@@ -5,44 +5,69 @@ import java.util.List;
 
 public class KGenProgMain {
 
-    public static void main(String[] args) {
-        // TODO: TargetProjectの名前の問題
-        final TargetProject targetProject = new TargetProject();
+	private TargetProject targetProject;
+	private FaultLocalization faultLocalization;
+	private Mutation mutation;
+	private Crossover crossover;
+	private SourceCodeGeneration sourceCodeGeneration;
+	private SourceCodeValidation sourceCodeValidation;
+	private VariantSelection variantSelection;
 
-        List<Variant> selectedVariants = new ArrayList<>();
-        selectedVariants.add(new Variant());
+	public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization, Mutation mutation, Crossover crossover,
+			SourceCodeGeneration sourceCodeGeneration, SourceCodeValidation sourceCodeValidation,
+			VariantSelection variantSelection) {
+		this.targetProject = targetProject;
+		this.faultLocalization = faultLocalization;
+		this.mutation = mutation;
+		this.crossover = crossover;
+		this.sourceCodeGeneration = sourceCodeGeneration;
+		this.sourceCodeValidation = sourceCodeValidation;
+		this.variantSelection = variantSelection;
+	}
 
-        while (true) {
-            if (isTimedOut() || reachedMaxGeneration() || isSuccess(selectedVariants)) {
-                break;
-            }
-            List<Gene> genes = new ArrayList<>();
-            for (Variant variant : selectedVariants) {
-                FaultLocalization faultLocalization = new FaultLocalization();
-                List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant);
+	public void run() {
+		List<Variant> selectedVariants = new ArrayList<>();
+		selectedVariants.add(targetProject.getInitialVariant());
 
-                Mutation mutation = new Mutation();
-                List<Base> bases = mutation.exec(suspiciousenesses);
-                genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
-            }
+		while (true) {
+			if (isTimedOut() || reachedMaxGeneration() || isSuccess(selectedVariants)) {
+				break;
+			}
+			List<Gene> genes = new ArrayList<>();
+			for (Variant variant : selectedVariants) {
+				List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant);
 
-            Crossover crossover = new Crossover();
-            genes.addAll(crossover.exec(selectedVariants));
+				List<Base> bases = mutation.exec(suspiciousenesses);
+				genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
+			}
 
-            List<Variant> variants = new ArrayList<>();
-            for (Gene gene : genes) {
-                SourceCodeGeneration sourceCodeGeneration = new SourceCodeGeneration();
-                GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
+			genes.addAll(crossover.exec(selectedVariants));
 
-                SourceCodeValidation sourceCodeValidation = new SourceCodeValidation();
-                Fitness fitness = sourceCodeValidation.exec(generatedSourceCode, targetProject);
+			List<Variant> variants = new ArrayList<>();
+			for (Gene gene : genes) {
+				GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
 
-                Variant variant = new Variant(gene, fitness, generatedSourceCode);
-                variants.add(variant);
-            }
+				Fitness fitness = sourceCodeValidation.exec(generatedSourceCode, targetProject);
 
-            VariantSelection variantSelection = new VariantSelection();
-            selectedVariants = variantSelection.exec(variants);
-        }
-    }
+				Variant variant = new Variant(gene, fitness, generatedSourceCode);
+				variants.add(variant);
+			}
+
+			selectedVariants = variantSelection.exec(variants);
+		}
+	}
+
+	private boolean reachedMaxGeneration() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private boolean isTimedOut() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private boolean isSuccess(List<Variant> variants) {
+		return false;
+	}
 }

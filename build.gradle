@@ -21,6 +21,9 @@ repositories {
 dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.21'
+     
+	// https://mvnrepository.com/artifact/args4j/args4j
+	compile group: 'args4j', name: 'args4j', version: '2.33'
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
