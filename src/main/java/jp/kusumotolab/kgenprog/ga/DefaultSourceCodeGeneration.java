@@ -1,4 +1,7 @@
-package jp.kusumotolab.kgenprog;
+package jp.kusumotolab.kgenprog.ga;
+
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 

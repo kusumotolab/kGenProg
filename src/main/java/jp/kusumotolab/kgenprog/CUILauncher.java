@@ -4,6 +4,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jp.kusumotolab.kgenprog.fl.FaultLocalization;
+import jp.kusumotolab.kgenprog.fl.Ochiai;
+import jp.kusumotolab.kgenprog.ga.Crossover;
+import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
+import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
+import jp.kusumotolab.kgenprog.ga.Mutation;
+import jp.kusumotolab.kgenprog.ga.RandomMutation;
+import jp.kusumotolab.kgenprog.ga.SiglePointCrossover;
+import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.VariantSelection;
+import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.TargetProject;
+
 public class CUILauncher {
 
 	public List<String> sourceFiles = Arrays.asList(new String[] {"src/main/java"});

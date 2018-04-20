@@ -3,6 +3,21 @@ package jp.kusumotolab.kgenprog;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.kusumotolab.kgenprog.fl.FaultLocalization;
+import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.ga.Base;
+import jp.kusumotolab.kgenprog.ga.Crossover;
+import jp.kusumotolab.kgenprog.ga.Fitness;
+import jp.kusumotolab.kgenprog.ga.Gene;
+import jp.kusumotolab.kgenprog.ga.Mutation;
+import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.VariantSelection;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+
 public class KGenProgMain {
 
 	private TargetProject targetProject;
@@ -12,6 +27,7 @@ public class KGenProgMain {
 	private SourceCodeGeneration sourceCodeGeneration;
 	private SourceCodeValidation sourceCodeValidation;
 	private VariantSelection variantSelection;
+	private TestExecutor testExecutor;
 
 	public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization, Mutation mutation, Crossover crossover,
 			SourceCodeGeneration sourceCodeGeneration, SourceCodeValidation sourceCodeValidation,
@@ -23,6 +39,8 @@ public class KGenProgMain {
 		this.sourceCodeGeneration = sourceCodeGeneration;
 		this.sourceCodeValidation = sourceCodeValidation;
 		this.variantSelection = variantSelection;
+
+		this.testExecutor = new TestExecutor(targetProject);
 	}
 
 	public void run() {
@@ -35,7 +53,7 @@ public class KGenProgMain {
 			}
 			List<Gene> genes = new ArrayList<>();
 			for (Variant variant : selectedVariants) {
-				List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant);
+				List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant, testExecutor);
 
 				List<Base> bases = mutation.exec(suspiciousenesses);
 				genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
@@ -47,7 +65,7 @@ public class KGenProgMain {
 			for (Gene gene : genes) {
 				GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
 
-				Fitness fitness = sourceCodeValidation.exec(generatedSourceCode, targetProject);
+				Fitness fitness = sourceCodeValidation.exec(generatedSourceCode, targetProject, testExecutor);
 
 				Variant variant = new Variant(gene, fitness, generatedSourceCode);
 				variants.add(variant);
@@ -57,16 +75,19 @@ public class KGenProgMain {
 		}
 	}
 
+	//	hitori
 	private boolean reachedMaxGeneration() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	//	hitori
 	private boolean isTimedOut() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	//	hitori
 	private boolean isSuccess(List<Variant> variants) {
 		return false;
 	}
