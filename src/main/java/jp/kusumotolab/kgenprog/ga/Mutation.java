@@ -1,6 +1,8 @@
-package jp.kusumotolab.kgenprog;
+package jp.kusumotolab.kgenprog.ga;
 
 import java.util.List;
+
+import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 
 public interface Mutation {
 

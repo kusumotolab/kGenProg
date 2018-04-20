@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog;
+package jp.kusumotolab.kgenprog.project;
 
 public final class SourceFile {
 	public final String path;

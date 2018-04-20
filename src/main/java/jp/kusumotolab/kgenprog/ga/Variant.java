@@ -1,4 +1,6 @@
-package jp.kusumotolab.kgenprog;
+package jp.kusumotolab.kgenprog.ga;
+
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
 public class Variant {
 	

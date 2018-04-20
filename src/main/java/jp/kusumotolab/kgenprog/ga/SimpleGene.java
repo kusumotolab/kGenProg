@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog;
+package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
 import java.util.List;
