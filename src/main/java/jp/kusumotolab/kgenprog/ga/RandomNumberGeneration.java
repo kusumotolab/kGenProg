@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class RandomNumberGeneration {
 
-    public static RandomNumberGeneration sharedInstance = new RandomNumberGeneration();
+    public final static RandomNumberGeneration sharedInstance = new RandomNumberGeneration();
 
     private int seed;
     private Random random;
