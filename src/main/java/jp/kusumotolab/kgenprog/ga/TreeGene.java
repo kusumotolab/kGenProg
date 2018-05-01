@@ -4,23 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TreeGene extends Gene {
-	private Gene parent;
-	private Base base;
-
-	public TreeGene() {
-		this(null, null);
-	}
+	private final Gene parent;
+	private final Base base;
 
 	public TreeGene(Gene parent, Base base) {
+		if (parent == null || base == null)
+			throw new NullPointerException("Parameters of Constructor of TreeGene must not be null.");
 		this.parent = parent;
 		this.base = base;
 	}
 
 	@Override
 	public List<Base> getBases() {
-		if (parent == null) {
-			return new ArrayList<>();
-		}
 		final List<Base> bases = parent instanceof TreeGene ? parent.getBases() : new ArrayList<>(parent.getBases());
 		bases.add(base);
 		return bases;
