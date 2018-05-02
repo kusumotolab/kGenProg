@@ -11,8 +11,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
 /**
- * テスト実行クラス．
- * 外部プロジェクトの単体テストclassファイルを実行してその結果を回収する．
+ * テスト実行クラス． 外部プロジェクトの単体テストclassファイルを実行してその結果を回収する．
  * 
  * @author shinsuke
  *
@@ -45,7 +44,7 @@ public class TestExecutor {
 		final JUnitCore junit = new JUnitCore();
 		try {
 			ClassPathHacker.addFile(classPath);
-			for(final String testClass: testClasses) {
+			for (final String testClass : testClasses) {
 				final Result result = junit.run(Request.classes(Class.forName(testClass)));
 				testResults.add(testClass, result);
 			}
@@ -61,4 +60,18 @@ public class TestExecutor {
 		return null;
 	}
 
+	// stub for JaCoCoExecutor
+	public TestResults exec(final String classPath, final Class<?> testClass) {
+		final TestResults testResults = new TestResults();
+		final JUnitCore junit = new JUnitCore();
+
+		// ClassPathHacker.addFile(classPath);
+		final Result result = junit.run(testClass);
+
+		System.out.println(result.getFailures() + "!!!!!!!!!");
+		// testResults.add(testClass, result);
+
+		return testResults;
+
+	}
 }
