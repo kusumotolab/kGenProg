@@ -40,13 +40,13 @@ public class TestExecutor {
 	 *            実行対象のテストクラス名の集合
 	 * @return
 	 */
-	public TestResults exec(String classPath, List<String> testClasses) {
-		TestResults testResults = new TestResults();
-		JUnitCore junit = new JUnitCore();
+	public TestResults exec(final String classPath, final List<String> testClasses) {
+		final TestResults testResults = new TestResults();
+		final JUnitCore junit = new JUnitCore();
 		try {
 			ClassPathHacker.addFile(classPath);
-			for(String testClass: testClasses) {
-				Result result = junit.run(Request.classes(Class.forName(testClass)));
+			for(final String testClass: testClasses) {
+				final Result result = junit.run(Request.classes(Class.forName(testClass)));
 				testResults.add(testClass, result);
 			}
 			return testResults;
