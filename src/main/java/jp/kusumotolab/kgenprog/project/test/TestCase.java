@@ -1,8 +1,10 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import java.io.Serializable;
+
 import jp.kusumotolab.kgenprog.project.SourceFile;
 
-public class TestCase {
+public class TestCase implements Serializable {
 	private SourceFile testFile;
 	private String name;
 	private int startLine;
