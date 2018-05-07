@@ -17,7 +17,7 @@ public class TestExecutorTest {
 	@Test
 	public void exec01() {
 		TestExecutor executor = new TestExecutor(null);
-		TestResults results = executor.exec("example/example01/bin/", Arrays.asList("BuggyCalculatorTest"));
+		TestResults results = executor.exec("example/example01/bin/", "", Arrays.asList("BuggyCalculatorTest"));
 		assertEquals(4, results.getFailedTestResults().get(0).getRunCount());
 		assertEquals(1, results.getFailedTestResults().get(0).getFailureCount());
 	}
