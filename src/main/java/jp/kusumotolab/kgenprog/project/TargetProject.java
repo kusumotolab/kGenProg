@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,9 +11,9 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
-	private List<SourceFile> sourceFiles;
-	private List<SourceFile> testFiles;
-	private List<ClassPath> classPaths;
+	private final List<SourceFile> sourceFiles;
+	private final List<SourceFile> testFiles;
+	private final List<ClassPath> classPaths;
 
 	public TargetProject(List<SourceFile> sourceFiles, List<SourceFile> testFiles, List<ClassPath> classPaths) {
 		this.sourceFiles = sourceFiles;
@@ -40,6 +41,7 @@ public class TargetProject {
 		return new Variant(gene, fitness, generatedSourceCode);
 	}
 
+	// hitori
 	private List<GeneratedAST> constructAST() {
 		// TODO: ここにDIする方法を検討
 		return new JDTASTConstruction().constructAST(this);
