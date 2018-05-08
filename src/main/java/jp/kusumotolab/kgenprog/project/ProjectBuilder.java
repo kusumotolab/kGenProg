@@ -1,5 +1,6 @@
-package jp.kusumotolab.kgenprog;
+package jp.kusumotolab.kgenprog.project;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -15,13 +16,10 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class ProjectBuilder {
 
-	static private final String CLASSPATH_SEPARATOR = System.getProperty("os.name").toLowerCase().contains("windows")
-			? ";" : ":";
+	static private final String CLASSPATH_SEPARATOR = File.pathSeparator;
 
 	private final TargetProject targetProject;
 
