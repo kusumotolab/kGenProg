@@ -15,6 +15,7 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -27,10 +28,11 @@ public class KGenProgMain {
 	private SourceCodeGeneration sourceCodeGeneration;
 	private SourceCodeValidation sourceCodeValidation;
 	private VariantSelection variantSelection;
+	private ProjectBuilder projectBuilder;
 	private TestExecutor testExecutor;
 
-	public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization, Mutation mutation, Crossover crossover,
-			SourceCodeGeneration sourceCodeGeneration, SourceCodeValidation sourceCodeValidation,
+	public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization, Mutation mutation,
+			Crossover crossover, SourceCodeGeneration sourceCodeGeneration, SourceCodeValidation sourceCodeValidation,
 			VariantSelection variantSelection) {
 		this.targetProject = targetProject;
 		this.faultLocalization = faultLocalization;
@@ -39,8 +41,9 @@ public class KGenProgMain {
 		this.sourceCodeGeneration = sourceCodeGeneration;
 		this.sourceCodeValidation = sourceCodeValidation;
 		this.variantSelection = variantSelection;
-
+		this.projectBuilder = new ProjectBuilder(targetProject);
 		this.testExecutor = new TestExecutor(targetProject);
+
 	}
 
 	public void run() {
@@ -75,19 +78,19 @@ public class KGenProgMain {
 		}
 	}
 
-	//	hitori
+	// hitori
 	private boolean reachedMaxGeneration() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	//	hitori
+	// hitori
 	private boolean isTimedOut() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	//	hitori
+	// hitori
 	private boolean isSuccess(List<Variant> variants) {
 		return false;
 	}

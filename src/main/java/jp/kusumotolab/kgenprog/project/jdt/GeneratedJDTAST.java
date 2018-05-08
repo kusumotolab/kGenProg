@@ -9,6 +9,12 @@ public class GeneratedJDTAST implements GeneratedAST {
 	private CompilationUnit root;
 	private SourceFile sourceFile;
 
+	@Override
+	public String getSourceCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public GeneratedJDTAST(SourceFile sourceFile, CompilationUnit root) {
 		this.root = root;
 		this.sourceFile = sourceFile;
@@ -23,4 +29,9 @@ public class GeneratedJDTAST implements GeneratedAST {
 		return sourceFile;
 	}
 
+	@Override
+	public String getPrimaryClassName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
