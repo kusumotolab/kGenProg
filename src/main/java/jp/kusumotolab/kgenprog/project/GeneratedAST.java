@@ -6,4 +6,6 @@ public interface GeneratedAST {
 	public String getSourceCode();
 
 	public String getPrimaryClassName();
+
+	public SourceFile getSourceFile();
 }

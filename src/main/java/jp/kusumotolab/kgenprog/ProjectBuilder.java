@@ -59,7 +59,7 @@ public class ProjectBuilder {
 		
 		// variant が null でなければ，バリアントのソースコードをビルド
 		else {
-			final List<GeneratedAST> generatedASTs = variant.getGeneratedSourceCode().getGeneratedASTs();
+			final List<GeneratedAST> generatedASTs = variant.getGeneratedSourceCode().getFiles();
 			javaFileObjects = generatedASTs.stream()
 					.map(a -> new JavaSourceFromString(a.getPrimaryClassName(), a.getSourceCode()))
 					.collect(Collectors.toList());
