@@ -1,3 +1,5 @@
+package jp.kusumotolab;
+
 public class BuggyCalculator {
 
 	/**
@@ -12,9 +14,9 @@ public class BuggyCalculator {
 	 */
 	public int close_to_zero(int n) {
 		if (n > 0) {
-			n--;
+			n = Util.minus(n);
 		} else {
-			n++;
+			n = Util.plus(n);
 		}
 		return n;
 	}
@@ -55,7 +57,7 @@ public class BuggyCalculator {
 		i++;
 		n += i;
 	}
-	
+
 	public static void main(String args[]) {
 		;
 	}
