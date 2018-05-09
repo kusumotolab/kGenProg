@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -30,16 +31,19 @@ public class ProjectBuilder {
 	/**
 	 * 初期ソースコードをビルド
 	 * 
-	 * @param outDir バイトコード出力ディレクトリ
+	 * @param outDir
+	 *            バイトコード出力ディレクトリ
 	 * @return ビルドが成功すれば true，失敗すれば false
 	 */
-	public boolean build(final String outDir){
+	public boolean build(final String outDir) {
 		return this.build(null, outDir);
 	}
-	
+
 	/**
-	 * @param variant null でなければ与えられた variant からビルド．null の場合は，初期ソースコードからビルド
-	 * @param outDir バイトコード出力ディレクトリ
+	 * @param variant
+	 *            null でなければ与えられた variant からビルド．null の場合は，初期ソースコードからビルド
+	 * @param outDir
+	 *            バイトコード出力ディレクトリ
 	 * @return ビルドが成功すれば true，失敗すれば false
 	 */
 	public boolean build(final Variant variant, final String outDir) {
@@ -48,13 +52,13 @@ public class ProjectBuilder {
 		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
 		final Iterable<? extends JavaFileObject> javaFileObjects;
-		
+
 		// variant が null なら，初期ソースコードをビルド
 		if (null == variant) {
 			javaFileObjects = fileManager.getJavaFileObjectsFromStrings(
 					this.targetProject.getSourceFiles().stream().map(f -> f.path).collect(Collectors.toList()));
-		} 
-		
+		}
+
 		// variant が null でなければ，バリアントのソースコードをビルド
 		else {
 			final List<GeneratedAST> generatedASTs = variant.getGeneratedSourceCode().getFiles();
@@ -77,6 +81,17 @@ public class ProjectBuilder {
 				javaFileObjects);
 
 		final boolean isSuccess = task.call();
+		// TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
+		for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
+			System.err.println(diagnostic.getCode());
+			System.err.println(diagnostic.getKind());
+			System.err.println(diagnostic.getPosition());
+			System.err.println(diagnostic.getStartPosition());
+			System.err.println(diagnostic.getEndPosition());
+			System.err.println(diagnostic.getSource());
+			System.err.println(diagnostic.getMessage(null));
+
+		}
 
 		try {
 			fileManager.close();
