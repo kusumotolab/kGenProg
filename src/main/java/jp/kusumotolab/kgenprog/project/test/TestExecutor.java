@@ -19,7 +19,7 @@ class TestExecutor {
 	private final MemoryClassLoader memoryClassLoader;
 	private final IRuntime runtime;
 	private final Instrumenter instrumenter;
-	
+
 	public TestExecutor() {
 		this.memoryClassLoader = new MemoryClassLoader();
 		this.runtime = new LoggerRuntime();
@@ -54,9 +54,18 @@ class TestExecutor {
 		for (final String testClass : testClasses) {
 			final String targetName = Class.forName(testClass).getName();
 			final Class<?> junitClass = loadClass(targetName, instrument(targetName));
+
+			// TODO
+			// addListener()を使って，テストメソッドを1個ずつ処理する必要がある．
+			// 現在は全テストメソッドを一括で実行しているため，
+			// successなテストがどの行を実行したか，failなテストがどの行を実行したかが判別できない．
+
 			final Result result = junitCore.run(junitClass);
 			testResults.add(result);
-			System.out.println("Failure count: " + result.getFailureCount() + " (" + targetName);
+
+			// TODO
+			// ひとまずsysoutしておく．本来はきちんとTestResultsを生成しないといけない．
+			System.out.println("Failure count: " + result.getFailureCount() + " (" + targetName + ")");
 		}
 
 		final ExecutionDataStore executionData = new ExecutionDataStore();
@@ -66,8 +75,9 @@ class TestExecutor {
 		final CoverageBuilder coverageBuilder = new CoverageBuilder();
 		final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
 
+		// TODO
+		// 計測結果をTestResultsに格納して返すべき．
 		String targetName = sourceClasses.get(0); //
-
 		analyzer.analyzeClass(getTargetClass(targetName), targetName);
 		for (final IClassCoverage cc : coverageBuilder.getClasses()) {
 			for (int i = cc.getFirstLine(); i <= cc.getLastLine(); i++) {
@@ -80,7 +90,7 @@ class TestExecutor {
 	private byte[] instrument(final String targetName) throws Exception {
 		return this.instrumenter.instrument(getTargetClass(targetName), "");
 	}
-	
+
 	private Class<?> loadClass(final String targetName, final byte[] bytes) throws ClassNotFoundException {
 		this.memoryClassLoader.addDefinition(targetName, bytes);
 		return this.memoryClassLoader.loadClass(targetName); // force load instrumented class.

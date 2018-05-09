@@ -7,8 +7,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * Java-ClassPathに動的にclassを追加するHackerクラス．
- * 修正対象の題材プロジェクトのテスト実行時に必須．
+ * Java-ClassPathに動的にclassを追加するHackerクラス． 修正対象の題材プロジェクトのテスト実行時に必須．
  * 
  * @see https://stackoverflow.com/a/1011126
  */
