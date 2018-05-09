@@ -17,13 +17,13 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
  */
 public class TestProcessBuilder {
 
-	@SuppressWarnings("unused") // TODO
 	private TargetProject targetProject;
 
 	public TestProcessBuilder(TargetProject targetProject) {
 		this.targetProject = targetProject;
 	}
 
+	@Deprecated
 	public TestResults exec(GeneratedSourceCode generatedSourceCode) {
 		return null;
 
@@ -39,38 +39,29 @@ public class TestProcessBuilder {
 	 *            実行対象のテストクラス名の集合
 	 * @return
 	 */
-	public void build(final List<String> sourceClasses, final List<String> testClasses, final String classpath) {
+	public void start(final List<String> sourceClasses, final List<String> testClasses, final String classpath) {
 		final String javaHome = System.getProperty("java.home");
 		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-		String _classpath = "bin/main" + File.pathSeparator //
-				+ "lib/junit-4.12.jar" + File.pathSeparator //
-				+ "lib/hamcrest-core-1.3.jar" + File.pathSeparator
-				+ "lib/args4j-2.33.jar" + File.pathSeparator
-				+ "lib/org.jacoco.core-0.8.1.jar" + File.pathSeparator
-				+ "lib/asm-6.0.jar" + File.pathSeparator
-				+ "lib/asm-commons-6.0.jar" + File.pathSeparator
-				+ "lib/asm-tree-6.0.jar" + File.pathSeparator
-				+ classpath;
-		//_classpath += System.getProperty("java.class.path");
-		
+		final String _classpath = System.getProperty("java.class.path") + File.pathSeparator + classpath;
 		final String main = "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
-		final String[] args = new String[] {"-s ", String.join(",", sourceClasses), String.join(",", testClasses)};
 
-		ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", _classpath, main, "-s", String.join(",", sourceClasses), String.join(",", testClasses));
+		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", _classpath, main, "-s",
+				String.join(TestExecutorMain.SEPARATOR, sourceClasses),
+				String.join(TestExecutorMain.SEPARATOR, testClasses));
 
 		try {
-			Process process = builder.start();
-			process.waitFor();
+			final Process process = builder.start();
 
-			String result = IOUtils.toString(process.getInputStream(), "UTF-8");
-			String errresult = IOUtils.toString(process.getErrorStream(), "SJIS");
-			System.out.println(result);
-			System.out.println(errresult);
+			// TODO
+			// process.waitFor()するとhangする．謎
+			// たぶんこの問題
+			// https://stackoverflow.com/questions/42436307/process-hanging-on-the-process-builder
+			String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
+			String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
+			System.out.println(out_result);
+			System.err.println(err_result);
 			System.out.println(process.exitValue());
 
-		} catch (InterruptedException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();

@@ -34,8 +34,8 @@ public class TestExecutorMainTest {
 	public void mainTest02() throws Exception {
 		TestExecutorMain.main(new String[] { //
 				"-s", //
-				"jp.kusumotolab.BuggyCalculator,jp.kusumotolab.Util", //
-				"jp.kusumotolab.BuggyCalculatorTest,jp.kusumotolab.UtilTest" });
+				"jp.kusumotolab.BuggyCalculator" + TestExecutorMain.SEPARATOR + "jp.kusumotolab.Util", //
+				"jp.kusumotolab.BuggyCalculatorTest" + TestExecutorMain.SEPARATOR + "jp.kusumotolab.UtilTest" });
 		assertTrue(new File(TestResults.getSerFilename()).exists());
 	}
 }
