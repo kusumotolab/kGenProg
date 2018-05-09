@@ -66,6 +66,8 @@ public class ProjectBuilder {
 		final List<String> compilationOptions = new ArrayList<>();
 		compilationOptions.add("-d");
 		compilationOptions.add(outDir);
+		compilationOptions.add("-encoding");
+		compilationOptions.add("UTF-8");
 		compilationOptions.add("-classpath");
 		compilationOptions.add(String.join(CLASSPATH_SEPARATOR,
 				this.targetProject.getClassPaths().stream().map(cp -> cp.path).collect(Collectors.toList())));
