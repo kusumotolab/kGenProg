@@ -15,24 +15,26 @@ public class ProjectBuilderTest {
 	public void testBuildStringForExample01() {
 
 		final String separator = File.separator;
-		final String sourceFilePath = "example" + separator + "example01" + separator + "src" + separator
-				+ "BuggyCalculator.java";
+		final String sourceDirPath = "example" + separator + "example01" + separator + "src" + separator;
+		final SourceFile sourceFile = new SourceFile(sourceDirPath + "BuggyCalculator.java");
+		final SourceFile testFile = new SourceFile(sourceDirPath + "BuggyCalculatorTest.java");
+		System.out.println(sourceFile.path);
 		final List<SourceFile> sourceFiles = new ArrayList<>();
-		sourceFiles.add(new SourceFile(sourceFilePath));
-		final String testFilePath = "example" + separator + "example01" + separator + "src" + separator
-				+ "BuggyCalculatorTest.java";
+		sourceFiles.add(sourceFile);
+//		sourceFiles.add(testFile);
+
 		final List<SourceFile> testFiles = new ArrayList<>();
-		testFiles.add(new SourceFile(testFilePath));
+		testFiles.add(testFile);
 
 		final TargetProject targetProject = new TargetProject(sourceFiles, testFiles, Collections.emptyList());
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-		final String outputDirectory = "example" + separator + "example01" + separator + "bin";
+		final String outDirPath = "example" + separator + "example01" + separator + "bin";
 
-		final File outputDirectoryFile = new File(outputDirectory);
+		final File outputDirectoryFile = new File(outDirPath);
 		if (!outputDirectoryFile.exists()) {
 			outputDirectoryFile.mkdirs();
 		}
-		final boolean success = projectBuilder.build(outputDirectory);
+		final boolean success = projectBuilder.build(outDirPath);
 
 		assertTrue(success);
 	}
@@ -41,30 +43,32 @@ public class ProjectBuilderTest {
 	public void testBuildStringForExample02() {
 
 		final String separator = File.separator;
-		final String sourceFilePath1 = "example" + separator + "example02" + separator + "src" + separator + "jp"
-				+ separator + "kusumotolab" + separator + "BuggyCalculator.java";
-		final String sourceFilePath2 = "example" + separator + "example02" + separator + "src" + separator + "jp"
-				+ separator + "kusumotolab" + separator + "Util.java";
+		final String sourceDirPath = "example" + separator + "example02" + separator + "src" + separator + "jp"
+				+ separator + "kusumotolab" + separator;
+		final SourceFile sourceFile1 = new SourceFile(sourceDirPath + "BuggyCalculator.java");
+		final SourceFile sourceFile2 = new SourceFile(sourceDirPath + "Util.java");
+		final SourceFile testFile1 = new SourceFile(sourceDirPath + "BuggyCalculatorTest.java");
+		final SourceFile testFile2 = new SourceFile(sourceDirPath + "UtilTest.java");
+
 		final List<SourceFile> sourceFiles = new ArrayList<>();
-		sourceFiles.add(new SourceFile(sourceFilePath1));
-		sourceFiles.add(new SourceFile(sourceFilePath2));
-		final String testFilePath1 = "example" + separator + "example01" + separator + "src" + separator + "jp"
-				+ separator + "kusumotolab" + separator + "BuggyCalculatorTest.java";
-		final String testFilePath2 = "example" + separator + "example01" + separator + "src" + separator + "jp"
-				+ separator + "kusumotolab" + separator + "UtilTest.java";
+		sourceFiles.add(sourceFile1);
+		sourceFiles.add(sourceFile2);
+//		sourceFiles.add(testFile1);
+//		sourceFiles.add(testFile2);
+		
 		final List<SourceFile> testFiles = new ArrayList<>();
-		testFiles.add(new SourceFile(testFilePath1));
-		testFiles.add(new SourceFile(testFilePath2));
+		testFiles.add(testFile1);
+		testFiles.add(testFile2);
 
 		final TargetProject targetProject = new TargetProject(sourceFiles, testFiles, Collections.emptyList());
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-		final String outputDirectory = "example" + separator + "example02" + separator + "bin";
+		final String outDirPath = "example" + separator + "example02" + separator + "bin";
 
-		final File outputDirectoryFile = new File(outputDirectory);
+		final File outputDirectoryFile = new File(outDirPath);
 		if (!outputDirectoryFile.exists()) {
 			outputDirectoryFile.mkdirs();
 		}
-		final boolean success = projectBuilder.build(outputDirectory);
+		final boolean success = projectBuilder.build(outDirPath);
 
 		assertTrue(success);
 	}
