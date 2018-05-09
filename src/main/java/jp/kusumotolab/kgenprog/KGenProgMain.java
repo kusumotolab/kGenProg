@@ -29,7 +29,7 @@ public class KGenProgMain {
 	private SourceCodeValidation sourceCodeValidation;
 	private VariantSelection variantSelection;
 	private ProjectBuilder projectBuilder;
-	private TestProcessBuilder testExecutor;
+	private TestProcessBuilder testProcessBuilder;
 
 	public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization, Mutation mutation,
 			Crossover crossover, SourceCodeGeneration sourceCodeGeneration, SourceCodeValidation sourceCodeValidation,
@@ -42,7 +42,7 @@ public class KGenProgMain {
 		this.sourceCodeValidation = sourceCodeValidation;
 		this.variantSelection = variantSelection;
 		this.projectBuilder = new ProjectBuilder(targetProject);
-		this.testExecutor = new TestProcessBuilder(targetProject);
+		this.testProcessBuilder = new TestProcessBuilder(targetProject);
 	}
 
 	public void run() {
@@ -55,7 +55,7 @@ public class KGenProgMain {
 			}
 			List<Gene> genes = new ArrayList<>();
 			for (Variant variant : selectedVariants) {
-				List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant, testExecutor);
+				List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
 				List<Base> bases = mutation.exec(suspiciousenesses);
 				genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
@@ -67,7 +67,7 @@ public class KGenProgMain {
 			for (Gene gene : genes) {
 				GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
 
-				Fitness fitness = sourceCodeValidation.exec(generatedSourceCode, targetProject, testExecutor);
+				Fitness fitness = sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
 
 				Variant variant = new Variant(gene, fitness, generatedSourceCode);
 				variants.add(variant);

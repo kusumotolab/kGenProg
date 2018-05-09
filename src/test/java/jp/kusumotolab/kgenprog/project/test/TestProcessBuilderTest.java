@@ -9,7 +9,11 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import jp.kusumotolab.kgenprog.project.TargetProject;
+
 public class TestProcessBuilderTest {
+
+	private static TargetProject targetProject;
 
 	@Before
 	public void before() throws IOException {
@@ -20,7 +24,7 @@ public class TestProcessBuilderTest {
 	@Test
 	public void exec01() {
 		final TestProcessBuilder builder = new TestProcessBuilder(null);
-		builder.build( //
+		builder.start( //
 				Arrays.asList("jp.kusumotolab.BuggyCalculator"), //
 				Arrays.asList("jp.kusumotolab.BuggyCalculatorTest"), //
 				"example/example02/bin/");
