@@ -1,9 +1,5 @@
 package jp.kusumotolab.kgenprog;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.Crossover;
@@ -23,14 +19,18 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class CUILauncher {
 
 	@Option(name = "-s", aliases = "--src", required = true, usage = "Paths of the root directories holding source codes")
-	public List<String> sourceFiles = Arrays.asList("src/main/java");
+	public List<String> sourceFiles = new ArrayList<>();
 	@Option(name = "-t", aliases = "--test", required = true, usage = "Paths of the root directories holding test codes")
-	public List<String> testFiles = Arrays.asList();
+	public List<String> testFiles = new ArrayList<>();
 	@Option(name = "-c", aliases = "--cp", required = true, usage = "Class paths required to build the target project")
-	public List<String> classPaths = Arrays.asList();
+	public List<String> classPaths = new ArrayList<>();
 
 	public static void main(String[] args) {
 		CUILauncher launcher = new CUILauncher();
