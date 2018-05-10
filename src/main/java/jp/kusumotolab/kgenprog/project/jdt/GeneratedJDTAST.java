@@ -11,8 +11,7 @@ public class GeneratedJDTAST implements GeneratedAST {
 
 	@Override
 	public String getSourceCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return root.toString();
 	}
 
 	public GeneratedJDTAST(SourceFile sourceFile, CompilationUnit root) {
