@@ -20,17 +20,54 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CUILauncher {
 
-	@Option(name = "-s", aliases = "--src", required = true, usage = "Paths of the root directories holding source codes")
-	public List<String> sourceFiles = new ArrayList<>();
-	@Option(name = "-t", aliases = "--test", required = true, usage = "Paths of the root directories holding test codes")
-	public List<String> testFiles = new ArrayList<>();
+	// region Fields
+	private List<SourceFile> sourceFiles = new ArrayList<>();
+	private List<SourceFile> testFiles = new ArrayList<>();
+	private List<ClassPath> classPaths = new ArrayList<>();
+	// endregion
+
+	// region Getter/Setter
+
+	public List<SourceFile> getSourceFiles() {
+		return sourceFiles;
+	}
+
+	@Option(name = "-s", aliases = "--src", required = true, usage = "Paths of the root directories holding src codes separated with ':'")
+	public void setSourceFiles(String sourceFiles) {
+		this.sourceFiles = Arrays.stream(sourceFiles.split(":"))
+				.map(SourceFile::new)
+				.collect(Collectors.toList());
+	}
+
+	public List<SourceFile> getTestFiles() {
+		return testFiles;
+	}
+
+	@Option(name = "-t", aliases = "--test", required = true, usage = "Paths of the root directories holding test codes separated with ':'")
+	public void setTestFiles(String testFiles) {
+		this.testFiles = Arrays.stream(testFiles.split(":"))
+				.map(SourceFile::new)
+				.collect(Collectors.toList());
+	}
+
+	public List<ClassPath> getClassPaths() {
+		return classPaths;
+	}
+
 	@Option(name = "-c", aliases = "--cp", required = true, usage = "Class paths required to build the target project")
-	public List<String> classPaths = new ArrayList<>();
+	public void setClassPaths(String classPaths) {
+		this.classPaths = Arrays.stream(classPaths.split(":"))
+				.map(ClassPath::new)
+				.collect(Collectors.toList());
+	}
+
+	// endregion
 
 	public static void main(String[] args) {
 		CUILauncher launcher = new CUILauncher();
@@ -47,19 +84,7 @@ public class CUILauncher {
 	}
 
 	public void launch() {
-		List<SourceFile> sourceFiles = this.sourceFiles.stream()
-				.map(SourceFile::new)
-				.collect(Collectors.toList());
-
-		List<SourceFile> testFiles = this.testFiles.stream()
-				.map(SourceFile::new)
-				.collect(Collectors.toList());
-
-		List<ClassPath> classPaths = this.classPaths.stream()
-				.map(ClassPath::new)
-				.collect(Collectors.toList());
-
-		TargetProject targetProject = new TargetProject(sourceFiles, testFiles, classPaths);
+		TargetProject targetProject = new TargetProject(getSourceFiles(), getTestFiles(), getClassPaths());
 		FaultLocalization faultLocalization = new Ochiai();
 		Mutation mutation = new RandomMutation();
 		Crossover crossover = new SiglePointCrossover();
