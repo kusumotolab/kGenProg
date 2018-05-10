@@ -17,7 +17,7 @@ public class ProjectBuilderTest {
 		final String sourceDirPath = "example" + separator + "example01" + separator + "src" + separator;
 		final SourceFile sourceFile = new SourceFile(sourceDirPath + "BuggyCalculator.java");
 		final SourceFile testFile = new SourceFile(sourceDirPath + "BuggyCalculatorTest.java");
-		System.out.println(sourceFile.path);
+
 		final List<SourceFile> sourceFiles = new ArrayList<>();
 		sourceFiles.add(sourceFile);
 		sourceFiles.add(testFile);
