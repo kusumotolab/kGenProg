@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -21,12 +20,21 @@ public class ProjectBuilderTest {
 		System.out.println(sourceFile.path);
 		final List<SourceFile> sourceFiles = new ArrayList<>();
 		sourceFiles.add(sourceFile);
-//		sourceFiles.add(testFile);
+		sourceFiles.add(testFile);
 
 		final List<SourceFile> testFiles = new ArrayList<>();
 		testFiles.add(testFile);
 
-		final TargetProject targetProject = new TargetProject(sourceFiles, testFiles, Collections.emptyList());
+		final List<ClassPath> classPaths = new ArrayList<>();
+		final String junitDirPath = "lib" + separator + "junit4" + separator;
+		final File junitFile1 = new File(junitDirPath + "junit-4.12.jar");
+		final File junitFile2 = new File(junitDirPath + "hamcrest-core-1.3.jar");
+		final ClassPath classPath1 = new ClassPath(junitFile1.getAbsolutePath());
+		final ClassPath classPath2 = new ClassPath(junitFile2.getAbsolutePath());
+		classPaths.add(classPath1);
+		classPaths.add(classPath2);
+
+		final TargetProject targetProject = new TargetProject(sourceFiles, testFiles, classPaths);
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example01" + separator + "bin";
 
@@ -53,14 +61,23 @@ public class ProjectBuilderTest {
 		final List<SourceFile> sourceFiles = new ArrayList<>();
 		sourceFiles.add(sourceFile1);
 		sourceFiles.add(sourceFile2);
-//		sourceFiles.add(testFile1);
-//		sourceFiles.add(testFile2);
-		
+		sourceFiles.add(testFile1);
+		sourceFiles.add(testFile2);
+
 		final List<SourceFile> testFiles = new ArrayList<>();
 		testFiles.add(testFile1);
 		testFiles.add(testFile2);
 
-		final TargetProject targetProject = new TargetProject(sourceFiles, testFiles, Collections.emptyList());
+		final List<ClassPath> classPaths = new ArrayList<>();
+		final String junitDirPath = "lib" + separator + "junit4" + separator;
+		final File junitFile1 = new File(junitDirPath + "junit-4.12.jar");
+		final File junitFile2 = new File(junitDirPath + "hamcrest-core-1.3.jar");
+		final ClassPath classPath1 = new ClassPath(junitFile1.getAbsolutePath());
+		final ClassPath classPath2 = new ClassPath(junitFile2.getAbsolutePath());
+		classPaths.add(classPath1);
+		classPaths.add(classPath2);
+
+		final TargetProject targetProject = new TargetProject(sourceFiles, testFiles, classPaths);
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example02" + separator + "bin";
 
