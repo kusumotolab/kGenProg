@@ -7,8 +7,12 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
 	@Override
 	public GeneratedSourceCode exec(Gene gene, TargetProject targetProject) {
-		// TODO Auto-generated method stub
-		return null;
+		final Variant initialVariant = targetProject.getInitialVariant();
+		GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
+		for (Base base : gene.getBases()) {
+			generatedSourceCode = base.getOperation().apply(generatedSourceCode, base.getTargetLocation());
+		}
+		return generatedSourceCode;
 	}
 
 }
