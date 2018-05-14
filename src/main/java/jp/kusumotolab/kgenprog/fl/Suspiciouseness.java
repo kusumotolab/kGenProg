@@ -12,5 +12,11 @@ public class Suspiciouseness {
 		this.value = value;
 	}
 
+	public Location getLocation() {
+		return location;
+	}
 
+	public double getValue() {
+		return value;
+	}
 }
