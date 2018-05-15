@@ -2,6 +2,8 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -20,7 +22,7 @@ public final class TestExecutorMain {
 
 	/**
 	 * Application entry point <br>
-	 * e.g.,) java Main -s jp.kusu.TargetClass jp.kusu.TargetClassTest
+	 * usage: $ java Main -s jp.kusu.TargetClass jp.kusu.TargetClassTest
 	 * 
 	 * @param args
 	 * @throws Exception
@@ -36,10 +38,14 @@ public final class TestExecutorMain {
 		}
 
 		final TestExecutor executor = new TestExecutor();
-		final TestResults testResults = executor.exec( //
-				Arrays.asList(main.sourceClass.split(SEPARATOR)), //
-				Arrays.asList(main.testClass.split(SEPARATOR)));
+
+		final TestResults testResults = executor.exec(createFQNs(main.sourceClass), createFQNs(main.testClass));
 		TestResults.serialize(testResults);
+
 	}
 
+	private static List<FullyQualifiedName> createFQNs(String names) {
+		return Arrays.asList(names.split(SEPARATOR)).stream().map(n -> new FullyQualifiedName(n))
+				.collect(Collectors.toList());
+	}
 }

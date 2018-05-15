@@ -17,7 +17,7 @@ public class TestProcessBuilderTest {
 
 	@Before
 	public void before() throws IOException {
-		ClassPathHacker.addFile("example/example02/bin/");
+		ClassPathHacker.addFile("example/example01/bin/");
 		new File(TestResults.getSerFilename()).delete();
 	}
 
@@ -27,10 +27,10 @@ public class TestProcessBuilderTest {
 		builder.start( //
 				Arrays.asList("jp.kusumotolab.BuggyCalculator"), //
 				Arrays.asList("jp.kusumotolab.BuggyCalculatorTest"), //
-				"example/example02/bin/");
+				"example/example01/bin/");
+		
 		TestResults tr = TestResults.deserialize();
+		assertEquals(4, tr.getTestResults().size());
 		assertEquals(1, tr.getFailedTestResults().size());
-		assertEquals(4, tr.getFailedTestResults().get(0).getRunCount());
-		assertEquals(1, tr.getFailedTestResults().get(0).getFailureCount());
 	}
 }
