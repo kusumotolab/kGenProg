@@ -12,7 +12,7 @@ public class TestExecutorMainTest {
 
 	@Before
 	public void before() throws IOException {
-		ClassPathHacker.addFile("example/example02/bin/");
+		ClassPathHacker.addFile("example/example01/bin/");
 		new File(TestResults.getSerFilename()).delete();
 	}
 
@@ -27,15 +27,4 @@ public class TestExecutorMainTest {
 		assertTrue(new File(TestResults.getSerFilename()).exists());
 	}
 
-	// TODO
-	// assertionは適当．serializeファイルが生成できているかだけ確認．
-	// 複数ソース指定の確認．
-	@Test
-	public void mainTest02() throws Exception {
-		TestExecutorMain.main(new String[] { //
-				"-s", //
-				"jp.kusumotolab.BuggyCalculator" + TestExecutorMain.SEPARATOR + "jp.kusumotolab.Util", //
-				"jp.kusumotolab.BuggyCalculatorTest" + TestExecutorMain.SEPARATOR + "jp.kusumotolab.UtilTest" });
-		assertTrue(new File(TestResults.getSerFilename()).exists());
-	}
 }
