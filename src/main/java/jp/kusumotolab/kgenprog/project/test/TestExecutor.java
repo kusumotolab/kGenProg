@@ -1,104 +1,246 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.IRuntime;
 import org.jacoco.core.runtime.LoggerRuntime;
 import org.jacoco.core.runtime.RuntimeData;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 
+/**
+ * 
+ * @author shinsuke
+ *
+ */
 class TestExecutor {
 	private final MemoryClassLoader memoryClassLoader;
-	private final IRuntime runtime;
-	private final Instrumenter instrumenter;
+	private final IRuntime jacocoRuntime;
+	private final Instrumenter jacocoInstrumenter;
+	private final RuntimeData jacocoRuntimeData;
 
 	public TestExecutor() {
 		this.memoryClassLoader = new MemoryClassLoader();
-		this.runtime = new LoggerRuntime();
-		this.instrumenter = new Instrumenter(runtime);
+		this.jacocoRuntime = new LoggerRuntime();
+		this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
+		this.jacocoRuntimeData = new RuntimeData();
 	}
 
 	/**
-	 * JaCoCO + JUnitの実行．<br>
+	 * JaCoCo + JUnitの実行．<br>
 	 * sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．<br>
-	 * classpathは通ってることが前提．
+	 * 実行対象のclasspathは通ってることが前提．
 	 * 
-	 * @param sourceClasses
-	 *            計測対象のソースコードのリスト
-	 * @param testClasses
-	 *            実行する単体テストのリスト
+	 * @param sourceFQNs 計測対象のソースコードのFQNのリスト
+	 * @param testFQNs 実行する単体テストのFQNのリスト
 	 * @return
 	 * @throws Exception
 	 */
-	public TestResults exec(final List<String> sourceClasses, final List<String> testClasses) throws Exception {
-
+	public TestResults exec(final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs)
+			throws Exception {
 		final TestResults testResults = new TestResults();
 
-		for (final String sourceClass : sourceClasses) {
-			final String targetName = Class.forName(sourceClass).getName();
-			loadClass(targetName, instrument(targetName));
-		}
-
-		final RuntimeData runtimeData = new RuntimeData();
-		this.runtime.startup(runtimeData);
-
-		final JUnitCore junitCore = new JUnitCore();
-		for (final String testClass : testClasses) {
-			final String targetName = Class.forName(testClass).getName();
-			final Class<?> junitClass = loadClass(targetName, instrument(targetName));
-
-			// TODO
-			// addListener()を使って，テストメソッドを1個ずつ処理する必要がある．
-			// 現在は全テストメソッドを一括で実行しているため，
-			// successなテストがどの行を実行したか，failなテストがどの行を実行したかが判別できない．
-
-			final Result result = junitCore.run(junitClass);
-			testResults.add(result);
-
-			// TODO
-			// ひとまずsysoutしておく．本来はきちんとTestResultsを生成しないといけない．
-			System.out.println("Failure count: " + result.getFailureCount() + " (" + targetName + ")");
-		}
-
-		final ExecutionDataStore executionData = new ExecutionDataStore();
-		runtimeData.collect(executionData, new SessionInfoStore(), false);
-		this.runtime.shutdown();
-
-		final CoverageBuilder coverageBuilder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
+		loadInstrumentedClasses(sourceFQNs);
+		final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
 
 		// TODO
-		// 計測結果をTestResultsに格納して返すべき．
-		String targetName = sourceClasses.get(0); //
-		analyzer.analyzeClass(getTargetClass(targetName), targetName);
-		for (final IClassCoverage cc : coverageBuilder.getClasses()) {
-			for (int i = cc.getFirstLine(); i <= cc.getLastLine(); i++) {
-				System.out.printf("  Line %s: %s%n", Integer.valueOf(i), cc.getLine(i).getStatus());
-			}
+		// junitCore.run(Classes<?>...)による一括実行を使えないか？
+		// 速度改善するかも．jacocoとの連携が難しい．listenerを再利用すると結果がバグる
+		for (Class<?> junitClass : junitClasses) {
+			final JUnitCore junitCore = new JUnitCore();
+			final CoverageMeasurementListener listener = new CoverageMeasurementListener(sourceFQNs, testResults);
+			junitCore.addListener(listener);
+			junitCore.run(junitClass);
 		}
+
 		return testResults;
 	}
 
-	private byte[] instrument(final String targetName) throws Exception {
-		return this.instrumenter.instrument(getTargetClass(targetName), "");
+	/**
+	 * jacoco計測のためのクラス書き換えを行い，その書き換え結果をクラスロードする．
+	 * 
+	 * @param fqns 書き換え対象（計測対象）クラスのFQNs
+	 * @return 書き換えたクラスオブジェクトs
+	 * @throws Exception
+	 */
+	private List<Class<?>> loadInstrumentedClasses(List<FullyQualifiedName> fqns) throws Exception {
+		List<Class<?>> loadedClasses = new ArrayList<>();
+		for (final FullyQualifiedName fqn : fqns) {
+			final byte[] instrumentedData = instrument(fqn);
+			loadedClasses.add(loadClass(fqn, instrumentedData));
+		}
+		return loadedClasses;
 	}
 
-	private Class<?> loadClass(final String targetName, final byte[] bytes) throws ClassNotFoundException {
-		this.memoryClassLoader.addDefinition(targetName, bytes);
-		return this.memoryClassLoader.loadClass(targetName); // force load instrumented class.
+	/**
+	 * jacoco計測のためのクラス書き換えを行う．
+	 * 
+	 * @param fqn 書き換え対象（計測対象）クラスのFQNs
+	 * @return 書き換えた
+	 * @throws Exception
+	 */
+	private byte[] instrument(final FullyQualifiedName fqn) throws Exception {
+		return this.jacocoInstrumenter.instrument(getTargetClassInputStream(fqn), "");
 	}
 
-	private InputStream getTargetClass(final String name) {
-		final String resource = "/" + name.replace('.', '/') + ".class";
+	/**
+	 * MemoryClassLoaderを使ったクラスのロード．
+	 * 
+	 * @param fqn
+	 * @param bytes
+	 * @return
+	 * @throws ClassNotFoundException
+	 */
+	private Class<?> loadClass(final FullyQualifiedName fqn, final byte[] bytes) throws ClassNotFoundException {
+		this.memoryClassLoader.addDefinition(fqn.value, bytes);
+		return this.memoryClassLoader.loadClass(fqn.value); // force load instrumented class.
+	}
+
+	/**
+	 * classファイルのInputStreamを取り出す．
+	 * 
+	 * @param fqn 読み込み対象のFQN
+	 * @return
+	 */
+	private InputStream getTargetClassInputStream(final FullyQualifiedName fqn) {
+		final String resource = "/" + fqn.value.replace('.', '/') + ".class";
 		return getClass().getResourceAsStream(resource);
+	}
+
+	/**
+	 * JUnit実行のイベントリスナー．内部クラス． 
+	 * JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
+	 * 
+	 * メモ：JUnitには「テスト成功時」のイベントリスナーがないので，テスト成否をDescriptionに強引に追記して管理
+	 * 
+	 * @author shinsuke
+	 *
+	 */
+	class CoverageMeasurementListener extends RunListener {
+		private final Description FAILED = Description.createTestDescription("failed", "failed");
+
+		final private List<FullyQualifiedName> measuredClasses;
+		final public TestResults testResults;
+
+		/**
+		 * constructor
+		 * 
+		 * @param measuredFQNs 計測対象のクラス名一覧
+		 * @param storedTestResults テスト実行結果の保存先
+		 * @throws Exception
+		 */
+		public CoverageMeasurementListener(List<FullyQualifiedName> measuredFQNs, TestResults storedTestResults)
+				throws Exception {
+			jacocoRuntime.startup(jacocoRuntimeData);
+			this.testResults = storedTestResults;
+			this.measuredClasses = measuredFQNs;
+		}
+
+		@Override
+		public void testStarted(Description description) {
+			resetJacocoRuntimeData();
+		}
+
+		@Override
+		public void testFailure(Failure failure) {
+			noteTestExecutionFail(failure);
+		}
+
+		@Override
+		public void testFinished(Description description) throws IOException {
+			collectRuntimeData(description);
+		}
+
+		/**
+		 * JaCoCoが回収した実行結果をリセットする．
+		 */
+		private void resetJacocoRuntimeData() {
+			jacocoRuntimeData.reset();
+		}
+
+		/**
+		 * Failureオブジェクトの持つDescriptionに，当該テストがfailしたことをメモする．
+		 * @param failure
+		 */
+		private void noteTestExecutionFail(Failure failure) {
+			failure.getDescription().addChild(FAILED);
+		}
+
+		/**
+		 * Descriptionから当該テストがfailしたかどうかを返す．
+		 * @param description
+		 * @return テストがfailしたかどうか
+		 */
+		private boolean isFailed(Description description) {
+			return description.getChildren().contains(FAILED);
+		}
+
+		/**
+		 * Descriptionから実行したテストメソッドのFQNを取り出す．
+		 * 
+		 * @param description
+		 * @return
+		 */
+		private FullyQualifiedName getTestMethodName(Description description) {
+			return new FullyQualifiedName(description.getTestClass().getName() + "." + description.getMethodName());
+		}
+
+		/**
+		 * jacocoにより計測した行ごとのCoverageを回収し，TestResultsに格納する．
+		 * 
+		 * @throws IOException
+		 */
+		private void collectRuntimeData(final Description description) throws IOException {
+			final CoverageBuilder coverageBuilder = new CoverageBuilder();
+			analyzeJacocoRuntimeData(coverageBuilder);
+			addJacocoCoverageToTestResults(coverageBuilder, description);
+		}
+
+		/**
+		 * jacocoにより計測した行ごとのCoverageを回収する．
+		 * 
+		 * @param coverageBuilder 計測したCoverageを格納する保存先
+		 * @throws IOException
+		 */
+		private void analyzeJacocoRuntimeData(final CoverageBuilder coverageBuilder) throws IOException {
+			final ExecutionDataStore executionData = new ExecutionDataStore();
+			final SessionInfoStore sessionInfo = new SessionInfoStore();
+			jacocoRuntimeData.collect(executionData, sessionInfo, false);
+			jacocoRuntime.shutdown();
+
+			final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
+			for (final FullyQualifiedName measuredClass : measuredClasses) {
+				analyzer.analyzeClass(getTargetClassInputStream(measuredClass), measuredClass.value);
+			}
+		}
+
+		/**
+		 * 回収したCoverageを型変換しTestResultsに格納する．
+		 * 
+		 * @param coverageBuilder Coverageが格納されたビルダー
+		 * @param description テストの実行情報
+		 */
+		private void addJacocoCoverageToTestResults(final CoverageBuilder coverageBuilder,
+				final Description description) {
+			final FullyQualifiedName testMethodFQN = getTestMethodName(description);
+			final boolean isFailed = isFailed(description);
+			List<Coverage> coverages = coverageBuilder.getClasses().stream().map(c -> new Coverage(c))
+					.collect(Collectors.toList());
+
+			final TestResult testResult = new TestResult(testMethodFQN, isFailed, coverages);
+			testResults.add(testResult);
+		}
 	}
 
 }

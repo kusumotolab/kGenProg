@@ -26,7 +26,6 @@ public class TestProcessBuilder {
 	@Deprecated
 	public TestResults exec(GeneratedSourceCode generatedSourceCode) {
 		return null;
-
 	}
 
 	/**

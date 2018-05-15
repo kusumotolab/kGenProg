@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.junit.runner.Result;
-
 import jp.kusumotolab.kgenprog.project.Location;
 
 public class TestResults implements Serializable {
@@ -25,6 +23,64 @@ public class TestResults implements Serializable {
 	public TestResults() {
 		testResults = new ArrayList<>();
 	}
+
+	public void add(TestResult testResult) {
+		this.testResults.add(testResult);
+	}
+
+	/**
+	 * 失敗したテスト結果の一覧を取得．
+	 * 
+	 * @return 失敗したテスト結果s
+	 */
+	public List<TestResult> getFailedTestResults() {
+		return this.testResults.stream().filter(r -> r.wasFailed()).collect(Collectors.toList());
+	}
+
+	// necessary?
+	public List<TestResult> getSuccessedTestResults() {
+		return this.testResults.stream().filter(r -> !r.wasFailed()).collect(Collectors.toList());
+	}
+
+	public List<TestResult> getTestResults() {
+		return testResults;
+	}
+	
+	public List<FullyQualifiedName> getFailedTestNames() {
+		return getFailedTestResults().stream().map(r -> r.getMethodName()).collect(Collectors.toList());
+	}
+
+	/**
+	 * テストの成功率
+	 * 
+	 * @return
+	 */
+	public double getSuccessRate() {
+		final int fail = getFailedTestResults().size();
+		final int success = getSuccessedTestResults().size();
+		return success / (success + fail);
+	}
+
+	public Map<Location, Integer> getExecutedFailedTestCounts() {
+		return null;
+	}
+
+	public Map<Location, Integer> getNotExecutedFailedTestCounts() {
+		return null;
+	}
+
+	public Map<Location, Integer> getExecutedPassedTestCounts() {
+		return null;
+	}
+
+	public Map<Location, Integer> getNotExecutedPassedTestCounts() {
+		return null;
+	}
+
+	/*
+	 * public void add(final Result result) { testResults.add(new TestResult(null,
+	 * result, null)); }
+	 */
 
 	public static String getSerFilename() {
 		return "tmp/__testresults.ser";
@@ -59,51 +115,6 @@ public class TestResults implements Serializable {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	/**
-	 * 失敗したテスト結果の一覧を取得．
-	 * 
-	 * @return 失敗したテスト結果s
-	 */
-	public List<TestResult> getFailedTestResults() {
-		return this.testResults.stream().filter(r -> !r.wasSuccessful()).collect(Collectors.toList());
-	}
-
-	// necessary?
-	public List<TestResult> getSuccessedTestResults() {
-		return this.testResults.stream().filter(r -> r.wasSuccessful()).collect(Collectors.toList());
-	}
-
-	/**
-	 * テストの成功率
-	 * 
-	 * @return
-	 */
-	public double getSuccessRate() {
-		final int fail = getFailedTestResults().size();
-		final int success = getSuccessedTestResults().size();
-		return success / (success + fail);
-	}
-
-	public Map<Location, Integer> getExecutedFailedTestCounts() {
-		return null;
-	}
-
-	public Map<Location, Integer> getNotExecutedFailedTestCounts() {
-		return null;
-	}
-
-	public Map<Location, Integer> getExecutedPassedTestCounts() {
-		return null;
-	}
-
-	public Map<Location, Integer> getNotExecutedPassedTestCounts() {
-		return null;
-	}
-
-	public void add(final Result result) {
-		testResults.add(new TestResult(null, result, null));
 	}
 
 }
