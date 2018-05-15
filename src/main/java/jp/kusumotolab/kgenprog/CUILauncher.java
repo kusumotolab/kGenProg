@@ -38,7 +38,7 @@ public class CUILauncher {
 		return sourceFiles;
 	}
 
-	@Option(name = "-s", aliases = "--src", required = true, usage = "Paths of the root directories holding src codes separated with ':'")
+	@Option(name = "-s", aliases = "--src", required = true, metaVar = "<path>[:<path>...]", usage = "Paths of the root directories holding src codes separated with ':'")
 	public void setSourceFiles(String sourceFiles) {
 		this.sourceFiles = Arrays.stream(sourceFiles.split(":"))
 				.map(SourceFile::new)
@@ -49,7 +49,7 @@ public class CUILauncher {
 		return testFiles;
 	}
 
-	@Option(name = "-t", aliases = "--test", required = true, usage = "Paths of the root directories holding test codes separated with ':'")
+	@Option(name = "-t", aliases = "--test", required = true, metaVar = "<path>[:<path>...]", usage = "Paths of the root directories holding test codes separated with ':'")
 	public void setTestFiles(String testFiles) {
 		this.testFiles = Arrays.stream(testFiles.split(":"))
 				.map(SourceFile::new)
@@ -60,7 +60,7 @@ public class CUILauncher {
 		return classPaths;
 	}
 
-	@Option(name = "-c", aliases = "--cp", required = true, usage = "Class paths required to build the target project")
+	@Option(name = "-c", aliases = "--cp", required = true, metaVar = "<class path>[:<class path>...]", usage = "Class paths required to build the target project separated with ':'")
 	public void setClassPaths(String classPaths) {
 		this.classPaths = Arrays.stream(classPaths.split(":"))
 				.map(ClassPath::new)
