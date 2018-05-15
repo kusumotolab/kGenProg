@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
 /**
@@ -31,14 +32,48 @@ public class TestProcessBuilder {
 		return null;
 	}
 
+	private List<FullyQualifiedName> createFQNs(List<SourceFile> sourceFiles) {
+		return sourceFiles.stream().map(s -> new FullyQualifiedName(s)).collect(Collectors.toList());
+	}
+
+	public void start() {
+		final String javaHome = System.getProperty("java.home");
+		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
+		final String classpath = filterClasspathFromSystemClasspath();
+		final String main = "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
+		final String sourceFiles = String.join(TestExecutorMain.SEPARATOR,
+				createFQNs(targetProject.getSourceFiles()).stream().map(f -> f.value).collect(Collectors.toList()));
+		final String testFiles = String.join(TestExecutorMain.SEPARATOR,
+				createFQNs(targetProject.getTestFiles()).stream().map(f -> f.value).collect(Collectors.toList()));
+
+		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-s", sourceFiles,
+				testFiles);
+
+		try {
+			final Process process = builder.start();
+
+			// TODO
+			// process.waitFor()するとhangする．謎
+			// たぶんこの問題
+			// https://stackoverflow.com/questions/42436307/process-hanging-on-the-process-builder
+			String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
+			String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
+			System.out.println(out_result);
+			System.err.println(err_result);
+			System.out.println(process.exitValue());
+
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * TestResults.exec(GeneratedSourceCode)の代替メソッド．
 	 * 本メソッドがGeneratedSourceCodeの実装に強依存なので，ひとまずStringで処理．
 	 * 
-	 * @param sourceClasses
-	 *            対象プロジェクトのclassPath
-	 * @param testClasses
-	 *            実行対象のテストクラス名の集合
+	 * @param sourceClasses 対象プロジェクトのclassPath
+	 * @param testClasses 実行対象のテストクラス名の集合
 	 * @return
 	 */
 	public void start(final List<String> sourceClasses, final List<String> testClasses, final String classpath) {
