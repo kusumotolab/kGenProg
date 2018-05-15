@@ -74,8 +74,8 @@ class TestExecutor {
 	 * @return 書き換えたクラスオブジェクトs
 	 * @throws Exception
 	 */
-	private List<Class<?>> loadInstrumentedClasses(List<FullyQualifiedName> fqns) throws Exception {
-		List<Class<?>> loadedClasses = new ArrayList<>();
+	private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns) throws Exception {
+		final List<Class<?>> loadedClasses = new ArrayList<>();
 		for (final FullyQualifiedName fqn : fqns) {
 			final byte[] instrumentedData = instrument(fqn);
 			loadedClasses.add(loadClass(fqn, instrumentedData));
@@ -87,7 +87,7 @@ class TestExecutor {
 	 * jacoco計測のためのクラス書き換えを行う．
 	 * 
 	 * @param fqn 書き換え対象（計測対象）クラスのFQNs
-	 * @return 書き換えた
+	 * @return 書き換えたクラスオブジェクトのバイナリ
 	 * @throws Exception
 	 */
 	private byte[] instrument(final FullyQualifiedName fqn) throws Exception {

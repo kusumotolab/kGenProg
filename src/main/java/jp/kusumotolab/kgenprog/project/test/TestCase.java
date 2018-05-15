@@ -9,6 +9,7 @@ public class TestCase implements Serializable {
 	private String name;
 	private int startLine;
 
+	@Deprecated
 	public TestCase(SourceFile testFile, String name, int startLine) {
 		this.testFile = testFile;
 		this.name = name;

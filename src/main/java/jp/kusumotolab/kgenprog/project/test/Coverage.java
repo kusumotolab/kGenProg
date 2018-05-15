@@ -30,22 +30,23 @@ public class Coverage implements Serializable {
 		PARTLY_COVERED
 	}
 
-	final private String className;
+	final private FullyQualifiedName targetClassFQN;
 	final private List<Status> statuses;
 
 	/**
 	 * 
-	 * @param className Coverage計測対象のクラス名
-	 * @param statuses Coverage計測の結果
+	 * @param className
+	 *            Coverage計測対象のクラス名
+	 * @param statuses
+	 *            Coverage計測の結果
 	 */
 	public Coverage(IClassCoverage classCoverage) {
-		this.className = classCoverage.getName().replaceAll("/", ".");
+		this.targetClassFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
 		this.statuses = convertClassCoverage(classCoverage);
 	}
 
 	/**
-	 * ClassCoverageに格納されたCoverageをList<Status>に変換する．
-	 * 実質enumの型変換やってるだけ．
+	 * ClassCoverageに格納されたCoverageをList<Status>に変換する． 実質enumの型変換やってるだけ．
 	 * 
 	 * @param classCoverage
 	 * @return
@@ -73,7 +74,7 @@ public class Coverage implements Serializable {
 	public String toString() {
 		final StringBuffer sb = new StringBuffer();
 		final String separator = " ";
-		sb.append(className + "\n");
+		sb.append(targetClassFQN + "\n");
 		for (int i = 0; i < statuses.size(); i++) {
 			sb.append(String.format("%2d", i + 1));
 			sb.append(separator);
