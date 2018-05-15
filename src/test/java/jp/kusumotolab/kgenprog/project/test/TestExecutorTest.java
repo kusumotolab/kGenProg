@@ -34,10 +34,10 @@ public class TestExecutorTest {
 		assertEquals(4, r.getTestResults().size());
 		assertEquals(new Double(1 / 4), new Double(r.getSuccessRate()));
 
-		assertTrue(r.getTestResults().get(0).wasFailed());
-		assertTrue(r.getTestResults().get(1).wasFailed());
-		assertFalse(r.getTestResults().get(2).wasFailed());
-		assertTrue(r.getTestResults().get(3).wasFailed());
+		assertFalse(r.getTestResults().get(0).wasFailed());
+		assertFalse(r.getTestResults().get(1).wasFailed());
+		assertTrue(r.getTestResults().get(2).wasFailed());
+		assertFalse(r.getTestResults().get(3).wasFailed());
 
 		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test01", r.getTestResults().get(0).getMethodName().value);
 		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test02", r.getTestResults().get(1).getMethodName().value);
