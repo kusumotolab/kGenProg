@@ -17,7 +17,6 @@ public class TestProcessBuilderTest {
 
 	@Before
 	public void before() throws IOException {
-		ClassPathHacker.addFile("example/example01/bin/");
 		new File(TestResults.getSerFilename()).delete();
 	}
 
