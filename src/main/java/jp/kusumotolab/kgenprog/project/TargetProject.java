@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -69,12 +70,12 @@ public class TargetProject {
 	 * @return
 	 * @throws IOException
 	 */
-	public static TargetProject generate(String basePath) throws IOException {
+	public static TargetProject generate(String basePath) {
 		final List<SourceFile> sourceFiles = new ArrayList<>();
 		final List<SourceFile> testFiles = new ArrayList<>();
 
 		final String[] extension = { "java" };
-		Collection<File> files = FileUtils.listFiles(new File(basePath), extension, true);
+		final Collection<File> files = FileUtils.listFiles(new File(basePath), extension, true);
 		for (File file : files) {
 			if (file.getName().contains("Test")) {
 				testFiles.add(new SourceFile(file.getPath()));
@@ -82,6 +83,10 @@ public class TargetProject {
 				sourceFiles.add(new SourceFile(file.getPath()));
 			}
 		}
-		return new TargetProject(basePath, sourceFiles, testFiles, new ArrayList<>());
+
+		final List<ClassPath> classPath = Arrays.asList( //
+				new ClassPath("lib/junit4/junit-4.12.jar"), //
+				new ClassPath("lib/junit4/hamcrest-core-1.3.jar"));
+		return new TargetProject(basePath, sourceFiles, testFiles, classPath);
 	}
 }
