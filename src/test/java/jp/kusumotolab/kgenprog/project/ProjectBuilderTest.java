@@ -14,7 +14,8 @@ public class ProjectBuilderTest {
 	public void testBuildStringForExample01() {
 
 		final String separator = File.separator;
-		final String sourceDirPath = "example" + separator + "example01" + separator + "src" + separator;
+		final String sourceDirPath = "example" + separator + "example01" + separator + "src" + separator + "jp"
+				+ separator + "kusumotolab" + separator;
 		final SourceFile sourceFile = new SourceFile(sourceDirPath + "BuggyCalculator.java");
 		final SourceFile testFile = new SourceFile(sourceDirPath + "BuggyCalculatorTest.java");
 
