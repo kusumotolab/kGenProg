@@ -24,8 +24,12 @@ public class TestResults implements Serializable {
 		testResults = new ArrayList<>();
 	}
 
-	public void add(TestResult testResult) {
+	public void add(final TestResult testResult) {
 		this.testResults.add(testResult);
+	}
+
+	public void addAll(TestResults testResults) {
+		this.testResults.addAll(testResults.getTestResults());
 	}
 
 	/**
@@ -37,7 +41,7 @@ public class TestResults implements Serializable {
 		return this.testResults.stream().filter(r -> r.wasFailed()).collect(Collectors.toList());
 	}
 
-	// necessary?
+	// is necessary?
 	public List<TestResult> getSuccessedTestResults() {
 		return this.testResults.stream().filter(r -> !r.wasFailed()).collect(Collectors.toList());
 	}
@@ -45,7 +49,7 @@ public class TestResults implements Serializable {
 	public List<TestResult> getTestResults() {
 		return testResults;
 	}
-	
+
 	public List<FullyQualifiedName> getFailedTestNames() {
 		return getFailedTestResults().stream().map(r -> r.getMethodName()).collect(Collectors.toList());
 	}
