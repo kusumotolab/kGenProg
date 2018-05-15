@@ -2,7 +2,10 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
@@ -41,7 +44,7 @@ public class TestProcessBuilder {
 	public void start(final List<String> sourceClasses, final List<String> testClasses, final String classpath) {
 		final String javaHome = System.getProperty("java.home");
 		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-		final String _classpath = System.getProperty("java.class.path") + File.pathSeparator + classpath;
+		final String _classpath = filterClasspathFromSystemClasspath() + File.pathSeparator + classpath;
 		final String main = "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
 		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", _classpath, main, "-s",
@@ -67,4 +70,25 @@ public class TestProcessBuilder {
 		}
 	}
 
+	private final String jarFileTail = "-(\\d+\\.)+jar$";
+
+	private String filterClasspathFromSystemClasspath() {
+		final String[] classpaths = System.getProperty("java.class.path").split(File.pathSeparator);
+
+		final List<String> filter = new ArrayList<>();
+		filter.add(".*args4j" + jarFileTail);
+		filter.add(".*jacoco\\.core" + jarFileTail);
+		filter.add(".*asm" + jarFileTail);
+		filter.add(".*asm-commons" + jarFileTail);
+		filter.add(".*asm-tree" + jarFileTail);
+		filter.add(".*junit" + jarFileTail);
+		filter.add(".*hamcrest-core" + jarFileTail);
+		filter.add(".*bin" + "\\" + File.separator + "main$");
+		filter.add(".*bin" + "\\" + File.separator + "test$");
+
+		List<String> result = Arrays.asList(classpaths).stream()
+				.filter(cp -> filter.stream().anyMatch(f -> cp.matches(f))).collect(Collectors.toList());
+
+		return String.join(File.pathSeparator, result);
+	}
 }
