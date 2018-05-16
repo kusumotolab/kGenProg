@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -19,16 +20,18 @@ public class TestExecutorTest {
 
 	@Before
 	public void before() throws IOException {
+		System.gc();
+		System.out.println(ClassLoader.getSystemClassLoader());
 	}
 
 	@Test
 	public void exec01() throws Exception {
 		final String outdir = "example/example01/_bin/";
-		ClassPathHacker.addFile(outdir);
+		// ClassPathHacker.addFile(outdir);
 
 		new ProjectBuilder(createTargetProjectFromExample01()).build(outdir);
-
-		TestResults r = new TestExecutor().exec( //
+		TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./example/example01/_bin/") });
+		TestResults r = executor.exec( //
 				Arrays.asList(new FullyQualifiedName("jp.kusumotolab.BuggyCalculator")), //
 				Arrays.asList(new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest")));
 
@@ -46,7 +49,7 @@ public class TestExecutorTest {
 		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test04", r.getTestResults().get(3).getMethodName().value);
 
 		Coverage c = r.getTestResults().get(0).getCoverages().get(0);
-		// assertEquals(c.)
+		executor = null;
 	}
 
 	// TODO
@@ -54,14 +57,14 @@ public class TestExecutorTest {
 	// 単体では正常に動作するが，ClassPathHackerによるクラスローダの問題で，クラスロードが2回行われてしまう．
 	// よって，exec01()の実行後では期待通りに動作しない．
 	// このテストは外部プロセスを起動するTestProcessBuilderTestから実行すること．
-	//@Test
+	@Test
 	public void exec02() throws Exception {
 		final String outdir = "example/example02/_bin/";
-		ClassPathHacker.addFile(outdir);
+		// ClassPathHacker.addFile(outdir);
 
 		new ProjectBuilder(createTargetProjectFromExample02()).build(outdir);
 
-		TestResults r = new TestExecutor().exec( //
+		TestResults r = new TestExecutor(new URL[] { new URL("file:./example/example02/_bin/") }).exec( //
 				Arrays.asList( //
 						new FullyQualifiedName("jp.kusumotolab.BuggyCalculator"), //
 						new FullyQualifiedName("jp.kusumotolab.Util")), //
@@ -98,7 +101,6 @@ public class TestExecutorTest {
 						new ClassPath("lib/junit4/junit-4.12.jar"), //
 						new ClassPath("lib/junit4/hamcrest-core-1.3.jar")));
 	}
-	
 
 	private TargetProject createTargetProjectFromExample02() {
 		String project = "example/example02/";
