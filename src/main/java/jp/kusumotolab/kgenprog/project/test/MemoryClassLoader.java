@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,9 +10,17 @@ import java.util.Map;
  * 
  * @see https://www.jacoco.org/jacoco/trunk/doc/examples/java/CoreTutorial.java
  */
-public class MemoryClassLoader extends ClassLoader {
+public class MemoryClassLoader extends URLClassLoader {
 
 	private final Map<String, byte[]> definitions = new HashMap<>();
+
+	public MemoryClassLoader(String[] classpathes) {
+		super(new URL[] {});
+	}
+
+	public MemoryClassLoader(URL[] classpathes) {
+		super(classpathes);
+	}
 
 	/**
 	 * Add a in-memory representation of a class.
@@ -23,7 +33,12 @@ public class MemoryClassLoader extends ClassLoader {
 	}
 
 	@Override
-	protected Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
+	public Class<?> loadClass(final String name) throws ClassNotFoundException {
+		return loadClass(name, false);
+	}
+
+	@Override
+	public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
 		final byte[] bytes = definitions.get(name);
 		if (bytes != null) {
 			return defineClass(name, bytes, 0, bytes.length);

@@ -2,6 +2,8 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,21 +32,23 @@ class TestExecutor {
 	private final Instrumenter jacocoInstrumenter;
 	private final RuntimeData jacocoRuntimeData;
 
-	public TestExecutor() {
-		this.memoryClassLoader = new MemoryClassLoader();
+	public TestExecutor(URL[] classpath) throws MalformedURLException {
+		// TODO oooooooooooooooooooooo
+		this.memoryClassLoader = new MemoryClassLoader(classpath);
+
 		this.jacocoRuntime = new LoggerRuntime();
 		this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
 		this.jacocoRuntimeData = new RuntimeData();
 	}
 
 	/**
-	 * JaCoCo + JUnitの実行．<br>
-	 * sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．<br>
+	 * JaCoCo + JUnitの実行．
+	 * sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．
 	 * 実行対象のclasspathは通ってることが前提．
 	 * 
 	 * @param sourceFQNs 計測対象のソースコードのFQNのリスト
 	 * @param testFQNs 実行する単体テストのFQNのリスト
-	 * @return
+	 * @return テストの実行結果（テスト成否やCoverage等）
 	 * @throws Exception
 	 */
 	public TestResults exec(final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs)
@@ -114,8 +118,10 @@ class TestExecutor {
 	 * @return
 	 */
 	private InputStream getTargetClassInputStream(final FullyQualifiedName fqn) {
-		final String resource = "/" + fqn.value.replace('.', '/') + ".class";
-		return getClass().getResourceAsStream(resource);
+		final String resource = fqn.value.replace('.', '/') + ".class";
+
+		InputStream is = memoryClassLoader.getResourceAsStream(resource);
+		return is;
 	}
 
 	/**
