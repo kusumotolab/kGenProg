@@ -2,27 +2,17 @@ package jp.kusumotolab.kgenprog;
 
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
-import jp.kusumotolab.kgenprog.ga.Crossover;
-import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
-import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
-import jp.kusumotolab.kgenprog.ga.Mutation;
-import jp.kusumotolab.kgenprog.ga.RandomMutation;
-import jp.kusumotolab.kgenprog.ga.SiglePointCrossover;
-import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.VariantSelection;
+import jp.kusumotolab.kgenprog.ga.*;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CUILauncher {
 
@@ -38,33 +28,27 @@ public class CUILauncher {
 		return sourceFiles;
 	}
 
-	@Option(name = "-s", aliases = "--src", required = true, metaVar = "<path>[:<path>...]", usage = "Paths of the root directories holding src codes separated with ':'")
+	@Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class, metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
 	public void setSourceFiles(String sourceFiles) {
-		this.sourceFiles = Arrays.stream(sourceFiles.split(":"))
-				.map(SourceFile::new)
-				.collect(Collectors.toList());
+		this.sourceFiles.add(new SourceFile(sourceFiles));
 	}
 
 	public List<SourceFile> getTestFiles() {
 		return testFiles;
 	}
 
-	@Option(name = "-t", aliases = "--test", required = true, metaVar = "<path>[:<path>...]", usage = "Paths of the root directories holding test codes separated with ':'")
+	@Option(name = "-t", aliases = "--test", required = true, handler = StringArrayOptionHandler.class, metaVar = "<path> ...", usage = "Paths of the root directories holding test codes")
 	public void setTestFiles(String testFiles) {
-		this.testFiles = Arrays.stream(testFiles.split(":"))
-				.map(SourceFile::new)
-				.collect(Collectors.toList());
+		this.testFiles.add(new SourceFile(testFiles));
 	}
 
 	public List<ClassPath> getClassPaths() {
 		return classPaths;
 	}
 
-	@Option(name = "-c", aliases = "--cp", required = true, metaVar = "<class path>[:<class path>...]", usage = "Class paths required to build the target project separated with ':'")
+	@Option(name = "-c", aliases = "--cp", required = true, handler = StringArrayOptionHandler.class, metaVar = "<class path> ...", usage = "Class paths required to build the target project")
 	public void setClassPaths(String classPaths) {
-		this.classPaths = Arrays.stream(classPaths.split(":"))
-				.map(ClassPath::new)
-				.collect(Collectors.toList());
+		this.classPaths.add(new ClassPath(classPaths));
 	}
 
 	// endregion
