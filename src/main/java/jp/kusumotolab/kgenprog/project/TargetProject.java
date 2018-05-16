@@ -77,7 +77,7 @@ public class TargetProject {
 		final String[] extension = { "java" };
 		final Collection<File> files = FileUtils.listFiles(new File(basePath), extension, true);
 		for (File file : files) {
-			if (file.getName().contains("Test")) {
+			if (file.getName().endsWith("Test.java")) {
 				testFiles.add(new SourceFile(file.getPath()));
 			} else {
 				sourceFiles.add(new SourceFile(file.getPath()));
