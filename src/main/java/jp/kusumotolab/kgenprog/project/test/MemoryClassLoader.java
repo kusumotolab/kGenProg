@@ -12,21 +12,21 @@ import java.util.Map;
  */
 public class MemoryClassLoader extends URLClassLoader {
 
-	private final Map<String, byte[]> definitions = new HashMap<>();
-
-	public MemoryClassLoader(String[] classpathes) {
-		super(new URL[] {});
-	}
-
-	public MemoryClassLoader(URL[] classpathes) {
-		super(classpathes);
+	public MemoryClassLoader(URL[] urls) {
+		super(urls);
 	}
 
 	/**
-	 * Add a in-memory representation of a class.
+	 * クラス定義を表すMap．
+	 * クラス名とバイト配列のペアを持つ．
+	 */
+	private final Map<String, byte[]> definitions = new HashMap<>();
+
+	/**
+	 * メモリ上のバイト配列をクラス定義に追加する．
 	 * 
-	 * @param name name of the class
-	 * @param bytes class definition
+	 * @param name 定義するクラス名
+	 * @param bytes 追加するクラス定義
 	 */
 	public void addDefinition(final String name, final byte[] bytes) {
 		definitions.put(name, bytes);
@@ -37,6 +37,10 @@ public class MemoryClassLoader extends URLClassLoader {
 		return loadClass(name, false);
 	}
 
+	/**
+	 * クラスロード．
+	 * メモリ上のバイト配列のクラス定義を優先で探し，それがなければファイルシステム上の.classファイルからロードを行う．
+	 */
 	@Override
 	public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
 		final byte[] bytes = definitions.get(name);
