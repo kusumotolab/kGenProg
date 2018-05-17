@@ -21,6 +21,10 @@ repositories {
     jcenter()
 }
 
+// Set default encoding to UTF-8
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
 // In this section you declare the dependencies for your production and test code
 dependencies {
     // The production code uses the SLF4J logging API at compile time
@@ -31,10 +35,10 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.eclipse.jdt/org.eclipse.jdt.core
 	compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.13.102'
-	
+
 	// https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin
 	compile group: 'org.jacoco', name: 'jacoco-maven-plugin', version: '0.8.1'
-	
+
 	// https://mvnrepository.com/artifact/commons-io/commons-io
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
 	
