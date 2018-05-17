@@ -37,7 +37,7 @@ public final class TestExecutorMain {
 			return;
 		}
 
-		final TestExecutor executor = new TestExecutor();
+		final TestExecutor executor = new TestExecutor(null);
 
 		final TestResults testResults = executor.exec(createFQNs(main.sourceClass), createFQNs(main.testClass));
 		TestResults.serialize(testResults);
