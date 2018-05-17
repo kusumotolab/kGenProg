@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -32,6 +34,8 @@ public class TestProcessBuilder {
 		return null;
 	}
 
+	@SuppressWarnings("unused")
+	@Deprecated
 	private List<FullyQualifiedName> createFQNs(List<SourceFile> sourceFiles) {
 		return sourceFiles.stream().map(s -> new FullyQualifiedName(s)).collect(Collectors.toList());
 	}
@@ -41,28 +45,38 @@ public class TestProcessBuilder {
 		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
 		final String classpath = filterClasspathFromSystemClasspath();
 		final String main = "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
-		final String sourceFiles = String.join(TestExecutorMain.SEPARATOR,
-				createFQNs(targetProject.getSourceFiles()).stream().map(f -> f.value).collect(Collectors.toList()));
-		final String testFiles = String.join(TestExecutorMain.SEPARATOR,
-				createFQNs(targetProject.getTestFiles()).stream().map(f -> f.value).collect(Collectors.toList()));
+
+		final Collection<FullyQualifiedName> c = CollectionUtils.subtract( //
+				this.targetProject.getSourceFQNs(), //
+				this.targetProject.getTestFQNs());
+
+		//final String sourceFiles = this.targetProject.getSourceFQNs().stream().map(f -> f.value)
+		//		.collect(Collectors.joining(TestExecutorMain.SEPARATOR));
+		final String sourceFiles = c.stream().map(f -> f.value).collect(Collectors.joining(TestExecutorMain.SEPARATOR));
+		final String testFiles = this.targetProject.getTestFQNs().stream().map(f -> f.value)
+				.collect(Collectors.joining(TestExecutorMain.SEPARATOR));
+
+		System.out.println("> " + this.targetProject.getSourceFQNs());
+		System.out.println("> " + this.targetProject.getTestFQNs());
+		System.out.println("> " + c);
+		System.out.println("> " + testFiles);
 
 		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-s", sourceFiles,
 				testFiles);
 
 		try {
 			final Process process = builder.start();
+			process.waitFor();
 
-			// TODO
-			// process.waitFor()するとhangする．謎
-			// たぶんこの問題
-			// https://stackoverflow.com/questions/42436307/process-hanging-on-the-process-builder
 			String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
 			String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
 			System.out.println(out_result);
 			System.err.println(err_result);
 			System.out.println(process.exitValue());
-
 		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
@@ -76,6 +90,7 @@ public class TestProcessBuilder {
 	 * @param testClasses 実行対象のテストクラス名の集合
 	 * @return
 	 */
+	@Deprecated
 	public void start(final List<String> sourceClasses, final List<String> testClasses, final String classpath) {
 		final String javaHome = System.getProperty("java.home");
 		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
