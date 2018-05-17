@@ -1,33 +1,34 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestExecutorMainTest {
 
 	@Before
 	public void before() throws IOException {
-		final String outdir = "example/example01/_bin/";
-		// ClassPathHacker.addFile(outdir);
-		new ProjectBuilder(createTargetProjectFromExample01()).build(outdir);
 		new File(TestResults.getSerFilename()).delete();
 	}
 
 	@Test
 	public void mainTest01() throws Exception {
+
+		final String rootDir = "example/example01";
+		final String outDir = rootDir + "/_bin/";
+
+		final TargetProject targetProject = TargetProject.generate(rootDir);
+		new ProjectBuilder(targetProject).build(outDir);
+
 		TestExecutorMain.main(new String[] { //
 				"-s", //
 				"jp.kusumotolab.BuggyCalculator", //
@@ -37,30 +38,26 @@ public class TestExecutorMainTest {
 
 		final TestResults r = TestResults.deserialize();
 
-		assertEquals(4, r.getTestResults().size());
-		assertEquals(new Double(1 / 4), new Double(r.getSuccessRate()));
+		assertThat(r.getTestResults().size(), is(4));
+		assertThat(r.getSuccessRate(), is(1.0 * 3 / 4));
 
-		assertFalse(r.getTestResults().get(0).wasFailed());
-		assertFalse(r.getTestResults().get(1).wasFailed());
-		assertTrue(r.getTestResults().get(2).wasFailed());
-		assertFalse(r.getTestResults().get(3).wasFailed());
+		assertThat(r.getTestResults().get(0).wasFailed(), is(false));
+		assertThat(r.getTestResults().get(1).wasFailed(), is(false));
+		assertThat(r.getTestResults().get(2).wasFailed(), is(true));
+		assertThat(r.getTestResults().get(3).wasFailed(), is(false));
 
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test01", r.getTestResults().get(0).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test02", r.getTestResults().get(1).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test03", r.getTestResults().get(2).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test04", r.getTestResults().get(3).getMethodName().value);
+		assertThat(r.getTestResults().get(0).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test01"));
+		assertThat(r.getTestResults().get(1).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test02"));
+		assertThat(r.getTestResults().get(2).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test03"));
+		assertThat(r.getTestResults().get(3).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test04"));
+
+		// BuggyCalculatorTest.test01 実行によるカバレッジはこうなるはず
+		assertThat(r.getTestResults().get(0).getCoverages().get(0).getStatuses(), is(contains( //
+				EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+
+		// BuggyCalculatorTest.test04 によるカバレッジはこうなるはず
+		assertThat(r.getTestResults().get(3).getCoverages().get(0).getStatuses(), is(contains( //
+				EMPTY, EMPTY, COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, COVERED, EMPTY, COVERED)));
 	}
 
-	private TargetProject createTargetProjectFromExample01() {
-		String project = "example/example01/";
-		return new TargetProject( //
-				Arrays.asList( //
-						new SourceFile(project + "src/jp/kusumotolab/BuggyCalculator.java"), //
-						new SourceFile(project + "src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-				Arrays.asList( //
-						new SourceFile(project + "src/BuggyCalculatorTest.java")), //
-				Arrays.asList( //
-						new ClassPath("lib/junit4/junit-4.12.jar"), //
-						new ClassPath("lib/junit4/hamcrest-core-1.3.jar")));
-	}
 }

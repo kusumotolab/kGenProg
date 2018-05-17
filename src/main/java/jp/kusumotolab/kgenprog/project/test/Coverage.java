@@ -33,6 +33,10 @@ public class Coverage implements Serializable {
 	final private FullyQualifiedName targetClassFQN;
 	final private List<Status> statuses;
 
+	public List<Status> getStatuses() {
+		return statuses;
+	}
+
 	/**
 	 * 
 	 * @param className
@@ -46,7 +50,8 @@ public class Coverage implements Serializable {
 	}
 
 	/**
-	 * ClassCoverageに格納されたCoverageをList<Status>に変換する． 実質enumの型変換やってるだけ．
+	 * ClassCoverageに格納されたCoverageをList<Status>に変換する．
+	 * 実質enumの型変換やってるだけ．
 	 * 
 	 * @param classCoverage
 	 * @return
