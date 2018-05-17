@@ -62,7 +62,7 @@ public class TestResults implements Serializable {
 	public double getSuccessRate() {
 		final int fail = getFailedTestResults().size();
 		final int success = getSuccessedTestResults().size();
-		return success / (success + fail);
+		return 1.0 * success / (success + fail);
 	}
 
 	public Map<Location, Integer> getExecutedFailedTestCounts() {

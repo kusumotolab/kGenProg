@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -20,47 +22,49 @@ public class TestExecutorTest {
 
 	@Test
 	public void exec01() throws Exception {
-		final String outdir = "example/example01/_bin/";
+		final String rootDir = "example/example01";
+		final String outDir = rootDir + "/_bin/";
 
-		final TargetProject targetProject = TargetProject.generate("example/example01");
-		new ProjectBuilder(targetProject).build(outdir);
+		final TargetProject targetProject = TargetProject.generate(rootDir);
+		new ProjectBuilder(targetProject).build(outDir);
 
-		TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./example/example01/_bin/") });
-		TestResults r = executor.exec( //
+		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
+		final TestResults r = executor.exec( //
 				Arrays.asList(new FullyQualifiedName("jp.kusumotolab.BuggyCalculator")), //
 				Arrays.asList(new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest")));
 
-		assertEquals(4, r.getTestResults().size());
-		assertEquals(new Double(1 / 4), new Double(r.getSuccessRate()));
+		assertThat(r.getTestResults().size(), is(4));
+		assertThat(r.getSuccessRate(), is(1.0 * 3 / 4));
 
-		assertFalse(r.getTestResults().get(0).wasFailed());
-		assertFalse(r.getTestResults().get(1).wasFailed());
-		assertTrue(r.getTestResults().get(2).wasFailed());
-		assertFalse(r.getTestResults().get(3).wasFailed());
+		assertThat(r.getTestResults().get(0).wasFailed(), is(false));
+		assertThat(r.getTestResults().get(1).wasFailed(), is(false));
+		assertThat(r.getTestResults().get(2).wasFailed(), is(true));
+		assertThat(r.getTestResults().get(3).wasFailed(), is(false));
 
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test01", r.getTestResults().get(0).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test02", r.getTestResults().get(1).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test03", r.getTestResults().get(2).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test04", r.getTestResults().get(3).getMethodName().value);
+		assertThat(r.getTestResults().get(0).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test01"));
+		assertThat(r.getTestResults().get(1).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test02"));
+		assertThat(r.getTestResults().get(2).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test03"));
+		assertThat(r.getTestResults().get(3).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test04"));
 
-		Coverage c = r.getTestResults().get(0).getCoverages().get(0);
-		executor = null;
+		// BuggyCalculatorTest.test01 実行によるカバレッジはこうなるはず
+		assertThat(r.getTestResults().get(0).getCoverages().get(0).getStatuses(), is(contains( //
+				EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+
+		// BuggyCalculatorTest.test04 によるカバレッジはこうなるはず
+		assertThat(r.getTestResults().get(3).getCoverages().get(0).getStatuses(), is(contains( //
+				EMPTY, EMPTY, COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, COVERED, EMPTY, COVERED)));
 	}
 
-	// TODO
-	// このテストは動作しない．
-	// 単体では正常に動作するが，ClassPathHackerによるクラスローダの問題で，クラスロードが2回行われてしまう．
-	// よって，exec01()の実行後では期待通りに動作しない．
-	// このテストは外部プロセスを起動するTestProcessBuilderTestから実行すること．
 	@Test
 	public void exec02() throws Exception {
-		final String outdir = "example/example02/_bin/";
-		// ClassPathHacker.addFile(outdir);
+		final String rootDir = "example/example02";
+		final String outDir = rootDir + "/_bin/";
 
-		final TargetProject targetProject = TargetProject.generate("example/example02");
-		new ProjectBuilder(targetProject).build(outdir);
+		final TargetProject targetProject = TargetProject.generate(rootDir);
+		new ProjectBuilder(targetProject).build(outDir);
 
-		TestResults r = new TestExecutor(new URL[] { new URL("file:./example/example02/_bin/") }).exec( //
+		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
+		final TestResults r = executor.exec( //
 				Arrays.asList( //
 						new FullyQualifiedName("jp.kusumotolab.BuggyCalculator"), //
 						new FullyQualifiedName("jp.kusumotolab.Util")), //
@@ -68,18 +72,21 @@ public class TestExecutorTest {
 						new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest"),
 						new FullyQualifiedName("jp.kusumotolab.UtilTest")));
 
-		assertEquals(10, r.getTestResults().size());
-		assertEquals(new Double(1 / 10), new Double(r.getSuccessRate()));
+		assertThat(r.getTestResults().size(), is(10));
+		assertThat(r.getSuccessRate(), is(1.0 * 9 / 10));
 
-		assertFalse(r.getTestResults().get(0).wasFailed());
-		assertFalse(r.getTestResults().get(1).wasFailed());
-		assertTrue(r.getTestResults().get(2).wasFailed());
-		assertFalse(r.getTestResults().get(3).wasFailed());
+		assertThat(r.getTestResults().get(0).wasFailed(), is(false));
+		assertThat(r.getTestResults().get(1).wasFailed(), is(false));
+		assertThat(r.getTestResults().get(2).wasFailed(), is(true));
+		assertThat(r.getTestResults().get(3).wasFailed(), is(false));
 
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test01", r.getTestResults().get(0).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test02", r.getTestResults().get(1).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test03", r.getTestResults().get(2).getMethodName().value);
-		assertEquals("jp.kusumotolab.BuggyCalculatorTest.test04", r.getTestResults().get(3).getMethodName().value);
+		assertThat(r.getTestResults().get(0).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test01"));
+		assertThat(r.getTestResults().get(1).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test02"));
+		assertThat(r.getTestResults().get(2).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test03"));
+		assertThat(r.getTestResults().get(3).getMethodName().value, is("jp.kusumotolab.BuggyCalculatorTest.test04"));
+
+		assertThat(r.getTestResults().get(8).getMethodName().value, is("jp.kusumotolab.UtilTest.plusTest01"));
+		assertThat(r.getTestResults().get(9).getMethodName().value, is("jp.kusumotolab.UtilTest.plusTest02"));
 
 		Coverage c = r.getTestResults().get(0).getCoverages().get(0);
 		// assertEquals(c.)
