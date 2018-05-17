@@ -2,11 +2,14 @@ package jp.kusumotolab.kgenprog.project;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 
@@ -15,21 +18,26 @@ import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.SimpleGene;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class TargetProject {
-	private final String basePath;
+	private final Path rootPath;
+	private final List<Path> sourcePaths;
 	private final List<SourceFile> sourceFiles;
 	private final List<SourceFile> testFiles;
 	private final List<ClassPath> classPaths;
 
 	// stub for compatibility
-	public TargetProject(List<SourceFile> sourceFiles, List<SourceFile> testFiles, List<ClassPath> classPaths) {
-		this("", sourceFiles, testFiles, classPaths);
+	@Deprecated
+	public TargetProject(final List<SourceFile> sourceFiles, final List<SourceFile> testFiles,
+			final List<ClassPath> classPaths) {
+		this(Paths.get(""), new ArrayList<>(), sourceFiles, testFiles, classPaths);
 	}
 
-	public TargetProject(String basePath, List<SourceFile> sourceFiles, List<SourceFile> testFiles,
-			List<ClassPath> classPaths) {
-		this.basePath = basePath;
+	public TargetProject(final Path rootPath, final List<Path> sourcePaths, final List<SourceFile> sourceFiles,
+			final List<SourceFile> testFiles, List<ClassPath> classPaths) {
+		this.rootPath = rootPath;
+		this.sourcePaths = sourcePaths;
 		this.sourceFiles = sourceFiles;
 		this.testFiles = testFiles;
 		this.classPaths = classPaths;
@@ -55,10 +63,36 @@ public class TargetProject {
 		return new Variant(gene, fitness, generatedSourceCode);
 	}
 
+	public List<FullyQualifiedName> getSourceFQNs() {
+		return this.sourceFiles.stream() //
+				.map(s -> Paths.get(s.path)) //
+				.map(p -> rootPath.resolve(sourcePaths.get(0)).relativize(p)) //
+				.map(p -> new FullyQualifiedName(p)) //
+				.collect(Collectors.toList());
+	}
+
+	public List<FullyQualifiedName> getTestFQNs() {
+		return this.testFiles.stream() //
+				.map(s -> Paths.get(s.path)) //
+				.map(p -> rootPath.resolve(sourcePaths.get(0)).relativize(p)) //
+				.map(p -> new FullyQualifiedName(p)) //
+				.collect(Collectors.toList());
+	}
+
 	// hitori
 	private List<GeneratedAST> constructAST() {
 		// TODO: ここにDIする方法を検討
 		return new JDTASTConstruction().constructAST(this);
+	}
+
+	/**
+	 * @see TargetProject#generate(Path)
+	 * 
+	 * @param basePath
+	 * @return
+	 */
+	public static TargetProject generate(final String basePath) {
+		return generate(Paths.get(basePath));
 	}
 
 	/**
@@ -70,23 +104,24 @@ public class TargetProject {
 	 * @return
 	 * @throws IOException
 	 */
-	public static TargetProject generate(String basePath) {
+	public static TargetProject generate(final Path basePath) {
 		final List<SourceFile> sourceFiles = new ArrayList<>();
 		final List<SourceFile> testFiles = new ArrayList<>();
 
 		final String[] extension = { "java" };
-		final Collection<File> files = FileUtils.listFiles(new File(basePath), extension, true);
+		final Collection<File> files = FileUtils.listFiles(basePath.toFile(), extension, true);
 		for (File file : files) {
 			if (file.getName().endsWith("Test.java")) {
 				testFiles.add(new SourceFile(file.getPath()));
-			} else {
-				sourceFiles.add(new SourceFile(file.getPath()));
 			}
+			sourceFiles.add(new SourceFile(file.getPath()));
 		}
 
 		final List<ClassPath> classPath = Arrays.asList( //
 				new ClassPath("lib/junit4/junit-4.12.jar"), //
 				new ClassPath("lib/junit4/hamcrest-core-1.3.jar"));
-		return new TargetProject(basePath, sourceFiles, testFiles, classPath);
+
+		final List<Path> sourcePaths = Arrays.asList(Paths.get("src"));
+		return new TargetProject(basePath, sourcePaths, sourceFiles, testFiles, classPath);
 	}
 }
