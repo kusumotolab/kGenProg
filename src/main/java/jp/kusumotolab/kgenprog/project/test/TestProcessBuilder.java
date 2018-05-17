@@ -51,16 +51,9 @@ public class TestProcessBuilder {
 				this.targetProject.getSourceFQNs(), //
 				this.targetProject.getTestFQNs());
 
-		//final String sourceFiles = this.targetProject.getSourceFQNs().stream().map(f -> f.value)
-		//		.collect(Collectors.joining(TestExecutorMain.SEPARATOR));
 		final String sourceFiles = c.stream().map(f -> f.value).collect(Collectors.joining(TestExecutorMain.SEPARATOR));
 		final String testFiles = this.targetProject.getTestFQNs().stream().map(f -> f.value)
 				.collect(Collectors.joining(TestExecutorMain.SEPARATOR));
-
-		System.out.println("> " + this.targetProject.getSourceFQNs());
-		System.out.println("> " + this.targetProject.getTestFQNs());
-		System.out.println("> " + c);
-		System.out.println("> " + testFiles);
 
 		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-s", sourceFiles,
 				testFiles);
