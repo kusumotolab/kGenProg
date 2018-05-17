@@ -13,6 +13,8 @@ import java.net.URLClassLoader;
  * 
  * @see https://stackoverflow.com/a/1011126
  */
+
+@Deprecated
 public class ClassPathHacker {
 
 	private static final Class<?>[] parameters = new Class[] { URL.class };
