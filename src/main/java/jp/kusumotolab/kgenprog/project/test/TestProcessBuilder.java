@@ -46,6 +46,7 @@ public class TestProcessBuilder {
 		final String classpath = filterClasspathFromSystemClasspath();
 		final String main = "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
+		@SuppressWarnings("unchecked")
 		final Collection<FullyQualifiedName> c = CollectionUtils.subtract( //
 				this.targetProject.getSourceFQNs(), //
 				this.targetProject.getTestFQNs());
