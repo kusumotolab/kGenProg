@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public final class TestExecutorMain {
 			return;
 		}
 
-		final TestExecutor executor = new TestExecutor(null);
+		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./example/example01/_bin/") }); // TODO
 
 		final TestResults testResults = executor.exec(createFQNs(main.sourceClass), createFQNs(main.testClass));
 		TestResults.serialize(testResults);
