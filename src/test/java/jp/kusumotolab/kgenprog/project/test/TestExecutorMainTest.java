@@ -21,7 +21,7 @@ public class TestExecutorMainTest {
 	@Before
 	public void before() throws IOException {
 		final String outdir = "example/example01/_bin/";
-		ClassPathHacker.addFile(outdir);
+		// ClassPathHacker.addFile(outdir);
 		new ProjectBuilder(createTargetProjectFromExample01()).build(outdir);
 		new File(TestResults.getSerFilename()).delete();
 	}
@@ -32,9 +32,9 @@ public class TestExecutorMainTest {
 				"-s", //
 				"jp.kusumotolab.BuggyCalculator", //
 				"jp.kusumotolab.BuggyCalculatorTest" });
-		
+
 		assertTrue(new File(TestResults.getSerFilename()).exists());
-		
+
 		final TestResults r = TestResults.deserialize();
 
 		assertEquals(4, r.getTestResults().size());

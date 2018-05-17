@@ -1,8 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,25 +9,22 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestExecutorTest {
 
 	@Before
 	public void before() throws IOException {
-		System.gc();
-		System.out.println(ClassLoader.getSystemClassLoader());
 	}
 
 	@Test
 	public void exec01() throws Exception {
 		final String outdir = "example/example01/_bin/";
-		// ClassPathHacker.addFile(outdir);
 
-		new ProjectBuilder(createTargetProjectFromExample01()).build(outdir);
+		final TargetProject targetProject = TargetProject.generate("example/example01");
+		new ProjectBuilder(targetProject).build(outdir);
+
 		TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./example/example01/_bin/") });
 		TestResults r = executor.exec( //
 				Arrays.asList(new FullyQualifiedName("jp.kusumotolab.BuggyCalculator")), //
@@ -62,7 +57,8 @@ public class TestExecutorTest {
 		final String outdir = "example/example02/_bin/";
 		// ClassPathHacker.addFile(outdir);
 
-		new ProjectBuilder(createTargetProjectFromExample02()).build(outdir);
+		final TargetProject targetProject = TargetProject.generate("example/example02");
+		new ProjectBuilder(targetProject).build(outdir);
 
 		TestResults r = new TestExecutor(new URL[] { new URL("file:./example/example02/_bin/") }).exec( //
 				Arrays.asList( //
@@ -89,32 +85,4 @@ public class TestExecutorTest {
 		// assertEquals(c.)
 	}
 
-	private TargetProject createTargetProjectFromExample01() {
-		String project = "example/example01/";
-		return new TargetProject( //
-				Arrays.asList( //
-						new SourceFile(project + "src/jp/kusumotolab/BuggyCalculator.java"), //
-						new SourceFile(project + "src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-				Arrays.asList( //
-						new SourceFile(project + "src/BuggyCalculatorTest.java")), //
-				Arrays.asList( //
-						new ClassPath("lib/junit4/junit-4.12.jar"), //
-						new ClassPath("lib/junit4/hamcrest-core-1.3.jar")));
-	}
-
-	private TargetProject createTargetProjectFromExample02() {
-		String project = "example/example02/";
-		return new TargetProject( //
-				Arrays.asList( //
-						new SourceFile(project + "src/jp/kusumotolab/BuggyCalculator.java"), //
-						new SourceFile(project + "src/jp/kusumotolab/Util.java"), //
-						new SourceFile(project + "src/jp/kusumotolab/BuggyCalculatorTest.java"),
-						new SourceFile(project + "src/jp/kusumotolab/UtilTest.java")), //
-				Arrays.asList( //
-						new SourceFile(project + "src/jp/kusumotolab/BuggyCalculatorTest.java"),
-						new SourceFile(project + "src/jp/kusumotolab/UtilTest.java")), //
-				Arrays.asList( //
-						new ClassPath("lib/junit4/junit-4.12.jar"), //
-						new ClassPath("lib/junit4/hamcrest-core-1.3.jar")));
-	}
 }

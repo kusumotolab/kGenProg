@@ -72,7 +72,7 @@ class TestExecutor {
 	}
 
 	/**
-	 * jacoco計測のためのクラス書き換えを行い，その書き換え結果をクラスロードする．
+	 * jacoco計測のためのクラス書き換えを行い，その書き換えたバイト配列をクラスロードする．
 	 * 
 	 * @param fqns 書き換え対象（計測対象）クラスのFQNs
 	 * @return 書き換えたクラスオブジェクトs
@@ -81,25 +81,27 @@ class TestExecutor {
 	private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns) throws Exception {
 		final List<Class<?>> loadedClasses = new ArrayList<>();
 		for (final FullyQualifiedName fqn : fqns) {
-			final byte[] instrumentedData = instrument(fqn);
+			final byte[] instrumentedData = getInstrumentedClassBinary(fqn);
 			loadedClasses.add(loadClass(fqn, instrumentedData));
 		}
 		return loadedClasses;
 	}
 
 	/**
-	 * jacoco計測のためのクラス書き換えを行う．
+	 * jacoco計測のためのクラス書き換えを行ったバイト配列を返す．
+	 * クラスローダーに対する作用はなし．
 	 * 
 	 * @param fqn 書き換え対象（計測対象）クラスのFQNs
 	 * @return 書き換えたクラスオブジェクトのバイナリ
 	 * @throws Exception
 	 */
-	private byte[] instrument(final FullyQualifiedName fqn) throws Exception {
-		return this.jacocoInstrumenter.instrument(getTargetClassInputStream(fqn), "");
+	private byte[] getInstrumentedClassBinary(final FullyQualifiedName fqn) throws Exception {
+		final InputStream inputStream = getClassFileInputStream(fqn);
+		return this.jacocoInstrumenter.instrument(inputStream, "");
 	}
 
 	/**
-	 * MemoryClassLoaderを使ったクラスのロード．
+	 * MemoryClassLoaderを使ったクラスロード．
 	 * 
 	 * @param fqn
 	 * @param bytes
@@ -112,16 +114,14 @@ class TestExecutor {
 	}
 
 	/**
-	 * classファイルのInputStreamを取り出す．
+	 * ファイルシステムから.classファイルへのInputStreamを取り出す．
 	 * 
 	 * @param fqn 読み込み対象のFQN
 	 * @return
 	 */
-	private InputStream getTargetClassInputStream(final FullyQualifiedName fqn) {
+	private InputStream getClassFileInputStream(final FullyQualifiedName fqn) {
 		final String resource = fqn.value.replace('.', '/') + ".class";
-
-		InputStream is = memoryClassLoader.getResourceAsStream(resource);
-		return is;
+		return memoryClassLoader.getResourceAsStream(resource);
 	}
 
 	/**
@@ -227,7 +227,7 @@ class TestExecutor {
 
 			final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
 			for (final FullyQualifiedName measuredClass : measuredClasses) {
-				analyzer.analyzeClass(getTargetClassInputStream(measuredClass), measuredClass.value);
+				analyzer.analyzeClass(getClassFileInputStream(measuredClass), measuredClass.value);
 			}
 		}
 
