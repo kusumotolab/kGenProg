@@ -4,24 +4,30 @@ import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestProcessBuilderTest {
 
 	@Before
 	public void before() throws IOException {
-		new File(TestResults.getSerFilename()).delete();
+		Files.delete(TestResults.getSerFilePath());
 	}
 
 	@Test
 	public void exec01() {
-		final TargetProject targetProject = TargetProject.generate("example/example01");
+		final String rootDir = "example/example01";
+		final String outDir = rootDir + "/_bin/";
+
+		final TargetProject targetProject = TargetProject.generate(rootDir);
+		new ProjectBuilder(targetProject).build(outDir);
+
 		final TestProcessBuilder builder = new TestProcessBuilder(targetProject);
 		builder.start();
 

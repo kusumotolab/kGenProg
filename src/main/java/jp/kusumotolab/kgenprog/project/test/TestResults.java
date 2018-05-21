@@ -1,12 +1,13 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -86,13 +87,14 @@ public class TestResults implements Serializable {
 	 * result, null)); }
 	 */
 
-	public static String getSerFilename() {
-		return "tmp/__testresults.ser";
+	public static Path getSerFilePath() throws IOException {
+		return Paths.get(System.getProperty("java.io.tmpdir") + "/kgenprog-testresults.ser");
 	}
 
 	public static void serialize(TestResults testResults) {
 		try {
-			final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(getSerFilename()));
+
+			final ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(getSerFilePath()));
 			out.writeObject(testResults);
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -107,7 +109,7 @@ public class TestResults implements Serializable {
 	public static TestResults deserialize() {
 		ObjectInputStream in;
 		try {
-			in = new ObjectInputStream(new FileInputStream(getSerFilename()));
+			in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
 			final TestResults testResults = (TestResults) in.readObject();
 			in.close();
 			return testResults;
