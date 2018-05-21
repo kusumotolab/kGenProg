@@ -3,7 +3,9 @@ package jp.kusumotolab.kgenprog.project.test;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 
@@ -13,39 +15,37 @@ public class Coverage implements Serializable {
 
 	public enum Status {
 		/**
-		 * Status flag for no items (value is 0x00).
+		 * 実行不可能な行 (value is 0x00).
 		 */
 		EMPTY,
 		/**
-		 * Status flag when all items are not covered (value is 0x01).
+		 * 実行可能だが実行されなかった行 (value is 0x01).
 		 */
 		NOT_COVERED,
 		/**
-		 * Status flag when all items are covered (value is 0x02).
+		 * 実行可能で実行された行 (value is 0x02).
 		 */
 		COVERED,
 		/**
-		 * Status flag when items are partly covered (value is 0x03). どういう時に起きるか不明．
+		 * 実行可能で一部だけ実行された行(value is 0x03). 
+		 * TODO 現在このステータスは一切利用していない．
+		 * jacocoはif分岐等にこの値をセットするが，本Statusではif分岐はCOVEREDに持ち上げ．
 		 */
 		PARTLY_COVERED
 	}
 
-	final private FullyQualifiedName targetClassFQN;
-	final private List<Status> statuses;
-
-	public List<Status> getStatuses() {
-		return statuses;
-	}
+	final public FullyQualifiedName executedTargetFQN;
+	final public List<Status> statuses;
 
 	/**
+	 * constructor．
+	 * jacocoで生成したIClassCoverageから生成．
 	 * 
-	 * @param className
-	 *            Coverage計測対象のクラス名
-	 * @param statuses
-	 *            Coverage計測の結果
+	 * @param className Coverage計測対象のクラス名
+	 * @param statuses Coverage計測の結果
 	 */
 	public Coverage(IClassCoverage classCoverage) {
-		this.targetClassFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
+		this.executedTargetFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
 		this.statuses = convertClassCoverage(classCoverage);
 	}
 
@@ -76,19 +76,19 @@ public class Coverage implements Serializable {
 		return statuses;
 	}
 
+	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer();
-		final String separator = " ";
-		sb.append(targetClassFQN + "\n");
-		for (int i = 0; i < statuses.size(); i++) {
-			sb.append(String.format("%2d", i + 1));
-			sb.append(separator);
-		}
-		sb.append("\n");
-		for (Status status : statuses) {
-			sb.append(String.format("%2d", status.ordinal()));
-			sb.append(separator);
-		}
+		return toString(0);
+	}
+
+	public String toString(int indentDepth) {
+		final StringBuilder sb = new StringBuilder();
+		final String indent = StringUtils.repeat(" ", indentDepth);
+		sb.append(indent + "  {");
+		sb.append("\"executedTargetFqn\": \"" + executedTargetFQN + "\", ");
+		sb.append("\"coverages\": [");
+		sb.append(statuses.stream().map(Enum::ordinal).map(String::valueOf).collect(Collectors.joining(", ")));
+		sb.append("]}");
 		return sb.toString();
 	}
 }

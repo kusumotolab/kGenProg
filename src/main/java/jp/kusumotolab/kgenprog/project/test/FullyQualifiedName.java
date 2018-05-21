@@ -32,6 +32,11 @@ public class FullyQualifiedName implements Serializable {
 	}
 
 	@Override
+	public int hashCode() {
+		return this.value.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return this.value;
 	}
