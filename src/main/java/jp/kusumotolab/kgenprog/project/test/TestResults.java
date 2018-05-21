@@ -9,8 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import jp.kusumotolab.kgenprog.project.Location;
@@ -19,40 +21,61 @@ public class TestResults implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final List<TestResult> testResults;
+	private final Map<FullyQualifiedName, TestResult> value;
 
 	public TestResults() {
-		testResults = new ArrayList<>();
+		value = new HashMap<>();
 	}
 
 	public void add(final TestResult testResult) {
-		this.testResults.add(testResult);
+		this.value.put(testResult.executedTestFQN, testResult);
 	}
 
-	public void addAll(TestResults testResults) {
-		this.testResults.addAll(testResults.getTestResults());
+	public void addAll(final TestResults testResults) {
+		testResults.value.forEach(this.value::putIfAbsent);
 	}
 
 	/**
-	 * 失敗したテスト結果の一覧を取得．
-	 * 
+	 * 失敗したテストのFQN一覧を取得．
 	 * @return 失敗したテスト結果s
 	 */
 	public List<TestResult> getFailedTestResults() {
-		return this.testResults.stream().filter(r -> r.wasFailed()).collect(Collectors.toList());
+		return this.value.values().stream().filter(r -> r.failed).collect(Collectors.toList());
 	}
 
-	// is necessary?
+	/**
+	 * 成功したテストのFQN一覧を取得．
+	 * @return 成功したテスト結果s
+	 */
 	public List<TestResult> getSuccessedTestResults() {
-		return this.testResults.stream().filter(r -> !r.wasFailed()).collect(Collectors.toList());
+		return this.value.values().stream().filter(r -> !r.failed).collect(Collectors.toList());
 	}
 
+	/**
+	 * obsoleted
+	 * @return
+	 */
+	@Deprecated
 	public List<TestResult> getTestResults() {
-		return testResults;
+		return value.values().stream().collect(Collectors.toList());
 	}
 
-	public List<FullyQualifiedName> getFailedTestNames() {
-		return getFailedTestResults().stream().map(r -> r.getMethodName()).collect(Collectors.toList());
+	/**
+	 * 実行されたテストメソッドのFQN一覧を返す．
+	 * @return
+	 */
+	public Set<FullyQualifiedName> getExecutedTestFQNs() {
+		return this.value.keySet();
+	}
+
+	/**
+	 * 実行された単一テストメソッドの結果を返す．
+	 * @param fqn 対象のテストメソッドFQN
+	 * @return
+	 */
+	public TestResult getTestResult(final FullyQualifiedName fqn) {
+		//TODO if null 
+		return this.value.get(fqn);
 	}
 
 	/**
@@ -66,18 +89,88 @@ public class TestResults implements Serializable {
 		return 1.0 * success / (success + fail);
 	}
 
+	/**
+	 * FLで用いる4メトリクスのParameterized-Method
+	 * 
+	 * @param targetFqn 計算対象クラスのFQN
+	 * @param lineNumber 計算対象クラスの行番号
+	 * @param status 実行されたか否か
+	 * @param failed テストの成否
+	 * @return
+	 */
+	private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFqn, final int lineNumber,
+			final Coverage.Status status, final boolean failed) {
+		final List<FullyQualifiedName> result = new ArrayList<>();
+		for (final TestResult testResult : this.value.values()) {
+			final Coverage coverage = testResult.getCoverages(targetFqn);
+			final Coverage.Status _status = coverage.getStatuses().get(lineNumber - 1);
+			if (status == _status && failed == testResult.failed) {
+				result.add(testResult.executedTestFQN);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * a_ef
+	 * @param targetFqn ターゲットクラスのFQN
+	 * @param lineNumber ターゲットクラスの行番号
+	 * @return a_ef
+	 */
+	public List<FullyQualifiedName> getFailedTestFQNsExecutingTheStatement(final FullyQualifiedName targetFqn,
+			final int lineNumber) {
+		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.COVERED, true);
+	}
+
+	/**
+	 * a_ep
+	 * @param targetFqn ターゲットクラスのFQN
+	 * @param lineNumber ターゲットクラスの行番号
+	 * @return
+	 */
+	public List<FullyQualifiedName> getPassedTestFQNsExecutingTheStatement(final FullyQualifiedName targetFqn,
+			final int lineNumber) {
+		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.COVERED, false);
+	}
+
+	/**
+	 * a_nf
+	 * @param targetFqn ターゲットクラスのFQN
+	 * @param lineNumber ターゲットクラスの行番号
+	 * @return
+	 */
+	public List<FullyQualifiedName> getFailedTestFQNsNotExecutingTheStatement(final FullyQualifiedName targetFqn,
+			final int lineNumber) {
+		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.NOT_COVERED, true);
+	}
+
+	/**
+	 * a_np
+	 * @param targetFqn ターゲットクラスのFQN
+	 * @param lineNumber ターゲットクラスの行番号
+	 * @return
+	 */
+	public List<FullyQualifiedName> getPassedTestFQNsNotExecutingTheStatement(final FullyQualifiedName targetFqn,
+			final int lineNumber) {
+		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.NOT_COVERED, false);
+	}
+
+	@Deprecated
 	public Map<Location, Integer> getExecutedFailedTestCounts() {
 		return null;
 	}
 
+	@Deprecated
 	public Map<Location, Integer> getNotExecutedFailedTestCounts() {
 		return null;
 	}
 
+	@Deprecated
 	public Map<Location, Integer> getExecutedPassedTestCounts() {
 		return null;
 	}
 
+	@Deprecated
 	public Map<Location, Integer> getNotExecutedPassedTestCounts() {
 		return null;
 	}
@@ -108,9 +201,8 @@ public class TestResults implements Serializable {
 	}
 
 	public static TestResults deserialize() {
-		ObjectInputStream in;
 		try {
-			in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
+			ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
 			final TestResults testResults = (TestResults) in.readObject();
 			in.close();
 			return testResults;
@@ -124,4 +216,14 @@ public class TestResults implements Serializable {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("[\n");
+		sb.append(String.join(",\n", //
+				this.value.values().stream().map(v -> v.toString(2)).collect(Collectors.toList())));
+		sb.append("\n");
+		sb.append("]\n");
+		return sb.toString();
+	}
 }
