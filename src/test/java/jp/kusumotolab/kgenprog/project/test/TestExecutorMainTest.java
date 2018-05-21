@@ -4,8 +4,8 @@ import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class TestExecutorMainTest {
 
 	@Before
 	public void before() throws IOException {
-		new File(TestResults.getSerFilename()).delete();
+		Files.delete(TestResults.getSerFilePath());
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class TestExecutorMainTest {
 				"jp.kusumotolab.BuggyCalculator", //
 				"jp.kusumotolab.BuggyCalculatorTest" });
 
-		assertTrue(new File(TestResults.getSerFilename()).exists());
+		assertTrue(Files.exists(TestResults.getSerFilePath()));
 
 		final TestResults r = TestResults.deserialize();
 
