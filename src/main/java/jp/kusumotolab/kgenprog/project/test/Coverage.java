@@ -3,7 +3,9 @@ package jp.kusumotolab.kgenprog.project.test;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 
@@ -30,7 +32,7 @@ public class Coverage implements Serializable {
 		PARTLY_COVERED
 	}
 
-	final private FullyQualifiedName targetClassFQN;
+	final public FullyQualifiedName executedTargetFQN;
 	final private List<Status> statuses;
 
 	public List<Status> getStatuses() {
@@ -45,7 +47,7 @@ public class Coverage implements Serializable {
 	 *            Coverage計測の結果
 	 */
 	public Coverage(IClassCoverage classCoverage) {
-		this.targetClassFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
+		this.executedTargetFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
 		this.statuses = convertClassCoverage(classCoverage);
 	}
 
@@ -76,19 +78,19 @@ public class Coverage implements Serializable {
 		return statuses;
 	}
 
+	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer();
-		final String separator = " ";
-		sb.append(targetClassFQN + "\n");
-		for (int i = 0; i < statuses.size(); i++) {
-			sb.append(String.format("%2d", i + 1));
-			sb.append(separator);
-		}
-		sb.append("\n");
-		for (Status status : statuses) {
-			sb.append(String.format("%2d", status.ordinal()));
-			sb.append(separator);
-		}
+		return toString(0);
+	}
+
+	public String toString(int indentDepth) {
+		final StringBuilder sb = new StringBuilder();
+		final String indent = StringUtils.repeat(" ", indentDepth);
+		sb.append(indent + "  {");
+		sb.append("\"executedTargetFqn\": \"" + executedTargetFQN + "\", ");
+		sb.append("\"coverages\": [");
+		sb.append(statuses.stream().map(Enum::ordinal).map(String::valueOf).collect(Collectors.joining(", ")));
+		sb.append("]}");
 		return sb.toString();
 	}
 }
