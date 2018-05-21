@@ -93,9 +93,7 @@ public class TestResults implements Serializable {
 
 	public static void serialize(TestResults testResults) {
 		try {
-			if (Files.exists(getSerFilePath())) {
-				Files.delete(TestResults.getSerFilePath());
-			}
+			Files.deleteIfExists(TestResults.getSerFilePath());
 			Files.createFile(getSerFilePath());
 			final ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(getSerFilePath()));
 			out.writeObject(testResults);
