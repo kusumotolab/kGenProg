@@ -24,4 +24,10 @@ public class BuggyCalculatorTest {
 	public void test04() {
 		assertEquals(-9, new BuggyCalculator().close_to_zero(-10));
 	}
+
+	@Test
+	public void test05() {
+		assertEquals(-9, new BuggyCalculator().close_to_zero(-10));
+		assertEquals(9, new BuggyCalculator().close_to_zero(10));
+	}
 }

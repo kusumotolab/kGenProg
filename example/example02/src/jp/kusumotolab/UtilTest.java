@@ -25,7 +25,7 @@ public class UtilTest {
 	public void minusTest02() {
 		assertEquals(-1, Util.minus(0));
 	}
-	
+
 	@Test
 	public void dummyTest01() {
 		Util.dummy();
