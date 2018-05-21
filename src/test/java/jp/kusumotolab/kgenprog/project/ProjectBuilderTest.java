@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 
@@ -15,10 +15,6 @@ public class ProjectBuilderTest {
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example01" + separator + "bin";
 
-		final File outputDirectoryFile = new File(outDirPath);
-		if (!outputDirectoryFile.exists()) {
-			outputDirectoryFile.mkdirs();
-		}
 		final boolean success = projectBuilder.build(outDirPath);
 
 		assertTrue(success);
@@ -31,10 +27,6 @@ public class ProjectBuilderTest {
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example02" + separator + "bin";
 
-		final File outputDirectoryFile = new File(outDirPath);
-		if (!outputDirectoryFile.exists()) {
-			outputDirectoryFile.mkdirs();
-		}
 		final boolean success = projectBuilder.build(outDirPath);
 
 		assertTrue(success);
