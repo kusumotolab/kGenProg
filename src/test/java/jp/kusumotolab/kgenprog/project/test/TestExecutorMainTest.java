@@ -25,7 +25,7 @@ public class TestExecutorMainTest {
 
 	@Before
 	public void before() throws IOException {
-		Files.delete(TestResults.getSerFilePath());
+		TestResults.getSerFilePath().toFile().delete();
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public class TestExecutorMainTest {
 		assertThat(r.getTestResult(test01).getExecutedTargetFQNs(), is(containsInAnyOrder(buggyCalculator)));
 
 		// test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
-		assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).getStatuses(), //
+		assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, //
 				is(contains(EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED)));
 
 	}

@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,7 @@ public class TestProcessBuilderTest {
 
 	@Before
 	public void before() throws IOException {
-		Files.deleteIfExists(TestResults.getSerFilePath());
+		TestResults.getSerFilePath().toFile().delete();
 	}
 
 	@Test
@@ -48,11 +47,11 @@ public class TestProcessBuilderTest {
 		assertThat(r.getTestResult(test04).failed, is(false));
 
 		// BuggyCalculatorTest.test01 実行によるbuggyCalculatorのカバレッジはこうなるはず
-		assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).getStatuses(), is(contains( //
+		assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, is(contains( //
 				EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED)));
 
 		// BuggyCalculatorTest.test04 実行によるカbuggyCalculatorのバレッジはこうなるはず
-		assertThat(r.getTestResult(test04).getCoverages(buggyCalculator).getStatuses(), is(contains( //
+		assertThat(r.getTestResult(test04).getCoverages(buggyCalculator).statuses, is(contains( //
 				EMPTY, EMPTY, COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, COVERED, EMPTY, COVERED)));
 	}
 
