@@ -5,8 +5,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -241,8 +242,12 @@ class TestExecutor {
 				final Description description) {
 			final FullyQualifiedName testMethodFQN = getTestMethodName(description);
 			final boolean isFailed = isFailed(description);
-			List<Coverage> coverages = coverageBuilder.getClasses().stream().map(c -> new Coverage(c))
-					.collect(Collectors.toList());
+
+			final Map<FullyQualifiedName, Coverage> coverages = new HashMap<>();
+			coverageBuilder.getClasses().stream().forEach(c -> {
+				final Coverage cc = new Coverage(c);
+				coverages.put(cc.executedTargetFQN, cc);
+			});
 
 			final TestResult testResult = new TestResult(testMethodFQN, isFailed, coverages);
 			testResults.add(testResult);

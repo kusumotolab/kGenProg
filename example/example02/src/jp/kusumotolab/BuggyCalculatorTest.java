@@ -1,6 +1,6 @@
 package jp.kusumotolab;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -23,11 +23,5 @@ public class BuggyCalculatorTest {
 	@Test
 	public void test04() {
 		assertEquals(-9, new BuggyCalculator().close_to_zero(-10));
-	}
-
-	@Test
-	public void test05() {
-		assertEquals(-9, new BuggyCalculator().close_to_zero(-10));
-		assertEquals(9, new BuggyCalculator().close_to_zero(10));
 	}
 }

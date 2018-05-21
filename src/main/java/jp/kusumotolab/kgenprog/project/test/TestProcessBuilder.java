@@ -61,12 +61,13 @@ public class TestProcessBuilder {
 		try {
 			final Process process = builder.start();
 			process.waitFor();
-
+			/*
 			String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
 			String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
 			System.out.println(out_result);
 			System.err.println(err_result);
 			System.out.println(process.exitValue());
+			*/
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
