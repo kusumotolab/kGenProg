@@ -17,9 +17,7 @@ public class TestProcessBuilderTest {
 
 	@Before
 	public void before() throws IOException {
-		if (Files.exists(TestResults.getSerFilePath())) {
-			Files.delete(TestResults.getSerFilePath());
-		}
+		Files.deleteIfExists(TestResults.getSerFilePath());
 	}
 
 	@Test
