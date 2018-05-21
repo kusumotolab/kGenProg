@@ -53,6 +53,12 @@ public class ProjectBuilder {
 
 		final Iterable<? extends JavaFileObject> javaFileObjects;
 
+		// outディレクトリが存在しなければ生成
+		final File outputDirectoryFile = new File(outDir);
+		if (!outputDirectoryFile.exists()) {
+			outputDirectoryFile.mkdirs();
+		}
+
 		// variant が null なら，初期ソースコードをビルド
 		if (null == variant) {
 			javaFileObjects = fileManager.getJavaFileObjectsFromStrings(
