@@ -1,3 +1,4 @@
+package jp.kusumotolab;
 
 import static org.junit.Assert.assertEquals;
 

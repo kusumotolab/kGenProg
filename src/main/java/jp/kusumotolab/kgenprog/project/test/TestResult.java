@@ -1,19 +1,39 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import java.util.Map;
+import java.io.Serializable;
+import java.util.List;
 
-import jp.kusumotolab.kgenprog.project.Location;
+public class TestResult implements Serializable {
 
-public class TestResult {
-	private boolean isSuccess;
-	private Map<Location,Integer> executionCount;
-	private TestCase testCase;
-	private String message;
+	private static final long serialVersionUID = 1L;
 
-	public TestResult(boolean isSuccess, Map<Location, Integer> executionCount, TestCase testCase, String message) {
-		this.isSuccess = isSuccess;
-		this.executionCount = executionCount;
-		this.testCase = testCase;
-		this.message = message;
+	private FullyQualifiedName methodName;
+	private boolean failed;
+	private List<Coverage> coverages;
+
+	/**
+	 * constructor
+	 * 
+	 * @param methodName 実行したテストメソッドの名前
+	 * @param failed テストの結果
+	 * @param coverages テスト対象それぞれの行ごとのCoverage計測結果
+	 */
+	public TestResult(FullyQualifiedName methodName, boolean failed, List<Coverage> coverages) {
+		this.methodName = methodName;
+		this.failed = failed;
+		this.coverages = coverages;
 	}
+
+	public boolean wasFailed() {
+		return failed;
+	}
+
+	public FullyQualifiedName getMethodName() {
+		return methodName;
+	}
+
+	public List<Coverage> getCoverages() {
+		return coverages;
+	}
+
 }
