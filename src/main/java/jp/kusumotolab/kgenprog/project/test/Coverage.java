@@ -15,36 +15,34 @@ public class Coverage implements Serializable {
 
 	public enum Status {
 		/**
-		 * Status flag for no items (value is 0x00).
+		 * 実行不可能な行 (value is 0x00).
 		 */
 		EMPTY,
 		/**
-		 * Status flag when all items are not covered (value is 0x01).
+		 * 実行可能だが実行されなかった行 (value is 0x01).
 		 */
 		NOT_COVERED,
 		/**
-		 * Status flag when all items are covered (value is 0x02).
+		 * 実行可能で実行された行 (value is 0x02).
 		 */
 		COVERED,
 		/**
-		 * Status flag when items are partly covered (value is 0x03). どういう時に起きるか不明．
+		 * 実行可能で一部だけ実行された行(value is 0x03). 
+		 * TODO 現在このステータスは一切利用していない．
+		 * jacocoはif分岐等にこの値をセットするが，本Statusではif分岐はCOVEREDに持ち上げ．
 		 */
 		PARTLY_COVERED
 	}
 
 	final public FullyQualifiedName executedTargetFQN;
-	final private List<Status> statuses;
-
-	public List<Status> getStatuses() {
-		return statuses;
-	}
+	final public List<Status> statuses;
 
 	/**
+	 * constructor．
+	 * jacocoで生成したIClassCoverageから生成．
 	 * 
-	 * @param className
-	 *            Coverage計測対象のクラス名
-	 * @param statuses
-	 *            Coverage計測の結果
+	 * @param className Coverage計測対象のクラス名
+	 * @param statuses Coverage計測の結果
 	 */
 	public Coverage(IClassCoverage classCoverage) {
 		this.executedTargetFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));

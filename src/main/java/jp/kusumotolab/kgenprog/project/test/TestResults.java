@@ -21,16 +21,26 @@ public class TestResults implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	// 直接valueへのアクセスを回避するために可視性を下げておく
 	private final Map<FullyQualifiedName, TestResult> value;
 
 	public TestResults() {
 		value = new HashMap<>();
 	}
 
+	/**
+	 * 新規TestResultの追加
+	 * @param testResult
+	 */
 	public void add(final TestResult testResult) {
 		this.value.put(testResult.executedTestFQN, testResult);
 	}
 
+	/**
+	 * 別のTestResultsをまとめて追加する
+	 * @param testResults
+	 */
+	@Deprecated
 	public void addAll(final TestResults testResults) {
 		testResults.value.forEach(this.value::putIfAbsent);
 	}
@@ -79,9 +89,8 @@ public class TestResults implements Serializable {
 	}
 
 	/**
-	 * テストの成功率
-	 * 
-	 * @return
+	 * テスト成功率を取得（全成功テストメソッド / 全実行テストメソッド）
+	 * @return テスト成功率
 	 */
 	public double getSuccessRate() {
 		final int fail = getFailedTestResults().size();
@@ -90,8 +99,7 @@ public class TestResults implements Serializable {
 	}
 
 	/**
-	 * FLで用いる4メトリクスのParameterized-Method
-	 * 
+	 * FLで用いる4メトリクスのprivateなParameterized-Method
 	 * @param targetFqn 計算対象クラスのFQN
 	 * @param lineNumber 計算対象クラスの行番号
 	 * @param status 実行されたか否か
@@ -103,7 +111,7 @@ public class TestResults implements Serializable {
 		final List<FullyQualifiedName> result = new ArrayList<>();
 		for (final TestResult testResult : this.value.values()) {
 			final Coverage coverage = testResult.getCoverages(targetFqn);
-			final Coverage.Status _status = coverage.getStatuses().get(lineNumber - 1);
+			final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
 			if (status == _status && failed == testResult.failed) {
 				result.add(testResult.executedTestFQN);
 			}
@@ -175,19 +183,24 @@ public class TestResults implements Serializable {
 		return null;
 	}
 
-	/*
-	 * public void add(final Result result) { testResults.add(new TestResult(null,
-	 * result, null)); }
+	/**
+	 * serialize()とdeserialize()で用いる.serファイルパス．
+	 * 注意：固定名で処理しているので，並列処理は不可能．
+	 * @return
 	 */
-
-	public static Path getSerFilePath() throws IOException {
+	public static Path getSerFilePath() {
 		return Paths.get(System.getProperty("java.io.tmpdir") + "/kgenprog-testresults.ser");
 	}
 
+	/**
+	 * ファイルシステム上の.serへのserializer．
+	 * 注意：固定名で処理しているので，並列処理は不可能．
+	 * @param testResults serialize対象のオブジェクト
+	 */
 	public static void serialize(TestResults testResults) {
 		try {
-			Files.deleteIfExists(TestResults.getSerFilePath());
-			Files.createFile(getSerFilePath());
+			getSerFilePath().toFile().delete();
+			getSerFilePath().toFile().createNewFile();
 			final ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(getSerFilePath()));
 			out.writeObject(testResults);
 			out.close();
@@ -200,9 +213,14 @@ public class TestResults implements Serializable {
 		}
 	}
 
+	/**
+	 * ファイルシステム上の.serからのdeserializer()
+	 * 注意：固定名で処理しているので，並列処理は不可能．
+	 * @return deserialize後のオブジェクト
+	 */
 	public static TestResults deserialize() {
 		try {
-			ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
+			final ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
 			final TestResults testResults = (TestResults) in.readObject();
 			in.close();
 			return testResults;
@@ -220,8 +238,8 @@ public class TestResults implements Serializable {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("[\n");
-		sb.append(String.join(",\n", //
-				this.value.values().stream().map(v -> v.toString(2)).collect(Collectors.toList())));
+		sb.append(
+				String.join(",\n", this.value.values().stream().map(v -> v.toString(2)).collect(Collectors.toList())));
 		sb.append("\n");
 		sb.append("]\n");
 		return sb.toString();
