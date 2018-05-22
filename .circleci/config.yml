@@ -54,3 +54,4 @@ jobs:
 
       - store_artifacts:
           path: ~/junit
+
