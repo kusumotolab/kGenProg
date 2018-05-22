@@ -33,8 +33,8 @@ public class TestResult implements Serializable {
 		return this.coverages.keySet().stream().collect(Collectors.toList());
 	}
 
-	public Coverage getCoverages(final FullyQualifiedName fqn) {
-		return this.coverages.get(fqn);
+	public Coverage getCoverages(final FullyQualifiedName testFQN) {
+		return this.coverages.get(testFQN);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class TestResult implements Serializable {
 		return toString(0);
 	}
 
-	public String toString(int indentDepth) {
+	public String toString(final int indentDepth) {
 		final StringBuilder sb = new StringBuilder();
 		final String indent = StringUtils.repeat(" ", indentDepth);
 		sb.append(indent + "{\n");
