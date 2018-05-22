@@ -46,7 +46,7 @@ public class TestResult implements Serializable {
 		final StringBuilder sb = new StringBuilder();
 		final String indent = StringUtils.repeat(" ", indentDepth);
 		sb.append(indent + "{\n");
-		sb.append(indent + "  \"executedTestFqn\": \"" + executedTestFQN + "\",\n");
+		sb.append(indent + "  \"executedTestFQN\": \"" + executedTestFQN + "\",\n");
 		sb.append(indent + "  \"wasFailed\": " + failed + ",\n");
 		sb.append(indent + "  \"coverages\": [\n");
 		sb.append(String.join(",\n",
