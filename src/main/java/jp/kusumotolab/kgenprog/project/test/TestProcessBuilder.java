@@ -2,6 +2,8 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -117,22 +119,33 @@ public class TestProcessBuilder {
 
 	private final String jarFileTail = "-(\\d+\\.)+jar$";
 
+	/**
+	 * 現在実行中のjavaプロセスのcpから，TestExecutorMain実行に必要なcpをフィルタリングする．
+	 * @return
+	 */
 	private String filterClasspathFromSystemClasspath() {
+		// 依存する外部ライブラリを定義
 		final String[] classpaths = System.getProperty("java.class.path").split(File.pathSeparator);
-
 		final List<String> filter = new ArrayList<>();
-		filter.add(".*args4j" + jarFileTail);
-		filter.add(".*jacoco\\.core" + jarFileTail);
-		filter.add(".*asm" + jarFileTail);
-		filter.add(".*asm-commons" + jarFileTail);
-		filter.add(".*asm-tree" + jarFileTail);
-		filter.add(".*junit" + jarFileTail);
-		filter.add(".*hamcrest-core" + jarFileTail);
-		filter.add(".*bin" + "\\" + File.separator + "main$");
-		filter.add(".*bin" + "\\" + File.separator + "test$");
+		filter.add("args4j");
+		filter.add("jacoco\\.core");
+		filter.add("asm");
+		filter.add("asm-commons");
+		filter.add("asm-tree");
+		filter.add("junit");
+		filter.add("hamcrest-core");
 
+		// cp一覧から必須外部ライブラリのみをフィルタリング
 		List<String> result = Arrays.asList(classpaths).stream()
-				.filter(cp -> filter.stream().anyMatch(f -> cp.matches(f))).collect(Collectors.toList());
+				.filter(cp -> filter.stream().anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
+				.collect(Collectors.toList());
+
+		// 自身（TestProcessBuilder.class）へのcpを追加
+		try {
+			result.add(Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).toString());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
 		return String.join(File.pathSeparator, result);
 	}
