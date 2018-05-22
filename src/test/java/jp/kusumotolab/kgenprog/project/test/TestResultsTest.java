@@ -63,31 +63,31 @@ public class TestResultsTest {
 		final String expected = "" //
 				+ "[\n" //
 				+ "  {\n" //
-				+ "    \"executedTestFqn\": \"jp.kusumotolab.BuggyCalculatorTest.test04\",\n" //
+				+ "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test04\",\n" //
 				+ "    \"wasFailed\": false,\n" //
 				+ "    \"coverages\": [\n" //
-				+ "      {\"executedTargetFqn\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
+				+ "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
 				+ "    ]\n" //
 				+ "  },\n" //
 				+ "  {\n" //
-				+ "    \"executedTestFqn\": \"jp.kusumotolab.BuggyCalculatorTest.test03\",\n" //
+				+ "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test03\",\n" //
 				+ "    \"wasFailed\": true,\n" //
 				+ "    \"coverages\": [\n" //
-				+ "      {\"executedTargetFqn\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
+				+ "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
 				+ "    ]\n" //
 				+ "  },\n" //
 				+ "  {\n" //
-				+ "    \"executedTestFqn\": \"jp.kusumotolab.BuggyCalculatorTest.test02\",\n" //
+				+ "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test02\",\n" //
 				+ "    \"wasFailed\": false,\n" //
 				+ "    \"coverages\": [\n" //
-				+ "      {\"executedTargetFqn\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
+				+ "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
 				+ "    ]\n" //
 				+ "  },\n" //
 				+ "  {\n" //
-				+ "    \"executedTestFqn\": \"jp.kusumotolab.BuggyCalculatorTest.test01\",\n" //
+				+ "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test01\",\n" //
 				+ "    \"wasFailed\": false,\n" //
 				+ "    \"coverages\": [\n" //
-				+ "      {\"executedTargetFqn\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
+				+ "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
 				+ "    ]\n" //
 				+ "  }\n" //
 				+ "]\n";
