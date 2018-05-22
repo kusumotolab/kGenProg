@@ -44,7 +44,7 @@ public class Coverage implements Serializable {
 	 * @param className Coverage計測対象のクラス名
 	 * @param statuses Coverage計測の結果
 	 */
-	public Coverage(IClassCoverage classCoverage) {
+	public Coverage(final IClassCoverage classCoverage) {
 		this.executedTargetFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
 		this.statuses = convertClassCoverage(classCoverage);
 	}
@@ -56,7 +56,7 @@ public class Coverage implements Serializable {
 	 * @param classCoverage
 	 * @return
 	 */
-	private List<Status> convertClassCoverage(IClassCoverage classCoverage) {
+	private List<Status> convertClassCoverage(final IClassCoverage classCoverage) {
 		final List<Coverage.Status> statuses = new ArrayList<>();
 		for (int i = 1; i <= classCoverage.getLastLine(); i++) {
 			final Coverage.Status status;
@@ -81,11 +81,11 @@ public class Coverage implements Serializable {
 		return toString(0);
 	}
 
-	public String toString(int indentDepth) {
+	public String toString(final int indentDepth) {
 		final StringBuilder sb = new StringBuilder();
 		final String indent = StringUtils.repeat(" ", indentDepth);
 		sb.append(indent + "  {");
-		sb.append("\"executedTargetFqn\": \"" + executedTargetFQN + "\", ");
+		sb.append("\"executedTargetFQN\": \"" + executedTargetFQN + "\", ");
 		sb.append("\"coverages\": [");
 		sb.append(statuses.stream().map(Enum::ordinal).map(String::valueOf).collect(Collectors.joining(", ")));
 		sb.append("]}");
