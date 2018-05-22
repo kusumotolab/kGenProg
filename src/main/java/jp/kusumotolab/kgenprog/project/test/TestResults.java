@@ -80,12 +80,12 @@ public class TestResults implements Serializable {
 
 	/**
 	 * 実行された単一テストメソッドの結果を返す．
-	 * @param fqn 対象のテストメソッドFQN
+	 * @param testFQN 対象のテストメソッドFQN
 	 * @return
 	 */
-	public TestResult getTestResult(final FullyQualifiedName fqn) {
+	public TestResult getTestResult(final FullyQualifiedName testFQN) {
 		//TODO if null 
-		return this.value.get(fqn);
+		return this.value.get(testFQN);
 	}
 
 	/**
@@ -100,17 +100,17 @@ public class TestResults implements Serializable {
 
 	/**
 	 * FLで用いる4メトリクスのprivateなParameterized-Method
-	 * @param targetFqn 計算対象クラスのFQN
+	 * @param targetFQN 計算対象クラスのFQN
 	 * @param lineNumber 計算対象クラスの行番号
 	 * @param status 実行されたか否か
 	 * @param failed テストの成否
 	 * @return
 	 */
-	private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFqn, final int lineNumber,
+	private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFQN, final int lineNumber,
 			final Coverage.Status status, final boolean failed) {
 		final List<FullyQualifiedName> result = new ArrayList<>();
 		for (final TestResult testResult : this.value.values()) {
-			final Coverage coverage = testResult.getCoverages(targetFqn);
+			final Coverage coverage = testResult.getCoverages(targetFQN);
 			final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
 			if (status == _status && failed == testResult.failed) {
 				result.add(testResult.executedTestFQN);
@@ -121,46 +121,46 @@ public class TestResults implements Serializable {
 
 	/**
 	 * a_ef
-	 * @param targetFqn ターゲットクラスのFQN
+	 * @param targetFQN ターゲットクラスのFQN
 	 * @param lineNumber ターゲットクラスの行番号
 	 * @return a_ef
 	 */
-	public List<FullyQualifiedName> getFailedTestFQNsExecutingTheStatement(final FullyQualifiedName targetFqn,
+	public List<FullyQualifiedName> getFailedTestFQNsExecutingTheStatement(final FullyQualifiedName targetFQN,
 			final int lineNumber) {
-		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.COVERED, true);
+		return getTestFQNs(targetFQN, lineNumber, Coverage.Status.COVERED, true);
 	}
 
 	/**
 	 * a_ep
-	 * @param targetFqn ターゲットクラスのFQN
+	 * @param targetFQN ターゲットクラスのFQN
 	 * @param lineNumber ターゲットクラスの行番号
 	 * @return
 	 */
-	public List<FullyQualifiedName> getPassedTestFQNsExecutingTheStatement(final FullyQualifiedName targetFqn,
+	public List<FullyQualifiedName> getPassedTestFQNsExecutingTheStatement(final FullyQualifiedName targetFQN,
 			final int lineNumber) {
-		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.COVERED, false);
+		return getTestFQNs(targetFQN, lineNumber, Coverage.Status.COVERED, false);
 	}
 
 	/**
 	 * a_nf
-	 * @param targetFqn ターゲットクラスのFQN
+	 * @param targetFQN ターゲットクラスのFQN
 	 * @param lineNumber ターゲットクラスの行番号
 	 * @return
 	 */
-	public List<FullyQualifiedName> getFailedTestFQNsNotExecutingTheStatement(final FullyQualifiedName targetFqn,
+	public List<FullyQualifiedName> getFailedTestFQNsNotExecutingTheStatement(final FullyQualifiedName targetFQN,
 			final int lineNumber) {
-		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.NOT_COVERED, true);
+		return getTestFQNs(targetFQN, lineNumber, Coverage.Status.NOT_COVERED, true);
 	}
 
 	/**
 	 * a_np
-	 * @param targetFqn ターゲットクラスのFQN
+	 * @param targetFQN ターゲットクラスのFQN
 	 * @param lineNumber ターゲットクラスの行番号
 	 * @return
 	 */
-	public List<FullyQualifiedName> getPassedTestFQNsNotExecutingTheStatement(final FullyQualifiedName targetFqn,
+	public List<FullyQualifiedName> getPassedTestFQNsNotExecutingTheStatement(final FullyQualifiedName targetFQN,
 			final int lineNumber) {
-		return getTestFQNs(targetFqn, lineNumber, Coverage.Status.NOT_COVERED, false);
+		return getTestFQNs(targetFQN, lineNumber, Coverage.Status.NOT_COVERED, false);
 	}
 
 	@Deprecated
