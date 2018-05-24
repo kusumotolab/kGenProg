@@ -47,8 +47,9 @@ public class KGenProgMain {
 
 	public void run() {
 		List<Variant> selectedVariants = new ArrayList<>();
-		selectedVariants.add(targetProject.getInitialVariant());
-
+		final Variant initialVariant = targetProject.getInitialVariant();
+		selectedVariants.add(initialVariant);
+		mutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
 		while (true) {
 			if (isTimedOut() || reachedMaxGeneration() || isSuccess(selectedVariants)) {
 				break;

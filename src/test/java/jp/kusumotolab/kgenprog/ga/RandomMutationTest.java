@@ -1,0 +1,81 @@
+package jp.kusumotolab.kgenprog.ga;
+
+import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.jdt.*;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.junit.Test;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class RandomMutationTest {
+
+    private class StaticNumberGeneration extends RandomNumberGeneration {
+
+        @Override
+        public int getRandomNumber() {
+            return 0;
+        }
+
+        @Override
+        public int getRandomNumber(int divisor) {
+            // InsertOperationを選択するためにdivisorが3の時だけInsertに対応する1を返す
+            return divisor == 3 ? 1 : 0;
+        }
+
+        @Override
+        public boolean getRandomBoolean() {
+            return true;
+        }
+    }
+
+    @Test
+    public void testExec() throws NoSuchFieldException, IllegalAccessException {
+        final String basePath = "example/example01/";
+        final TargetProject targetProject = TargetProject.generate(basePath);
+        final Variant initialVariant = targetProject.getInitialVariant();
+        final RandomMutation randomMutation = new RandomMutation(new StaticNumberGeneration());
+        randomMutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
+
+        final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode().getFiles().get(0);
+        final SourceFile sourceFile = generatedAST.getSourceFile();
+        final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot().getRoot().getRoot();
+        final TypeDeclaration typeRoot = (TypeDeclaration) root.types().get(0);
+        final List<Statement> statements = typeRoot.getMethods()[0].getBody().statements();
+
+        final float[] value = {0};
+        final List<Suspiciouseness> suspiciousenesses = statements.stream()
+                .map(e -> new JDTLocation(sourceFile, e))
+                .map(e -> {
+                    value[0] += 0.1;
+                    return new Suspiciouseness(e, value[0]);
+                })
+                .collect(Collectors.toList());
+
+        final List<Base> baseList = randomMutation.exec(suspiciousenesses);
+        final Base base = baseList.get(0);
+        final JDTLocation targetLocation = (JDTLocation) base.getTargetLocation();
+
+        assertEquals(targetLocation.node.toString(), "return n;\n");
+
+        final Operation operation = base.getOperation();
+        assertTrue(operation instanceof InsertOperation);
+
+        final InsertOperation insertOperation = (InsertOperation) operation;
+        final Field field = insertOperation.getClass().getDeclaredField("astNode");
+        field.setAccessible(true);
+        final ASTNode node = (ASTNode) field.get(insertOperation);
+        assertEquals(node.toString(), "n--;\n");
+    }
+}
