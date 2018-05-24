@@ -30,7 +30,9 @@ public class RandomMutation implements Mutation {
 
     @Override
     public void setCandidates(List<GeneratedAST> candidates) {
-        this.candidates = candidates;
+        this.candidates = candidates.stream()
+                .sorted(Comparator.comparing(x -> x.getSourceFile().path))
+                .collect(Collectors.toList());
     }
 
     @Override
