@@ -25,10 +25,17 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
  */
 public class TestProcessBuilder {
 
-	private TargetProject targetProject;
+	final private TargetProject targetProject;
+	final private String binDir;
 
+	// stub for compatibility
 	public TestProcessBuilder(TargetProject targetProject) {
+		this(targetProject, ""); // TODO
+	}
+
+	public TestProcessBuilder(TargetProject targetProject, String binDir) {
 		this.targetProject = targetProject;
+		this.binDir = binDir;
 	}
 
 	@Deprecated
@@ -57,8 +64,8 @@ public class TestProcessBuilder {
 		final String testFiles = this.targetProject.getTestFQNs().stream().map(f -> f.value)
 				.collect(Collectors.joining(TestExecutorMain.SEPARATOR));
 
-		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-s", sourceFiles,
-				testFiles);
+		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-b", binDir, "-s",
+				sourceFiles, "-t", testFiles);
 
 		try {
 			final Process process = builder.start();
