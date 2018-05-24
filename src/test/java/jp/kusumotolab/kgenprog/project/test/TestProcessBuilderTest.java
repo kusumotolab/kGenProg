@@ -33,7 +33,7 @@ public class TestProcessBuilderTest {
 		new ProjectBuilder(targetProject).build(outDir);
 
 		// main
-		final TestProcessBuilder builder = new TestProcessBuilder(targetProject);
+		final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
 		builder.start();
 		final TestResults r = TestResults.deserialize();
 
