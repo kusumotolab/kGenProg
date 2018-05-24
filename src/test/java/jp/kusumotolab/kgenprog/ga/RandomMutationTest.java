@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,9 @@ public class RandomMutationTest {
         final RandomMutation randomMutation = new RandomMutation(new StaticNumberGeneration());
         randomMutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
 
-        final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode().getFiles().get(0);
+        final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode().getFiles().stream()
+                .sorted(Comparator.comparing(x -> x.getSourceFile().path))
+                .collect(Collectors.toList()).get(0);
         final SourceFile sourceFile = generatedAST.getSourceFile();
         final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot().getRoot().getRoot();
         final TypeDeclaration typeRoot = (TypeDeclaration) root.types().get(0);
