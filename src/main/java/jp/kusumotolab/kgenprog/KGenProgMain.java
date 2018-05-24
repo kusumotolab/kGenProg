@@ -55,7 +55,8 @@ public class KGenProgMain {
 			}
 			List<Gene> genes = new ArrayList<>();
 			for (Variant variant : selectedVariants) {
-				List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant, testProcessBuilder);
+				List<Suspiciouseness> suspiciousenesses = faultLocalization.exec(targetProject, variant,
+						testProcessBuilder);
 
 				List<Base> bases = mutation.exec(suspiciousenesses);
 				genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
