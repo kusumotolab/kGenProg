@@ -2,21 +2,23 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 public final class TestExecutorMain {
 
-	@Option(name = "-s", aliases = "source", usage = "Specify source classes")
+	@Option(name = "-b", aliases = "--bindir", required = true, usage = "Specify a bin directory")
+	private String binDir;
+
+	@Option(name = "-s", aliases = "--src", required = true, usage = "Specify source classes")
 	private String sourceClass;
 
-	@Argument(index = 0, metaVar = "test-classes", usage = "Specify executed test classes")
+	@Option(name = "-t", aliases = "--test", required = true, usage = "Specify executed test classes")
 	private String testClass;
 
 	public static final String SEPARATOR = File.pathSeparator;
@@ -31,14 +33,10 @@ public final class TestExecutorMain {
 	public static void main(final String[] args) throws Exception {
 		final TestExecutorMain main = new TestExecutorMain();
 		final CmdLineParser parser = new CmdLineParser(main);
-		try {
-			parser.parseArgument(args);
-		} catch (CmdLineException e) {
-			e.printStackTrace();
-			return;
-		}
+		parser.parseArgument(args);
 
-		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./example/example01/_bin/") }); // TODO
+		final URL binUrl = Paths.get(main.binDir).toUri().toURL();
+		final TestExecutor executor = new TestExecutor(new URL[] { binUrl });
 
 		final TestResults testResults = executor.exec(createFQNs(main.sourceClass), createFQNs(main.testClass));
 		TestResults.serialize(testResults);
