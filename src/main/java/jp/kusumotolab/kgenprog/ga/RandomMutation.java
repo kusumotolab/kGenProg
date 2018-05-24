@@ -71,7 +71,7 @@ public class RandomMutation implements Mutation {
                 return chooseNodeAtRandom();
             }
             final MethodDeclaration method = methods[randomNumberGeneration.getRandomNumber(methods.length)];
-            final Statement statement = excludeStatementFromBlock(method.getBody());
+            final Statement statement = extractStatementFromBlock(method.getBody());
             if (statement == null) {
                 return chooseNodeAtRandom();
             }
@@ -80,40 +80,40 @@ public class RandomMutation implements Mutation {
         return chooseNodeAtRandom();
     }
 
-    private Statement excludeStatement(Statement statement) {
+    private Statement extractStatement(Statement statement) {
         if (statement instanceof Block) {
-            return excludeStatementFromBlock(((Block) statement));
+            return extractStatementFromBlock(((Block) statement));
         } else if (statement instanceof IfStatement) {
-            return excludeStatementFromIfStatement(((IfStatement) statement));
+            return extractStatementFromIfStatement(((IfStatement) statement));
         } else if (statement instanceof WhileStatement) {
-            return excludeStatementFromWhile(((WhileStatement) statement));
+            return extractStatementFromWhile(((WhileStatement) statement));
         } else if (statement instanceof SwitchStatement) {
-            return excludeStatementFromSwitch(((SwitchStatement) statement));
+            return extractStatementFromSwitch(((SwitchStatement) statement));
         } else if (statement instanceof DoStatement) {
-            return excludeStatementFromDo(((DoStatement) statement));
+            return extractStatementFromDo(((DoStatement) statement));
         } else if (statement instanceof TryStatement) {
-            return excludeStatementFromTry(((TryStatement) statement));
+            return extractStatementFromTry(((TryStatement) statement));
         }
         return statement;
     }
 
-    private Statement excludeStatementFromStatements(List<Statement> statements) {
+    private Statement extractStatementFromStatements(List<Statement> statements) {
         if (statements.isEmpty()) {
             return null;
         }
         final Statement statement = statements.get(randomNumberGeneration.getRandomNumber(statements.size()));
-        return excludeStatement(statement);
+        return extractStatement(statement);
     }
 
-    private Statement excludeStatementFromBlock(Block block) {
-        return excludeStatementFromStatements(block.statements());
+    private Statement extractStatementFromBlock(Block block) {
+        return extractStatementFromStatements(block.statements());
     }
 
-    private Statement excludeStatementFromIfStatement(IfStatement ifStatement) {
+    private Statement extractStatementFromIfStatement(IfStatement ifStatement) {
         if (randomNumberGeneration.getRandomBoolean()) {
-            return excludeStatement(ifStatement.getThenStatement());
+            return extractStatement(ifStatement.getThenStatement());
         } else if (randomNumberGeneration.getRandomBoolean()) {
-            return excludeStatement(ifStatement.getElseStatement());
+            return extractStatement(ifStatement.getElseStatement());
         } else if (randomNumberGeneration.getRandomBoolean()) {
             return ifStatement.getElseStatement();
         } else if (randomNumberGeneration.getRandomBoolean()) {
@@ -122,29 +122,29 @@ public class RandomMutation implements Mutation {
         return ifStatement;
     }
 
-    private Statement excludeStatementFromWhile(WhileStatement whileStatement) {
+    private Statement extractStatementFromWhile(WhileStatement whileStatement) {
         if (randomNumberGeneration.getRandomBoolean()) {
-            return excludeStatement(whileStatement.getBody());
+            return extractStatement(whileStatement.getBody());
         }
         return whileStatement;
     }
 
-    private Statement excludeStatementFromSwitch(SwitchStatement switchStatement) {
+    private Statement extractStatementFromSwitch(SwitchStatement switchStatement) {
         if (randomNumberGeneration.getRandomBoolean()) {
-            return excludeStatementFromStatements(switchStatement.statements());
+            return extractStatementFromStatements(switchStatement.statements());
         }
         return switchStatement;
     }
 
-    private Statement excludeStatementFromDo(DoStatement doStatement) {
-        return excludeStatement(doStatement.getBody());
+    private Statement extractStatementFromDo(DoStatement doStatement) {
+        return extractStatement(doStatement.getBody());
     }
 
-    private Statement excludeStatementFromTry(TryStatement tryStatement) {
+    private Statement extractStatementFromTry(TryStatement tryStatement) {
         if (randomNumberGeneration.getRandomBoolean()) {
-            return excludeStatementFromBlock(tryStatement.getBody());
+            return extractStatementFromBlock(tryStatement.getBody());
         } else if (randomNumberGeneration.getRandomBoolean()) {
-            return excludeStatementFromBlock(tryStatement.getFinally());
+            return extractStatementFromBlock(tryStatement.getFinally());
         }
         return tryStatement;
     }
