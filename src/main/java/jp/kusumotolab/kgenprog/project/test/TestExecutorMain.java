@@ -38,13 +38,18 @@ public final class TestExecutorMain {
 		final URL binUrl = Paths.get(main.binDir).toUri().toURL();
 		final TestExecutor executor = new TestExecutor(new URL[] { binUrl });
 
-		final TestResults testResults = executor.exec(createFQNs(main.sourceClass), createFQNs(main.testClass));
+		final TestResults testResults = executor.exec(createTargetFQNs(main.sourceClass), createTestFQNs(main.testClass));
 		TestResults.serialize(testResults);
 
 	}
 
-	private static List<FullyQualifiedName> createFQNs(String names) {
-		return Arrays.asList(names.split(SEPARATOR)).stream().map(n -> new FullyQualifiedName(n))
+	private static List<FullyQualifiedName> createTargetFQNs(final String names) {
+		return Arrays.asList(names.split(SEPARATOR)).stream().map(n -> new TargetFullyQualifiedName(n))
+				.collect(Collectors.toList());
+	}
+	
+	private static List<FullyQualifiedName> createTestFQNs(final String names) {
+		return Arrays.asList(names.split(SEPARATOR)).stream().map(n -> new TestFullyQualifiedName(n))
 				.collect(Collectors.toList());
 	}
 }
