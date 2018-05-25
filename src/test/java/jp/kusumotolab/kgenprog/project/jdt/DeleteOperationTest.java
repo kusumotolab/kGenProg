@@ -11,13 +11,14 @@ import org.junit.Test;
 
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 
 public class DeleteOperationTest {
 
 	@Test
 	public void testDeleteStatement() {
 		String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-		SourceFile testSourceFile = new SourceFile("A.java");
+		SourceFile testSourceFile = new TargetSourceFile("A.java");
 		
 		JDTASTConstruction constructor = new JDTASTConstruction();
 		GeneratedJDTAST ast = (GeneratedJDTAST)constructor.constructAST(testSourceFile, testSource.toCharArray());
