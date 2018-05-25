@@ -112,9 +112,10 @@ public class TargetProject {
 		final Collection<File> files = FileUtils.listFiles(basePath.toFile(), extension, true);
 		for (File file : files) {
 			if (file.getName().endsWith("Test.java")) {
-				testFiles.add(new SourceFile(file.getPath()));
+				testFiles.add(new TestSourceFile(file.getPath()));
 			}
-			sourceFiles.add(new SourceFile(file.getPath()));
+			// TODO テストファイルはsourceFilesにaddすべきではないのでは？
+			sourceFiles.add(new TargetSourceFile(file.getPath()));			
 		}
 
 		final List<ClassPath> classPath = Arrays.asList( //

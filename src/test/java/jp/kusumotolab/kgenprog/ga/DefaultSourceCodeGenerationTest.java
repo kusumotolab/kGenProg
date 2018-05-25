@@ -11,16 +11,18 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.TestSourceFile;
 
 public class DefaultSourceCodeGenerationTest {
 
 	@Test
 	public void execTest() {
 		final List<SourceFile> sourceCodeFiles = new ArrayList<>();
-		sourceCodeFiles.add(new SourceFile("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
+		sourceCodeFiles.add(new TargetSourceFile("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
 		final List<SourceFile> testFiles = new ArrayList<>();
-		testFiles.add(new SourceFile("example/example01/src/jp/kusumotolab/BuggyCalculatorTest.java"));
+		testFiles.add(new TestSourceFile("example/example01/src/jp/kusumotolab/BuggyCalculatorTest.java"));
 
 		final List<ClassPath> classPaths = new ArrayList<>();
 
