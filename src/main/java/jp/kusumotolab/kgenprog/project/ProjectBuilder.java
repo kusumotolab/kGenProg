@@ -16,8 +16,6 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import jp.kusumotolab.kgenprog.ga.Variant;
-
 public class ProjectBuilder {
 
 	static private final String CLASSPATH_SEPARATOR = File.pathSeparator;
@@ -40,13 +38,14 @@ public class ProjectBuilder {
 	}
 
 	/**
-	 * @param variant
-	 *            null でなければ与えられた variant からビルド．null の場合は，初期ソースコードからビルド
+	 * @param generatedSourceCode
+	 *            null でなければ与えられた generatedSourceCode からビルド．null
+	 *            の場合は，初期ソースコードからビルド
 	 * @param outDir
 	 *            バイトコード出力ディレクトリ
 	 * @return ビルドが成功すれば true，失敗すれば false
 	 */
-	public boolean build(final Variant variant, final String outDir) {
+	public boolean build(final GeneratedSourceCode generatedSourceCode, final String outDir) {
 
 		final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
@@ -60,14 +59,14 @@ public class ProjectBuilder {
 		}
 
 		// variant が null なら，初期ソースコードをビルド
-		if (null == variant) {
+		if (null == generatedSourceCode) {
 			javaFileObjects = fileManager.getJavaFileObjectsFromStrings(
 					this.targetProject.getSourceFiles().stream().map(f -> f.path).collect(Collectors.toList()));
 		}
 
 		// variant が null でなければ，バリアントのソースコードをビルド
 		else {
-			final List<GeneratedAST> generatedASTs = variant.getGeneratedSourceCode().getFiles();
+			final List<GeneratedAST> generatedASTs = generatedSourceCode.getFiles();
 			javaFileObjects = generatedASTs.stream()
 					.map(a -> new JavaSourceFromString(a.getPrimaryClassName(), a.getSourceCode()))
 					.collect(Collectors.toList());
