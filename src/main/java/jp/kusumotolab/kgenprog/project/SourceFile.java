@@ -2,13 +2,13 @@ package jp.kusumotolab.kgenprog.project;
 
 import java.io.File;
 
-public final class SourceFile {
+public abstract class SourceFile {
 	// TODO
 	// pathはjava.nio.Pathで管理すべき．
 
 	public final String path;
 
-	public SourceFile(final String path) {
+	protected SourceFile(final String path) {
 		this.path = new File(path).toString(); // for class-platform compatibility
 	}
 

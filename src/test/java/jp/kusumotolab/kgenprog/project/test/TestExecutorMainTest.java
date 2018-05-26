@@ -16,21 +16,21 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestExecutorMainTest {
 
-	final static FullyQualifiedName buggyCalculator = new FullyQualifiedName("jp.kusumotolab.BuggyCalculator");
-	final static FullyQualifiedName buggyCalculatorTest = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
-	final static FullyQualifiedName util = new FullyQualifiedName("jp.kusumotolab.Util");
-	final static FullyQualifiedName utilTest = new FullyQualifiedName("jp.kusumotolab.UtilTest");
+	final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
+	final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
+	final static FullyQualifiedName util = new TargetFullyQualifiedName("jp.kusumotolab.Util");
+	final static FullyQualifiedName utilTest = new TestFullyQualifiedName("jp.kusumotolab.UtilTest");
 
-	final static FullyQualifiedName test01 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
-	final static FullyQualifiedName test02 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
-	final static FullyQualifiedName test03 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
-	final static FullyQualifiedName test04 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
+	final static FullyQualifiedName test01 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
+	final static FullyQualifiedName test02 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
+	final static FullyQualifiedName test03 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
+	final static FullyQualifiedName test04 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
 
-	final static FullyQualifiedName plusTest01 = new FullyQualifiedName("jp.kusumotolab.UtilTest.plusTest01");
-	final static FullyQualifiedName plusTest02 = new FullyQualifiedName("jp.kusumotolab.UtilTest.plusTest02");
-	final static FullyQualifiedName minusTest01 = new FullyQualifiedName("jp.kusumotolab.UtilTest.minusTest01");
-	final static FullyQualifiedName minusTest02 = new FullyQualifiedName("jp.kusumotolab.UtilTest.minusTest02");
-	final static FullyQualifiedName dummyTest01 = new FullyQualifiedName("jp.kusumotolab.UtilTest.dummyTest01");
+	final static FullyQualifiedName plusTest01 = new TestFullyQualifiedName("jp.kusumotolab.UtilTest.plusTest01");
+	final static FullyQualifiedName plusTest02 = new TestFullyQualifiedName("jp.kusumotolab.UtilTest.plusTest02");
+	final static FullyQualifiedName minusTest01 = new TestFullyQualifiedName("jp.kusumotolab.UtilTest.minusTest01");
+	final static FullyQualifiedName minusTest02 = new TestFullyQualifiedName("jp.kusumotolab.UtilTest.minusTest02");
+	final static FullyQualifiedName dummyTest01 = new TestFullyQualifiedName("jp.kusumotolab.UtilTest.dummyTest01");
 
 	@Before
 	public void before() throws IOException {
