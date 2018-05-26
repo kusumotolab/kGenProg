@@ -1,18 +1,30 @@
 package jp.kusumotolab.kgenprog;
 
-import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.fl.Ochiai;
-import jp.kusumotolab.kgenprog.ga.*;
-import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import jp.kusumotolab.kgenprog.fl.FaultLocalization;
+import jp.kusumotolab.kgenprog.fl.Ochiai;
+import jp.kusumotolab.kgenprog.ga.Crossover;
+import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
+import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
+import jp.kusumotolab.kgenprog.ga.Mutation;
+import jp.kusumotolab.kgenprog.ga.RandomMutation;
+import jp.kusumotolab.kgenprog.ga.SiglePointCrossover;
+import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.VariantSelection;
+import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.TestSourceFile;
 
 public class CUILauncher {
 
@@ -30,7 +42,7 @@ public class CUILauncher {
 
 	@Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class, metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
 	public void setSourceFiles(String sourceFiles) {
-		this.sourceFiles.add(new SourceFile(sourceFiles));
+		this.sourceFiles.add(new TargetSourceFile(sourceFiles));
 	}
 
 	public List<SourceFile> getTestFiles() {
@@ -39,7 +51,7 @@ public class CUILauncher {
 
 	@Option(name = "-t", aliases = "--test", required = true, handler = StringArrayOptionHandler.class, metaVar = "<path> ...", usage = "Paths of the root directories holding test codes")
 	public void setTestFiles(String testFiles) {
-		this.testFiles.add(new SourceFile(testFiles));
+		this.testFiles.add(new TestSourceFile(testFiles));
 	}
 
 	public List<ClassPath> getClassPaths() {
@@ -76,7 +88,8 @@ public class CUILauncher {
 		SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
 		VariantSelection variantSelection = new DefaultVariantSelection();
 
-		KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection);
+		KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation, crossover,
+				sourceCodeGeneration, sourceCodeValidation, variantSelection);
 		kGenProgMain.run();
 	}
 }
