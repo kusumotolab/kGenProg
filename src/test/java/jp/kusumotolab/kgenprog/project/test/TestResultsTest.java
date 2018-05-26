@@ -16,13 +16,13 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestResultsTest {
 
-	final static FullyQualifiedName buggyCalculator = new FullyQualifiedName("jp.kusumotolab.BuggyCalculator");
-	final static FullyQualifiedName buggyCalculatorTest = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
+	final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
+	final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
 
-	final static FullyQualifiedName test01 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
-	final static FullyQualifiedName test02 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
-	final static FullyQualifiedName test03 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
-	final static FullyQualifiedName test04 = new FullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
+	final static FullyQualifiedName test01 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
+	final static FullyQualifiedName test02 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
+	final static FullyQualifiedName test03 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
+	final static FullyQualifiedName test04 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
 
 	private TestResults generateTestResultsForExample01() throws Exception {
 		final String rootDir = "example/example01";

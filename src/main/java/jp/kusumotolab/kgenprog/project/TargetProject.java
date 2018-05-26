@@ -19,6 +19,8 @@ import jp.kusumotolab.kgenprog.ga.SimpleGene;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.TestFullyQualifiedName;
 
 public class TargetProject {
 	private final Path rootPath;
@@ -67,7 +69,7 @@ public class TargetProject {
 		return this.sourceFiles.stream() //
 				.map(s -> Paths.get(s.path)) //
 				.map(p -> rootPath.resolve(sourcePaths.get(0)).relativize(p)) //
-				.map(p -> new FullyQualifiedName(p)) //
+				.map(p -> new TargetFullyQualifiedName(p)) //
 				.collect(Collectors.toList());
 	}
 
@@ -75,7 +77,7 @@ public class TargetProject {
 		return this.testFiles.stream() //
 				.map(s -> Paths.get(s.path)) //
 				.map(p -> rootPath.resolve(sourcePaths.get(0)).relativize(p)) //
-				.map(p -> new FullyQualifiedName(p)) //
+				.map(p -> new TestFullyQualifiedName(p)) //
 				.collect(Collectors.toList());
 	}
 
