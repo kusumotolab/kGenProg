@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 
@@ -18,13 +17,10 @@ import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.SimpleGene;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.test.TestFullyQualifiedName;
 
 public class TargetProject {
-	private final Path rootPath;
-	private final List<Path> sourcePaths;
+	public final Path rootPath; //TODO ひとまずrootPathだけpublicに．他フィールドは要検討
+	private final List<Path> sourcePaths; // TODO 不要．削除するべき．
 	private final List<SourceFile> sourceFiles;
 	private final List<SourceFile> testFiles;
 	private final List<ClassPath> classPaths;
@@ -65,22 +61,6 @@ public class TargetProject {
 		return new Variant(gene, fitness, generatedSourceCode);
 	}
 
-	public List<FullyQualifiedName> getSourceFQNs() {
-		return this.sourceFiles.stream() //
-				.map(s -> Paths.get(s.path)) //
-				.map(p -> rootPath.resolve(sourcePaths.get(0)).relativize(p)) //
-				.map(p -> new TargetFullyQualifiedName(p)) //
-				.collect(Collectors.toList());
-	}
-
-	public List<FullyQualifiedName> getTestFQNs() {
-		return this.testFiles.stream() //
-				.map(s -> Paths.get(s.path)) //
-				.map(p -> rootPath.resolve(sourcePaths.get(0)).relativize(p)) //
-				.map(p -> new TestFullyQualifiedName(p)) //
-				.collect(Collectors.toList());
-	}
-
 	// hitori
 	private List<GeneratedAST> constructAST() {
 		// TODO: ここにDIする方法を検討
@@ -117,7 +97,7 @@ public class TargetProject {
 				testFiles.add(new TestSourceFile(file.getPath()));
 			}
 			// TODO テストファイルはsourceFilesにaddすべきではないのでは？
-			sourceFiles.add(new TargetSourceFile(file.getPath()));			
+			sourceFiles.add(new TargetSourceFile(file.getPath()));
 		}
 
 		final List<ClassPath> classPath = Arrays.asList( //
