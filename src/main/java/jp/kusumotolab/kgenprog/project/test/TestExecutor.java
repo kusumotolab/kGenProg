@@ -200,7 +200,7 @@ class TestExecutor {
 		 * @return
 		 */
 		private FullyQualifiedName getTestMethodName(Description description) {
-			return new FullyQualifiedName(description.getTestClass().getName() + "." + description.getMethodName());
+			return new TestFullyQualifiedName(description.getTestClass().getName() + "." + description.getMethodName());
 		}
 
 		/**

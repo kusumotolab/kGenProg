@@ -45,7 +45,7 @@ public class Coverage implements Serializable {
 	 * @param statuses Coverage計測の結果
 	 */
 	public Coverage(final IClassCoverage classCoverage) {
-		this.executedTargetFQN = new FullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
+		this.executedTargetFQN = new TargetFullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
 		this.statuses = convertClassCoverage(classCoverage);
 	}
 
