@@ -33,9 +33,9 @@ public class ProjectBuilder {
 	 * 
 	 * @param outDir
 	 *            バイトコード出力ディレクトリ
-	 * @return ビルドが成功すれば true，失敗すれば false
+	 * @return ビルドに関するさまざまな情報
 	 */
-	public boolean build(final String outDir) {
+	public BuildResults build(final String outDir) {
 		return this.build(null, outDir);
 	}
 
@@ -44,20 +44,20 @@ public class ProjectBuilder {
 	 *            null でなければ与えられた variant からビルド．null の場合は，初期ソースコードからビルド
 	 * @param outDir
 	 *            バイトコード出力ディレクトリ
-	 * @return ビルドが成功すれば true，失敗すれば false
+	 * @return ビルドに関するさまざまな情報
 	 */
-	public boolean build(final Variant variant, final String outDir) {
+	public BuildResults build(final Variant variant, final String outDir) {
 
 		final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-
-		final Iterable<? extends JavaFileObject> javaFileObjects;
 
 		// outディレクトリが存在しなければ生成
 		final File outputDirectoryFile = new File(outDir);
 		if (!outputDirectoryFile.exists()) {
 			outputDirectoryFile.mkdirs();
 		}
+
+		final Iterable<? extends JavaFileObject> javaFileObjects;
 
 		// variant が null なら，初期ソースコードをビルド
 		if (null == variant) {
@@ -86,7 +86,7 @@ public class ProjectBuilder {
 		final CompilationTask task = compiler.getTask(null, fileManager, diagnostics, compilationOptions, null,
 				javaFileObjects);
 
-		final boolean isSuccess = task.call();
+		final boolean isFailed = !task.call();
 		// TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
 		for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
 			System.err.println(diagnostic.getCode());
@@ -96,8 +96,9 @@ public class ProjectBuilder {
 			System.err.println(diagnostic.getEndPosition());
 			System.err.println(diagnostic.getSource());
 			System.err.println(diagnostic.getMessage(null));
-
 		}
+
+		final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
 
 		try {
 			fileManager.close();
@@ -105,7 +106,7 @@ public class ProjectBuilder {
 			e.printStackTrace();
 		}
 
-		return isSuccess;
+		return buildResults;
 	}
 }
 
