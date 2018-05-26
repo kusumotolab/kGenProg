@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,35 +27,31 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 public class TestProcessBuilder {
 
 	final private TargetProject targetProject;
-	final private String binDir;
+	final private Path binDir;
 
 	// stub for compatibility
 	public TestProcessBuilder(TargetProject targetProject) {
-		this(targetProject, ""); // TODO
+		this(targetProject, Paths.get("")); // TODO
 	}
 
-	public TestProcessBuilder(TargetProject targetProject, String binDir) {
+	// stub for compatibility
+	public TestProcessBuilder(TargetProject targetProject, String outDir) {
+		this(targetProject, Paths.get(outDir)); // TODO
+	}
+
+	public TestProcessBuilder(TargetProject targetProject, Path binDir) {
 		this.targetProject = targetProject;
-		this.binDir = binDir;
+
+		// start()時にワーキングディレクトリを変更するために，binDirはrootPathからの相対パスに変更
+		// TODO いろんな状況でバグるので要修正．一時的な処置．
+		this.binDir = targetProject.rootPath.relativize(binDir);
 	}
 
 	@Deprecated
 	public TestResults exec(GeneratedSourceCode generatedSourceCode) {
 		return null;
 	}
-	
-	@SuppressWarnings("unused")
-	@Deprecated
-	private List<FullyQualifiedName> createTargetFQNs(final List<SourceFile> sourceFiles) {
-		return sourceFiles.stream().map(s -> new TargetFullyQualifiedName(s)).collect(Collectors.toList());
-	}
 
-	@SuppressWarnings("unused")
-	@Deprecated
-	private List<FullyQualifiedName> createTestFQNs(final List<SourceFile> sourceFiles) {
-		return sourceFiles.stream().map(s -> new TestFullyQualifiedName(s)).collect(Collectors.toList());
-	}
-	
 	public void start() {
 		final String javaHome = System.getProperty("java.home");
 		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
@@ -63,15 +60,17 @@ public class TestProcessBuilder {
 
 		@SuppressWarnings("unchecked")
 		final Collection<FullyQualifiedName> c = CollectionUtils.subtract( //
-				this.targetProject.getSourceFQNs(), //
-				this.targetProject.getTestFQNs());
+				getSourceFQNs(this.targetProject), getTestFQNs(this.targetProject));
 
 		final String sourceFiles = c.stream().map(f -> f.value).collect(Collectors.joining(TestExecutorMain.SEPARATOR));
-		final String testFiles = this.targetProject.getTestFQNs().stream().map(f -> f.value)
+		final String testFiles = getTestFQNs(this.targetProject).stream().map(f -> f.value)
 				.collect(Collectors.joining(TestExecutorMain.SEPARATOR));
 
-		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-b", binDir, "-s",
-				sourceFiles, "-t", testFiles);
+		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-b", this.binDir.toString(),
+				"-s", sourceFiles, "-t", testFiles);
+
+		// テスト実行のためにworking dirを移動（対象プロジェクトが相対パスを利用している可能性が高いため）
+		builder.directory(this.targetProject.rootPath.toFile());
 
 		try {
 			final Process process = builder.start();
@@ -90,6 +89,30 @@ public class TestProcessBuilder {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
+	}
+
+	// TODO
+	// 現在FQN生成の責務がどこにもないので一時的に本クラスで実装．srcパスは"/src"に固定しているので潜在的バグ．
+	@Deprecated
+	private List<FullyQualifiedName> getSourceFQNs(final TargetProject targetProject) {
+		return getFQNs(targetProject.getSourceFiles(), targetProject.rootPath);
+	}
+
+	// TODO
+	// 現在FQN生成の責務がどこにもないので一時的に本クラスで実装．srcパスは"/src"に固定しているので潜在的バグ．
+	@Deprecated
+	private List<FullyQualifiedName> getTestFQNs(final TargetProject targetProject) {
+		return getFQNs(targetProject.getTestFiles(), targetProject.rootPath);
+	}
+
+	@Deprecated
+	private List<FullyQualifiedName> getFQNs(List<SourceFile> files, Path rootPath) {
+		return files.stream() //
+				.map(s -> Paths.get(s.path)) //
+				.map(p -> rootPath.resolve("src").relativize(p)) //
+				.map(p -> new TestFullyQualifiedName(p)) //
+				.collect(Collectors.toList());
+
 	}
 
 	/**
