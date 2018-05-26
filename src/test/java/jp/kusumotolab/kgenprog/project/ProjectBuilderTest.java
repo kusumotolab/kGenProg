@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 
@@ -15,9 +15,9 @@ public class ProjectBuilderTest {
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example01" + separator + "bin";
 
-		final boolean success = projectBuilder.build(outDirPath);
+		final BuildResults buildResults = projectBuilder.build(outDirPath);
 
-		assertTrue(success);
+		assertFalse(buildResults.isBuildFailed); // TODO assertThat に置き換える
 	}
 
 	@Test
@@ -27,8 +27,8 @@ public class ProjectBuilderTest {
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example02" + separator + "bin";
 
-		final boolean success = projectBuilder.build(outDirPath);
+		final BuildResults buildResults = projectBuilder.build(outDirPath);
 
-		assertTrue(success);
+		assertFalse(buildResults.isBuildFailed); // TODO assertThat に置き換える
 	}
 }
