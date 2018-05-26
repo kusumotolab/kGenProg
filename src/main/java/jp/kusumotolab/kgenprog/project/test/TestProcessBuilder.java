@@ -52,18 +52,6 @@ public class TestProcessBuilder {
 		return null;
 	}
 
-	@SuppressWarnings("unused")
-	@Deprecated
-	private List<FullyQualifiedName> createTargetFQNs(final List<SourceFile> sourceFiles) {
-		return sourceFiles.stream().map(s -> new TargetFullyQualifiedName(s)).collect(Collectors.toList());
-	}
-
-	@SuppressWarnings("unused")
-	@Deprecated
-	private List<FullyQualifiedName> createTestFQNs(final List<SourceFile> sourceFiles) {
-		return sourceFiles.stream().map(s -> new TestFullyQualifiedName(s)).collect(Collectors.toList());
-	}
-
 	public void start() {
 		final String javaHome = System.getProperty("java.home");
 		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
