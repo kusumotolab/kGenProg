@@ -20,7 +20,6 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
 	public final Path rootPath; //TODO ひとまずrootPathだけpublicに．他フィールドは要検討
-	private final List<Path> sourcePaths; // TODO 不要．削除するべき．
 	private final List<SourceFile> sourceFiles;
 	private final List<SourceFile> testFiles;
 	private final List<ClassPath> classPaths;
@@ -29,13 +28,12 @@ public class TargetProject {
 	@Deprecated
 	public TargetProject(final List<SourceFile> sourceFiles, final List<SourceFile> testFiles,
 			final List<ClassPath> classPaths) {
-		this(Paths.get(""), new ArrayList<>(), sourceFiles, testFiles, classPaths);
+		this(Paths.get(""), sourceFiles, testFiles, classPaths);
 	}
 
-	public TargetProject(final Path rootPath, final List<Path> sourcePaths, final List<SourceFile> sourceFiles,
+	public TargetProject(final Path rootPath, final List<SourceFile> sourceFiles,
 			final List<SourceFile> testFiles, List<ClassPath> classPaths) {
 		this.rootPath = rootPath;
-		this.sourcePaths = sourcePaths;
 		this.sourceFiles = sourceFiles;
 		this.testFiles = testFiles;
 		this.classPaths = classPaths;
@@ -69,7 +67,7 @@ public class TargetProject {
 
 	/**
 	 * @see TargetProject#generate(Path)
-	 * 
+	 *
 	 * @param basePath
 	 * @return
 	 */
@@ -81,7 +79,7 @@ public class TargetProject {
 	 * 指定のbasepathからTargetProjectを生成するstatic factoryメソッド．
 	 * 単体テスト等でTargetProject生成を何度も行うので利便性のために用意．
 	 * testFilesの判定は適当．
-	 * 
+	 *
 	 * @param basePath
 	 * @return
 	 * @throws IOException
@@ -104,7 +102,6 @@ public class TargetProject {
 				new ClassPath("lib/junit4/junit-4.12.jar"), //
 				new ClassPath("lib/junit4/hamcrest-core-1.3.jar"));
 
-		final List<Path> sourcePaths = Arrays.asList(Paths.get("src"));
-		return new TargetProject(basePath, sourcePaths, sourceFiles, testFiles, classPath);
+		return new TargetProject(basePath, sourceFiles, testFiles, classPath);
 	}
 }
