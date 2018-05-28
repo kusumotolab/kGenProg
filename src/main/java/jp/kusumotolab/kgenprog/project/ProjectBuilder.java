@@ -127,8 +127,10 @@ public class ProjectBuilder {
 						correspondingSourceFile = sourceFile;
 					}
 				}
-				buildResults.addMapping(Paths.get(correspondingSourceFile.path),
-						Paths.get(classFile.getAbsolutePath()));
+				if (maxSimilarity > 0f) {
+					buildResults.addMapping(Paths.get(correspondingSourceFile.path),
+							Paths.get(classFile.getAbsolutePath()));
+				}
 			}
 		}
 
