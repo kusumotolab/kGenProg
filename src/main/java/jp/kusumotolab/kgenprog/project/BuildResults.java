@@ -29,6 +29,25 @@ public class BuildResults {
 		this.classToSourceMap = new HashMap<>();
 	}
 
+	public void addMapping(final Path pathToSource, final Path pathToClass) {
+		Set<Path> pathToClasses = this.sourceToClassMap.get(pathToSource);
+		if (null == pathToClasses) {
+			pathToClasses = new HashSet<>();
+			this.sourceToClassMap.put(pathToSource, pathToClasses);
+		}
+		pathToClasses.add(pathToClass);
+		this.classToSourceMap.put(pathToClass, pathToSource);
+	}
+
+	public Set<Path> getPathToClasses(final Path pathToSource) {
+		return this.sourceToClassMap.get(pathToSource);
+	}
+
+	public Path getPathToSource(final Path pathToClass) {
+		return this.classToSourceMap.get(pathToClass);
+	}
+
+	@Deprecated
 	public void addMaping(final Path source, final Collection<Path> classes) {
 		this.sourceToClassMap.put(source, new HashSet<Path>(classes));
 		classes.forEach(c -> this.classToSourceMap.put(c, source));

@@ -3,7 +3,9 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,9 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.lucene.search.spell.LevensteinDistance;
 
 public class ProjectBuilder {
 
@@ -85,6 +90,12 @@ public class ProjectBuilder {
 		final CompilationTask task = compiler.getTask(null, fileManager, diagnostics, compilationOptions, null,
 				javaFileObjects);
 
+		try {
+			fileManager.close();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
 		final boolean isFailed = !task.call();
 		// TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
 		for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
@@ -99,10 +110,26 @@ public class ProjectBuilder {
 
 		final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
 
-		try {
-			fileManager.close();
-		} catch (final IOException e) {
-			e.printStackTrace();
+		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピングを取る
+		if (!isFailed) {
+			final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
+			final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+
+			final LevensteinDistance levensteinDistance = new LevensteinDistance();
+			for (final File classFile : classFiles) {
+				float maxSimilarity = 0f;
+				SourceFile correspondingSourceFile = null;
+				for (final SourceFile sourceFile : sourceFiles) {
+					final float similarity = levensteinDistance.getDistance(classFile.getAbsolutePath(),
+							sourceFile.path.intern());
+					if (similarity > maxSimilarity) {
+						maxSimilarity = similarity;
+						correspondingSourceFile = sourceFile;
+					}
+				}
+				buildResults.addMapping(Paths.get(correspondingSourceFile.path),
+						Paths.get(classFile.getAbsolutePath()));
+			}
 		}
 
 		return buildResults;
