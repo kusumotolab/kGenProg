@@ -1,23 +1,28 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Files;
+
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.kohsuke.args4j.CmdLineException;
 
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
-
 public class TestExecutorMainTest {
 
 	final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
-	final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
+	final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(
+			"jp.kusumotolab.BuggyCalculatorTest");
 	final static FullyQualifiedName util = new TargetFullyQualifiedName("jp.kusumotolab.Util");
 	final static FullyQualifiedName utilTest = new TestFullyQualifiedName("jp.kusumotolab.UtilTest");
 
