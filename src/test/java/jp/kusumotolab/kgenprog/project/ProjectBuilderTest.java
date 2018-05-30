@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class ProjectBuilderTest {
 		final BuildResults buildResults = projectBuilder.build(outDirPath);
 
 		assertFalse(buildResults.isBuildFailed); // TODO assertThat に置き換える
-		
+
 		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
 			if (sourceFile.path.endsWith("BuggyCalculator.java")) {
 				final Path pathToClass = buildResults.getPathToClasses(Paths.get(sourceFile.path)).iterator().next();
@@ -78,6 +79,27 @@ public class ProjectBuilderTest {
 				assertThat(pathToClass.endsWith("UtilTest.class"), is(true));
 				assertThat(correspondingSource.endsWith("UtilTest.java"), is(true));
 			}
+		}
+	}
+
+	@Test
+	public void testBuildStringForExample03() {
+		final String separator = File.separator;
+		final TargetProject targetProject = TargetProject.generate("example/example03");
+		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+		final String outDirPath = "example" + separator + "example03" + separator + "bin";
+
+		final BuildResults buildResults = projectBuilder.build(outDirPath);
+
+		assertThat(buildResults.isBuildFailed, is(false));
+		assertThat(buildResults.isMappingAvailable(), is(true));
+
+		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
+			final Set<Path> pathToClasses = buildResults.getPathToClasses(Paths.get(sourceFile.path));
+			pathToClasses.stream().forEach(c -> {
+				final Path correspondingSourcePath = buildResults.getPathToSource(c);
+				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+			});
 		}
 	}
 }
