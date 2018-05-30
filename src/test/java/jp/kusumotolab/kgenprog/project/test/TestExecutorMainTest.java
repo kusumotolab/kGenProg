@@ -26,11 +26,6 @@ public class TestExecutorMainTest {
 	final static FullyQualifiedName util = new TargetFullyQualifiedName("jp.kusumotolab.Util");
 	final static FullyQualifiedName utilTest = new TestFullyQualifiedName("jp.kusumotolab.UtilTest");
 
-	final static FullyQualifiedName inner = new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$InnerClass");
-	final static FullyQualifiedName staticInner = new TargetFullyQualifiedName(
-			"jp.kusumotolab.BuggyCalculator$StaticInnerClass");
-	final static FullyQualifiedName outer = new TargetFullyQualifiedName("jp.kusumotolab.OuterClass");
-
 	final static FullyQualifiedName test01 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
 	final static FullyQualifiedName test02 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
 	final static FullyQualifiedName test03 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
@@ -122,59 +117,6 @@ public class TestExecutorMainTest {
 		// plusTest01()ではBuggyCalculatorとUtilが実行されたはず
 		final TestResult plusTest01_result = r.getTestResult(plusTest01);
 		assertThat(plusTest01_result.getExecutedTargetFQNs(), is(containsInAnyOrder(buggyCalculator, util)));
-
-		// plusTest01()で実行されたUtilのカバレッジはこうなるはず
-		assertThat(plusTest01_result.getCoverages(util).statuses, //
-				is(contains(EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED, EMPTY, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY,
-						EMPTY, EMPTY, NOT_COVERED, NOT_COVERED)));
-		// TODO 最後のNOT_COVERDだけ理解できない．謎．
-	}
-
-	@Test
-	public void testMainSuccess03() throws Exception {
-		final String rootDir = "example/example03";
-		final String outDir = rootDir + "/_bin/";
-		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
-
-		TestExecutorMain.main(new String[] { //
-				"-b", outDir, //
-				"-s",
-				buggyCalculator.toString() + TestExecutorMain.SEPARATOR + util.toString() + TestExecutorMain.SEPARATOR
-						+ inner.toString() + TestExecutorMain.SEPARATOR + staticInner.toString()
-						+ TestExecutorMain.SEPARATOR + outer.toString(),
-				"-t", buggyCalculatorTest.toString() + TestExecutorMain.SEPARATOR + utilTest.toString() });
-
-		// serialize対象のファイルがあるはず
-		assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
-
-		final TestResults r = TestResults.deserialize();
-
-		// example03で実行されたテストは10個のはず
-		assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder( //
-				test01, test02, test03, test04, //
-				plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
-
-		// テストの成否はこうなるはず
-		assertThat(r.getTestResult(test01).failed, is(false));
-		assertThat(r.getTestResult(test02).failed, is(false));
-		assertThat(r.getTestResult(test03).failed, is(true));
-		assertThat(r.getTestResult(test04).failed, is(false));
-
-		// test01()ではBuggyCalculatorとUtilが実行されたはず
-		final TestResult test01_result = r.getTestResult(test01);
-		assertThat(test01_result.getExecutedTargetFQNs(),
-				is(containsInAnyOrder(buggyCalculator, util, inner, staticInner, outer)));
-
-		// test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
-		assertThat(test01_result.getCoverages(buggyCalculator).statuses, //
-				is(contains(EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED, COVERED,
-						EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, COVERED)));
-
-		// plusTest01()ではBuggyCalculatorとUtilが実行されたはず
-		final TestResult plusTest01_result = r.getTestResult(plusTest01);
-		assertThat(plusTest01_result.getExecutedTargetFQNs(),
-				is(containsInAnyOrder(buggyCalculator, inner, staticInner, outer, util)));
 
 		// plusTest01()で実行されたUtilのカバレッジはこうなるはず
 		assertThat(plusTest01_result.getCoverages(util).statuses, //
