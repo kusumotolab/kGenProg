@@ -5,7 +5,9 @@ import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
@@ -28,6 +30,7 @@ public class TestExecutorTest {
 	final static FullyQualifiedName staticInner = new TargetFullyQualifiedName(
 			"jp.kusumotolab.BuggyCalculator$StaticInnerClass");
 	final static FullyQualifiedName outer = new TargetFullyQualifiedName("jp.kusumotolab.OuterClass");
+	final static FullyQualifiedName anonymousClass = new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$1");
 
 	final static FullyQualifiedName test01 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
 	final static FullyQualifiedName test02 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
@@ -144,16 +147,23 @@ public class TestExecutorTest {
 		assertThat(test01_result.getExecutedTargetFQNs(),
 				is(containsInAnyOrder(buggyCalculator, util, inner, staticInner, outer)));
 
+		// 無名クラスは計測できないらしい（そもそもテストで実行された扱いにすらならない）． 
+		assertThat(test01_result.getExecutedTargetFQNs(), not(hasItem(anonymousClass)));
+
 		// test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
 		assertThat(test01_result.getCoverages(buggyCalculator).statuses, //
-				is(contains(EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED, COVERED,
-						EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, COVERED)));
+				is(contains(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY,
+						NOT_COVERED, EMPTY, EMPTY, COVERED, COVERED, EMPTY, EMPTY, COVERED, EMPTY, EMPTY, COVERED,
+						COVERED, EMPTY, EMPTY, COVERED, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, COVERED, COVERED, EMPTY,
+						EMPTY, COVERED, EMPTY, COVERED)));
 
 		// test01()で実行されたStaticInnerのカバレッジはこうなるはず
 		assertThat(test01_result.getCoverages(staticInner).statuses, //
 				is(contains(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
 						EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-						EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED, COVERED)));
+						EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
+						EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED,
+						COVERED)));
 
 		// plusTest01()ではBuggyCalculator，Util，Inner，StaticInner, Outerが実行されたはず
 		final TestResult plusTest01_result = r.getTestResult(plusTest01);
