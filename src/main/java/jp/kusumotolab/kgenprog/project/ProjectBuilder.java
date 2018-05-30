@@ -3,7 +3,9 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,9 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.lucene.search.spell.LevensteinDistance;
 
 public class ProjectBuilder {
 
@@ -31,9 +36,9 @@ public class ProjectBuilder {
 	 * 
 	 * @param outDir
 	 *            バイトコード出力ディレクトリ
-	 * @return ビルドが成功すれば true，失敗すれば false
+	 * @return ビルドに関するさまざまな情報
 	 */
-	public boolean build(final String outDir) {
+	public BuildResults build(final String outDir) {
 		return this.build(null, outDir);
 	}
 
@@ -43,20 +48,20 @@ public class ProjectBuilder {
 	 *            の場合は，初期ソースコードからビルド
 	 * @param outDir
 	 *            バイトコード出力ディレクトリ
-	 * @return ビルドが成功すれば true，失敗すれば false
+	 * @return ビルドに関するさまざまな情報
 	 */
-	public boolean build(final GeneratedSourceCode generatedSourceCode, final String outDir) {
+	public BuildResults build(final GeneratedSourceCode generatedSourceCode, final String outDir) {
 
 		final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-
-		final Iterable<? extends JavaFileObject> javaFileObjects;
 
 		// outディレクトリが存在しなければ生成
 		final File outputDirectoryFile = new File(outDir);
 		if (!outputDirectoryFile.exists()) {
 			outputDirectoryFile.mkdirs();
 		}
+
+		final Iterable<? extends JavaFileObject> javaFileObjects;
 
 		// variant が null なら，初期ソースコードをビルド
 		if (null == generatedSourceCode) {
@@ -85,7 +90,13 @@ public class ProjectBuilder {
 		final CompilationTask task = compiler.getTask(null, fileManager, diagnostics, compilationOptions, null,
 				javaFileObjects);
 
-		final boolean isSuccess = task.call();
+		try {
+			fileManager.close();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
+		final boolean isFailed = !task.call();
 		// TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
 		for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
 			System.err.println(diagnostic.getCode());
@@ -95,16 +106,35 @@ public class ProjectBuilder {
 			System.err.println(diagnostic.getEndPosition());
 			System.err.println(diagnostic.getSource());
 			System.err.println(diagnostic.getMessage(null));
-
 		}
 
-		try {
-			fileManager.close();
-		} catch (final IOException e) {
-			e.printStackTrace();
+		final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
+
+		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピングを取る
+		if (!isFailed) {
+			final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
+			final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+
+			final LevensteinDistance levensteinDistance = new LevensteinDistance();
+			for (final File classFile : classFiles) {
+				float maxSimilarity = 0f;
+				SourceFile correspondingSourceFile = null;
+				for (final SourceFile sourceFile : sourceFiles) {
+					final float similarity = levensteinDistance.getDistance(classFile.getAbsolutePath(),
+							sourceFile.path.intern());
+					if (similarity > maxSimilarity) {
+						maxSimilarity = similarity;
+						correspondingSourceFile = sourceFile;
+					}
+				}
+				if (maxSimilarity > 0f) {
+					buildResults.addMapping(Paths.get(correspondingSourceFile.path),
+							Paths.get(classFile.getAbsolutePath()));
+				}
+			}
 		}
 
-		return isSuccess;
+		return buildResults;
 	}
 }
 

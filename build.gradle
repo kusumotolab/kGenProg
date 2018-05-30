@@ -51,4 +51,7 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     //testCompile 'junit:junit:4.12'
     compile 'junit:junit:4.12'
+    
+	// https://mvnrepository.com/artifact/org.apache.lucene/lucene-spellchecker
+	compile group: 'org.apache.lucene', name: 'lucene-spellchecker', version: '3.6.2'
 }
