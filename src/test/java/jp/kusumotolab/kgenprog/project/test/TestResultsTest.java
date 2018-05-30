@@ -1,7 +1,10 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -9,10 +12,10 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.junit.Test;
-
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+
+import org.junit.Test;
 
 public class TestResultsTest {
 
