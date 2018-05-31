@@ -114,26 +114,27 @@ public class ProjectBuilder {
 
 		final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
 
-		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピングを取る
-		if (!isFailed) {
-			final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
-			final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+		if (buildResults.isBuildFailed) {
+			return buildResults;
+		}
 
-			for (final File classFile : classFiles) {
-				final String partialPath = getPartialPath(classFile);
-				SourceFile correspondingSourceFile = null;
-				for (final SourceFile sourceFile : sourceFiles) {
-					if (sourceFile.path.endsWith(partialPath)) {
-						correspondingSourceFile = sourceFile;
-						break;
-					}
+		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピングを取る
+		final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
+		final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+		for (final File classFile : classFiles) {
+			final String partialPath = getPartialPath(classFile);
+			SourceFile correspondingSourceFile = null;
+			for (final SourceFile sourceFile : sourceFiles) {
+				if (sourceFile.path.endsWith(partialPath)) {
+					correspondingSourceFile = sourceFile;
+					break;
 				}
-				if (null != correspondingSourceFile) {
-					buildResults.addMapping(Paths.get(correspondingSourceFile.path),
-							Paths.get(classFile.getAbsolutePath()));
-				} else {
-					buildResults.setMappingAvailable(false);
-				}
+			}
+			if (null != correspondingSourceFile) {
+				buildResults.addMapping(Paths.get(correspondingSourceFile.path),
+						Paths.get(classFile.getAbsolutePath()));
+			} else {
+				buildResults.setMappingAvailable(false);
 			}
 		}
 
