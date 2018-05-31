@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import javax.tools.Diagnostic;
@@ -167,7 +168,7 @@ public class ProjectBuilder {
 			e.printStackTrace();
 		}
 
-		return sb.toString().replaceAll("/", File.separator);
+		return sb.toString().replaceAll("/", Matcher.quoteReplacement(File.separator));
 	}
 }
 
