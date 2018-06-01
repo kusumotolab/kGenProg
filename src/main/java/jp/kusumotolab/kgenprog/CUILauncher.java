@@ -29,12 +29,22 @@ import jp.kusumotolab.kgenprog.project.TestSourceFile;
 public class CUILauncher {
 
 	// region Fields
+	private SourceFile rootDir;
 	private List<SourceFile> sourceFiles = new ArrayList<>();
 	private List<SourceFile> testFiles = new ArrayList<>();
 	private List<ClassPath> classPaths = new ArrayList<>();
 	// endregion
 
 	// region Getter/Setter
+
+	public SourceFile getRootDir() {
+		return rootDir;
+	}
+
+	@Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>", usage = "Path of a root directory of a target project")
+	public void setRootDir(String rootDir) {
+		this.rootDir = new TargetSourceFile(rootDir);
+	}
 
 	public List<SourceFile> getSourceFiles() {
 		return sourceFiles;
