@@ -43,7 +43,7 @@ public class CUILauncher {
 
 	@Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>", usage = "Path of a root directory of a target project")
 	public void setRootDir(String rootDir) {
-		this.rootDir = new SourceFile(rootDir);
+		this.rootDir = new TargetSourceFile(rootDir);
 	}
 
 	public List<SourceFile> getSourceFiles() {
