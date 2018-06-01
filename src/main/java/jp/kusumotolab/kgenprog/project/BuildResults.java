@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,6 +19,8 @@ public class BuildResults {
 	private final Map<Path, Set<Path>> sourceToClassMap;
 	private final Map<Path, Path> classToSourceMap;
 
+	private boolean isMappingAvaiable;
+
 	public BuildResults(final boolean isBuildFailed, final String outDir,
 			final DiagnosticCollector<JavaFileObject> diagnostics) {
 		this.isBuildFailed = isBuildFailed;
@@ -27,6 +28,7 @@ public class BuildResults {
 		this.diagnostics = diagnostics;
 		this.sourceToClassMap = new HashMap<>();
 		this.classToSourceMap = new HashMap<>();
+		this.isMappingAvaiable = true;
 	}
 
 	public void addMapping(final Path pathToSource, final Path pathToClass) {
@@ -47,9 +49,11 @@ public class BuildResults {
 		return this.classToSourceMap.get(pathToClass);
 	}
 
-	@Deprecated
-	public void addMaping(final Path source, final Collection<Path> classes) {
-		this.sourceToClassMap.put(source, new HashSet<Path>(classes));
-		classes.forEach(c -> this.classToSourceMap.put(c, source));
+	public void setMappingAvailable(final boolean available) {
+		this.isMappingAvaiable = available;
+	}
+
+	public boolean isMappingAvailable() {
+		return this.isMappingAvaiable;
 	}
 }
