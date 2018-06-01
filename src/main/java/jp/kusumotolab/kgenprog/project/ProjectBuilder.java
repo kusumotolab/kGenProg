@@ -1,12 +1,14 @@
 package jp.kusumotolab.kgenprog.project;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import javax.tools.Diagnostic;
@@ -19,7 +21,9 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.lucene.search.spell.LevensteinDistance;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class ProjectBuilder {
 
@@ -110,31 +114,62 @@ public class ProjectBuilder {
 
 		final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
 
-		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピングを取る
-		if (!isFailed) {
-			final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
-			final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+		if (buildResults.isBuildFailed) {
+			return buildResults;
+		}
 
-			final LevensteinDistance levensteinDistance = new LevensteinDistance();
-			for (final File classFile : classFiles) {
-				float maxSimilarity = 0f;
-				SourceFile correspondingSourceFile = null;
-				for (final SourceFile sourceFile : sourceFiles) {
-					final float similarity = levensteinDistance.getDistance(classFile.getAbsolutePath(),
-							sourceFile.path.intern());
-					if (similarity > maxSimilarity) {
-						maxSimilarity = similarity;
-						correspondingSourceFile = sourceFile;
-					}
+		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピングを取る
+		final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
+		final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+		for (final File classFile : classFiles) {
+			final String partialPath = getPartialPath(classFile);
+			SourceFile correspondingSourceFile = null;
+			for (final SourceFile sourceFile : sourceFiles) {
+				if (sourceFile.path.endsWith(partialPath)) {
+					correspondingSourceFile = sourceFile;
+					break;
 				}
-				if (maxSimilarity > 0f) {
-					buildResults.addMapping(Paths.get(correspondingSourceFile.path),
-							Paths.get(classFile.getAbsolutePath()));
-				}
+			}
+			if (null != correspondingSourceFile) {
+				buildResults.addMapping(Paths.get(correspondingSourceFile.path),
+						Paths.get(classFile.getAbsolutePath()));
+			} else {
+				buildResults.setMappingAvailable(false);
 			}
 		}
 
 		return buildResults;
+	}
+
+	private String getPartialPath(final File classFile) {
+
+		final StringBuilder sb = new StringBuilder();
+
+		try {
+			final ClassReader reader = new ClassReader(new FileInputStream(classFile));
+			reader.accept(new ClassVisitor(Opcodes.ASM6) {
+
+				@Override
+				public void visit(final int version, final int access, final String name, final String signature,
+						final String superName, final String[] interfaces) {
+
+					final int index = name.lastIndexOf('/');
+					if (0 < index) {
+						sb.append(name.substring(0, index + 1));
+					}
+				}
+
+				@Override
+				public void visitSource(final String source, final String debug) {
+					sb.append(source);
+				}
+
+			}, ClassReader.SKIP_CODE);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
+		return sb.toString().replaceAll("/", Matcher.quoteReplacement(File.separator));
 	}
 }
 
