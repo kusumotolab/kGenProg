@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import javax.tools.Diagnostic;
@@ -22,8 +21,9 @@ import javax.tools.ToolProvider;
 
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
+
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
@@ -118,11 +118,18 @@ public class ProjectBuilder {
 			return buildResults;
 		}
 
-		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピングを取る
+		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピング
+		// およびFQNとソースファイルのマッピングを取る
 		final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
 		final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
 		for (final File classFile : classFiles) {
-			final String partialPath = getPartialPath(classFile);
+
+			// クラスファイルのパース
+			final ClassParser parser = this.parse(classFile);
+
+			// 対応関係の構築
+			final String partialPath = parser.getPartialPath();
+			final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(parser.getFQN("."));
 			SourceFile correspondingSourceFile = null;
 			for (final SourceFile sourceFile : sourceFiles) {
 				if (sourceFile.path.endsWith(partialPath)) {
@@ -133,6 +140,7 @@ public class ProjectBuilder {
 			if (null != correspondingSourceFile) {
 				buildResults.addMapping(Paths.get(correspondingSourceFile.path),
 						Paths.get(classFile.getAbsolutePath()));
+				buildResults.addMapping(Paths.get(correspondingSourceFile.path), fqn);
 			} else {
 				buildResults.setMappingAvailable(false);
 			}
@@ -141,35 +149,16 @@ public class ProjectBuilder {
 		return buildResults;
 	}
 
-	private String getPartialPath(final File classFile) {
-
-		final StringBuilder sb = new StringBuilder();
-
+	private ClassParser parse(final File classFile) {
+		ClassReader reader = null;
 		try {
-			final ClassReader reader = new ClassReader(new FileInputStream(classFile));
-			reader.accept(new ClassVisitor(Opcodes.ASM6) {
-
-				@Override
-				public void visit(final int version, final int access, final String name, final String signature,
-						final String superName, final String[] interfaces) {
-
-					final int index = name.lastIndexOf('/');
-					if (0 < index) {
-						sb.append(name.substring(0, index + 1));
-					}
-				}
-
-				@Override
-				public void visitSource(final String source, final String debug) {
-					sb.append(source);
-				}
-
-			}, ClassReader.SKIP_CODE);
-		} catch (final IOException e) {
+			reader = new ClassReader(new FileInputStream(classFile));
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-
-		return sb.toString().replaceAll("/", Matcher.quoteReplacement(File.separator));
+		final ClassParser parser = new ClassParser(Opcodes.ASM6);
+		reader.accept(parser, ClassReader.SKIP_CODE);
+		return parser;
 	}
 }
 
