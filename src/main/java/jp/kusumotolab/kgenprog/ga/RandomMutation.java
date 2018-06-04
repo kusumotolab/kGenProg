@@ -15,9 +15,9 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 import org.eclipse.jdt.core.dom.*;
 
-public class RandomMutation implements Mutation {
+public class RandomMutation extends ASTVisitor implements Mutation {
 
-    private List<GeneratedAST> candidates = new ArrayList<>();
+    private List<Statement> candidates = new ArrayList<>();
     private final RandomNumberGeneration randomNumberGeneration;
 
     public RandomMutation() {
@@ -30,9 +30,10 @@ public class RandomMutation implements Mutation {
 
     @Override
     public void setCandidates(List<GeneratedAST> candidates) {
-        this.candidates = candidates.stream()
-                .sorted(Comparator.comparing(x -> x.getSourceFile().path))
-                .collect(Collectors.toList());
+        for (GeneratedAST candidate : candidates) {
+            final CompilationUnit unit = ((GeneratedJDTAST) candidate).getRoot();
+            unit.accept(this);
+        }
     }
 
     @Override
@@ -61,93 +62,100 @@ public class RandomMutation implements Mutation {
     }
 
     private Statement chooseNodeAtRandom() {
-        final int randomNumber = randomNumberGeneration.getRandomNumber(candidates.size());
-        final GeneratedAST generatedAST = candidates.get(randomNumber);
-        final CompilationUnit root = ((GeneratedJDTAST) generatedAST).getRoot();
-        final List types = root.types();
-        final Object type = types.get(randomNumberGeneration.getRandomNumber(types.size()));
-        if(type instanceof TypeDeclaration) {
-            final TypeDeclaration typeDeclaration = ((TypeDeclaration) type);
-            final MethodDeclaration[] methods = typeDeclaration.getMethods();
-            if (methods.length == 0) {
-                return chooseNodeAtRandom();
-            }
-            final MethodDeclaration method = methods[randomNumberGeneration.getRandomNumber(methods.length)];
-            final Statement statement = extractStatementFromBlock(method.getBody());
-            if (statement == null) {
-                return chooseNodeAtRandom();
-            }
-            return statement;
-        }
-        return chooseNodeAtRandom();
+        return candidates.get(randomNumberGeneration.getRandomNumber(candidates.size()));
     }
 
-    private Statement extractStatement(Statement statement) {
-        if (statement instanceof Block) {
-            return extractStatementFromBlock(((Block) statement));
-        } else if (statement instanceof IfStatement) {
-            return extractStatementFromIfStatement(((IfStatement) statement));
-        } else if (statement instanceof WhileStatement) {
-            return extractStatementFromWhile(((WhileStatement) statement));
-        } else if (statement instanceof SwitchStatement) {
-            return extractStatementFromSwitch(((SwitchStatement) statement));
-        } else if (statement instanceof DoStatement) {
-            return extractStatementFromDo(((DoStatement) statement));
-        } else if (statement instanceof TryStatement) {
-            return extractStatementFromTry(((TryStatement) statement));
-        }
-        return statement;
+    private void addStatement(Statement statement) {
+        candidates.add(statement);
     }
 
-    private Statement extractStatementFromStatements(List<Statement> statements) {
-        if (statements.isEmpty()) {
-            return null;
-        }
-        final Statement statement = statements.get(randomNumberGeneration.getRandomNumber(statements.size()));
-        return extractStatement(statement);
+    @Override
+    public boolean visit(AssertStatement node) {
+        addStatement(node);
+        return super.visit(node);
     }
 
-    private Statement extractStatementFromBlock(Block block) {
-        return extractStatementFromStatements(block.statements());
+    @Override
+    public boolean visit(BreakStatement node) {
+        addStatement(node);
+        return super.visit(node);
     }
 
-    private Statement extractStatementFromIfStatement(IfStatement ifStatement) {
-        if (randomNumberGeneration.getRandomBoolean()) {
-            return extractStatement(ifStatement.getThenStatement());
-        } else if (randomNumberGeneration.getRandomBoolean()) {
-            return extractStatement(ifStatement.getElseStatement());
-        } else if (randomNumberGeneration.getRandomBoolean()) {
-            return ifStatement.getElseStatement();
-        } else if (randomNumberGeneration.getRandomBoolean()) {
-            return ifStatement.getThenStatement();
-        }
-        return ifStatement;
+    @Override
+    public boolean visit(ContinueStatement node) {
+        addStatement(node);
+        return super.visit(node);
     }
 
-    private Statement extractStatementFromWhile(WhileStatement whileStatement) {
-        if (randomNumberGeneration.getRandomBoolean()) {
-            return extractStatement(whileStatement.getBody());
-        }
-        return whileStatement;
+    @Override
+    public boolean visit(DoStatement node) {
+        addStatement(node);
+        return super.visit(node);
     }
 
-    private Statement extractStatementFromSwitch(SwitchStatement switchStatement) {
-        if (randomNumberGeneration.getRandomBoolean()) {
-            return extractStatementFromStatements(switchStatement.statements());
-        }
-        return switchStatement;
+    @Override
+    public boolean visit(EmptyStatement node) {
+        addStatement(node);
+        return super.visit(node);
     }
 
-    private Statement extractStatementFromDo(DoStatement doStatement) {
-        return extractStatement(doStatement.getBody());
+    @Override
+    public boolean visit(ExpressionStatement node) {
+        addStatement(node);
+        return super.visit(node);
     }
 
-    private Statement extractStatementFromTry(TryStatement tryStatement) {
-        if (randomNumberGeneration.getRandomBoolean()) {
-            return extractStatementFromBlock(tryStatement.getBody());
-        } else if (randomNumberGeneration.getRandomBoolean()) {
-            return extractStatementFromBlock(tryStatement.getFinally());
-        }
-        return tryStatement;
+    @Override
+    public boolean visit(ForStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(IfStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(ReturnStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(SwitchStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(SynchronizedStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(ThrowStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(TryStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(VariableDeclarationStatement node) {
+        addStatement(node);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(WhileStatement node) {
+        addStatement(node);
+        return super.visit(node);
     }
 }
