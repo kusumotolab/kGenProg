@@ -35,12 +35,11 @@ public class StatementListVistor extends ASTVisitor {
   private Statement[] lineToStatement;
   private CompilationUnit unit;
 
-
   public void analyzeStatement(CompilationUnit unit) {
     this.statements = new ArrayList<>();
     this.unit = unit;
     int lineNumberLength = unit.getLineNumber(unit.getLength() - 1);
-    this.lineToStatement = new Statement[lineNumberLength];
+    this.lineToStatement = new Statement[lineNumberLength + 1];
 
     unit.accept(this);
   }
