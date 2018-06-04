@@ -2,14 +2,14 @@ package jp.kusumotolab.kgenprog.ga;
 
 import java.util.Random;
 
-public class RandomNumberGeneration {
+import static java.lang.Math.abs;
 
-    public final static RandomNumberGeneration sharedInstance = new RandomNumberGeneration();
+public class RandomNumberGeneration {
 
     private int seed;
     private Random random;
 
-    private RandomNumberGeneration() {
+    public RandomNumberGeneration() {
         setSeed(0);
     }
 
@@ -24,5 +24,13 @@ public class RandomNumberGeneration {
 
     public int getRandomNumber() {
         return random.nextInt();
+    }
+
+    public int getRandomNumber(int divisor) {
+        return abs(random.nextInt()) % divisor;
+    }
+
+    public boolean getRandomBoolean() {
+        return random.nextBoolean();
     }
 }
