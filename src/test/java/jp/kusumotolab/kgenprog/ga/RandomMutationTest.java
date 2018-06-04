@@ -31,8 +31,7 @@ public class RandomMutationTest {
 
         @Override
         public int getRandomNumber(int divisor) {
-            // InsertOperationを選択するためにdivisorが3の時だけInsertに対応する1を返す
-            return divisor == 3 ? 1 : 0;
+            return 1;
         }
 
         @Override
