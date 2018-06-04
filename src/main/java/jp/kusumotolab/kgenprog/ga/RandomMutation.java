@@ -30,10 +30,12 @@ public class RandomMutation extends ASTVisitor implements Mutation {
 
     @Override
     public void setCandidates(List<GeneratedAST> candidates) {
-        for (GeneratedAST candidate : candidates) {
-            final CompilationUnit unit = ((GeneratedJDTAST) candidate).getRoot();
-            unit.accept(this);
-        }
+        candidates.stream()
+                .sorted(Comparator.comparing(x -> x.getSourceFile().path))
+                .forEach(e -> {
+                    final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
+                    unit.accept(this);
+                });
     }
 
     @Override
