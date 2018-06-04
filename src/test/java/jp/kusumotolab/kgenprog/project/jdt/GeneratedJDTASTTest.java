@@ -1,8 +1,10 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 import java.nio.file.Paths;
-import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.Location;
@@ -36,7 +38,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferASTNode01() {
-    Location location = ast.inferASTNode(3);
+    Location location = ast.inferLocation(3);
 
     assertThat(location, instanceOf(JDTLocation.class));
     JDTLocation jdtLocation = (JDTLocation) location;
@@ -46,7 +48,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferASTNode02() {
-    Location location = ast.inferASTNode(5);
+    Location location = ast.inferLocation(5);
 
     assertThat(location, instanceOf(JDTLocation.class));
     JDTLocation jdtLocation = (JDTLocation) location;
@@ -56,7 +58,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferASTNode03() {
-    Location location = ast.inferASTNode(1);
+    Location location = ast.inferLocation(1);
 
     assertThat(location, nullValue());
   }

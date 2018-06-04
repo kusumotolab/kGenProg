@@ -9,5 +9,5 @@ public interface GeneratedAST {
 
   public SourceFile getSourceFile();
 
-  public Location inferASTNode(int lineNumber);
+  public Location inferLocation(int lineNumber);
 }
