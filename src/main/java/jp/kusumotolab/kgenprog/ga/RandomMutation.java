@@ -15,7 +15,7 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 import org.eclipse.jdt.core.dom.*;
 
-public class RandomMutation extends ASTVisitor implements Mutation {
+public class RandomMutation implements Mutation {
 
     private List<Statement> candidates = new ArrayList<>();
     private final RandomNumberGeneration randomNumberGeneration;
@@ -34,7 +34,9 @@ public class RandomMutation extends ASTVisitor implements Mutation {
                 .sorted(Comparator.comparing(x -> x.getSourceFile().path))
                 .forEach(e -> {
                     final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
-                    unit.accept(this);
+                    final Visitor visitor = new Visitor();
+                    unit.accept(visitor);
+                    this.candidates.addAll(visitor.statements);
                 });
     }
 
@@ -67,97 +69,102 @@ public class RandomMutation extends ASTVisitor implements Mutation {
         return candidates.get(randomNumberGeneration.getRandomNumber(candidates.size()));
     }
 
-    private void addStatement(Statement statement) {
-        candidates.add(statement);
-    }
+    private class Visitor extends ASTVisitor {
 
-    @Override
-    public boolean visit(AssertStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        private List<Statement> statements = new ArrayList<>();
 
-    @Override
-    public boolean visit(BreakStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        private void addStatement(Statement statement) {
+            statements.add(statement);
+        }
 
-    @Override
-    public boolean visit(ContinueStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(AssertStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(DoStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(BreakStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(EmptyStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(ContinueStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(ExpressionStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(DoStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(ForStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(EmptyStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(IfStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(ExpressionStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(ReturnStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(ForStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(SwitchStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(IfStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(SynchronizedStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(ReturnStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(ThrowStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(SwitchStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(TryStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(SynchronizedStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(VariableDeclarationStatement node) {
-        addStatement(node);
-        return super.visit(node);
-    }
+        @Override
+        public boolean visit(ThrowStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
 
-    @Override
-    public boolean visit(WhileStatement node) {
-        addStatement(node);
-        return super.visit(node);
+        @Override
+        public boolean visit(TryStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
+
+        @Override
+        public boolean visit(VariableDeclarationStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
+
+        @Override
+        public boolean visit(WhileStatement node) {
+            addStatement(node);
+            return super.visit(node);
+        }
     }
 }
