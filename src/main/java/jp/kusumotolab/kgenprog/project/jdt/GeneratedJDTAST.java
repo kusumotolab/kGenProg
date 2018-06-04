@@ -44,7 +44,7 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public Location inferASTNode(int lineNumber) {
+  public Location inferLocation(int lineNumber) {
     if (0 <= lineNumber && lineNumber < lineNumberToStatement.length) {
       Statement statement = lineNumberToStatement[lineNumber];
 

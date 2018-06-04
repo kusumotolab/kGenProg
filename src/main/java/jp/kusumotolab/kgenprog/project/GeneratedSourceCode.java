@@ -30,6 +30,6 @@ public class GeneratedSourceCode {
     if (ast == null) {
       return null;
     }
-    return ast.inferASTNode(lineNumber);
+    return ast.inferLocation(lineNumber);
   }
 }
