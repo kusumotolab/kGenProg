@@ -8,4 +8,6 @@ public interface GeneratedAST {
   public String getPrimaryClassName();
 
   public SourceFile getSourceFile();
+
+  public Location inferASTNode(int lineNumber);
 }
