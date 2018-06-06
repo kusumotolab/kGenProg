@@ -108,7 +108,7 @@ public class TestProcessBuilder {
 	@Deprecated
 	private List<FullyQualifiedName> getFQNs(List<SourceFile> files, Path rootPath) {
 		return files.stream() //
-				.map(s -> Paths.get(s.path)) //
+				.map(s -> s.path) //
 				.map(p -> rootPath.resolve("src").relativize(p)) //
 				.map(p -> new TestFullyQualifiedName(p)) //
 				.collect(Collectors.toList());
