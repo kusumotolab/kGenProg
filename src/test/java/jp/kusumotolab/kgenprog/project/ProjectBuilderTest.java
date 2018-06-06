@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class ProjectBuilderTest {
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example01" + separator + "bin";
 
-		final BuildResults buildResults = projectBuilder.build(outDirPath);
+		final BuildResults buildResults = projectBuilder.build(Paths.get(outDirPath));
 
 		assertThat(buildResults.isBuildFailed, is(false));
 		assertThat(buildResults.isMappingAvailable(), is(true));
@@ -49,7 +50,7 @@ public class ProjectBuilderTest {
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example02" + separator + "bin";
 
-		final BuildResults buildResults = projectBuilder.build(outDirPath);
+		final BuildResults buildResults = projectBuilder.build(Paths.get(outDirPath));
 
 		assertThat(buildResults.isBuildFailed, is(false));
 		assertThat(buildResults.isMappingAvailable(), is(true));
@@ -78,7 +79,7 @@ public class ProjectBuilderTest {
 		final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 		final String outDirPath = "example" + separator + "example03" + separator + "bin";
 
-		final BuildResults buildResults = projectBuilder.build(outDirPath);
+		final BuildResults buildResults = projectBuilder.build(Paths.get(outDirPath));
 
 		assertThat(buildResults.isBuildFailed, is(false));
 		assertThat(buildResults.isMappingAvailable(), is(true));

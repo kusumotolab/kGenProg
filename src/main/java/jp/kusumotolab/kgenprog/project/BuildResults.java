@@ -14,7 +14,7 @@ import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 public class BuildResults {
 
 	public final boolean isBuildFailed;
-	public final String outDir;
+	public final Path outDir;
 	// TODO コンパイルできないときのエラー情報はほんとにこの型でいいか？
 	public final DiagnosticCollector<JavaFileObject> diagnostics;
 
@@ -32,11 +32,14 @@ public class BuildResults {
 	/**
 	 * コンストラクタ（後で書き換え TODO）
 	 * 
-	 * @param isBuildFailed ビルドの成否
-	 * @param outDir クラスファイル生成ディレクトリ
-	 * @param diagnostics ビルド時の詳細情報
+	 * @param isBuildFailed
+	 *            ビルドの成否
+	 * @param outDir
+	 *            クラスファイル生成ディレクトリ
+	 * @param diagnostics
+	 *            ビルド時の詳細情報
 	 */
-	public BuildResults(final boolean isBuildFailed, final String outDir,
+	public BuildResults(final boolean isBuildFailed, final Path outDir,
 			final DiagnosticCollector<JavaFileObject> diagnostics) {
 		this.isBuildFailed = isBuildFailed;
 		this.outDir = outDir;

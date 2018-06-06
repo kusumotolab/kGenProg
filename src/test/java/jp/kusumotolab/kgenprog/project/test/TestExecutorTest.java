@@ -11,12 +11,13 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
+
+import org.junit.Test;
 
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-
-import org.junit.Test;
 
 public class TestExecutorTest {
 
@@ -47,7 +48,7 @@ public class TestExecutorTest {
 		final String rootDir = "example/example01";
 		final String outDir = rootDir + "/_bin/";
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
+		new ProjectBuilder(targetProject).build(Paths.get(outDir));
 		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
 		return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
 	}
@@ -56,7 +57,7 @@ public class TestExecutorTest {
 		final String rootDir = "example/example02";
 		final String outDir = rootDir + "/_bin/";
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
+		new ProjectBuilder(targetProject).build(Paths.get(outDir));
 		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
 		return executor.exec(Arrays.asList(buggyCalculator, util), Arrays.asList(buggyCalculatorTest, utilTest));
 	}
@@ -65,7 +66,7 @@ public class TestExecutorTest {
 		final String rootDir = "example/example03";
 		final String outDir = rootDir + "/_bin/";
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
+		new ProjectBuilder(targetProject).build(Paths.get(outDir));
 		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
 		return executor.exec(Arrays.asList(buggyCalculator, util, inner, staticInner, outer),
 				Arrays.asList(buggyCalculatorTest, utilTest));
@@ -98,9 +99,10 @@ public class TestExecutorTest {
 		final TestResults r = generateTestResultsForExample02();
 
 		// example02で実行されたテストは10個のはず
-		assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder( //
-				test01, test02, test03, test04, //
-				plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
+		assertThat(r.getExecutedTestFQNs(),
+				is(containsInAnyOrder( //
+						test01, test02, test03, test04, //
+						plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
 
 		// テストの成否はこうなるはず
 		assertThat(r.getTestResult(test01).failed, is(false));
@@ -132,9 +134,10 @@ public class TestExecutorTest {
 		final TestResults r = generateTestResultsForExample03();
 
 		// example03で実行されたテストは10個のはず
-		assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder( //
-				test01, test02, test03, test04, //
-				plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
+		assertThat(r.getExecutedTestFQNs(),
+				is(containsInAnyOrder( //
+						test01, test02, test03, test04, //
+						plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
 
 		// テストの成否はこうなるはず
 		assertThat(r.getTestResult(test01).failed, is(false));
@@ -147,7 +150,7 @@ public class TestExecutorTest {
 		assertThat(test01_result.getExecutedTargetFQNs(),
 				is(containsInAnyOrder(buggyCalculator, util, inner, staticInner, outer)));
 
-		// 無名クラスは計測できないらしい（そもそもテストで実行された扱いにすらならない）． 
+		// 無名クラスは計測できないらしい（そもそもテストで実行された扱いにすらならない）．
 		assertThat(test01_result.getExecutedTargetFQNs(), not(hasItem(anonymousClass)));
 
 		// test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず

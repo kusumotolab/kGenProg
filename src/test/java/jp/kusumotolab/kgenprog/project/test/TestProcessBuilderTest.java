@@ -1,10 +1,15 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
+import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +35,7 @@ public class TestProcessBuilderTest {
 		final String rootDir = "example/example01";
 		final String outDir = rootDir + "/_bin/";
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
+		new ProjectBuilder(targetProject).build(Paths.get(outDir));
 
 		// main
 		final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
