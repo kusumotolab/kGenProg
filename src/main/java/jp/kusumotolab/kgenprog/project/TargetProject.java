@@ -98,8 +98,8 @@ public class TargetProject {
 		}
 
 		final List<ClassPath> classPath = Arrays.asList( //
-				new ClassPath("lib/junit4/junit-4.12.jar"), //
-				new ClassPath("lib/junit4/hamcrest-core-1.3.jar"));
+				new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")), //
+				new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")));
 
 		return new TargetProject(basePath, sourceFiles, testFiles, classPath);
 	}
