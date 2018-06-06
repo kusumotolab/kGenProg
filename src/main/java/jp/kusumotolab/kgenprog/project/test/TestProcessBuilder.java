@@ -49,10 +49,7 @@ public class TestProcessBuilder {
 
 	public TestProcessBuilder(final TargetProject targetProject, final Path outDir) {
 		this.targetProject = targetProject;
-
-		this.buildResults = new ProjectBuilder(this.targetProject).build(//
-				outDir.toString() // TODO should-use-path
-		);
+		this.buildResults = new ProjectBuilder(this.targetProject).build(outDir);
 	}
 
 	public TestResults start() {
@@ -62,9 +59,7 @@ public class TestProcessBuilder {
 
 		// start()時にワーキングディレクトリを変更するために，binDirはrootPathからの相対パスに変更
 		// TODO いろんな状況でバグるので要修正．一時的な処置．
-		final Path relativeOutDir = this.targetProject.rootPath.relativize(//
-				Paths.get(this.buildResults.outDir)// TODO should-use-path
-		);
+		final Path relativeOutDir = this.targetProject.rootPath.relativize(this.buildResults.outDir);
 
 		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, testExecutorMain, "-b",
 				relativeOutDir.toString(), // TODO should-use-path
@@ -116,8 +111,8 @@ public class TestProcessBuilder {
 	}
 
 	private Set<FullyQualifiedName> getFQNs(final List<SourceFile> sources) {
-		return sources.stream().map(source -> this.buildResults.getPathToFQNs(Paths.get(source.path)))
-				.flatMap(c -> c.stream()).collect(toSet());
+		return sources.stream().map(source -> this.buildResults.getPathToFQNs(source.path)).flatMap(c -> c.stream())
+				.collect(toSet());
 	}
 
 	private final String jarFileTail = "-(\\d+\\.)+jar$";

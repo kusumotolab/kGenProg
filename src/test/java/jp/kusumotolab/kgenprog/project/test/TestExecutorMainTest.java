@@ -10,6 +10,8 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
@@ -44,13 +46,13 @@ public class TestExecutorMainTest {
 
 	@Test
 	public void testMainSuccess01() throws Exception {
-		final String rootDir = "example/example01";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example01");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
 		new ProjectBuilder(targetProject).build(outDir);
 
 		TestExecutorMain.main(new String[] { //
-				"-b", outDir, //
+				"-b", outDir.toString(), //
 				"-s", buggyCalculator.toString(), //
 				"-t", buggyCalculatorTest.toString() });
 
@@ -80,13 +82,13 @@ public class TestExecutorMainTest {
 
 	@Test
 	public void testMainSuccess02() throws Exception {
-		final String rootDir = "example/example02";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example02");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
 		new ProjectBuilder(targetProject).build(outDir);
 
 		TestExecutorMain.main(new String[] { //
-				"-b", outDir, //
+				"-b", outDir.toString(), //
 				"-s", buggyCalculator.toString() + TestExecutorMain.SEPARATOR + util.toString(), //
 				"-t", buggyCalculatorTest.toString() + TestExecutorMain.SEPARATOR + utilTest.toString() });
 
@@ -129,12 +131,12 @@ public class TestExecutorMainTest {
 	public void testMainFailureByInvalidOutDir() throws Exception {
 
 		// rootDirがバグってる
-		final String rootDir = "example/example01xxxxxxx";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example01xxxxxxxx");
+		final Path outDir = rootDir.resolve("_bin");
 
 		// 例外を吐くはず（具体的にどの例外を吐くかはひとまず確認せず）
 		TestExecutorMain.main(new String[] { //
-				"-b", outDir, //
+				"-b", outDir.toString(), //
 				"-s", buggyCalculator.toString(), //
 				"-t", buggyCalculatorTest.toString() });
 	}
