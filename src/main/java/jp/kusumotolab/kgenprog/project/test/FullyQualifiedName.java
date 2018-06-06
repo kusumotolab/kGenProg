@@ -12,8 +12,8 @@ public abstract class FullyQualifiedName implements Serializable {
 	final public String value;
 
 	protected FullyQualifiedName(final String value) {
-		//final String v = value.substring(0, value.lastIndexOf('.'));
-		//this.value = v.replaceAll("\\" + File.separator, ".");
+		// final String v = value.substring(0, value.lastIndexOf('.'));
+		// this.value = v.replaceAll("\\" + File.separator, ".");
 		this.value = value;
 	}
 
@@ -27,8 +27,8 @@ public abstract class FullyQualifiedName implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		return this.value.equals(((FullyQualifiedName) o).value);
+	public boolean equals(final Object o) {
+		return this.toString().equals(o.toString());
 	}
 
 	@Override
