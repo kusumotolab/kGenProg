@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+
 public class BuildResults {
 
 	public final boolean isBuildFailed;
@@ -16,11 +18,24 @@ public class BuildResults {
 	// TODO コンパイルできないときのエラー情報はほんとにこの型でいいか？
 	public final DiagnosticCollector<JavaFileObject> diagnostics;
 
+	// ソースとクラスファイル間のマッピング
 	private final Map<Path, Set<Path>> sourceToClassMap;
 	private final Map<Path, Path> classToSourceMap;
 
+	// ソースとFQN間のマッピング
+	private final Map<Path, Set<FullyQualifiedName>> sourceToFQNMap;
+	private final Map<FullyQualifiedName, Path> fqnToSourceMap;
+
+	// 対応関係がうまく構築できたかの可否
 	private boolean isMappingAvaiable;
 
+	/**
+	 * コンストラクタ（後で書き換え TODO）
+	 * 
+	 * @param isBuildFailed ビルドの成否
+	 * @param outDir クラスファイル生成ディレクトリ
+	 * @param diagnostics ビルド時の詳細情報
+	 */
 	public BuildResults(final boolean isBuildFailed, final String outDir,
 			final DiagnosticCollector<JavaFileObject> diagnostics) {
 		this.isBuildFailed = isBuildFailed;
@@ -28,9 +43,19 @@ public class BuildResults {
 		this.diagnostics = diagnostics;
 		this.sourceToClassMap = new HashMap<>();
 		this.classToSourceMap = new HashMap<>();
+		this.fqnToSourceMap = new HashMap<>();
+		this.sourceToFQNMap = new HashMap<>();
 		this.isMappingAvaiable = true;
 	}
 
+	/**
+	 * ソースファイルとクラスファイル間のマッピングを追加する
+	 * 
+	 * @param pathToSource
+	 *            ソースファイルのPath
+	 * @param pathToClass
+	 *            クラスファイルのPath
+	 */
 	public void addMapping(final Path pathToSource, final Path pathToClass) {
 		Set<Path> pathToClasses = this.sourceToClassMap.get(pathToSource);
 		if (null == pathToClasses) {
@@ -41,18 +66,87 @@ public class BuildResults {
 		this.classToSourceMap.put(pathToClass, pathToSource);
 	}
 
+	/**
+	 * 引数で与えたソースファイルに対応するクラスファイルのPath（PathのSet）を返す
+	 * 
+	 * @param pathToSource
+	 *            ソースファイルの Path
+	 * @return 引数で与えたソースファイルに対応するクラスファイルの Path の Set
+	 */
 	public Set<Path> getPathToClasses(final Path pathToSource) {
 		return this.sourceToClassMap.get(pathToSource);
 	}
 
+	/**
+	 * 引数絵与えたソースファイルに対応するFQNのPath（FQNのSet）を返す
+	 * 
+	 * @param pathToSource
+	 *            ソースファイルの Path
+	 * @return 引数で与えたソースファイルに対応する FQN の Set
+	 */
+	public Set<FullyQualifiedName> getPathToFQNs(final Path pathToSource) {
+		return this.sourceToFQNMap.get(pathToSource);
+	}
+
+	/**
+	 * ソースファイルと FQN 間のマッピングを追加する
+	 * 
+	 * @param source
+	 *            ソースファイルの Path
+	 * @param fqn
+	 *            FQN
+	 */
+	public void addMapping(final Path source, final FullyQualifiedName fqn) {
+
+		Set<FullyQualifiedName> fqns = this.sourceToFQNMap.get(source);
+		if (null == fqns) {
+			fqns = new HashSet<>();
+			this.sourceToFQNMap.put(source, fqns);
+		}
+		fqns.add(fqn);
+
+		// TODO すでに同じfqnな別のsourceが登録されているかチェックすべき
+		// 登録されている場合はillegalStateExceptionを投げるべき？
+		this.fqnToSourceMap.put(fqn, source);
+	}
+
+	/**
+	 * クラスファイルの Path から対応するソースファイルの Path を返す
+	 * 
+	 * @param pathToClass
+	 *            クラスファイルの Path
+	 * @return 対応するソースファイルの Path
+	 */
 	public Path getPathToSource(final Path pathToClass) {
 		return this.classToSourceMap.get(pathToClass);
 	}
 
+	/**
+	 * FQN から対応するソースファイルの Path を返す
+	 * 
+	 * @param fqn
+	 *            FQN
+	 * @return 対応するソースファイルの FQN
+	 */
+	public Path getPathToSource(final FullyQualifiedName fqn) {
+		return this.fqnToSourceMap.get(fqn);
+	}
+
+	/**
+	 * 「ソースファイルとクラスファイルの対応関係」および「ソースファイルとFQNの対応関係」の構築の成否を登録する
+	 * 
+	 * @param available
+	 *            true なら成功，false なら失敗
+	 */
 	public void setMappingAvailable(final boolean available) {
 		this.isMappingAvaiable = available;
 	}
 
+	/**
+	 * 「ソースファイルとクラスファイルの対応関係」および「ソースファイルとFQNの対応関係」の構築の成否を返す
+	 * 
+	 * @return true なら成功，false なら失敗
+	 */
 	public boolean isMappingAvailable() {
 		return this.isMappingAvaiable;
 	}

@@ -10,6 +10,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+
 public class ProjectBuilderTest {
 
 	@Test
@@ -28,6 +30,14 @@ public class ProjectBuilderTest {
 			final Set<Path> pathToClasses = buildResults.getPathToClasses(Paths.get(sourceFile.path));
 			pathToClasses.stream().forEach(c -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(c);
+				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+			});
+		}
+
+		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
+			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(Paths.get(sourceFile.path));
+			fqns.stream().forEach(f -> {
+				final Path correspondingSourcePath = buildResults.getPathToSource(f);
 				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
 			});
 		}
@@ -52,6 +62,14 @@ public class ProjectBuilderTest {
 				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
 			});
 		}
+
+		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
+			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(Paths.get(sourceFile.path));
+			fqns.stream().forEach(f -> {
+				final Path correspondingSourcePath = buildResults.getPathToSource(f);
+				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+			});
+		}
 	}
 
 	@Test
@@ -70,6 +88,14 @@ public class ProjectBuilderTest {
 			final Set<Path> pathToClasses = buildResults.getPathToClasses(Paths.get(sourceFile.path));
 			pathToClasses.stream().forEach(c -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(c);
+				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+			});
+		}
+
+		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
+			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(Paths.get(sourceFile.path));
+			fqns.stream().forEach(f -> {
+				final Path correspondingSourcePath = buildResults.getPathToSource(f);
 				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
 			});
 		}
