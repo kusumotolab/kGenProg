@@ -9,14 +9,15 @@ import static org.junit.Assert.assertThat;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.junit.Test;
-
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+
+import org.junit.Test;
 
 public class TestResultsTest {
 
@@ -30,11 +31,11 @@ public class TestResultsTest {
 	final static FullyQualifiedName test04 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
 
 	private TestResults generateTestResultsForExample01() throws Exception {
-		final String rootDir = "example/example01";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example01");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(Paths.get(outDir));
-		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
+		new ProjectBuilder(targetProject).build(outDir);
+		final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri().toURL() });
 		return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
 	}
 

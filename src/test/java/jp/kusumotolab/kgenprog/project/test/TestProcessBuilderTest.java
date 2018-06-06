@@ -9,13 +9,14 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class TestProcessBuilderTest {
 
@@ -32,10 +33,10 @@ public class TestProcessBuilderTest {
 
 	@Test
 	public void testProcessBuilderBuild01() {
-		final String rootDir = "example/example01";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example01");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(Paths.get(outDir));
+		new ProjectBuilder(targetProject).build(outDir);
 
 		// main
 		final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
