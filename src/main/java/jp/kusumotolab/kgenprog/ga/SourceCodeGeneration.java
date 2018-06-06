@@ -5,5 +5,5 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public interface SourceCodeGeneration {
 
-    public GeneratedSourceCode exec(Gene gene, TargetProject targetProject);
+  public GeneratedSourceCode exec(Gene gene, TargetProject targetProject);
 }

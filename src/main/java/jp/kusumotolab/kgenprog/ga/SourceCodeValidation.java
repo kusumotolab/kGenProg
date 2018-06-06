@@ -6,5 +6,6 @@ import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public interface SourceCodeValidation {
 
-    public Fitness exec(GeneratedSourceCode sourceCode, TargetProject project, TestProcessBuilder testExecutor);
+  public Fitness exec(GeneratedSourceCode sourceCode, TargetProject project,
+      TestProcessBuilder testExecutor);
 }
