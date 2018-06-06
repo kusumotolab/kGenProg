@@ -231,20 +231,11 @@ public class TestResults implements Serializable {
    * 
    * @return deserialize後のオブジェクト
    */
-  public static TestResults deserialize() {
-    try {
-      final ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
-      final TestResults testResults = (TestResults) in.readObject();
-      in.close();
-      return testResults;
-    } catch (IOException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    }
-    return null;
+  public static TestResults deserialize() throws IOException, ClassNotFoundException {
+    final ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
+    final TestResults testResults = (TestResults) in.readObject();
+    in.close();
+    return testResults;
   }
 
   @Override
