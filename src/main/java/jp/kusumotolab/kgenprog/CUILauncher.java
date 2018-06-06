@@ -71,7 +71,7 @@ public class CUILauncher {
 
 	@Option(name = "-c", aliases = "--cp", required = true, handler = StringArrayOptionHandler.class, metaVar = "<class path> ...", usage = "Class paths required to build the target project")
 	public void setClassPaths(String classPaths) {
-		this.classPaths.add(new ClassPath(classPaths));
+		this.classPaths.add(new ClassPath(Paths.get(classPaths)));
 	}
 
 	// endregion
