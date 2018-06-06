@@ -3,18 +3,16 @@ package jp.kusumotolab.kgenprog.project.test;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.URL;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import org.junit.Test;
 
 public class TestResultsTest {
 
@@ -110,7 +108,7 @@ public class TestResultsTest {
    * 単純なserialize -> deserializeの確認
    */
   @Test
-  public void testSerializeDeserialize01() {
+  public void testSerializeDeserialize01() throws Exception {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加
@@ -134,7 +132,7 @@ public class TestResultsTest {
    * serialize -> 要素書き換え -> deserializeの確認
    */
   @Test
-  public void testSerializeDeserialize02() {
+  public void testSerializeDeserialize02() throws Exception {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加
@@ -157,7 +155,7 @@ public class TestResultsTest {
    * serialize -> serialize -> deserializeの確認
    */
   @Test
-  public void testSerializeDeserialize03() {
+  public void testSerializeDeserialize03() throws Exception {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加
@@ -183,7 +181,7 @@ public class TestResultsTest {
    * 重複要素を持つ要素のserialize -> deserializeの確認
    */
   @Test
-  public void testSerializeDeserialize04() {
+  public void testSerializeDeserialize04() throws Exception {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加（重複するtest03を追加）
@@ -208,25 +206,13 @@ public class TestResultsTest {
   /**
    * いきなりdeserializeした際の確認
    */
-  @Test
-  public void testSerializeDeserialize05() {
-    // runtime exceptionを隠すためにsystem.errを退避して無効化
-    final PrintStream ps = System.err;
-    System.setErr(new PrintStream(new OutputStream() {
-      @Override
-      public void write(int b) {
-        // 何もしないwriter
-      }
-    }));
-
+  @Test(expected = NoSuchFileException.class)
+  public void testSerializeDeserialize05() throws Exception {
     // serializeファイルを消しておいて
     TestResults.getSerFilePath().toFile().delete();
 
-    // deserializeでnullが返ってくるはず
-    assertThat(TestResults.deserialize(), is(nullValue()));
-
-    // system.errを戻しておく
-    System.setErr(ps);
+    // deserializeでNoSuchFileExceptionが返ってくるはず
+    TestResults.deserialize();
   }
 
   /**
