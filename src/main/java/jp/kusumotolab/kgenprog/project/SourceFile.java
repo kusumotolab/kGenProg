@@ -4,19 +4,19 @@ import java.nio.file.Path;
 
 public abstract class SourceFile {
 
-	public final Path path;
+  public final Path path;
 
-	protected SourceFile(final Path path) {
-		this.path = path;
-	}
+  protected SourceFile(final Path path) {
+    this.path = path;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		return this.toString().equals(o.toString());
-	}
+  @Override
+  public boolean equals(Object o) {
+    return this.toString().equals(o.toString());
+  }
 
-	@Override
-	public String toString() {
-		return this.path.toString();
-	}
+  @Override
+  public String toString() {
+    return this.path.toString();
+  }
 }
