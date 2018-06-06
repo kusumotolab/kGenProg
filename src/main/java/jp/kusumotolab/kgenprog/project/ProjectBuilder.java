@@ -129,7 +129,7 @@ public class ProjectBuilder {
 
 			// 対応関係の構築
 			final String partialPath = parser.getPartialPath();
-			final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(parser.getFQN("."));
+			final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(parser.getFQN());
 			SourceFile correspondingSourceFile = null;
 			for (final SourceFile sourceFile : sourceFiles) {
 				if (sourceFile.path.endsWith(partialPath)) {

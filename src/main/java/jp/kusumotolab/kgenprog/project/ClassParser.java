@@ -27,12 +27,12 @@ public class ClassParser extends ClassVisitor {
 		// packageName に対する処理
 		final int index = name.lastIndexOf('/');
 		if (0 < index) {
-			Arrays.asList(name.substring(0, index).split("/")).stream().forEach(t -> this.packageName.add(t));
+			Arrays.stream(name.substring(0, index).split("/")).forEach(t -> this.packageName.add(t));
 		}
 
 		// fqnClassName に対する処理
 		for (final String token : name.split("/")) {
-			Arrays.asList(token.split("$")).stream().forEach(t -> this.fqnClassName.add(t));
+			Arrays.stream(token.split("$")).forEach(t -> this.fqnClassName.add(t));
 		}
 	}
 
@@ -45,7 +45,7 @@ public class ClassParser extends ClassVisitor {
 		return String.join(File.separator, String.join(File.separator, this.packageName), this.sourceFileName);
 	}
 
-	public String getFQN(final String delimiter) {
-		return String.join(delimiter, this.fqnClassName);
+	public String getFQN() {
+		return String.join(".", this.fqnClassName);
 	}
 }
