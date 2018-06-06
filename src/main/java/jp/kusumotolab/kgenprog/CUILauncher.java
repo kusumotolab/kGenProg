@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class CUILauncher {
 
 	@Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>", usage = "Path of a root directory of a target project")
 	public void setRootDir(String rootDir) {
-		this.rootDir = new TargetSourceFile(rootDir);
+		this.rootDir = new TargetSourceFile(Paths.get(rootDir));
 	}
 
 	public List<SourceFile> getSourceFiles() {
@@ -52,7 +53,7 @@ public class CUILauncher {
 
 	@Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class, metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
 	public void setSourceFiles(String sourceFiles) {
-		this.sourceFiles.add(new TargetSourceFile(sourceFiles));
+		this.sourceFiles.add(new TargetSourceFile(Paths.get(sourceFiles)));
 	}
 
 	public List<SourceFile> getTestFiles() {
@@ -61,7 +62,7 @@ public class CUILauncher {
 
 	@Option(name = "-t", aliases = "--test", required = true, handler = StringArrayOptionHandler.class, metaVar = "<path> ...", usage = "Paths of the root directories holding test codes")
 	public void setTestFiles(String testFiles) {
-		this.testFiles.add(new TestSourceFile(testFiles));
+		this.testFiles.add(new TestSourceFile(Paths.get(testFiles)));
 	}
 
 	public List<ClassPath> getClassPaths() {
