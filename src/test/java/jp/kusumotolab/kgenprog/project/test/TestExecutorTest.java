@@ -11,6 +11,8 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
@@ -44,29 +46,29 @@ public class TestExecutorTest {
 	final static FullyQualifiedName dummyTest01 = new TestFullyQualifiedName("jp.kusumotolab.UtilTest.dummyTest01");
 
 	private TestResults generateTestResultsForExample01() throws Exception {
-		final String rootDir = "example/example01";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example01");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
 		new ProjectBuilder(targetProject).build(outDir);
-		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
+		final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri().toURL() });
 		return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
 	}
 
 	private TestResults generateTestResultsForExample02() throws Exception {
-		final String rootDir = "example/example02";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example02");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
 		new ProjectBuilder(targetProject).build(outDir);
-		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
+		final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri().toURL() });
 		return executor.exec(Arrays.asList(buggyCalculator, util), Arrays.asList(buggyCalculatorTest, utilTest));
 	}
 
 	private TestResults generateTestResultsForExample03() throws Exception {
-		final String rootDir = "example/example03";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example03");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
 		new ProjectBuilder(targetProject).build(outDir);
-		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
+		final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri().toURL() });
 		return executor.exec(Arrays.asList(buggyCalculator, util, inner, staticInner, outer),
 				Arrays.asList(buggyCalculatorTest, utilTest));
 	}
@@ -147,7 +149,7 @@ public class TestExecutorTest {
 		assertThat(test01_result.getExecutedTargetFQNs(),
 				is(containsInAnyOrder(buggyCalculator, util, inner, staticInner, outer)));
 
-		// 無名クラスは計測できないらしい（そもそもテストで実行された扱いにすらならない）． 
+		// 無名クラスは計測できないらしい（そもそもテストで実行された扱いにすらならない）．
 		assertThat(test01_result.getExecutedTargetFQNs(), not(hasItem(anonymousClass)));
 
 		// test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず

@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import jp.kusumotolab.kgenprog.project.TargetProject;
@@ -31,12 +32,12 @@ public class TestProcessBuilderTest {
 
 	@Test
 	public void testProcessBuilderBuild01() {
-		final String rootDir = "example/example01";
-		final String outDir = rootDir + "/_bin/";
+		final Path rootDir = Paths.get("example/example01");
+		final Path outDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
 
 		// main
-		final TestProcessBuilder builder = new TestProcessBuilder(targetProject, Paths.get(outDir));
+		final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
 		final TestResults r = builder.start();
 
 		// テストの結果はこうなるはず
