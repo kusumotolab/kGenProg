@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.ga;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,10 +20,10 @@ public class DefaultSourceCodeGenerationTest {
 	@Test
 	public void execTest() {
 		final List<SourceFile> sourceCodeFiles = new ArrayList<>();
-		sourceCodeFiles.add(new TargetSourceFile("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
+		sourceCodeFiles.add(new TargetSourceFile(Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")));
 
 		final List<SourceFile> testFiles = new ArrayList<>();
-		testFiles.add(new TestSourceFile("example/example01/src/jp/kusumotolab/BuggyCalculatorTest.java"));
+		testFiles.add(new TestSourceFile(Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
 		final List<ClassPath> classPaths = new ArrayList<>();
 

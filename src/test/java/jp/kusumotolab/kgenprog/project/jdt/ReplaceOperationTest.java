@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -21,7 +22,7 @@ public class ReplaceOperationTest {
 	@Test
 	public void testReplaceStatement() {
 		String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-		SourceFile testSourceFile = new TargetSourceFile("A.java");
+		SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
 
 		JDTASTConstruction constructor = new JDTASTConstruction();
 		GeneratedJDTAST ast = (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
@@ -51,7 +52,7 @@ public class ReplaceOperationTest {
 	@Test
 	public void testReplaceStatementInList() {
 		String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-		SourceFile testSourceFile = new TargetSourceFile("A.java");
+		SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
 
 		JDTASTConstruction constructor = new JDTASTConstruction();
 		GeneratedJDTAST ast = (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
