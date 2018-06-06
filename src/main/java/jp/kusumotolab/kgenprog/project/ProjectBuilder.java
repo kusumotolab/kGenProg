@@ -88,7 +88,7 @@ public class ProjectBuilder {
 		compilationOptions.add("UTF-8");
 		compilationOptions.add("-classpath");
 		compilationOptions.add(String.join(CLASSPATH_SEPARATOR,
-				this.targetProject.getClassPaths().stream().map(cp -> cp.path).collect(Collectors.toList())));
+				this.targetProject.getClassPaths().stream().map(cp -> cp.path.toString()).collect(Collectors.toList())));
 
 		final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 		final CompilationTask task = compiler.getTask(null, fileManager, diagnostics, compilationOptions, null,
