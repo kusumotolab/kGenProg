@@ -10,13 +10,14 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Files;
-
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import java.nio.file.Paths;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.kohsuke.args4j.CmdLineException;
+
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestExecutorMainTest {
 
@@ -47,7 +48,7 @@ public class TestExecutorMainTest {
 		final String rootDir = "example/example01";
 		final String outDir = rootDir + "/_bin/";
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
+		new ProjectBuilder(targetProject).build(Paths.get(outDir));
 
 		TestExecutorMain.main(new String[] { //
 				"-b", outDir, //
@@ -83,7 +84,7 @@ public class TestExecutorMainTest {
 		final String rootDir = "example/example02";
 		final String outDir = rootDir + "/_bin/";
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
+		new ProjectBuilder(targetProject).build(Paths.get(outDir));
 
 		TestExecutorMain.main(new String[] { //
 				"-b", outDir, //
@@ -96,9 +97,10 @@ public class TestExecutorMainTest {
 		final TestResults r = TestResults.deserialize();
 
 		// example02で実行されたテストは10個のはず
-		assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder( //
-				test01, test02, test03, test04, //
-				plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
+		assertThat(r.getExecutedTestFQNs(),
+				is(containsInAnyOrder( //
+						test01, test02, test03, test04, //
+						plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
 
 		// テストの成否はこうなるはず
 		assertThat(r.getTestResult(test01).failed, is(false));

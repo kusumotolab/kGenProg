@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +43,7 @@ public class ProjectBuilder {
 	 *            バイトコード出力ディレクトリ
 	 * @return ビルドに関するさまざまな情報
 	 */
-	public BuildResults build(final String outDir) {
+	public BuildResults build(final Path outDir) {
 		return this.build(null, outDir);
 	}
 
@@ -54,13 +55,13 @@ public class ProjectBuilder {
 	 *            バイトコード出力ディレクトリ
 	 * @return ビルドに関するさまざまな情報
 	 */
-	public BuildResults build(final GeneratedSourceCode generatedSourceCode, final String outDir) {
+	public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path outDir) {
 
 		final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
 		// outディレクトリが存在しなければ生成
-		final File outputDirectoryFile = new File(outDir);
+		final File outputDirectoryFile = outDir.toFile();
 		if (!outputDirectoryFile.exists()) {
 			outputDirectoryFile.mkdirs();
 		}
@@ -83,12 +84,12 @@ public class ProjectBuilder {
 
 		final List<String> compilationOptions = new ArrayList<>();
 		compilationOptions.add("-d");
-		compilationOptions.add(outDir);
+		compilationOptions.add(outDir.toFile().getAbsolutePath());
 		compilationOptions.add("-encoding");
 		compilationOptions.add("UTF-8");
 		compilationOptions.add("-classpath");
-		compilationOptions.add(String.join(CLASSPATH_SEPARATOR,
-				this.targetProject.getClassPaths().stream().map(cp -> cp.path.toString()).collect(Collectors.toList())));
+		compilationOptions.add(String.join(CLASSPATH_SEPARATOR, this.targetProject.getClassPaths().stream()
+				.map(cp -> cp.path.toString()).collect(Collectors.toList())));
 
 		final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 		final CompilationTask task = compiler.getTask(null, fileManager, diagnostics, compilationOptions, null,
@@ -120,7 +121,7 @@ public class ProjectBuilder {
 
 		// ビルドが成功したときは，ソースファイルとクラスファイルのマッピング
 		// およびFQNとソースファイルのマッピングを取る
-		final Collection<File> classFiles = FileUtils.listFiles(new File(outDir), new String[] { "class" }, true);
+		final Collection<File> classFiles = FileUtils.listFiles(outDir.toFile(), new String[] { "class" }, true);
 		final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
 		for (final File classFile : classFiles) {
 
