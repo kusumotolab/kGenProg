@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
@@ -17,154 +16,152 @@ import org.eclipse.jdt.core.dom.*;
 
 public class RandomMutation implements Mutation {
 
-    private List<Statement> candidates = new ArrayList<>();
-    private final RandomNumberGeneration randomNumberGeneration;
+  private List<Statement> candidates = new ArrayList<>();
+  private final RandomNumberGeneration randomNumberGeneration;
 
-    public RandomMutation() {
-        this.randomNumberGeneration = new RandomNumberGeneration();
+  public RandomMutation() {
+    this.randomNumberGeneration = new RandomNumberGeneration();
+  }
+
+  public RandomMutation(RandomNumberGeneration randomNumberGeneration) {
+    this.randomNumberGeneration = randomNumberGeneration;
+  }
+
+  @Override
+  public void setCandidates(List<GeneratedAST> candidates) {
+    candidates.stream().sorted(Comparator.comparing(x -> x.getSourceFile().path)).forEach(e -> {
+      final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
+      final Visitor visitor = new Visitor();
+      unit.accept(visitor);
+      this.candidates.addAll(visitor.statements);
+    });
+  }
+
+  @Override
+  public List<Base> exec(List<Suspiciouseness> suspiciousenesses) {
+    List<Base> bases = suspiciousenesses.stream()
+        .sorted(Comparator.comparingDouble(Suspiciouseness::getValue).reversed())
+        .map(this::makeBase).collect(Collectors.toList());
+    return bases;
+  }
+
+  private Base makeBase(Suspiciouseness suspiciouseness) {
+    return new Base(suspiciouseness.getLocation(), makeOperationAtRandom());
+  }
+
+  private Operation makeOperationAtRandom() {
+    final int randomNumber = randomNumberGeneration.getRandomNumber(3);
+    switch (randomNumber) {
+      case 0:
+        return new DeleteOperation();
+      case 1:
+        return new InsertOperation(chooseNodeAtRandom());
+      case 2:
+        return new ReplaceOperation(chooseNodeAtRandom());
     }
+    return new NoneOperation();
+  }
 
-    public RandomMutation(RandomNumberGeneration randomNumberGeneration) {
-        this.randomNumberGeneration = randomNumberGeneration;
+  private Statement chooseNodeAtRandom() {
+    return candidates.get(randomNumberGeneration.getRandomNumber(candidates.size()));
+  }
+
+  private class Visitor extends ASTVisitor {
+
+    private List<Statement> statements = new ArrayList<>();
+
+    private void addStatement(Statement statement) {
+      statements.add(statement);
     }
 
     @Override
-    public void setCandidates(List<GeneratedAST> candidates) {
-        candidates.stream()
-                .sorted(Comparator.comparing(x -> x.getSourceFile().path))
-                .forEach(e -> {
-                    final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
-                    final Visitor visitor = new Visitor();
-                    unit.accept(visitor);
-                    this.candidates.addAll(visitor.statements);
-                });
+    public boolean visit(AssertStatement node) {
+      addStatement(node);
+      return super.visit(node);
     }
 
     @Override
-    public List<Base> exec(List<Suspiciouseness> suspiciousenesses) {
-        List<Base> bases = suspiciousenesses.stream()
-                .sorted(Comparator.comparingDouble(Suspiciouseness::getValue).reversed())
-                .map(this::makeBase).collect(Collectors.toList());
-        return bases;
+    public boolean visit(BreakStatement node) {
+      addStatement(node);
+      return super.visit(node);
     }
 
-    private Base makeBase(Suspiciouseness suspiciouseness) {
-        return new Base(suspiciouseness.getLocation(), makeOperationAtRandom());
+    @Override
+    public boolean visit(ContinueStatement node) {
+      addStatement(node);
+      return super.visit(node);
     }
 
-    private Operation makeOperationAtRandom() {
-        final int randomNumber = randomNumberGeneration.getRandomNumber(3);
-        switch (randomNumber) {
-            case 0:
-                return new DeleteOperation();
-            case 1:
-                return new InsertOperation(chooseNodeAtRandom());
-            case 2:
-                return new ReplaceOperation(chooseNodeAtRandom());
-        }
-        return new NoneOperation();
+    @Override
+    public boolean visit(DoStatement node) {
+      addStatement(node);
+      return super.visit(node);
     }
 
-    private Statement chooseNodeAtRandom() {
-        return candidates.get(randomNumberGeneration.getRandomNumber(candidates.size()));
+    @Override
+    public boolean visit(EmptyStatement node) {
+      addStatement(node);
+      return super.visit(node);
     }
 
-    private class Visitor extends ASTVisitor {
-
-        private List<Statement> statements = new ArrayList<>();
-
-        private void addStatement(Statement statement) {
-            statements.add(statement);
-        }
-
-        @Override
-        public boolean visit(AssertStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(BreakStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(ContinueStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(DoStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(EmptyStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(ExpressionStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(ForStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(IfStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(ReturnStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(SwitchStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(SynchronizedStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(ThrowStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(TryStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(VariableDeclarationStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
-
-        @Override
-        public boolean visit(WhileStatement node) {
-            addStatement(node);
-            return super.visit(node);
-        }
+    @Override
+    public boolean visit(ExpressionStatement node) {
+      addStatement(node);
+      return super.visit(node);
     }
+
+    @Override
+    public boolean visit(ForStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(IfStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(ReturnStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(SwitchStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(SynchronizedStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(ThrowStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(TryStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(VariableDeclarationStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(WhileStatement node) {
+      addStatement(node);
+      return super.visit(node);
+    }
+  }
 }
