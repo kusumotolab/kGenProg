@@ -9,18 +9,20 @@ import static org.junit.Assert.assertThat;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import org.junit.Test;
 
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
-import org.junit.Test;
-
 public class TestResultsTest {
 
 	final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
-	final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
+	final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(
+			"jp.kusumotolab.BuggyCalculatorTest");
 
 	final static FullyQualifiedName test01 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
 	final static FullyQualifiedName test02 = new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
@@ -31,7 +33,7 @@ public class TestResultsTest {
 		final String rootDir = "example/example01";
 		final String outDir = rootDir + "/_bin/";
 		final TargetProject targetProject = TargetProject.generate(rootDir);
-		new ProjectBuilder(targetProject).build(outDir);
+		new ProjectBuilder(targetProject).build(Paths.get(outDir));
 		final TestExecutor executor = new TestExecutor(new URL[] { new URL("file:./" + outDir) });
 		return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
 	}
@@ -42,7 +44,8 @@ public class TestResultsTest {
 	@Test
 	public void checkFLMetricsInTestResultsForExample01() throws Exception {
 		final TestResults r = generateTestResultsForExample01();
-		final FullyQualifiedName bc = buggyCalculator; // alias for buggycalculator
+		final FullyQualifiedName bc = buggyCalculator; // alias for
+														// buggycalculator
 
 		// example01でのbcの6行目（n++;）のテスト結果はこうなるはず
 		assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 6), is(containsInAnyOrder(test01, test02)));
@@ -223,6 +226,7 @@ public class TestResultsTest {
 
 	/**
 	 * 改行コードのnormalizer
+	 * 
 	 * @param s
 	 * @return
 	 */

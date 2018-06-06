@@ -1,10 +1,16 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.startsWith;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -31,7 +37,7 @@ public class MemoryClassLoaderTest {
 	@BeforeClass
 	public static void beforeClass() {
 		final TargetProject targetProject = TargetProject.generate("example/example01");
-		new ProjectBuilder(targetProject).build(outdir);
+		new ProjectBuilder(targetProject).build(Paths.get(outdir));
 	}
 
 	@Test
