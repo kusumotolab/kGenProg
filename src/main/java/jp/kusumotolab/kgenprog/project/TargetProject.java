@@ -19,7 +19,7 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
-	public final Path rootPath; //TODO ひとまずrootPathだけpublicに．他フィールドは要検討
+	public final Path rootPath; // TODO ひとまずrootPathだけpublicに．他フィールドは要検討
 	private final List<SourceFile> sourceFiles;
 	private final List<SourceFile> testFiles;
 	private final List<ClassPath> classPaths;
@@ -31,8 +31,8 @@ public class TargetProject {
 		this(Paths.get(""), sourceFiles, testFiles, classPaths);
 	}
 
-	public TargetProject(final Path rootPath, final List<SourceFile> sourceFiles,
-			final List<SourceFile> testFiles, List<ClassPath> classPaths) {
+	public TargetProject(final Path rootPath, final List<SourceFile> sourceFiles, final List<SourceFile> testFiles,
+			List<ClassPath> classPaths) {
 		this.rootPath = rootPath;
 		this.sourceFiles = sourceFiles;
 		this.testFiles = testFiles;
@@ -77,8 +77,7 @@ public class TargetProject {
 
 	/**
 	 * 指定のbasepathからTargetProjectを生成するstatic factoryメソッド．
-	 * 単体テスト等でTargetProject生成を何度も行うので利便性のために用意．
-	 * testFilesの判定は適当．
+	 * 単体テスト等でTargetProject生成を何度も行うので利便性のために用意． testFilesの判定は適当．
 	 *
 	 * @param basePath
 	 * @return
@@ -92,15 +91,15 @@ public class TargetProject {
 		final Collection<File> files = FileUtils.listFiles(basePath.toFile(), extension, true);
 		for (File file : files) {
 			if (file.getName().endsWith("Test.java")) {
-				testFiles.add(new TestSourceFile(file.getPath()));
+				testFiles.add(new TestSourceFile(file.toPath()));
 			}
 			// TODO テストファイルはsourceFilesにaddすべきではないのでは？
-			sourceFiles.add(new TargetSourceFile(file.getPath()));
+			sourceFiles.add(new TargetSourceFile(file.toPath()));
 		}
 
 		final List<ClassPath> classPath = Arrays.asList( //
-				new ClassPath("lib/junit4/junit-4.12.jar"), //
-				new ClassPath("lib/junit4/hamcrest-core-1.3.jar"));
+				new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")), //
+				new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")));
 
 		return new TargetProject(basePath, sourceFiles, testFiles, classPath);
 	}
