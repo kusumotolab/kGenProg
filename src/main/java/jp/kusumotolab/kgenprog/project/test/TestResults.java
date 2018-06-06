@@ -218,20 +218,11 @@ public class TestResults implements Serializable {
 	 * 注意：固定名で処理しているので，並列処理は不可能．
 	 * @return deserialize後のオブジェクト
 	 */
-	public static TestResults deserialize() {
-		try {
-			final ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
-			final TestResults testResults = (TestResults) in.readObject();
-			in.close();
-			return testResults;
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-		return null;
+	public static TestResults deserialize() throws IOException, ClassNotFoundException {
+		final ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
+		final TestResults testResults = (TestResults) in.readObject();
+		in.close();
+		return testResults;
 	}
 
 	@Override
