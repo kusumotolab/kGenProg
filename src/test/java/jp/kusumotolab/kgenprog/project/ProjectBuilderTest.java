@@ -5,7 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Set;
 
 import org.junit.Test;
@@ -27,18 +26,18 @@ public class ProjectBuilderTest {
 		assertThat(buildResults.isMappingAvailable(), is(true));
 
 		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-			final Set<Path> pathToClasses = buildResults.getPathToClasses(Paths.get(sourceFile.path));
+			final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
 			pathToClasses.stream().forEach(c -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(c);
-				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+				assertThat(correspondingSourcePath, is(sourceFile.path));
 			});
 		}
 
 		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(Paths.get(sourceFile.path));
+			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
 			fqns.stream().forEach(f -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(f);
-				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+				assertThat(correspondingSourcePath, is(sourceFile.path));
 			});
 		}
 	}
@@ -56,18 +55,18 @@ public class ProjectBuilderTest {
 		assertThat(buildResults.isMappingAvailable(), is(true));
 
 		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-			final Set<Path> pathToClasses = buildResults.getPathToClasses(Paths.get(sourceFile.path));
+			final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
 			pathToClasses.stream().forEach(c -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(c);
-				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+				assertThat(correspondingSourcePath, is(sourceFile.path));
 			});
 		}
 
 		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(Paths.get(sourceFile.path));
+			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
 			fqns.stream().forEach(f -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(f);
-				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+				assertThat(correspondingSourcePath, is(sourceFile.path));
 			});
 		}
 	}
@@ -85,18 +84,18 @@ public class ProjectBuilderTest {
 		assertThat(buildResults.isMappingAvailable(), is(true));
 
 		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-			final Set<Path> pathToClasses = buildResults.getPathToClasses(Paths.get(sourceFile.path));
+			final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
 			pathToClasses.stream().forEach(c -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(c);
-				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+				assertThat(correspondingSourcePath, is(sourceFile.path));
 			});
 		}
 
 		for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(Paths.get(sourceFile.path));
+			final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
 			fqns.stream().forEach(f -> {
 				final Path correspondingSourcePath = buildResults.getPathToSource(f);
-				assertThat(correspondingSourcePath.toFile(), is(new File(sourceFile.path)));
+				assertThat(correspondingSourcePath, is(sourceFile.path));
 			});
 		}
 	}

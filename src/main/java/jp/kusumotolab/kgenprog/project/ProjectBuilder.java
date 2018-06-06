@@ -69,8 +69,8 @@ public class ProjectBuilder {
 
 		// variant が null なら，初期ソースコードをビルド
 		if (null == generatedSourceCode) {
-			javaFileObjects = fileManager.getJavaFileObjectsFromStrings(
-					this.targetProject.getSourceFiles().stream().map(f -> f.path).collect(Collectors.toList()));
+			javaFileObjects = fileManager.getJavaFileObjectsFromStrings(this.targetProject.getSourceFiles().stream()
+					.map(f -> f.path.toString()).collect(Collectors.toList()));
 		}
 
 		// variant が null でなければ，バリアントのソースコードをビルド
@@ -138,9 +138,8 @@ public class ProjectBuilder {
 				}
 			}
 			if (null != correspondingSourceFile) {
-				buildResults.addMapping(Paths.get(correspondingSourceFile.path),
-						Paths.get(classFile.getAbsolutePath()));
-				buildResults.addMapping(Paths.get(correspondingSourceFile.path), fqn);
+				buildResults.addMapping(correspondingSourceFile.path, Paths.get(classFile.getAbsolutePath()));
+				buildResults.addMapping(correspondingSourceFile.path, fqn);
 			} else {
 				buildResults.setMappingAvailable(false);
 			}
