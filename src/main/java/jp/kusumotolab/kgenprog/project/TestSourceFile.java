@@ -4,7 +4,7 @@ import java.nio.file.Path;
 
 public class TestSourceFile extends SourceFile {
 
-	public TestSourceFile(final Path path) {
-		super(path);
-	}
+  public TestSourceFile(final Path path) {
+    super(path);
+  }
 }

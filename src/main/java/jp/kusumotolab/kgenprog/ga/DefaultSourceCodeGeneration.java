@@ -5,14 +5,15 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
-	@Override
-	public GeneratedSourceCode exec(Gene gene, TargetProject targetProject) {
-		final Variant initialVariant = targetProject.getInitialVariant();
-		GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
-		for (Base base : gene.getBases()) {
-			generatedSourceCode = base.getOperation().apply(generatedSourceCode, base.getTargetLocation());
-		}
-		return generatedSourceCode;
-	}
+  @Override
+  public GeneratedSourceCode exec(Gene gene, TargetProject targetProject) {
+    final Variant initialVariant = targetProject.getInitialVariant();
+    GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
+    for (Base base : gene.getBases()) {
+      generatedSourceCode =
+          base.getOperation().apply(generatedSourceCode, base.getTargetLocation());
+    }
+    return generatedSourceCode;
+  }
 
 }
