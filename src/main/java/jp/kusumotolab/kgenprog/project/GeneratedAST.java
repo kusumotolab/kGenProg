@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project;
 
+import java.util.List;
+
 // TODO: クラス名を再検討
 public interface GeneratedAST {
 
@@ -9,5 +11,5 @@ public interface GeneratedAST {
 
   public SourceFile getSourceFile();
 
-  public Location inferLocation(int lineNumber);
+  public List<Location> inferLocations(int lineNumber);
 }
