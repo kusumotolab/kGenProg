@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,11 +26,11 @@ public class GeneratedSourceCode {
     return fileToAST.get(file);
   }
 
-  public Location inferLocation(SourceFile file, int lineNumber) {
+  public List<Location> inferLocations(SourceFile file, int lineNumber) {
     GeneratedAST ast = getAST(file);
     if (ast == null) {
-      return null;
+      return Collections.emptyList();
     }
-    return ast.inferLocation(lineNumber);
+    return ast.inferLocations(lineNumber);
   }
 }

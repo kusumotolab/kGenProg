@@ -1,8 +1,9 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.Block;
@@ -29,17 +30,19 @@ import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
-public class StatementListVistor extends ASTVisitor {
+public class StatementListVisitor extends ASTVisitor {
 
   private List<Statement> statements;
-  private Statement[] lineToStatement;
+  private List<List<Statement>> lineToStatements;
   private CompilationUnit unit;
+
 
   public void analyzeStatement(CompilationUnit unit) {
     this.statements = new ArrayList<>();
     this.unit = unit;
     int lineNumberLength = unit.getLineNumber(unit.getLength() - 1);
-    this.lineToStatement = new Statement[lineNumberLength + 1];
+    this.lineToStatements = IntStream.rangeClosed(0, lineNumberLength)
+        .mapToObj(ArrayList<Statement>::new).collect(Collectors.toList());
 
     unit.accept(this);
   }
@@ -48,8 +51,8 @@ public class StatementListVistor extends ASTVisitor {
     return statements;
   }
 
-  public Statement[] getLineToStatement() {
-    return lineToStatement;
+  public List<List<Statement>> getLineToStatements() {
+    return lineToStatements;
   }
 
   private void consumeStatement(Statement s) {
@@ -57,7 +60,8 @@ public class StatementListVistor extends ASTVisitor {
 
     int begin = unit.getLineNumber(s.getStartPosition());
     int end = unit.getLineNumber(s.getStartPosition() + s.getLength()) + 1;
-    Arrays.fill(lineToStatement, begin, end, s);
+
+    lineToStatements.stream().skip(begin).limit(end - begin).forEach(list -> list.add(s));
   }
 
   @Override
