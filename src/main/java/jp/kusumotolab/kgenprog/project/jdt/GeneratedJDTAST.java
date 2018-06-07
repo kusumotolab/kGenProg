@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -11,7 +13,7 @@ public class GeneratedJDTAST implements GeneratedAST {
   private CompilationUnit root;
   private SourceFile sourceFile;
   private List<Statement> statements;
-  private Statement[] lineNumberToStatement;
+  private List<List<Statement>> lineNumberToStatements;
 
   @Override
   public String getSourceCode() {
@@ -22,10 +24,10 @@ public class GeneratedJDTAST implements GeneratedAST {
     this.root = root;
     this.sourceFile = sourceFile;
 
-    StatementListVistor visitor = new StatementListVistor();
+    StatementListVisitor visitor = new StatementListVisitor();
     visitor.analyzeStatement(root);
     this.statements = visitor.getStatements();
-    this.lineNumberToStatement = visitor.getLineToStatement();
+    this.lineNumberToStatements = visitor.getLineToStatements();
   }
 
   public CompilationUnit getRoot() {
@@ -44,14 +46,12 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public Location inferLocation(int lineNumber) {
-    if (0 <= lineNumber && lineNumber < lineNumberToStatement.length) {
-      Statement statement = lineNumberToStatement[lineNumber];
-
-      if (statement != null) {
-        return new JDTLocation(this.sourceFile, statement);
-      }
+  public List<Location> inferLocations(int lineNumber) {
+    if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
+      return lineNumberToStatements.get(lineNumber).stream()
+          .map(statement -> new JDTLocation(this.sourceFile, statement))
+          .collect(Collectors.toList());
     }
-    return null;
+    return Collections.emptyList();
   }
 }
