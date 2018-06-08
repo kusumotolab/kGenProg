@@ -18,10 +18,10 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
@@ -70,6 +70,7 @@ public class ProjectBuilder {
     // variant が null でなければ，バリアントのソースコードをビルド
     else {
       final List<GeneratedAST> generatedASTs = generatedSourceCode.getFiles();
+      generatedASTs.stream().forEach(a -> System.out.println(a + " " + a.getPrimaryClassName()));
       javaFileObjects = generatedASTs.stream()
           .map(a -> new JavaSourceFromString(a.getPrimaryClassName(), a.getSourceCode()))
           .collect(Collectors.toList());

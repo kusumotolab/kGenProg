@@ -10,10 +10,9 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 import org.junit.Before;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestProcessBuilderTest {
 
@@ -38,12 +37,10 @@ public class TestProcessBuilderTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
-    new ProjectBuilder(targetProject).build(outDir);
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
-    builder.start();
-    final TestResults r = TestResults.deserialize();
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
 
     // テストの結果はこうなるはず
     assertThat(r.getExecutedTestFQNs().size(), is(4));

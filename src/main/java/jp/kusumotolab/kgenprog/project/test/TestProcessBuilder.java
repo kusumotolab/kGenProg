@@ -28,7 +28,8 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 public class TestProcessBuilder {
 
   final private TargetProject targetProject;
-  final private BuildResults buildResults;
+  final private Path outDir;
+  final private ProjectBuilder projectBuilder;
 
   final static private String javaHome = System.getProperty("java.home");
   final static private String javaBin = Paths.get(javaHome + "/bin/java").toString();
@@ -48,21 +49,23 @@ public class TestProcessBuilder {
 
   public TestProcessBuilder(final TargetProject targetProject, final Path outDir) {
     this.targetProject = targetProject;
-    this.buildResults = new ProjectBuilder(this.targetProject).build(outDir);
+    this.outDir = outDir;
+    this.projectBuilder = new ProjectBuilder(this.targetProject);
   }
 
-  public TestResults start() {
+  public TestResults start(final GeneratedSourceCode generatedSourceCode) {
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.outDir);
+
     final String classpath = filterClasspathFromSystemClasspath();
-    final String sourceFQNs = joinFQNs(getSourceFQNs());
-    final String testFQNs = joinFQNs(getTestFQNs());
+    final String sourceFQNs = joinFQNs(getSourceFQNs(buildResults));
+    final String testFQNs = joinFQNs(getTestFQNs(buildResults));
 
     // start()時にワーキングディレクトリを変更するために，binDirはrootPathからの相対パスに変更
     // TODO いろんな状況でバグるので要修正．一時的な処置．
-    final Path relativeOutDir = this.targetProject.rootPath.relativize(this.buildResults.outDir);
+    final Path relativeOutDir = this.targetProject.rootPath.relativize(buildResults.outDir);
 
     final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, testExecutorMain,
-        "-b", relativeOutDir.toString(), // TODO should-use-path
-        "-s", sourceFQNs, "-t", testFQNs);
+        "-b", relativeOutDir.toString(), "-s", sourceFQNs, "-t", testFQNs);
 
     // テスト実行のためにworking dirを移動（対象プロジェクトが相対パスを利用している可能性が高いため）
     builder.directory(this.targetProject.rootPath.toFile());
@@ -71,11 +74,12 @@ public class TestProcessBuilder {
       final Process process = builder.start();
       process.waitFor();
       return TestResults.deserialize();
-      /*
-       * String out_result = IOUtils.toString(process.getInputStream(), "UTF-8"); String err_result
-       * = IOUtils.toString(process.getErrorStream(), "SJIS"); System.out.println(out_result);
-       * System.err.println(err_result); System.out.println(process.exitValue());
-       */
+
+      // String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
+      // String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
+      // System.out.println(out_result);
+      // System.err.println(err_result);
+      // System.out.println(process.exitValue());
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
@@ -93,22 +97,24 @@ public class TestProcessBuilder {
     return fqns.stream().map(fqn -> fqn.value).collect(joining(TestExecutorMain.SEPARATOR));
   }
 
-  private Set<FullyQualifiedName> getSourceFQNs() {
-    final Set<FullyQualifiedName> sourceFQNs = getFQNs(this.targetProject.getSourceFiles());
+  private Set<FullyQualifiedName> getSourceFQNs(final BuildResults buildResults) {
+    final Set<FullyQualifiedName> sourceFQNs =
+        getFQNs(buildResults, this.targetProject.getSourceFiles());
 
     // TODO testにsourceが含まれるのでsubtractしておく．
     // https://github.com/kusumotolab/kGenProg/issues/79
-    sourceFQNs.removeAll(getTestFQNs());
+    sourceFQNs.removeAll(getTestFQNs(buildResults));
 
     return sourceFQNs;
   }
 
-  private Set<FullyQualifiedName> getTestFQNs() {
-    return getFQNs(this.targetProject.getTestFiles());
+  private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
+    return getFQNs(buildResults, this.targetProject.getTestFiles());
   }
 
-  private Set<FullyQualifiedName> getFQNs(final List<SourceFile> sources) {
-    return sources.stream().map(source -> this.buildResults.getPathToFQNs(source.path))
+  private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
+      final List<SourceFile> sources) {
+    return sources.stream().map(source -> buildResults.getPathToFQNs(source.path))
         .flatMap(c -> c.stream()).collect(toSet());
   }
 
@@ -133,7 +139,7 @@ public class TestProcessBuilder {
     filter.add("hamcrest-core");
 
     // cp一覧から必須外部ライブラリのみをフィルタリング
-    final List<String> result = Arrays.stream(classpaths)
+    final List<String> result = Stream.of(classpaths)
         .filter(cp -> filter.stream().anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
         .collect(Collectors.toList());
 
