@@ -12,7 +12,6 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
 public class GeneratedJDTAST implements GeneratedAST {
   private CompilationUnit root;
   private SourceFile sourceFile;
-  private List<Statement> statements;
   private List<List<Statement>> lineNumberToStatements;
 
   @Override
@@ -26,7 +25,6 @@ public class GeneratedJDTAST implements GeneratedAST {
 
     StatementListVisitor visitor = new StatementListVisitor();
     visitor.analyzeStatement(root);
-    this.statements = visitor.getStatements();
     this.lineNumberToStatements = visitor.getLineToStatements();
   }
 
