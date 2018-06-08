@@ -73,8 +73,9 @@ public class GeneratedJDTAST implements GeneratedAST {
 
     } else {
       typeName = sourceFile.path.getFileName().toString();
-      if (typeName.endsWith(".java")) {
-        typeName = typeName.substring(0, typeName.length() - ".java".length());
+      int idx = typeName.indexOf(".");
+      if (idx > 0) {
+        typeName = typeName.substring(0, idx);
       }
     }
     return constructFQN(root.getPackage(), typeName);
