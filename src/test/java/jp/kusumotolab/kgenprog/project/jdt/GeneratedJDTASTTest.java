@@ -23,6 +23,10 @@ public class GeneratedJDTASTTest {
     "           System.out.println(a);\n" +
     "       }\n" +
     "   }\n" +
+    "   public int b(int a) {\n" +
+    "       if (a < 0) { return -a; }\n" +
+    "       return a;\n" +
+    "   }\n" +
     "}\n" +
     ""
     ;
@@ -64,6 +68,17 @@ public class GeneratedJDTASTTest {
     List<Location> locations = ast.inferLocations(1);
 
     assertThat(locations.size(), is(0));
+  }
+
+  @Test
+  public void testInferASTNode04() {
+    List<Location> locations = ast.inferLocations(9);
+
+    testLocation(locations.get(0),
+        "{\n  if (a < 0) {\n    return -a;\n  }\n  return a;\n}\n");
+    testLocation(locations.get(1), "if (a < 0) {\n  return -a;\n}\n");
+    testLocation(locations.get(2), "{\n  return -a;\n}\n");
+    testLocation(locations.get(3), "return -a;\n");
   }
 
   private void testLocation(Location target, String expected) {
