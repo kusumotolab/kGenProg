@@ -11,10 +11,12 @@ public class TestFullyQualifiedName extends FullyQualifiedName {
     super(value);
   }
 
+  @Deprecated
   public TestFullyQualifiedName(final SourceFile sourceFile) {
     super(sourceFile);
   }
 
+  @Deprecated
   public TestFullyQualifiedName(final Path path) {
     super(path);
   }
