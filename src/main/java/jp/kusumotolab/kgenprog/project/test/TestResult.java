@@ -1,9 +1,9 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import static java.util.stream.Collectors.toList;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 
 public class TestResult implements Serializable {
@@ -29,7 +29,7 @@ public class TestResult implements Serializable {
   }
 
   public List<FullyQualifiedName> getExecutedTargetFQNs() {
-    return this.coverages.keySet().stream().collect(Collectors.toList());
+    return this.coverages.keySet().stream().collect(toList());
   }
 
   public Coverage getCoverages(final FullyQualifiedName testFQN) {
@@ -48,8 +48,8 @@ public class TestResult implements Serializable {
     sb.append(indent + "  \"executedTestFQN\": \"" + executedTestFQN + "\",\n");
     sb.append(indent + "  \"wasFailed\": " + failed + ",\n");
     sb.append(indent + "  \"coverages\": [\n");
-    sb.append(String.join(",\n", coverages.values().stream().map(c -> c.toString(indentDepth + 2))
-        .collect(Collectors.toList())));
+    sb.append(String.join(",\n",
+        coverages.values().stream().map(c -> c.toString(indentDepth + 2)).collect(toList())));
     sb.append("\n");
     sb.append(indent + "  ]\n");
     sb.append(indent + "}");
