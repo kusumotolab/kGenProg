@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import static java.util.stream.Collectors.toList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.Location;
 
 public class TestResults implements Serializable {
@@ -52,7 +52,7 @@ public class TestResults implements Serializable {
    * @return 失敗したテスト結果s
    */
   public List<TestResult> getFailedTestResults() {
-    return this.value.values().stream().filter(r -> r.failed).collect(Collectors.toList());
+    return this.value.values().stream().filter(r -> r.failed).collect(toList());
   }
 
   /**
@@ -61,7 +61,7 @@ public class TestResults implements Serializable {
    * @return 成功したテスト結果s
    */
   public List<TestResult> getSuccessedTestResults() {
-    return this.value.values().stream().filter(r -> !r.failed).collect(Collectors.toList());
+    return this.value.values().stream().filter(r -> !r.failed).collect(toList());
   }
 
   /**
@@ -71,7 +71,7 @@ public class TestResults implements Serializable {
    */
   @Deprecated
   public List<TestResult> getTestResults() {
-    return value.values().stream().collect(Collectors.toList());
+    return value.values().stream().collect(toList());
   }
 
   /**
@@ -242,8 +242,8 @@ public class TestResults implements Serializable {
   public String toString() {
     final StringBuilder sb = new StringBuilder();
     sb.append("[\n");
-    sb.append(String.join(",\n",
-        this.value.values().stream().map(v -> v.toString(2)).collect(Collectors.toList())));
+    sb.append(
+        String.join(",\n", this.value.values().stream().map(v -> v.toString(2)).collect(toList())));
     sb.append("\n");
     sb.append("]\n");
     return sb.toString();
