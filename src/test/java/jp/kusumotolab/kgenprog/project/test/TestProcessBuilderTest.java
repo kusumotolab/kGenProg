@@ -10,21 +10,21 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestProcessBuilderTest {
 
-  final static FullyQualifiedName test01 =
+  final static TestFullyQualifiedName test01 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
-  final static FullyQualifiedName test02 =
+  final static TestFullyQualifiedName test02 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
-  final static FullyQualifiedName test03 =
+  final static TestFullyQualifiedName test03 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
-  final static FullyQualifiedName test04 =
+  final static TestFullyQualifiedName test04 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
-  final static FullyQualifiedName buggyCalculator =
+  final static TargetFullyQualifiedName buggyCalculator =
       new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
 
   @Before

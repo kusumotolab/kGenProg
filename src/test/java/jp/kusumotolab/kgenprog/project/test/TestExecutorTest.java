@@ -13,45 +13,47 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import org.junit.Test;
 
 public class TestExecutorTest {
 
-  final static FullyQualifiedName buggyCalculator =
+  final static TargetFullyQualifiedName buggyCalculator =
       new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
-  final static FullyQualifiedName buggyCalculatorTest =
+  final static TestFullyQualifiedName buggyCalculatorTest =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
-  final static FullyQualifiedName util = new TargetFullyQualifiedName("jp.kusumotolab.Util");
-  final static FullyQualifiedName utilTest = new TestFullyQualifiedName("jp.kusumotolab.UtilTest");
+  final static TargetFullyQualifiedName util = new TargetFullyQualifiedName("jp.kusumotolab.Util");
+  final static TestFullyQualifiedName utilTest =
+      new TestFullyQualifiedName("jp.kusumotolab.UtilTest");
 
-  final static FullyQualifiedName inner =
+  final static TargetFullyQualifiedName inner =
       new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$InnerClass");
-  final static FullyQualifiedName staticInner =
+  final static TargetFullyQualifiedName staticInner =
       new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$StaticInnerClass");
-  final static FullyQualifiedName outer = new TargetFullyQualifiedName("jp.kusumotolab.OuterClass");
-  final static FullyQualifiedName anonymousClass =
+  final static TargetFullyQualifiedName outer =
+      new TargetFullyQualifiedName("jp.kusumotolab.OuterClass");
+  final static TargetFullyQualifiedName anonymousClass =
       new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$1");
 
-  final static FullyQualifiedName test01 =
+  final static TestFullyQualifiedName test01 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
-  final static FullyQualifiedName test02 =
+  final static TestFullyQualifiedName test02 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
-  final static FullyQualifiedName test03 =
+  final static TestFullyQualifiedName test03 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
-  final static FullyQualifiedName test04 =
+  final static TestFullyQualifiedName test04 =
       new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
 
-  final static FullyQualifiedName plusTest01 =
+  final static TestFullyQualifiedName plusTest01 =
       new TestFullyQualifiedName("jp.kusumotolab.UtilTest.plusTest01");
-  final static FullyQualifiedName plusTest02 =
+  final static TestFullyQualifiedName plusTest02 =
       new TestFullyQualifiedName("jp.kusumotolab.UtilTest.plusTest02");
-  final static FullyQualifiedName minusTest01 =
+  final static TestFullyQualifiedName minusTest01 =
       new TestFullyQualifiedName("jp.kusumotolab.UtilTest.minusTest01");
-  final static FullyQualifiedName minusTest02 =
+  final static TestFullyQualifiedName minusTest02 =
       new TestFullyQualifiedName("jp.kusumotolab.UtilTest.minusTest02");
-  final static FullyQualifiedName dummyTest01 =
+  final static TestFullyQualifiedName dummyTest01 =
       new TestFullyQualifiedName("jp.kusumotolab.UtilTest.dummyTest01");
 
   private TestResults generateTestResultsForExample01() throws Exception {
