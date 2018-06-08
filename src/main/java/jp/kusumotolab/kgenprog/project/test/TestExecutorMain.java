@@ -44,12 +44,10 @@ public final class TestExecutorMain {
   }
 
   private static List<FullyQualifiedName> createTargetFQNs(final String names) {
-    return Stream.of(names.split(SEPARATOR)).map(n -> new TargetFullyQualifiedName(n))
-        .collect(toList());
+    return Stream.of(names.split(SEPARATOR)).map(TargetFullyQualifiedName::new).collect(toList());
   }
 
   private static List<FullyQualifiedName> createTestFQNs(final String names) {
-    return Stream.of(names.split(SEPARATOR)).map(n -> new TestFullyQualifiedName(n))
-        .collect(toList());
+    return Stream.of(names.split(SEPARATOR)).map(TestFullyQualifiedName::new).collect(toList());
   }
 }
