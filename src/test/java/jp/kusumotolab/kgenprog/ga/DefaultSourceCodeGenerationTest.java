@@ -33,6 +33,7 @@ public class DefaultSourceCodeGenerationTest {
 
     // NoneOperationにより全てのソースコードが初期ソースコードと等価であるはず
     for (int i = 0; i < targetProject.getSourceFiles().size(); i++) {
+      // TODO list内部要素の順序が変更されたらバグる
       final String expected = initialSourceCode.getFiles().get(i).getSourceCode();
       final String actual = generatedSourceCode.getFiles().get(i).getSourceCode();
       assertThat(actual, is(expected));
