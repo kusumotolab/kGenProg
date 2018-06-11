@@ -1,47 +1,43 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import java.nio.file.Paths;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
-import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
-import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import org.junit.Test;
 
 public class DefaultSourceCodeGenerationTest {
 
   @Test
-  public void execTest() {
-    final List<SourceFile> sourceCodeFiles = new ArrayList<>();
-    sourceCodeFiles.add(new TargetSourceFile(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")));
+  public void noneOperationTest() {
+    final TargetProject targetProject = TargetProject.generate("example/example01");
+    final SourceCodeGeneration defaultSourceCodeGeneration = new DefaultSourceCodeGeneration();
+    final Gene simpleGene = new SimpleGene(new ArrayList<>());
+    final Base noneBase = new Base(null, new NoneOperation());
+    final List<Gene> genes = simpleGene.generateNextGenerationGenes(Arrays.asList(noneBase));
 
-    final List<SourceFile> testFiles = new ArrayList<>();
-    testFiles.add(new TestSourceFile(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculatorTest.java")));
-
-    final List<ClassPath> classPaths = new ArrayList<>();
-
-    final TargetProject targetProject = new TargetProject(sourceCodeFiles, testFiles, classPaths);
-
-    final DefaultSourceCodeGeneration defaultSourceCodeGeneration =
-        new DefaultSourceCodeGeneration();
-    final Gene gene = new SimpleGene(new ArrayList<>());
-
-    // TODO: None以外のOperationでテストする必要有り
-    final Base base = new Base(null, new NoneOperation());
-
-    final List<Gene> genes = gene.generateNextGenerationGenes(Collections.singletonList(base));
+    // noneBaseを適用した単一のGeneを取り出す
+    final Gene gene = genes.get(0);
 
     final GeneratedSourceCode generatedSourceCode =
-        defaultSourceCodeGeneration.exec(genes.get(0), targetProject);
+        defaultSourceCodeGeneration.exec(gene, targetProject);
+    final GeneratedSourceCode initialSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
 
-    // TODO: Noneしかないのでテストができない
-    System.out.println(generatedSourceCode.getFiles().get(0).getSourceCode());
+    // ファイル数は同じはず
+    assertThat(generatedSourceCode.getFiles().size(), is(initialSourceCode.getFiles().size()));
+
+    // NoneOperationにより全てのソースコードが初期ソースコードと等価であるはず
+    for (int i = 0; i < targetProject.getSourceFiles().size(); i++) {
+      final String expected = initialSourceCode.getFiles().get(i).getSourceCode();
+      final String actual = generatedSourceCode.getFiles().get(i).getSourceCode();
+      assertThat(actual, is(expected));
+    }
   }
+
+  // TODO: None以外のOperationでテストする必要有り
 }
