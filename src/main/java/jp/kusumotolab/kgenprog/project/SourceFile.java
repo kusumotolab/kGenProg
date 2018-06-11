@@ -1,25 +1,22 @@
 package jp.kusumotolab.kgenprog.project;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public abstract class SourceFile {
-	// TODO
-	// pathはjava.nio.Pathで管理すべき．
 
-	public final String path;
+  public final Path path;
 
-	protected SourceFile(final String path) {
-		this.path = new File(path).toString(); // for class-platform compatibility
-	}
+  protected SourceFile(final Path path) {
+    this.path = path;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		final File f = new File(((SourceFile) o).path);
-		return new File(this.path).equals(f);
-	}
+  @Override
+  public boolean equals(Object o) {
+    return this.toString().equals(o.toString());
+  }
 
-	@Override
-	public String toString() {
-		return this.path;
-	}
+  @Override
+  public String toString() {
+    return this.path.toString();
+  }
 }
