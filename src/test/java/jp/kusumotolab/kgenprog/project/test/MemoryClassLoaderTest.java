@@ -250,7 +250,7 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(new URL[] {outDir.toUri().toURL()});
 
     // 不正なバイトコードを生成
-    byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};
+    final byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};
 
     // addDefinitionで定義追加
     loader.addDefinition(buggyCalculator, invalidByteCode);
