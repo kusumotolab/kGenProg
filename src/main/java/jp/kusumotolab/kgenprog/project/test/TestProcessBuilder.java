@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -9,12 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.IOUtils;
-
+import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
@@ -26,163 +27,124 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
  */
 public class TestProcessBuilder {
 
-	final private TargetProject targetProject;
-	final private Path binDir;
+  final private TargetProject targetProject;
+  final private BuildResults buildResults;
 
-	// stub for compatibility
-	public TestProcessBuilder(TargetProject targetProject) {
-		this(targetProject, Paths.get("")); // TODO
-	}
+  final static private String javaHome = System.getProperty("java.home");
+  final static private String javaBin = Paths.get(javaHome + "/bin/java").toString();
+  final static private String testExecutorMain =
+      "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
-	// stub for compatibility
-	public TestProcessBuilder(TargetProject targetProject, String outDir) {
-		this(targetProject, Paths.get(outDir)); // TODO
-	}
+  // for compatibility
+  @Deprecated
+  public TestProcessBuilder(final TargetProject targetProject) {
+    this(targetProject, Paths.get("")); // TODO
+  }
 
-	public TestProcessBuilder(TargetProject targetProject, Path binDir) {
-		this.targetProject = targetProject;
+  @Deprecated
+  public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
+    return null;
+  }
 
-		// start()時にワーキングディレクトリを変更するために，binDirはrootPathからの相対パスに変更
-		// TODO いろんな状況でバグるので要修正．一時的な処置．
-		this.binDir = targetProject.rootPath.relativize(binDir);
-	}
+  public TestProcessBuilder(final TargetProject targetProject, final Path outDir) {
+    this.targetProject = targetProject;
+    this.buildResults = new ProjectBuilder(this.targetProject).build(outDir);
+  }
 
-	@Deprecated
-	public TestResults exec(GeneratedSourceCode generatedSourceCode) {
-		return null;
-	}
+  public TestResults start() {
+    final String classpath = filterClasspathFromSystemClasspath();
+    final String sourceFQNs = joinFQNs(getSourceFQNs());
+    final String testFQNs = joinFQNs(getTestFQNs());
 
-	public void start() {
-		final String javaHome = System.getProperty("java.home");
-		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-		final String classpath = filterClasspathFromSystemClasspath();
-		final String main = "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
+    // start()時にワーキングディレクトリを変更するために，binDirはrootPathからの相対パスに変更
+    // TODO いろんな状況でバグるので要修正．一時的な処置．
+    final Path relativeOutDir = this.targetProject.rootPath.relativize(this.buildResults.outDir);
 
-		@SuppressWarnings("unchecked")
-		final Collection<FullyQualifiedName> c = CollectionUtils.subtract( //
-				getSourceFQNs(this.targetProject), getTestFQNs(this.targetProject));
+    final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, testExecutorMain,
+        "-b", relativeOutDir.toString(), // TODO should-use-path
+        "-s", sourceFQNs, "-t", testFQNs);
 
-		final String sourceFiles = c.stream().map(f -> f.value).collect(Collectors.joining(TestExecutorMain.SEPARATOR));
-		final String testFiles = getTestFQNs(this.targetProject).stream().map(f -> f.value)
-				.collect(Collectors.joining(TestExecutorMain.SEPARATOR));
+    // テスト実行のためにworking dirを移動（対象プロジェクトが相対パスを利用している可能性が高いため）
+    builder.directory(this.targetProject.rootPath.toFile());
 
-		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, main, "-b", this.binDir.toString(),
-				"-s", sourceFiles, "-t", testFiles);
+    try {
+      final Process process = builder.start();
+      process.waitFor();
+      return TestResults.deserialize();
+      /*
+       * String out_result = IOUtils.toString(process.getInputStream(), "UTF-8"); String err_result
+       * = IOUtils.toString(process.getErrorStream(), "SJIS"); System.out.println(out_result);
+       * System.err.println(err_result); System.out.println(process.exitValue());
+       */
+    } catch (IOException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    }
+    return null;
+  }
 
-		// テスト実行のためにworking dirを移動（対象プロジェクトが相対パスを利用している可能性が高いため）
-		builder.directory(this.targetProject.rootPath.toFile());
+  private String joinFQNs(Collection<FullyQualifiedName> fqns) {
+    return fqns.stream().map(fqn -> fqn.value).collect(joining(TestExecutorMain.SEPARATOR));
+  }
 
-		try {
-			final Process process = builder.start();
-			process.waitFor();
-			/*
-			String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
-			String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
-			System.out.println(out_result);
-			System.err.println(err_result);
-			System.out.println(process.exitValue());
-			*/
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-	}
+  private Set<FullyQualifiedName> getSourceFQNs() {
+    final Set<FullyQualifiedName> sourceFQNs = getFQNs(this.targetProject.getSourceFiles());
 
-	// TODO
-	// 現在FQN生成の責務がどこにもないので一時的に本クラスで実装．srcパスは"/src"に固定しているので潜在的バグ．
-	@Deprecated
-	private List<FullyQualifiedName> getSourceFQNs(final TargetProject targetProject) {
-		return getFQNs(targetProject.getSourceFiles(), targetProject.rootPath);
-	}
+    // TODO testにsourceが含まれるのでsubtractしておく．
+    // https://github.com/kusumotolab/kGenProg/issues/79
+    sourceFQNs.removeAll(getTestFQNs());
 
-	// TODO
-	// 現在FQN生成の責務がどこにもないので一時的に本クラスで実装．srcパスは"/src"に固定しているので潜在的バグ．
-	@Deprecated
-	private List<FullyQualifiedName> getTestFQNs(final TargetProject targetProject) {
-		return getFQNs(targetProject.getTestFiles(), targetProject.rootPath);
-	}
+    return sourceFQNs;
+  }
 
-	@Deprecated
-	private List<FullyQualifiedName> getFQNs(List<SourceFile> files, Path rootPath) {
-		return files.stream() //
-				.map(s -> Paths.get(s.path)) //
-				.map(p -> rootPath.resolve("src").relativize(p)) //
-				.map(p -> new TestFullyQualifiedName(p)) //
-				.collect(Collectors.toList());
+  private Set<FullyQualifiedName> getTestFQNs() {
+    return getFQNs(this.targetProject.getTestFiles());
+  }
 
-	}
+  private Set<FullyQualifiedName> getFQNs(final List<SourceFile> sources) {
+    return sources.stream().map(source -> this.buildResults.getPathToFQNs(source.path))
+        .flatMap(c -> c.stream()).collect(toSet());
+  }
 
-	/**
-	 * TestResults.exec(GeneratedSourceCode)の代替メソッド．
-	 * 本メソッドがGeneratedSourceCodeの実装に強依存なので，ひとまずStringで処理．
-	 * 
-	 * @param sourceClasses 対象プロジェクトのclassPath
-	 * @param testClasses 実行対象のテストクラス名の集合
-	 * @return
-	 */
-	@Deprecated
-	public void start(final List<String> sourceClasses, final List<String> testClasses, final String classpath) {
-		final String javaHome = System.getProperty("java.home");
-		final String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-		final String _classpath = filterClasspathFromSystemClasspath() + File.pathSeparator + classpath;
-		final String main = "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
+  private final String jarFileTail = "-(\\d+\\.)+jar$";
 
-		final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", _classpath, main, "-s",
-				String.join(TestExecutorMain.SEPARATOR, sourceClasses),
-				String.join(TestExecutorMain.SEPARATOR, testClasses));
+  /**
+   * 現在実行中のjavaプロセスのcpから，TestExecutorMain実行に必要なcpをフィルタリングする．
+   * 
+   * @return
+   */
+  private String filterClasspathFromSystemClasspath() {
+    // 依存する外部ライブラリを定義
+    // TODO もうちょいcoolに改善
+    final String[] classpaths = System.getProperty("java.class.path").split(File.pathSeparator);
+    final List<String> filter = new ArrayList<>();
+    filter.add("args4j");
+    filter.add("jacoco\\.core");
+    filter.add("asm");
+    filter.add("asm-commons");
+    filter.add("asm-tree");
+    filter.add("junit");
+    filter.add("hamcrest-core");
 
-		try {
-			final Process process = builder.start();
+    // cp一覧から必須外部ライブラリのみをフィルタリング
+    final List<String> result = Arrays.stream(classpaths)
+        .filter(cp -> filter.stream().anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
+        .collect(Collectors.toList());
 
-			// TODO
-			// process.waitFor()するとhangする．謎
-			// たぶんこの問題
-			// https://stackoverflow.com/questions/42436307/process-hanging-on-the-process-builder
-			String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
-			String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
-			System.out.println(out_result);
-			System.err.println(err_result);
-			System.out.println(process.exitValue());
+    // 自身（TestProcessBuilder.class）へのcpを追加
+    try {
+      result.add(Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI())
+          .toString());
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
 
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-	}
-
-	private final String jarFileTail = "-(\\d+\\.)+jar$";
-
-	/**
-	 * 現在実行中のjavaプロセスのcpから，TestExecutorMain実行に必要なcpをフィルタリングする．
-	 * @return
-	 */
-	private String filterClasspathFromSystemClasspath() {
-		// 依存する外部ライブラリを定義
-		final String[] classpaths = System.getProperty("java.class.path").split(File.pathSeparator);
-		final List<String> filter = new ArrayList<>();
-		filter.add("args4j");
-		filter.add("jacoco\\.core");
-		filter.add("asm");
-		filter.add("asm-commons");
-		filter.add("asm-tree");
-		filter.add("junit");
-		filter.add("hamcrest-core");
-
-		// cp一覧から必須外部ライブラリのみをフィルタリング
-		List<String> result = Arrays.asList(classpaths).stream()
-				.filter(cp -> filter.stream().anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
-				.collect(Collectors.toList());
-
-		// 自身（TestProcessBuilder.class）へのcpを追加
-		try {
-			result.add(Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).toString());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-
-		return String.join(File.pathSeparator, result);
-	}
+    return String.join(File.pathSeparator, result);
+  }
 }
