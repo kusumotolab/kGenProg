@@ -19,7 +19,7 @@ public class MemoryClassLoader extends URLClassLoader {
   /**
    * クラス定義を表すMap． クラス名とバイト配列のペアを持つ．
    */
-  private final Map<String, byte[]> definitions = new HashMap<>();
+  private final Map<FullyQualifiedName, byte[]> definitions = new HashMap<>();
 
   /**
    * メモリ上のバイト配列をクラス定義に追加する．
@@ -27,26 +27,36 @@ public class MemoryClassLoader extends URLClassLoader {
    * @param name 定義するクラス名
    * @param bytes 追加するクラス定義
    */
-  public void addDefinition(final String name, final byte[] bytes) {
+  public void addDefinition(final FullyQualifiedName name, final byte[] bytes) {
     definitions.put(name, bytes);
   }
 
+
   @Override
   public Class<?> loadClass(final String name) throws ClassNotFoundException {
+    return loadClass(new TargetFullyQualifiedName(name));
+  }
+
+  public Class<?> loadClass(final FullyQualifiedName name) throws ClassNotFoundException {
     return loadClass(name, false);
+  }
+
+  @Override
+  public Class<?> loadClass(final String name, final boolean resolve)
+      throws ClassNotFoundException {
+    return loadClass(new TargetFullyQualifiedName(name), resolve);
   }
 
   /**
    * クラスロード． メモリ上のバイト配列のクラス定義を優先で探し，それがなければファイルシステム上の.classファイルからロードを行う．
    */
-  @Override
-  public Class<?> loadClass(final String name, final boolean resolve)
+  public Class<?> loadClass(final FullyQualifiedName name, final boolean resolve)
       throws ClassNotFoundException {
     final byte[] bytes = definitions.get(name);
     if (bytes != null) {
-      return defineClass(name, bytes, 0, bytes.length);
+      return defineClass(name.toString(), bytes, 0, bytes.length);
     }
-    return super.loadClass(name, resolve);
+    return super.loadClass(name.toString(), resolve);
   }
 
 }
