@@ -10,9 +10,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
-import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+import org.junit.Test;
 
 public class TestResultsTest {
 
@@ -49,11 +49,11 @@ public class TestResultsTest {
                                                    // buggycalculator
 
     // example01でのbcの6行目（n++;）のテスト結果はこうなるはず
-    assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 6),
+    assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 5),
         is(containsInAnyOrder(test01, test02)));
-    assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 6), is(empty()));
-    assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 6), is(containsInAnyOrder(test04)));
-    assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 6), is(containsInAnyOrder(test03)));
+    assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 5), is(empty()));
+    assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 5), is(containsInAnyOrder(test04)));
+    assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 5), is(containsInAnyOrder(test03)));
 
     // example01でのbcの10行目（return n;）のテスト結果はこうなるはず
     assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 10),
@@ -75,28 +75,28 @@ public class TestResultsTest {
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test04\",\n" //
         + "    \"wasFailed\": false,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}\n" //
         + "    ]\n" //
         + "  },\n" //
         + "  {\n" //
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test03\",\n" //
         + "    \"wasFailed\": true,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}\n" //
         + "    ]\n" //
         + "  },\n" //
         + "  {\n" //
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test02\",\n" //
         + "    \"wasFailed\": false,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}\n" //
         + "    ]\n" //
         + "  },\n" //
         + "  {\n" //
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test01\",\n" //
         + "    \"wasFailed\": false,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}\n" //
         + "    ]\n" //
         + "  }\n" //
         + "]\n";
