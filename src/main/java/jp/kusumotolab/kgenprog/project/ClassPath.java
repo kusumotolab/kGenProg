@@ -1,9 +1,11 @@
 package jp.kusumotolab.kgenprog.project;
 
-public final class ClassPath {
-	public final String path;
+import java.nio.file.Path;
 
-	public ClassPath(final String path) {
-		this.path = path;
-	}
+public final class ClassPath {
+  public final Path path;
+
+  public ClassPath(final Path path) {
+    this.path = path;
+  }
 }
