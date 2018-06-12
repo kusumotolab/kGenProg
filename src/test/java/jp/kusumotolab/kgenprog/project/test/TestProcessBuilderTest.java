@@ -10,10 +10,9 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 import org.junit.Before;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestProcessBuilderTest {
 
@@ -38,7 +37,6 @@ public class TestProcessBuilderTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
-    new ProjectBuilder(targetProject).build(outDir);
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
@@ -55,12 +53,12 @@ public class TestProcessBuilderTest {
     assertThat(r.getTestResult(test04).failed, is(false));
 
     // BuggyCalculatorTest.test01 実行によるbuggyCalculatorのカバレッジはこうなるはず
-    assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, is(contains( //
-        EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+    assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, is(contains(EMPTY,
+        COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED)));
 
-    // BuggyCalculatorTest.test04 実行によるカbuggyCalculatorのバレッジはこうなるはず
-    assertThat(r.getTestResult(test04).getCoverages(buggyCalculator).statuses, is(contains( //
-        EMPTY, EMPTY, COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, COVERED, EMPTY, COVERED)));
+    // BuggyCalculatorTest.test04 実行によるbuggyCalculatorのバレッジはこうなるはず
+    assertThat(r.getTestResult(test04).getCoverages(buggyCalculator).statuses, is(contains(EMPTY,
+        COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED)));
   }
 
 }
