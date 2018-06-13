@@ -11,9 +11,11 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 
 public class TestResultsTest {
 
@@ -48,8 +50,7 @@ public class TestResultsTest {
   @Test
   public void checkFLMetricsInTestResultsForExample01() throws Exception {
     final TestResults r = generateTestResultsForExample01();
-    final FullyQualifiedName bc = buggyCalculator; // alias for
-                                                   // buggycalculator
+    final FullyQualifiedName bc = buggyCalculator; // alias for buggycalculator
 
     // example01でのbcの6行目（n++;）のテスト結果はこうなるはず
     assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 5),
@@ -64,6 +65,27 @@ public class TestResultsTest {
     assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 10), is(containsInAnyOrder(test03)));
     assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
     assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
+  }
+
+  /**
+   * FLで用いる4メトリクスのテスト
+   */
+  @Test
+  public void checkFLMetricsInTestResultsForExample02() throws Exception {
+    final Path rootDir = Paths.get("example/example01");
+    final Path outDir = rootDir.resolve("_bin");
+    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final BuildResults buildResults =
+        new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
+    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri().toURL()});
+    final TestResults r =
+        executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
+
+    final TargetSourceFile bcSourceCode = new TargetSourceFile(Paths.get(buggyCalculator.value));
+    // final Location location = buildResults.sourceCode.getAST(bcSourceCode).inferLocations(5);
+    // r.getNumberOfFailedTestExecutingTheStatement(bcSourceCode, location);
   }
 
   /**

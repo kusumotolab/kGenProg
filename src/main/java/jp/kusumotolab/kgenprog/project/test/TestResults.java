@@ -14,7 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.SourceFile;
 
 public class TestResults implements Serializable {
 
@@ -175,24 +177,16 @@ public class TestResults implements Serializable {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.NOT_COVERED, false);
   }
 
-  @Deprecated
-  public Map<Location, Integer> getExecutedFailedTestCounts() {
-    return null;
-  }
+  public long getNumberOfFailedTestExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    final Set<FullyQualifiedName> correspondingFqns =
+        this.buildResults.getPathToFQNs(sourceFile.path);
+    final int correspondingLineNumber = 5;
+    // this.buildResults.sourceCode.getAST(sourceFile).inferLocations(null);
 
-  @Deprecated
-  public Map<Location, Integer> getNotExecutedFailedTestCounts() {
-    return null;
-  }
-
-  @Deprecated
-  public Map<Location, Integer> getExecutedPassedTestCounts() {
-    return null;
-  }
-
-  @Deprecated
-  public Map<Location, Integer> getNotExecutedPassedTestCounts() {
-    return null;
+    return correspondingFqns.stream()
+        .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, Coverage.Status.COVERED, true))
+        .flatMap(v -> v.stream()).count();
   }
 
   /**
@@ -248,4 +242,18 @@ public class TestResults implements Serializable {
     sb.append("]\n");
     return sb.toString();
   }
+
+
+  /*
+   * 以降，翻訳のための一時的な処理
+   */
+
+  // 翻訳用ASTを持つbuildResults
+  private BuildResults buildResults;
+
+  public void setBuildResults(final BuildResults buildResults) {
+    this.buildResults = buildResults;
+  }
+
+
 }

@@ -30,7 +30,6 @@ public class TestProcessBuilder {
   final private TargetProject targetProject;
   final private Path outDir;
   final private ProjectBuilder projectBuilder;
-  final private BuildResults buildResults;
 
   final static private String javaHome = System.getProperty("java.home");
   final static private String javaBin = Paths.get(javaHome + "/bin/java").toString();
@@ -52,9 +51,6 @@ public class TestProcessBuilder {
     this.targetProject = targetProject;
     this.outDir = outDir;
     this.projectBuilder = new ProjectBuilder(this.targetProject);
-    final GeneratedSourceCode generatedSourceCode =
-        targetProject.getInitialVariant().getGeneratedSourceCode();
-    this.buildResults = new ProjectBuilder(this.targetProject).build(generatedSourceCode, outDir);
   }
 
   public TestResults start(final GeneratedSourceCode generatedSourceCode) {
@@ -77,7 +73,13 @@ public class TestProcessBuilder {
     try {
       final Process process = builder.start();
       process.waitFor();
-      return TestResults.deserialize();
+
+      final TestResults testResults = TestResults.deserialize();
+
+      // TODO 翻訳のための一時的な処理
+      testResults.setBuildResults(buildResults);
+
+      return testResults;
 
       // String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
       // String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
@@ -97,7 +99,7 @@ public class TestProcessBuilder {
     return null;
   }
 
-  private String joinFQNs(Collection<FullyQualifiedName> fqns) {
+  private String joinFQNs(final Collection<FullyQualifiedName> fqns) {
     return fqns.stream().map(fqn -> fqn.value).collect(joining(TestExecutorMain.SEPARATOR));
   }
 
