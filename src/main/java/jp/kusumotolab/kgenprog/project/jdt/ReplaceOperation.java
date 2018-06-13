@@ -50,7 +50,7 @@ public class ReplaceOperation implements JDTOperation {
         .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
           CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
           ASTNode target = jdtLocation.locate(unit);
-          
+
           replaceNode(target);
         });
 
