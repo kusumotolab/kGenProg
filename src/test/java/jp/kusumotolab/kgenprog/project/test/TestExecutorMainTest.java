@@ -78,13 +78,19 @@ public class TestExecutorMainTest {
     assertThat(r.getTestResult(test03).failed, is(true));
     assertThat(r.getTestResult(test04).failed, is(false));
 
-    // test01()ではBuggyCalculatorのみが実行されたはず
-    assertThat(r.getTestResult(test01).getExecutedTargetFQNs(),
-        is(containsInAnyOrder(buggyCalculator)));
+    final TestResult test01_result = r.getTestResult(test01);
+    final TestResult test04_result = r.getTestResult(test04);
 
-    // BuggyCalculatorTest.test01 実行によるbuggyCalculatorのカバレッジはこうなるはず
-    assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, is(contains(EMPTY,
-        COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+    // test01()ではBuggyCalculatorのみが実行されたはず
+    assertThat(test01_result.getExecutedTargetFQNs(), is(containsInAnyOrder(buggyCalculator)));
+
+    // test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
+    assertThat(test01_result.getCoverages(buggyCalculator).statuses, is(contains(EMPTY, COVERED,
+        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+
+    // test04()で実行されたbuggyCalculatorのバレッジはこうなるはず
+    assertThat(test04_result.getCoverages(buggyCalculator).statuses, is(contains(EMPTY, COVERED,
+        EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED)));
 
   }
 
@@ -116,8 +122,9 @@ public class TestExecutorMainTest {
     assertThat(r.getTestResult(test03).failed, is(true));
     assertThat(r.getTestResult(test04).failed, is(false));
 
-    // test01()ではBuggyCalculatorとUtilが実行されたはず
     final TestResult test01_result = r.getTestResult(test01);
+
+    // test01()ではBuggyCalculatorとUtilが実行されたはず
     assertThat(test01_result.getExecutedTargetFQNs(),
         is(containsInAnyOrder(buggyCalculator, util)));
 
@@ -131,9 +138,8 @@ public class TestExecutorMainTest {
         is(containsInAnyOrder(buggyCalculator, util)));
 
     // plusTest01()で実行されたUtilのカバレッジはこうなるはず
-    assertThat(plusTest01_result.getCoverages(util).statuses, //
-        is(contains(EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED, EMPTY, EMPTY, EMPTY, NOT_COVERED,
-            EMPTY, EMPTY, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED)));
+    assertThat(plusTest01_result.getCoverages(util).statuses, is(contains(EMPTY, NOT_COVERED, EMPTY,
+        COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED)));
 
     // TODO 最後のNOT_COVERDだけ理解できない．謎．
   }
