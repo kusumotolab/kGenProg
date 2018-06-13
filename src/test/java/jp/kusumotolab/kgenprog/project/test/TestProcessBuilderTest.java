@@ -52,12 +52,12 @@ public class TestProcessBuilderTest {
     assertThat(r.getTestResult(test04).failed, is(false));
 
     // BuggyCalculatorTest.test01 実行によるbuggyCalculatorのカバレッジはこうなるはず
-    assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, is(contains( //
-        EMPTY, EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+    assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, is(contains(EMPTY,
+        COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED)));
 
-    // BuggyCalculatorTest.test04 実行によるカbuggyCalculatorのバレッジはこうなるはず
-    assertThat(r.getTestResult(test04).getCoverages(buggyCalculator).statuses, is(contains( //
-        EMPTY, EMPTY, COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, COVERED, EMPTY, COVERED)));
+    // BuggyCalculatorTest.test04 実行によるbuggyCalculatorのバレッジはこうなるはず
+    assertThat(r.getTestResult(test04).getCoverages(buggyCalculator).statuses, is(contains(EMPTY,
+        COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED)));
   }
 
 }

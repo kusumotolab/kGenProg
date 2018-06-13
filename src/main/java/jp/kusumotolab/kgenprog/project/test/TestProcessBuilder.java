@@ -30,6 +30,7 @@ public class TestProcessBuilder {
   final private TargetProject targetProject;
   final private Path outDir;
   final private ProjectBuilder projectBuilder;
+  final private BuildResults buildResults;
 
   final static private String javaHome = System.getProperty("java.home");
   final static private String javaBin = Paths.get(javaHome + "/bin/java").toString();
@@ -51,6 +52,9 @@ public class TestProcessBuilder {
     this.targetProject = targetProject;
     this.outDir = outDir;
     this.projectBuilder = new ProjectBuilder(this.targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    this.buildResults = new ProjectBuilder(this.targetProject).build(generatedSourceCode, outDir);
   }
 
   public TestResults start(final GeneratedSourceCode generatedSourceCode) {
