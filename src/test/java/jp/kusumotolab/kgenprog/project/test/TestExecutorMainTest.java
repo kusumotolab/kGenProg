@@ -11,11 +11,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 import org.junit.Before;
 import org.junit.Test;
 import org.kohsuke.args4j.CmdLineException;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestExecutorMainTest {
 
@@ -56,7 +57,9 @@ public class TestExecutorMainTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
-    new ProjectBuilder(targetProject).build(outDir);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
 
     TestExecutorMain.main(new String[] { //
         "-b", outDir.toString(), //
@@ -99,7 +102,9 @@ public class TestExecutorMainTest {
     final Path rootDir = Paths.get("example/example02");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
-    new ProjectBuilder(targetProject).build(outDir);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
 
     TestExecutorMain.main(new String[] { //
         "-b", outDir.toString(), //

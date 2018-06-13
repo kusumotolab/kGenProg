@@ -10,9 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import org.junit.Test;
 
 public class TestResultsTest {
 
@@ -34,7 +35,9 @@ public class TestResultsTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
-    new ProjectBuilder(targetProject).build(outDir);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
     final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri().toURL()});
     return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
   }
