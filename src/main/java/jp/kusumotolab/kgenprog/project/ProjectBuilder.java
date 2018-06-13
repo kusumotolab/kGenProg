@@ -107,7 +107,8 @@ public class ProjectBuilder {
       e.printStackTrace();
     }
 
-    final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
+    final BuildResults buildResults =
+        new BuildResults(generatedSourceCode, isFailed, outDir, diagnostics);
 
     if (buildResults.isBuildFailed) {
       return buildResults;
