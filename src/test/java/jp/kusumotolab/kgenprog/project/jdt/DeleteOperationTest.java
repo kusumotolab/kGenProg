@@ -37,4 +37,28 @@ public class DeleteOperationTest {
 
   }
 
+
+  @Test
+  public void testDeleteStatementDirectly() {
+    String testSource = "class A{public void a(){int a = 0;a = 1;}}";
+    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+
+    JDTASTConstruction constructor = new JDTASTConstruction();
+    GeneratedJDTAST ast =
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+    GeneratedSourceCode generatedSourceCode =
+        new GeneratedSourceCode(Collections.singletonList(ast));
+
+    TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
+    MethodDeclaration method = type.getMethods()[0];
+    Statement statement = (Statement) method.getBody().statements().get(1);
+    JDTLocation location = new JDTLocation(testSourceFile, statement);
+    DeleteOperation operation = new DeleteOperation();
+
+    operation.applyDirectly(generatedSourceCode, location);
+
+    assertEquals("class A {\n  public void a(){\n    int a=0;\n  }\n}\n", ast.getRoot().toString());
+
+  }
+
 }

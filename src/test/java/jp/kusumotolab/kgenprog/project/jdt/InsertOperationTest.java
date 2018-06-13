@@ -47,4 +47,35 @@ public class InsertOperationTest {
 
   }
 
+  @Test
+  public void testInsertStatementDirectly() {
+    String testSource = "class A{public void a(){int a = 0;a = 1;}}";
+    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+
+    JDTASTConstruction constructor = new JDTASTConstruction();
+    GeneratedJDTAST ast =
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+    GeneratedSourceCode generatedSourceCode =
+        new GeneratedSourceCode(Collections.singletonList(ast));
+
+    // 挿入位置のLocation生成
+    TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
+    MethodDeclaration method = type.getMethods()[0];
+    Statement statement = (Statement) method.getBody().statements().get(1);
+    JDTLocation location = new JDTLocation(testSourceFile, statement);
+
+    // 挿入対象生成
+    AST jdtAST = ast.getRoot().getAST();
+    MethodInvocation invocation = jdtAST.newMethodInvocation();
+    invocation.setName(jdtAST.newSimpleName("a"));
+    Statement insertStatement = jdtAST.newExpressionStatement(invocation);
+
+    InsertOperation operation = new InsertOperation(insertStatement);
+
+    operation.applyDirectly(generatedSourceCode, location);
+    assertEquals("class A {\n  public void a(){\n    int a=0;\n    a=1;\n    a();\n  }\n}\n",
+        ast.getRoot().toString());
+
+  }
+
 }
