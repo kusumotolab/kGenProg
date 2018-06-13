@@ -39,6 +39,7 @@ public class ProjectBuilder {
    * @param outDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
+  @Deprecated
   public BuildResults build(final Path outDir) {
     return this.build(null, outDir);
   }
@@ -88,12 +89,6 @@ public class ProjectBuilder {
     final CompilationTask task =
         compiler.getTask(null, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
-    try {
-      fileManager.close();
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-
     final boolean isFailed = !task.call();
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
     for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
@@ -104,6 +99,12 @@ public class ProjectBuilder {
       System.err.println(diagnostic.getEndPosition());
       System.err.println(diagnostic.getSource());
       System.err.println(diagnostic.getMessage(null));
+    }
+
+    try {
+      fileManager.close();
+    } catch (final IOException e) {
+      e.printStackTrace();
     }
 
     final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
