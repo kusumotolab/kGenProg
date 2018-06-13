@@ -5,8 +5,8 @@ import static org.junit.Assert.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class ProjectBuilderTest {
 
@@ -16,7 +16,9 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Path outDirPath = Paths.get("example/example01/bin");
 
-    final BuildResults buildResults = projectBuilder.build(outDirPath);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, outDirPath);
 
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
@@ -44,7 +46,9 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Path outDirPath = Paths.get("example/example02/bin");
 
-    final BuildResults buildResults = projectBuilder.build(outDirPath);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, outDirPath);
 
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
@@ -72,7 +76,9 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Path outDirPath = Paths.get("example/example03/bin");
 
-    final BuildResults buildResults = projectBuilder.build(outDirPath);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, outDirPath);
 
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
