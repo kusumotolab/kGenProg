@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
+import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
@@ -24,11 +25,7 @@ public class JDTASTConstruction {
     String[] filePaths =
         sourceFiles.stream().map(file -> file.path.toString()).toArray(String[]::new);
 
-    ASTParser parser = ASTParser.newParser(AST.JLS10);
-    // TODO: Bindingが必要か検討
-    parser.setResolveBindings(false);
-    parser.setBindingsRecovery(false);
-    parser.setEnvironment(null, null, null, true);
+    ASTParser parser = createNewParser();
 
     Map<Path, SourceFile> pathToSourceFile =
         sourceFiles.stream().collect(Collectors.toMap(file -> file.path, file -> file));
@@ -51,14 +48,26 @@ public class JDTASTConstruction {
   }
 
   public GeneratedAST constructAST(SourceFile file, char[] data) {
-    ASTParser parser = ASTParser.newParser(AST.JLS10);
-
-    Map<String, String> options = JavaCore.getOptions();
-    options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_10);
-
-    parser.setCompilerOptions(options);
+    ASTParser parser = createNewParser();
     parser.setSource(data);
 
     return new GeneratedJDTAST(file, (CompilationUnit) parser.createAST(null));
+  }
+
+  private ASTParser createNewParser() {
+    ASTParser parser = ASTParser.newParser(AST.JLS10);
+
+    final Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
+    options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
+    options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
+    options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+    parser.setCompilerOptions(options);
+
+    // TODO: Bindingが必要か検討
+    parser.setResolveBindings(false);
+    parser.setBindingsRecovery(false);
+    parser.setEnvironment(null, null, null, true);
+
+    return parser;
   }
 }

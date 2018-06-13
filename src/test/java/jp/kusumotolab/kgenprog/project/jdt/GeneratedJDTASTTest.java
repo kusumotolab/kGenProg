@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.nio.file.Paths;
 import java.util.List;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.Location;
@@ -134,4 +135,17 @@ public class GeneratedJDTASTTest {
     assertThat(ast.getPrimaryClassName(), is("a.b.c.package-info"));
   }
 
+  @Test
+  public void testStaticImport() {
+    String testSource = "import static java.lang.Math.max; class StaticImport{ }";
+    SourceFile testSourceFile = new TargetSourceFile(Paths.get("StaticImport.java"));
+
+    JDTASTConstruction constructor = new JDTASTConstruction();
+    GeneratedJDTAST ast =
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+
+    List<ImportDeclaration> imports = ast.getRoot().imports();
+    assertThat(imports.size(), is(1));
+    assertThat(imports.get(0).isStatic(), is(true));
+  }
 }

@@ -36,6 +36,28 @@ public class ReplaceOperation implements JDTOperation {
     CompilationUnit newAST = (CompilationUnit) ASTNode.copySubtree(unit.getAST(), unit);
     ASTNode target = location.locate(newAST);
 
+    replaceNode(target);
+
+    return new GeneratedJDTAST(ast.getSourceFile(), newAST);
+  }
+
+  @Override
+  public GeneratedSourceCode applyDirectly(GeneratedSourceCode generatedSourceCode,
+      Location location) {
+    JDTLocation jdtLocation = (JDTLocation) location;
+
+    generatedSourceCode.getFiles().stream()
+        .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
+          CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
+          ASTNode target = jdtLocation.locate(unit);
+          
+          replaceNode(target);
+        });
+
+    return generatedSourceCode;
+  }
+
+  private void replaceNode(ASTNode target) {
     StructuralPropertyDescriptor locationInParent = target.getLocationInParent();
     if (locationInParent.isChildListProperty()) {
       List siblings = (List) target.getParent().getStructuralProperty(locationInParent);
@@ -48,7 +70,5 @@ public class ReplaceOperation implements JDTOperation {
     } else {
       throw new RuntimeException("can't replace node");
     }
-
-    return new GeneratedJDTAST(ast.getSourceFile(), newAST);
   }
 }

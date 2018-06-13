@@ -48,7 +48,9 @@ public class TestProcessBuilder {
 
   public TestProcessBuilder(final TargetProject targetProject, final Path outDir) {
     this.targetProject = targetProject;
-    this.buildResults = new ProjectBuilder(this.targetProject).build(outDir);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    this.buildResults = new ProjectBuilder(this.targetProject).build(generatedSourceCode, outDir);
   }
 
   public TestResults start() {
