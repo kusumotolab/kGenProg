@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
@@ -34,7 +35,9 @@ public class TestResultsTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
-    new ProjectBuilder(targetProject).build(outDir);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
     final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri().toURL()});
     return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
   }
@@ -49,11 +52,11 @@ public class TestResultsTest {
                                                    // buggycalculator
 
     // example01でのbcの6行目（n++;）のテスト結果はこうなるはず
-    assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 6),
+    assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 5),
         is(containsInAnyOrder(test01, test02)));
-    assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 6), is(empty()));
-    assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 6), is(containsInAnyOrder(test04)));
-    assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 6), is(containsInAnyOrder(test03)));
+    assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 5), is(empty()));
+    assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 5), is(containsInAnyOrder(test04)));
+    assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 5), is(containsInAnyOrder(test03)));
 
     // example01でのbcの10行目（return n;）のテスト結果はこうなるはず
     assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 10),
@@ -75,28 +78,28 @@ public class TestResultsTest {
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test04\",\n" //
         + "    \"wasFailed\": false,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}\n" //
         + "    ]\n" //
         + "  },\n" //
         + "  {\n" //
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test03\",\n" //
         + "    \"wasFailed\": true,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 1, 0, 2, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}\n" //
         + "    ]\n" //
         + "  },\n" //
         + "  {\n" //
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test02\",\n" //
         + "    \"wasFailed\": false,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}\n" //
         + "    ]\n" //
         + "  },\n" //
         + "  {\n" //
         + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test01\",\n" //
         + "    \"wasFailed\": false,\n" //
         + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 0, 2, 0, 2, 2, 0, 1, 0, 2]}\n" //
+        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}\n" //
         + "    ]\n" //
         + "  }\n" //
         + "]\n";

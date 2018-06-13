@@ -18,10 +18,10 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
@@ -39,6 +39,7 @@ public class ProjectBuilder {
    * @param outDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
+  @Deprecated
   public BuildResults build(final Path outDir) {
     return this.build(null, outDir);
   }
@@ -70,7 +71,6 @@ public class ProjectBuilder {
     // variant が null でなければ，バリアントのソースコードをビルド
     else {
       final List<GeneratedAST> generatedASTs = generatedSourceCode.getFiles();
-      generatedASTs.stream().forEach(a -> System.out.println(a + " " + a.getPrimaryClassName()));
       javaFileObjects = generatedASTs.stream()
           .map(a -> new JavaSourceFromString(a.getPrimaryClassName(), a.getSourceCode()))
           .collect(Collectors.toList());
@@ -89,12 +89,6 @@ public class ProjectBuilder {
     final CompilationTask task =
         compiler.getTask(null, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
-    try {
-      fileManager.close();
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-
     final boolean isFailed = !task.call();
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
     for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
@@ -105,6 +99,12 @@ public class ProjectBuilder {
       System.err.println(diagnostic.getEndPosition());
       System.err.println(diagnostic.getSource());
       System.err.println(diagnostic.getMessage(null));
+    }
+
+    try {
+      fileManager.close();
+    } catch (final IOException e) {
+      e.printStackTrace();
     }
 
     final BuildResults buildResults = new BuildResults(isFailed, outDir, diagnostics);
