@@ -71,6 +71,7 @@ public class TestExecutorTest {
         Arrays.asList(buggyCalculatorTest, utilTest));
   }
 
+  @SuppressWarnings("unused")
   private TestResults generateTestResultsForExample03() throws Exception {
     final Path rootDir = Paths.get("example/example03");
     final Path outDir = rootDir.resolve("_bin");
