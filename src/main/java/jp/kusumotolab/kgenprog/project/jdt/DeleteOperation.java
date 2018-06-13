@@ -29,4 +29,20 @@ public class DeleteOperation implements JDTOperation {
     return new GeneratedSourceCode(newASTs);
   }
 
+  @Override
+  public GeneratedSourceCode applyDirectly(GeneratedSourceCode generatedSourceCode,
+      Location location) {
+    JDTLocation jdtLocation = (JDTLocation) location;
+
+    generatedSourceCode.getFiles().stream()
+        .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
+          if (ast.getSourceFile().equals(location.getSourceFile())) {
+            CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
+            ASTNode target = jdtLocation.locate(unit);
+            target.delete();
+          }
+        });
+
+    return generatedSourceCode;
+  }
 }
