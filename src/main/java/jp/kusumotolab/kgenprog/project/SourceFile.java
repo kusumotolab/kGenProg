@@ -14,6 +14,11 @@ public abstract class SourceFile {
   public boolean equals(Object o) {
     return this.toString().equals(o.toString());
   }
+  
+  @Override
+  public int hashCode() {
+    return path.hashCode();
+  }
 
   @Override
   public String toString() {
