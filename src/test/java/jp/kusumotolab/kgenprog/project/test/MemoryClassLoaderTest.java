@@ -14,12 +14,13 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.TargetProject;
 
 /**
  * 
@@ -36,7 +37,9 @@ public class MemoryClassLoaderTest {
   @BeforeClass
   public static void beforeClass() {
     final TargetProject targetProject = TargetProject.generate(rootDir);
-    new ProjectBuilder(targetProject).build(outDir);
+    final GeneratedSourceCode generatedSourceCode =
+        targetProject.getInitialVariant().getGeneratedSourceCode();
+    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
   }
 
   @Test

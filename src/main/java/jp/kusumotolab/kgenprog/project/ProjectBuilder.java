@@ -39,6 +39,7 @@ public class ProjectBuilder {
    * @param outDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
+  @Deprecated
   public BuildResults build(final Path outDir) {
     return this.build(null, outDir);
   }
