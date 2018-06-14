@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.Range;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 
 public class TestResults implements Serializable {
@@ -136,6 +137,7 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return a_ef
    */
+  @Deprecated
   public List<FullyQualifiedName> getFailedTestFQNsExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.COVERED, true);
@@ -148,6 +150,7 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return
    */
+  @Deprecated
   public List<FullyQualifiedName> getPassedTestFQNsExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.COVERED, false);
@@ -160,6 +163,7 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return
    */
+  @Deprecated
   public List<FullyQualifiedName> getFailedTestFQNsNotExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.NOT_COVERED, true);
@@ -172,21 +176,87 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return
    */
+  @Deprecated
   public List<FullyQualifiedName> getPassedTestFQNsNotExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.NOT_COVERED, false);
   }
 
-  public long getNumberOfFailedTestExecutingTheStatement(final SourceFile sourceFile,
-      final Location location) {
+  /**
+   * FLで用いる4メトリクスのprivateなParameterized-Method
+   * 
+   * @param sourceFile
+   * @param location
+   * @param status
+   * @param failed
+   * @return
+   */
+  private long getNumberOfTests(final SourceFile sourceFile, final Location location,
+      final Coverage.Status status, final boolean failed) {
+
     final Set<FullyQualifiedName> correspondingFqns =
         this.buildResults.getPathToFQNs(sourceFile.path);
-    final int correspondingLineNumber = 5;
-    // this.buildResults.sourceCode.getAST(sourceFile).inferLocations(null);
+
+    // TODO
+    // GeneratedSourceCode#inferLineNumbers(Location) を使うか Location#inferLineNumbers()を使うか．
+    // 後者の方が嫉妬の度合いが低そう
+    // final Range correspondingRange = this.buildResults.sourceCode.inferLineNumbers(location);
+    final Range correspondingRange = location.inferLineNumbers();
+
+    // TODO location:lineNum = 1:N の時の対策が必要．ひとまずNの一行目だけを使う．
+    final int correspondingLineNumber = correspondingRange.start;
 
     return correspondingFqns.stream()
-        .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, Coverage.Status.COVERED, true))
+        .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, status, failed))
         .flatMap(v -> v.stream()).count();
+  }
+
+  /**
+   * a_ep
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfPassedTestsExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.COVERED, false);
+  }
+
+  /**
+   * a_ef
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfFailedTestsExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.COVERED, true);
+  }
+
+  /**
+   * a_np
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfPassedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.NOT_COVERED, false);
+  }
+
+  /**
+   * a_nf
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfFailedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.NOT_COVERED, true);
   }
 
   /**
