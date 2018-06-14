@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.Range;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 
 /**
@@ -82,5 +84,21 @@ final public class JDTLocation implements Location {
   @Override
   public SourceFile getSourceFile() {
     return sourceFile;
+  }
+
+  @Override
+  public Range inferLineNumbers() {
+    ASTNode root = this.node.getRoot();
+    
+    if(!(root instanceof CompilationUnit)) {
+      return Location.NONE;
+    }
+    
+    CompilationUnit compilationUnit = (CompilationUnit)root;
+    
+    int start = compilationUnit.getLineNumber(this.node.getStartPosition());
+    int end = compilationUnit.getLineNumber(this.node.getStartPosition() + this.node.getLength());
+    
+    return new Range(start, end);
   }
 }
