@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.net.URL;
@@ -10,12 +9,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
-import org.junit.Test;
+import java.util.List;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
+import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
+import org.junit.Test;
 
 public class TestResultsTest {
 
@@ -49,22 +52,24 @@ public class TestResultsTest {
    */
   @Test
   public void checkFLMetricsInTestResultsForExample01() throws Exception {
-    final TestResults r = generateTestResultsForExample01();
-    final FullyQualifiedName bc = buggyCalculator; // alias for buggycalculator
-
-    // example01でのbcの6行目（n++;）のテスト結果はこうなるはず
-    assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 5),
-        is(containsInAnyOrder(test01, test02)));
-    assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 5), is(empty()));
-    assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 5), is(containsInAnyOrder(test04)));
-    assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 5), is(containsInAnyOrder(test03)));
-
-    // example01でのbcの10行目（return n;）のテスト結果はこうなるはず
-    assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 10),
-        is(containsInAnyOrder(test01, test02, test04)));
-    assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 10), is(containsInAnyOrder(test03)));
-    assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
-    assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
+    // final TestResults r = generateTestResultsForExample01();
+    // final FullyQualifiedName bc = buggyCalculator; // alias for buggycalculator
+    //
+    // // example01でのbcの6行目（n++;）のテスト結果はこうなるはず
+    // assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 5),
+    // is(containsInAnyOrder(test01, test02)));
+    // assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 5), is(empty()));
+    // assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 5),
+    // is(containsInAnyOrder(test04)));
+    // assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 5),
+    // is(containsInAnyOrder(test03)));
+    //
+    // // example01でのbcの10行目（return n;）のテスト結果はこうなるはず
+    // assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 10),
+    // is(containsInAnyOrder(test01, test02, test04)));
+    // assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 10), is(containsInAnyOrder(test03)));
+    // assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
+    // assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
   }
 
   /**
@@ -72,6 +77,7 @@ public class TestResultsTest {
    */
   @Test
   public void checkFLMetricsInTestResultsForExample02() throws Exception {
+    // actual確保のためにテストの実行
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
@@ -80,12 +86,61 @@ public class TestResultsTest {
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
     final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri().toURL()});
-    final TestResults r =
+    final TestResults testResults =
         executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
+    testResults.setBuildResults(buildResults);
 
-    final TargetSourceFile bcSourceCode = new TargetSourceFile(Paths.get(buggyCalculator.value));
-    // final Location location = buildResults.sourceCode.getAST(bcSourceCode).inferLocations(5);
-    // r.getNumberOfFailedTestExecutingTheStatement(bcSourceCode, location);
+    // expected確保の作業
+    // まずast生成
+    final Path bcSourcePath = Paths.get(buggyCalculator.value.replaceAll("\\.", "/") + ".java");
+    final TargetSourceFile bcSourceFile =
+        new TargetSourceFile(rootDir.resolve("src").resolve(bcSourcePath));
+    final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAST(bcSourceFile);
+
+    // astから5行目 (n--;) のlocationを取り出す
+    final List<Location> locations1 = bcAst.inferLocations(5);
+    final Location location1 = locations1.get(locations1.size() - 1);
+    final JDTLocation jdtLocation1 = (JDTLocation) location1;
+
+    // 一応locationの中身を確認しておく
+    assertThat(jdtLocation1.node.toString(), is("n--;\n"));
+
+    // 4メトリクスの取り出しとassertion
+    final long a_ep1 =
+        testResults.getNumberOfPassedTestsExecutingTheStatement(bcSourceFile, location1);
+    final long a_ef1 =
+        testResults.getNumberOfFailedTestsExecutingTheStatement(bcSourceFile, location1);
+    final long a_np1 =
+        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcSourceFile, location1);
+    final long a_nf1 =
+        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcSourceFile, location1);
+    assertThat(a_ep1, is(2L)); // test01, test02
+    assertThat(a_ef1, is(0L));
+    assertThat(a_np1, is(1L)); // test04
+    assertThat(a_nf1, is(1L)); // test03
+
+
+    // astから10行目 (return n;) のlocationを取り出す
+    final List<Location> locations2 = bcAst.inferLocations(10);
+    final Location location2 = locations2.get(locations2.size() - 1);
+    final JDTLocation jdtLocation2 = (JDTLocation) location2;
+
+    // 一応locationの中身を確認しておく
+    assertThat(jdtLocation2.node.toString(), is("return n;\n"));
+
+    // 4メトリクスの取り出しとassertion
+    final long a_ep2 =
+        testResults.getNumberOfPassedTestsExecutingTheStatement(bcSourceFile, location2);
+    final long a_ef2 =
+        testResults.getNumberOfFailedTestsExecutingTheStatement(bcSourceFile, location2);
+    final long a_np2 =
+        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcSourceFile, location2);
+    final long a_nf2 =
+        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcSourceFile, location2);
+    assertThat(a_ep2, is(3L)); // test01, test02, test04
+    assertThat(a_ef2, is(1L)); // test03
+    assertThat(a_np2, is(0L));
+    assertThat(a_nf2, is(0L));
   }
 
   /**
