@@ -6,4 +6,10 @@ public class NoneOperation implements Operation {
   public GeneratedSourceCode apply(GeneratedSourceCode generatedSourceCode, Location location) {
     return generatedSourceCode;
   }
+
+  @Override
+  public GeneratedSourceCode applyDirectly(GeneratedSourceCode generatedSourceCode,
+      Location location) {
+    return generatedSourceCode;
+  }
 }
