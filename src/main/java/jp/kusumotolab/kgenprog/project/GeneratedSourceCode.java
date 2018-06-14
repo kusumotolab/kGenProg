@@ -33,4 +33,8 @@ public class GeneratedSourceCode {
     }
     return ast.inferLocations(lineNumber);
   }
+  
+  public Range inferLineNumbers(Location location) {
+    return location.inferLineNumbers();
+  }
 }
