@@ -108,27 +108,6 @@ public class TestResults implements Serializable {
     return 1.0 * success / (success + fail);
   }
 
-  /**
-   * FLで用いる4メトリクスのprivateなParameterized-Method
-   * 
-   * @param targetFQN 計算対象クラスのFQN
-   * @param lineNumber 計算対象クラスの行番号
-   * @param status 実行されたか否か
-   * @param failed テストの成否
-   * @return
-   */
-  private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFQN,
-      final int lineNumber, final Coverage.Status status, final boolean failed) {
-    final List<FullyQualifiedName> result = new ArrayList<>();
-    for (final TestResult testResult : this.value.values()) {
-      final Coverage coverage = testResult.getCoverages(targetFQN);
-      final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
-      if (status == _status && failed == testResult.failed) {
-        result.add(testResult.executedTestFQN);
-      }
-    }
-    return result;
-  }
 
   /**
    * a_ef
@@ -194,9 +173,11 @@ public class TestResults implements Serializable {
   private long getNumberOfTests(final SourceFile sourceFile, final Location location,
       final Coverage.Status status, final boolean failed) {
 
+    // 翻訳1: SourceFile → [FQN]
     final Set<FullyQualifiedName> correspondingFqns =
         this.buildResults.getPathToFQNs(sourceFile.path);
 
+    // 翻訳2: location → 行番号
     // TODO
     // GeneratedSourceCode#inferLineNumbers(Location) を使うか Location#inferLineNumbers()を使うか．
     // 後者の方が嫉妬の度合いが低そう
@@ -209,6 +190,28 @@ public class TestResults implements Serializable {
     return correspondingFqns.stream()
         .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, status, failed))
         .flatMap(v -> v.stream()).count();
+  }
+
+  /**
+   * FLで用いる4メトリクスのprivateなParameterized-Method
+   * 
+   * @param targetFQN 計算対象クラスのFQN
+   * @param lineNumber 計算対象クラスの行番号
+   * @param status 実行されたか否か
+   * @param failed テストが失敗したかどうか
+   * @return
+   */
+  private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFQN,
+      final int lineNumber, final Coverage.Status status, final boolean failed) {
+    final List<FullyQualifiedName> result = new ArrayList<>();
+    for (final TestResult testResult : this.value.values()) {
+      final Coverage coverage = testResult.getCoverages(targetFQN);
+      final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
+      if (status == _status && failed == testResult.failed) {
+        result.add(testResult.executedTestFQN);
+      }
+    }
+    return result;
   }
 
   /**
