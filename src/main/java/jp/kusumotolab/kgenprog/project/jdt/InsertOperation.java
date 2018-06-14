@@ -36,6 +36,27 @@ public class InsertOperation implements JDTOperation {
     CompilationUnit newAST = (CompilationUnit) ASTNode.copySubtree(unit.getAST(), unit);
     ASTNode target = location.locate(newAST);
 
+    insertNode(target);
+
+    return new GeneratedJDTAST(ast.getSourceFile(), newAST);
+  }
+
+  @Override
+  public GeneratedSourceCode applyDirectly(GeneratedSourceCode generatedSourceCode,
+      Location location) {
+    JDTLocation jdtLocation = (JDTLocation) location;
+
+    generatedSourceCode.getFiles().stream()
+        .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
+          CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
+          ASTNode target = jdtLocation.locate(unit);
+          insertNode(target);
+        });
+
+    return generatedSourceCode;
+  }
+
+  private void insertNode(ASTNode target) {
     StructuralPropertyDescriptor locationInParent = target.getLocationInParent();
     if (!locationInParent.isChildListProperty()) {
       throw new RuntimeException("can only insert ASTNode into a list");
@@ -44,8 +65,6 @@ public class InsertOperation implements JDTOperation {
     List siblings = (List) target.getParent().getStructuralProperty(locationInParent);
     int insertIdx = siblings.indexOf(target) + 1;
     siblings.add(insertIdx, this.astNode);
-
-    return new GeneratedJDTAST(ast.getSourceFile(), newAST);
   }
 
 }
