@@ -110,8 +110,8 @@ class TestExecutor {
    */
   private Class<?> loadClass(final FullyQualifiedName fqn, final byte[] bytes)
       throws ClassNotFoundException {
-    this.memoryClassLoader.addDefinition(fqn.value, bytes);
-    return this.memoryClassLoader.loadClass(fqn.value); // force load instrumented class.
+    this.memoryClassLoader.addDefinition(fqn, bytes);
+    return this.memoryClassLoader.loadClass(fqn); // force load instrumented class.
   }
 
   /**
