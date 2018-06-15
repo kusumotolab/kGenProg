@@ -27,15 +27,20 @@ public class BuildResults {
   // 対応関係がうまく構築できたかの可否
   private boolean isMappingAvaiable;
 
+  // ビルド元となったソースコード
+  public final GeneratedSourceCode sourceCode;
+
   /**
    * コンストラクタ（後で書き換え TODO）
    * 
+   * @param sourceCode ビルド元となったソースコード
    * @param isBuildFailed ビルドの成否
    * @param outDir クラスファイル生成ディレクトリ
    * @param diagnostics ビルド時の詳細情報
    */
-  public BuildResults(final boolean isBuildFailed, final Path outDir,
-      final DiagnosticCollector<JavaFileObject> diagnostics) {
+  public BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
+      final Path outDir, final DiagnosticCollector<JavaFileObject> diagnostics) {
+    this.sourceCode = sourceCode;
     this.isBuildFailed = isBuildFailed;
     this.outDir = outDir;
     this.diagnostics = diagnostics;
