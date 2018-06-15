@@ -57,7 +57,7 @@ public class TestProcessBuilder {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.outDir);
 
     final String classpath = filterClasspathFromSystemClasspath();
-    final String sourceFQNs = joinFQNs(getSourceFQNs(buildResults));
+    final String targetFQNs = joinFQNs(getTargetFQNs(buildResults));
     final String testFQNs = joinFQNs(getTestFQNs(buildResults));
 
     // start()時にワーキングディレクトリを変更するために，binDirはrootPathからの相対パスに変更
@@ -65,7 +65,7 @@ public class TestProcessBuilder {
     final Path relativeOutDir = this.targetProject.rootPath.relativize(buildResults.outDir);
 
     final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, testExecutorMain,
-        "-b", relativeOutDir.toString(), "-s", sourceFQNs, "-t", testFQNs);
+        "-b", relativeOutDir.toString(), "-s", targetFQNs, "-t", testFQNs);
 
     // テスト実行のためにworking dirを移動（対象プロジェクトが相対パスを利用している可能性が高いため）
     builder.directory(this.targetProject.rootPath.toFile());
@@ -103,7 +103,7 @@ public class TestProcessBuilder {
     return fqns.stream().map(fqn -> fqn.value).collect(joining(TestExecutorMain.SEPARATOR));
   }
 
-  private Set<FullyQualifiedName> getSourceFQNs(final BuildResults buildResults) {
+  private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
     final Set<FullyQualifiedName> sourceFQNs =
         getFQNs(buildResults, this.targetProject.getSourceFiles());
 
