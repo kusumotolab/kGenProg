@@ -206,9 +206,11 @@ public class TestResults implements Serializable {
     final List<FullyQualifiedName> result = new ArrayList<>();
     for (final TestResult testResult : this.value.values()) {
       final Coverage coverage = testResult.getCoverages(targetFQN);
-      final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
-      if (status == _status && failed == testResult.failed) {
-        result.add(testResult.executedTestFQN);
+      if (null != coverage) {
+        final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
+        if (status == _status && failed == testResult.failed) {
+          result.add(testResult.executedTestFQN);
+        }
       }
     }
     return result;
