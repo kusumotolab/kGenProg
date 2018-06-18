@@ -31,7 +31,7 @@ public class DiffOutputTest {
 
     TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
     MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody().statements().get(1);
+    Statement statement = (Statement) method.getBody().statements().get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTLocation location = new JDTLocation(new TargetSourceFile(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")), statement);
