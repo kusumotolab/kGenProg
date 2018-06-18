@@ -1,12 +1,10 @@
 package jp.kusumotolab.kgenprog;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -25,6 +23,7 @@ public class DiffOutput implements ResultOutput {
   public void outputResult(TargetProject targetProject, List<Variant> modifiedVariants) {
 
     List<GeneratedSourceCode> modifiedCode = new ArrayList<GeneratedSourceCode>();
+    Variant originVariant = targetProject.getInitialVariant();
 
     for (Variant variant : modifiedVariants) {
       GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
@@ -45,11 +44,12 @@ public class DiffOutput implements ResultOutput {
             edit.apply(document);
             System.out.println(document.get());
           }
-        } catch (IOException e) {
-          e.printStackTrace();
         } catch (MalformedTreeException e) {
           e.printStackTrace();
         } catch (BadLocationException e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          // TODO 自動生成された catch ブロック
           e.printStackTrace();
         }
       }
@@ -76,8 +76,7 @@ public class DiffOutput implements ResultOutput {
    * @throws IOException
    */
   public String readAll(String path) throws IOException {
-    return Files.lines(Paths.get(path), Charset.forName("UTF-8"))
-        .collect(Collectors.joining(System.getProperty("line.separator")));
+    return new String(Files.readAllBytes(Paths.get(path)));
   }
 
 
