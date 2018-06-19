@@ -25,7 +25,7 @@ public class Ochiai implements FaultLocalization {
     for (final GeneratedAST ast : variant.getGeneratedSourceCode().getFiles()) {
       final String code = ast.getSourceCode();
       final SourceFile file = ast.getSourceFile();
-      final int lastLineNumber = getLastLineNumber(code);
+      final int lastLineNumber = countLines(code);
 
       for (int line = 1; line <= lastLineNumber; line++) {
         final List<Location> locations = ast.inferLocations(line);
@@ -46,10 +46,8 @@ public class Ochiai implements FaultLocalization {
     return suspeciousenesses;
   }
 
-  private int getLastLineNumber(final String text) {
-    final int length1 = text.length();
-    final int length2 = text.replaceAll(LINE_SEPARATOR, "").length();
-    final int lastLineNumber = (length1 - length2) / LINE_SEPARATOR.length();
-    return lastLineNumber;
+  private int countLines(final String text) {
+    String[] lines = text.split("\r\n|\r|\n");
+    return lines.length;
   }
 }
