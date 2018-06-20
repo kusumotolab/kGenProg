@@ -27,7 +27,7 @@ public class DefaultVariantSelectionTest {
     }
     resultVariants = variantSelection.exec(variants);
     assertThat(resultVariants.size(), is(10));
-    assertThat(resultVariants.get(0).getFitness().getValue(), is(closeTo(0.8, 0.000001)));
-    assertThat(resultVariants.get(9).getFitness().getValue(), is(closeTo(0.98, 0.000001)));
+    assertThat(resultVariants.get(0).getFitness().getValue(), is(closeTo(0.98, 0.000001)));
+    assertThat(resultVariants.get(9).getFitness().getValue(), is(closeTo(0.8, 0.000001)));
   }
 }
