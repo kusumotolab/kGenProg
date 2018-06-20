@@ -101,7 +101,7 @@ public class CUILauncher {
     Crossover crossover = new SiglePointCrossover();
     SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    VariantSelection variantSelection = new DefaultVariantSelection(100);
+    VariantSelection variantSelection = new DefaultVariantSelection();
 
     KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
         crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection);
