@@ -8,6 +8,10 @@ public class DefaultVariantSelection implements VariantSelection {
 
   final private int maxVariantsPerGeneration;
 
+  public DefaultVariantSelection() {
+    this.maxVariantsPerGeneration = 100;
+  }
+
   public DefaultVariantSelection(int maxVariantPerGeneration) {
     this.maxVariantsPerGeneration = maxVariantPerGeneration;
   }
