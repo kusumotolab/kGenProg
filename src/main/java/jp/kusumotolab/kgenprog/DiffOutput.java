@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,6 +27,9 @@ public class DiffOutput implements ResultOutput {
     List<GeneratedSourceCode> modifiedCode = new ArrayList<GeneratedSourceCode>();
     Variant originVariant = targetProject.getInitialVariant();
 
+    File file = new File(targetProject.rootPath.toString() + File.separator + "modified");
+    file.mkdir();
+
     for (Variant variant : modifiedVariants) {
       GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
       recordAST(targetCode);
@@ -43,13 +48,18 @@ public class DiffOutput implements ResultOutput {
           if (edit.getChildren().length != 0) {
             edit.apply(document);
             System.out.println(document.get());
+
+            File modFile = new File(file.getPath() + File.separator + ((GeneratedJDTAST)ast).getSourceFile().path.getFileName().toString());
+            modFile.createNewFile();
+            FileWriter fileWriter = new FileWriter(modFile);
+            fileWriter.write(document.get());
+            fileWriter.close();
           }
         } catch (MalformedTreeException e) {
           e.printStackTrace();
         } catch (BadLocationException e) {
           e.printStackTrace();
         } catch (IOException e) {
-          // TODO 自動生成された catch ブロック
           e.printStackTrace();
         }
       }
