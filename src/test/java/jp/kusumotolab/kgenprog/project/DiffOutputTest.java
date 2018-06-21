@@ -4,14 +4,12 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -38,7 +36,7 @@ public class DiffOutputTest {
         "  public int close_to_zero(  int n){" + sep +
         "    return n;" + sep +
         "  }" + sep +
-        "}";
+        "}" + sep;
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -61,9 +59,7 @@ public class DiffOutputTest {
     File modFile = new File("example/example01/modified/BuggyCalculator.java");
 
     try {
-//      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
-      String modSource = Files.lines(Paths.get(modFile.toURI()), Charset.forName("UTF-8"))
-          .collect(Collectors.joining(System.getProperty("line.separator")));
+      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
       DeleteFiles(new File("example/example01/modified"));
       assertThat(modSource, is(expected));
     } catch (IOException e) {
@@ -94,7 +90,7 @@ public class DiffOutputTest {
         "\tpublic static void dummy() {" + sep +
         "\t\tnew String();" + sep +
         "\t}" + sep +
-        "}";
+        "}" + sep;
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -118,9 +114,7 @@ public class DiffOutputTest {
     File modFile = new File("example/example03/modified/Util.java");
 
     try {
-//      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
-      String modSource = Files.lines(Paths.get(modFile.toURI()), Charset.forName("UTF-8"))
-          .collect(Collectors.joining(System.getProperty("line.separator")));
+      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
       DeleteFiles(new File("example/example03/modified"));
       assertThat(modSource, is(expected));
     } catch (IOException e) {
@@ -147,12 +141,7 @@ public class DiffOutputTest {
           DeleteFiles(files[i]);
         }
 
-        while(true) {
-          boolean bool = file.delete();
-          if(bool) {
-            break;
-          }
-        }
+        file.delete();
       }
     } else {
       System.out.println("File does not exist");
