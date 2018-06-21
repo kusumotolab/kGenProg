@@ -1,13 +1,27 @@
 package jp.kusumotolab.kgenprog.ga;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultVariantSelection implements VariantSelection {
 
-  @Override
-  public List<Variant> exec(List<Variant> variants) {
-    // TODO Auto-generated method stub
-    return null;
+  final private int maxVariantsPerGeneration;
+
+  public DefaultVariantSelection() {
+    this.maxVariantsPerGeneration = 100;
   }
 
+  public DefaultVariantSelection(int maxVariantPerGeneration) {
+    this.maxVariantsPerGeneration = maxVariantPerGeneration;
+  }
+
+  @Override
+  public List<Variant> exec(List<Variant> variants) {
+    final List<Variant> list = variants.stream()
+        .sorted(Comparator.<Variant>comparingDouble(e -> e.getFitness().getValue()).reversed())
+        .limit(maxVariantsPerGeneration)
+        .collect(Collectors.toList());
+    return list;
+  }
 }
