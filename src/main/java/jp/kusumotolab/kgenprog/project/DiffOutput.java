@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog;
+package jp.kusumotolab.kgenprog.project;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -13,10 +13,6 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class DiffOutput implements ResultOutput {
