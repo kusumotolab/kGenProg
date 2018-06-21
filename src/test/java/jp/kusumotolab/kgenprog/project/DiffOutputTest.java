@@ -14,7 +14,6 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.DiffOutput;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.SimpleGene;
 import jp.kusumotolab.kgenprog.ga.Variant;
