@@ -21,10 +21,13 @@ import javax.tools.ToolProvider;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
+  private static Logger log = LoggerFactory.getLogger(ProcessBuilder.class);
   static private final String CLASSPATH_SEPARATOR = File.pathSeparator;
 
   private final TargetProject targetProject;
@@ -35,12 +38,13 @@ public class ProjectBuilder {
 
   /**
    * 初期ソースコードをビルド
-   * 
+   *
    * @param outDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
   @Deprecated
   public BuildResults build(final Path outDir) {
+    log.debug("enter build(Path)");
     return this.build(null, outDir);
   }
 
@@ -50,6 +54,7 @@ public class ProjectBuilder {
    * @return ビルドに関するさまざまな情報
    */
   public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path outDir) {
+    log.debug("enter build(GeneratedSourceCode, Path)");
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
@@ -111,6 +116,7 @@ public class ProjectBuilder {
         new BuildResults(generatedSourceCode, isFailed, outDir, diagnostics);
 
     if (buildResults.isBuildFailed) {
+      log.debug("exit build(GeneratedSourceCode, Path)");
       return buildResults;
     }
 
@@ -142,11 +148,13 @@ public class ProjectBuilder {
         buildResults.setMappingAvailable(false);
       }
     }
-
+    log.debug("exit build(GeneratedSourceCode, Path)");
     return buildResults;
   }
 
   private ClassParser parse(final File classFile) {
+    log.debug("enter parse(File)");
+
     ClassReader reader = null;
     try {
       reader = new ClassReader(new FileInputStream(classFile));
@@ -155,6 +163,8 @@ public class ProjectBuilder {
     }
     final ClassParser parser = new ClassParser(Opcodes.ASM6);
     reader.accept(parser, ClassReader.SKIP_CODE);
+
+    log.debug("exit parse(File)");
     return parser;
   }
 }
