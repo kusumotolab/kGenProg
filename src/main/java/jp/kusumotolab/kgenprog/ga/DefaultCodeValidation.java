@@ -9,7 +9,7 @@ public class DefaultCodeValidation implements SourceCodeValidation {
   @Override
   public Fitness exec(GeneratedSourceCode sourceCode, TargetProject project,
       TestProcessBuilder testExecutor) {
-    return new SimpleFitness(testExecutor.exec(sourceCode).getSuccessRate());
+    return new SimpleFitness(testExecutor.start(sourceCode).getSuccessRate());
   }
 
 }
