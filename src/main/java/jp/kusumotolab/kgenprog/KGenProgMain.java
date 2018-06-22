@@ -101,7 +101,7 @@ public class KGenProgMain {
 
   // hitori
   private boolean isSuccess(List<Variant> variants) {
-    log.debug("enter isSuccess(List)");
+    log.debug("enter isSuccess(List<>)");
     return false;
   }
 }
