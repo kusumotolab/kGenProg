@@ -1,8 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,6 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
@@ -21,11 +21,13 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 
 /**
  * テスト実行クラス． 外部プロジェクトの単体テストclassファイルを実行してその結果を回収する．
- * 
+ *
  * @author shinsuke
  *
  */
 public class TestProcessBuilder {
+
+  private static Logger log = LoggerFactory.getLogger(TestProcessBuilder.class);
 
   final private TargetProject targetProject;
   final private Path outDir;
@@ -44,6 +46,7 @@ public class TestProcessBuilder {
 
   @Deprecated
   public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
+    log.debug("enter exec(GeneratedSourceCode)");
     return null;
   }
 
@@ -54,6 +57,8 @@ public class TestProcessBuilder {
   }
 
   public TestResults start(final GeneratedSourceCode generatedSourceCode) {
+    log.debug("enter start(GeneratedSourceCode)");
+
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.outDir);
 
     final String classpath = filterClasspathFromSystemClasspath();
@@ -79,6 +84,7 @@ public class TestProcessBuilder {
       // TODO 翻訳のための一時的な処理
       testResults.setBuildResults(buildResults);
 
+      log.debug("exit start(GeneratedSourceCode)");
       return testResults;
 
       // String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
@@ -96,6 +102,7 @@ public class TestProcessBuilder {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
+    log.debug("exit start(GeneratedSourceCode)");
     return null;
   }
 
@@ -128,7 +135,7 @@ public class TestProcessBuilder {
 
   /**
    * 現在実行中のjavaプロセスのcpから，TestExecutorMain実行に必要なcpをフィルタリングする．
-   * 
+   *
    * @return
    */
   private String filterClasspathFromSystemClasspath() {
