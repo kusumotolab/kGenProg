@@ -9,7 +9,7 @@ public class BuggyCalculator {
    * 
    * fix1: バグ行を削除<br>
    * fix2: バグ行の次に 'n--;' を追加<br>
-   * fix2: バグ行を 'return n;' で置換
+   * fix3: バグ行を 'return n;' で置換
    * 
    * @param n
    * @return
