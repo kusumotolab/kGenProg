@@ -97,19 +97,27 @@ public class ProjectBuilder {
     final boolean isFailed = !task.call();
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
     for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
-      System.err.println(diagnostic.getCode());
-      System.err.println(diagnostic.getKind());
-      System.err.println(diagnostic.getPosition());
-      System.err.println(diagnostic.getStartPosition());
-      System.err.println(diagnostic.getEndPosition());
-      System.err.println(diagnostic.getSource());
-      System.err.println(diagnostic.getMessage(null));
+//      System.err.println(diagnostic.getCode());
+//      System.err.println(diagnostic.getKind());
+//      System.err.println(diagnostic.getPosition());
+//      System.err.println(diagnostic.getStartPosition());
+//      System.err.println(diagnostic.getEndPosition());
+//      System.err.println(diagnostic.getSource());
+//      System.err.println(diagnostic.getMessage(null));
+      log.error(diagnostic.getCode());
+      log.error("{}", diagnostic.getKind());
+      log.error("{}", diagnostic.getPosition());
+      log.error("{}", diagnostic.getStartPosition());
+      log.error("{}", diagnostic.getEndPosition());
+      log.error("{}", diagnostic.getSource());
+      log.error(diagnostic.getMessage(null));
     }
 
     try {
       fileManager.close();
     } catch (final IOException e) {
-      e.printStackTrace();
+      log.error("fail to close file", e);
+//      e.printStackTrace();
     }
 
     final BuildResults buildResults =
@@ -159,7 +167,8 @@ public class ProjectBuilder {
     try {
       reader = new ClassReader(new FileInputStream(classFile));
     } catch (final Exception e) {
-      e.printStackTrace();
+      log.error("fail to read or open file", e);
+//      e.printStackTrace();
     }
     final ClassParser parser = new ClassParser(Opcodes.ASM6);
     reader.accept(parser, ClassReader.SKIP_CODE);
