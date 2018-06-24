@@ -116,7 +116,7 @@ public class ProjectBuilder {
     try {
       fileManager.close();
     } catch (final IOException e) {
-      log.error("fail to close file", e);
+      log.error(e.getMessage(), e);
 //      e.printStackTrace();
     }
 
@@ -167,7 +167,7 @@ public class ProjectBuilder {
     try {
       reader = new ClassReader(new FileInputStream(classFile));
     } catch (final Exception e) {
-      log.error("fail to read or open file", e);
+      log.error(e.getMessage(), e);
 //      e.printStackTrace();
     }
     final ClassParser parser = new ClassParser(Opcodes.ASM6);

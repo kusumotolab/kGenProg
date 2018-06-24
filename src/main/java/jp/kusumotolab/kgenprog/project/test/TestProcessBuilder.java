@@ -94,15 +94,15 @@ public class TestProcessBuilder {
       // System.out.println(process.exitValue());
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
-      log.error("fail to deserialize", e);
+      log.error(e.getMessage(), e);
 //      e.printStackTrace();
     } catch (InterruptedException e) {
       // TODO 自動生成された catch ブロック
-      log.error("this thread was interrupted by other threads", e);
+      log.error(e.getMessage(), e);
 //      e.printStackTrace();
     } catch (ClassNotFoundException e) {
       // TODO 自動生成された catch ブロック
-      log.error("fail to deserialize", e);
+      log.error(e.getMessage(), e);
       e.printStackTrace();
     }
     log.debug("exit start(GeneratedSourceCode)");
@@ -164,7 +164,7 @@ public class TestProcessBuilder {
       result.add(Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI())
           .toString());
     } catch (URISyntaxException e) {
-      log.error("fail to convert URI", e);
+      log.error(e.getMessage(), e);
 //      e.printStackTrace();
     }
 
