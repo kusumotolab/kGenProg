@@ -98,7 +98,8 @@ public class CUILauncher {
     try {
       parser.parseArgument(args);
     } catch (CmdLineException e) {
-      System.err.println(e.getMessage());
+      log.error(e.getMessage());
+//      System.err.println(e.getMessage());
       parser.printUsage(System.err);
       System.exit(1);
     }
