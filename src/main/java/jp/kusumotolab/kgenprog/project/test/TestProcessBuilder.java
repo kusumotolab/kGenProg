@@ -110,26 +110,32 @@ public class TestProcessBuilder {
   }
 
   private String joinFQNs(final Collection<FullyQualifiedName> fqns) {
+    log.debug("enter joinFQNs(Collection<>)"); 
     return fqns.stream().map(fqn -> fqn.value).collect(joining(TestExecutorMain.SEPARATOR));
   }
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
+    log.debug("enter getTargetFQNs(BuildResults)");
+    
     final Set<FullyQualifiedName> sourceFQNs =
         getFQNs(buildResults, this.targetProject.getSourceFiles());
-
+    
     // TODO testにsourceが含まれるのでsubtractしておく．
     // https://github.com/kusumotolab/kGenProg/issues/79
     sourceFQNs.removeAll(getTestFQNs(buildResults));
-
+    
+    log.debug("exit getTargetFQNs(BuildResults)");
     return sourceFQNs;
   }
 
   private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
+    log.debug("enter getTestFQNs(BuildResults)");
     return getFQNs(buildResults, this.targetProject.getTestFiles());
   }
 
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
       final List<SourceFile> sources) {
+    log.debug("enter getFQNs(BuildResults, List<>)");
     return sources.stream().map(source -> buildResults.getPathToFQNs(source.path))
         .flatMap(c -> c.stream()).collect(toSet());
   }
@@ -142,6 +148,7 @@ public class TestProcessBuilder {
    * @return
    */
   private String filterClasspathFromSystemClasspath() {
+    log.debug("enter filterClasspathFromSystemClasspath()");
     // 依存する外部ライブラリを定義
     // TODO もうちょいcoolに改善
     final String[] classpaths = System.getProperty("java.class.path").split(File.pathSeparator);
@@ -167,7 +174,7 @@ public class TestProcessBuilder {
       log.error(e.getMessage(), e);
 //      e.printStackTrace();
     }
-
+    log.debug("exit filterClasspathFromSystemClasspath()");
     return String.join(File.pathSeparator, result);
   }
 }
