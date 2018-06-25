@@ -74,10 +74,12 @@ public class RandomMutation implements Mutation {
   }
 
   private Base makeBase(Suspiciouseness suspiciouseness) {
+    log.debug("enter makeBase(Suspiciouseness)");
     return new Base(suspiciouseness.getLocation(), makeOperationAtRandom());
   }
 
   private Operation makeOperationAtRandom() {
+    log.debug("enter makeOperationAtRandom()");
     final int randomNumber = randomNumberGeneration.getRandomNumber(3);
     switch (randomNumber) {
       case 0:
@@ -91,6 +93,7 @@ public class RandomMutation implements Mutation {
   }
 
   private Statement chooseNodeAtRandom() {
+    log.debug("enter chooseNodeAtRandom()");
     return candidates.get(randomNumberGeneration.getRandomNumber(candidates.size()));
   }
 
