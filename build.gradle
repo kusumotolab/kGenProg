@@ -30,6 +30,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
+	// https://mvnrepository.com/artifact/org.projectlombok/lombok
+	//compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
+
     // https://mvnrepository.com/artifact/args4j/args4j
     compile group: 'args4j', name: 'args4j', version: '2.33'
 
