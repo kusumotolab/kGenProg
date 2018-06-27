@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import static java.util.stream.Collectors.toList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,8 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.Range;
+import jp.kusumotolab.kgenprog.project.SourceFile;
 
 public class TestResults implements Serializable {
 
@@ -52,7 +55,7 @@ public class TestResults implements Serializable {
    * @return 失敗したテスト結果s
    */
   public List<TestResult> getFailedTestResults() {
-    return this.value.values().stream().filter(r -> r.failed).collect(Collectors.toList());
+    return this.value.values().stream().filter(r -> r.failed).collect(toList());
   }
 
   /**
@@ -61,7 +64,7 @@ public class TestResults implements Serializable {
    * @return 成功したテスト結果s
    */
   public List<TestResult> getSuccessedTestResults() {
-    return this.value.values().stream().filter(r -> !r.failed).collect(Collectors.toList());
+    return this.value.values().stream().filter(r -> !r.failed).collect(toList());
   }
 
   /**
@@ -71,7 +74,7 @@ public class TestResults implements Serializable {
    */
   @Deprecated
   public List<TestResult> getTestResults() {
-    return value.values().stream().collect(Collectors.toList());
+    return value.values().stream().collect(toList());
   }
 
   /**
@@ -105,27 +108,6 @@ public class TestResults implements Serializable {
     return 1.0 * success / (success + fail);
   }
 
-  /**
-   * FLで用いる4メトリクスのprivateなParameterized-Method
-   * 
-   * @param targetFQN 計算対象クラスのFQN
-   * @param lineNumber 計算対象クラスの行番号
-   * @param status 実行されたか否か
-   * @param failed テストの成否
-   * @return
-   */
-  private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFQN,
-      final int lineNumber, final Coverage.Status status, final boolean failed) {
-    final List<FullyQualifiedName> result = new ArrayList<>();
-    for (final TestResult testResult : this.value.values()) {
-      final Coverage coverage = testResult.getCoverages(targetFQN);
-      final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
-      if (status == _status && failed == testResult.failed) {
-        result.add(testResult.executedTestFQN);
-      }
-    }
-    return result;
-  }
 
   /**
    * a_ef
@@ -134,6 +116,7 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return a_ef
    */
+  @Deprecated
   public List<FullyQualifiedName> getFailedTestFQNsExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.COVERED, true);
@@ -146,6 +129,7 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return
    */
+  @Deprecated
   public List<FullyQualifiedName> getPassedTestFQNsExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.COVERED, false);
@@ -158,6 +142,7 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return
    */
+  @Deprecated
   public List<FullyQualifiedName> getFailedTestFQNsNotExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.NOT_COVERED, true);
@@ -170,29 +155,113 @@ public class TestResults implements Serializable {
    * @param lineNumber ターゲットクラスの行番号
    * @return
    */
+  @Deprecated
   public List<FullyQualifiedName> getPassedTestFQNsNotExecutingTheStatement(
       final FullyQualifiedName targetFQN, final int lineNumber) {
     return getTestFQNs(targetFQN, lineNumber, Coverage.Status.NOT_COVERED, false);
   }
 
-  @Deprecated
-  public Map<Location, Integer> getExecutedFailedTestCounts() {
-    return null;
+  /**
+   * FLで用いる4メトリクスのprivateなParameterized-Method
+   * 
+   * @param sourceFile
+   * @param location
+   * @param status
+   * @param failed
+   * @return
+   */
+  private long getNumberOfTests(final SourceFile sourceFile, final Location location,
+      final Coverage.Status status, final boolean failed) {
+
+    // 翻訳1: SourceFile → [FQN]
+    final Set<FullyQualifiedName> correspondingFqns =
+        this.buildResults.getPathToFQNs(sourceFile.path);
+
+    // 翻訳2: location → 行番号
+    // TODO
+    // GeneratedSourceCode#inferLineNumbers(Location) を使うか Location#inferLineNumbers()を使うか．
+    // 後者の方が嫉妬の度合いが低そう
+    // final Range correspondingRange = this.buildResults.sourceCode.inferLineNumbers(location);
+    final Range correspondingRange = location.inferLineNumbers();
+
+    // TODO location:lineNum = 1:N の時の対策が必要．ひとまずNの一行目だけを使う．
+    final int correspondingLineNumber = correspondingRange.start;
+
+    return correspondingFqns.stream()
+        .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, status, failed))
+        .flatMap(v -> v.stream()).count();
   }
 
-  @Deprecated
-  public Map<Location, Integer> getNotExecutedFailedTestCounts() {
-    return null;
+  /**
+   * FLで用いる4メトリクスのprivateなParameterized-Method
+   * 
+   * @param targetFQN 計算対象クラスのFQN
+   * @param lineNumber 計算対象クラスの行番号
+   * @param status 実行されたか否か
+   * @param failed テストが失敗したかどうか
+   * @return
+   */
+  private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFQN,
+      final int lineNumber, final Coverage.Status status, final boolean failed) {
+    final List<FullyQualifiedName> result = new ArrayList<>();
+    for (final TestResult testResult : this.value.values()) {
+      final Coverage coverage = testResult.getCoverages(targetFQN);
+      if (null != coverage) {
+        final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
+        if (status == _status && failed == testResult.failed) {
+          result.add(testResult.executedTestFQN);
+        }
+      }
+    }
+    return result;
   }
 
-  @Deprecated
-  public Map<Location, Integer> getExecutedPassedTestCounts() {
-    return null;
+  /**
+   * a_ep
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfPassedTestsExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.COVERED, false);
   }
 
-  @Deprecated
-  public Map<Location, Integer> getNotExecutedPassedTestCounts() {
-    return null;
+  /**
+   * a_ef
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfFailedTestsExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.COVERED, true);
+  }
+
+  /**
+   * a_np
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfPassedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.NOT_COVERED, false);
+  }
+
+  /**
+   * a_nf
+   * 
+   * @param sourceFile
+   * @param location
+   * @return
+   */
+  public long getNumberOfFailedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+      final Location location) {
+    return getNumberOfTests(sourceFile, location, Coverage.Status.NOT_COVERED, true);
   }
 
   /**
@@ -242,10 +311,24 @@ public class TestResults implements Serializable {
   public String toString() {
     final StringBuilder sb = new StringBuilder();
     sb.append("[\n");
-    sb.append(String.join(",\n",
-        this.value.values().stream().map(v -> v.toString(2)).collect(Collectors.toList())));
+    sb.append(
+        String.join(",\n", this.value.values().stream().map(v -> v.toString(2)).collect(toList())));
     sb.append("\n");
     sb.append("]\n");
     return sb.toString();
   }
+
+
+  /*
+   * 以降，翻訳のための一時的な処理
+   */
+
+  // 翻訳用ASTを持つbuildResults
+  private BuildResults buildResults;
+
+  public void setBuildResults(final BuildResults buildResults) {
+    this.buildResults = buildResults;
+  }
+
+
 }
