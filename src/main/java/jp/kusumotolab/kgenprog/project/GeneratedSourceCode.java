@@ -33,4 +33,12 @@ public class GeneratedSourceCode {
     }
     return ast.inferLocations(lineNumber);
   }
+  
+  public List<Location> getAllLocations() {
+    return files.stream().flatMap(v -> v.getAllLocations().stream()).collect(Collectors.toList());
+  }
+  
+  public Range inferLineNumbers(Location location) {
+    return location.inferLineNumbers();
+  }
 }
