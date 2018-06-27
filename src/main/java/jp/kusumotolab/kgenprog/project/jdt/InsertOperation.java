@@ -64,7 +64,10 @@ public class InsertOperation implements JDTOperation {
 
     List siblings = (List) target.getParent().getStructuralProperty(locationInParent);
     int insertIdx = siblings.indexOf(target) + 1;
-    siblings.add(insertIdx, this.astNode);
+    
+    ASTNode copiedNode = ASTNode.copySubtree(target.getAST(), this.astNode);
+    
+    siblings.add(insertIdx, copiedNode);
   }
 
 }
