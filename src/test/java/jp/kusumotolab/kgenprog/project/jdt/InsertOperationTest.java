@@ -20,7 +20,7 @@ public class InsertOperationTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -48,7 +48,7 @@ public class InsertOperationTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -74,7 +74,7 @@ public class InsertOperationTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, target.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, target);
     
     TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
     return (Statement) type.getMethods()[0].getBody().statements().get(0);

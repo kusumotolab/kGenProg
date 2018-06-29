@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class JDTASTConstruction {
       public void acceptAST(String sourceFilePath, CompilationUnit ast) {
         SourceFile file = pathToSourceFile.get(Paths.get(sourceFilePath));
         if (file != null) {
-          asts.add(new GeneratedJDTAST(file, ast));
+          asts.add(new GeneratedJDTAST(file, ast, loadAsString(sourceFilePath)));
         }
       }
     };
@@ -47,11 +49,23 @@ public class JDTASTConstruction {
     return asts;
   }
 
-  public GeneratedAST constructAST(SourceFile file, char[] data) {
+  @Deprecated
+  public GeneratedJDTAST constructAST(SourceFile file, char[] data) {
+    return this.constructAST(file, new String(data));
+  }
+  
+  public GeneratedJDTAST constructAST(SourceFile file, String data) {
+    ASTParser parser = createNewParser();
+    parser.setSource(data.toCharArray());
+
+    return new GeneratedJDTAST(file, (CompilationUnit) parser.createAST(null), data);
+  }
+  
+  CompilationUnit parse(char[] data) {
     ASTParser parser = createNewParser();
     parser.setSource(data);
 
-    return new GeneratedJDTAST(file, (CompilationUnit) parser.createAST(null));
+    return (CompilationUnit) parser.createAST(null);
   }
 
   private ASTParser createNewParser() {
@@ -69,5 +83,13 @@ public class JDTASTConstruction {
     parser.setEnvironment(null, null, null, true);
 
     return parser;
+  }
+  
+  private String loadAsString(String filePath) {
+    try {
+      return new String(Files.readAllBytes(Paths.get(filePath)));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
