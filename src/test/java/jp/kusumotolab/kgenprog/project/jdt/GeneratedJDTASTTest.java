@@ -39,7 +39,7 @@ public class GeneratedJDTASTTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get(TEST_SOURCE_FILE_NAME));
     JDTASTConstruction constructor = new JDTASTConstruction();
     this.ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, TEST_SOURCE.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, TEST_SOURCE);
   }
 
   @Test
@@ -94,7 +94,7 @@ public class GeneratedJDTASTTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.T2"));
   }
@@ -106,7 +106,7 @@ public class GeneratedJDTASTTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("T2"));
   }
@@ -118,7 +118,7 @@ public class GeneratedJDTASTTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.T1"));
   }
@@ -130,7 +130,7 @@ public class GeneratedJDTASTTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.package-info"));
   }
@@ -142,7 +142,7 @@ public class GeneratedJDTASTTest {
 
     JDTASTConstruction constructor = new JDTASTConstruction();
     GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource.toCharArray());
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
 
     List<ImportDeclaration> imports = ast.getRoot().imports();
     assertThat(imports.size(), is(1));
