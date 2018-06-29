@@ -19,21 +19,34 @@ public class GeneratedJDTAST implements GeneratedAST {
   private List<List<Statement>> lineNumberToStatements;
   private List<Location> allLocations;
   private String primaryClassName;
+  private String sourceCode;
 
   @Override
   public String getSourceCode() {
-    return root.toString();
+    return sourceCode;
   }
 
+  @Deprecated
   public GeneratedJDTAST(SourceFile sourceFile, CompilationUnit root) {
+    this(sourceFile, root, root.toString());
+  }
+  
+  public GeneratedJDTAST(SourceFile sourceFile, CompilationUnit root, String source) {
     this.root = root;
     this.sourceFile = sourceFile;
+    this.sourceCode = source;
 
     StatementListVisitor visitor = new StatementListVisitor();
     visitor.analyzeStatement(root);
     this.lineNumberToStatements = visitor.getLineToStatements();
     this.allLocations = visitor.getStatements().stream().map(v -> new JDTLocation(sourceFile, v)).collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
+  }
+  
+  public static GeneratedJDTAST generateAST(SourceFile sourceFile, String source) {
+    // TODO Refactoring
+    JDTASTConstruction construction = new JDTASTConstruction();
+    return construction.constructAST(sourceFile, source);
   }
 
   public CompilationUnit getRoot() {
@@ -64,7 +77,7 @@ public class GeneratedJDTAST implements GeneratedAST {
   public List<Location> getAllLocations() {
     return allLocations;
   }
-
+  
   private String searchPrimaryClassName(CompilationUnit root) {
     List<AbstractTypeDeclaration> types = root.types();
     Optional<AbstractTypeDeclaration> findAny = types.stream()
