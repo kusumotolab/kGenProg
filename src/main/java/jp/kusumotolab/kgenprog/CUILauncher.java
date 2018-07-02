@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,12 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class CUILauncher {
 
   // region Fields
-  private SourceFile rootDir;
+  private Path rootDir;
   private List<SourceFile> sourceFiles = new ArrayList<>();
   private List<SourceFile> testFiles = new ArrayList<>();
   private List<ClassPath> classPaths = new ArrayList<>();
@@ -36,14 +38,14 @@ public class CUILauncher {
 
   // region Getter/Setter
 
-  public SourceFile getRootDir() {
+  public Path getRootDir() {
     return rootDir;
   }
 
   @Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>",
       usage = "Path of a root directory of a target project")
   public void setRootDir(String rootDir) {
-    this.rootDir = new TargetSourceFile(Paths.get(rootDir));
+    this.rootDir = Paths.get(rootDir);
   }
 
   public List<SourceFile> getSourceFiles() {
@@ -94,8 +96,8 @@ public class CUILauncher {
   }
 
   public void launch() {
-    TargetProject targetProject =
-        new TargetProject(getSourceFiles(), getTestFiles(), getClassPaths());
+    TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getSourceFiles(),
+        getTestFiles(), getClassPaths());
     FaultLocalization faultLocalization = new Ochiai();
     Mutation mutation = new RandomMutation();
     Crossover crossover = new SiglePointCrossover();

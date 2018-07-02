@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestProcessBuilderTest {
 

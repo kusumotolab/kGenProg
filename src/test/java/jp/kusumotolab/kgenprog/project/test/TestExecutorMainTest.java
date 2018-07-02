@@ -17,7 +17,7 @@ import org.kohsuke.args4j.CmdLineException;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestExecutorMainTest {
 
