@@ -26,7 +26,7 @@ import org.junit.runner.Result;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 /**
  * 

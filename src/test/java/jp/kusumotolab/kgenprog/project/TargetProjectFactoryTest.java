@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TargetProjectFactoryTest {
 

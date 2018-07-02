@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public class OchiaiTest {

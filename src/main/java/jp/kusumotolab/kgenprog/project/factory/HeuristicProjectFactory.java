@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.project.factory;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -8,6 +8,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
+import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.IProjectFactory;
+import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.TestSourceFile;
 
 public class HeuristicProjectFactory implements IProjectFactory {
   final Path rootPath;

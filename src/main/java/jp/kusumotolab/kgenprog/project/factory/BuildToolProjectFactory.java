@@ -1,10 +1,11 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.project.factory;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import jp.kusumotolab.kgenprog.project.IProjectFactory;
 
 public abstract class BuildToolProjectFactory implements IProjectFactory {
 

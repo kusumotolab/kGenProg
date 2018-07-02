@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TargetProjectTest {
   @Test
