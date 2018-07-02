@@ -1,18 +1,14 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
-import jp.kusumotolab.kgenprog.project.TestSourceFile;
 
 public class HeuristicProjectFactory implements IProjectFactory {
   final Path rootPath;
@@ -28,24 +24,20 @@ public class HeuristicProjectFactory implements IProjectFactory {
 
   @Override
   public TargetProject create() {
+    final String[] javaExtension = {"java"};
+    final String[] jarExtension = {"jar"};
 
-    final List<SourceFile> sourceFiles = new ArrayList<>();
-    final List<SourceFile> testFiles = new ArrayList<>();
+    final List<SourceFile> sourceFiles =
+        FileUtils.listFiles(rootPath.toFile(), javaExtension, true).stream()
+            .map(file -> file.toPath()).map(TargetSourceFile::new).collect(Collectors.toList());
 
-    final String[] extension = {"java"};
-    final Collection<File> files = FileUtils.listFiles(rootPath.toFile(), extension, true);
-    for (File file : files) {
-      if (file.getName().endsWith("Test.java")) {
-        testFiles.add(new TestSourceFile(file.toPath()));
-      }
-      // TODO テストファイルはsourceFilesにaddすべきではないのでは？
-      sourceFiles.add(new TargetSourceFile(file.toPath()));
-    }
+    final List<SourceFile> testFiles = FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
+        .stream().filter(file -> file.getName().endsWith("Test.java")).map(file -> file.toPath())
+        .map(TargetSourceFile::new).collect(Collectors.toList());
 
-    // TODO 固定lib名の修正
-    final List<ClassPath> classPath = Arrays.asList( //
-        new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")), //
-        new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")));
+    final List<ClassPath> classPath =
+        FileUtils.listFiles(Paths.get("lib/junit4/").toFile(), jarExtension, false).stream()
+            .map(file -> file.toPath()).map(ClassPath::new).collect(Collectors.toList());
 
     return new TargetProject(rootPath, sourceFiles, testFiles, classPath);
   }
