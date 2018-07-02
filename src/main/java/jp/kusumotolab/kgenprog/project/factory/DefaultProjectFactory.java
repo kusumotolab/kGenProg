@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Path;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.IProjectFactory;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 
