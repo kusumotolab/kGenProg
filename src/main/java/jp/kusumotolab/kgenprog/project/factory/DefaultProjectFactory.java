@@ -22,7 +22,6 @@ public class DefaultProjectFactory implements IProjectFactory {
 
     // create new instance to avoid UnsupportedOperationException
     this.classPaths = new ArrayList<ClassPath>(classPaths);
-
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
   }
 
