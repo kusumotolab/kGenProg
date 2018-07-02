@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
 
 public class TestProcessBuilderTest {
 
@@ -36,7 +37,7 @@ public class TestProcessBuilderTest {
   public void testProcessBuilderBuild01() throws ClassNotFoundException, IOException {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
