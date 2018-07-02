@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import jp.kusumotolab.kgenprog.ga.Fitness;
@@ -15,13 +14,6 @@ public class TargetProject {
   private final List<SourceFile> sourceFiles;
   private final List<SourceFile> testFiles;
   private final List<ClassPath> classPaths;
-
-  // stub for compatibility
-  @Deprecated
-  public TargetProject(final List<SourceFile> sourceFiles, final List<SourceFile> testFiles,
-      final List<ClassPath> classPaths) {
-    this(Paths.get(""), sourceFiles, testFiles, classPaths);
-  }
 
   public TargetProject(final Path rootPath, final List<SourceFile> sourceFiles,
       final List<SourceFile> testFiles, List<ClassPath> classPaths) {
