@@ -32,7 +32,7 @@ public class TestProcessBuilderTest {
 	}
 
 	//@Test
-	public void testProcessBuilderBuild01() {
+	public void testStart01() {
 		final Path rootDir = Paths.get("example/example01");
 		final Path workingDir = rootDir.resolve("_bin");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
@@ -60,7 +60,7 @@ public class TestProcessBuilderTest {
 	}
 
 	@Test
-	public void testProcessBuilderBuild02() {
+	public void testStartWithOtherWorkingDir01() {
 		final Path rootDir = Paths.get("example/example01");
 
 		// exampleとは全く別のworkingDirで動作確認
