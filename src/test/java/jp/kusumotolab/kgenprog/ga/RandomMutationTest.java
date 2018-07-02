@@ -1,22 +1,25 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.Operation;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.jdt.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import java.lang.reflect.Field;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
-import java.lang.reflect.Field;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
+import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 
 public class RandomMutationTest {
 
@@ -41,7 +44,7 @@ public class RandomMutationTest {
   @Test
   public void testExec() throws NoSuchFieldException, IllegalAccessException {
     final String basePath = "example/example01/";
-    final TargetProject targetProject = TargetProject.generate(basePath);
+    final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final RandomMutation randomMutation = new RandomMutation(new StaticNumberGeneration());
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());

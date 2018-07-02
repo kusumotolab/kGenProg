@@ -15,6 +15,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
 
 public class TestExecutorTest {
 
@@ -58,7 +59,7 @@ public class TestExecutorTest {
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
@@ -69,7 +70,7 @@ public class TestExecutorTest {
   private TestResults generateTestResultsForExample02() throws Exception {
     final Path rootDir = Paths.get("example/example02");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
@@ -82,7 +83,7 @@ public class TestExecutorTest {
   private TestResults generateTestResultsForExample03() throws Exception {
     final Path rootDir = Paths.get("example/example03");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
