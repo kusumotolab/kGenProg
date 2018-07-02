@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class ProjectBuilderTest {

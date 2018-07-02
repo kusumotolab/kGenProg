@@ -12,8 +12,8 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.Range;
 import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class JDTLocationTest {
 
