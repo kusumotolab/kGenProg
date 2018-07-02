@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.factory;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class TargetProjectFactoryTest {
     final Path rootPath = Paths.get("./example/example01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    assertEquals(project.rootPath, rootPath);
+    assertThat(project.rootPath, is(rootPath));
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
@@ -39,7 +38,7 @@ public class TargetProjectFactoryTest {
     final Path rootPath = Paths.get("./example/example02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    assertEquals(project.rootPath, rootPath);
+    assertThat(project.rootPath, is(rootPath));
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")),
