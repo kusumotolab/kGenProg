@@ -31,7 +31,7 @@ public class TestProcessBuilderTest {
 		TestResults.getSerFilePath().toFile().delete();
 	}
 
-	//@Test
+	@Test
 	public void testStart01() {
 		final Path rootDir = Paths.get("example/example01");
 		final Path workingDir = rootDir.resolve("_bin");
@@ -64,7 +64,7 @@ public class TestProcessBuilderTest {
 		final Path rootDir = Paths.get("example/example01");
 
 		// exampleとは全く別のworkingDirで動作確認
-		final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog");
+		final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
 		final TargetProject targetProject = TargetProject.generate(rootDir);
 
 		// main
