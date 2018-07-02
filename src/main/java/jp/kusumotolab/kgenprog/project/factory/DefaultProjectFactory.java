@@ -5,6 +5,7 @@ import java.util.List;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class DefaultProjectFactory implements IProjectFactory {
   private final Path rootPath;
@@ -13,11 +14,12 @@ public class DefaultProjectFactory implements IProjectFactory {
   private final List<ClassPath> classPaths;
 
   public DefaultProjectFactory(final Path rootPath, final List<SourceFile> sourceFiles,
-      final List<SourceFile> testFiles, List<ClassPath> classPaths) {
+      final List<SourceFile> testFiles, List<ClassPath> classPaths, JUnitVersion junitVersion) {
     this.rootPath = rootPath;
     this.sourceFiles = sourceFiles;
     this.testFiles = testFiles;
     this.classPaths = classPaths;
+    this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
   }
 
   @Override
