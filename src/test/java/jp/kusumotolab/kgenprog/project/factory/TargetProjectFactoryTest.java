@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.TargetProject;
@@ -18,7 +19,7 @@ import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 public class TargetProjectFactoryTest {
 
   @Test
-  public void testCreate01() {
+  public void testCreateByBasePath01() {
     final Path rootPath = Paths.get("./example/example01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
@@ -34,7 +35,7 @@ public class TargetProjectFactoryTest {
   }
 
   @Test
-  public void testCreate02() {
+  public void testCreateByBasePath02() {
     final Path rootPath = Paths.get("./example/example02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
@@ -47,6 +48,31 @@ public class TargetProjectFactoryTest {
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")),
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/UtilTest.java")))));
+    assertThat(project.getClassPaths(), is(containsInAnyOrder( //
+        new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
+        new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
+  }
+
+  @Test
+  public void testCreateByCompletelySpecified01() {
+    final Path rootPath = Paths.get("./example/example01");
+    final TargetProject project = TargetProjectFactory.create( //
+        rootPath, //
+        Arrays.asList( //
+            new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+            new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
+        Arrays.asList( //
+            new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
+        Arrays.asList( //
+            new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
+            new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar"))));
+
+    assertThat(project.rootPath, is(rootPath));
+    assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
+        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
+    assertThat(project.getTestFiles(), is(containsInAnyOrder( //
+        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
     assertThat(project.getClassPaths(), is(containsInAnyOrder( //
         new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
         new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
