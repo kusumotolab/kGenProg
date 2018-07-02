@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourceFile;
@@ -18,7 +19,10 @@ public class DefaultProjectFactory implements IProjectFactory {
     this.rootPath = rootPath;
     this.sourceFiles = sourceFiles;
     this.testFiles = testFiles;
-    this.classPaths = classPaths;
+
+    // create new instance to avoid UnsupportedOperationException
+    this.classPaths = new ArrayList<ClassPath>(classPaths);
+
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
   }
 
