@@ -73,4 +73,20 @@ public class TestProcessBuilderTest {
 
 		assertThat(r.getExecutedTestFQNs().size(), is(4));
 	}
+
+	@Test
+	public void testStartWithOtherWorkingDir02() {
+		// 絶対パスにしてみる
+		final Path rootDir = Paths.get("example/example01").toAbsolutePath();
+
+		// exampleとは全く別のworkingDirで動作確認
+		final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
+		final TargetProject targetProject = TargetProject.generate(rootDir);
+
+		// main
+		final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
+		final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+
+		assertThat(r.getExecutedTestFQNs().size(), is(4));
+	}
 }
