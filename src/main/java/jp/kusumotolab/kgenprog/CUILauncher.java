@@ -25,6 +25,7 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class CUILauncher {
@@ -97,7 +98,8 @@ public class CUILauncher {
 
   public void launch() {
     TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getSourceFiles(),
-        getTestFiles(), getClassPaths());
+        getTestFiles(), getClassPaths(), JUnitVersion.JUNIT4);
+
     FaultLocalization faultLocalization = new Ochiai();
     Mutation mutation = new RandomMutation();
     Crossover crossover = new SiglePointCrossover();

@@ -15,6 +15,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class TargetProjectFactoryTest {
 
@@ -63,9 +64,8 @@ public class TargetProjectFactoryTest {
             new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
         Arrays.asList( //
             new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
-        Arrays.asList( //
-            new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
-            new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar"))));
+        Arrays.asList(), //
+        JUnitVersion.JUNIT4);
 
     assertThat(project.rootPath, is(rootPath));
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //

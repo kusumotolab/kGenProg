@@ -7,6 +7,7 @@ import java.util.List;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class TargetProjectFactory {
 
@@ -43,8 +44,9 @@ public class TargetProjectFactory {
    * @return TargetProject
    */
   public static TargetProject create(final Path rootPath, final List<SourceFile> sourceFiles,
-      final List<SourceFile> testFiles, List<ClassPath> classPaths) {
-    return new DefaultProjectFactory(rootPath, sourceFiles, testFiles, classPaths).create();
+      final List<SourceFile> testFiles, List<ClassPath> classPaths, JUnitVersion junitVersion) {
+    return new DefaultProjectFactory(rootPath, sourceFiles, testFiles, classPaths, junitVersion)
+        .create();
   }
 
   /**
