@@ -14,43 +14,32 @@ import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 
 public class GeneratedJDTAST implements GeneratedAST {
-  private CompilationUnit root;
-  private SourceFile sourceFile;
-  private List<List<Statement>> lineNumberToStatements;
-  private List<Location> allLocations;
-  private String primaryClassName;
-  private String sourceCode;
+  private final JDTASTConstruction construction;
+  private final CompilationUnit root;
+  private final SourceFile sourceFile;
+  private final List<List<Statement>> lineNumberToStatements;
+  private final List<Location> allLocations;
+  private final String primaryClassName;
+  private final String sourceCode;
 
-  @Override
-  public String getSourceCode() {
-    return sourceCode;
-  }
-
-  @Deprecated
-  public GeneratedJDTAST(SourceFile sourceFile, CompilationUnit root) {
-    this(sourceFile, root, root.toString());
-  }
-  
-  public GeneratedJDTAST(SourceFile sourceFile, CompilationUnit root, String source) {
+  public GeneratedJDTAST(final JDTASTConstruction construction, final SourceFile sourceFile,
+      final CompilationUnit root, final String source) {
+    this.construction = construction;
     this.root = root;
     this.sourceFile = sourceFile;
     this.sourceCode = source;
 
-    StatementListVisitor visitor = new StatementListVisitor();
+    final StatementListVisitor visitor = new StatementListVisitor();
     visitor.analyzeStatement(root);
     this.lineNumberToStatements = visitor.getLineToStatements();
-    this.allLocations = visitor.getStatements().stream().map(v -> new JDTLocation(sourceFile, v)).collect(Collectors.toList());
+    this.allLocations = visitor.getStatements().stream().map(v -> new JDTLocation(sourceFile, v))
+        .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
   }
-  
-  public static GeneratedJDTAST generateAST(SourceFile sourceFile, String source) {
-    // TODO Refactoring
-    JDTASTConstruction construction = new JDTASTConstruction();
-    return construction.constructAST(sourceFile, source);
-  }
 
-  public CompilationUnit getRoot() {
-    return root;
+  @Override
+  public String getSourceCode() {
+    return sourceCode;
   }
 
   @Override
@@ -64,7 +53,20 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public List<Location> inferLocations(int lineNumber) {
+  public List<Location> getAllLocations() {
+    return allLocations;
+  }
+
+  public CompilationUnit getRoot() {
+    return root;
+  }
+
+  public JDTASTConstruction getConstruction() {
+    return construction;
+  }
+
+  @Override
+  public List<Location> inferLocations(final int lineNumber) {
     if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
       return lineNumberToStatements.get(lineNumber).stream()
           .map(statement -> new JDTLocation(this.sourceFile, statement))
@@ -72,15 +74,11 @@ public class GeneratedJDTAST implements GeneratedAST {
     }
     return Collections.emptyList();
   }
-  
-  @Override
-  public List<Location> getAllLocations() {
-    return allLocations;
-  }
-  
-  private String searchPrimaryClassName(CompilationUnit root) {
-    List<AbstractTypeDeclaration> types = root.types();
-    Optional<AbstractTypeDeclaration> findAny = types.stream()
+
+  private String searchPrimaryClassName(final CompilationUnit root) {
+    @SuppressWarnings("unchecked")
+    final List<AbstractTypeDeclaration> types = root.types();
+    final Optional<AbstractTypeDeclaration> findAny = types.stream()
         .filter(type -> (type.getModifiers() & Modifier.PUBLIC) == Modifier.PUBLIC).findAny();
 
     String typeName;
@@ -92,7 +90,7 @@ public class GeneratedJDTAST implements GeneratedAST {
 
     } else {
       typeName = sourceFile.path.getFileName().toString();
-      int idx = typeName.indexOf(".");
+      final int idx = typeName.indexOf(".");
       if (idx > 0) {
         typeName = typeName.substring(0, idx);
       }
@@ -100,7 +98,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     return constructFQN(root.getPackage(), typeName);
   }
 
-  private String constructFQN(PackageDeclaration packageName, String name) {
+  private String constructFQN(final PackageDeclaration packageName, final String name) {
     if (packageName == null) {
       return name;
     } else {

@@ -39,7 +39,7 @@ public class JDTASTConstruction {
       public void acceptAST(String sourceFilePath, CompilationUnit ast) {
         SourceFile file = pathToSourceFile.get(Paths.get(sourceFilePath));
         if (file != null) {
-          asts.add(new GeneratedJDTAST(file, ast, loadAsString(sourceFilePath)));
+          asts.add(new GeneratedJDTAST(JDTASTConstruction.this, file, ast, loadAsString(sourceFilePath)));
         }
       }
     };
@@ -48,29 +48,18 @@ public class JDTASTConstruction {
 
     return asts;
   }
-
-  @Deprecated
-  public GeneratedJDTAST constructAST(SourceFile file, char[] data) {
-    return this.constructAST(file, new String(data));
-  }
   
   public GeneratedJDTAST constructAST(SourceFile file, String data) {
     ASTParser parser = createNewParser();
     parser.setSource(data.toCharArray());
 
-    return new GeneratedJDTAST(file, (CompilationUnit) parser.createAST(null), data);
+    return new GeneratedJDTAST(this, file, (CompilationUnit) parser.createAST(null), data);
   }
   
-  CompilationUnit parse(char[] data) {
-    ASTParser parser = createNewParser();
-    parser.setSource(data);
-
-    return (CompilationUnit) parser.createAST(null);
-  }
-
   private ASTParser createNewParser() {
     ASTParser parser = ASTParser.newParser(AST.JLS10);
 
+    @SuppressWarnings("unchecked")
     final Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
     options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
     options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
