@@ -153,6 +153,7 @@ public class GeneratedJDTASTTest {
     GeneratedJDTAST ast =
         (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
 
+    @SuppressWarnings("unchecked")
     List<ImportDeclaration> imports = ast.getRoot().imports();
     assertThat(imports.size(), is(1));
     assertThat(imports.get(0).isStatic(), is(true));
