@@ -91,7 +91,7 @@ public class InsertOperation implements JDTOperation {
       throw new RuntimeException(e);
     }
 
-    return GeneratedJDTAST.generateAST(ast.getSourceFile(), document.get());
+    return jdtast.getConstruction().constructAST(ast.getSourceFile(), document.get());
   }
 
 
