@@ -207,4 +207,29 @@ public class GeneratedJDTASTTest {
 
 
   }
+  
+  @Test
+  public void testInferLocationAfterDeleteOperation() {
+    final SourceFile testSourceFile = new TargetSourceFile(
+        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(testSourceFile));
+    final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
+    final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
+    testLocation(jdtAst.inferLocations(10).get(1), "return n;\n");
+
+    // 削除位置のLocation生成
+    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot().types().get(0);
+    final MethodDeclaration method = type.getMethods()[0];
+    final Statement statement = (Statement) method.getBody().statements().get(0);
+    final JDTLocation location = new JDTLocation(testSourceFile, statement);
+    final DeleteOperation operation = new DeleteOperation();
+
+    final  GeneratedJDTAST newJdtAst =
+        (GeneratedJDTAST) operation.apply(generatedSourceCode, location).getFiles().get(0);
+    testLocation(newJdtAst.inferLocations(4).get(1), "return n;\n");
+
+
+  }
 }
