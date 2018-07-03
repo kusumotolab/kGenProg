@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
@@ -229,6 +230,48 @@ public class GeneratedJDTASTTest {
     final  GeneratedJDTAST newJdtAst =
         (GeneratedJDTAST) operation.apply(generatedSourceCode, location).getFiles().get(0);
     testLocation(newJdtAst.inferLocations(4).get(1), "return n;\n");
+
+
+  }
+  
+  @Test
+  public void testInferLocationAfterReplaceOperation() {
+    final SourceFile testSourceFile = new TargetSourceFile(
+        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(testSourceFile));
+    final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
+    final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
+    testLocation(jdtAst.inferLocations(10).get(1), "return n;\n");
+
+    // 置換位置のLocation生成
+    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot().types().get(0);
+    final MethodDeclaration method = type.getMethods()[0];
+    final Statement statement = (Statement) method.getBody().statements().get(0);
+    final JDTLocation location = new JDTLocation(testSourceFile, statement);
+    
+    
+    //置換対象の生成
+    final AST ast = jdtAst.getRoot().getAST();
+    final MethodInvocation methodInvocationA = ast.newMethodInvocation();
+    methodInvocationA.setName(ast.newSimpleName("a"));
+    final MethodInvocation methodInvocationB = ast.newMethodInvocation();
+    methodInvocationB.setName(ast.newSimpleName("b"));
+    final Block block = ast.newBlock();
+    
+    @SuppressWarnings("unchecked")
+    final List<Statement> blockStatementList = block.statements();
+    
+    blockStatementList.add(ast.newExpressionStatement(methodInvocationA));
+    blockStatementList.add(ast.newExpressionStatement(methodInvocationB));
+    
+    
+    final ReplaceOperation operation = new ReplaceOperation(block);
+
+    final  GeneratedJDTAST newJdtAst =
+        (GeneratedJDTAST) operation.apply(generatedSourceCode, location).getFiles().get(0);
+    testLocation(newJdtAst.inferLocations(8).get(1), "return n;\n");
 
 
   }
