@@ -55,7 +55,6 @@ public class DiffOutput implements ResultOutput {
           // 修正ファイル作成
           String origStr = new String(
               Files.readAllBytes(getOriginPath(targetProject.getSourceFiles(), ast.getSourceFile())));
-                  ;
           Document document = new Document(origStr);
           TextEdit edit = ((GeneratedJDTAST) ast).getRoot().rewrite(document, null);
           if (edit.getChildren().length != 0) {
