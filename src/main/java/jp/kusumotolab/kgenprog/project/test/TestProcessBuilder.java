@@ -32,7 +32,7 @@ public class TestProcessBuilder {
   final private ProjectBuilder projectBuilder;
 
   final static private String javaHome = System.getProperty("java.home");
-  final static private String javaBin = Paths.get(javaHome + "/bin/java").toString();
+  final static private String javaBin = Paths.get(javaHome, "/bin/java").toString();
   final static private String testExecutorMain =
       "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
