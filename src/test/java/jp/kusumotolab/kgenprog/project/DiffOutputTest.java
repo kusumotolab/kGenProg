@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -24,25 +25,22 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
-import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 public class DiffOutputTest {
 
   @Test
-  public void DiffOutputTest1() {
+  public void testDiffOutput1() {
     Path basePath = Paths.get("example/example01/");
-    DiffOutput diffOutput = new DiffOutput();
+    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String sep = "\r\n";
-
-    String expected = "package jp.kusumotolab;" + sep +
-        "public class BuggyCalculator {" + sep +
-        "  public int close_to_zero(  int n){" + sep +
-        "    return n;" + sep +
-        "  }" + sep +
-        "}" + sep;
+    String expected = "package jp.kusumotolab;\r\n" +
+        "public class BuggyCalculator {\r\n" +
+        "  public int close_to_zero(  int n){\r\n" +
+        "    return n;\r\n" +
+        "  }\r\n" +
+        "}\r\n\r\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -63,41 +61,36 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    File modFile = new File("example/example01/modified/BuggyCalculator.java");
-
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
-      DeleteFiles(new File("example/example01/modified"));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/BuggyCalculator.java")));
+      FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(modSource, is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
-
   }
 
   @Test
-  public void DiffOutputTest2() {
+  public void testDiffOutput2() {
     Path basePath = Paths.get("example/example03/");
-    DiffOutput diffOutput = new DiffOutput();
+    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String sep = "\r\n";
-
-    String expected = "package jp.kusumotolab;" + sep +
-        "" + sep +
-        "public class Util {" + sep +
-        "\tpublic static int plus(int n) {" + sep +
-        "\t}" + sep +
-        "" + sep +
-        "\tpublic static int minus(int n) {" + sep +
-        "\t\treturn n - 1;" + sep +
-        "\t}" + sep +
-        "" + sep +
-        "\t// テストからのみ実行されるダミー関数" + sep +
-        "\tpublic static void dummy() {" + sep +
-        "\t\tnew String();" + sep +
-        "\t}" + sep +
-        "}" + sep;
+    String expected = "package jp.kusumotolab;\r\n" +
+        "\r\n" +
+        "public class Util {\r\n" +
+        "\tpublic static int plus(int n) {\r\n" +
+        "\t}\r\n" +
+        "\r\n" +
+        "\tpublic static int minus(int n) {\r\n" +
+        "\t\treturn n - 1;\r\n" +
+        "\t}\r\n" +
+        "\r\n" +
+        "\t// テストからのみ実行されるダミー関数\r\n" +
+        "\tpublic static void dummy() {\r\n" +
+        "\t\tnew String();\r\n" +
+        "\t}\r\n" +
+        "}\r\n\r\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -119,11 +112,9 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    File modFile = new File("example/example03/modified/Util.java");
-
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
-      DeleteFiles(new File("example/example03/modified"));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example03/modified/Util.java")));
+      FileUtils.deleteDirectory(new File("example/example03/modified"));
       assertThat(modSource, is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
@@ -132,25 +123,23 @@ public class DiffOutputTest {
   }
 
   @Test
-  public void DiffOutputTest3() {
+  public void testDiffOutput3() {
     Path basePath = Paths.get("example/example01/");
-    DiffOutput diffOutput = new DiffOutput();
+    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String sep = "\r\n";
-
-    String expected = "package jp.kusumotolab;" + sep +
-        "public class BuggyCalculator {" + sep +
-        "  public int close_to_zero(  int n){" + sep +
-        "    if (n > 0) {" + sep +
-        "      n--;" + sep +
-        "    }" + sep +
-        " else {" +  sep +
-        "      n++;" + sep +
-        "    }" + sep +
-        "    a();" + sep +
-        "\treturn n;" + sep +
-        "  }" + sep +
-        "}" + sep;
+    String expected = "package jp.kusumotolab;\r\n" +
+        "public class BuggyCalculator {\r\n" +
+        "  public int close_to_zero(  int n){\r\n" +
+        "    if (n > 0) {\r\n" +
+        "      n--;\r\n" +
+        "    }\r\n" +
+        " else {\r\n" +
+        "      n++;\r\n" +
+        "    }\r\n" +
+        "    a();\r\n" +
+        "\treturn n;\r\n" +
+        "  }\r\n" +
+        "}\r\n\r\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -179,37 +168,30 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    File modFile = new File("example/example01/modified/BuggyCalculator.java");
-
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
-      DeleteFiles(new File("example/example01/modified"));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/BuggyCalculator.java")));
+      FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(modSource, is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
-
-
-
   }
 
   @Test
-  public void DiffOutputTest4() {
+  public void testDiffOutput4() {
     Path basePath = Paths.get("example/example01/");
-    DiffOutput diffOutput = new DiffOutput();
+    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String sep = "\r\n";
-
-    String expected = "package jp.kusumotolab;" + sep +
-        "public class BuggyCalculator {" + sep +
-        "  public int close_to_zero(  int n){" + sep +
-        "    {" +  sep +
-        "\t\ta();" + sep +
-        "\t}" + sep +
-        "    return n;" + sep +
-        "  }" + sep +
-        "}" + sep;
+    String expected = "package jp.kusumotolab;\r\n" +
+        "public class BuggyCalculator {\r\n" +
+        "  public int close_to_zero(  int n){\r\n" +
+        "    {\r\n" +
+        "\t\ta();\r\n" +
+        "\t}\r\n" +
+        "    return n;\r\n" +
+        "  }\r\n" +
+        "}\r\n\r\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -239,41 +221,13 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    File modFile = new File("example/example01/modified/BuggyCalculator.java");
-
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get(modFile.toURI())));
-      DeleteFiles(new File("example/example01/modified"));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/BuggyCalculator.java")));
+      FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(modSource, is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
-
   }
-
-  /***
-   * ファイルまたはディレクトリを削除するメソッド
-   * @param file
-   */
-  public void DeleteFiles(File file) {
-    if(file.exists()) {
-      if(file.isFile()) {
-        if(!file.delete()) {
-          System.out.println("Failed to delete File");
-        }
-      } else {
-        File[] files = file.listFiles();
-
-        for(int i = 0; i < files.length; i++) {
-          DeleteFiles(files[i]);
-        }
-
-        file.delete();
-      }
-    } else {
-      System.out.println("File does not exist");
-    }
-  }
-
 }
