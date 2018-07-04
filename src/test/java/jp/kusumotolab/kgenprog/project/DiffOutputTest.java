@@ -40,7 +40,7 @@ public class DiffOutputTest {
         "  public int close_to_zero(  int n){\r\n" +
         "    return n;\r\n" +
         "  }\r\n" +
-        "}\r\n\r\n";
+        "}\r\n" + System.getProperty("line.separator");
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -90,7 +90,7 @@ public class DiffOutputTest {
         "\tpublic static void dummy() {\r\n" +
         "\t\tnew String();\r\n" +
         "\t}\r\n" +
-        "}\r\n\r\n";
+        "}\r\n" + System.getProperty("line.separator");
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -139,7 +139,7 @@ public class DiffOutputTest {
         "    a();\r\n" +
         "\treturn n;\r\n" +
         "  }\r\n" +
-        "}\r\n\r\n";
+        "}\r\n" + System.getProperty("line.separator");
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -191,7 +191,7 @@ public class DiffOutputTest {
         "\t}\r\n" +
         "    return n;\r\n" +
         "  }\r\n" +
-        "}\r\n\r\n";
+        "}\r\n" + System.getProperty("line.separator");
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
