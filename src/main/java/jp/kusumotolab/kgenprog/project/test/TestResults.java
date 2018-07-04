@@ -108,7 +108,6 @@ public class TestResults implements Serializable {
     return 1.0 * success / (success + fail);
   }
 
-
   /**
    * a_ef
    * 
@@ -206,9 +205,11 @@ public class TestResults implements Serializable {
     final List<FullyQualifiedName> result = new ArrayList<>();
     for (final TestResult testResult : this.value.values()) {
       final Coverage coverage = testResult.getCoverages(targetFQN);
-      final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
-      if (status == _status && failed == testResult.failed) {
-        result.add(testResult.executedTestFQN);
+      if (null != coverage) {
+        final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
+        if (status == _status && failed == testResult.failed) {
+          result.add(testResult.executedTestFQN);
+        }
       }
     }
     return result;
@@ -268,7 +269,7 @@ public class TestResults implements Serializable {
    * @return
    */
   public static Path getSerFilePath() {
-    return Paths.get(System.getProperty("java.io.tmpdir") + "/kgenprog-testresults.ser");
+    return Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-testresults.ser");
   }
 
   /**
@@ -316,7 +317,6 @@ public class TestResults implements Serializable {
     return sb.toString();
   }
 
-
   /*
    * 以降，翻訳のための一時的な処理
    */
@@ -327,6 +327,5 @@ public class TestResults implements Serializable {
   public void setBuildResults(final BuildResults buildResults) {
     this.buildResults = buildResults;
   }
-
 
 }

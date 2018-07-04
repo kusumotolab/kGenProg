@@ -33,13 +33,13 @@ public class TestProcessBuilderTest {
   }
 
   @Test
-  public void testProcessBuilderBuild01() throws ClassNotFoundException, IOException {
+  public void testStart01() {
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path workingDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProject.generate(rootDir);
 
     // main
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
     final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
 
     // テストの結果はこうなるはず
@@ -60,4 +60,34 @@ public class TestProcessBuilderTest {
         COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED)));
   }
 
+  @Test
+  public void testStartWithOtherWorkingDir01() {
+    final Path rootDir = Paths.get("example/example01");
+
+    // exampleとは全く別のworkingDirで動作確認
+    final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
+    final TargetProject targetProject = TargetProject.generate(rootDir);
+
+    // main
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+
+    assertThat(r.getExecutedTestFQNs().size(), is(4));
+  }
+
+  @Test
+  public void testStartWithOtherWorkingDir02() {
+    // 絶対パスにしてみる
+    final Path rootDir = Paths.get("example/example01").toAbsolutePath();
+
+    // exampleとは全く別のworkingDirで動作確認
+    final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
+    final TargetProject targetProject = TargetProject.generate(rootDir);
+
+    // main
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+
+    assertThat(r.getExecutedTestFQNs().size(), is(4));
+  }
 }

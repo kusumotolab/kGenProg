@@ -30,11 +30,11 @@ public class TestProcessBuilder {
   private static Logger log = LoggerFactory.getLogger(TestProcessBuilder.class);
 
   final private TargetProject targetProject;
-  final private Path outDir;
+  final private Path workingDir;
   final private ProjectBuilder projectBuilder;
 
   final static private String javaHome = System.getProperty("java.home");
-  final static private String javaBin = Paths.get(javaHome + "/bin/java").toString();
+  final static private String javaBin = Paths.get(javaHome, "bin/java").toString();
   final static private String testExecutorMain =
       "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
@@ -50,27 +50,23 @@ public class TestProcessBuilder {
     return null;
   }
 
-  public TestProcessBuilder(final TargetProject targetProject, final Path outDir) {
+  public TestProcessBuilder(final TargetProject targetProject, final Path workingDir) {
     this.targetProject = targetProject;
-    this.outDir = outDir;
+    this.workingDir = workingDir;
     this.projectBuilder = new ProjectBuilder(this.targetProject);
   }
 
   public TestResults start(final GeneratedSourceCode generatedSourceCode) {
     log.debug("enter start(GeneratedSourceCode)");
 
-    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.outDir);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
     final String classpath = filterClasspathFromSystemClasspath();
     final String targetFQNs = joinFQNs(getTargetFQNs(buildResults));
     final String testFQNs = joinFQNs(getTestFQNs(buildResults));
 
-    // start()時にワーキングディレクトリを変更するために，binDirはrootPathからの相対パスに変更
-    // TODO いろんな状況でバグるので要修正．一時的な処置．
-    final Path relativeOutDir = this.targetProject.rootPath.relativize(buildResults.outDir);
-
     final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, testExecutorMain,
-        "-b", relativeOutDir.toString(), "-s", targetFQNs, "-t", testFQNs);
+        "-b", workingDir.toAbsolutePath().toString(), "-s", targetFQNs, "-t", testFQNs);
 
     // テスト実行のためにworking dirを移動（対象プロジェクトが相対パスを利用している可能性が高いため）
     builder.directory(this.targetProject.rootPath.toFile());

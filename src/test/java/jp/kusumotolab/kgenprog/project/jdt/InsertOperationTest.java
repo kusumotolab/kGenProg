@@ -3,9 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static org.junit.Assert.assertEquals;
 import java.nio.file.Paths;
 import java.util.Collections;
-import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
@@ -33,11 +31,7 @@ public class InsertOperationTest {
     JDTLocation location = new JDTLocation(testSourceFile, statement);
 
     // 挿入対象生成
-    AST jdtAST = ast.getRoot().getAST();
-    MethodInvocation invocation = jdtAST.newMethodInvocation();
-    invocation.setName(jdtAST.newSimpleName("a"));
-    Statement insertStatement = jdtAST.newExpressionStatement(invocation);
-
+    Statement insertStatement = createInsertionTarget();
     InsertOperation operation = new InsertOperation(insertStatement);
 
     GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
@@ -65,11 +59,7 @@ public class InsertOperationTest {
     JDTLocation location = new JDTLocation(testSourceFile, statement);
 
     // 挿入対象生成
-    AST jdtAST = ast.getRoot().getAST();
-    MethodInvocation invocation = jdtAST.newMethodInvocation();
-    invocation.setName(jdtAST.newSimpleName("a"));
-    Statement insertStatement = jdtAST.newExpressionStatement(invocation);
-
+    Statement insertStatement = createInsertionTarget();
     InsertOperation operation = new InsertOperation(insertStatement);
 
     operation.applyDirectly(generatedSourceCode, location);
@@ -77,5 +67,16 @@ public class InsertOperationTest {
         ast.getRoot().toString());
 
   }
+  
+  private Statement createInsertionTarget() {
+    String target = "class B{ public void a() { a(); } }";
+    SourceFile testSourceFile = new TargetSourceFile(Paths.get("B.java"));
 
+    JDTASTConstruction constructor = new JDTASTConstruction();
+    GeneratedJDTAST ast =
+        (GeneratedJDTAST) constructor.constructAST(testSourceFile, target.toCharArray());
+    
+    TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
+    return (Statement) type.getMethods()[0].getBody().statements().get(0);
+  }
 }

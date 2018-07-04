@@ -59,13 +59,16 @@ public class ReplaceOperation implements JDTOperation {
 
   private void replaceNode(ASTNode target) {
     StructuralPropertyDescriptor locationInParent = target.getLocationInParent();
+
+    ASTNode copiedNode = ASTNode.copySubtree(target.getAST(), this.astNode);
+    
     if (locationInParent.isChildListProperty()) {
       List siblings = (List) target.getParent().getStructuralProperty(locationInParent);
       int replaceIdx = siblings.indexOf(target);
-      siblings.set(replaceIdx, this.astNode);
+      siblings.set(replaceIdx, copiedNode);
 
     } else if (locationInParent.isChildProperty()) {
-      target.getParent().setStructuralProperty(locationInParent, astNode);
+      target.getParent().setStructuralProperty(locationInParent, copiedNode);
 
     } else {
       throw new RuntimeException("can't replace node");
