@@ -148,4 +148,23 @@ public class GeneratedJDTASTTest {
     assertThat(imports.size(), is(1));
     assertThat(imports.get(0).isStatic(), is(true));
   }
+  
+  @Test
+  public void testGetAllLocations() {
+    final List<Location> locations = ast.getAllLocations();
+    assertThat(locations, hasSize(10));
+
+    testLocation(locations.get(0),
+        "{\n  int a=0;\n  if (a == 1) {\n    System.out.println(a);\n  }\n}\n");
+    testLocation(locations.get(1), "int a=0;\n");
+    testLocation(locations.get(2), "if (a == 1) {\n  System.out.println(a);\n}\n");
+    testLocation(locations.get(3), "{\n  System.out.println(a);\n}\n");
+    testLocation(locations.get(4), "System.out.println(a);\n");
+
+    testLocation(locations.get(5), "{\n  if (a < 0) {\n    return -a;\n  }\n  return a;\n}\n");
+    testLocation(locations.get(6), "if (a < 0) {\n  return -a;\n}\n");
+    testLocation(locations.get(7), "{\n  return -a;\n}\n");
+    testLocation(locations.get(8), "return -a;\n");
+    testLocation(locations.get(9), "return a;\n");
+  }
 }

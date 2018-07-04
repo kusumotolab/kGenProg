@@ -14,7 +14,7 @@ public class DefaultCodeValidation implements SourceCodeValidation {
   public Fitness exec(GeneratedSourceCode sourceCode, TargetProject project,
       TestProcessBuilder testExecutor) {
     log.debug("enter exec(GeneratedSourceCode, TargetProject, TestProcessBuilder)");
-    return new SimpleFitness(testExecutor.exec(sourceCode).getSuccessRate());
+    return new SimpleFitness(testExecutor.start(sourceCode).getSuccessRate());
   }
 
 }
