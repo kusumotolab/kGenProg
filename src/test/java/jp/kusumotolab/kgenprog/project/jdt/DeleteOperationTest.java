@@ -19,8 +19,7 @@ public class DeleteOperationTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -44,8 +43,7 @@ public class DeleteOperationTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
