@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class JDTASTConstruction {
       public void acceptAST(String sourceFilePath, CompilationUnit ast) {
         SourceFile file = pathToSourceFile.get(Paths.get(sourceFilePath));
         if (file != null) {
-          asts.add(new GeneratedJDTAST(file, ast));
+          asts.add(new GeneratedJDTAST(JDTASTConstruction.this, file, ast, loadAsString(sourceFilePath)));
         }
       }
     };
@@ -46,17 +48,18 @@ public class JDTASTConstruction {
 
     return asts;
   }
-
-  public GeneratedAST constructAST(SourceFile file, char[] data) {
+  
+  public GeneratedJDTAST constructAST(SourceFile file, String data) {
     ASTParser parser = createNewParser();
-    parser.setSource(data);
+    parser.setSource(data.toCharArray());
 
-    return new GeneratedJDTAST(file, (CompilationUnit) parser.createAST(null));
+    return new GeneratedJDTAST(this, file, (CompilationUnit) parser.createAST(null), data);
   }
-
+  
   private ASTParser createNewParser() {
     ASTParser parser = ASTParser.newParser(AST.JLS10);
 
+    @SuppressWarnings("unchecked")
     final Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
     options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
     options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
@@ -69,5 +72,13 @@ public class JDTASTConstruction {
     parser.setEnvironment(null, null, null, true);
 
     return parser;
+  }
+  
+  private String loadAsString(String filePath) {
+    try {
+      return new String(Files.readAllBytes(Paths.get(filePath)));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
