@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.ga.Fitness;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.SimpleGene;
@@ -19,9 +17,6 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
-
-  private static Logger log = LoggerFactory.getLogger(TargetProject.class);
-
   public final Path rootPath; // TODO ひとまずrootPathだけpublicに．他フィールドは要検討
   private final List<SourceFile> sourceFiles;
   private final List<SourceFile> testFiles;
@@ -43,34 +38,27 @@ public class TargetProject {
   }
 
   public List<SourceFile> getSourceFiles() {
-    log.debug("enter getSourceFiles()");
     return sourceFiles;
   }
 
   public List<SourceFile> getTestFiles() {
-    log.debug("enter getTestFiles()");
     return testFiles;
   }
 
   public List<ClassPath> getClassPaths() {
-    log.debug("enter getClassPaths()");
     return classPaths;
   }
 
   public Variant getInitialVariant() {
-    log.debug("enter getInitialVariant()");
-
     Gene gene = new SimpleGene(Collections.emptyList());
     Fitness fitness = null;
     GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(constructAST());
 
-    log.debug("exit getInitialVariant()");
     return new Variant(gene, fitness, generatedSourceCode);
   }
 
   // hitori
   private List<GeneratedAST> constructAST() {
-    log.debug("enter constructAST()");
     // TODO: ここにDIする方法を検討
     return new JDTASTConstruction().constructAST(this);
   }
@@ -82,7 +70,6 @@ public class TargetProject {
    * @return
    */
   public static TargetProject generate(final String basePath) {
-    log.debug("enter generate(String)");
     return generate(Paths.get(basePath));
   }
 
@@ -95,8 +82,6 @@ public class TargetProject {
    * @throws IOException
    */
   public static TargetProject generate(final Path basePath) {
-    log.debug("enter generate(Path)");
-
     final List<SourceFile> sourceFiles = new ArrayList<>();
     final List<SourceFile> testFiles = new ArrayList<>();
 
@@ -114,7 +99,6 @@ public class TargetProject {
         new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")), //
         new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")));
 
-    log.debug("exit generate(Path)");
     return new TargetProject(basePath, sourceFiles, testFiles, classPath);
   }
 }

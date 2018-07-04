@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,8 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
@@ -21,13 +21,11 @@ import jp.kusumotolab.kgenprog.project.TargetProject;
 
 /**
  * テスト実行クラス． 外部プロジェクトの単体テストclassファイルを実行してその結果を回収する．
- *
+ * 
  * @author shinsuke
  *
  */
 public class TestProcessBuilder {
-
-  private static Logger log = LoggerFactory.getLogger(TestProcessBuilder.class);
 
   final private TargetProject targetProject;
   final private Path workingDir;
@@ -46,7 +44,6 @@ public class TestProcessBuilder {
 
   @Deprecated
   public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
-    log.debug("enter exec(GeneratedSourceCode)");
     return null;
   }
 
@@ -57,8 +54,6 @@ public class TestProcessBuilder {
   }
 
   public TestResults start(final GeneratedSourceCode generatedSourceCode) {
-    log.debug("enter start(GeneratedSourceCode)");
-
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
     final String classpath = filterClasspathFromSystemClasspath();
@@ -80,7 +75,6 @@ public class TestProcessBuilder {
       // TODO 翻訳のための一時的な処理
       testResults.setBuildResults(buildResults);
 
-      log.debug("exit start(GeneratedSourceCode)");
       return testResults;
 
       // String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
@@ -90,48 +84,38 @@ public class TestProcessBuilder {
       // System.out.println(process.exitValue());
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
-      log.error(e.getMessage(), e);
-//      e.printStackTrace();
+      e.printStackTrace();
     } catch (InterruptedException e) {
       // TODO 自動生成された catch ブロック
-      log.error(e.getMessage(), e);
-//      e.printStackTrace();
+      e.printStackTrace();
     } catch (ClassNotFoundException e) {
       // TODO 自動生成された catch ブロック
-      log.error(e.getMessage(), e);
       e.printStackTrace();
     }
-    log.debug("exit start(GeneratedSourceCode)");
     return null;
   }
 
   private String joinFQNs(final Collection<FullyQualifiedName> fqns) {
-    log.debug("enter joinFQNs(Collection<>)"); 
     return fqns.stream().map(fqn -> fqn.value).collect(joining(TestExecutorMain.SEPARATOR));
   }
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
-    log.debug("enter getTargetFQNs(BuildResults)");
-    
     final Set<FullyQualifiedName> sourceFQNs =
         getFQNs(buildResults, this.targetProject.getSourceFiles());
-    
+
     // TODO testにsourceが含まれるのでsubtractしておく．
     // https://github.com/kusumotolab/kGenProg/issues/79
     sourceFQNs.removeAll(getTestFQNs(buildResults));
-    
-    log.debug("exit getTargetFQNs(BuildResults)");
+
     return sourceFQNs;
   }
 
   private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
-    log.debug("enter getTestFQNs(BuildResults)");
     return getFQNs(buildResults, this.targetProject.getTestFiles());
   }
 
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
       final List<SourceFile> sources) {
-    log.debug("enter getFQNs(BuildResults, List<>)");
     return sources.stream().map(source -> buildResults.getPathToFQNs(source.path))
         .flatMap(c -> c.stream()).collect(toSet());
   }
@@ -140,11 +124,10 @@ public class TestProcessBuilder {
 
   /**
    * 現在実行中のjavaプロセスのcpから，TestExecutorMain実行に必要なcpをフィルタリングする．
-   *
+   * 
    * @return
    */
   private String filterClasspathFromSystemClasspath() {
-    log.debug("enter filterClasspathFromSystemClasspath()");
     // 依存する外部ライブラリを定義
     // TODO もうちょいcoolに改善
     final String[] classpaths = System.getProperty("java.class.path").split(File.pathSeparator);
@@ -167,10 +150,9 @@ public class TestProcessBuilder {
       result.add(Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI())
           .toString());
     } catch (URISyntaxException e) {
-      log.error(e.getMessage(), e);
-//      e.printStackTrace();
+      e.printStackTrace();
     }
-    log.debug("exit filterClasspathFromSystemClasspath()");
+
     return String.join(File.pathSeparator, result);
   }
 }

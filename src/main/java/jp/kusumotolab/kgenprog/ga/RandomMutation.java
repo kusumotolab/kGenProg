@@ -4,26 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AssertStatement;
-import org.eclipse.jdt.core.dom.BreakStatement;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ContinueStatement;
-import org.eclipse.jdt.core.dom.DoStatement;
-import org.eclipse.jdt.core.dom.EmptyStatement;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.ForStatement;
-import org.eclipse.jdt.core.dom.IfStatement;
-import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.SwitchStatement;
-import org.eclipse.jdt.core.dom.SynchronizedStatement;
-import org.eclipse.jdt.core.dom.ThrowStatement;
-import org.eclipse.jdt.core.dom.TryStatement;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.WhileStatement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
@@ -32,10 +12,9 @@ import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
+import org.eclipse.jdt.core.dom.*;
 
 public class RandomMutation implements Mutation {
-
-  private static Logger log = LoggerFactory.getLogger(RandomMutation.class);
 
   private List<Statement> candidates = new ArrayList<>();
   private final RandomNumberGeneration randomNumberGeneration;
@@ -50,36 +29,27 @@ public class RandomMutation implements Mutation {
 
   @Override
   public void setCandidates(List<GeneratedAST> candidates) {
-    log.debug("enter setCandidates(List<>)");
-
     candidates.stream().sorted(Comparator.comparing(x -> x.getSourceFile().path)).forEach(e -> {
       final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
       final Visitor visitor = new Visitor();
       unit.accept(visitor);
       this.candidates.addAll(visitor.statements);
     });
-    log.debug("exit setCandidates(List<>)");
   }
 
   @Override
   public List<Base> exec(List<Suspiciouseness> suspiciousenesses) {
-    log.debug("enter exec(List<>)");
-
     List<Base> bases = suspiciousenesses.stream()
         .sorted(Comparator.comparingDouble(Suspiciouseness::getValue).reversed())
         .map(this::makeBase).collect(Collectors.toList());
-
-    log.debug("exit exec(List<>)");
     return bases;
   }
 
   private Base makeBase(Suspiciouseness suspiciouseness) {
-    log.debug("enter makeBase(Suspiciouseness)");
     return new Base(suspiciouseness.getLocation(), makeOperationAtRandom());
   }
 
   private Operation makeOperationAtRandom() {
-    log.debug("enter makeOperationAtRandom()");
     final int randomNumber = randomNumberGeneration.getRandomNumber(3);
     switch (randomNumber) {
       case 0:
@@ -93,7 +63,6 @@ public class RandomMutation implements Mutation {
   }
 
   private Statement chooseNodeAtRandom() {
-    log.debug("enter chooseNodeAtRandom()");
     return candidates.get(randomNumberGeneration.getRandomNumber(candidates.size()));
   }
 
