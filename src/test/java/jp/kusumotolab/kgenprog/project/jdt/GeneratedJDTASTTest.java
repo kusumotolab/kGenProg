@@ -47,8 +47,7 @@ public class GeneratedJDTASTTest {
   public void setup() {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get(TEST_SOURCE_FILE_NAME));
     JDTASTConstruction constructor = new JDTASTConstruction();
-    this.ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, TEST_SOURCE);
+    this.ast = constructor.constructAST(testSourceFile, TEST_SOURCE);
   }
 
   @Test
@@ -102,8 +101,7 @@ public class GeneratedJDTASTTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get("a", "b", "c", "T2.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.T2"));
   }
@@ -114,8 +112,7 @@ public class GeneratedJDTASTTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get("T2.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("T2"));
   }
@@ -126,8 +123,7 @@ public class GeneratedJDTASTTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get("a", "b", "c", "T2.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.T1"));
   }
@@ -138,8 +134,7 @@ public class GeneratedJDTASTTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get("a", "b", "c", "package-info.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.package-info"));
   }
@@ -150,8 +145,7 @@ public class GeneratedJDTASTTest {
     SourceFile testSourceFile = new TargetSourceFile(Paths.get("StaticImport.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
 
     @SuppressWarnings("unchecked")
     List<ImportDeclaration> imports = ast.getRoot().imports();
