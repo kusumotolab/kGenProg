@@ -39,26 +39,26 @@ public class ProjectBuilder {
   /**
    * 初期ソースコードをビルド
    * 
-   * @param outDir バイトコード出力ディレクトリ
+   * @param workingDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
   @Deprecated
-  public BuildResults build(final Path outDir) {
-    return this.build(null, outDir);
+  public BuildResults build(final Path workingDir) {
+    return this.build(null, workingDir);
   }
 
   /**
    * @param generatedSourceCode null でなければ与えられた generatedSourceCode からビルド．null の場合は，初期ソースコードからビルド
-   * @param outDir バイトコード出力ディレクトリ
+   * @param workingDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
-  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path outDir) {
+  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path workingDir) {
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
     // outディレクトリが存在しなければ生成
-    final File outputDirectoryFile = outDir.toFile();
+    final File outputDirectoryFile = workingDir.toFile();
     if (!outputDirectoryFile.exists()) {
       outputDirectoryFile.mkdirs();
     }
@@ -81,7 +81,7 @@ public class ProjectBuilder {
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
-    compilationOptions.add(outDir.toFile().getAbsolutePath());
+    compilationOptions.add(workingDir.toFile().getAbsolutePath());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
@@ -113,7 +113,7 @@ public class ProjectBuilder {
     }
 
     final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, isFailed, outDir, diagnostics);
+        new BuildResults(generatedSourceCode, isFailed, workingDir, diagnostics);
 
     if (buildResults.isBuildFailed) {
       return buildResults;
@@ -121,7 +121,7 @@ public class ProjectBuilder {
 
     // ソースファイルとクラスファイルのマッピング
     final Collection<File> classFiles =
-        FileUtils.listFiles(outDir.toFile(), new String[] {"class"}, true);
+        FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
     final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
     for (final File classFile : classFiles) {
 
