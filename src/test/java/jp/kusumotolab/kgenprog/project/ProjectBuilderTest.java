@@ -113,14 +113,16 @@ public class ProjectBuilderTest {
     // example03のビルドが成功するかテスト
     final TargetProject targetProject03 = TargetProject.generate("example/example03");
     final ProjectBuilder projectBuilder03 = new ProjectBuilder(targetProject03);
-    final BuildResults buildResults03 = projectBuilder03.build(workingDir);
+    final BuildResults buildResults03 = projectBuilder03
+        .build(targetProject03.getInitialVariant().getGeneratedSourceCode(), workingDir);
     assertThat(buildResults03.isBuildFailed, is(false));
     assertThat(buildResults03.isMappingAvailable(), is(true));
 
     // example02のビルドが成功するかテスト
     final TargetProject targetProject02 = TargetProject.generate("example/example02");
     final ProjectBuilder projectBuilder02 = new ProjectBuilder(targetProject02);
-    final BuildResults buildResults02 = projectBuilder02.build(workingDir);
+    final BuildResults buildResults02 = projectBuilder02
+        .build(targetProject02.getInitialVariant().getGeneratedSourceCode(), workingDir);
     assertThat(buildResults02.isBuildFailed, is(false));
     assertThat(buildResults02.isMappingAvailable(), is(true));
 
