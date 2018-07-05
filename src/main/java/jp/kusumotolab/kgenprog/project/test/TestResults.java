@@ -108,7 +108,6 @@ public class TestResults implements Serializable {
     return 1.0 * success / (success + fail);
   }
 
-
   /**
    * a_ef
    * 
@@ -270,7 +269,7 @@ public class TestResults implements Serializable {
    * @return
    */
   public static Path getSerFilePath() {
-    return Paths.get(System.getProperty("java.io.tmpdir") + "/kgenprog-testresults.ser");
+    return Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-testresults.ser");
   }
 
   /**
@@ -318,7 +317,6 @@ public class TestResults implements Serializable {
     return sb.toString();
   }
 
-
   /*
    * 以降，翻訳のための一時的な処理
    */
@@ -329,6 +327,5 @@ public class TestResults implements Serializable {
   public void setBuildResults(final BuildResults buildResults) {
     this.buildResults = buildResults;
   }
-
 
 }
