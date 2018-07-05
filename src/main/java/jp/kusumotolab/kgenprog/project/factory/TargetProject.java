@@ -19,7 +19,8 @@ public class TargetProject {
   private final List<SourceFile> testFiles;
   private final List<ClassPath> classPaths;
 
-  public TargetProject(final Path rootPath, final List<SourceFile> sourceFiles,
+  // Must be package-private. Should be created only from TargetProjectFactory#create
+  TargetProject(final Path rootPath, final List<SourceFile> sourceFiles,
       final List<SourceFile> testFiles, List<ClassPath> classPaths) {
     this.rootPath = rootPath;
     this.sourceFiles = sourceFiles;
