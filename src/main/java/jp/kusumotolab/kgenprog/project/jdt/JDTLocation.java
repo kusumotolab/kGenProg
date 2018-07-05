@@ -3,12 +3,12 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.Range;
 import jp.kusumotolab.kgenprog.project.SourceFile;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 
 /**
  * JDT AST の単一ノードを示すオブジェクト Operation のターゲットに利用する
