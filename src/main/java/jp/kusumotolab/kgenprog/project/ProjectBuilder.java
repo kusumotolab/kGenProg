@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -98,7 +100,7 @@ public class ProjectBuilder {
 
     final long compilationTime = System.currentTimeMillis();
     final boolean isFailed = !task.call();
-    
+
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
     for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
       System.err.println(diagnostic.getCode());
@@ -123,16 +125,21 @@ public class ProjectBuilder {
     final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
     for (final File classFile : classFiles) {
 
-      // コンパイル時間よりも古い更新時間のファイルは，削除してOK
-      final long lastModifiedTime = classFile.lastModified();
-      if (lastModifiedTime < compilationTime) {
+      try {
+        // コンパイル時間よりも古い更新時間のファイルは，削除してOK
+        final long lastModifiedTime =
+            Files.getLastModifiedTime(classFile.toPath(), LinkOption.NOFOLLOW_LINKS).toMillis();
+        if (lastModifiedTime < compilationTime) {
 
-        // 更新されて間もないファイルは消せないことがあるので（OS依存），その場合はプログラム終了時に消すように指定，ただしそれでも消せない場合はある
-        if (!classFile.delete()) {
-          // classFile.deleteOnExit();
-          throw new RuntimeException();
+          // 更新されて間もないファイルは消せないことがあるので（OS依存），その場合はプログラム終了時に消すように指定，ただしそれでも消せない場合はある
+          if (!classFile.delete()) {
+            // classFile.deleteOnExit();
+            throw new RuntimeException();
+          }
+          continue;
         }
-        continue;
+      } catch (final IOException e) {
+        e.printStackTrace();
       }
 
       // クラスファイルのパース
