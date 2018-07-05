@@ -1,7 +1,5 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
-import jp.kusumotolab.kgenprog.project.TargetProject;
-
 public interface IProjectFactory {
 
   /**
