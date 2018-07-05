@@ -4,17 +4,17 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
-import org.junit.Test;
 
 public class TargetProjectFactoryTest {
 
@@ -98,8 +98,8 @@ public class TargetProjectFactoryTest {
     }));
 
     // 一時的にダミーbuild.xmlを生成
-    final File configFile = rootPath.resolve("build.xml").toFile();
-    configFile.createNewFile();
+    final Path configFile = rootPath.resolve("build.xml");
+    Files.createFile(configFile);
 
     // Factory.createしてみる
     final TargetProject project = TargetProjectFactory.create(rootPath);
@@ -108,7 +108,7 @@ public class TargetProjectFactoryTest {
     assertThat(project, is(nullValue()));
 
     // 後処理
-    configFile.delete();
+    Files.delete(configFile);
     System.setErr(ps);
   }
 }
