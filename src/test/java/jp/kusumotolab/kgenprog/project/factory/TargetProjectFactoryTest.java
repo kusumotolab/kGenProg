@@ -11,11 +11,10 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
+import org.junit.Test;
 
 public class TargetProjectFactoryTest {
 

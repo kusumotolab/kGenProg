@@ -6,20 +6,20 @@ import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
+import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.Operation;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
-import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 
 public class RandomMutationTest {
 

@@ -5,11 +5,11 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import org.junit.Test;
 
 public class DefaultSourceCodeGenerationTest {
 

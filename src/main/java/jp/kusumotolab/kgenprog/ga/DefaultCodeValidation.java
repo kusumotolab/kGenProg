@@ -1,7 +1,7 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public class DefaultCodeValidation implements SourceCodeValidation {

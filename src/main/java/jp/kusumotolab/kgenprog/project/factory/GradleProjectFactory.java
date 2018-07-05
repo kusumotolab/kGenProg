@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
 import java.nio.file.Path;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class GradleProjectFactory extends BuildToolProjectFactory {
   private final static String CONFIG_FILE_NAME = "build.gradle";
