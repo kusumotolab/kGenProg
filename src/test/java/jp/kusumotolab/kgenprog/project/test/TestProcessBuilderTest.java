@@ -10,9 +10,10 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import org.junit.Before;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestProcessBuilderTest {
 
@@ -36,7 +37,7 @@ public class TestProcessBuilderTest {
   public void testStart01() {
     final Path rootDir = Paths.get("example/example01");
     final Path workingDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
@@ -66,7 +67,7 @@ public class TestProcessBuilderTest {
 
     // exampleとは全く別のworkingDirで動作確認
     final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
@@ -82,7 +83,7 @@ public class TestProcessBuilderTest {
 
     // exampleとは全く別のworkingDirで動作確認
     final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
