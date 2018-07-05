@@ -2,12 +2,10 @@ package jp.kusumotolab.kgenprog.ga;
 
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
-import org.junit.Test;
-
 import static org.junit.Assert.assertThat;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Test;
 
 public class DefaultVariantSelectionTest {
 
