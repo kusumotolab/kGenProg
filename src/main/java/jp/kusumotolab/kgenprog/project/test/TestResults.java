@@ -26,7 +26,12 @@ public class TestResults implements Serializable {
   // 直接valueへのアクセスを回避するために可視性を下げておく
   private final Map<FullyQualifiedName, TestResult> value;
 
-  public TestResults() {
+  // 再利用可能な空TestResultsインスタンス．
+  // TODO immutabilityが確保できていないので作用する可能性がある．
+  // issue #79
+  public static final TestResults EMPTY_VALUE = new TestResults();
+
+  TestResults() {
     value = new HashMap<>();
   }
 
@@ -69,7 +74,7 @@ public class TestResults implements Serializable {
 
   /**
    * obsoleted
-   * 
+   *
    * @return
    */
   @Deprecated
@@ -105,12 +110,18 @@ public class TestResults implements Serializable {
   public double getSuccessRate() {
     final int fail = getFailedTestResults().size();
     final int success = getSuccessedTestResults().size();
+
+    // TODO 一時的な実装．
+    // 全テストが失敗した時（コンパイル失敗時等）に，successRateはどうあるべきか？新たな型を切るほうがよさそう
+    if (success + fail == 0) {
+      return Double.NaN;
+    }
     return 1.0 * success / (success + fail);
   }
 
   /**
    * a_ef
-   * 
+   *
    * @param targetFQN ターゲットクラスのFQN
    * @param lineNumber ターゲットクラスの行番号
    * @return a_ef
@@ -123,7 +134,7 @@ public class TestResults implements Serializable {
 
   /**
    * a_ep
-   * 
+   *
    * @param targetFQN ターゲットクラスのFQN
    * @param lineNumber ターゲットクラスの行番号
    * @return
@@ -136,7 +147,7 @@ public class TestResults implements Serializable {
 
   /**
    * a_nf
-   * 
+   *
    * @param targetFQN ターゲットクラスのFQN
    * @param lineNumber ターゲットクラスの行番号
    * @return
@@ -149,7 +160,7 @@ public class TestResults implements Serializable {
 
   /**
    * a_np
-   * 
+   *
    * @param targetFQN ターゲットクラスのFQN
    * @param lineNumber ターゲットクラスの行番号
    * @return
@@ -176,6 +187,9 @@ public class TestResults implements Serializable {
     final Set<FullyQualifiedName> correspondingFqns =
         this.buildResults.getPathToFQNs(sourceFile.path);
 
+    if (null == correspondingFqns) {
+      return 0;
+    }
     // 翻訳2: location → 行番号
     // TODO
     // GeneratedSourceCode#inferLineNumbers(Location) を使うか Location#inferLineNumbers()を使うか．

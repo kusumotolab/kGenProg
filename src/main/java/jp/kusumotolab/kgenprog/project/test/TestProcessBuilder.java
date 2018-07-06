@@ -6,11 +6,13 @@ import static java.util.stream.Collectors.toSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 import jp.kusumotolab.kgenprog.project.BuildResults;
@@ -53,7 +55,7 @@ public class TestProcessBuilder {
     this.projectBuilder = new ProjectBuilder(this.targetProject);
   }
 
-  public TestResults start(final GeneratedSourceCode generatedSourceCode) {
+  public Optional<TestResults> start(final GeneratedSourceCode generatedSourceCode) {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
     final String classpath = filterClasspathFromSystemClasspath();
@@ -75,13 +77,16 @@ public class TestProcessBuilder {
       // TODO 翻訳のための一時的な処理
       testResults.setBuildResults(buildResults);
 
-      return testResults;
+      return Optional.ofNullable(testResults);
 
       // String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
       // String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
       // System.out.println(out_result);
       // System.err.println(err_result);
       // System.out.println(process.exitValue());
+    } catch (NoSuchFileException e) {
+      // Serializeに失敗
+      return Optional.empty();
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
@@ -92,7 +97,7 @@ public class TestProcessBuilder {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
-    return null;
+    return Optional.empty();
   }
 
   private String joinFQNs(final Collection<FullyQualifiedName> fqns) {
@@ -117,7 +122,7 @@ public class TestProcessBuilder {
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
       final List<SourceFile> sources) {
     return sources.stream().map(source -> buildResults.getPathToFQNs(source.path))
-        .flatMap(c -> c.stream()).collect(toSet());
+        .filter(fqn -> null != fqn).flatMap(c -> c.stream()).collect(toSet());
   }
 
   private final String jarFileTail = "-(\\d+\\.)+jar$";
