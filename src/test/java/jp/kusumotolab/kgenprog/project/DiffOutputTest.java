@@ -61,7 +61,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/jp.kusumotolab.BuggyCalculator.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {
@@ -112,7 +112,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example03/modified/jp.kusumotolab.Util.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example03/modified/Variant1/jp.kusumotolab.Util.java")));
       FileUtils.deleteDirectory(new File("example/example03/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {
@@ -168,7 +168,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/jp.kusumotolab.BuggyCalculator.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {
@@ -221,7 +221,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/jp.kusumotolab.BuggyCalculator.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {

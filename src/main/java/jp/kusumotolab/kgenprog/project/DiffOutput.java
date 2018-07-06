@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +53,13 @@ public class DiffOutput implements ResultOutput {
     }
 
     for (GeneratedSourceCode code : modifiedCode) {
+      Path variantBasePath = Paths.get(workingDir + "/Variant" + (modifiedCode.indexOf(code) + 1));
+      try {
+        Files.createDirectory(variantBasePath);
+      } catch (IOException e1) {
+        // TODO 自動生成された catch ブロック
+        e1.printStackTrace();
+      }
       for (GeneratedAST ast : code.getFiles()) {
         try {
           GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
@@ -63,14 +71,14 @@ public class DiffOutput implements ResultOutput {
           TextEdit edit = jdtAST.getRoot().rewrite(document, null);
           if (edit.getChildren().length != 0) {
             edit.apply(document);
-            Files.write(workingDir.resolve(jdtAST.getPrimaryClassName() + ".java"),
+            Files.write(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java"),
                 Arrays.asList(document.get()));
 
             // パッチファイル作成
             List<String> origin = Files.readAllLines(
                 getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile()));
             List<String> modified =
-                Files.readAllLines(workingDir.resolve(jdtAST.getPrimaryClassName() + ".java"));
+                Files.readAllLines(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java"));
 
             Patch<String> diff = DiffUtils.diff(origin, modified);
 
@@ -81,7 +89,7 @@ public class DiffOutput implements ResultOutput {
 
             unifiedDiff.forEach(System.out::println);
 
-            Files.write(workingDir.resolve(jdtAST.getPrimaryClassName() + ".patch"), unifiedDiff);
+            Files.write(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"), unifiedDiff);
           }
         } catch (MalformedTreeException e) {
           e.printStackTrace();
