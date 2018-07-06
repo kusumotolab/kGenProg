@@ -3,7 +3,10 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,26 +40,26 @@ public class ProjectBuilder {
   /**
    * 初期ソースコードをビルド
    * 
-   * @param outDir バイトコード出力ディレクトリ
+   * @param workingDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
   @Deprecated
-  public BuildResults build(final Path outDir) {
-    return this.build(null, outDir);
+  public BuildResults build(final Path workingDir) {
+    return this.build(null, workingDir);
   }
 
   /**
    * @param generatedSourceCode null でなければ与えられた generatedSourceCode からビルド．null の場合は，初期ソースコードからビルド
-   * @param outDir バイトコード出力ディレクトリ
+   * @param workingDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
-  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path outDir) {
+  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path workingDir) {
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
     // outディレクトリが存在しなければ生成
-    final File outputDirectoryFile = outDir.toFile();
+    final File outputDirectoryFile = workingDir.toFile();
     if (!outputDirectoryFile.exists()) {
       outputDirectoryFile.mkdirs();
     }
@@ -79,7 +82,7 @@ public class ProjectBuilder {
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
-    compilationOptions.add(outDir.toFile().getAbsolutePath());
+    compilationOptions.add(workingDir.toFile().getAbsolutePath());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
@@ -90,7 +93,15 @@ public class ProjectBuilder {
     final CompilationTask task =
         compiler.getTask(null, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
+    try {
+      fileManager.close();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+
+    final long compilationTime = System.currentTimeMillis();
     final boolean isFailed = !task.call();
+
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
     for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
       System.err.println(diagnostic.getCode());
@@ -102,25 +113,35 @@ public class ProjectBuilder {
       System.err.println(diagnostic.getMessage(null));
     }
 
-    try {
-      fileManager.close();
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-
     final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, isFailed, outDir, diagnostics);
+        new BuildResults(generatedSourceCode, isFailed, workingDir, diagnostics);
 
     if (buildResults.isBuildFailed) {
       return buildResults;
     }
 
-    // ビルドが成功したときは，ソースファイルとクラスファイルのマッピング
-    // およびFQNとソースファイルのマッピングを取る
+    // ソースファイルとクラスファイルのマッピング
     final Collection<File> classFiles =
-        FileUtils.listFiles(outDir.toFile(), new String[] {"class"}, true);
+        FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
     final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
     for (final File classFile : classFiles) {
+
+      try {
+        // コンパイル時間よりも古い更新時間のファイルは，削除してOK
+        final long lastModifiedTime =
+            Files.getLastModifiedTime(classFile.toPath(), LinkOption.NOFOLLOW_LINKS).toMillis();
+        if (lastModifiedTime < compilationTime) {
+
+          // 更新されて間もないファイルは消せないことがあるので（OS依存），その場合はプログラム終了時に消すように指定，ただしそれでも消せない場合はある
+          if (!classFile.delete()) {
+            // classFile.deleteOnExit();
+            throw new RuntimeException();
+          }
+          continue;
+        }
+      } catch (final IOException e) {
+        e.printStackTrace();
+      }
 
       // クラスファイルのパース
       final ClassParser parser = this.parse(classFile);
@@ -148,15 +169,16 @@ public class ProjectBuilder {
   }
 
   private ClassParser parse(final File classFile) {
-    ClassReader reader = null;
-    try {
-      reader = new ClassReader(new FileInputStream(classFile));
+
+    try (final InputStream is = new FileInputStream(classFile)) {
+      final ClassReader reader = new ClassReader(is);
+      final ClassParser parser = new ClassParser(Opcodes.ASM6);
+      reader.accept(parser, ClassReader.SKIP_CODE);
+      return parser;
     } catch (final Exception e) {
       e.printStackTrace();
+      return null;
     }
-    final ClassParser parser = new ClassParser(Opcodes.ASM6);
-    reader.accept(parser, ClassReader.SKIP_CODE);
-    return parser;
   }
 }
 
