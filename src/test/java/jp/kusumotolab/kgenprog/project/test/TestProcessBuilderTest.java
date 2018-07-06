@@ -5,15 +5,20 @@ import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import java.nio.file.StandardOpenOption;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestProcessBuilderTest {
 
@@ -41,7 +46,8 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+    final TestResults r =
+        builder.start(targetProject.getInitialVariant().getGeneratedSourceCode()).get();
 
     // テストの結果はこうなるはず
     assertThat(r.getExecutedTestFQNs().size(), is(4));
@@ -71,7 +77,8 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+    final TestResults r =
+        builder.start(targetProject.getInitialVariant().getGeneratedSourceCode()).get();
 
     assertThat(r.getExecutedTestFQNs().size(), is(4));
   }
@@ -87,8 +94,52 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+    final TestResults r =
+        builder.start(targetProject.getInitialVariant().getGeneratedSourceCode()).get();
 
     assertThat(r.getExecutedTestFQNs().size(), is(4));
   }
+
+  @Test
+  public void testBuildFailure01() throws IOException {
+    final Path rootDir = Paths.get("example/example01");
+
+    // コンパイルできない構文エラーファイルを一時的に生成
+    final Path noCompilableClassPath =
+        rootDir.resolve("src/jp/kusumotolab/NonCompilableClass.java");
+    final String noCompilableClassBody = "" + //
+        "package jp.kusumotolab;\n" + //
+        "public class NonCompilableClass {\n" + //
+        "  public void x() {\n" + //
+        "    i++; // syntax error here\n" + //
+        "  }\n" + //
+        "}\n";
+    Files.write(noCompilableClassPath, noCompilableClassBody.getBytes(), StandardOpenOption.CREATE);
+
+    // TODO 一時的なSyserr対策．
+    // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
+    final PrintStream ps = System.err;
+    System.setErr(new PrintStream(new OutputStream() {
+      @Override
+      public void write(int b) {} // 何もしないwriter
+    }));
+
+    final Path outDir = rootDir.resolve("_bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode())
+        .orElse(TestResults.EMPTY_VALUE);
+
+    assertThat(r.getExecutedTestFQNs(), is(empty()));
+    assertThat(r.getSuccessedTestResults(), is(empty()));
+    assertThat(r.getFailedTestResults(), is(empty()));
+    assertThat(r.getSuccessRate(), is(Double.NaN));
+
+    // 後処理
+    Files.delete(noCompilableClassPath);
+    System.setErr(ps);
+  }
+
+
 }
