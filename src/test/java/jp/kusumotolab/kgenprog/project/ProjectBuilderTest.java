@@ -113,7 +113,7 @@ public class ProjectBuilderTest {
     final Path workingDir = Paths.get("example", separator, "example03", separator, "bin");
 
     // example03のビルドが成功するかテスト
-    final TargetProject targetProject03 = TargetProject.generate("example/example03");
+    final TargetProject targetProject03 = TargetProjectFactory.create("example/example03");
     final ProjectBuilder projectBuilder03 = new ProjectBuilder(targetProject03);
     final BuildResults buildResults03 = projectBuilder03
         .build(targetProject03.getInitialVariant().getGeneratedSourceCode(), workingDir);
@@ -121,7 +121,7 @@ public class ProjectBuilderTest {
     assertThat(buildResults03.isMappingAvailable(), is(true));
 
     // example02のビルドが成功するかテスト
-    final TargetProject targetProject02 = TargetProject.generate("example/example02");
+    final TargetProject targetProject02 = TargetProjectFactory.create("example/example02");
     final ProjectBuilder projectBuilder02 = new ProjectBuilder(targetProject02);
     final BuildResults buildResults02 = projectBuilder02
         .build(targetProject02.getInitialVariant().getGeneratedSourceCode(), workingDir);
