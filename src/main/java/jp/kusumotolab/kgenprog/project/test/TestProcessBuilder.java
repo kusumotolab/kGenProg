@@ -58,6 +58,12 @@ public class TestProcessBuilder {
   public Optional<TestResults> start(final GeneratedSourceCode generatedSourceCode) {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
+    // TODO
+    // BuildResults自体もNullableなのでOptionalすべき
+    if (buildResults.isBuildFailed) {
+      return Optional.empty();
+    }
+
     final String classpath = filterClasspathFromSystemClasspath();
     final String targetFQNs = joinFQNs(getTargetFQNs(buildResults));
     final String testFQNs = joinFQNs(getTestFQNs(buildResults));
