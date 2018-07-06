@@ -32,7 +32,15 @@ public class TestResults implements Serializable {
   public static final TestResults EMPTY_VALUE = new TestResults();
 
   TestResults() {
-    value = new HashMap<>();
+    this.value = new HashMap<>();
+  }
+
+  // ビルド失敗時用のコンストラクタ．
+  // TODO αのための一時的な対処．
+  // ビルド失敗時にBuildResults/TestResultsがどうあるべきか検討する必要あり
+  TestResults(BuildResults buildResults) {
+    this();
+    this.buildResults = buildResults;
   }
 
   /**
