@@ -58,10 +58,11 @@ public class TestProcessBuilder {
   public Optional<TestResults> start(final GeneratedSourceCode generatedSourceCode) {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
-    // TODO
-    // BuildResults自体もNullableなのでOptionalすべき
+    // ビルド失敗時の特殊処理
+    // TODO BuildResults自体もNullableなのでOptionalで包むべきか．
     if (buildResults.isBuildFailed) {
-      return Optional.empty();
+      // ビルド結果だけはくっつけておく
+      return Optional.of(new TestResults(buildResults));
     }
 
     final String classpath = filterClasspathFromSystemClasspath();
