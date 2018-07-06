@@ -3,22 +3,23 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.nio.file.Paths;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.Range;
+import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.Range;
-import jp.kusumotolab.kgenprog.project.TargetProject;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 
 public class JDTLocationTest {
 
   @Test
   public void testInferLineNumbers() {
-    final TargetProject targetProject = TargetProject.generate("example/example01");
+    final TargetProject targetProject = TargetProjectFactory.create("example/example01");
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
 

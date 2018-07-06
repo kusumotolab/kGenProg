@@ -17,7 +17,7 @@ import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
  * テスト実行クラス． 外部プロジェクトの単体テストclassファイルを実行してその結果を回収する．

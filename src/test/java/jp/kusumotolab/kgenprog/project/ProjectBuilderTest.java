@@ -10,13 +10,15 @@ import java.util.Collection;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample01() {
-    final TargetProject targetProject = TargetProject.generate("example/example01");
+    final TargetProject targetProject = TargetProjectFactory.create("example/example01");
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Path outDirPath = Paths.get("example/example01/bin");
 
@@ -46,7 +48,7 @@ public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample02() {
-    final TargetProject targetProject = TargetProject.generate("example/example02");
+    final TargetProject targetProject = TargetProjectFactory.create("example/example02");
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Path outDirPath = Paths.get("example/example02/bin");
 
@@ -76,7 +78,7 @@ public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample03() {
-    final TargetProject targetProject = TargetProject.generate("example/example03");
+    final TargetProject targetProject = TargetProjectFactory.create("example/example03");
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Path outDirPath = Paths.get("example/example03/bin");
 

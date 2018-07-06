@@ -1,7 +1,7 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import java.util.Random;
 import static java.lang.Math.abs;
+import java.util.Random;
 
 public class RandomNumberGeneration {
 
