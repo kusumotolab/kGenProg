@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jdt.core.dom.AST;
@@ -35,12 +34,12 @@ public class DiffOutputTest {
     Path basePath = Paths.get("example/example01/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String expected = "package jp.kusumotolab;\r\n" +
-        "public class BuggyCalculator {\r\n" +
-        "  public int close_to_zero(  int n){\r\n" +
-        "    return n;\r\n" +
-        "  }\r\n" +
-        "}\r\n" + System.getProperty("line.separator");
+    String expected = "package jp.kusumotolab;\n" +
+        "public class BuggyCalculator {\n" +
+        "  public int close_to_zero(  int n){\n" +
+        "    return n;\n" +
+        "  }\n" +
+        "}\n\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -62,9 +61,9 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/BuggyCalculator.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
-      assertThat(modSource, is(expected));
+      assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
@@ -76,21 +75,21 @@ public class DiffOutputTest {
     Path basePath = Paths.get("example/example03/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String expected = "package jp.kusumotolab;\r\n" +
-        "\r\n" +
-        "public class Util {\r\n" +
-        "\tpublic static int plus(int n) {\r\n" +
-        "\t}\r\n" +
-        "\r\n" +
-        "\tpublic static int minus(int n) {\r\n" +
-        "\t\treturn n - 1;\r\n" +
-        "\t}\r\n" +
-        "\r\n" +
-        "\t// テストからのみ実行されるダミー関数\r\n" +
-        "\tpublic static void dummy() {\r\n" +
-        "\t\tnew String();\r\n" +
-        "\t}\r\n" +
-        "}\r\n" + System.getProperty("line.separator");
+    String expected = "package jp.kusumotolab;\n" +
+        "\n" +
+        "public class Util {\n" +
+        "\tpublic static int plus(int n) {\n" +
+        "\t}\n" +
+        "\n" +
+        "\tpublic static int minus(int n) {\n" +
+        "\t\treturn n - 1;\n" +
+        "\t}\n" +
+        "\n" +
+        "\t// テストからのみ実行されるダミー関数\n" +
+        "\tpublic static void dummy() {\n" +
+        "\t\tnew String();\n" +
+        "\t}\n" +
+        "}\n\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -113,9 +112,9 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example03/modified/Util.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example03/modified/jp.kusumotolab.Util.java")));
       FileUtils.deleteDirectory(new File("example/example03/modified"));
-      assertThat(modSource, is(expected));
+      assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
@@ -127,19 +126,19 @@ public class DiffOutputTest {
     Path basePath = Paths.get("example/example01/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String expected = "package jp.kusumotolab;\r\n" +
-        "public class BuggyCalculator {\r\n" +
-        "  public int close_to_zero(  int n){\r\n" +
-        "    if (n > 0) {\r\n" +
-        "      n--;\r\n" +
-        "    }\r\n" +
-        " else {\r\n" +
-        "      n++;\r\n" +
-        "    }\r\n" +
-        "    a();\r\n" +
-        "\treturn n;\r\n" +
-        "  }\r\n" +
-        "}\r\n" + System.getProperty("line.separator");
+    String expected = "package jp.kusumotolab;\n" +
+        "public class BuggyCalculator {\n" +
+        "  public int close_to_zero(  int n){\n" +
+        "    if (n > 0) {\n" +
+        "      n--;\n" +
+        "    }\n" +
+        " else {\n" +
+        "      n++;\n" +
+        "    }\n" +
+        "    a();\n" +
+        "\treturn n;\n" +
+        "  }\n" +
+        "}\n\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -169,9 +168,9 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/BuggyCalculator.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
-      assertThat(modSource, is(expected));
+      assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
@@ -183,15 +182,15 @@ public class DiffOutputTest {
     Path basePath = Paths.get("example/example01/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
-    String expected = "package jp.kusumotolab;\r\n" +
-        "public class BuggyCalculator {\r\n" +
-        "  public int close_to_zero(  int n){\r\n" +
-        "    {\r\n" +
-        "\t\ta();\r\n" +
-        "\t}\r\n" +
-        "    return n;\r\n" +
-        "  }\r\n" +
-        "}\r\n" + System.getProperty("line.separator");
+    String expected = "package jp.kusumotolab;\n" +
+        "public class BuggyCalculator {\n" +
+        "  public int close_to_zero(  int n){\n" +
+        "    {\n" +
+        "\t\ta();\n" +
+        "\t}\n" +
+        "    return n;\n" +
+        "  }\n" +
+        "}\n\n";
 
     TargetProject project = TargetProject.generate(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -222,12 +221,16 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     try {
-      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/BuggyCalculator.java")));
+      String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
-      assertThat(modSource, is(expected));
+      assertThat(normalizeCrLf(modSource), is(expected));
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
+  }
+
+  private String normalizeCrLf(final String s) {
+    return s.replaceAll("\\r\\n", "\n");
   }
 }
