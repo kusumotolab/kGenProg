@@ -1,11 +1,8 @@
 package jp.kusumotolab.kgenprog.project;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,10 +20,10 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class DiffOutput implements ResultOutput {
 
-  private final Path outDir;
+  private final Path workingDir;
 
-  public DiffOutput(Path outDir) {
-    this.outDir = outDir;
+  public DiffOutput(Path workingDir) {
+    this.workingDir = workingDir;
   }
 
   @Override
@@ -35,14 +32,19 @@ public class DiffOutput implements ResultOutput {
     List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
 
     // 出力先ディレクトリ作成
-    if(!outDir.toFile().exists()) {
-      outDir.toFile().mkdir();
+    if (!Files.exists(workingDir)) {
+      try {
+        Files.createDirectory(workingDir);
+      } catch (IOException e) {
+        // TODO 自動生成された catch ブロック
+        e.printStackTrace();
+      }
     }
 
-    // ast へ変更内容を適用
+    // 初期 ast に対して，修正された ast へ実行された全変更内容をクローンを生成せずに適用
     for (Variant variant : modifiedVariants) {
       GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
-      recordAST(targetCode);
+      activateRecordModifications(targetCode);
       for (Base base : variant.getGene().getBases()) {
         targetCode = base.getOperation().applyDirectly(targetCode, base.getTargetLocation());
       }
@@ -52,39 +54,34 @@ public class DiffOutput implements ResultOutput {
     for (GeneratedSourceCode code : modifiedCode) {
       for (GeneratedAST ast : code.getFiles()) {
         try {
+          GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
+
           // 修正ファイル作成
-          String origStr = new String(
-              Files.readAllBytes(getOriginPath(targetProject.getSourceFiles(), ast.getSourceFile())));
+          String origStr = new String(Files
+              .readAllBytes(getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile())));
           Document document = new Document(origStr);
-          TextEdit edit = ((GeneratedJDTAST) ast).getRoot().rewrite(document, null);
+          TextEdit edit = jdtAST.getRoot().rewrite(document, null);
           if (edit.getChildren().length != 0) {
             edit.apply(document);
-            Files.write(
-                outDir
-                    .resolve(((GeneratedJDTAST) ast).getSourceFile().path.getFileName().toString()),
-                Arrays.asList(document.get()), StandardOpenOption.CREATE);
+            Files.write(workingDir.resolve(jdtAST.getPrimaryClassName() + ".java"),
+                Arrays.asList(document.get()));
 
-            // patch file 作成
-            List<String> origin = Files
-                .readAllLines(getOriginPath(targetProject.getSourceFiles(), ast.getSourceFile()));
-            List<String> modified = Files.readAllLines(outDir
-                .resolve(((GeneratedJDTAST) ast).getSourceFile().path.getFileName().toString()));
+            // パッチファイル作成
+            List<String> origin = Files.readAllLines(
+                getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile()));
+            List<String> modified =
+                Files.readAllLines(workingDir.resolve(jdtAST.getPrimaryClassName() + ".java"));
 
             Patch<String> diff = DiffUtils.diff(origin, modified);
 
             List<String> unifiedDiff = UnifiedDiffUtils.generateUnifiedDiff(
-                getOriginPath(targetProject.getSourceFiles(), ast.getSourceFile()).getFileName()
+                getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile()).getFileName()
                     .toString(),
-                ast.getSourceFile().path.getFileName().toString(), origin, diff, 3);
+                jdtAST.getSourceFile().path.getFileName().toString(), origin, diff, 3);
 
             unifiedDiff.forEach(System.out::println);
 
-            int index = ((GeneratedJDTAST) ast).getSourceFile().path.getFileName().toString()
-                .lastIndexOf(".");
-            String fileName = ((GeneratedJDTAST) ast).getSourceFile().path.getFileName().toString()
-                .substring(0, index);
-
-            Files.write(outDir.resolve(fileName + ".patch"), unifiedDiff, StandardOpenOption.CREATE);
+            Files.write(workingDir.resolve(jdtAST.getPrimaryClassName() + ".patch"), unifiedDiff);
           }
         } catch (MalformedTreeException e) {
           e.printStackTrace();
@@ -105,7 +102,7 @@ public class DiffOutput implements ResultOutput {
    *
    * @param variant
    */
-  public void recordAST(GeneratedSourceCode code) {
+  private void activateRecordModifications(GeneratedSourceCode code) {
     for (GeneratedAST ast : code.getFiles()) {
       ((GeneratedJDTAST) ast).getRoot().recordModifications();
     }
@@ -118,14 +115,17 @@ public class DiffOutput implements ResultOutput {
    * @param source
    * @return
    */
-  public Path getOriginPath(List<SourceFile> originFiles, SourceFile source) {
+  private Path getOriginPath(List<SourceFile> originFiles, SourceFile source) {
     for (SourceFile origin : originFiles) {
-      if (origin.path.getFileName().equals(source.path.getFileName())) {
-        return origin.path;
+      try {
+        if (Files.isSameFile(origin.path, source.path)) {
+          return origin.path;
+        }
+      } catch (IOException e) {
+        // TODO 自動生成された catch ブロック
+        e.printStackTrace();
       }
     }
-
     return null;
   }
-
 }
