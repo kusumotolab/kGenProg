@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.kohsuke.args4j.CmdLineException;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 
 public class TestExecutorMainTest {
 
@@ -57,7 +58,7 @@ public class TestExecutorMainTest {
   public void testMainSuccess01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
@@ -102,7 +103,7 @@ public class TestExecutorMainTest {
   public void testMainSuccess02() throws Exception {
     final Path rootDir = Paths.get("example/example02");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
