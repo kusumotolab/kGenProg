@@ -20,6 +20,7 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.TestSourceFile;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -34,7 +35,7 @@ public class KGenProgMainTest {
     targetSourceFiles.add(new TargetSourceFile(
         Paths.get("example/example04/src/jp/kusumotolab/BuggyCalculator.java")));
     final List<SourceFile> testSourceFiles = new ArrayList<>();
-    testSourceFiles.add(new TargetSourceFile(
+    testSourceFiles.add(new TestSourceFile(
         Paths.get("example/example04/src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
@@ -60,7 +61,7 @@ public class KGenProgMainTest {
     targetSourceFiles.add(new TargetSourceFile(
         Paths.get("example/example05/src/jp/kusumotolab/BuggyCalculator.java")));
     final List<SourceFile> testSourceFiles = new ArrayList<>();
-    testSourceFiles.add(new TargetSourceFile(
+    testSourceFiles.add(new TestSourceFile(
         Paths.get("example/example05/src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
@@ -86,7 +87,7 @@ public class KGenProgMainTest {
     targetSourceFiles.add(new TargetSourceFile(
         Paths.get("example/example06/src/jp/kusumotolab/BuggyCalculator.java")));
     final List<SourceFile> testSourceFiles = new ArrayList<>();
-    testSourceFiles.add(new TargetSourceFile(
+    testSourceFiles.add(new TestSourceFile(
         Paths.get("example/example06/src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
