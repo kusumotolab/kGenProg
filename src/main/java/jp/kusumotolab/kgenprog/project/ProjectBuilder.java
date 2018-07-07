@@ -11,7 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -21,11 +23,11 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
@@ -68,8 +70,11 @@ public class ProjectBuilder {
 
     // variant が null なら，初期ソースコードをビルド
     if (null == generatedSourceCode) {
-      javaFileObjects = fileManager.getJavaFileObjectsFromStrings(this.targetProject
-          .getSourceFiles().stream().map(f -> f.path.toString()).collect(Collectors.toList()));
+      final Set<SourceFile> allFiles = new HashSet<>();
+      allFiles.addAll(this.targetProject.getSourceFiles());
+      allFiles.addAll(this.targetProject.getTestFiles());
+      javaFileObjects = fileManager.getJavaFileObjectsFromStrings(
+          allFiles.stream().map(f -> f.path.toString()).collect(Collectors.toSet()));
     }
 
     // variant が null でなければ，バリアントのソースコードをビルド
