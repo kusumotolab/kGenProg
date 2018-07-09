@@ -37,12 +37,6 @@ public class TestProcessBuilder {
   final static private String testExecutorMain =
       "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
-  // for compatibility
-  @Deprecated
-  public TestProcessBuilder(final TargetProject targetProject) {
-    this(targetProject, Paths.get("")); // TODO
-  }
-
   public TestProcessBuilder(final TargetProject targetProject, final Path workingDir) {
     this.targetProject = targetProject;
     this.workingDir = workingDir;
