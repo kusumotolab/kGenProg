@@ -46,8 +46,7 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r =
-        builder.start(targetProject.getInitialVariant().getGeneratedSourceCode()).get();
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
 
     // テストの結果はこうなるはず
     assertThat(r.getExecutedTestFQNs().size(), is(4));
@@ -77,8 +76,7 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r =
-        builder.start(targetProject.getInitialVariant().getGeneratedSourceCode()).get();
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
 
     assertThat(r.getExecutedTestFQNs().size(), is(4));
   }
@@ -94,8 +92,7 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r =
-        builder.start(targetProject.getInitialVariant().getGeneratedSourceCode()).get();
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
 
     assertThat(r.getExecutedTestFQNs().size(), is(4));
   }
@@ -128,8 +125,7 @@ public class TestProcessBuilderTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
 
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode())
-        .orElse(TestResults.EMPTY_VALUE);
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
 
     assertThat(r.getExecutedTestFQNs(), is(empty()));
     assertThat(r.getSuccessedTestResults(), is(empty()));
