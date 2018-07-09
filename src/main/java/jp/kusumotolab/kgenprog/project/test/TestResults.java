@@ -26,11 +26,6 @@ public class TestResults implements Serializable {
   // 直接valueへのアクセスを回避するために可視性を下げておく
   private final Map<FullyQualifiedName, TestResult> value;
 
-  // 再利用可能な空TestResultsインスタンス．
-  // TODO immutabilityが確保できていないので作用する可能性がある．
-  // issue #79
-  public static final TestResults EMPTY_VALUE = new TestResults();
-
   TestResults() {
     this.value = new HashMap<>();
   }
@@ -119,11 +114,6 @@ public class TestResults implements Serializable {
     final int fail = getFailedTestResults().size();
     final int success = getSuccessedTestResults().size();
 
-    // TODO 一時的な実装．
-    // 全テストが失敗した時（コンパイル失敗時等）に，successRateはどうあるべきか？新たな型を切るほうがよさそう
-    if (success + fail == 0) {
-      return Double.NaN;
-    }
     return 1.0 * success / (success + fail);
   }
 
