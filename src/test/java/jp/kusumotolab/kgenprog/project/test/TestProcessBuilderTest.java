@@ -11,10 +11,8 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -99,19 +97,7 @@ public class TestProcessBuilderTest {
 
   @Test
   public void testBuildFailure01() throws IOException {
-    final Path rootDir = Paths.get("example/example01");
-
-    // コンパイルできない構文エラーファイルを一時的に生成
-    final Path noCompilableClassPath =
-        rootDir.resolve("src/jp/kusumotolab/NonCompilableClass.java");
-    final String noCompilableClassBody = "" + //
-        "package jp.kusumotolab;\n" + //
-        "public class NonCompilableClass {\n" + //
-        "  public void x() {\n" + //
-        "    i++; // syntax error here\n" + //
-        "  }\n" + //
-        "}\n";
-    Files.write(noCompilableClassPath, noCompilableClassBody.getBytes(), StandardOpenOption.CREATE);
+    final Path rootDir = Paths.get("example/example00");
 
     // TODO 一時的なSyserr対策．
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
@@ -133,7 +119,6 @@ public class TestProcessBuilderTest {
     assertThat(r.getSuccessRate(), is(Double.NaN));
 
     // 後処理
-    Files.delete(noCompilableClassPath);
     System.setErr(ps);
   }
 
