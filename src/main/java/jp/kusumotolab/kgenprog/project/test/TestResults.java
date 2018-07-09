@@ -185,9 +185,6 @@ public class TestResults implements Serializable {
     final Set<FullyQualifiedName> correspondingFqns =
         this.buildResults.getPathToFQNs(sourceFile.path);
 
-    if (null == correspondingFqns) {
-      return 0;
-    }
     // 翻訳2: location → 行番号
     // TODO
     // GeneratedSourceCode#inferLineNumbers(Location) を使うか Location#inferLineNumbers()を使うか．
