@@ -43,11 +43,6 @@ public class TestProcessBuilder {
     this(targetProject, Paths.get("")); // TODO
   }
 
-  @Deprecated
-  public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
-    return null;
-  }
-
   public TestProcessBuilder(final TargetProject targetProject, final Path workingDir) {
     this.targetProject = targetProject;
     this.workingDir = workingDir;
