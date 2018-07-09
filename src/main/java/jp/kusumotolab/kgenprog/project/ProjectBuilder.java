@@ -21,11 +21,11 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
@@ -99,7 +99,7 @@ public class ProjectBuilder {
       e.printStackTrace();
     }
 
-    final long compilationTime = System.currentTimeMillis();
+    final long compilationTime = 1000 * (System.currentTimeMillis() / 1000); // 強制的にミリ秒の位を000に．
     final boolean isFailed = !task.call();
 
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
@@ -129,7 +129,7 @@ public class ProjectBuilder {
       try {
         // コンパイル時間よりも古い更新時間のファイルは，削除してOK
         final long lastModifiedTime =
-            Files.getLastModifiedTime(classFile.toPath(), LinkOption.NOFOLLOW_LINKS).toMillis();
+            Files.getLastModifiedTime(classFile.toPath(), LinkOption.NOFOLLOW_LINKS).toMillis() + 1;
         if (lastModifiedTime < compilationTime) {
 
           // 更新されて間もないファイルは消せないことがあるので（OS依存），その場合はプログラム終了時に消すように指定，ただしそれでも消せない場合はある

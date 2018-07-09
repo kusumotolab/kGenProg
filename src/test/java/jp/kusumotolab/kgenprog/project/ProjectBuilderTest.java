@@ -107,7 +107,7 @@ public class ProjectBuilderTest {
   }
 
   @Test
-  public void testRemovingOldClassFiles() {
+  public void testRemovingOldClassFiles() throws Exception {
 
     final String separator = File.separator;
     final Path workingDir = Paths.get("example", separator, "example03", separator, "bin");
@@ -119,6 +119,9 @@ public class ProjectBuilderTest {
         .build(targetProject03.getInitialVariant().getGeneratedSourceCode(), workingDir);
     assertThat(buildResults03.isBuildFailed, is(false));
     assertThat(buildResults03.isMappingAvailable(), is(true));
+
+    // Mac 環境ではミリ秒単位で時間計測できないので，しょうがなく1秒待つ．いけてない．
+    Thread.sleep(1000);
 
     // example02のビルドが成功するかテスト
     final TargetProject targetProject02 = TargetProjectFactory.create("example/example02");
