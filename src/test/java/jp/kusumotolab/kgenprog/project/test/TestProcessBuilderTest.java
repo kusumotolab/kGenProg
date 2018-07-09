@@ -98,6 +98,7 @@ public class TestProcessBuilderTest {
   @Test
   public void testBuildFailure01() throws IOException {
     final Path rootDir = Paths.get("example/example00");
+    final Path outDir = rootDir.resolve("_bin");
 
     // TODO 一時的なSyserr対策．
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
@@ -107,9 +108,7 @@ public class TestProcessBuilderTest {
       public void write(int b) {} // 何もしないwriter
     }));
 
-    final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
     final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
 

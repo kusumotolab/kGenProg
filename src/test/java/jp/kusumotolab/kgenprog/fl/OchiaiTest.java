@@ -61,7 +61,6 @@ public class OchiaiTest {
 
   @Test
   public void testForFailedProject() throws IOException {
-
     final Path rootDir = Paths.get("example/example00");
     final Path outDir = rootDir.resolve("_bin");
 
