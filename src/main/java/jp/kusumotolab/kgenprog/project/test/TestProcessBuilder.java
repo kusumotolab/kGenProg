@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 import jp.kusumotolab.kgenprog.project.BuildResults;
@@ -55,14 +54,13 @@ public class TestProcessBuilder {
     this.projectBuilder = new ProjectBuilder(this.targetProject);
   }
 
-  public Optional<TestResults> start(final GeneratedSourceCode generatedSourceCode) {
+  public TestResults start(final GeneratedSourceCode generatedSourceCode) {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
     // ビルド失敗時の特殊処理
-    // TODO BuildResults自体もNullableなのでOptionalで包むべきか．
+    // TODO BuildResults自体もNullableなのでNullObjectパターン適用すべきか．
     if (buildResults.isBuildFailed) {
-      // ビルド結果だけはくっつけておく
-      return Optional.of(new TestResults(buildResults));
+      return new NullTestResults();
     }
 
     final String classpath = filterClasspathFromSystemClasspath();
@@ -84,7 +82,7 @@ public class TestProcessBuilder {
       // TODO 翻訳のための一時的な処理
       testResults.setBuildResults(buildResults);
 
-      return Optional.ofNullable(testResults);
+      return testResults;
 
       // String out_result = IOUtils.toString(process.getInputStream(), "UTF-8");
       // String err_result = IOUtils.toString(process.getErrorStream(), "SJIS");
@@ -93,7 +91,6 @@ public class TestProcessBuilder {
       // System.out.println(process.exitValue());
     } catch (NoSuchFileException e) {
       // Serializeに失敗
-      return Optional.empty();
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
@@ -104,7 +101,7 @@ public class TestProcessBuilder {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
-    return Optional.empty();
+    return new NullTestResults();
   }
 
   private String joinFQNs(final Collection<FullyQualifiedName> fqns) {

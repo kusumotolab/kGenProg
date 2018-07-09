@@ -20,8 +20,7 @@ public class Ochiai implements FaultLocalization {
       final TestProcessBuilder testExecutor) {
 
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    final TestResults testResults =
-        testExecutor.start(generatedSourceCode).orElse(TestResults.EMPTY_VALUE);
+    final TestResults testResults = testExecutor.start(generatedSourceCode);
 
     final List<Suspiciouseness> suspeciousenesses = new ArrayList<>();
 
