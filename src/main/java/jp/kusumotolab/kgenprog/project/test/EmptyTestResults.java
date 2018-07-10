@@ -3,13 +3,13 @@ package jp.kusumotolab.kgenprog.project.test;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 
-public class NullTestResults extends TestResults {
+public class EmptyTestResults extends TestResults {
 
   private static final long serialVersionUID = 1L;
 
-  public static final NullTestResults instance = new NullTestResults();
+  public static final EmptyTestResults instance = new EmptyTestResults();
 
-  private NullTestResults() {}
+  private EmptyTestResults() {}
 
   @Override
   public double getSuccessRate() {
