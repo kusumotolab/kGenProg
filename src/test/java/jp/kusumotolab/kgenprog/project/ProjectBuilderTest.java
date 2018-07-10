@@ -120,9 +120,6 @@ public class ProjectBuilderTest {
     assertThat(buildResults03.isBuildFailed, is(false));
     assertThat(buildResults03.isMappingAvailable(), is(true));
 
-    // Mac 環境ではミリ秒単位で時間計測できないので，しょうがなく1秒待つ．いけてない．
-    Thread.sleep(1000);
-
     // example02のビルドが成功するかテスト
     final TargetProject targetProject02 = TargetProjectFactory.create("example/example02");
     final ProjectBuilder projectBuilder02 = new ProjectBuilder(targetProject02);
