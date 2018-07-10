@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -18,7 +19,8 @@ public class Ochiai implements FaultLocalization {
   public List<Suspiciouseness> exec(final TargetProject targetProject, final Variant variant,
       final TestProcessBuilder testExecutor) {
 
-    final TestResults testResults = testExecutor.start(variant.getGeneratedSourceCode());
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final TestResults testResults = testExecutor.start(generatedSourceCode);
 
     final List<Suspiciouseness> suspeciousenesses = new ArrayList<>();
 
