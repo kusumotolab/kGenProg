@@ -42,15 +42,7 @@ public class DiffOutput implements ResultOutput {
       }
     }
 
-    // 初期 ast に対して，修正された ast へ実行された全変更内容をクローンを生成せずに適用
-    for (Variant variant : modifiedVariants) {
-      GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
-      activateRecordModifications(targetCode);
-      for (Base base : variant.getGene().getBases()) {
-        targetCode = base.getOperation().applyDirectly(targetCode, base.getTargetLocation());
-      }
-      modifiedCode.add(targetCode);
-    }
+    modifiedCode.addAll(applyAllModificationDirectly(targetProject, modifiedVariants));
 
     for (GeneratedSourceCode code : modifiedCode) {
       Path variantBasePath = Paths.get(workingDir + "/Variant" + (modifiedCode.indexOf(code) + 1));
@@ -63,7 +55,6 @@ public class DiffOutput implements ResultOutput {
       for (GeneratedAST ast : code.getFiles()) {
         try {
           GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
-
           Path originPath = getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile());
 
           if (originPath == null) {
@@ -79,29 +70,13 @@ public class DiffOutput implements ResultOutput {
             edit.apply(document);
             Files.write(diffFile, Arrays.asList(document.get()));
 
-            // パッチファイル作成
-            List<String> origin = Files.readAllLines(originPath);
-            List<String> modified = Files.readAllLines(diffFile);
-
-            Patch<String> diff = DiffUtils.diff(origin, modified);
-
-            List<String> unifiedDiff =
-                UnifiedDiffUtils.generateUnifiedDiff(originPath.getFileName().toString(),
-                    jdtAST.getSourceFile().path.getFileName().toString(), origin, diff, 3);
-
-            unifiedDiff.forEach(System.out::println);
-
-            Files.write(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"),
-                unifiedDiff);
+            makePatchFile(originPath, diffFile, variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"));
           }
         } catch (MalformedTreeException e) {
           e.printStackTrace();
         } catch (BadLocationException e) {
           e.printStackTrace();
         } catch (IOException e) {
-          e.printStackTrace();
-        } catch (DiffException e) {
-          // TODO 自動生成された catch ブロック
           e.printStackTrace();
         }
       }
@@ -138,5 +113,58 @@ public class DiffOutput implements ResultOutput {
       }
     }
     return null;
+  }
+
+  /***
+   * 初期 ast に対して，修正された ast へ実行された全変更内容をクローンを生成せずに適用
+   *
+   * @param targetProject
+   * @param modifiedVariants
+   * @return
+   */
+  private List<GeneratedSourceCode> applyAllModificationDirectly(TargetProject targetProject,
+      List<Variant> modifiedVariants) {
+    List<GeneratedSourceCode> modified = new ArrayList<>();
+
+    for (Variant variant : modifiedVariants) {
+      GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
+      activateRecordModifications(targetCode);
+      for (Base base : variant.getGene().getBases()) {
+        targetCode = base.getOperation().applyDirectly(targetCode, base.getTargetLocation());
+      }
+      modified.add(targetCode);
+    }
+
+    return modified;
+  }
+
+  /***
+   * originPath と diffFile の間のパッチを patchFile へ出力する
+   * @param originPath
+   * @param diffFile
+   * @param patchFile
+   */
+  private void makePatchFile(Path originPath, Path diffFile, Path patchFile) {
+    try {
+      List<String> origin = Files.readAllLines(originPath);
+      List<String> modified = Files.readAllLines(diffFile);
+
+      Patch<String> diff = DiffUtils.diff(origin, modified);
+
+      String fileName = originPath.getFileName().toString();
+
+      List<String> unifiedDiff =
+          UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
+
+      unifiedDiff.forEach(System.out::println);
+
+      Files.write(patchFile, unifiedDiff);
+    } catch (IOException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    } catch (DiffException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    }
   }
 }
