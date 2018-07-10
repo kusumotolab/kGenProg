@@ -30,7 +30,7 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 public class DiffOutputTest {
 
   @Test
-  public void testDiffOutput1() {
+  public void testDiffOutput1() throws IOException {
     Path basePath = Paths.get("example/example01/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
@@ -60,18 +60,13 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    try {
       String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
-    } catch (IOException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    }
   }
 
   @Test
-  public void testDiffOutput2() {
+  public void testDiffOutput2() throws IOException {
     Path basePath = Paths.get("example/example03/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
@@ -111,18 +106,13 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    try {
       String modSource = new String(Files.readAllBytes(Paths.get("example/example03/modified/Variant1/jp.kusumotolab.Util.java")));
       FileUtils.deleteDirectory(new File("example/example03/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
-    } catch (IOException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    }
   }
 
   @Test
-  public void testDiffOutput3() {
+  public void testDiffOutput3() throws IOException {
     Path basePath = Paths.get("example/example01/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
@@ -167,18 +157,13 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    try {
       String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
-    } catch (IOException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    }
   }
 
   @Test
-  public void testDiffOutput4() {
+  public void testDiffOutput4() throws IOException {
     Path basePath = Paths.get("example/example01/");
     DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
 
@@ -220,14 +205,9 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    try {
       String modSource = new String(Files.readAllBytes(Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
       FileUtils.deleteDirectory(new File("example/example01/modified"));
       assertThat(normalizeCrLf(modSource), is(expected));
-    } catch (IOException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    }
   }
 
   private String normalizeCrLf(final String s) {
