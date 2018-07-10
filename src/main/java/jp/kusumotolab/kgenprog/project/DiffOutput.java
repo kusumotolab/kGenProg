@@ -64,32 +64,35 @@ public class DiffOutput implements ResultOutput {
         try {
           GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
 
+          Path originPath = getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile());
+
+          if (originPath == null) {
+            continue;
+          }
+
           // 修正ファイル作成
-          String origStr = new String(Files
-              .readAllBytes(getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile())));
-          Document document = new Document(origStr);
+          Document document = new Document(new String(Files.readAllBytes(originPath)));
           TextEdit edit = jdtAST.getRoot().rewrite(document, null);
+          // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
+            Path diffFile = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
             edit.apply(document);
-            Files.write(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java"),
-                Arrays.asList(document.get()));
+            Files.write(diffFile, Arrays.asList(document.get()));
 
             // パッチファイル作成
-            List<String> origin = Files.readAllLines(
-                getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile()));
-            List<String> modified =
-                Files.readAllLines(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java"));
+            List<String> origin = Files.readAllLines(originPath);
+            List<String> modified = Files.readAllLines(diffFile);
 
             Patch<String> diff = DiffUtils.diff(origin, modified);
 
-            List<String> unifiedDiff = UnifiedDiffUtils.generateUnifiedDiff(
-                getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile()).getFileName()
-                    .toString(),
-                jdtAST.getSourceFile().path.getFileName().toString(), origin, diff, 3);
+            List<String> unifiedDiff =
+                UnifiedDiffUtils.generateUnifiedDiff(originPath.getFileName().toString(),
+                    jdtAST.getSourceFile().path.getFileName().toString(), origin, diff, 3);
 
             unifiedDiff.forEach(System.out::println);
 
-            Files.write(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"), unifiedDiff);
+            Files.write(variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"),
+                unifiedDiff);
           }
         } catch (MalformedTreeException e) {
           e.printStackTrace();
