@@ -141,7 +141,7 @@ public class ProjectBuilder {
     for (final File classFile : classFiles) {
 
       // 更新されたファイルの中に classFile が含まれていない場合は削除
-      if (!updatedFiles.contains(classFile.getAbsolutePath())) {
+      if (!updatedFiles.isEmpty() && !updatedFiles.contains(classFile.getAbsolutePath())) {
         if (!classFile.delete()) {
           throw new RuntimeException();
         }
