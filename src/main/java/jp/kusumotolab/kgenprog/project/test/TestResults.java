@@ -30,14 +30,6 @@ public class TestResults implements Serializable {
     this.value = new HashMap<>();
   }
 
-  // ビルド失敗時用のコンストラクタ．
-  // TODO αのための一時的な対処．
-  // ビルド失敗時にBuildResults/TestResultsがどうあるべきか検討する必要あり
-  TestResults(BuildResults buildResults) {
-    this();
-    this.buildResults = buildResults;
-  }
-
   /**
    * 新規TestResultの追加
    * 
