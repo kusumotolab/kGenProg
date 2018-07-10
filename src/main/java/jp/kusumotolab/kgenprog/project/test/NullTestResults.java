@@ -7,6 +7,10 @@ public class NullTestResults extends TestResults {
 
   private static final long serialVersionUID = 1L;
 
+  public static final NullTestResults instance = new NullTestResults();
+
+  private NullTestResults() {}
+
   @Override
   public double getSuccessRate() {
     return Double.NaN;
