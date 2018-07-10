@@ -27,7 +27,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class KGenProgMainTest {
 
-  @Test
+  //@Test
   public void testExample04() {
 
     final Path rootPath = Paths.get("example/example04/");
@@ -53,7 +53,7 @@ public class KGenProgMainTest {
     kGenProgMain.run();
   }
 
-  @Test
+  //@Test
   public void testExample05() {
 
     final Path rootPath = Paths.get("example/example05/");
@@ -79,7 +79,7 @@ public class KGenProgMainTest {
     kGenProgMain.run();
   }
 
-  @Test
+  //@Test
   public void testExample06() {
 
     final Path rootPath = Paths.get("example/example06/");
