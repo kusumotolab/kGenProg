@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -88,10 +89,23 @@ public class ProjectBuilder {
     compilationOptions.add("-classpath");
     compilationOptions.add(String.join(CLASSPATH_SEPARATOR, this.targetProject.getClassPaths()
         .stream().map(cp -> cp.path.toString()).collect(Collectors.toList())));
+    compilationOptions.add("-verbose");
 
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-    final CompilationTask task =
-        compiler.getTask(null, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
+    final List<String> verboseLines = new ArrayList<>();
+    final CompilationTask task = compiler.getTask(new Writer() {
+      @Override
+      public void write(char[] cbuf, int off, int len) throws IOException {
+        final String text = new String(cbuf);
+        verboseLines.add(text.substring(off, off + len));
+      }
+
+      @Override
+      public void flush() throws IOException {}
+
+      @Override
+      public void close() throws IOException {}
+    }, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
     try {
       fileManager.close();
@@ -99,7 +113,6 @@ public class ProjectBuilder {
       e.printStackTrace();
     }
 
-    final long compilationTime = 1000 * (System.currentTimeMillis() / 1000); // 強制的にミリ秒の位を000に．
     final boolean isFailed = !task.call();
 
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
@@ -124,23 +137,15 @@ public class ProjectBuilder {
     final Collection<File> classFiles =
         FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
     final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+    final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
     for (final File classFile : classFiles) {
 
-      try {
-        // コンパイル時間よりも古い更新時間のファイルは，削除してOK
-        final long lastModifiedTime =
-            Files.getLastModifiedTime(classFile.toPath(), LinkOption.NOFOLLOW_LINKS).toMillis() + 1;
-        if (lastModifiedTime < compilationTime) {
-
-          // 更新されて間もないファイルは消せないことがあるので（OS依存），その場合はプログラム終了時に消すように指定，ただしそれでも消せない場合はある
-          if (!classFile.delete()) {
-            // classFile.deleteOnExit();
-            throw new RuntimeException();
-          }
-          continue;
+      // 更新されたファイルの中に classFile が含まれていない場合は削除
+      if (!updatedFiles.contains(classFile.getAbsolutePath())) {
+        if (!classFile.delete()) {
+          throw new RuntimeException();
         }
-      } catch (final IOException e) {
-        e.printStackTrace();
+        continue;
       }
 
       // クラスファイルのパース
@@ -179,6 +184,21 @@ public class ProjectBuilder {
       e.printStackTrace();
       return null;
     }
+  }
+
+  private Set<String> getUpdatedFiles(final List<String> lines) {
+    final String prefix = "[DirectoryFileObject[";
+    final Set<String> updatedFiles = new HashSet<>();
+    for (final String line : lines) {
+      if (line.startsWith(prefix)) {
+        final int startIndex = prefix.length();
+        final int endIndex = line.indexOf(']');
+        final String updatedFile =
+            line.substring(startIndex, endIndex).replace(":", File.separator);
+        updatedFiles.add(updatedFile);
+      }
+    }
+    return updatedFiles;
   }
 }
 
