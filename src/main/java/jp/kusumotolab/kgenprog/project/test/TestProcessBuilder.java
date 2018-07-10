@@ -49,7 +49,7 @@ public class TestProcessBuilder {
     // ビルド失敗時の特殊処理
     // TODO BuildResults自体もNullableなのでNullObjectパターン適用すべきか．
     if (buildResults.isBuildFailed) {
-      return new NullTestResults();
+      return NullTestResults.instance;
     }
 
     final String classpath = filterClasspathFromSystemClasspath();
@@ -90,7 +90,7 @@ public class TestProcessBuilder {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
-    return new NullTestResults();
+    return NullTestResults.instance;
   }
 
   private String joinFQNs(final Collection<FullyQualifiedName> fqns) {
