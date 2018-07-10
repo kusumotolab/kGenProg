@@ -100,7 +100,7 @@ public class TestProcessBuilder {
 
     // TODO testにsourceが含まれるのでsubtractしておく．
     // https://github.com/kusumotolab/kGenProg/issues/79
-    sourceFQNs.removeAll(getTestFQNs(buildResults));
+    // sourceFQNs.removeAll(getTestFQNs(buildResults));
 
     return sourceFQNs;
   }
