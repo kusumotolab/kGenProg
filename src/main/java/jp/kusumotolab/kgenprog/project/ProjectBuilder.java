@@ -80,9 +80,16 @@ public class ProjectBuilder {
     // variant が null でなければ，バリアントのソースコードをビルド
     else {
       final List<GeneratedAST> generatedASTs = generatedSourceCode.getFiles();
-      javaFileObjects = generatedASTs.stream()
+      final Iterable<? extends JavaFileObject> targetFileObjects = generatedASTs.stream()
           .map(a -> new JavaSourceFromString(a.getPrimaryClassName(), a.getSourceCode()))
           .collect(Collectors.toList());
+      final Iterable<? extends JavaFileObject> testFileObjects =
+          fileManager.getJavaFileObjectsFromStrings(this.targetProject.getTestFiles().stream()
+              .map(f -> f.path.toString()).collect(Collectors.toSet()));
+      final List<JavaFileObject> tmpList = new ArrayList<>();
+      targetFileObjects.forEach(tmpList::add);
+      testFileObjects.forEach(tmpList::add);
+      javaFileObjects = tmpList;
     }
 
     final List<String> compilationOptions = new ArrayList<>();
@@ -97,6 +104,8 @@ public class ProjectBuilder {
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
     final CompilationTask task =
         compiler.getTask(null, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
+
+
 
     try {
       fileManager.close();
@@ -128,7 +137,9 @@ public class ProjectBuilder {
     // ソースファイルとクラスファイルのマッピング
     final Collection<File> classFiles =
         FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
-    final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+    final List<SourceFile> allSourceFiles = new ArrayList<>();
+    allSourceFiles.addAll(this.targetProject.getSourceFiles());
+    allSourceFiles.addAll(this.targetProject.getTestFiles());
     for (final File classFile : classFiles) {
 
       try {
@@ -155,7 +166,7 @@ public class ProjectBuilder {
       final String partialPath = parser.getPartialPath();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(parser.getFQN());
       SourceFile correspondingSourceFile = null;
-      for (final SourceFile sourceFile : sourceFiles) {
+      for (final SourceFile sourceFile : allSourceFiles) {
         if (sourceFile.path.endsWith(partialPath)) {
           correspondingSourceFile = sourceFile;
           break;

@@ -25,8 +25,8 @@ public class TargetProjectFactoryTest {
 
     assertThat(project.rootPath, is(rootPath));
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
+        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")) //
+    )));
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
     assertThat(project.getClassPaths(), is(containsInAnyOrder( //
@@ -41,10 +41,9 @@ public class TargetProjectFactoryTest {
 
     assertThat(project.rootPath, is(rootPath));
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")),
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/Util.java")),
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/UtilTest.java")))));
+        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
+        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/Util.java")) //
+    )));
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")),
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/UtilTest.java")))));
@@ -59,17 +58,16 @@ public class TargetProjectFactoryTest {
     final TargetProject project = TargetProjectFactory.create( //
         rootPath, //
         Arrays.asList( //
-            new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-            new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
-        Arrays.asList( //
+            new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")) //
+        ), Arrays.asList( //
             new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
         Arrays.asList(), //
         JUnitVersion.JUNIT4);
 
     assertThat(project.rootPath, is(rootPath));
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
+        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")) //
+    )));
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
     assertThat(project.getClassPaths(), is(containsInAnyOrder( //
