@@ -109,8 +109,7 @@ public class ProjectBuilderTest {
   @Test
   public void testRemovingOldClassFiles() throws Exception {
 
-    final String separator = File.separator;
-    final Path workingDir = Paths.get("example", separator, "example03", separator, "bin");
+    final Path workingDir = Paths.get("example/example03/bin");
 
     // example03のビルドが成功するかテスト
     final TargetProject targetProject03 = TargetProjectFactory.create("example/example03");
