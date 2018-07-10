@@ -31,7 +31,6 @@ public class ReplaceOperation implements JDTOperation {
         .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
           final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
           final ASTNode target = jdtLocation.locate(unit);
-
           replaceNode(target);
         });
 
