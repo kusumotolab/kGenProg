@@ -12,7 +12,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -38,17 +41,6 @@ public class ProjectBuilder {
   }
 
   /**
-   * 初期ソースコードをビルド
-   * 
-   * @param workingDir バイトコード出力ディレクトリ
-   * @return ビルドに関するさまざまな情報
-   */
-  @Deprecated
-  public BuildResults build(final Path workingDir) {
-    return this.build(null, workingDir);
-  }
-
-  /**
    * @param generatedSourceCode null でなければ与えられた generatedSourceCode からビルド．null の場合は，初期ソースコードからビルド
    * @param workingDir バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
@@ -58,27 +50,15 @@ public class ProjectBuilder {
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
-    // outディレクトリが存在しなければ生成
-    final File outputDirectoryFile = workingDir.toFile();
-    if (!outputDirectoryFile.exists()) {
-      outputDirectoryFile.mkdirs();
+    // workingDir が存在しなければ生成
+    final File workingDireFile = workingDir.toFile();
+    if (!workingDireFile.exists()) {
+      workingDireFile.mkdirs();
     }
 
-    final Iterable<? extends JavaFileObject> javaFileObjects;
-
-    // variant が null なら，初期ソースコードをビルド
-    if (null == generatedSourceCode) {
-      javaFileObjects = fileManager.getJavaFileObjectsFromStrings(this.targetProject
-          .getSourceFiles().stream().map(f -> f.path.toString()).collect(Collectors.toList()));
-    }
-
-    // variant が null でなければ，バリアントのソースコードをビルド
-    else {
-      final List<GeneratedAST> generatedASTs = generatedSourceCode.getFiles();
-      javaFileObjects = generatedASTs.stream()
-          .map(a -> new JavaSourceFromString(a.getPrimaryClassName(), a.getSourceCode()))
-          .collect(Collectors.toList());
-    }
+    // コンパイル対象の JavaFileObject を生成
+    final Iterable<? extends JavaFileObject> javaFileObjects =
+        generateAllJavaFileObjects(generatedSourceCode.getFiles(), fileManager);
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
@@ -123,7 +103,9 @@ public class ProjectBuilder {
     // ソースファイルとクラスファイルのマッピング
     final Collection<File> classFiles =
         FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
-    final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+    final List<SourceFile> allSourceFiles = new ArrayList<>();
+    allSourceFiles.addAll(this.targetProject.getSourceFiles());
+    allSourceFiles.addAll(this.targetProject.getTestFiles());
     for (final File classFile : classFiles) {
 
       try {
@@ -150,7 +132,7 @@ public class ProjectBuilder {
       final String partialPath = parser.getPartialPath();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(parser.getFQN());
       SourceFile correspondingSourceFile = null;
-      for (final SourceFile sourceFile : sourceFiles) {
+      for (final SourceFile sourceFile : allSourceFiles) {
         if (sourceFile.path.endsWith(partialPath)) {
           correspondingSourceFile = sourceFile;
           break;
@@ -167,6 +149,52 @@ public class ProjectBuilder {
 
     return buildResults;
   }
+
+  /**
+   * すべて（ターゲットソースファイルとテストコード）の JavaFileObject を生成するメソッド
+   * 
+   * @param list
+   * @param fileManager
+   * @return
+   */
+  private Iterable<? extends JavaFileObject> generateAllJavaFileObjects(
+      final List<GeneratedAST> list, final StandardJavaFileManager fileManager) {
+
+    final Iterable<? extends JavaFileObject> targetIterator =
+        generateJavaFileObjectsFromGeneratedAst(list);
+    final Iterable<? extends JavaFileObject> testIterator =
+        generateJavaFileObjectsFromSourceFile(this.targetProject.getTestFiles(), fileManager);
+
+    return Stream.concat( //
+        StreamSupport.stream(targetIterator.spliterator(), false), //
+        StreamSupport.stream(testIterator.spliterator(), false)).collect(Collectors.toSet());
+  }
+
+  /**
+   * GeneratedAST の List からJavaFileObject を生成するメソッド
+   * 
+   * @param asts
+   * @return
+   */
+  private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
+      final List<GeneratedAST> asts) {
+    return asts.stream().map(JavaSourceFromString::new).collect(Collectors.toSet());
+  }
+
+  /**
+   * ソースファイルから JavaFileObject を生成するメソッド
+   * 
+   * @param files
+   * @param fileManager
+   * @return
+   */
+  private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromSourceFile(
+      final List<SourceFile> files, final StandardJavaFileManager fileManager) {
+    final Set<String> sourceFileNames =
+        files.stream().map(f -> f.path.toString()).collect(Collectors.toSet());
+    return fileManager.getJavaFileObjectsFromStrings(sourceFileNames);
+  }
+
 
   private ClassParser parse(final File classFile) {
 
@@ -187,7 +215,11 @@ class JavaSourceFromString extends SimpleJavaFileObject {
 
   final String code;
 
-  JavaSourceFromString(String name, String code) {
+  JavaSourceFromString(final GeneratedAST ast) {
+    this(ast.getPrimaryClassName(), ast.getSourceCode());
+  }
+
+  JavaSourceFromString(final String name, final String code) {
     super(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
     this.code = code;
   }

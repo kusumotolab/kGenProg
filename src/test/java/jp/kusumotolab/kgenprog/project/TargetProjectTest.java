@@ -17,13 +17,10 @@ public class TargetProjectTest {
     final TargetProject project = TargetProjectFactory.create(basePath);
 
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))//
-    )));
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
 
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
-        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))//
-    )));
+        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
   }
 
   @Test
@@ -33,15 +30,11 @@ public class TargetProjectTest {
 
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/Util.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/UtilTest.java"))//
-    )));
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/Util.java")))));
 
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
         new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/UtilTest.java"))//
-    )));
+        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/UtilTest.java")))));
 
   }
 }
