@@ -6,9 +6,9 @@ import static org.hamcrest.Matchers.is;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import org.junit.Test;
 
 public class TargetProjectTest {
   @Test
@@ -17,13 +17,10 @@ public class TargetProjectTest {
     final TargetProject project = TargetProjectFactory.create(basePath);
 
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))//
-    )));
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
 
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
-        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))//
-    )));
+        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
   }
 
   @Test
@@ -33,15 +30,11 @@ public class TargetProjectTest {
 
     assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
         new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/Util.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/UtilTest.java"))//
-    )));
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/Util.java")))));
 
     assertThat(project.getTestFiles(), is(containsInAnyOrder( //
         new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/UtilTest.java"))//
-    )));
+        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/UtilTest.java")))));
 
   }
 }
