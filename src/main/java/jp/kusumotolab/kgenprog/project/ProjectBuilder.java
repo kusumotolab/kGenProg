@@ -137,16 +137,16 @@ public class ProjectBuilder {
     final Collection<File> classFiles =
         FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
     final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
-    final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
+    // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
     for (final File classFile : classFiles) {
 
-      // 更新されたファイルの中に classFile が含まれていない場合は削除
-      if (!updatedFiles.isEmpty() && !updatedFiles.contains(classFile.getAbsolutePath())) {
-        if (!classFile.delete()) {
-          throw new RuntimeException();
-        }
-        continue;
-      }
+      // 更新されたファイルの中に classFile が含まれていない場合は削除．この機能はとりあえず無しで問題ない
+      // if (!updatedFiles.isEmpty() && !updatedFiles.contains(classFile.getAbsolutePath())) {
+      // if (!classFile.delete()) {
+      // throw new RuntimeException();
+      // }
+      // continue;
+      // }
 
       // クラスファイルのパース
       final ClassParser parser = this.parse(classFile);
