@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -36,12 +37,6 @@ public class TestProcessBuilder {
   final static private String testExecutorMain =
       "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
-  // for compatibility
-  @Deprecated
-  public TestProcessBuilder(final TargetProject targetProject) {
-    this(targetProject, Paths.get("")); // TODO
-  }
-
   public TestProcessBuilder(final TargetProject targetProject, final Path workingDir) {
     this.targetProject = targetProject;
     this.workingDir = workingDir;
@@ -50,6 +45,12 @@ public class TestProcessBuilder {
 
   public TestResults start(final GeneratedSourceCode generatedSourceCode) {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
+
+    // ビルド失敗時の特殊処理
+    // TODO BuildResults自体もNullableなのでNullObjectパターン適用すべきか．
+    if (buildResults.isBuildFailed) {
+      return EmptyTestResults.instance;
+    }
 
     final String classpath = filterClasspathFromSystemClasspath();
     final String targetFQNs = joinFQNs(getTargetFQNs(buildResults));
@@ -77,6 +78,8 @@ public class TestProcessBuilder {
       // System.out.println(out_result);
       // System.err.println(err_result);
       // System.out.println(process.exitValue());
+    } catch (NoSuchFileException e) {
+      // Serializeに失敗
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
@@ -87,7 +90,7 @@ public class TestProcessBuilder {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
-    return null;
+    return EmptyTestResults.instance;
   }
 
   private String joinFQNs(final Collection<FullyQualifiedName> fqns) {
@@ -95,14 +98,7 @@ public class TestProcessBuilder {
   }
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
-    final Set<FullyQualifiedName> sourceFQNs =
-        getFQNs(buildResults, this.targetProject.getSourceFiles());
-
-    // TODO testにsourceが含まれるのでsubtractしておく．
-    // https://github.com/kusumotolab/kGenProg/issues/79
-    sourceFQNs.removeAll(getTestFQNs(buildResults));
-
-    return sourceFQNs;
+    return getFQNs(buildResults, this.targetProject.getSourceFiles());
   }
 
   private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
@@ -112,7 +108,7 @@ public class TestProcessBuilder {
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
       final List<SourceFile> sources) {
     return sources.stream().map(source -> buildResults.getPathToFQNs(source.path))
-        .flatMap(c -> c.stream()).collect(toSet());
+        .filter(fqn -> null != fqn).flatMap(c -> c.stream()).collect(toSet());
   }
 
   private final String jarFileTail = "-(\\d+\\.)+jar$";
