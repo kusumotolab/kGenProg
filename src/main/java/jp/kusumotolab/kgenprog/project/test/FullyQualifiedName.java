@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public abstract class FullyQualifiedName implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+  
   final public String value;
 
   protected FullyQualifiedName(final String value) {
