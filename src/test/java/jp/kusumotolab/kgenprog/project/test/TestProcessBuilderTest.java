@@ -5,15 +5,18 @@ import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestProcessBuilderTest {
 
@@ -91,4 +94,32 @@ public class TestProcessBuilderTest {
 
     assertThat(r.getExecutedTestFQNs().size(), is(4));
   }
+
+  @Test
+  public void testBuildFailure01() throws IOException {
+    final Path rootDir = Paths.get("example/example00");
+    final Path outDir = rootDir.resolve("_bin");
+
+    // TODO 一時的なSyserr対策．
+    // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
+    final PrintStream ps = System.err;
+    System.setErr(new PrintStream(new OutputStream() {
+      @Override
+      public void write(int b) {} // 何もしないwriter
+    }));
+
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
+    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+
+    assertThat(r.getExecutedTestFQNs(), is(empty()));
+    assertThat(r.getSuccessedTestResults(), is(empty()));
+    assertThat(r.getFailedTestResults(), is(empty()));
+    assertThat(r.getSuccessRate(), is(Double.NaN));
+
+    // 後処理
+    System.setErr(ps);
+  }
+
+
 }
