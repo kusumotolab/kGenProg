@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.toList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.Range;
@@ -48,7 +48,7 @@ public class TestResults implements Serializable {
     return this.value.values()
         .stream()
         .filter(r -> r.failed)
-        .collect(toList());
+        .collect(Collectors.toList());
   }
 
   /**
@@ -60,7 +60,7 @@ public class TestResults implements Serializable {
     return this.value.values()
         .stream()
         .filter(r -> !r.failed)
-        .collect(toList());
+        .collect(Collectors.toList());
   }
 
   /**
@@ -249,7 +249,7 @@ public class TestResults implements Serializable {
     sb.append(String.join(",\n", this.value.values()
         .stream()
         .map(v -> v.toString(2))
-        .collect(toList())));
+        .collect(Collectors.toList())));
     sb.append("\n");
     sb.append("]\n");
     return sb.toString();

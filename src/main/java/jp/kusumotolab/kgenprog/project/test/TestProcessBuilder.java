@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +111,7 @@ public class TestProcessBuilder {
     log.debug("enter joinFQNs(Collection<>)");
     return fqns.stream()
         .map(fqn -> fqn.value)
-        .collect(joining(TestExecutorMain.SEPARATOR));
+        .collect(Collectors.joining(TestExecutorMain.SEPARATOR));
   }
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
@@ -131,7 +131,7 @@ public class TestProcessBuilder {
         .map(source -> buildResults.getPathToFQNs(source.path))
         .filter(fqn -> null != fqn)
         .flatMap(c -> c.stream())
-        .collect(toSet());
+        .collect(Collectors.toSet());
   }
 
   private final String jarFileTail = "-(\\d+\\.)+jar$";
@@ -160,7 +160,7 @@ public class TestProcessBuilder {
     final List<String> result = Stream.of(classpaths)
         .filter(cp -> filter.stream()
             .anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
-        .collect(toList());
+        .collect(Collectors.toList());
 
     // 自身（TestProcessBuilder.class）へのcpを追加
     try {

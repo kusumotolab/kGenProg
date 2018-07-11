@@ -156,6 +156,7 @@ public class KGenProgMain {
     return elapsedTime > this.timeout * 1000 * 1000 * 1000;
   }
 
+  @SuppressWarnings("unused")
   @Deprecated
   private boolean isSuccess(List<Variant> variants) {
     log.debug("enter isSuccess(List<>)");
