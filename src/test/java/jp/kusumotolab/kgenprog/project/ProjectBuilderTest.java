@@ -106,6 +106,7 @@ public class ProjectBuilderTest {
     }
   }
 
+  // TODO: https://github.com/kusumotolab/kGenProg/pull/154
   // @Test
   public void testRemovingOldClassFiles() throws Exception {
 
