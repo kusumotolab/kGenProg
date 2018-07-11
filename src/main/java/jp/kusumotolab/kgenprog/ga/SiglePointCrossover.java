@@ -4,7 +4,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SiglePointCrossover implements Crossover{
+public class SiglePointCrossover implements Crossover {
 
   private static Logger log = LoggerFactory.getLogger(SiglePointCrossover.class);
 

@@ -42,8 +42,8 @@ public class Coverage implements Serializable {
    * @param statuses Coverage計測の結果
    */
   public Coverage(final IClassCoverage classCoverage) {
-    this.executedTargetFQN =
-        new TargetFullyQualifiedName(classCoverage.getName().replaceAll("/", "."));
+    this.executedTargetFQN = new TargetFullyQualifiedName(classCoverage.getName()
+        .replaceAll("/", "."));
     this.statuses = convertClassCoverage(classCoverage);
   }
 
@@ -57,7 +57,8 @@ public class Coverage implements Serializable {
     final List<Coverage.Status> statuses = new ArrayList<>();
     for (int i = 1; i <= classCoverage.getLastLine(); i++) {
       final Coverage.Status status;
-      final int s = classCoverage.getLine(i).getStatus();
+      final int s = classCoverage.getLine(i)
+          .getStatus();
 
       if (s == ICounter.EMPTY) {
         status = Coverage.Status.EMPTY;
@@ -84,7 +85,10 @@ public class Coverage implements Serializable {
     sb.append(indent + "  {");
     sb.append("\"executedTargetFQN\": \"" + executedTargetFQN + "\", ");
     sb.append("\"coverages\": [");
-    sb.append(statuses.stream().map(Enum::ordinal).map(String::valueOf).collect(joining(", ")));
+    sb.append(statuses.stream()
+        .map(Enum::ordinal)
+        .map(String::valueOf)
+        .collect(joining(", ")));
     sb.append("]}");
     return sb.toString();
   }

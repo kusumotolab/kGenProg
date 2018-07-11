@@ -11,6 +11,7 @@ import jp.kusumotolab.kgenprog.project.TestSourceFile;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class HeuristicProjectFactory implements IProjectFactory {
+
   final Path rootPath;
 
   public HeuristicProjectFactory(final Path rootPath) {
@@ -27,12 +28,20 @@ public class HeuristicProjectFactory implements IProjectFactory {
     final String[] javaExtension = {"java"};
 
     final List<SourceFile> sourceFiles = FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
-        .stream().filter(file -> !file.getName().endsWith("Test.java")).map(file -> file.toPath())
-        .map(TargetSourceFile::new).collect(Collectors.toList());
-    
+        .stream()
+        .filter(file -> !file.getName()
+            .endsWith("Test.java"))
+        .map(file -> file.toPath())
+        .map(TargetSourceFile::new)
+        .collect(Collectors.toList());
+
     final List<SourceFile> testFiles = FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
-        .stream().filter(file -> file.getName().endsWith("Test.java")).map(file -> file.toPath())
-        .map(TestSourceFile::new).collect(Collectors.toList());
+        .stream()
+        .filter(file -> file.getName()
+            .endsWith("Test.java"))
+        .map(file -> file.toPath())
+        .map(TestSourceFile::new)
+        .collect(Collectors.toList());
 
     final List<ClassPath> classPath = JUnitLibraryResolver.libraries.get(JUnitVersion.JUNIT4);
 

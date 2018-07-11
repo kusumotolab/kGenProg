@@ -23,9 +23,11 @@ public class DefaultVariantSelection implements VariantSelection {
   @Override
   public List<Variant> exec(List<Variant> variants) {
     log.debug("enter exec(List<>)");
-    
+
     final List<Variant> list = variants.stream()
-        .sorted(Comparator.<Variant>comparingDouble(e -> e.getFitness().getValue()).reversed())
+        .sorted(Comparator.<Variant>comparingDouble(e -> e.getFitness()
+            .getValue())
+            .reversed())
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
     return list;

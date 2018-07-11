@@ -11,6 +11,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 
 public class InsertOperation implements JDTOperation {
+
   private final ASTNode astNode;
 
   public InsertOperation(final ASTNode astNode) {
@@ -32,8 +33,11 @@ public class InsertOperation implements JDTOperation {
       final Location location) {
     final JDTLocation jdtLocation = (JDTLocation) location;
 
-    generatedSourceCode.getFiles().stream()
-        .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
+    generatedSourceCode.getFiles()
+        .stream()
+        .filter(ast -> ast.getSourceFile()
+            .equals(location.getSourceFile()))
+        .forEach(ast -> {
           final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
           final ASTNode target = jdtLocation.locate(unit);
           insertNode(target);
@@ -49,8 +53,8 @@ public class InsertOperation implements JDTOperation {
     }
 
     @SuppressWarnings("unchecked")
-    final List<ASTNode> siblings =
-        (List<ASTNode>) target.getParent().getStructuralProperty(locationInParent);
+    final List<ASTNode> siblings = (List<ASTNode>) target.getParent()
+        .getStructuralProperty(locationInParent);
     final int insertIdx = siblings.indexOf(target) + 1;
 
     final ASTNode copiedNode = ASTNode.copySubtree(target.getAST(), this.astNode);

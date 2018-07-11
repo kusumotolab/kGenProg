@@ -13,7 +13,8 @@ public abstract class FullyQualifiedName implements Serializable {
 
   @Override
   public boolean equals(final Object o) {
-    return this.toString().equals(o.toString());
+    return this.toString()
+        .equals(o.toString());
   }
 
   @Override

@@ -26,12 +26,15 @@ public class ClassParser extends ClassVisitor {
     // packageName に対する処理
     final int index = name.lastIndexOf('/');
     if (0 < index) {
-      Arrays.stream(name.substring(0, index).split("/")).forEach(t -> this.packageName.add(t));
+      Arrays.stream(name.substring(0, index)
+          .split("/"))
+          .forEach(t -> this.packageName.add(t));
     }
 
     // fqnClassName に対する処理
     for (final String token : name.split("/")) {
-      Arrays.stream(token.split("$")).forEach(t -> this.fqnClassName.add(t));
+      Arrays.stream(token.split("$"))
+          .forEach(t -> this.fqnClassName.add(t));
     }
   }
 
