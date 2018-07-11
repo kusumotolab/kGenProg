@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItems;
@@ -18,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -47,12 +47,8 @@ public class MemoryClassLoaderTest {
   static MemoryClassLoader loader;
 
   @BeforeClass
-  public static void beforeClass() {
-    try {
-      FileUtils.deleteDirectory(outDir.toFile());
-    } catch (IOException e) {
-      return;
-    }
+  public static void beforeClass() throws IOException {
+    FileUtils.deleteDirectory(outDir.toFile());
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
@@ -304,23 +300,18 @@ public class MemoryClassLoaderTest {
    * @param classLoader
    * @return
    */
-  private List<String> listLoadedClasses(final ClassLoader classLoader) {
+  private List<String> listLoadedClasses(final ClassLoader classLoader) throws Exception {
     final Class<?> javaLangClassLoader = findJavaLangClassLoader(classLoader.getClass());
-    try {
-      final Field classesField = javaLangClassLoader.getDeclaredField("classes");
-      classesField.setAccessible(true);
 
-      @SuppressWarnings("unchecked")
-      final Vector<Class<?>> classes = (Vector<Class<?>>) classesField.get(classLoader);
+    final Field classesField = javaLangClassLoader.getDeclaredField("classes");
+    classesField.setAccessible(true);
 
-      return classes.stream()
-          .map(Class::getName)
-          .collect(toList());
-    } catch (final SecurityException | IllegalArgumentException | NoSuchFieldException
-        | IllegalAccessException e) {
-      e.printStackTrace();
-    }
-    return null;
+    @SuppressWarnings("unchecked")
+    final Vector<Class<?>> classes = (Vector<Class<?>>) classesField.get(classLoader);
+
+    return classes.stream()
+        .map(Class::getName)
+        .collect(Collectors.toList());
   }
 
   private Class<?> findJavaLangClassLoader(Class<?> classLoader) {
