@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,8 +48,11 @@ public class MemoryClassLoaderTest {
 
   @BeforeClass
   public static void beforeClass() {
-    outDir.toFile()
-        .delete();
+    try {
+      FileUtils.deleteDirectory(outDir.toFile());
+    } catch (IOException e) {
+      return;
+    }
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();

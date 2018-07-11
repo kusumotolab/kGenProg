@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 public class ProjectBuilder {
 
   private static Logger log = LoggerFactory.getLogger(ProcessBuilder.class);
-  static private final String CLASSPATH_SEPARATOR = File.pathSeparator;
 
   private final TargetProject targetProject;
 
@@ -55,9 +55,15 @@ public class ProjectBuilder {
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
     // workingDir が存在しなければ生成
-    final File workingDireFile = workingDir.toFile();
-    if (!workingDireFile.exists()) {
-      workingDireFile.mkdirs();
+    if (Files.notExists(workingDir)) {
+      try {
+        Files.createDirectories(workingDir);
+      } catch (IOException e) {
+        log.error(e.getMessage(), e);
+
+        // TODO should be considered
+        return null;
+      }
     }
 
     // コンパイル対象の JavaFileObject を生成
@@ -71,7 +77,7 @@ public class ProjectBuilder {
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
-    compilationOptions.add(String.join(CLASSPATH_SEPARATOR, this.targetProject.getClassPaths()
+    compilationOptions.add(String.join(File.pathSeparator, this.targetProject.getClassPaths()
         .stream()
         .map(cp -> cp.path.toString())
         .collect(Collectors.toList())));
