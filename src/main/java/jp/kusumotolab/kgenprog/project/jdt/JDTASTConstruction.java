@@ -19,27 +19,31 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class JDTASTConstruction {
+
   public List<GeneratedAST> constructAST(TargetProject project) {
     return constructAST(project.getSourceFiles());
   }
 
   public List<GeneratedAST> constructAST(List<SourceFile> sourceFiles) {
-    String[] filePaths =
-        sourceFiles.stream().map(file -> file.path.toString()).toArray(String[]::new);
+    String[] filePaths = sourceFiles.stream()
+        .map(file -> file.path.toString())
+        .toArray(String[]::new);
 
     ASTParser parser = createNewParser();
 
-    Map<Path, SourceFile> pathToSourceFile =
-        sourceFiles.stream().collect(Collectors.toMap(file -> file.path, file -> file));
+    Map<Path, SourceFile> pathToSourceFile = sourceFiles.stream()
+        .collect(Collectors.toMap(file -> file.path, file -> file));
 
     List<GeneratedAST> asts = new ArrayList<>();
 
     FileASTRequestor requestor = new FileASTRequestor() {
+
       @Override
       public void acceptAST(String sourceFilePath, CompilationUnit ast) {
         SourceFile file = pathToSourceFile.get(Paths.get(sourceFilePath));
         if (file != null) {
-          asts.add(new GeneratedJDTAST(JDTASTConstruction.this, file, ast, loadAsString(sourceFilePath)));
+          asts.add(new GeneratedJDTAST(JDTASTConstruction.this, file, ast,
+              loadAsString(sourceFilePath)));
         }
       }
     };
@@ -48,14 +52,14 @@ public class JDTASTConstruction {
 
     return asts;
   }
-  
+
   public GeneratedJDTAST constructAST(SourceFile file, String data) {
     ASTParser parser = createNewParser();
     parser.setSource(data.toCharArray());
 
     return new GeneratedJDTAST(this, file, (CompilationUnit) parser.createAST(null), data);
   }
-  
+
   private ASTParser createNewParser() {
     ASTParser parser = ASTParser.newParser(AST.JLS10);
 
@@ -73,7 +77,7 @@ public class JDTASTConstruction {
 
     return parser;
   }
-  
+
   private String loadAsString(String filePath) {
     try {
       return new String(Files.readAllBytes(Paths.get(filePath)));

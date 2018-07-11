@@ -12,9 +12,10 @@ public abstract class SourceFile {
 
   @Override
   public boolean equals(Object o) {
-    return this.toString().equals(o.toString());
+    return this.toString()
+        .equals(o.toString());
   }
-  
+
   @Override
   public int hashCode() {
     return path.hashCode();

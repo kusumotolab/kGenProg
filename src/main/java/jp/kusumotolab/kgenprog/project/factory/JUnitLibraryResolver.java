@@ -24,7 +24,10 @@ public class JUnitLibraryResolver {
   }
 
   private static List<ClassPath> listJUnitLibraries(final Path path) {
-    return FileUtils.listFiles(path.toFile(), new String[] {"jar"}, false).stream()
-        .map(File::toPath).map(ClassPath::new).collect(Collectors.toList());
+    return FileUtils.listFiles(path.toFile(), new String[] {"jar"}, false)
+        .stream()
+        .map(File::toPath)
+        .map(ClassPath::new)
+        .collect(Collectors.toList());
   }
 }

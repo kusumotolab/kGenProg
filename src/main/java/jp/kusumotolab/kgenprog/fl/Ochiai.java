@@ -30,7 +30,8 @@ public class Ochiai implements FaultLocalization {
 
     final List<Suspiciouseness> suspeciousenesses = new ArrayList<>();
 
-    for (final GeneratedAST ast : variant.getGeneratedSourceCode().getFiles()) {
+    for (final GeneratedAST ast : variant.getGeneratedSourceCode()
+        .getFiles()) {
       final String code = ast.getSourceCode();
       final SourceFile file = ast.getSourceFile();
       final int lastLineNumber = countLines(code);

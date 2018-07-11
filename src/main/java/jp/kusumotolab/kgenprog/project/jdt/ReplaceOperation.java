@@ -9,6 +9,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 
 public class ReplaceOperation implements JDTOperation {
+
   private final ASTNode astNode;
 
   public ReplaceOperation(final ASTNode astNode) {
@@ -27,8 +28,11 @@ public class ReplaceOperation implements JDTOperation {
       final Location location) {
     final JDTLocation jdtLocation = (JDTLocation) location;
 
-    generatedSourceCode.getFiles().stream()
-        .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
+    generatedSourceCode.getFiles()
+        .stream()
+        .filter(ast -> ast.getSourceFile()
+            .equals(location.getSourceFile()))
+        .forEach(ast -> {
           final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
           final ASTNode target = jdtLocation.locate(unit);
           replaceNode(target);
@@ -44,13 +48,14 @@ public class ReplaceOperation implements JDTOperation {
 
     if (locationInParent.isChildListProperty()) {
       @SuppressWarnings("unchecked")
-      final List<ASTNode> siblings =
-          (List<ASTNode>) target.getParent().getStructuralProperty(locationInParent);
+      final List<ASTNode> siblings = (List<ASTNode>) target.getParent()
+          .getStructuralProperty(locationInParent);
       final int replaceIdx = siblings.indexOf(target);
       siblings.set(replaceIdx, copiedNode);
 
     } else if (locationInParent.isChildProperty()) {
-      target.getParent().setStructuralProperty(locationInParent, copiedNode);
+      target.getParent()
+          .setStructuralProperty(locationInParent, copiedNode);
 
     } else {
       throw new RuntimeException("can't replace node");

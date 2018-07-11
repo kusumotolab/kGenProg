@@ -41,10 +41,11 @@ public class TestResultsTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode =
-        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
+        .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri().toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
+        .toURL()});
     return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
   }
 
@@ -82,11 +83,12 @@ public class TestResultsTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode =
-        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
+        .getGeneratedSourceCode();
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri().toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
+        .toURL()});
     final TestResults testResults =
         executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
     testResults.setBuildResults(buildResults);
@@ -94,8 +96,8 @@ public class TestResultsTest {
     // expected確保の作業
     // まずast生成
     final Path bcSourcePath = Paths.get(buggyCalculator.value.replaceAll("\\.", "/") + ".java");
-    final TargetSourceFile bcSourceFile =
-        new TargetSourceFile(rootDir.resolve("src").resolve(bcSourcePath));
+    final TargetSourceFile bcSourceFile = new TargetSourceFile(rootDir.resolve("src")
+        .resolve(bcSourcePath));
     final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAST(bcSourceFile);
 
     // astから5行目 (n--;) のlocationを取り出す
@@ -200,7 +202,9 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath().toFile().exists(), is(true));
+    assertThat(TestResults.getSerFilePath()
+        .toFile()
+        .exists(), is(true));
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
@@ -275,7 +279,9 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath().toFile().exists(), is(true));
+    assertThat(TestResults.getSerFilePath()
+        .toFile()
+        .exists(), is(true));
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
@@ -290,7 +296,9 @@ public class TestResultsTest {
   @Test(expected = NoSuchFileException.class)
   public void testSerializeDeserialize05() throws Exception {
     // serializeファイルを消しておいて
-    TestResults.getSerFilePath().toFile().delete();
+    TestResults.getSerFilePath()
+        .toFile()
+        .delete();
 
     // deserializeでNoSuchFileExceptionが返ってくるはず
     TestResults.deserialize();

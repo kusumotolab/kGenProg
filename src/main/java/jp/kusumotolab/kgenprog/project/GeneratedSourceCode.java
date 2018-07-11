@@ -20,7 +20,8 @@ public class GeneratedSourceCode {
 
   public GeneratedSourceCode(List<GeneratedAST> files) {
     this.files = files;
-    fileToAST = files.stream().collect(Collectors.toMap(GeneratedAST::getSourceFile, v -> v));
+    fileToAST = files.stream()
+        .collect(Collectors.toMap(GeneratedAST::getSourceFile, v -> v));
   }
 
   public List<GeneratedAST> getFiles() {
@@ -41,11 +42,14 @@ public class GeneratedSourceCode {
     }
     return ast.inferLocations(lineNumber);
   }
-  
+
   public List<Location> getAllLocations() {
-    return files.stream().flatMap(v -> v.getAllLocations().stream()).collect(Collectors.toList());
+    return files.stream()
+        .flatMap(v -> v.getAllLocations()
+            .stream())
+        .collect(Collectors.toList());
   }
-  
+
   public Range inferLineNumbers(Location location) {
     log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();

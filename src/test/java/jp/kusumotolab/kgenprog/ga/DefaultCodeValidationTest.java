@@ -40,6 +40,7 @@ public class DefaultCodeValidationTest {
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
     final PrintStream ps = System.err;
     System.setErr(new PrintStream(new OutputStream() {
+
       @Override
       public void write(int b) {} // 何もしないwriter
     }));
