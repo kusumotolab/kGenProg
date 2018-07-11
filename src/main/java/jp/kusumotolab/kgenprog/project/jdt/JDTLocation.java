@@ -18,6 +18,7 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
  *
  */
 final public class JDTLocation implements Location {
+
   final public ASTNode node;
 
   private SourceFile sourceFile;
@@ -61,6 +62,7 @@ final public class JDTLocation implements Location {
   }
 
   private static class TreePathElement {
+
     public static final int NOT_LIST = -1;
 
     StructuralPropertyDescriptor descriptor;
@@ -89,16 +91,16 @@ final public class JDTLocation implements Location {
   @Override
   public Range inferLineNumbers() {
     ASTNode root = this.node.getRoot();
-    
-    if(!(root instanceof CompilationUnit)) {
+
+    if (!(root instanceof CompilationUnit)) {
       return Location.NONE;
     }
-    
-    CompilationUnit compilationUnit = (CompilationUnit)root;
-    
+
+    CompilationUnit compilationUnit = (CompilationUnit) root;
+
     int start = compilationUnit.getLineNumber(this.node.getStartPosition());
     int end = compilationUnit.getLineNumber(this.node.getStartPosition() + this.node.getLength());
-    
+
     return new Range(start, end);
   }
 }

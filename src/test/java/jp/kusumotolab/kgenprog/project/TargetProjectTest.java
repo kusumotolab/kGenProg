@@ -11,6 +11,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TargetProjectTest {
+
   @Test
   public void testGenerate01() throws IOException {
     final Path basePath = Paths.get("example/example01/");

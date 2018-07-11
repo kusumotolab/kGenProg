@@ -89,6 +89,7 @@ public class TargetProjectFactoryTest {
     // runtime exceptionを隠すためにsystem.errを退避して無効化
     final PrintStream ps = System.err;
     System.setErr(new PrintStream(new OutputStream() {
+
       @Override
       public void write(int b) {} // 何もしないwriter
     }));

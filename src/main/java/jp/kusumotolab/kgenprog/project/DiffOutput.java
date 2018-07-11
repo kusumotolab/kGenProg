@@ -64,14 +64,16 @@ public class DiffOutput implements ResultOutput {
 
           // 修正ファイル作成
           Document document = new Document(new String(Files.readAllBytes(originPath)));
-          TextEdit edit = jdtAST.getRoot().rewrite(document, null);
+          TextEdit edit = jdtAST.getRoot()
+              .rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
             Path diffFile = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
             edit.apply(document);
             Files.write(diffFile, Arrays.asList(document.get()));
 
-            makePatchFile(originPath, diffFile, variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"));
+            makePatchFile(originPath, diffFile,
+                variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"));
           }
         } catch (MalformedTreeException e) {
           e.printStackTrace();
@@ -91,7 +93,8 @@ public class DiffOutput implements ResultOutput {
    */
   private void activateRecordModifications(GeneratedSourceCode code) {
     for (GeneratedAST ast : code.getFiles()) {
-      ((GeneratedJDTAST) ast).getRoot().recordModifications();
+      ((GeneratedJDTAST) ast).getRoot()
+          .recordModifications();
     }
   }
 
@@ -128,10 +131,13 @@ public class DiffOutput implements ResultOutput {
     List<GeneratedSourceCode> modified = new ArrayList<>();
 
     for (Variant variant : modifiedVariants) {
-      GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
+      GeneratedSourceCode targetCode = targetProject.getInitialVariant()
+          .getGeneratedSourceCode();
       activateRecordModifications(targetCode);
-      for (Base base : variant.getGene().getBases()) {
-        targetCode = base.getOperation().applyDirectly(targetCode, base.getTargetLocation());
+      for (Base base : variant.getGene()
+          .getBases()) {
+        targetCode = base.getOperation()
+            .applyDirectly(targetCode, base.getTargetLocation());
       }
       modified.add(targetCode);
     }
@@ -141,6 +147,7 @@ public class DiffOutput implements ResultOutput {
 
   /***
    * originPath と diffFile の間のパッチを patchFile へ出力する
+   * 
    * @param originPath
    * @param diffFile
    * @param patchFile
@@ -152,7 +159,8 @@ public class DiffOutput implements ResultOutput {
 
       Patch<String> diff = DiffUtils.diff(origin, modified);
 
-      String fileName = originPath.getFileName().toString();
+      String fileName = originPath.getFileName()
+          .toString();
 
       List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);

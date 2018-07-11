@@ -14,6 +14,7 @@ import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 
 public class GeneratedJDTAST implements GeneratedAST {
+
   private final JDTASTConstruction construction;
   private final CompilationUnit root;
   private final SourceFile sourceFile;
@@ -32,7 +33,9 @@ public class GeneratedJDTAST implements GeneratedAST {
     final StatementListVisitor visitor = new StatementListVisitor();
     visitor.analyzeStatement(root);
     this.lineNumberToStatements = visitor.getLineToStatements();
-    this.allLocations = visitor.getStatements().stream().map(v -> new JDTLocation(sourceFile, v))
+    this.allLocations = visitor.getStatements()
+        .stream()
+        .map(v -> new JDTLocation(sourceFile, v))
         .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
   }
@@ -68,7 +71,8 @@ public class GeneratedJDTAST implements GeneratedAST {
   @Override
   public List<Location> inferLocations(final int lineNumber) {
     if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
-      return lineNumberToStatements.get(lineNumber).stream()
+      return lineNumberToStatements.get(lineNumber)
+          .stream()
           .map(statement -> new JDTLocation(this.sourceFile, statement))
           .collect(Collectors.toList());
     }
@@ -79,17 +83,23 @@ public class GeneratedJDTAST implements GeneratedAST {
     @SuppressWarnings("unchecked")
     final List<AbstractTypeDeclaration> types = root.types();
     final Optional<AbstractTypeDeclaration> findAny = types.stream()
-        .filter(type -> (type.getModifiers() & Modifier.PUBLIC) == Modifier.PUBLIC).findAny();
+        .filter(type -> (type.getModifiers() & Modifier.PUBLIC) == Modifier.PUBLIC)
+        .findAny();
 
     String typeName;
     if (findAny.isPresent()) {
-      typeName = findAny.get().getName().getIdentifier();
+      typeName = findAny.get()
+          .getName()
+          .getIdentifier();
 
     } else if (types.size() > 0) {
-      typeName = types.get(0).getName().getIdentifier();
+      typeName = types.get(0)
+          .getName()
+          .getIdentifier();
 
     } else {
-      typeName = sourceFile.path.getFileName().toString();
+      typeName = sourceFile.path.getFileName()
+          .toString();
       final int idx = typeName.indexOf(".");
       if (idx > 0) {
         typeName = typeName.substring(0, idx);
@@ -102,7 +112,8 @@ public class GeneratedJDTAST implements GeneratedAST {
     if (packageName == null) {
       return name;
     } else {
-      return packageName.getName().getFullyQualifiedName() + "." + name;
+      return packageName.getName()
+          .getFullyQualifiedName() + "." + name;
     }
   }
 }

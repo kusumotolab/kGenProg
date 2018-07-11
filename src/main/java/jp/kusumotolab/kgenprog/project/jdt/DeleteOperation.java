@@ -19,9 +19,13 @@ public class DeleteOperation implements JDTOperation {
       final Location location) {
     final JDTLocation jdtLocation = (JDTLocation) location;
 
-    generatedSourceCode.getFiles().stream()
-        .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
-          if (ast.getSourceFile().equals(location.getSourceFile())) {
+    generatedSourceCode.getFiles()
+        .stream()
+        .filter(ast -> ast.getSourceFile()
+            .equals(location.getSourceFile()))
+        .forEach(ast -> {
+          if (ast.getSourceFile()
+              .equals(location.getSourceFile())) {
             final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
             final ASTNode target = jdtLocation.locate(unit);
             target.delete();
