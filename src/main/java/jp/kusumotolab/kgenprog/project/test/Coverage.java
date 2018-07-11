@@ -43,7 +43,7 @@ public class Coverage implements Serializable {
    */
   public Coverage(final IClassCoverage classCoverage) {
     this.executedTargetFQN = new TargetFullyQualifiedName(classCoverage.getName()
-        .replaceAll("/", "."));
+        .replace("/", "."));
     this.statuses = convertClassCoverage(classCoverage);
   }
 

@@ -72,8 +72,8 @@ public class ProjectBuilder {
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
-    compilationOptions.add(workingDir.toFile()
-        .getAbsolutePath());
+    compilationOptions.add(workingDir.toAbsolutePath()
+        .toString());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");

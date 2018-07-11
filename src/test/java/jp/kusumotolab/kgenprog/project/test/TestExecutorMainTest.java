@@ -51,9 +51,7 @@ public class TestExecutorMainTest {
 
   @Before
   public void before() throws IOException {
-    TestResults.getSerFilePath()
-        .toFile()
-        .delete();
+    Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
   @Test

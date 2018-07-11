@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Before;
@@ -33,9 +34,7 @@ public class TestProcessBuilderTest {
 
   @Before
   public void before() throws IOException {
-    TestResults.getSerFilePath()
-        .toFile()
-        .delete();
+    Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
   @Test

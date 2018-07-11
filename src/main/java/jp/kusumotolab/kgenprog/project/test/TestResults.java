@@ -215,10 +215,8 @@ public class TestResults implements Serializable {
    */
   public static void serialize(TestResults testResults) {
     try {
-      getSerFilePath().toFile()
-          .delete();
-      getSerFilePath().toFile()
-          .createNewFile();
+      Files.deleteIfExists(getSerFilePath());
+      Files.createFile(getSerFilePath());
       final ObjectOutputStream out =
           new ObjectOutputStream(Files.newOutputStream(getSerFilePath()));
       out.writeObject(testResults);
