@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -202,9 +203,7 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath()
-        .toFile()
-        .exists(), is(true));
+    assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
@@ -279,9 +278,7 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath()
-        .toFile()
-        .exists(), is(true));
+    assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
@@ -296,9 +293,7 @@ public class TestResultsTest {
   @Test(expected = NoSuchFileException.class)
   public void testSerializeDeserialize05() throws Exception {
     // serializeファイルを消しておいて
-    TestResults.getSerFilePath()
-        .toFile()
-        .delete();
+    Files.deleteIfExists(TestResults.getSerFilePath());
 
     // deserializeでNoSuchFileExceptionが返ってくるはず
     TestResults.deserialize();
