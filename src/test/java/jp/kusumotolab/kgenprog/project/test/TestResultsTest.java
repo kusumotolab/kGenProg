@@ -96,7 +96,7 @@ public class TestResultsTest {
 
     // expected確保の作業
     // まずast生成
-    final Path bcSourcePath = Paths.get(buggyCalculator.value.replaceAll(".", "/") + ".java");
+    final Path bcSourcePath = Paths.get(buggyCalculator.value.replace(".", "/") + ".java");
     final TargetSourceFile bcSourceFile = new TargetSourceFile(rootDir.resolve("src")
         .resolve(bcSourcePath));
     final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAST(bcSourceFile);

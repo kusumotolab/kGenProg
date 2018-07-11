@@ -267,7 +267,7 @@ public class MemoryClassLoaderTest {
 
     // .classファイルを探す
     final Path classFileName = Paths.get(buggyCalculator.toString()
-        .replaceAll(".", "/") + ".class");
+        .replace(".", "/") + ".class");
     final Optional<Path> classFile = Files.walk(outDir)
         .filter(file -> file.endsWith(classFileName))
         .findFirst();
