@@ -5,16 +5,17 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
-import jp.kusumotolab.kgenprog.project.TargetProject;
-import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class DefaultSourceCodeGenerationTest {
 
   @Test
   public void noneOperationTest() {
-    final TargetProject targetProject = TargetProject.generate("example/example01");
+    final TargetProject targetProject = TargetProjectFactory.create("example/example01");
     final SourceCodeGeneration defaultSourceCodeGeneration = new DefaultSourceCodeGeneration();
     final Gene simpleGene = new SimpleGene(new ArrayList<>());
     final Base noneBase = new Base(null, new NoneOperation());

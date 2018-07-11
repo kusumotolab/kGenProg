@@ -1,9 +1,9 @@
 package jp.kusumotolab.kgenprog;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 import jp.kusumotolab.kgenprog.ga.Base;
@@ -16,13 +16,10 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public class KGenProgMain {
-
-  private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
   private TargetProject targetProject;
   private FaultLocalization faultLocalization;
@@ -31,8 +28,12 @@ public class KGenProgMain {
   private SourceCodeGeneration sourceCodeGeneration;
   private SourceCodeValidation sourceCodeValidation;
   private VariantSelection variantSelection;
-  private ProjectBuilder projectBuilder;
   private TestProcessBuilder testProcessBuilder;
+
+  // TODO #146
+  // workingdirのパスを一時的にMainに記述
+  // 別クラスが管理すべき情報？
+  private final Path WORKING_DIR = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
 
   public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization,
       Mutation mutation, Crossover crossover, SourceCodeGeneration sourceCodeGeneration,
@@ -44,12 +45,10 @@ public class KGenProgMain {
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-    this.projectBuilder = new ProjectBuilder(targetProject);
-    this.testProcessBuilder = new TestProcessBuilder(targetProject);
+    this.testProcessBuilder = new TestProcessBuilder(targetProject, WORKING_DIR);
   }
 
   public void run() {
-    log.debug("enter run()");
     List<Variant> selectedVariants = new ArrayList<>();
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
@@ -82,26 +81,22 @@ public class KGenProgMain {
 
       selectedVariants = variantSelection.exec(variants);
     }
-    log.debug("exit run()");
   }
 
   // hitori
   private boolean reachedMaxGeneration() {
-    log.debug("enter reachedMaxGeneration()");
     // TODO Auto-generated method stub
     return false;
   }
 
   // hitori
   private boolean isTimedOut() {
-    log.debug("enter isTimedOut()");
     // TODO Auto-generated method stub
     return false;
   }
 
   // hitori
   private boolean isSuccess(List<Variant> variants) {
-    log.debug("enter isSuccess(List<>)");
     return false;
   }
 }

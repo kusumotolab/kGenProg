@@ -10,15 +10,16 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
-import org.junit.Test;
 
 public class TestResultsTest {
 
@@ -39,7 +40,7 @@ public class TestResultsTest {
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
@@ -80,7 +81,7 @@ public class TestResultsTest {
     // actual確保のためにテストの実行
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     final BuildResults buildResults =

@@ -25,7 +25,8 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 /**
  * 
@@ -47,7 +48,7 @@ public class MemoryClassLoaderTest {
   @BeforeClass
   public static void beforeClass() {
     outDir.toFile().delete();
-    final TargetProject targetProject = TargetProject.generate(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode =
         targetProject.getInitialVariant().getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
