@@ -11,6 +11,7 @@ public abstract class Gene {
 
 
 class TreeGene extends Gene {
+
   private Gene parent;
   private Base base;
 

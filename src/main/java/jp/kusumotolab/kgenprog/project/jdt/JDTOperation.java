@@ -13,38 +13,45 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 
 public interface JDTOperation extends Operation {
+
   @Override
   default public GeneratedSourceCode apply(final GeneratedSourceCode generatedSourceCode,
       final Location location) {
-    
+
     try {
-      final List<GeneratedAST> newASTs = generatedSourceCode.getFiles().stream()
-        .map(ast -> applyEachAST(ast, location)).collect(Collectors.toList());
+      final List<GeneratedAST> newASTs = generatedSourceCode.getFiles()
+          .stream()
+          .map(ast -> applyEachAST(ast, location))
+          .collect(Collectors.toList());
       return new GeneratedSourceCode(newASTs);
-    }catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
       return GenerationFailedSourceCode.GENERATION_FAILED;
     }
   }
 
   default public GeneratedAST applyEachAST(final GeneratedAST ast, final Location location) {
-    if (!ast.getSourceFile().equals(location.getSourceFile())) {
+    if (!ast.getSourceFile()
+        .equals(location.getSourceFile())) {
       return ast;
     }
 
     final GeneratedJDTAST jdtast = (GeneratedJDTAST) ast;
-    final ASTRewrite astRewrite = ASTRewrite.create(jdtast.getRoot().getAST());
+    final ASTRewrite astRewrite = ASTRewrite.create(jdtast.getRoot()
+        .getAST());
 
     applyToASTRewrite((GeneratedJDTAST) ast, (JDTLocation) location, astRewrite);
 
     final Document document = new Document(jdtast.getSourceCode());
     try {
-      astRewrite.rewriteAST(document, null).apply(document);
+      astRewrite.rewriteAST(document, null)
+          .apply(document);
     } catch (MalformedTreeException | BadLocationException e) {
       throw new RuntimeException(e);
     }
 
-    return jdtast.getConstruction().constructAST(ast.getSourceFile(), document.get());
+    return jdtast.getConstruction()
+        .constructAST(ast.getSourceFile(), document.get());
   }
 
   public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTLocation location,

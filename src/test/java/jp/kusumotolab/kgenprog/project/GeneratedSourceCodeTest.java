@@ -10,7 +10,9 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 
 public class GeneratedSourceCodeTest {
+
   private static class GeneratedASTMock implements GeneratedAST {
+
     private final SourceFile file;
     private final List<Location> locations;
 

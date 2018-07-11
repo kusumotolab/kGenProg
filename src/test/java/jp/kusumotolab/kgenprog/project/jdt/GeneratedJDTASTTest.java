@@ -25,21 +25,10 @@ import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 public class GeneratedJDTASTTest {
 
   private static final String TEST_SOURCE_FILE_NAME = "A.java";
-  private static final String TEST_SOURCE = 
-      "class A {\n" +
-      "   public void a() {\n" +
-      "       int a = 0;\n" +
-      "       if (a == 1) {\n" +
-      "           System.out.println(a);\n" +
-      "       }\n" +
-      "   }\n" +
-      "   public int b(int a) {\n" +
-      "       if (a < 0) { return -a; }\n" +
-      "       return a;\n" +
-      "   }\n" +
-      "}\n" +
-      ""
-      ;
+  private static final String TEST_SOURCE = "class A {\n" + "   public void a() {\n"
+      + "       int a = 0;\n" + "       if (a == 1) {\n" + "           System.out.println(a);\n"
+      + "       }\n" + "   }\n" + "   public int b(int a) {\n"
+      + "       if (a < 0) { return -a; }\n" + "       return a;\n" + "   }\n" + "}\n" + "";
 
   private GeneratedJDTAST ast;
 
@@ -148,11 +137,13 @@ public class GeneratedJDTASTTest {
     GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
 
     @SuppressWarnings("unchecked")
-    List<ImportDeclaration> imports = ast.getRoot().imports();
+    List<ImportDeclaration> imports = ast.getRoot()
+        .imports();
     assertThat(imports.size(), is(1));
-    assertThat(imports.get(0).isStatic(), is(true));
+    assertThat(imports.get(0)
+        .isStatic(), is(true));
   }
-  
+
   @Test
   public void testGetAllLocations() {
     final List<Location> locations = ast.getAllLocations();
@@ -178,95 +169,125 @@ public class GeneratedJDTASTTest {
         Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(testSourceFile));
+    final List<GeneratedAST> asts =
+        constructor.constructAST(Collections.singletonList(testSourceFile));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
-    testLocation(jdtAst.inferLocations(10).get(1), "return n;\n");
+    testLocation(jdtAst.inferLocations(10)
+        .get(1), "return n;\n");
 
     // 挿入位置のLocation生成
-    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot().types().get(0);
+    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
+        .types()
+        .get(0);
     final MethodDeclaration method = type.getMethods()[0];
-    final Statement statement = (Statement) method.getBody().statements().get(0);
+    final Statement statement = (Statement) method.getBody()
+        .statements()
+        .get(0);
     final JDTLocation location = new JDTLocation(testSourceFile, statement);
 
     // 挿入対象生成
-    final AST ast = jdtAst.getRoot().getAST();
+    final AST ast = jdtAst.getRoot()
+        .getAST();
     final MethodInvocation methodInvocation = ast.newMethodInvocation();
     methodInvocation.setName(ast.newSimpleName("a"));
     final Statement insertStatement = ast.newExpressionStatement(methodInvocation);
     final InsertOperation operation = new InsertOperation(insertStatement);
 
-    final  GeneratedJDTAST newJdtAst =
-        (GeneratedJDTAST) operation.apply(generatedSourceCode, location).getFiles().get(0);
-    testLocation(newJdtAst.inferLocations(10).get(1), "a();\n");
-    testLocation(newJdtAst.inferLocations(11).get(1), "return n;\n");
+    final GeneratedJDTAST newJdtAst =
+        (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
+            .getFiles()
+            .get(0);
+    testLocation(newJdtAst.inferLocations(10)
+        .get(1), "a();\n");
+    testLocation(newJdtAst.inferLocations(11)
+        .get(1), "return n;\n");
 
 
   }
-  
+
   @Test
   public void testInferLocationAfterDeleteOperation() {
     final SourceFile testSourceFile = new TargetSourceFile(
         Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(testSourceFile));
+    final List<GeneratedAST> asts =
+        constructor.constructAST(Collections.singletonList(testSourceFile));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
-    testLocation(jdtAst.inferLocations(10).get(1), "return n;\n");
+    testLocation(jdtAst.inferLocations(10)
+        .get(1), "return n;\n");
 
     // 削除位置のLocation生成
-    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot().types().get(0);
+    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
+        .types()
+        .get(0);
     final MethodDeclaration method = type.getMethods()[0];
-    final Statement statement = (Statement) method.getBody().statements().get(0);
+    final Statement statement = (Statement) method.getBody()
+        .statements()
+        .get(0);
     final JDTLocation location = new JDTLocation(testSourceFile, statement);
     final DeleteOperation operation = new DeleteOperation();
 
-    final  GeneratedJDTAST newJdtAst =
-        (GeneratedJDTAST) operation.apply(generatedSourceCode, location).getFiles().get(0);
-    testLocation(newJdtAst.inferLocations(4).get(1), "return n;\n");
+    final GeneratedJDTAST newJdtAst =
+        (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
+            .getFiles()
+            .get(0);
+    testLocation(newJdtAst.inferLocations(4)
+        .get(1), "return n;\n");
 
 
   }
-  
+
   @Test
   public void testInferLocationAfterReplaceOperation() {
     final SourceFile testSourceFile = new TargetSourceFile(
         Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(testSourceFile));
+    final List<GeneratedAST> asts =
+        constructor.constructAST(Collections.singletonList(testSourceFile));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
-    testLocation(jdtAst.inferLocations(10).get(1), "return n;\n");
+    testLocation(jdtAst.inferLocations(10)
+        .get(1), "return n;\n");
 
     // 置換位置のLocation生成
-    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot().types().get(0);
+    final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
+        .types()
+        .get(0);
     final MethodDeclaration method = type.getMethods()[0];
-    final Statement statement = (Statement) method.getBody().statements().get(0);
+    final Statement statement = (Statement) method.getBody()
+        .statements()
+        .get(0);
     final JDTLocation location = new JDTLocation(testSourceFile, statement);
-    
-    
-    //置換対象の生成
-    final AST ast = jdtAst.getRoot().getAST();
+
+
+    // 置換対象の生成
+    final AST ast = jdtAst.getRoot()
+        .getAST();
     final MethodInvocation methodInvocationA = ast.newMethodInvocation();
     methodInvocationA.setName(ast.newSimpleName("a"));
     final MethodInvocation methodInvocationB = ast.newMethodInvocation();
     methodInvocationB.setName(ast.newSimpleName("b"));
     final Block block = ast.newBlock();
-    
+
     @SuppressWarnings("unchecked")
     final List<Statement> blockStatementList = block.statements();
-    
+
     blockStatementList.add(ast.newExpressionStatement(methodInvocationA));
     blockStatementList.add(ast.newExpressionStatement(methodInvocationB));
-    
-    
+
+
     final ReplaceOperation operation = new ReplaceOperation(block);
 
-    final  GeneratedJDTAST newJdtAst =
-        (GeneratedJDTAST) operation.apply(generatedSourceCode, location).getFiles().get(0);
-    testLocation(newJdtAst.inferLocations(8).get(1), "return n;\n");
+    final GeneratedJDTAST newJdtAst =
+        (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
+            .getFiles()
+            .get(0);
+    testLocation(newJdtAst.inferLocations(8)
+        .get(1), "return n;\n");
 
 
   }

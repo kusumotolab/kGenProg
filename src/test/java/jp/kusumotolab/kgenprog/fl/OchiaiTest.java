@@ -33,10 +33,14 @@ public class OchiaiTest {
 
     suspeciousnesses.sort(comparing(Suspiciouseness::getValue, reverseOrder()));
 
-    assertThat(suspeciousnesses.get(0).getValue(), is(0.7071067811865475d));
-    assertThat(suspeciousnesses.get(1).getValue(), is(0.5d));
-    assertThat(suspeciousnesses.get(2).getValue(), is(0.5d));
-    assertThat(suspeciousnesses.get(3).getValue(), is(0.5d));
+    assertThat(suspeciousnesses.get(0)
+        .getValue(), is(0.7071067811865475d));
+    assertThat(suspeciousnesses.get(1)
+        .getValue(), is(0.5d));
+    assertThat(suspeciousnesses.get(2)
+        .getValue(), is(0.5d));
+    assertThat(suspeciousnesses.get(3)
+        .getValue(), is(0.5d));
   }
 
   @Test
@@ -53,10 +57,14 @@ public class OchiaiTest {
 
     suspeciousnesses.sort(comparing(Suspiciouseness::getValue, reverseOrder()));
 
-    assertThat(suspeciousnesses.get(0).getValue(), is(0.7071067811865475d));
-    assertThat(suspeciousnesses.get(1).getValue(), is(0.5d));
-    assertThat(suspeciousnesses.get(2).getValue(), is(0.5d));
-    assertThat(suspeciousnesses.get(3).getValue(), is(0.5d));
+    assertThat(suspeciousnesses.get(0)
+        .getValue(), is(0.7071067811865475d));
+    assertThat(suspeciousnesses.get(1)
+        .getValue(), is(0.5d));
+    assertThat(suspeciousnesses.get(2)
+        .getValue(), is(0.5d));
+    assertThat(suspeciousnesses.get(3)
+        .getValue(), is(0.5d));
   }
 
   @Test
@@ -68,6 +76,7 @@ public class OchiaiTest {
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
     final PrintStream ps = System.err;
     System.setErr(new PrintStream(new OutputStream() {
+
       @Override
       public void write(int b) {} // 何もしないwriter
     }));

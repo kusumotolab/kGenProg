@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Path;
 
 public class MavenProjectFactory extends BuildToolProjectFactory {
+
   private final static String CONFIG_FILE_NAME = "pom.xml";
 
   public MavenProjectFactory(final Path rootPath) {

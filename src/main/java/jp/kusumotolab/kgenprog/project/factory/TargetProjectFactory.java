@@ -18,9 +18,10 @@ public class TargetProjectFactory {
    * @return TargetProject
    */
   public static TargetProject create(final Path rootPath) {
-    IProjectFactory applicableFactory =
-        instanceProjectFactories(rootPath).stream().filter(IProjectFactory::isApplicable)
-            .findFirst().orElse(new HeuristicProjectFactory(rootPath));
+    IProjectFactory applicableFactory = instanceProjectFactories(rootPath).stream()
+        .filter(IProjectFactory::isApplicable)
+        .findFirst()
+        .orElse(new HeuristicProjectFactory(rootPath));
     return applicableFactory.create();
   }
 

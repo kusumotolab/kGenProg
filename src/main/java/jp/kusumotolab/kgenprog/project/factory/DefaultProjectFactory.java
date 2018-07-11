@@ -8,6 +8,7 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class DefaultProjectFactory implements IProjectFactory {
+
   private final Path rootPath;
   private final List<SourceFile> sourceFiles;
   private final List<SourceFile> testFiles;
