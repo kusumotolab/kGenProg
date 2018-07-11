@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +24,17 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetProject;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class CUILauncher {
 
   private static Logger log = LoggerFactory.getLogger(CUILauncher.class);
   // region Fields
-  private SourceFile rootDir;
+  private Path rootDir;
   private List<SourceFile> sourceFiles = new ArrayList<>();
   private List<SourceFile> testFiles = new ArrayList<>();
   private List<ClassPath> classPaths = new ArrayList<>();
@@ -39,7 +42,7 @@ public class CUILauncher {
 
   // region Getter/Setter
 
-  public SourceFile getRootDir() {
+  public Path getRootDir() {
     return rootDir;
   }
 
@@ -47,7 +50,7 @@ public class CUILauncher {
       usage = "Path of a root directory of a target project")
   public void setRootDir(String rootDir) {
     log.debug("enter setRootDir(String)");
-    this.rootDir = new TargetSourceFile(Paths.get(rootDir));
+    this.rootDir = Paths.get(rootDir);
   }
 
   public List<SourceFile> getSourceFiles() {
@@ -99,7 +102,7 @@ public class CUILauncher {
       parser.parseArgument(args);
     } catch (CmdLineException e) {
       log.error(e.getMessage());
-//      System.err.println(e.getMessage());
+      // System.err.println(e.getMessage());
       parser.printUsage(System.err);
       System.exit(1);
     }
@@ -111,8 +114,9 @@ public class CUILauncher {
   public void launch() {
     log.debug("enter launch()");
 
-    TargetProject targetProject =
-        new TargetProject(getSourceFiles(), getTestFiles(), getClassPaths());
+    TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getSourceFiles(),
+        getTestFiles(), getClassPaths(), JUnitVersion.JUNIT4);
+
     FaultLocalization faultLocalization = new Ochiai();
     Mutation mutation = new RandomMutation();
     Crossover crossover = new SiglePointCrossover();

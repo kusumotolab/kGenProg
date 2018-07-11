@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -16,8 +18,7 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public class KGenProgMain {
@@ -31,8 +32,12 @@ public class KGenProgMain {
   private SourceCodeGeneration sourceCodeGeneration;
   private SourceCodeValidation sourceCodeValidation;
   private VariantSelection variantSelection;
-  private ProjectBuilder projectBuilder;
   private TestProcessBuilder testProcessBuilder;
+
+  // TODO #146
+  // workingdirのパスを一時的にMainに記述
+  // 別クラスが管理すべき情報？
+  private final Path WORKING_DIR = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
 
   public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization,
       Mutation mutation, Crossover crossover, SourceCodeGeneration sourceCodeGeneration,
@@ -44,8 +49,7 @@ public class KGenProgMain {
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-    this.projectBuilder = new ProjectBuilder(targetProject);
-    this.testProcessBuilder = new TestProcessBuilder(targetProject);
+    this.testProcessBuilder = new TestProcessBuilder(targetProject, WORKING_DIR);
   }
 
   public void run() {
