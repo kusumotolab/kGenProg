@@ -4,14 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.NoneOperation;
-import jp.kusumotolab.kgenprog.project.Operation;
-import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
-import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
-import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.BreakStatement;
@@ -30,6 +22,14 @@ import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
+import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.NoneOperation;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
+import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
+import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 public class RandomMutation implements Mutation {
 
