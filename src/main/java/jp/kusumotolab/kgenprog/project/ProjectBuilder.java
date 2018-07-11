@@ -137,9 +137,12 @@ public class ProjectBuilder {
     final Collection<File> classFiles =
         FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
     final List<SourceFile> sourceFiles = this.targetProject.getSourceFiles();
+
+    // TODO: https://github.com/kusumotolab/kGenProg/pull/154
     // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
     for (final File classFile : classFiles) {
 
+      // TODO: https://github.com/kusumotolab/kGenProg/pull/154
       // 更新されたファイルの中に classFile が含まれていない場合は削除．この機能はとりあえず無しで問題ない
       // if (!updatedFiles.isEmpty() && !updatedFiles.contains(classFile.getAbsolutePath())) {
       // if (!classFile.delete()) {
@@ -186,6 +189,8 @@ public class ProjectBuilder {
     }
   }
 
+  // TODO: https://github.com/kusumotolab/kGenProg/pull/154
+  @SuppressWarnings("unused")
   private Set<String> getUpdatedFiles(final List<String> lines) {
     final String prefixWindowsOracle = "[RegularFileObject[";
     final String prefixMacOracle = "[DirectoryFileObject[";
