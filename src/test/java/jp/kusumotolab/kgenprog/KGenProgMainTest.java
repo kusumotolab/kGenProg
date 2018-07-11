@@ -34,13 +34,13 @@ public class KGenProgMainTest {
   @Test
   public void testExample04() {
 
-    final Path rootPath = Paths.get("example/example04/");
+    final Path rootPath = Paths.get("example/example04");
     final List<SourceFile> targetSourceFiles = new ArrayList<>();
-    targetSourceFiles.add(new TargetSourceFile(
-        Paths.get("example/example04/src/jp/kusumotolab/BuggyCalculator.java")));
+    targetSourceFiles
+        .add(new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
     final List<SourceFile> testSourceFiles = new ArrayList<>();
-    testSourceFiles.add(new TestSourceFile(
-        Paths.get("example/example04/src/jp/kusumotolab/BuggyCalculatorTest.java")));
+    testSourceFiles
+        .add(new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -63,13 +63,13 @@ public class KGenProgMainTest {
   @Test
   public void testExample05() {
 
-    final Path rootPath = Paths.get("example/example05/");
+    final Path rootPath = Paths.get("example/example05");
     final List<SourceFile> targetSourceFiles = new ArrayList<>();
-    targetSourceFiles.add(new TargetSourceFile(
-        Paths.get("example/example05/src/jp/kusumotolab/BuggyCalculator.java")));
+    targetSourceFiles
+        .add(new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
     final List<SourceFile> testSourceFiles = new ArrayList<>();
-    testSourceFiles.add(new TestSourceFile(
-        Paths.get("example/example05/src/jp/kusumotolab/BuggyCalculatorTest.java")));
+    testSourceFiles
+        .add(new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -92,13 +92,13 @@ public class KGenProgMainTest {
   @Test
   public void testExample06() {
 
-    final Path rootPath = Paths.get("example/example06/");
+    final Path rootPath = Paths.get("example/example06");
     final List<SourceFile> targetSourceFiles = new ArrayList<>();
-    targetSourceFiles.add(new TargetSourceFile(
-        Paths.get("example/example06/src/jp/kusumotolab/BuggyCalculator.java")));
+    targetSourceFiles
+        .add(new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
     final List<SourceFile> testSourceFiles = new ArrayList<>();
-    testSourceFiles.add(new TestSourceFile(
-        Paths.get("example/example06/src/jp/kusumotolab/BuggyCalculatorTest.java")));
+    testSourceFiles
+        .add(new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);

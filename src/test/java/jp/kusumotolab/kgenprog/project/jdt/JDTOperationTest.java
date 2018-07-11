@@ -19,7 +19,7 @@ public class JDTOperationTest {
     final JDTOperation operation = new ExceptionOperation();
 
     final SourceFile testSourceFile = new TargetSourceFile(
-        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(

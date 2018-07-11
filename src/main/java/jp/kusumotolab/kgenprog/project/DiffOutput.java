@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +45,9 @@ public class DiffOutput implements ResultOutput {
     modifiedCode.addAll(applyAllModificationDirectly(targetProject, modifiedVariants));
 
     for (GeneratedSourceCode code : modifiedCode) {
-      Path variantBasePath = Paths.get(workingDir + "/Variant" + (modifiedCode.indexOf(code) + 1));
+      final String variantDir = "variant" + modifiedCode.indexOf(code) + 1;
+      final Path variantBasePath = workingDir.resolve(variantDir);
+
       try {
         Files.createDirectory(variantBasePath);
       } catch (IOException e1) {
