@@ -57,7 +57,8 @@ public class KGenProgMain {
     List<Variant> selectedVariants = new ArrayList<>();
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
-    mutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
+    mutation.setCandidates(initialVariant.getGeneratedSourceCode()
+        .getFiles());
     while (true) {
       if (isTimedOut() || reachedMaxGeneration() || isSuccess(selectedVariants)) {
         break;
@@ -68,7 +69,8 @@ public class KGenProgMain {
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
         List<Base> bases = mutation.exec(suspiciousenesses);
-        genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
+        genes.addAll(variant.getGene()
+            .generateNextGenerationGenes(bases));
       }
 
       genes.addAll(crossover.exec(selectedVariants));

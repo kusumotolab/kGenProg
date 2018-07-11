@@ -51,7 +51,9 @@ public class TestExecutorMainTest {
 
   @Before
   public void before() throws IOException {
-    TestResults.getSerFilePath().toFile().delete();
+    TestResults.getSerFilePath()
+        .toFile()
+        .delete();
   }
 
   @Test
@@ -59,8 +61,8 @@ public class TestExecutorMainTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode =
-        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
+        .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
 
     TestExecutorMain.main(new String[] { //
@@ -104,8 +106,8 @@ public class TestExecutorMainTest {
     final Path rootDir = Paths.get("example/example02");
     final Path outDir = rootDir.resolve("_bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode =
-        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
+        .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
 
     TestExecutorMain.main(new String[] { //

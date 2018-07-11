@@ -27,6 +27,7 @@ import org.junit.runner.notification.RunListener;
  *
  */
 class TestExecutor {
+
   private final MemoryClassLoader memoryClassLoader;
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
@@ -134,6 +135,7 @@ class TestExecutor {
    *
    */
   class CoverageMeasurementListener extends RunListener {
+
     private final Description FAILED = Description.createTestDescription("failed", "failed");
 
     final private List<FullyQualifiedName> measuredClasses;
@@ -181,7 +183,8 @@ class TestExecutor {
      * @param failure
      */
     private void noteTestExecutionFail(Failure failure) {
-      failure.getDescription().addChild(FAILED);
+      failure.getDescription()
+          .addChild(FAILED);
     }
 
     /**
@@ -191,7 +194,8 @@ class TestExecutor {
      * @return テストがfailしたかどうか
      */
     private boolean isFailed(Description description) {
-      return description.getChildren().contains(FAILED);
+      return description.getChildren()
+          .contains(FAILED);
     }
 
     /**
@@ -201,8 +205,8 @@ class TestExecutor {
      * @return
      */
     private FullyQualifiedName getTestMethodName(Description description) {
-      return new TestFullyQualifiedName(
-          description.getTestClass().getName() + "." + description.getMethodName());
+      return new TestFullyQualifiedName(description.getTestClass()
+          .getName() + "." + description.getMethodName());
     }
 
     /**
@@ -247,10 +251,12 @@ class TestExecutor {
       final boolean isFailed = isFailed(description);
 
       final Map<FullyQualifiedName, Coverage> coverages = new HashMap<>();
-      coverageBuilder.getClasses().stream().forEach(c -> {
-        final Coverage cc = new Coverage(c);
-        coverages.put(cc.executedTargetFQN, cc);
-      });
+      coverageBuilder.getClasses()
+          .stream()
+          .forEach(c -> {
+            final Coverage cc = new Coverage(c);
+            coverages.put(cc.executedTargetFQN, cc);
+          });
 
       final TestResult testResult = new TestResult(testMethodFQN, isFailed, coverages);
       testResults.add(testResult);

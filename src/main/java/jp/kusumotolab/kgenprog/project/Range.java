@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project;
 
 public class Range {
+
   /** 開始行番号 (この行を含む) */
   public final int start;
 

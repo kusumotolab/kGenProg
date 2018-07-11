@@ -6,6 +6,7 @@ import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.Operation;
 
 public class Base {
+
   private static Logger log = LoggerFactory.getLogger(Base.class);
 
   final private Location targetLocation;

@@ -16,8 +16,8 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
     final Variant initialVariant = targetProject.getInitialVariant();
     GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
     for (Base base : gene.getBases()) {
-      generatedSourceCode =
-          base.getOperation().apply(generatedSourceCode, base.getTargetLocation());
+      generatedSourceCode = base.getOperation()
+          .apply(generatedSourceCode, base.getTargetLocation());
     }
     log.debug("exit exec(Gene, TargetProject)");
     return generatedSourceCode;

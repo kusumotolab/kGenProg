@@ -34,7 +34,9 @@ public final class TestExecutorMain {
     final CmdLineParser parser = new CmdLineParser(main);
     parser.parseArgument(args);
 
-    final URL binUrl = Paths.get(main.binDir).toUri().toURL();
+    final URL binUrl = Paths.get(main.binDir)
+        .toUri()
+        .toURL();
     final TestExecutor executor = new TestExecutor(new URL[] {binUrl});
 
     final TestResults testResults =
@@ -44,10 +46,14 @@ public final class TestExecutorMain {
   }
 
   private static List<FullyQualifiedName> createTargetFQNs(final String names) {
-    return Stream.of(names.split(SEPARATOR)).map(TargetFullyQualifiedName::new).collect(toList());
+    return Stream.of(names.split(SEPARATOR))
+        .map(TargetFullyQualifiedName::new)
+        .collect(toList());
   }
 
   private static List<FullyQualifiedName> createTestFQNs(final String names) {
-    return Stream.of(names.split(SEPARATOR)).map(TestFullyQualifiedName::new).collect(toList());
+    return Stream.of(names.split(SEPARATOR))
+        .map(TestFullyQualifiedName::new)
+        .collect(toList());
   }
 }

@@ -5,6 +5,7 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
 
 @Deprecated
 public class TestCase implements Serializable {
+
   private SourceFile testFile;
   private String name;
   private int startLine;

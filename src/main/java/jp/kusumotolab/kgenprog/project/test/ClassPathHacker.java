@@ -23,7 +23,8 @@ public class ClassPathHacker {
   }
 
   public static void addFile(File f) throws IOException {
-    addURL(f.toURI().toURL());
+    addURL(f.toURI()
+        .toURL());
   }
 
   public static void addURL(URL u) throws IOException {

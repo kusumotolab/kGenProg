@@ -20,21 +20,26 @@ public class JDTLocationTest {
   @Test
   public void testInferLineNumbers() {
     final TargetProject targetProject = TargetProjectFactory.create("example/example01");
-    final GeneratedSourceCode generatedSourceCode =
-        targetProject.getInitialVariant().getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
+        .getGeneratedSourceCode();
 
     GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAST((new TargetSourceFile(
         Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"))));
 
     CompilationUnit root = ast.getRoot();
-    TypeDeclaration type = (TypeDeclaration) root.types().get(0);
+    TypeDeclaration type = (TypeDeclaration) root.types()
+        .get(0);
     MethodDeclaration method = type.getMethods()[0];
 
-    Statement statement1 = (Statement) method.getBody().statements().get(0);
+    Statement statement1 = (Statement) method.getBody()
+        .statements()
+        .get(0);
     Location location1 = new JDTLocation(null, statement1);
     assertThat(location1.inferLineNumbers(), is(new Range(4, 9)));
 
-    Statement statement2 = (Statement) method.getBody().statements().get(1);
+    Statement statement2 = (Statement) method.getBody()
+        .statements()
+        .get(1);
     Location location2 = new JDTLocation(null, statement2);
     assertThat(location2.inferLineNumbers(), is(new Range(10, 10)));
   }

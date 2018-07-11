@@ -14,6 +14,7 @@ import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
+
   public final Path rootPath; // TODO ひとまずrootPathだけpublicに．他フィールドは要検討
   private final List<SourceFile> sourceFiles;
   private final List<SourceFile> testFiles;

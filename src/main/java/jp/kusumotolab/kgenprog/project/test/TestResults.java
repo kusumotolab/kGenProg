@@ -45,7 +45,10 @@ public class TestResults implements Serializable {
    * @return 失敗したテスト結果s
    */
   public List<TestResult> getFailedTestResults() {
-    return this.value.values().stream().filter(r -> r.failed).collect(toList());
+    return this.value.values()
+        .stream()
+        .filter(r -> r.failed)
+        .collect(toList());
   }
 
   /**
@@ -54,7 +57,10 @@ public class TestResults implements Serializable {
    * @return 成功したテスト結果s
    */
   public List<TestResult> getSuccessedTestResults() {
-    return this.value.values().stream().filter(r -> !r.failed).collect(toList());
+    return this.value.values()
+        .stream()
+        .filter(r -> !r.failed)
+        .collect(toList());
   }
 
   /**
@@ -117,7 +123,8 @@ public class TestResults implements Serializable {
 
     return correspondingFqns.stream()
         .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, status, failed))
-        .flatMap(v -> v.stream()).count();
+        .flatMap(v -> v.stream())
+        .count();
   }
 
   /**
@@ -208,8 +215,10 @@ public class TestResults implements Serializable {
    */
   public static void serialize(TestResults testResults) {
     try {
-      getSerFilePath().toFile().delete();
-      getSerFilePath().toFile().createNewFile();
+      getSerFilePath().toFile()
+          .delete();
+      getSerFilePath().toFile()
+          .createNewFile();
       final ObjectOutputStream out =
           new ObjectOutputStream(Files.newOutputStream(getSerFilePath()));
       out.writeObject(testResults);
@@ -239,8 +248,10 @@ public class TestResults implements Serializable {
   public String toString() {
     final StringBuilder sb = new StringBuilder();
     sb.append("[\n");
-    sb.append(
-        String.join(",\n", this.value.values().stream().map(v -> v.toString(2)).collect(toList())));
+    sb.append(String.join(",\n", this.value.values()
+        .stream()
+        .map(v -> v.toString(2))
+        .collect(toList())));
     sb.append("\n");
     sb.append("]\n");
     return sb.toString();
