@@ -3,7 +3,7 @@ package jp.kusumotolab.kgenprog.ga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 

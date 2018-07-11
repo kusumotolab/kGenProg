@@ -1,70 +1,52 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 
 public class ReplaceOperation implements JDTOperation {
-  private ASTNode astNode;
+  private final ASTNode astNode;
 
-  public ReplaceOperation(ASTNode astNode) {
+  public ReplaceOperation(final ASTNode astNode) {
     this.astNode = astNode;
   }
 
   @Override
-  public GeneratedSourceCode apply(GeneratedSourceCode generatedSourceCode, Location location) {
-    JDTLocation jdtLocation = (JDTLocation) location;
-
-    List<GeneratedAST> newASTs = generatedSourceCode.getFiles().stream().map(ast -> {
-      if (ast.getSourceFile().equals(location.getSourceFile())) {
-        return applyReplacement((GeneratedJDTAST) ast, jdtLocation);
-      } else {
-        return ast;
-      }
-    }).collect(Collectors.toList());
-
-    return new GeneratedSourceCode(newASTs);
-  }
-
-  private GeneratedJDTAST applyReplacement(GeneratedJDTAST ast, JDTLocation location) {
-    CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
-    CompilationUnit newAST = (CompilationUnit) ASTNode.copySubtree(unit.getAST(), unit);
-    ASTNode target = location.locate(newAST);
-
-    replaceNode(target);
-
-    return new GeneratedJDTAST(ast.getSourceFile(), newAST);
+  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTLocation location,
+      final ASTRewrite astRewrite) {
+    final ASTNode copiedNode = ASTNode.copySubtree(astRewrite.getAST(), astNode);
+    astRewrite.replace(location.locate(ast.getRoot()), copiedNode, null);
   }
 
   @Override
-  public GeneratedSourceCode applyDirectly(GeneratedSourceCode generatedSourceCode,
-      Location location) {
-    JDTLocation jdtLocation = (JDTLocation) location;
+  public GeneratedSourceCode applyDirectly(final GeneratedSourceCode generatedSourceCode,
+      final Location location) {
+    final JDTLocation jdtLocation = (JDTLocation) location;
 
     generatedSourceCode.getFiles().stream()
         .filter(ast -> ast.getSourceFile().equals(location.getSourceFile())).forEach(ast -> {
-          CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
-          ASTNode target = jdtLocation.locate(unit);
-          
+          final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
+          final ASTNode target = jdtLocation.locate(unit);
           replaceNode(target);
         });
 
     return generatedSourceCode;
   }
 
-  private void replaceNode(ASTNode target) {
-    StructuralPropertyDescriptor locationInParent = target.getLocationInParent();
+  private void replaceNode(final ASTNode target) {
+    final StructuralPropertyDescriptor locationInParent = target.getLocationInParent();
 
-    ASTNode copiedNode = ASTNode.copySubtree(target.getAST(), this.astNode);
-    
+    final ASTNode copiedNode = ASTNode.copySubtree(target.getAST(), this.astNode);
+
     if (locationInParent.isChildListProperty()) {
-      List siblings = (List) target.getParent().getStructuralProperty(locationInParent);
-      int replaceIdx = siblings.indexOf(target);
+      @SuppressWarnings("unchecked")
+      final List<ASTNode> siblings =
+          (List<ASTNode>) target.getParent().getStructuralProperty(locationInParent);
+      final int replaceIdx = siblings.indexOf(target);
       siblings.set(replaceIdx, copiedNode);
 
     } else if (locationInParent.isChildProperty()) {
