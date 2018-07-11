@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 import jp.kusumotolab.kgenprog.ga.Base;
@@ -24,6 +26,8 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public class KGenProgMain {
+
+  private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
   private TargetProject targetProject;
   private FaultLocalization faultLocalization;
@@ -85,6 +89,7 @@ public class KGenProgMain {
   }
 
   public void run() {
+    log.debug("enter run()");
     List<Variant> selectedVariants = new ArrayList<>();
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
@@ -136,21 +141,23 @@ public class KGenProgMain {
       variants.removeAll(newComplatedVariants);
       selectedVariants = variantSelection.exec(variants);
     }
+    log.debug("exit run()");
   }
 
-  // hitori
   private boolean reachedMaxGeneration(final int generation) {
+    log.debug("enter reachedMaxGeneration()");
     return this.maxGeneration <= generation;
   }
 
-  // hitori
   private boolean isTimedOut(final long startTime) {
+    log.debug("enter isTimedOut()");
     final long elapsedTime = System.nanoTime() - startTime;
     return elapsedTime > this.timeout * 1000 * 1000 * 1000;
   }
 
   @Deprecated
   private boolean isSuccess(List<Variant> variants) {
+    log.debug("enter isSuccess(List<>)");
     return false;
   }
 
