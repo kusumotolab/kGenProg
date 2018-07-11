@@ -187,14 +187,25 @@ public class ProjectBuilder {
   }
 
   private Set<String> getUpdatedFiles(final List<String> lines) {
-    final String prefix = "[DirectoryFileObject[";
+    final String prefixWindowsOracle = "[RegularFileObject[";
+    final String prefixMacOracle = "[DirectoryFileObject[";
     final Set<String> updatedFiles = new HashSet<>();
     for (final String line : lines) {
-      if (line.startsWith(prefix)) {
-        final int startIndex = prefix.length();
+
+      // for OracleJDK in Mac environment
+      if (line.startsWith(prefixMacOracle)) {
+        final int startIndex = prefixMacOracle.length();
         final int endIndex = line.indexOf(']');
         final String updatedFile =
             line.substring(startIndex, endIndex).replace(":", File.separator);
+        updatedFiles.add(updatedFile);
+      }
+
+      // for OracleJDK in Windows environment
+      else if (line.startsWith(prefixWindowsOracle)) {
+        final int startIndex = prefixWindowsOracle.length();
+        final int endIndex = line.indexOf(']');
+        final String updatedFile = line.substring(startIndex, endIndex);
         updatedFiles.add(updatedFile);
       }
     }
