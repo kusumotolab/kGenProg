@@ -1,10 +1,10 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.toList;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -48,12 +48,12 @@ public final class TestExecutorMain {
   private static List<FullyQualifiedName> createTargetFQNs(final String names) {
     return Stream.of(names.split(SEPARATOR))
         .map(TargetFullyQualifiedName::new)
-        .collect(toList());
+        .collect(Collectors.toList());
   }
 
   private static List<FullyQualifiedName> createTestFQNs(final String names) {
     return Stream.of(names.split(SEPARATOR))
         .map(TestFullyQualifiedName::new)
-        .collect(toList());
+        .collect(Collectors.toList());
   }
 }

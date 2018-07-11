@@ -1,9 +1,9 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.joining;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
@@ -88,7 +88,7 @@ public class Coverage implements Serializable {
     sb.append(statuses.stream()
         .map(Enum::ordinal)
         .map(String::valueOf)
-        .collect(joining(", ")));
+        .collect(Collectors.joining(", ")));
     sb.append("]}");
     return sb.toString();
   }

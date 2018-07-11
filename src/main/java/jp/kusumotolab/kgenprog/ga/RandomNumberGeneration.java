@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import static java.lang.Math.abs;
 import java.util.Random;
 
 public class RandomNumberGeneration {
@@ -26,7 +25,7 @@ public class RandomNumberGeneration {
   }
 
   public int getRandomNumber(int divisor) {
-    return abs(random.nextInt()) % divisor;
+    return Math.abs(random.nextInt()) % divisor;
   }
 
   public boolean getRandomBoolean() {
