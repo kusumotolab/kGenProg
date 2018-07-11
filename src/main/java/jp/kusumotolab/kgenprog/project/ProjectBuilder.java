@@ -27,11 +27,14 @@ import javax.tools.ToolProvider;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
+  private static Logger log = LoggerFactory.getLogger(ProcessBuilder.class);
   static private final String CLASSPATH_SEPARATOR = File.pathSeparator;
 
   private final TargetProject targetProject;
@@ -46,6 +49,7 @@ public class ProjectBuilder {
    * @return ビルドに関するさまざまな情報
    */
   public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path workingDir) {
+    log.debug("enter build(GeneratedSourceCode, Path)");
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
@@ -96,19 +100,27 @@ public class ProjectBuilder {
 
     // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
     for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
-      System.err.println(diagnostic.getCode());
-      System.err.println(diagnostic.getKind());
-      System.err.println(diagnostic.getPosition());
-      System.err.println(diagnostic.getStartPosition());
-      System.err.println(diagnostic.getEndPosition());
-      System.err.println(diagnostic.getSource());
-      System.err.println(diagnostic.getMessage(null));
+//      System.err.println(diagnostic.getCode());
+//      System.err.println(diagnostic.getKind());
+//      System.err.println(diagnostic.getPosition());
+//      System.err.println(diagnostic.getStartPosition());
+//      System.err.println(diagnostic.getEndPosition());
+//      System.err.println(diagnostic.getSource());
+//      System.err.println(diagnostic.getMessage(null));
+      log.error(diagnostic.getCode());
+      log.error("{}", diagnostic.getKind());
+      log.error("{}", diagnostic.getPosition());
+      log.error("{}", diagnostic.getStartPosition());
+      log.error("{}", diagnostic.getEndPosition());
+      log.error("{}", diagnostic.getSource());
+      log.error(diagnostic.getMessage(null));
     }
 
     final BuildResults buildResults =
         new BuildResults(generatedSourceCode, isFailed, workingDir, diagnostics);
 
     if (buildResults.isBuildFailed) {
+      log.debug("exit build(GeneratedSourceCode, Path)");
       return buildResults;
     }
 
@@ -155,7 +167,7 @@ public class ProjectBuilder {
         buildResults.setMappingAvailable(false);
       }
     }
-
+    log.debug("exit build(GeneratedSourceCode, Path)");
     return buildResults;
   }
 
@@ -206,11 +218,12 @@ public class ProjectBuilder {
 
 
   private ClassParser parse(final File classFile) {
-
+    log.debug("enter parse(File)");
     try (final InputStream is = new FileInputStream(classFile)) {
       final ClassReader reader = new ClassReader(is);
       final ClassParser parser = new ClassParser(Opcodes.ASM6);
       reader.accept(parser, ClassReader.SKIP_CODE);
+      log.debug("exit parse(File)");
       return parser;
     } catch (final Exception e) {
       e.printStackTrace();
