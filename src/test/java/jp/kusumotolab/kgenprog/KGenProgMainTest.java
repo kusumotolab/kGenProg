@@ -82,6 +82,9 @@ public class KGenProgMainTest {
     KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation, crossover,
         sourceCodeGeneration, sourceCodeValidation, variantSelection);
     kGenProgMain.run();
+
+    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
+    ro.outputResult(project, kGenProgMain.getComplatedVariants());
   }
 
   @Test
@@ -108,5 +111,8 @@ public class KGenProgMainTest {
     KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation, crossover,
         sourceCodeGeneration, sourceCodeValidation, variantSelection);
     kGenProgMain.run();
+
+    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
+    ro.outputResult(project, kGenProgMain.getComplatedVariants());
   }
 }
