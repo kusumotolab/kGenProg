@@ -1,10 +1,13 @@
 package jp.kusumotolab.kgenprog;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 import jp.kusumotolab.kgenprog.ga.Base;
@@ -40,20 +43,30 @@ public class KGenProgMain {
   // TODO #146
   // workingdirのパスを一時的にMainに記述
   // 別クラスが管理すべき情報？
-  private final Path WORKING_DIR = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+  public final Path workingDir;
 
   public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization,
       Mutation mutation, Crossover crossover, SourceCodeGeneration sourceCodeGeneration,
       SourceCodeValidation sourceCodeValidation, VariantSelection variantSelection) {
-    
+
     this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, 600, 10, 1);
+        sourceCodeValidation, variantSelection, 60, 10, 1);
   }
 
   public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization,
       Mutation mutation, Crossover crossover, SourceCodeGeneration sourceCodeGeneration,
       SourceCodeValidation sourceCodeValidation, VariantSelection variantSelection,
       final long timeout, final int maxGeneration, final int requiredSolutions) {
+
+    this.workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    try {
+      if (Files.exists(this.workingDir)) {
+        FileUtils.deleteDirectory(this.workingDir.toFile());
+      }
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+
     this.targetProject = targetProject;
     this.faultLocalization = faultLocalization;
     this.mutation = mutation;
@@ -61,12 +74,14 @@ public class KGenProgMain {
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-    this.testProcessBuilder = new TestProcessBuilder(targetProject, WORKING_DIR);
+    this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingDir);
     this.completedVariants = new ArrayList<>();
 
     this.timeout = timeout;
     this.maxGeneration = maxGeneration;
     this.requiredSolutions = requiredSolutions;
+
+
   }
 
   public void run() {
@@ -131,7 +146,7 @@ public class KGenProgMain {
   // hitori
   private boolean isTimedOut(final long startTime) {
     final long elapsedTime = System.nanoTime() - startTime;
-    return elapsedTime > this.timeout * 1000 * 1000;
+    return elapsedTime > this.timeout * 1000 * 1000 * 1000;
   }
 
   @Deprecated
@@ -141,5 +156,9 @@ public class KGenProgMain {
 
   private boolean areEnoughComplatedVariants() {
     return this.requiredSolutions <= completedVariants.size();
+  }
+
+  public List<Variant> getComplatedVariants() {
+    return this.completedVariants;
   }
 }
