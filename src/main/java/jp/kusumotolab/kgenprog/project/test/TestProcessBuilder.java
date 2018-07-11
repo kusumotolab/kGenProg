@@ -95,14 +95,7 @@ public class TestProcessBuilder {
   }
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
-    final Set<FullyQualifiedName> sourceFQNs =
-        getFQNs(buildResults, this.targetProject.getSourceFiles());
-
-    // TODO testにsourceが含まれるのでsubtractしておく．
-    // https://github.com/kusumotolab/kGenProg/issues/79
-    // sourceFQNs.removeAll(getTestFQNs(buildResults));
-
-    return sourceFQNs;
+    return getFQNs(buildResults, this.targetProject.getSourceFiles());
   }
 
   private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
