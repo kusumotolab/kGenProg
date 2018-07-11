@@ -84,8 +84,6 @@ public class KGenProgMain {
     this.timeout = timeout;
     this.maxGeneration = maxGeneration;
     this.requiredSolutions = requiredSolutions;
-
-
   }
 
   public void run() {

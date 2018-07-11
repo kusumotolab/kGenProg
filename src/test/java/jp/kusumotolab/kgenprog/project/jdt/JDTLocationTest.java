@@ -24,7 +24,7 @@ public class JDTLocationTest {
         .getGeneratedSourceCode();
 
     GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAST((new TargetSourceFile(
-        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"))));
+        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"))));
 
     CompilationUnit root = ast.getRoot();
     TypeDeclaration type = (TypeDeclaration) root.types()

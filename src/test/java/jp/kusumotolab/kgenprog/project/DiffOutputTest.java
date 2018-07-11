@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.project;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,8 +32,9 @@ public class DiffOutputTest {
 
   @Test
   public void testDiffOutput1() throws IOException {
-    Path basePath = Paths.get("example/example01/");
-    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
+    Path basePath = Paths.get("example/example01");
+    final Path outdirPath = basePath.resolve("modified");
+    DiffOutput diffOutput = new DiffOutput(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
@@ -54,8 +54,9 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     DeleteOperation operation = new DeleteOperation();
-    JDTLocation location = new JDTLocation(new TargetSourceFile(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")), statement);
+    JDTLocation location = new JDTLocation(
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -63,16 +64,18 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    String modSource = new String(Files.readAllBytes(
-        Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
-    FileUtils.deleteDirectory(new File("example/example01/modified"));
+    String modSource = new String(
+        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+
     assertThat(normalizeCrLf(modSource), is(expected));
+    FileUtils.deleteDirectory(outdirPath.toFile());
   }
 
   @Test
   public void testDiffOutput2() throws IOException {
-    Path basePath = Paths.get("example/example03/");
-    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
+    Path basePath = Paths.get("example/example03");
+    final Path outdirPath = basePath.resolve("modified");
+    DiffOutput diffOutput = new DiffOutput(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "\n" + "public class Util {\n"
         + "\tpublic static int plus(int n) {\n" + "\t}\n" + "\n"
@@ -96,8 +99,7 @@ public class DiffOutputTest {
         .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTLocation location = new JDTLocation(
-        new TargetSourceFile(Paths.get("example/example03/src/jp/kusumotolab/Util.java")),
-        statement);
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -105,16 +107,18 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    String modSource = new String(Files
-        .readAllBytes(Paths.get("example/example03/modified/Variant1/jp.kusumotolab.Util.java")));
-    FileUtils.deleteDirectory(new File("example/example03/modified"));
+    String modSource =
+        new String(Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.Util.java")));
+
     assertThat(normalizeCrLf(modSource), is(expected));
+    FileUtils.deleteDirectory(outdirPath.toFile());
   }
 
   @Test
   public void testDiffOutput3() throws IOException {
-    Path basePath = Paths.get("example/example01/");
-    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
+    Path basePath = Paths.get("example/example01");
+    final Path outdirPath = basePath.resolve("modified");
+    DiffOutput diffOutput = new DiffOutput(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    if (n > 0) {\n" + "      n--;\n"
@@ -135,8 +139,9 @@ public class DiffOutputTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    JDTLocation location = new JDTLocation(new TargetSourceFile(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")), statement);
+    JDTLocation location = new JDTLocation(
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        statement);
 
     // 挿入対象生成
     AST jdtAST = ast.getRoot()
@@ -154,16 +159,19 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    String modSource = new String(Files.readAllBytes(
-        Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
-    FileUtils.deleteDirectory(new File("example/example01/modified"));
-    assertThat(normalizeCrLf(modSource), is(expected));
+    String modSource = new String(
+        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+
+    // TODO なぜassert文がないのか？何のテストか？
+
+    FileUtils.deleteDirectory(outdirPath.toFile());
   }
 
   @Test
   public void testDiffOutput4() throws IOException {
     Path basePath = Paths.get("example/example01/");
-    DiffOutput diffOutput = new DiffOutput(basePath.resolve("modified"));
+    final Path outdirPath = basePath.resolve("modified");
+    DiffOutput diffOutput = new DiffOutput(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    {\n" + "\t\ta();\n" + "\t}\n"
@@ -183,8 +191,9 @@ public class DiffOutputTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    JDTLocation location = new JDTLocation(new TargetSourceFile(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")), statement);
+    JDTLocation location = new JDTLocation(
+        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        statement);
 
     // 挿入対象生成
     AST jdtAST = ast.getRoot()
@@ -204,10 +213,11 @@ public class DiffOutputTest {
 
     diffOutput.outputResult(project, modVariant);
 
-    String modSource = new String(Files.readAllBytes(
-        Paths.get("example/example01/modified/Variant1/jp.kusumotolab.BuggyCalculator.java")));
-    FileUtils.deleteDirectory(new File("example/example01/modified"));
+    String modSource = new String(
+        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+
     assertThat(normalizeCrLf(modSource), is(expected));
+    FileUtils.deleteDirectory(outdirPath.toFile());
   }
 
   private String normalizeCrLf(final String s) {

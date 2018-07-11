@@ -166,7 +166,7 @@ public class GeneratedJDTASTTest {
   @Test
   public void testInferLocationAfterInsertOperation() {
     final SourceFile testSourceFile = new TargetSourceFile(
-        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts =
@@ -209,7 +209,7 @@ public class GeneratedJDTASTTest {
   @Test
   public void testInferLocationAfterDeleteOperation() {
     final SourceFile testSourceFile = new TargetSourceFile(
-        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts =
@@ -243,7 +243,7 @@ public class GeneratedJDTASTTest {
   @Test
   public void testInferLocationAfterReplaceOperation() {
     final SourceFile testSourceFile = new TargetSourceFile(
-        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts =
