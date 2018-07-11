@@ -17,6 +17,7 @@ import com.github.difflib.algorithm.DiffException;
 import com.github.difflib.patch.Patch;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class DiffOutput implements ResultOutput {
