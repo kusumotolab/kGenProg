@@ -6,8 +6,8 @@ import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import org.apache.commons.io.FileUtils;
+import jp.kusumotolab.kgenprog.project.ClassPath;
 
 public class JUnitLibraryResolver {
 

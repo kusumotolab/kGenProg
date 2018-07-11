@@ -6,8 +6,8 @@ import static org.junit.Assert.assertThat;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 
 public class GeneratedSourceCodeTest {
   private static class GeneratedASTMock implements GeneratedAST {
