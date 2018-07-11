@@ -21,7 +21,9 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
+import jp.kusumotolab.kgenprog.project.DiffOutput;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ResultOutput;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
@@ -37,7 +39,6 @@ public class KGenProgMain {
   private SourceCodeValidation sourceCodeValidation;
   private VariantSelection variantSelection;
   private TestProcessBuilder testProcessBuilder;
-  private final List<Variant> completedVariants;
 
   // 以下，一時的なフィールド #146 で解決すべき
   private final long timeout;
@@ -79,7 +80,6 @@ public class KGenProgMain {
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
     this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingDir);
-    this.completedVariants = new ArrayList<>();
 
     this.timeout = timeout;
     this.maxGeneration = maxGeneration;
@@ -88,14 +88,16 @@ public class KGenProgMain {
 
   }
 
-  public void run() {
+  public List<Variant> run() {
     log.debug("enter run()");
+
+    final List<Variant> completedVariants = new ArrayList<>();
+
     List<Variant> selectedVariants = new ArrayList<>();
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
 
-    mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getFiles());
+    mutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
     final long startTime = System.nanoTime();
     int generation = 0;
     while (true) {
@@ -111,8 +113,7 @@ public class KGenProgMain {
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
         List<Base> bases = mutation.exec(suspiciousenesses);
-        genes.addAll(variant.getGene()
-            .generateNextGenerationGenes(bases));
+        genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
       }
 
       genes.addAll(crossover.exec(selectedVariants));
@@ -129,14 +130,13 @@ public class KGenProgMain {
       }
 
       // この世代で生成された Variants のうち，Fitnessが 1.0 なものを complatedVariants に追加
-      final List<Variant> newComplatedVariants = variants.stream()
-          .filter(v -> 0 == Double.compare(v.getFitness()
-              .getValue(), 1.0d))
-          .collect(Collectors.toList());
+      final List<Variant> newComplatedVariants =
+          variants.stream().filter(v -> 0 == Double.compare(v.getFitness().getValue(), 1.0d))
+              .collect(Collectors.toList());
       completedVariants.addAll(newComplatedVariants);
 
       // しきい値以上の complatedVariants が生成された場合は，GAを抜ける
-      if (areEnoughComplatedVariants()) {
+      if (areEnoughComplatedVariants(completedVariants)) {
         break;
       }
 
@@ -144,7 +144,12 @@ public class KGenProgMain {
       variants.removeAll(newComplatedVariants);
       selectedVariants = variantSelection.exec(variants);
     }
+
+    final ResultOutput ro = new DiffOutput(workingDir);
+    ro.outputResult(targetProject, completedVariants);
+
     log.debug("exit run()");
+    return completedVariants;
   }
 
   private boolean reachedMaxGeneration(final int generation) {
@@ -164,11 +169,7 @@ public class KGenProgMain {
     return false;
   }
 
-  private boolean areEnoughComplatedVariants() {
+  private boolean areEnoughComplatedVariants(final List<Variant> completedVariants) {
     return this.requiredSolutions <= completedVariants.size();
-  }
-
-  public List<Variant> getComplatedVariants() {
-    return this.completedVariants;
   }
 }
