@@ -18,8 +18,6 @@ import jp.kusumotolab.kgenprog.ga.SiglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.project.DiffOutput;
-import jp.kusumotolab.kgenprog.project.ResultOutput;
 import jp.kusumotolab.kgenprog.project.SourceFile;
 import jp.kusumotolab.kgenprog.project.TargetSourceFile;
 import jp.kusumotolab.kgenprog.project.TestSourceFile;
@@ -32,6 +30,7 @@ public class KGenProgMainTest {
   @Test
   public void testExample04() {
 
+    
     final Path rootPath = Paths.get("example/example04/");
     final List<SourceFile> targetSourceFiles = new ArrayList<>();
     targetSourceFiles.add(new TargetSourceFile(
@@ -53,9 +52,6 @@ public class KGenProgMainTest {
     final KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation,
         crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection);
     kGenProgMain.run();
-
-    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getComplatedVariants());
   }
 
   @Test
@@ -82,9 +78,6 @@ public class KGenProgMainTest {
     KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation, crossover,
         sourceCodeGeneration, sourceCodeValidation, variantSelection);
     kGenProgMain.run();
-
-    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getComplatedVariants());
   }
 
   @Test
@@ -111,8 +104,5 @@ public class KGenProgMainTest {
     KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation, crossover,
         sourceCodeGeneration, sourceCodeValidation, variantSelection);
     kGenProgMain.run();
-
-    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getComplatedVariants());
   }
 }
