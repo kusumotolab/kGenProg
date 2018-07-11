@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleGene extends Gene {
+
   private List<Base> bases;
 
   public SimpleGene(List<Base> bases) {

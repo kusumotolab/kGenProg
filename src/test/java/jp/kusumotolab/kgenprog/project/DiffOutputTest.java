@@ -41,13 +41,18 @@ public class DiffOutputTest {
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) originVariant.getGeneratedSourceCode().getFiles().get(0);
+    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+        .getFiles()
+        .get(0);
 
     // 削除位置の Location 作成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
+    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+        .types()
+        .get(0);
     MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody().statements().get(0);
+    Statement statement = (Statement) method.getBody()
+        .statements()
+        .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTLocation location = new JDTLocation(new TargetSourceFile(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")), statement);
@@ -77,13 +82,18 @@ public class DiffOutputTest {
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) originVariant.getGeneratedSourceCode().getFiles().get(0);
+    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+        .getFiles()
+        .get(0);
 
     // 削除位置の Location 作成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
+    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+        .types()
+        .get(0);
     MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody().statements().get(0);
+    Statement statement = (Statement) method.getBody()
+        .statements()
+        .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTLocation location = new JDTLocation(
         new TargetSourceFile(Paths.get("example/example03/src/jp/kusumotolab/Util.java")),
@@ -113,18 +123,24 @@ public class DiffOutputTest {
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) originVariant.getGeneratedSourceCode().getFiles().get(0);
+    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+        .getFiles()
+        .get(0);
 
     // 挿入位置のLocation生成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
+    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+        .types()
+        .get(0);
     MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody().statements().get(0);
+    Statement statement = (Statement) method.getBody()
+        .statements()
+        .get(0);
     JDTLocation location = new JDTLocation(new TargetSourceFile(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")), statement);
 
     // 挿入対象生成
-    AST jdtAST = ast.getRoot().getAST();
+    AST jdtAST = ast.getRoot()
+        .getAST();
     MethodInvocation invocation = jdtAST.newMethodInvocation();
     invocation.setName(jdtAST.newSimpleName("a"));
     Statement insertStatement = jdtAST.newExpressionStatement(invocation);
@@ -155,23 +171,30 @@ public class DiffOutputTest {
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast =
-        (GeneratedJDTAST) originVariant.getGeneratedSourceCode().getFiles().get(0);
+    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+        .getFiles()
+        .get(0);
 
     // 挿入位置のLocation生成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot().types().get(0);
+    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+        .types()
+        .get(0);
     MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody().statements().get(0);
+    Statement statement = (Statement) method.getBody()
+        .statements()
+        .get(0);
     JDTLocation location = new JDTLocation(new TargetSourceFile(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java")), statement);
 
     // 挿入対象生成
-    AST jdtAST = ast.getRoot().getAST();
+    AST jdtAST = ast.getRoot()
+        .getAST();
     MethodInvocation invocation = jdtAST.newMethodInvocation();
     invocation.setName(jdtAST.newSimpleName("a"));
     statement = jdtAST.newExpressionStatement(invocation);
     Block replaceBlock = jdtAST.newBlock();
-    replaceBlock.statements().add(statement);
+    replaceBlock.statements()
+        .add(statement);
 
     ReplaceOperation operation = new ReplaceOperation(replaceBlock);
 

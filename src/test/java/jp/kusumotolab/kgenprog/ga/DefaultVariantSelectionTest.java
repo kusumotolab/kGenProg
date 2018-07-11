@@ -18,14 +18,17 @@ public class DefaultVariantSelectionTest {
     assertThat(resultVariants.size(), is(0));
 
     for (int i = 0; i < 100; i++) {
-      final SimpleFitness fitness = i % 2 == 0 ?
-          new SimpleFitness(((double) i) / 100) :
-          new SimpleFitness(((double) i) / 200);
+      final SimpleFitness fitness = i % 2 == 0 ? new SimpleFitness(((double) i) / 100)
+          : new SimpleFitness(((double) i) / 200);
       variants.add(new Variant(null, fitness, null));
     }
     resultVariants = variantSelection.exec(variants);
     assertThat(resultVariants.size(), is(10));
-    assertThat(resultVariants.get(0).getFitness().getValue(), is(closeTo(0.98, 0.000001)));
-    assertThat(resultVariants.get(9).getFitness().getValue(), is(closeTo(0.8, 0.000001)));
+    assertThat(resultVariants.get(0)
+        .getFitness()
+        .getValue(), is(closeTo(0.98, 0.000001)));
+    assertThat(resultVariants.get(9)
+        .getFitness()
+        .getValue(), is(closeTo(0.8, 0.000001)));
   }
 }

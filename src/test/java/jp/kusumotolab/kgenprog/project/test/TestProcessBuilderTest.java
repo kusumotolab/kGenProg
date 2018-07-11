@@ -33,7 +33,9 @@ public class TestProcessBuilderTest {
 
   @Before
   public void before() throws IOException {
-    TestResults.getSerFilePath().toFile().delete();
+    TestResults.getSerFilePath()
+        .toFile()
+        .delete();
   }
 
   @Test
@@ -44,10 +46,12 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+    final TestResults r = builder.start(targetProject.getInitialVariant()
+        .getGeneratedSourceCode());
 
     // テストの結果はこうなるはず
-    assertThat(r.getExecutedTestFQNs().size(), is(4));
+    assertThat(r.getExecutedTestFQNs()
+        .size(), is(4));
     assertThat(r.getSuccessRate(), is(1.0 * 3 / 4));
     assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder(test01, test02, test03, test04)));
     assertThat(r.getTestResult(test01).failed, is(false));
@@ -56,12 +60,16 @@ public class TestProcessBuilderTest {
     assertThat(r.getTestResult(test04).failed, is(false));
 
     // BuggyCalculatorTest.test01 実行によるbuggyCalculatorのカバレッジはこうなるはず
-    assertThat(r.getTestResult(test01).getCoverages(buggyCalculator).statuses, is(contains(EMPTY,
-        COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+    assertThat(r.getTestResult(test01)
+        .getCoverages(buggyCalculator).statuses,
+        is(contains(EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY,
+            COVERED)));
 
     // BuggyCalculatorTest.test04 実行によるbuggyCalculatorのバレッジはこうなるはず
-    assertThat(r.getTestResult(test04).getCoverages(buggyCalculator).statuses, is(contains(EMPTY,
-        COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED)));
+    assertThat(r.getTestResult(test04)
+        .getCoverages(buggyCalculator).statuses,
+        is(contains(EMPTY, COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY,
+            COVERED)));
   }
 
   @Test
@@ -74,15 +82,18 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+    final TestResults r = builder.start(targetProject.getInitialVariant()
+        .getGeneratedSourceCode());
 
-    assertThat(r.getExecutedTestFQNs().size(), is(4));
+    assertThat(r.getExecutedTestFQNs()
+        .size(), is(4));
   }
 
   @Test
   public void testStartWithOtherWorkingDir02() {
     // 絶対パスにしてみる
-    final Path rootDir = Paths.get("example/example01").toAbsolutePath();
+    final Path rootDir = Paths.get("example/example01")
+        .toAbsolutePath();
 
     // exampleとは全く別のworkingDirで動作確認
     final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
@@ -90,9 +101,11 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+    final TestResults r = builder.start(targetProject.getInitialVariant()
+        .getGeneratedSourceCode());
 
-    assertThat(r.getExecutedTestFQNs().size(), is(4));
+    assertThat(r.getExecutedTestFQNs()
+        .size(), is(4));
   }
 
   @Test
@@ -104,13 +117,15 @@ public class TestProcessBuilderTest {
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
     final PrintStream ps = System.err;
     System.setErr(new PrintStream(new OutputStream() {
+
       @Override
       public void write(int b) {} // 何もしないwriter
     }));
 
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant().getGeneratedSourceCode());
+    final TestResults r = builder.start(targetProject.getInitialVariant()
+        .getGeneratedSourceCode());
 
     assertThat(r.getExecutedTestFQNs(), is(empty()));
     assertThat(r.getSuccessedTestResults(), is(empty()));

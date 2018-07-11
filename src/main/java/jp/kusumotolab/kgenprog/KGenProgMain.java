@@ -93,8 +93,9 @@ public class KGenProgMain {
     List<Variant> selectedVariants = new ArrayList<>();
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
-    mutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
 
+    mutation.setCandidates(initialVariant.getGeneratedSourceCode()
+        .getFiles());
     final long startTime = System.nanoTime();
     int generation = 0;
     while (true) {
@@ -110,7 +111,8 @@ public class KGenProgMain {
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
         List<Base> bases = mutation.exec(suspiciousenesses);
-        genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
+        genes.addAll(variant.getGene()
+            .generateNextGenerationGenes(bases));
       }
 
       genes.addAll(crossover.exec(selectedVariants));
@@ -127,9 +129,10 @@ public class KGenProgMain {
       }
 
       // この世代で生成された Variants のうち，Fitnessが 1.0 なものを complatedVariants に追加
-      final List<Variant> newComplatedVariants =
-          variants.stream().filter(v -> 0 == Double.compare(v.getFitness().getValue(), 1.0d))
-              .collect(Collectors.toList());
+      final List<Variant> newComplatedVariants = variants.stream()
+          .filter(v -> 0 == Double.compare(v.getFitness()
+              .getValue(), 1.0d))
+          .collect(Collectors.toList());
       completedVariants.addAll(newComplatedVariants);
 
       // しきい値以上の complatedVariants が生成された場合は，GAを抜ける

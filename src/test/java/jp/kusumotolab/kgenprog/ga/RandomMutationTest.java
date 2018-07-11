@@ -47,23 +47,32 @@ public class RandomMutationTest {
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final RandomMutation randomMutation = new RandomMutation(new StaticNumberGeneration());
-    randomMutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
+    randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
+        .getFiles());
 
-    final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode().getFiles().stream()
-        .sorted(Comparator.comparing(x -> x.getSourceFile().path)).collect(Collectors.toList())
+    final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode()
+        .getFiles()
+        .stream()
+        .sorted(Comparator.comparing(x -> x.getSourceFile().path))
+        .collect(Collectors.toList())
         .get(0);
     final SourceFile sourceFile = generatedAST.getSourceFile();
-    final CompilationUnit root =
-        (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot().getRoot().getRoot();
-    final TypeDeclaration typeRoot = (TypeDeclaration) root.types().get(0);
-    final List<Statement> statements = typeRoot.getMethods()[0].getBody().statements();
+    final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
+        .getRoot()
+        .getRoot();
+    final TypeDeclaration typeRoot = (TypeDeclaration) root.types()
+        .get(0);
+    final List<Statement> statements = typeRoot.getMethods()[0].getBody()
+        .statements();
 
     final float[] value = {0};
-    final List<Suspiciouseness> suspiciousenesses =
-        statements.stream().map(e -> new JDTLocation(sourceFile, e)).map(e -> {
+    final List<Suspiciouseness> suspiciousenesses = statements.stream()
+        .map(e -> new JDTLocation(sourceFile, e))
+        .map(e -> {
           value[0] += 0.1;
           return new Suspiciouseness(e, value[0]);
-        }).collect(Collectors.toList());
+        })
+        .collect(Collectors.toList());
 
     final List<Base> baseList = randomMutation.exec(suspiciousenesses);
     final Base base = baseList.get(0);
@@ -75,7 +84,8 @@ public class RandomMutationTest {
     assertTrue(operation instanceof InsertOperation);
 
     final InsertOperation insertOperation = (InsertOperation) operation;
-    final Field field = insertOperation.getClass().getDeclaredField("astNode");
+    final Field field = insertOperation.getClass()
+        .getDeclaredField("astNode");
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
     assertEquals(node.toString(), "n--;\n");

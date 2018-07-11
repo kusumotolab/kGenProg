@@ -35,7 +35,8 @@ public class TestProcessBuilder {
   final private ProjectBuilder projectBuilder;
 
   final static private String javaHome = System.getProperty("java.home");
-  final static private String javaBin = Paths.get(javaHome, "bin/java").toString();
+  final static private String javaBin = Paths.get(javaHome, "bin/java")
+      .toString();
   final static private String testExecutorMain =
       "jp.kusumotolab.kgenprog.project.test.TestExecutorMain";
 
@@ -61,7 +62,9 @@ public class TestProcessBuilder {
     final String testFQNs = joinFQNs(getTestFQNs(buildResults));
 
     final ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, testExecutorMain,
-        "-b", workingDir.toAbsolutePath().toString(), "-s", targetFQNs, "-t", testFQNs);
+        "-b", workingDir.toAbsolutePath()
+            .toString(),
+        "-s", targetFQNs, "-t", testFQNs);
 
     // テスト実行のためにworking dirを移動（対象プロジェクトが相対パスを利用している可能性が高いため）
     builder.directory(this.targetProject.rootPath.toFile());
@@ -88,11 +91,11 @@ public class TestProcessBuilder {
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       log.error(e.getMessage(), e);
-//      e.printStackTrace();
+      // e.printStackTrace();
     } catch (InterruptedException e) {
       // TODO 自動生成された catch ブロック
       log.error(e.getMessage(), e);
-//      e.printStackTrace();
+      // e.printStackTrace();
     } catch (ClassNotFoundException e) {
       // TODO 自動生成された catch ブロック
       log.error(e.getMessage(), e);
@@ -106,7 +109,9 @@ public class TestProcessBuilder {
 
   private String joinFQNs(final Collection<FullyQualifiedName> fqns) {
     log.debug("enter joinFQNs(Collection<>)");
-    return fqns.stream().map(fqn -> fqn.value).collect(joining(TestExecutorMain.SEPARATOR));
+    return fqns.stream()
+        .map(fqn -> fqn.value)
+        .collect(joining(TestExecutorMain.SEPARATOR));
   }
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
@@ -122,8 +127,11 @@ public class TestProcessBuilder {
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
       final List<SourceFile> sources) {
     log.debug("enter getFQNs(BuildResults, List<>)");
-    return sources.stream().map(source -> buildResults.getPathToFQNs(source.path))
-        .filter(fqn -> null != fqn).flatMap(c -> c.stream()).collect(toSet());
+    return sources.stream()
+        .map(source -> buildResults.getPathToFQNs(source.path))
+        .filter(fqn -> null != fqn)
+        .flatMap(c -> c.stream())
+        .collect(toSet());
   }
 
   private final String jarFileTail = "-(\\d+\\.)+jar$";
@@ -137,7 +145,8 @@ public class TestProcessBuilder {
     log.debug("enter filterClasspathFromSystemClasspath()");
     // 依存する外部ライブラリを定義
     // TODO もうちょいcoolに改善
-    final String[] classpaths = System.getProperty("java.class.path").split(File.pathSeparator);
+    final String[] classpaths = System.getProperty("java.class.path")
+        .split(File.pathSeparator);
     final List<String> filter = new ArrayList<>();
     filter.add("args4j");
     filter.add("jacoco\\.core");
@@ -149,16 +158,20 @@ public class TestProcessBuilder {
 
     // cp一覧から必須外部ライブラリのみをフィルタリング
     final List<String> result = Stream.of(classpaths)
-        .filter(cp -> filter.stream().anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
+        .filter(cp -> filter.stream()
+            .anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
         .collect(toList());
 
     // 自身（TestProcessBuilder.class）へのcpを追加
     try {
-      result.add(Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI())
+      result.add(Paths.get(getClass().getProtectionDomain()
+          .getCodeSource()
+          .getLocation()
+          .toURI())
           .toString());
     } catch (URISyntaxException e) {
       log.error(e.getMessage(), e);
-//      e.printStackTrace();
+      // e.printStackTrace();
     }
     log.debug("exit filterClasspathFromSystemClasspath()");
     return String.join(File.pathSeparator, result);

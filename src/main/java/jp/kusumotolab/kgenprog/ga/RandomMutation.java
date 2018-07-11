@@ -52,12 +52,14 @@ public class RandomMutation implements Mutation {
   public void setCandidates(List<GeneratedAST> candidates) {
     log.debug("enter setCandidates(List<>)");
 
-    candidates.stream().sorted(Comparator.comparing(x -> x.getSourceFile().path)).forEach(e -> {
-      final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
-      final Visitor visitor = new Visitor();
-      unit.accept(visitor);
-      this.candidates.addAll(visitor.statements);
-    });
+    candidates.stream()
+        .sorted(Comparator.comparing(x -> x.getSourceFile().path))
+        .forEach(e -> {
+          final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
+          final Visitor visitor = new Visitor();
+          unit.accept(visitor);
+          this.candidates.addAll(visitor.statements);
+        });
     log.debug("exit setCandidates(List<>)");
   }
 
@@ -66,8 +68,10 @@ public class RandomMutation implements Mutation {
     log.debug("enter exec(List<>)");
 
     List<Base> bases = suspiciousenesses.stream()
-        .sorted(Comparator.comparingDouble(Suspiciouseness::getValue).reversed())
-        .map(this::makeBase).collect(Collectors.toList());
+        .sorted(Comparator.comparingDouble(Suspiciouseness::getValue)
+            .reversed())
+        .map(this::makeBase)
+        .collect(Collectors.toList());
 
     log.debug("exit exec(List<>)");
     return bases;
