@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -66,15 +65,12 @@ public class ProjectBuilder {
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
-    compilationOptions.add(workingDir.toFile()
-        .getAbsolutePath());
+    compilationOptions.add(workingDir.toFile().getAbsolutePath());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
     compilationOptions.add(String.join(CLASSPATH_SEPARATOR, this.targetProject.getClassPaths()
-        .stream()
-        .map(cp -> cp.path.toString())
-        .collect(Collectors.toList())));
+        .stream().map(cp -> cp.path.toString()).collect(Collectors.toList())));
     compilationOptions.add("-verbose");
 
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
@@ -102,29 +98,11 @@ public class ProjectBuilder {
 
     final boolean isFailed = !task.call();
 
-    // TODO コンパイルできないときのエラー出力はもうちょっと考えるべき
-    for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
-      // System.err.println(diagnostic.getCode());
-      // System.err.println(diagnostic.getKind());
-      // System.err.println(diagnostic.getPosition());
-      // System.err.println(diagnostic.getStartPosition());
-      // System.err.println(diagnostic.getEndPosition());
-      // System.err.println(diagnostic.getSource());
-      // System.err.println(diagnostic.getMessage(null));
-      log.error(diagnostic.getCode());
-      log.error("{}", diagnostic.getKind());
-      log.error("{}", diagnostic.getPosition());
-      log.error("{}", diagnostic.getStartPosition());
-      log.error("{}", diagnostic.getEndPosition());
-      log.error("{}", diagnostic.getSource());
-      log.error(diagnostic.getMessage(null));
-    }
-
     final BuildResults buildResults =
         new BuildResults(generatedSourceCode, isFailed, workingDir, diagnostics);
 
     if (buildResults.isBuildFailed) {
-      log.debug("exit build(GeneratedSourceCode, Path)");
+      log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
       return buildResults;
     }
 
@@ -171,7 +149,7 @@ public class ProjectBuilder {
         buildResults.setMappingAvailable(false);
       }
     }
-    log.debug("exit build(GeneratedSourceCode, Path)");
+    log.debug("exit build(GeneratedSourceCode, Path) -- build succeeded.");
     return buildResults;
   }
 
@@ -192,8 +170,7 @@ public class ProjectBuilder {
 
     return Stream.concat( //
         StreamSupport.stream(targetIterator.spliterator(), false), //
-        StreamSupport.stream(testIterator.spliterator(), false))
-        .collect(Collectors.toSet());
+        StreamSupport.stream(testIterator.spliterator(), false)).collect(Collectors.toSet());
   }
 
   /**
@@ -204,9 +181,7 @@ public class ProjectBuilder {
    */
   private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
       final List<GeneratedAST> asts) {
-    return asts.stream()
-        .map(JavaSourceFromString::new)
-        .collect(Collectors.toSet());
+    return asts.stream().map(JavaSourceFromString::new).collect(Collectors.toSet());
   }
 
   /**
@@ -218,9 +193,8 @@ public class ProjectBuilder {
    */
   private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromSourceFile(
       final List<SourceFile> files, final StandardJavaFileManager fileManager) {
-    final Set<String> sourceFileNames = files.stream()
-        .map(f -> f.path.toString())
-        .collect(Collectors.toSet());
+    final Set<String> sourceFileNames =
+        files.stream().map(f -> f.path.toString()).collect(Collectors.toSet());
     return fileManager.getJavaFileObjectsFromStrings(sourceFileNames);
   }
 
@@ -251,8 +225,8 @@ public class ProjectBuilder {
       if (line.startsWith(prefixMacOracle)) {
         final int startIndex = prefixMacOracle.length();
         final int endIndex = line.indexOf(']');
-        final String updatedFile = line.substring(startIndex, endIndex)
-            .replace(":", File.separator);
+        final String updatedFile =
+            line.substring(startIndex, endIndex).replace(":", File.separator);
         updatedFiles.add(updatedFile);
       }
 
