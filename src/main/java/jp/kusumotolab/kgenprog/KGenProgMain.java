@@ -94,10 +94,10 @@ public class KGenProgMain {
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
 
-    mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getFiles());
+    mutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
     final long startTime = System.nanoTime();
     int generation = 0;
+    List<Variant> previousGenerationVariants = new ArrayList<>();
     while (true) {
 
       // 制限時間に達したか，最大世代数に到達した場合には GA を抜ける
@@ -105,33 +105,32 @@ public class KGenProgMain {
         break;
       }
 
-      List<Gene> genes = new ArrayList<>();
+      final List<Gene> genes = new ArrayList<>();
       for (Variant variant : selectedVariants) {
-        List<Suspiciouseness> suspiciousenesses =
+        final List<Suspiciouseness> suspiciousenesses =
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
-        List<Base> bases = mutation.exec(suspiciousenesses);
-        genes.addAll(variant.getGene()
-            .generateNextGenerationGenes(bases));
+        final List<Base> bases = mutation.exec(suspiciousenesses);
+        genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
       }
 
       genes.addAll(crossover.exec(selectedVariants));
 
-      List<Variant> variants = new ArrayList<>();
-      for (Gene gene : genes) {
-        GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
+      final List<Variant> currentGenerationVariants = new ArrayList<>();
+      for (final Gene gene : genes) {
+        final GeneratedSourceCode generatedSourceCode =
+            sourceCodeGeneration.exec(gene, targetProject);
 
-        Fitness fitness =
+        final Fitness fitness =
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
 
-        Variant variant = new Variant(gene, fitness, generatedSourceCode);
-        variants.add(variant);
+        final Variant variant = new Variant(gene, fitness, generatedSourceCode);
+        currentGenerationVariants.add(variant);
       }
 
       // この世代で生成された Variants のうち，Fitnessが 1.0 なものを complatedVariants に追加
-      final List<Variant> newComplatedVariants = variants.stream()
-          .filter(v -> 0 == Double.compare(v.getFitness()
-              .getValue(), 1.0d))
+      final List<Variant> newComplatedVariants = currentGenerationVariants.stream()
+          .filter(v -> 0 == Double.compare(v.getFitness().getValue(), 1.0d))
           .collect(Collectors.toList());
       completedVariants.addAll(newComplatedVariants);
 
@@ -140,9 +139,13 @@ public class KGenProgMain {
         break;
       }
 
-      // Fitness が 1.0 な Variants は除いた上で，次世代を生成するための Variants を選択
-      variants.removeAll(newComplatedVariants);
-      selectedVariants = variantSelection.exec(variants);
+      // Fitness が 1.0 な Variants は除いた上で，前の世代のバリアントも併せた上で，次世代を生成するための Variants を選択
+      currentGenerationVariants.removeAll(newComplatedVariants);
+      previousGenerationVariants.addAll(currentGenerationVariants);
+      selectedVariants = variantSelection.exec(previousGenerationVariants);
+
+      // 現在の世代を前の世代にする
+      previousGenerationVariants = currentGenerationVariants;
     }
     log.debug("exit run()");
   }
