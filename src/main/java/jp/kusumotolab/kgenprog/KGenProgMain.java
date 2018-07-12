@@ -94,10 +94,10 @@ public class KGenProgMain {
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
 
-    mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getFiles());
+    mutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
     final long startTime = System.nanoTime();
     int generation = 0;
+    int foundSolutions = 0;
     while (true) {
 
       // 制限時間に達したか，最大世代数に到達した場合には GA を抜ける
@@ -105,14 +105,17 @@ public class KGenProgMain {
         break;
       }
 
+      final long eraTime = System.nanoTime();
+      log.info("in the era of the " + getOrdinalNumber(generation) + " generation ("
+          + getExecutionTime(eraTime - startTime) + ")");
+
       List<Gene> genes = new ArrayList<>();
       for (Variant variant : selectedVariants) {
         List<Suspiciouseness> suspiciousenesses =
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
         List<Base> bases = mutation.exec(suspiciousenesses);
-        genes.addAll(variant.getGene()
-            .generateNextGenerationGenes(bases));
+        genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
       }
 
       genes.addAll(crossover.exec(selectedVariants));
@@ -124,15 +127,20 @@ public class KGenProgMain {
         Fitness fitness =
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
 
+        if (0 == Double.compare(fitness.getValue(), 1.0d)) {
+          final long solutionTime = System.nanoTime();
+          log.info(getOrdinalNumber(++foundSolutions) + " solution has been found ("
+              + getExecutionTime(solutionTime - startTime) + ")");
+        }
+
         Variant variant = new Variant(gene, fitness, generatedSourceCode);
         variants.add(variant);
       }
 
       // この世代で生成された Variants のうち，Fitnessが 1.0 なものを complatedVariants に追加
-      final List<Variant> newComplatedVariants = variants.stream()
-          .filter(v -> 0 == Double.compare(v.getFitness()
-              .getValue(), 1.0d))
-          .collect(Collectors.toList());
+      final List<Variant> newComplatedVariants =
+          variants.stream().filter(v -> 0 == Double.compare(v.getFitness().getValue(), 1.0d))
+              .collect(Collectors.toList());
       completedVariants.addAll(newComplatedVariants);
 
       // しきい値以上の complatedVariants が生成された場合は，GAを抜ける
@@ -170,5 +178,59 @@ public class KGenProgMain {
 
   public List<Variant> getComplatedVariants() {
     return this.completedVariants;
+  }
+
+  /**
+   * 基数を序数に変換する．
+   * 
+   * @param cardinalNumber 変換したい基数
+   * @return 序数の文字列
+   */
+  public static String getOrdinalNumber(int cardinalNumber) {
+
+    // "st"をつける場合．11は対象外．
+    if ((cardinalNumber % 10 == 1) && (cardinalNumber % 100 != 11)) {
+      return cardinalNumber + "st";
+    }
+
+    // "nd"をつける場合．12は対象外．
+    else if ((cardinalNumber % 10 == 2) && (cardinalNumber % 100 != 12)) {
+      return cardinalNumber + "nd";
+    }
+
+    // "rd"をつける場合．13の場合は対象外．
+    else if ((cardinalNumber % 10 == 3) && (cardinalNumber % 100 != 13)) {
+      return cardinalNumber + "rd";
+    }
+
+    // "th"をつける場合．上記の以外すべて．
+    else {
+      return cardinalNumber + "th";
+    }
+  }
+
+  public static String getExecutionTime(final long nano) {
+
+    final long micro = nano / 1000l;
+    final long milli = micro / 1000l;
+    final long second = milli / 1000l;
+
+    final long hours = second / 3600;
+    final long minutes = (second % 3600) / 60;
+    final long seconds = (second % 3600) % 60;
+
+    final StringBuilder text = new StringBuilder();
+    if (0 < hours) {
+      text.append(hours);
+      text.append(" hours ");
+    }
+    if (0 < minutes) {
+      text.append(minutes);
+      text.append(" minutes ");
+    }
+    text.append(seconds);
+    text.append(" seconds");
+
+    return text.toString();
   }
 }
