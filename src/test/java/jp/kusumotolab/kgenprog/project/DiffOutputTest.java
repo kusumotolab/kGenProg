@@ -162,11 +162,12 @@ public class DiffOutputTest {
     String modSource = new String(
         Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
 
-    // TODO なぜassert文がないのか？何のテストか？
+    assertThat(normalizeCrLf(modSource), is(expected));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void testDiffOutput4() throws IOException {
     Path basePath = Paths.get("example/example01/");
