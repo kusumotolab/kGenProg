@@ -38,7 +38,7 @@ public class DiffOutputTest {
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
-        + "  public int close_to_zero(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n\n";
+        + "  public int close_to_zero(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -83,7 +83,7 @@ public class DiffOutputTest {
         + "\tpublic static int plus(int n) {\n" + "\t}\n" + "\n"
         + "\tpublic static int minus(int n) {\n" + "\t\treturn n - 1;\n" + "\t}\n" + "\n"
         + "\t// テストからのみ実行されるダミー関数\n" + "\tpublic static void dummy() {\n" + "\t\tnew String();\n"
-        + "\t}\n" + "}\n\n\n";
+        + "\t}\n" + "}\n\n";
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -126,7 +126,7 @@ public class DiffOutputTest {
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    if (n > 0) {\n" + "      n--;\n"
         + "    }\n" + " else {\n" + "      n++;\n" + "    }\n" + "    a();\n" + "\treturn n;\n"
-        + "  }\n" + "}\n\n\n";
+        + "  }\n" + "}\n\n";
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
@@ -179,7 +179,7 @@ public class DiffOutputTest {
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    {\n" + "\t\ta();\n" + "\t}\n"
-        + "    return n;\n" + "  }\n" + "}\n\n\n";
+        + "    return n;\n" + "  }\n" + "}\n\n";
 
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
