@@ -11,6 +11,7 @@ import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.Crossover;
 import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.GenerationalVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
@@ -42,20 +43,19 @@ public class KGenProgMainTest {
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
-
     final FaultLocalization faultLocalization = new Ochiai();
     final Mutation mutation = new RandomMutation();
     final Crossover crossover = new SiglePointCrossover();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
+    final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    final ResultOutput resultGenerator = new DiffOutput(workingPath);
 
-    final KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation,
-        crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection);
+    final KGenProgMain kGenProgMain =
+        new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
+            sourceCodeValidation, variantSelection, resultGenerator, workingPath);
     kGenProgMain.run();
-
-    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getCompletedVariants());
   }
 
   @Test
@@ -71,20 +71,18 @@ public class KGenProgMainTest {
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
-
-    FaultLocalization faultLocalization = new Ochiai();
-    Mutation mutation = new RandomMutation();
-    Crossover crossover = new SiglePointCrossover();
-    SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
-    SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    VariantSelection variantSelection = new GenerationalVariantSelection();
-
-    KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation, crossover,
-        sourceCodeGeneration, sourceCodeValidation, variantSelection);
+    final FaultLocalization faultLocalization = new Ochiai();
+    final Mutation mutation = new RandomMutation();
+    final Crossover crossover = new SiglePointCrossover();
+    final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
+    final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
+    final VariantSelection variantSelection = new DefaultVariantSelection();
+    final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    final ResultOutput resultGenerator = new DiffOutput(workingPath);
+    final KGenProgMain kGenProgMain =
+        new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
+            sourceCodeValidation, variantSelection, resultGenerator, workingPath);
     kGenProgMain.run();
-
-    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getCompletedVariants());
   }
 
   @Test
@@ -100,19 +98,18 @@ public class KGenProgMainTest {
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final FaultLocalization faultLocalization = new Ochiai();
+    final Mutation mutation = new RandomMutation();
+    final Crossover crossover = new SiglePointCrossover();
+    final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
+    final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
+    final VariantSelection variantSelection = new GenerationalVariantSelection();
+    final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    final ResultOutput resultGenerator = new DiffOutput(workingPath);
 
-    FaultLocalization faultLocalization = new Ochiai();
-    Mutation mutation = new RandomMutation();
-    Crossover crossover = new SiglePointCrossover();
-    SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
-    SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    VariantSelection variantSelection = new GenerationalVariantSelection();
-
-    KGenProgMain kGenProgMain = new KGenProgMain(project, faultLocalization, mutation, crossover,
-        sourceCodeGeneration, sourceCodeValidation, variantSelection);
+    final KGenProgMain kGenProgMain =
+        new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
+            sourceCodeValidation, variantSelection, resultGenerator, workingPath);
     kGenProgMain.run();
-
-    final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getCompletedVariants());
   }
 }
