@@ -53,7 +53,7 @@ public class RandomMutation implements Mutation {
     log.debug("enter setCandidates(List<>)");
 
     candidates.stream()
-        .sorted(Comparator.comparing(x -> x.getSourceFile().path))
+        .sorted(Comparator.comparing(x -> x.getSourcePath().path))
         .forEach(e -> {
           final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
           final Visitor visitor = new Visitor();

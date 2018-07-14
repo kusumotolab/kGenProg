@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.Range;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class TestResults implements Serializable {
 
@@ -98,18 +98,18 @@ public class TestResults implements Serializable {
   /**
    * FLで用いる4メトリクスのprivateなParameterized-Method
    * 
-   * @param sourceFile
+   * @param sourcePath
    * @param location
    * @param status
    * @param failed
    * @return
    */
-  private long getNumberOfTests(final SourceFile sourceFile, final Location location,
+  private long getNumberOfTests(final SourcePath sourcePath, final Location location,
       final Coverage.Status status, final boolean failed) {
 
-    // 翻訳1: SourceFile → [FQN]
+    // 翻訳1: SourcePath → [FQN]
     final Set<FullyQualifiedName> correspondingFqns =
-        this.buildResults.getPathToFQNs(sourceFile.path);
+        this.buildResults.getPathToFQNs(sourcePath.path);
 
     // 翻訳2: location → 行番号
     // TODO
@@ -154,49 +154,49 @@ public class TestResults implements Serializable {
   /**
    * a_ep
    * 
-   * @param sourceFile
+   * @param sourcePath
    * @param location
    * @return
    */
-  public long getNumberOfPassedTestsExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfPassedTestsExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
-    return getNumberOfTests(sourceFile, location, Coverage.Status.COVERED, false);
+    return getNumberOfTests(sourcePath, location, Coverage.Status.COVERED, false);
   }
 
   /**
    * a_ef
    * 
-   * @param sourceFile
+   * @param sourcePath
    * @param location
    * @return
    */
-  public long getNumberOfFailedTestsExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfFailedTestsExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
-    return getNumberOfTests(sourceFile, location, Coverage.Status.COVERED, true);
+    return getNumberOfTests(sourcePath, location, Coverage.Status.COVERED, true);
   }
 
   /**
    * a_np
    * 
-   * @param sourceFile
+   * @param sourcePath
    * @param location
    * @return
    */
-  public long getNumberOfPassedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfPassedTestsNotExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
-    return getNumberOfTests(sourceFile, location, Coverage.Status.NOT_COVERED, false);
+    return getNumberOfTests(sourcePath, location, Coverage.Status.NOT_COVERED, false);
   }
 
   /**
    * a_nf
    * 
-   * @param sourceFile
+   * @param sourcePath
    * @param location
    * @return
    */
-  public long getNumberOfFailedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfFailedTestsNotExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
-    return getNumberOfTests(sourceFile, location, Coverage.Status.NOT_COVERED, true);
+    return getNumberOfTests(sourcePath, location, Coverage.Status.NOT_COVERED, true);
   }
 
   /**

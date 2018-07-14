@@ -19,8 +19,8 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class GeneratedJDTASTTest {
 
@@ -34,9 +34,9 @@ public class GeneratedJDTASTTest {
 
   @Before
   public void setup() {
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get(TEST_SOURCE_FILE_NAME));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get(TEST_SOURCE_FILE_NAME));
     JDTASTConstruction constructor = new JDTASTConstruction();
-    this.ast = constructor.constructAST(testSourceFile, TEST_SOURCE);
+    this.ast = constructor.constructAST(testSourcePath, TEST_SOURCE);
   }
 
   @Test
@@ -87,10 +87,10 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName01() {
     String testSource = "package a.b.c; class T1{} public class T2{}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("a", "b", "c", "T2.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("a", "b", "c", "T2.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.T2"));
   }
@@ -98,10 +98,10 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName02() {
     String testSource = "class T1{} public class T2{}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("T2.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("T2.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("T2"));
   }
@@ -109,10 +109,10 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName03() {
     String testSource = "package a.b.c; class T1{} class T2{} class T3{}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("a", "b", "c", "T2.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("a", "b", "c", "T2.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.T1"));
   }
@@ -120,10 +120,10 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName04() {
     String testSource = "package a.b.c;";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("a", "b", "c", "package-info.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("a", "b", "c", "package-info.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
 
     assertThat(ast.getPrimaryClassName(), is("a.b.c.package-info"));
   }
@@ -131,10 +131,10 @@ public class GeneratedJDTASTTest {
   @Test
   public void testStaticImport() {
     String testSource = "import static java.lang.Math.max; class StaticImport{ }";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("StaticImport.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("StaticImport.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
 
     @SuppressWarnings("unchecked")
     List<ImportDeclaration> imports = ast.getRoot()
@@ -165,12 +165,12 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterInsertOperation() {
-    final SourceFile testSourceFile = new TargetSourceFile(
+    final SourcePath testSourcePath = new TargetSourcePath(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts =
-        constructor.constructAST(Collections.singletonList(testSourceFile));
+        constructor.constructAST(Collections.singletonList(testSourcePath));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
     testLocation(jdtAst.inferLocations(10)
@@ -184,7 +184,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTLocation location = new JDTLocation(testSourceFile, statement);
+    final JDTLocation location = new JDTLocation(testSourcePath, statement);
 
     // 挿入対象生成
     final AST ast = jdtAst.getRoot()
@@ -196,7 +196,7 @@ public class GeneratedJDTASTTest {
 
     final GeneratedJDTAST newJdtAst =
         (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
-            .getFiles()
+            .getAsts()
             .get(0);
     testLocation(newJdtAst.inferLocations(10)
         .get(1), "a();\n");
@@ -208,12 +208,12 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterDeleteOperation() {
-    final SourceFile testSourceFile = new TargetSourceFile(
+    final SourcePath testSourcePath = new TargetSourcePath(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts =
-        constructor.constructAST(Collections.singletonList(testSourceFile));
+        constructor.constructAST(Collections.singletonList(testSourcePath));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
     testLocation(jdtAst.inferLocations(10)
@@ -227,12 +227,12 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTLocation location = new JDTLocation(testSourceFile, statement);
+    final JDTLocation location = new JDTLocation(testSourcePath, statement);
     final DeleteOperation operation = new DeleteOperation();
 
     final GeneratedJDTAST newJdtAst =
         (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
-            .getFiles()
+            .getAsts()
             .get(0);
     testLocation(newJdtAst.inferLocations(4)
         .get(1), "return n;\n");
@@ -242,12 +242,12 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterReplaceOperation() {
-    final SourceFile testSourceFile = new TargetSourceFile(
+    final SourcePath testSourcePath = new TargetSourcePath(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts =
-        constructor.constructAST(Collections.singletonList(testSourceFile));
+        constructor.constructAST(Collections.singletonList(testSourcePath));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
     testLocation(jdtAst.inferLocations(10)
@@ -261,7 +261,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTLocation location = new JDTLocation(testSourceFile, statement);
+    final JDTLocation location = new JDTLocation(testSourcePath, statement);
 
 
     // 置換対象の生成
@@ -284,7 +284,7 @@ public class GeneratedJDTASTTest {
 
     final GeneratedJDTAST newJdtAst =
         (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
-            .getFiles()
+            .getAsts()
             .get(0);
     testLocation(newJdtAst.inferLocations(8)
         .get(1), "return n;\n");

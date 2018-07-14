@@ -21,9 +21,9 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.DiffOutput;
 import jp.kusumotolab.kgenprog.project.ResultOutput;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
-import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -35,15 +35,15 @@ public class KGenProgMainTest {
   public void testExample04() {
 
     final Path rootPath = Paths.get("example/example04");
-    final List<SourceFile> targetSourceFiles = new ArrayList<>();
-    targetSourceFiles
-        .add(new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
-    final List<SourceFile> testSourceFiles = new ArrayList<>();
-    testSourceFiles
-        .add(new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
+    final List<SourcePath> targetSourcePaths = new ArrayList<>();
+    targetSourcePaths
+        .add(new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
+    final List<SourcePath> testSourcePaths = new ArrayList<>();
+    testSourcePaths
+        .add(new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
-    final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
-        testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final TargetProject project = TargetProjectFactory.create(rootPath, targetSourcePaths,
+        testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
     final Mutation mutation = new RandomMutation();
@@ -64,14 +64,14 @@ public class KGenProgMainTest {
   public void testExample05() {
 
     final Path rootPath = Paths.get("example/example05");
-    final List<SourceFile> targetSourceFiles = new ArrayList<>();
-    targetSourceFiles
-        .add(new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
-    final List<SourceFile> testSourceFiles = new ArrayList<>();
+    final List<SourcePath> targetSourcePaths = new ArrayList<>();
+    targetSourcePaths
+        .add(new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
+    final List<SourcePath> testSourceFiles = new ArrayList<>();
     testSourceFiles
-        .add(new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
+        .add(new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
-    final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
+    final TargetProject project = TargetProjectFactory.create(rootPath, targetSourcePaths,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
 
     FaultLocalization faultLocalization = new Ochiai();
@@ -93,12 +93,12 @@ public class KGenProgMainTest {
   public void testExample06() {
 
     final Path rootPath = Paths.get("example/example06");
-    final List<SourceFile> targetSourceFiles = new ArrayList<>();
+    final List<SourcePath> targetSourceFiles = new ArrayList<>();
     targetSourceFiles
-        .add(new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
-    final List<SourceFile> testSourceFiles = new ArrayList<>();
+        .add(new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
+    final List<SourcePath> testSourceFiles = new ArrayList<>();
     testSourceFiles
-        .add(new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
+        .add(new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);

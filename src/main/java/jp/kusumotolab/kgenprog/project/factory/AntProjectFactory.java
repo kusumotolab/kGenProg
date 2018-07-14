@@ -12,7 +12,7 @@ public class AntProjectFactory extends BuildToolProjectFactory {
 
   @Override
   public boolean isApplicable() {
-    return getConfigFile().size() > 0;
+    return getConfigPath().size() > 0;
   }
 
   @Override

@@ -43,7 +43,7 @@ public class DiffOutputTest {
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
     GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
-        .getFiles()
+        .getAsts()
         .get(0);
 
     // 削除位置の Location 作成
@@ -56,7 +56,7 @@ public class DiffOutputTest {
         .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTLocation location = new JDTLocation(
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
@@ -88,7 +88,7 @@ public class DiffOutputTest {
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
     GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
-        .getFiles()
+        .getAsts()
         .get(0);
 
     // 削除位置の Location 作成
@@ -101,7 +101,7 @@ public class DiffOutputTest {
         .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTLocation location = new JDTLocation(
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
+        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -131,7 +131,7 @@ public class DiffOutputTest {
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
     GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
-        .getFiles()
+        .getAsts()
         .get(0);
 
     // 挿入位置のLocation生成
@@ -143,7 +143,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     JDTLocation location = new JDTLocation(
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     // 挿入対象生成
@@ -184,7 +184,7 @@ public class DiffOutputTest {
     TargetProject project = TargetProjectFactory.create(basePath);
     Variant originVariant = project.getInitialVariant();
     GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
-        .getFiles()
+        .getAsts()
         .get(0);
 
     // 挿入位置のLocation生成
@@ -196,7 +196,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     JDTLocation location = new JDTLocation(
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     // 挿入対象生成

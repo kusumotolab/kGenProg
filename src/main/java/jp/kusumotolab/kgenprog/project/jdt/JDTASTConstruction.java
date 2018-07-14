@@ -15,49 +15,49 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class JDTASTConstruction {
 
   public List<GeneratedAST> constructAST(TargetProject project) {
-    return constructAST(project.getSourceFiles());
+    return constructAST(project.getSourcePaths());
   }
 
-  public List<GeneratedAST> constructAST(List<SourceFile> sourceFiles) {
-    String[] filePaths = sourceFiles.stream()
-        .map(file -> file.path.toString())
+  public List<GeneratedAST> constructAST(List<SourcePath> sourcePaths) {
+    String[] paths = sourcePaths.stream()
+        .map(path -> path.path.toString())
         .toArray(String[]::new);
 
     ASTParser parser = createNewParser();
 
-    Map<Path, SourceFile> pathToSourceFile = sourceFiles.stream()
-        .collect(Collectors.toMap(file -> file.path, file -> file));
+    Map<Path, SourcePath> pathToSourcePath = sourcePaths.stream()
+        .collect(Collectors.toMap(path -> path.path, path -> path));
 
     List<GeneratedAST> asts = new ArrayList<>();
 
     FileASTRequestor requestor = new FileASTRequestor() {
 
       @Override
-      public void acceptAST(String sourceFilePath, CompilationUnit ast) {
-        SourceFile file = pathToSourceFile.get(Paths.get(sourceFilePath));
-        if (file != null) {
-          asts.add(new GeneratedJDTAST(JDTASTConstruction.this, file, ast,
-              loadAsString(sourceFilePath)));
+      public void acceptAST(String sourcePath, CompilationUnit ast) {
+        SourcePath path = pathToSourcePath.get(Paths.get(sourcePath));
+        if (path != null) {
+          asts.add(new GeneratedJDTAST(JDTASTConstruction.this, path, ast,
+              loadAsString(sourcePath)));
         }
       }
     };
 
-    parser.createASTs(filePaths, null, new String[] {}, requestor, null);
+    parser.createASTs(paths, null, new String[] {}, requestor, null);
 
     return asts;
   }
 
-  public GeneratedJDTAST constructAST(SourceFile file, String data) {
+  public GeneratedJDTAST constructAST(SourcePath path, String data) {
     ASTParser parser = createNewParser();
     parser.setSource(data.toCharArray());
 
-    return new GeneratedJDTAST(this, file, (CompilationUnit) parser.createAST(null), data);
+    return new GeneratedJDTAST(this, path, (CompilationUnit) parser.createAST(null), data);
   }
 
   private ASTParser createNewParser() {
@@ -78,9 +78,9 @@ public class JDTASTConstruction {
     return parser;
   }
 
-  private String loadAsString(String filePath) {
+  private String loadAsString(String path) {
     try {
-      return new String(Files.readAllBytes(Paths.get(filePath)));
+      return new String(Files.readAllBytes(Paths.get(path)));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
@@ -262,14 +261,15 @@ public class MemoryClassLoaderTest {
         .toURL()});
 
     // .classファイルを探す
-    final Path classFileName = Paths.get(buggyCalculator.toString()
+    final Path buggyCalculatorClassFilePath = Paths.get(buggyCalculator.toString()
         .replace(".", "/") + ".class");
-    final Optional<Path> classFile = Files.walk(outDir)
-        .filter(file -> file.endsWith(classFileName))
-        .findFirst();
+    final Path classFilePath = Files.walk(outDir)
+        .filter(path -> path.endsWith(buggyCalculatorClassFilePath))
+        .findFirst()
+        .get();
 
     // .classファイルを直接読み込んでメモリに格納
-    final byte[] byteCode = Files.readAllBytes(classFile.get());
+    final byte[] byteCode = Files.readAllBytes(classFilePath);
 
     // addDefinitionで定義追加
     loader.addDefinition(buggyCalculator, byteCode);

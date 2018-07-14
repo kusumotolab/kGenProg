@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
-import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class HeuristicProjectFactory implements IProjectFactory {
@@ -27,25 +27,25 @@ public class HeuristicProjectFactory implements IProjectFactory {
   public TargetProject create() {
     final String[] javaExtension = {"java"};
 
-    final List<SourceFile> sourceFiles = FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
+    final List<SourcePath> sourcePaths = FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
         .stream()
         .filter(file -> !file.getName()
             .endsWith("Test.java"))
         .map(file -> file.toPath())
-        .map(TargetSourceFile::new)
+        .map(TargetSourcePath::new)
         .collect(Collectors.toList());
 
-    final List<SourceFile> testFiles = FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
+    final List<SourcePath> testPaths = FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
         .stream()
         .filter(file -> file.getName()
             .endsWith("Test.java"))
         .map(file -> file.toPath())
-        .map(TestSourceFile::new)
+        .map(TestSourcePath::new)
         .collect(Collectors.toList());
 
     final List<ClassPath> classPath = JUnitLibraryResolver.libraries.get(JUnitVersion.JUNIT4);
 
-    return new TargetProject(rootPath, sourceFiles, testFiles, classPath);
+    return new TargetProject(rootPath, sourcePaths, testPaths, classPath);
   }
 
 }
