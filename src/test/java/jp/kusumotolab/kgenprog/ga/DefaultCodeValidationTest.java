@@ -18,7 +18,7 @@ public class DefaultCodeValidationTest {
   @Test
   public void testExec() {
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
 
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, outDir);
@@ -34,7 +34,7 @@ public class DefaultCodeValidationTest {
   @Test
   public void testExecForBuildFailure() {
     final Path rootDir = Paths.get("example/example00");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
 
     // TODO 一時的なSyserr対策．
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．

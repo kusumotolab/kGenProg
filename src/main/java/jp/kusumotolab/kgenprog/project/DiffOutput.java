@@ -69,11 +69,11 @@ public class DiffOutput implements ResultOutput {
               .rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
-            Path diffFile = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
+            Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
             edit.apply(document);
-            Files.write(diffFile, Arrays.asList(document.get()));
+            Files.write(diffFilePath, Arrays.asList(document.get()));
 
-            makePatchFile(originPath, diffFile,
+            makePatchFile(originPath, diffFilePath,
                 variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"));
           }
         } catch (MalformedTreeException e) {
@@ -150,13 +150,13 @@ public class DiffOutput implements ResultOutput {
    * originPath と diffFile の間のパッチを patchFile へ出力する
    * 
    * @param originPath
-   * @param diffFile
-   * @param patchFile
+   * @param diffPath
+   * @param patchPath
    */
-  private void makePatchFile(Path originPath, Path diffFile, Path patchFile) {
+  private void makePatchFile(Path originPath, Path diffPath, Path patchPath) {
     try {
       List<String> origin = Files.readAllLines(originPath);
-      List<String> modified = Files.readAllLines(diffFile);
+      List<String> modified = Files.readAllLines(diffPath);
 
       Patch<String> diff = DiffUtils.diff(origin, modified);
 
@@ -168,7 +168,7 @@ public class DiffOutput implements ResultOutput {
 
       unifiedDiff.forEach(System.out::println);
 
-      Files.write(patchFile, unifiedDiff);
+      Files.write(patchPath, unifiedDiff);
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();

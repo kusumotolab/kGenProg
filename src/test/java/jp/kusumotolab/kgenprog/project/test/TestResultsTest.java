@@ -40,13 +40,13 @@ public class TestResultsTest {
 
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
-        .toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
+        .toURL() });
     return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
   }
 
@@ -82,14 +82,14 @@ public class TestResultsTest {
   public void checkFLMetricsInTestResultsForExample02() throws Exception {
     // actual確保のためにテストの実行
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
-        .toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
+        .toURL() });
     final TestResults testResults =
         executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
     testResults.setBuildResults(buildResults);
