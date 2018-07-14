@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +21,7 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ResultOutput;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
@@ -29,15 +29,15 @@ public class KGenProgMain {
 
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
-  private TargetProject targetProject;
-  private FaultLocalization faultLocalization;
-  private Mutation mutation;
-  private Crossover crossover;
-  private SourceCodeGeneration sourceCodeGeneration;
-  private SourceCodeValidation sourceCodeValidation;
-  private VariantSelection variantSelection;
-  private TestProcessBuilder testProcessBuilder;
-  private final List<Variant> completedVariants;
+  private final TargetProject targetProject;
+  private final FaultLocalization faultLocalization;
+  private final Mutation mutation;
+  private final Crossover crossover;
+  private final SourceCodeGeneration sourceCodeGeneration;
+  private final SourceCodeValidation sourceCodeValidation;
+  private final VariantSelection variantSelection;
+  private final TestProcessBuilder testProcessBuilder;
+  private final ResultOutput resultGenerator;
 
   // 以下，一時的なフィールド #146 で解決すべき
   private final long timeout;
@@ -47,25 +47,29 @@ public class KGenProgMain {
   // TODO #146
   // workingdirのパスを一時的にMainに記述
   // 別クラスが管理すべき情報？
-  public final Path workingDir;
+  public final Path workingPath;
 
-  public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization,
-      Mutation mutation, Crossover crossover, SourceCodeGeneration sourceCodeGeneration,
-      SourceCodeValidation sourceCodeValidation, VariantSelection variantSelection) {
+  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
+      final Mutation mutation, final Crossover crossover,
+      final SourceCodeGeneration sourceCodeGeneration,
+      final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
+      final ResultOutput resultGenerator, final Path workingPath) {
 
     this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, 60, 10, 1);
+        sourceCodeValidation, variantSelection, resultGenerator, workingPath, 60, 10, 1);
   }
 
-  public KGenProgMain(TargetProject targetProject, FaultLocalization faultLocalization,
-      Mutation mutation, Crossover crossover, SourceCodeGeneration sourceCodeGeneration,
-      SourceCodeValidation sourceCodeValidation, VariantSelection variantSelection,
-      final long timeout, final int maxGeneration, final int requiredSolutions) {
+  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
+      final Mutation mutation, final Crossover crossover,
+      final SourceCodeGeneration sourceCodeGeneration,
+      final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
+      final ResultOutput resultGenerator, final Path workingPath, final long timeout,
+      final int maxGeneration, final int requiredSolutions) {
 
-    this.workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    this.workingPath = workingPath;
     try {
-      if (Files.exists(this.workingDir)) {
-        FileUtils.deleteDirectory(this.workingDir.toFile());
+      if (Files.exists(this.workingPath)) {
+        FileUtils.deleteDirectory(this.workingPath.toFile());
       }
     } catch (final IOException e) {
       e.printStackTrace();
@@ -78,18 +82,19 @@ public class KGenProgMain {
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-    this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingDir);
-    this.completedVariants = new ArrayList<>();
+    this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingPath);
+    this.resultGenerator = resultGenerator;
 
     this.timeout = timeout;
     this.maxGeneration = maxGeneration;
     this.requiredSolutions = requiredSolutions;
-
-
   }
 
-  public void run() {
+  public List<Variant> run() {
     log.debug("enter run()");
+
+    final List<Variant> completedVariants = new ArrayList<>();
+
     List<Variant> selectedVariants = new ArrayList<>();
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
@@ -105,26 +110,27 @@ public class KGenProgMain {
         break;
       }
 
-      List<Gene> genes = new ArrayList<>();
+      final List<Gene> genes = new ArrayList<>();
       for (Variant variant : selectedVariants) {
-        List<Suspiciouseness> suspiciousenesses =
+        final List<Suspiciouseness> suspiciousenesses =
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
-        List<Base> bases = mutation.exec(suspiciousenesses);
+        final List<Base> bases = mutation.exec(suspiciousenesses);
         genes.addAll(variant.getGene()
             .generateNextGenerationGenes(bases));
       }
 
       genes.addAll(crossover.exec(selectedVariants));
 
-      List<Variant> variants = new ArrayList<>();
-      for (Gene gene : genes) {
-        GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
+      final List<Variant> variants = new ArrayList<>();
+      for (final Gene gene : genes) {
+        final GeneratedSourceCode generatedSourceCode =
+            sourceCodeGeneration.exec(gene, targetProject);
 
-        Fitness fitness =
+        final Fitness fitness =
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
 
-        Variant variant = new Variant(gene, fitness, generatedSourceCode);
+        final Variant variant = new Variant(gene, fitness, generatedSourceCode);
         variants.add(variant);
       }
 
@@ -136,7 +142,7 @@ public class KGenProgMain {
       completedVariants.addAll(newComplatedVariants);
 
       // しきい値以上の complatedVariants が生成された場合は，GAを抜ける
-      if (areEnoughComplatedVariants()) {
+      if (areEnoughComplatedVariants(completedVariants)) {
         break;
       }
 
@@ -144,7 +150,11 @@ public class KGenProgMain {
       variants.removeAll(newComplatedVariants);
       selectedVariants = variantSelection.exec(variants);
     }
+
+    resultGenerator.outputResult(targetProject, completedVariants);
+
     log.debug("exit run()");
+    return completedVariants;
   }
 
   private boolean reachedMaxGeneration(final int generation) {
@@ -164,11 +174,7 @@ public class KGenProgMain {
     return false;
   }
 
-  private boolean areEnoughComplatedVariants() {
+  private boolean areEnoughComplatedVariants(final List<Variant> completedVariants) {
     return this.requiredSolutions <= completedVariants.size();
-  }
-
-  public List<Variant> getComplatedVariants() {
-    return this.completedVariants;
   }
 }
