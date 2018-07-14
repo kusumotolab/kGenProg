@@ -55,7 +55,7 @@ public class KGenProgMainTest {
     kGenProgMain.run();
 
     final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getComplatedVariants());
+    ro.outputResult(project, kGenProgMain.getCompletedVariants());
   }
 
   @Test
@@ -84,7 +84,7 @@ public class KGenProgMainTest {
     kGenProgMain.run();
 
     final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getComplatedVariants());
+    ro.outputResult(project, kGenProgMain.getCompletedVariants());
   }
 
   @Test
@@ -113,6 +113,6 @@ public class KGenProgMainTest {
     kGenProgMain.run();
 
     final ResultOutput ro = new DiffOutput(kGenProgMain.workingDir);
-    ro.outputResult(project, kGenProgMain.getComplatedVariants());
+    ro.outputResult(project, kGenProgMain.getCompletedVariants());
   }
 }
