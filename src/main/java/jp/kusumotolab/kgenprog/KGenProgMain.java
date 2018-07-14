@@ -94,7 +94,8 @@ public class KGenProgMain {
     final Variant initialVariant = targetProject.getInitialVariant();
     selectedVariants.add(initialVariant);
 
-    mutation.setCandidates(initialVariant.getGeneratedSourceCode().getFiles());
+    mutation.setCandidates(initialVariant.getGeneratedSourceCode()
+        .getFiles());
     final long startTime = System.nanoTime();
     int generation = 0;
     List<Variant> previousGenerationVariants = new ArrayList<>();
@@ -111,7 +112,8 @@ public class KGenProgMain {
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
 
         final List<Base> bases = mutation.exec(suspiciousenesses);
-        genes.addAll(variant.getGene().generateNextGenerationGenes(bases));
+        genes.addAll(variant.getGene()
+            .generateNextGenerationGenes(bases));
       }
 
       genes.addAll(crossover.exec(selectedVariants));
@@ -128,19 +130,22 @@ public class KGenProgMain {
         currentGenerationVariants.add(variant);
       }
 
-      // この世代で生成された Variants のうち，Fitnessが 1.0 なものを complatedVariants に追加
-      final List<Variant> newComplatedVariants = currentGenerationVariants.stream()
-          .filter(v -> 0 == Double.compare(v.getFitness().getValue(), 1.0d))
+      // TODO #171 で導入するAPIを使うべき
+      // この世代で生成された Variants のうち，Fitnessが 1.0 なものを completedVariants に追加
+      final List<Variant> newCompletedVariants = currentGenerationVariants.stream()
+          .filter(v -> 0 == Double.compare(v.getFitness()
+              .getValue(), 1.0d))
           .collect(Collectors.toList());
-      completedVariants.addAll(newComplatedVariants);
+      completedVariants.addAll(newCompletedVariants);
 
-      // しきい値以上の complatedVariants が生成された場合は，GAを抜ける
-      if (areEnoughComplatedVariants()) {
+      // しきい値以上の completedVariants が生成された場合は，GAを抜ける
+      if (areEnoughCompletedVariants()) {
         break;
       }
 
+      // TODO #171 で導入するAPIを使うべき
       // Fitness が 1.0 な Variants は除いた上で，前の世代のバリアントも併せた上で，次世代を生成するための Variants を選択
-      currentGenerationVariants.removeAll(newComplatedVariants);
+      currentGenerationVariants.removeAll(newCompletedVariants);
       previousGenerationVariants.addAll(currentGenerationVariants);
       selectedVariants = variantSelection.exec(previousGenerationVariants);
 
@@ -167,11 +172,11 @@ public class KGenProgMain {
     return false;
   }
 
-  private boolean areEnoughComplatedVariants() {
+  private boolean areEnoughCompletedVariants() {
     return this.requiredSolutions <= completedVariants.size();
   }
 
-  public List<Variant> getComplatedVariants() {
+  public List<Variant> getCompletedVariants() {
     return this.completedVariants;
   }
 }
