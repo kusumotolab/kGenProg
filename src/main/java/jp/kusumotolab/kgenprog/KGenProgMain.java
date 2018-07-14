@@ -40,7 +40,7 @@ public class KGenProgMain {
   private final List<Variant> completedVariants;
 
   // 以下，一時的なフィールド #146 で解決すべき
-  private final long timeout;
+  private final long timeoutSeconds;
   private final int maxGeneration;
   private final int requiredSolutions;
 
@@ -81,7 +81,7 @@ public class KGenProgMain {
     this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingDir);
     this.completedVariants = new ArrayList<>();
 
-    this.timeout = timeout;
+    this.timeoutSeconds = timeout;
     this.maxGeneration = maxGeneration;
     this.requiredSolutions = requiredSolutions;
 
@@ -163,7 +163,7 @@ public class KGenProgMain {
   private boolean isTimedOut(final long startTime) {
     log.debug("enter isTimedOut()");
     final long elapsedTime = System.nanoTime() - startTime;
-    return elapsedTime > this.timeout * 1000 * 1000 * 1000;
+    return elapsedTime > this.timeoutSeconds * 1000 * 1000 * 1000;
   }
 
   @Deprecated
