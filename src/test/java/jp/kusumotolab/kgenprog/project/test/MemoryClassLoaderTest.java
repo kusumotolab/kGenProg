@@ -36,7 +36,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 public class MemoryClassLoaderTest {
 
   final static Path rootDir = Paths.get("example/example01");
-  final static Path outDir = rootDir.resolve("_bin");
+  final static Path outDir = rootDir.resolve("bin");
 
   final static TargetFullyQualifiedName buggyCalculator =
       new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
@@ -64,8 +64,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading01() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // 動的ロード
     final Class<?> clazz = loader.loadClass(buggyCalculator);
@@ -79,8 +79,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading02() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // 動的ロード（Override側のメソッドで試す）
     final Class<?> clazz = loader.loadClass(buggyCalculator.toString(), false);
@@ -94,8 +94,8 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading03() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // SystemLoaderで動的ロード，失敗するはず (Exceptionを期待)
     ClassLoader.getSystemClassLoader()
@@ -104,8 +104,8 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading04() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // リフレクションで動的ロード，失敗するはず (Exceptionを期待)
     // 処理自体は02と等価なはず
@@ -114,8 +114,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading05() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // リフレクション + MemoryLoaderで動的ロード，これは成功するはず
     final Class<?> clazz = Class.forName(buggyCalculator.toString(), true, loader);
@@ -125,8 +125,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC01() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // まず動的ロード
     Class<?> clazz = loader.loadClass(buggyCalculator);
@@ -151,8 +151,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC02() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // まず動的ロード
     final Class<?> clazz = loader.loadClass(buggyCalculator);
@@ -177,8 +177,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC03() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // まず動的ロード
     Class<?> clazz = loader.loadClass(buggyCalculator);
@@ -201,8 +201,8 @@ public class MemoryClassLoaderTest {
     assertThat(targetClassWR.get(), is(nullValue()));
 
     // もう一度ロードすると
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
     clazz = loader.loadClass(buggyCalculator);
     targetClassWR = new WeakReference<>(clazz);
 
@@ -213,8 +213,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testJUnitWithMemoryLoader01() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // BuggyCalculatorTest（BCTest）をロードしておく
     final Class<?> clazz = loader.loadClass(buggyCalculatorTest);
@@ -232,8 +232,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testJUnitWithMemoryLoader02() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // まず何もロードされていないはず
     assertThat(listLoadedClasses(loader), is(empty()));
@@ -257,8 +257,8 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testAddDefinition01() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // .classファイルを探す
     final Path buggyCalculatorClassFilePath = Paths.get(buggyCalculator.toString()
@@ -281,11 +281,11 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassFormatError.class)
   public void testAddDefinition02() throws Exception {
-    loader = new MemoryClassLoader(new URL[] {outDir.toUri()
-        .toURL()});
+    loader = new MemoryClassLoader(new URL[] { outDir.toUri()
+        .toURL() });
 
     // 不正なバイトコードを生成
-    final byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};
+    final byte[] invalidByteCode = new byte[] { 0, 0, 0, 0, 0 };
 
     // addDefinitionで定義追加
     loader.addDefinition(buggyCalculator, invalidByteCode);
