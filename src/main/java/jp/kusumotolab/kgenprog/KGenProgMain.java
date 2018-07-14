@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,7 @@ public class KGenProgMain {
   private final ResultOutput resultGenerator;
 
   // 以下，一時的なフィールド #146 で解決すべき
-  private final long timeout;
+  private final long timeoutSeconds;
   private final int maxGeneration;
   private final int requiredSolutions;
 
@@ -85,7 +84,7 @@ public class KGenProgMain {
     this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingPath);
     this.resultGenerator = resultGenerator;
 
-    this.timeout = timeout;
+    this.timeoutSeconds = timeout;
     this.maxGeneration = maxGeneration;
     this.requiredSolutions = requiredSolutions;
   }
@@ -122,7 +121,7 @@ public class KGenProgMain {
 
       genes.addAll(crossover.exec(selectedVariants));
 
-      final List<Variant> variants = new ArrayList<>();
+      final List<Variant> currentGenerationVariants = new ArrayList<>();
       for (final Gene gene : genes) {
         final GeneratedSourceCode generatedSourceCode =
             sourceCodeGeneration.exec(gene, targetProject);
@@ -131,24 +130,17 @@ public class KGenProgMain {
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
 
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
-        variants.add(variant);
+        currentGenerationVariants.add(variant);
+
+        if (0 == Double.compare(fitness.getValue(), 1.0d)) {
+          completedVariants.add(variant);
+
+          // しきい値以上の completedVariants が生成された場合は，GAを抜ける
+          if (areEnoughCompletedVariants(completedVariants)) {
+            break;
+          }
+        }
       }
-
-      // この世代で生成された Variants のうち，Fitnessが 1.0 なものを complatedVariants に追加
-      final List<Variant> newComplatedVariants = variants.stream()
-          .filter(v -> 0 == Double.compare(v.getFitness()
-              .getValue(), 1.0d))
-          .collect(Collectors.toList());
-      completedVariants.addAll(newComplatedVariants);
-
-      // しきい値以上の complatedVariants が生成された場合は，GAを抜ける
-      if (areEnoughComplatedVariants(completedVariants)) {
-        break;
-      }
-
-      // Fitness が 1.0 な Variants は除いた上で，次世代を生成するための Variants を選択
-      variants.removeAll(newComplatedVariants);
-      selectedVariants = variantSelection.exec(variants);
     }
 
     resultGenerator.outputResult(targetProject, completedVariants);
@@ -165,7 +157,7 @@ public class KGenProgMain {
   private boolean isTimedOut(final long startTime) {
     log.debug("enter isTimedOut()");
     final long elapsedTime = System.nanoTime() - startTime;
-    return elapsedTime > this.timeout * 1000 * 1000 * 1000;
+    return elapsedTime > this.timeoutSeconds * 1000 * 1000 * 1000;
   }
 
   @Deprecated
@@ -174,7 +166,7 @@ public class KGenProgMain {
     return false;
   }
 
-  private boolean areEnoughComplatedVariants(final List<Variant> completedVariants) {
+  private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     return this.requiredSolutions <= completedVariants.size();
   }
 }
