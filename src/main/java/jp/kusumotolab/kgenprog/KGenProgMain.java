@@ -102,58 +102,69 @@ public class KGenProgMain {
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getFiles());
+
     final StopWatch stopWatch = new StopWatch();
     stopWatch.start();
-    int generation = 0;
-    int foundSolutions = 0;
+    final OrdinalNumber generation = new OrdinalNumber(1);
+    final OrdinalNumber foundSolutions = new OrdinalNumber(0);
     GA: while (true) {
 
-      // 制限時間に達したか，最大世代数に到達した場合には GA を抜ける
-      if (isTimedOut(stopWatch) || reachedMaxGeneration(generation++)) {
-        break;
-      }
+      log.info("in the era of the " + generation.toString() + " generation (" + getTime(stopWatch)
+          + ")");
 
-      log.info("in the era of the " + getOrdinalNumber(generation) + " generation ("
-          + getExecutionTime(stopWatch) + ")");
-
+      // 遺伝子を生成
       final List<Gene> genes = new ArrayList<>();
       for (final Variant variant : selectedVariants) {
         final List<Suspiciouseness> suspiciousenesses =
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
-
         final List<Base> bases = mutation.exec(suspiciousenesses);
         genes.addAll(variant.getGene()
             .generateNextGenerationGenes(bases));
       }
-
       genes.addAll(crossover.exec(selectedVariants));
 
+      // 遺伝子をもとに変異プログラムを生成
       final List<Variant> currentGenerationVariants = new ArrayList<>();
       for (final Gene gene : genes) {
         final GeneratedSourceCode generatedSourceCode =
             sourceCodeGeneration.exec(gene, targetProject);
-
         final Fitness fitness =
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
-
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
         currentGenerationVariants.add(variant);
 
+        // 生成した変異プログラムが，すべてのテストケースをパスした場合
         if (0 == Double.compare(fitness.getValue(), 1.0d)) {
+          foundSolutions.incrementAndGet();
 
-          log.info(getOrdinalNumber(++foundSolutions) + " solution has been found ("
-              + getExecutionTime(stopWatch) + ")");
+          log.info(
+              foundSolutions.toString() + " solution has been found (" + getTime(stopWatch) + ")");
 
           completedVariants.add(variant);
 
-          // しきい値以上の completedVariants が生成された場合は，GAを抜ける
+          // しきい値以上の completedVariants が生成された場合は，GA を抜ける
           if (areEnoughCompletedVariants(completedVariants)) {
+            log.info("reached the required solutions");
             break GA;
           }
         }
       }
 
+      // 制限時間に達した場合には GA を抜ける
+      if (isTimedOut(stopWatch)) {
+        log.info("reached the time limit");
+        break;
+      }
+
+      // 最大世代数に到達した場合には GA を抜ける
+      if (reachedMaxGeneration(generation)) {
+        log.info("reached the maximum generation");
+        break;
+      }
+
+      // 次世代に向けての準備
       selectedVariants = variantSelection.exec(currentGenerationVariants);
+      generation.getAndIncrement();
     }
 
     resultGenerator.outputResult(targetProject, completedVariants);
@@ -162,9 +173,9 @@ public class KGenProgMain {
     return completedVariants;
   }
 
-  private boolean reachedMaxGeneration(final int generation) {
+  private boolean reachedMaxGeneration(final OrdinalNumber generation) {
     log.debug("enter reachedMaxGeneration()");
-    return this.maxGeneration <= generation;
+    return this.maxGeneration <= generation.get();
   }
 
   private boolean isTimedOut(final StopWatch stopWatch) {
@@ -177,38 +188,11 @@ public class KGenProgMain {
     return this.requiredSolutions <= completedVariants.size();
   }
 
-  /**
-   * 基数を序数に変換する．
-   * 
-   * @param cardinalNumber 変換したい基数
-   * @return 序数の文字列
-   */
-  public static String getOrdinalNumber(int cardinalNumber) {
-
-    // "st"をつける場合．11は対象外．
-    if ((cardinalNumber % 10 == 1) && (cardinalNumber % 100 != 11)) {
-      return cardinalNumber + "st";
-    }
-
-    // "nd"をつける場合．12は対象外．
-    else if ((cardinalNumber % 10 == 2) && (cardinalNumber % 100 != 12)) {
-      return cardinalNumber + "nd";
-    }
-
-    // "rd"をつける場合．13の場合は対象外．
-    else if ((cardinalNumber % 10 == 3) && (cardinalNumber % 100 != 13)) {
-      return cardinalNumber + "rd";
-    }
-
-    // "th"をつける場合．上記の以外すべて．
-    else {
-      return cardinalNumber + "th";
-    }
+  public static String getTime(final StopWatch stopWatch) {
+    return getTime(stopWatch.getTime(TimeUnit.SECONDS));
   }
 
-  public static String getExecutionTime(final StopWatch stopWatch) {
-
-    final long elapsedSeconds = stopWatch.getTime(TimeUnit.SECONDS);
+  public static String getTime(final long elapsedSeconds) {
 
     final long hours = elapsedSeconds / 3600;
     final long minutes = (elapsedSeconds % 3600) / 60;
