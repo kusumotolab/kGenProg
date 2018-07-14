@@ -46,7 +46,7 @@ public class RandomMutationTest {
     final String basePath = "example/example01/";
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final RandomMutation randomMutation = new RandomMutation(new StaticNumberGeneration());
+    final RandomMutation randomMutation = new RandomMutation(10, new StaticNumberGeneration());
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getFiles());
 

@@ -44,7 +44,7 @@ public class KGenProgMainTest {
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
-    final Mutation mutation = new RandomMutation();
+    final Mutation mutation = new RandomMutation(10);
     final Crossover crossover = new SiglePointCrossover();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
@@ -73,7 +73,7 @@ public class KGenProgMainTest {
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
-    final Mutation mutation = new RandomMutation();
+    final Mutation mutation = new RandomMutation(10);
     final Crossover crossover = new SiglePointCrossover();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
@@ -102,7 +102,7 @@ public class KGenProgMainTest {
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
-    final Mutation mutation = new RandomMutation();
+    final Mutation mutation = new RandomMutation(10);
     final Crossover crossover = new SiglePointCrossover();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
