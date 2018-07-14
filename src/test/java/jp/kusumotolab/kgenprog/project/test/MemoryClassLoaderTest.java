@@ -46,8 +46,14 @@ public class MemoryClassLoaderTest {
   static MemoryClassLoader loader;
 
   @BeforeClass
-  public static void beforeClass() throws IOException {
-    FileUtils.deleteDirectory(outDir.toFile());
+  public static void beforeClass() {
+    try {
+      FileUtils.deleteDirectory(outDir.toFile());
+    } catch (IOException e) {
+      // TODO #97
+      // temporal patch
+      // nothing todo
+    }
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
