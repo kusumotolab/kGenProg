@@ -8,18 +8,18 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class InsertOperationTest {
 
   @Test
   public void testInsertStatement() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -31,14 +31,14 @@ public class InsertOperationTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourceFile, statement);
+    JDTLocation location = new JDTLocation(testSourcePath, statement);
 
     // 挿入対象生成
     Statement insertStatement = createInsertionTarget();
     InsertOperation operation = new InsertOperation(insertStatement);
 
     GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getFiles()
+    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
         .get(0);
     assertEquals("class A {\n  public void a(){\n    int a=0;\n    a=1;\n    a();\n  }\n}\n",
         newAST.getRoot()
@@ -49,10 +49,10 @@ public class InsertOperationTest {
   @Test
   public void testInsertStatementDirectly() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -64,7 +64,7 @@ public class InsertOperationTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourceFile, statement);
+    JDTLocation location = new JDTLocation(testSourcePath, statement);
 
     // 挿入対象生成
     Statement insertStatement = createInsertionTarget();
@@ -79,10 +79,10 @@ public class InsertOperationTest {
 
   private Statement createInsertionTarget() {
     String target = "class B{ public void a() { a(); } }";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("B.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("B.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, target);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, target);
 
     TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()

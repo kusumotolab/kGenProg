@@ -14,7 +14,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.Operation;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
@@ -48,15 +48,15 @@ public class RandomMutationTest {
     final Variant initialVariant = targetProject.getInitialVariant();
     final RandomMutation randomMutation = new RandomMutation(new StaticNumberGeneration());
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getFiles());
+        .getAsts());
 
     final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode()
-        .getFiles()
+        .getAsts()
         .stream()
-        .sorted(Comparator.comparing(x -> x.getSourceFile().path))
+        .sorted(Comparator.comparing(x -> x.getSourcePath().path))
         .collect(Collectors.toList())
         .get(0);
-    final SourceFile sourceFile = generatedAST.getSourceFile();
+    final SourcePath sourcePath = generatedAST.getSourcePath();
     final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
         .getRoot()
         .getRoot();
@@ -67,7 +67,7 @@ public class RandomMutationTest {
 
     final float[] value = {0};
     final List<Suspiciouseness> suspiciousenesses = statements.stream()
-        .map(e -> new JDTLocation(sourceFile, e))
+        .map(e -> new JDTLocation(sourcePath, e))
         .map(e -> {
           value[0] += 0.1;
           return new Suspiciouseness(e, value[0]);

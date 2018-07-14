@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
@@ -116,16 +116,16 @@ public class TestProcessBuilder {
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
     log.debug("enter getTargetFQNs(BuildResults)");
-    return getFQNs(buildResults, this.targetProject.getSourceFiles());
+    return getFQNs(buildResults, this.targetProject.getSourcePaths());
   }
 
   private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
     log.debug("enter getTestFQNs(BuildResults)");
-    return getFQNs(buildResults, this.targetProject.getTestFiles());
+    return getFQNs(buildResults, this.targetProject.getTestPaths());
   }
 
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
-      final List<SourceFile> sources) {
+      final List<SourcePath> sources) {
     log.debug("enter getFQNs(BuildResults, List<>)");
     return sources.stream()
         .map(source -> buildResults.getPathToFQNs(source.path))

@@ -10,31 +10,31 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
 
   public final Path rootPath; // TODO ひとまずrootPathだけpublicに．他フィールドは要検討
-  private final List<SourceFile> sourceFiles;
-  private final List<SourceFile> testFiles;
+  private final List<SourcePath> sourcePaths;
+  private final List<SourcePath> testPaths;
   private final List<ClassPath> classPaths;
 
   // Must be package-private. Should be created only from TargetProjectFactory#create
-  TargetProject(final Path rootPath, final List<SourceFile> sourceFiles,
-      final List<SourceFile> testFiles, List<ClassPath> classPaths) {
+  TargetProject(final Path rootPath, final List<SourcePath> sourcePaths,
+      final List<SourcePath> testPaths, List<ClassPath> classPaths) {
     this.rootPath = rootPath;
-    this.sourceFiles = sourceFiles;
-    this.testFiles = testFiles;
+    this.sourcePaths = sourcePaths;
+    this.testPaths = testPaths;
     this.classPaths = classPaths;
   }
 
-  public List<SourceFile> getSourceFiles() {
-    return sourceFiles;
+  public List<SourcePath> getSourcePaths() {
+    return sourcePaths;
   }
 
-  public List<SourceFile> getTestFiles() {
-    return testFiles;
+  public List<SourcePath> getTestPaths() {
+    return testPaths;
   }
 
   public List<ClassPath> getClassPaths() {

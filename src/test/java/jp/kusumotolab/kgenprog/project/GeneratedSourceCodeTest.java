@@ -13,11 +13,11 @@ public class GeneratedSourceCodeTest {
 
   private static class GeneratedASTMock implements GeneratedAST {
 
-    private final SourceFile file;
+    private final SourcePath path;
     private final List<Location> locations;
 
-    public GeneratedASTMock(final SourceFile file, final List<Location> locations) {
-      this.file = file;
+    public GeneratedASTMock(final SourcePath path, final List<Location> locations) {
+      this.path = path;
       this.locations = locations;
     }
 
@@ -32,8 +32,8 @@ public class GeneratedSourceCodeTest {
     }
 
     @Override
-    public SourceFile getSourceFile() {
-      return file;
+    public SourcePath getSourcePath() {
+      return path;
     }
 
     @Override
@@ -57,9 +57,9 @@ public class GeneratedSourceCodeTest {
     final Location l4 = new JDTLocation(null, null);
 
     final GeneratedAST ast1 =
-        new GeneratedASTMock(new TargetSourceFile(Paths.get("a")), Arrays.asList(l0, l1));
+        new GeneratedASTMock(new TargetSourcePath(Paths.get("a")), Arrays.asList(l0, l1));
     final GeneratedAST ast2 =
-        new GeneratedASTMock(new TargetSourceFile(Paths.get("b")), Arrays.asList(l2, l3, l4));
+        new GeneratedASTMock(new TargetSourcePath(Paths.get("b")), Arrays.asList(l2, l3, l4));
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Arrays.asList(ast1, ast2));
 

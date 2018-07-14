@@ -2,11 +2,11 @@ package jp.kusumotolab.kgenprog.project;
 
 import java.nio.file.Path;
 
-public abstract class SourceFile {
+public abstract class SourcePath {
 
   public final Path path;
 
-  protected SourceFile(final Path path) {
+  protected SourcePath(final Path path) {
     this.path = path;
   }
 

@@ -19,7 +19,7 @@ public interface JDTOperation extends Operation {
       final Location location) {
 
     try {
-      final List<GeneratedAST> newASTs = generatedSourceCode.getFiles()
+      final List<GeneratedAST> newASTs = generatedSourceCode.getAsts()
           .stream()
           .map(ast -> applyEachAST(ast, location))
           .collect(Collectors.toList());
@@ -31,8 +31,8 @@ public interface JDTOperation extends Operation {
   }
 
   default public GeneratedAST applyEachAST(final GeneratedAST ast, final Location location) {
-    if (!ast.getSourceFile()
-        .equals(location.getSourceFile())) {
+    if (!ast.getSourcePath()
+        .equals(location.getSourcePath())) {
       return ast;
     }
 
@@ -51,7 +51,7 @@ public interface JDTOperation extends Operation {
     }
 
     return jdtast.getConstruction()
-        .constructAST(ast.getSourceFile(), document.get());
+        .constructAST(ast.getSourcePath(), document.get());
   }
 
   public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTLocation location,

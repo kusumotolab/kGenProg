@@ -13,8 +13,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
-import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class TargetProjectFactoryTest {
@@ -25,10 +25,10 @@ public class TargetProjectFactoryTest {
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
     assertThat(project.rootPath, is(rootPath));
-    assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
-    assertThat(project.getTestFiles(), is(containsInAnyOrder( //
-        new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
+    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
+        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
+    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
+        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
     assertThat(project.getClassPaths(), is(containsInAnyOrder( //
         new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
         new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
@@ -40,12 +40,12 @@ public class TargetProjectFactoryTest {
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
     assertThat(project.rootPath, is(rootPath));
-    assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/Util.java")))));
-    assertThat(project.getTestFiles(), is(containsInAnyOrder( //
-        new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")),
-        new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/UtilTest.java")))));
+    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
+        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
+        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/Util.java")))));
+    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
+        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")),
+        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/UtilTest.java")))));
     assertThat(project.getClassPaths(), is(containsInAnyOrder( //
         new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
         new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
@@ -57,17 +57,17 @@ public class TargetProjectFactoryTest {
     final TargetProject project = TargetProjectFactory.create( //
         rootPath, //
         Arrays.asList( //
-            new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java"))),
+            new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java"))),
         Arrays.asList( //
-            new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
+            new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
         Arrays.asList(), //
         JUnitVersion.JUNIT4);
 
     assertThat(project.rootPath, is(rootPath));
-    assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
-    assertThat(project.getTestFiles(), is(containsInAnyOrder( //
-        new TestSourceFile(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
+    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
+        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
+    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
+        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
     assertThat(project.getClassPaths(), is(containsInAnyOrder( //
         new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
         new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
@@ -95,8 +95,8 @@ public class TargetProjectFactoryTest {
     }));
 
     // 一時的にダミーbuild.xmlを生成
-    final Path configFile = rootPath.resolve("build.xml");
-    Files.createFile(configFile);
+    final Path configPath = rootPath.resolve("build.xml");
+    Files.createFile(configPath);
 
     // Factory.createしてみる
     final TargetProject project = TargetProjectFactory.create(rootPath);
@@ -105,7 +105,7 @@ public class TargetProjectFactoryTest {
     assertThat(project, is(nullValue()));
 
     // 後処理
-    Files.delete(configFile);
+    Files.delete(configPath);
     System.setErr(ps);
   }
 }

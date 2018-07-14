@@ -30,21 +30,21 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourcePath.path);
       pathToClasses.stream()
           .forEach(c -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(c);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
       fqns.stream()
           .forEach(f -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(f);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
   }
@@ -63,21 +63,21 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourcePath.path);
       pathToClasses.stream()
           .forEach(c -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(c);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
       fqns.stream()
           .forEach(f -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(f);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
   }
@@ -96,21 +96,21 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourcePath.path);
       pathToClasses.stream()
           .forEach(c -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(c);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
       fqns.stream()
           .forEach(f -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(f);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
   }

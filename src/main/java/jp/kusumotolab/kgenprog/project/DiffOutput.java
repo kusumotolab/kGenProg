@@ -54,10 +54,10 @@ public class DiffOutput implements ResultOutput {
         // TODO 自動生成された catch ブロック
         e1.printStackTrace();
       }
-      for (GeneratedAST ast : code.getFiles()) {
+      for (GeneratedAST ast : code.getAsts()) {
         try {
           GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
-          Path originPath = getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile());
+          Path originPath = getOriginPath(targetProject.getSourcePaths(), jdtAST.getSourcePath());
 
           if (originPath == null) {
             continue;
@@ -93,7 +93,7 @@ public class DiffOutput implements ResultOutput {
    * @param variant
    */
   private void activateRecordModifications(GeneratedSourceCode code) {
-    for (GeneratedAST ast : code.getFiles()) {
+    for (GeneratedAST ast : code.getAsts()) {
       ((GeneratedJDTAST) ast).getRoot()
           .recordModifications();
     }
@@ -102,15 +102,15 @@ public class DiffOutput implements ResultOutput {
   /**
    * 変更前ファイルのパス取得
    *
-   * @param originFiles
-   * @param source
+   * @param originPaths
+   * @param sourcePath
    * @return
    */
-  private Path getOriginPath(List<SourceFile> originFiles, SourceFile source) {
-    for (SourceFile origin : originFiles) {
+  private Path getOriginPath(List<SourcePath> originPaths, SourcePath sourcePath) {
+    for (SourcePath originPath : originPaths) {
       try {
-        if (Files.isSameFile(origin.path, source.path)) {
-          return origin.path;
+        if (Files.isSameFile(originPath.path, sourcePath.path)) {
+          return originPath.path;
         }
       } catch (IOException e) {
         // TODO 自動生成された catch ブロック

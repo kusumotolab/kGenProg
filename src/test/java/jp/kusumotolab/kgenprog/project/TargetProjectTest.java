@@ -17,11 +17,11 @@ public class TargetProjectTest {
     final Path basePath = Paths.get("example/example01");
     final TargetProject project = TargetProjectFactory.create(basePath);
 
-    assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
+    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
+        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
 
-    assertThat(project.getTestFiles(), is(containsInAnyOrder( //
-        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
+    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
+        new TestSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
   }
 
   @Test
@@ -29,13 +29,13 @@ public class TargetProjectTest {
     final Path basePath = Paths.get("example/example02");
     final TargetProject project = TargetProjectFactory.create(basePath);
 
-    assertThat(project.getSourceFiles(), is(containsInAnyOrder( //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourceFile(basePath.resolve("src/jp/kusumotolab/Util.java")))));
+    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
+        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
+        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")))));
 
-    assertThat(project.getTestFiles(), is(containsInAnyOrder( //
-        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-        new TestSourceFile(basePath.resolve("src/jp/kusumotolab/UtilTest.java")))));
+    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
+        new TestSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")), //
+        new TestSourcePath(basePath.resolve("src/jp/kusumotolab/UtilTest.java")))));
 
   }
 }

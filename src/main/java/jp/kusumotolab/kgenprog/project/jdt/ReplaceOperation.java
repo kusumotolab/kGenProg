@@ -28,10 +28,10 @@ public class ReplaceOperation implements JDTOperation {
       final Location location) {
     final JDTLocation jdtLocation = (JDTLocation) location;
 
-    generatedSourceCode.getFiles()
+    generatedSourceCode.getAsts()
         .stream()
-        .filter(ast -> ast.getSourceFile()
-            .equals(location.getSourceFile()))
+        .filter(ast -> ast.getSourcePath()
+            .equals(location.getSourcePath()))
         .forEach(ast -> {
           final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
           final ASTNode target = jdtLocation.locate(unit);

@@ -11,7 +11,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.Range;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
@@ -23,7 +23,7 @@ public class JDTLocationTest {
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
 
-    GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAST((new TargetSourceFile(
+    GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAst((new TargetSourcePath(
         Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"))));
 
     CompilationUnit root = ast.getRoot();

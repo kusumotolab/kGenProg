@@ -93,7 +93,7 @@ public class KGenProgMain {
     selectedVariants.add(initialVariant);
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getFiles());
+        .getAsts());
     final long startTime = System.nanoTime();
     int generation = 0;
     while (true) {

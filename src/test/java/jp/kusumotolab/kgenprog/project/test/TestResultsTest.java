@@ -16,7 +16,7 @@ import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
@@ -97,9 +97,9 @@ public class TestResultsTest {
     // expected確保の作業
     // まずast生成
     final Path bcSourcePath = Paths.get(buggyCalculator.value.replace(".", "/") + ".java");
-    final TargetSourceFile bcSourceFile = new TargetSourceFile(rootDir.resolve("src")
+    final TargetSourcePath bcTargetSourcePath = new TargetSourcePath(rootDir.resolve("src")
         .resolve(bcSourcePath));
-    final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAST(bcSourceFile);
+    final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAst(bcTargetSourcePath);
 
     // astから5行目 (n--;) のlocationを取り出す
     final List<Location> locations1 = bcAst.inferLocations(5);
@@ -111,13 +111,13 @@ public class TestResultsTest {
 
     // 4メトリクスの取り出しとassertion
     final long a_ep1 =
-        testResults.getNumberOfPassedTestsExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, location1);
     final long a_ef1 =
-        testResults.getNumberOfFailedTestsExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, location1);
     final long a_np1 =
-        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
     final long a_nf1 =
-        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
     assertThat(a_ep1, is(2L)); // test01, test02
     assertThat(a_ef1, is(0L));
     assertThat(a_np1, is(1L)); // test04
@@ -134,13 +134,13 @@ public class TestResultsTest {
 
     // 4メトリクスの取り出しとassertion
     final long a_ep2 =
-        testResults.getNumberOfPassedTestsExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, location2);
     final long a_ef2 =
-        testResults.getNumberOfFailedTestsExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, location2);
     final long a_np2 =
-        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
     final long a_nf2 =
-        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
     assertThat(a_ep2, is(3L)); // test01, test02, test04
     assertThat(a_ef2, is(1L)); // test03
     assertThat(a_np2, is(0L));
