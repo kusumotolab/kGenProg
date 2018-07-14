@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,8 +83,6 @@ public class KGenProgMain {
     this.timeoutSeconds = timeout;
     this.maxGeneration = maxGeneration;
     this.requiredSolutions = requiredSolutions;
-
-
   }
 
   public void run() {
@@ -98,7 +95,6 @@ public class KGenProgMain {
         .getFiles());
     final long startTime = System.nanoTime();
     int generation = 0;
-    List<Variant> previousGenerationVariants = new ArrayList<>();
     while (true) {
 
       // 制限時間に達したか，最大世代数に到達した場合には GA を抜ける
@@ -128,29 +124,18 @@ public class KGenProgMain {
 
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
         currentGenerationVariants.add(variant);
+
+        if (0 == Double.compare(fitness.getValue(), 1.0d)) {
+          completedVariants.add(variant);
+
+          // しきい値以上の completedVariants が生成された場合は，GAを抜ける
+          if (areEnoughCompletedVariants()) {
+            break;
+          }
+        }
       }
 
-      // TODO #171 で導入するAPIを使うべき
-      // この世代で生成された Variants のうち，Fitnessが 1.0 なものを completedVariants に追加
-      final List<Variant> newCompletedVariants = currentGenerationVariants.stream()
-          .filter(v -> 0 == Double.compare(v.getFitness()
-              .getValue(), 1.0d))
-          .collect(Collectors.toList());
-      completedVariants.addAll(newCompletedVariants);
-
-      // しきい値以上の completedVariants が生成された場合は，GAを抜ける
-      if (areEnoughCompletedVariants()) {
-        break;
-      }
-
-      // TODO #171 で導入するAPIを使うべき
-      // Fitness が 1.0 な Variants は除いた上で，前の世代のバリアントも併せた上で，次世代を生成するための Variants を選択
-      currentGenerationVariants.removeAll(newCompletedVariants);
-      previousGenerationVariants.addAll(currentGenerationVariants);
-      selectedVariants = variantSelection.exec(previousGenerationVariants);
-
-      // 現在の世代を前の世代にする
-      previousGenerationVariants = currentGenerationVariants;
+      selectedVariants = variantSelection.exec(currentGenerationVariants);
     }
     log.debug("exit run()");
   }
