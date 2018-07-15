@@ -12,7 +12,7 @@ public class RandomNumberGeneration {
     setSeed(0);
   }
 
-  public void setSeed(int seed) {
+  public void setSeed(final int seed) {
     this.seed = seed;
     random = new Random(seed);
   }
@@ -21,15 +21,19 @@ public class RandomNumberGeneration {
     return seed;
   }
 
-  public int getRandomNumber() {
+  public int getInt() {
     return random.nextInt();
   }
 
-  public int getRandomNumber(int divisor) {
+  public int getInt(final int divisor) {
     return abs(random.nextInt()) % divisor;
   }
 
-  public boolean getRandomBoolean() {
+  public double getDouble(final double max) {
+    return max * random.nextDouble();
+  }
+
+  public boolean getBoolean() {
     return random.nextBoolean();
   }
 }
