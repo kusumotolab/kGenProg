@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.ga;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.List;
@@ -98,7 +97,7 @@ public class RandomMutationTest {
     final boolean result = map.get(weakSuspiciouseness)
         .size() < map.get(strongSuspiciouseness)
         .size();
-    assertTrue(result);
+    assertThat(result, is(true));
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
     final Base base = baseList.get(0);
