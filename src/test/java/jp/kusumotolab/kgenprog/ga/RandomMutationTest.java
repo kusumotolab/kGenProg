@@ -1,10 +1,12 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -23,20 +25,25 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 
 public class RandomMutationTest {
 
-  private class StaticNumberGeneration extends RandomNumberGeneration {
+  private class TestNumberGeneration extends RandomNumberGeneration {
 
     @Override
-    public int getRandomNumber() {
+    public int getInt() {
       return 0;
     }
 
     @Override
-    public int getRandomNumber(int divisor) {
+    public int getInt(int divisor) {
       return 1;
     }
 
     @Override
-    public boolean getRandomBoolean() {
+    public double getDouble(double max) {
+      return super.getDouble(max);
+    }
+
+    @Override
+    public boolean getBoolean() {
       return true;
     }
   }
@@ -46,7 +53,7 @@ public class RandomMutationTest {
     final String basePath = "example/example01/";
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final RandomMutation randomMutation = new RandomMutation(10, new StaticNumberGeneration());
+    final RandomMutation randomMutation = new RandomMutation(10, new TestNumberGeneration());
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getFiles());
 
@@ -65,7 +72,7 @@ public class RandomMutationTest {
     final List<Statement> statements = typeRoot.getMethods()[0].getBody()
         .statements();
 
-    final float[] value = {0};
+    final double[] value = {0.8};
     final List<Suspiciouseness> suspiciousenesses = statements.stream()
         .map(e -> new JDTLocation(sourceFile, e))
         .map(e -> {
@@ -74,20 +81,38 @@ public class RandomMutationTest {
         })
         .collect(Collectors.toList());
 
+    // 正しく10個のBaseが生成されるかのテスト
     final List<Base> baseList = randomMutation.exec(suspiciousenesses);
+    assertThat(baseList.size(), is(10));
+
+
+    // Suspiciousenessが高い場所ほど多くの操作が生成されているかのテスト
+    final Map<String, List<Base>> map = baseList.stream()
+        .collect(Collectors.groupingBy(e -> ((JDTLocation) e.getTargetLocation()).node.toString()));
+    final String weakSuspiciouseness = ((JDTLocation) suspiciousenesses.get(0)
+        .getLocation()).node
+        .toString();
+    final String strongSuspiciouseness = ((JDTLocation) suspiciousenesses.get(1)
+        .getLocation()).node
+        .toString();
+    final boolean result = map.get(weakSuspiciouseness)
+        .size() < map.get(strongSuspiciouseness)
+        .size();
+    assertTrue(result);
+
+    // TestNumberGenerationにしたがってOperationが生成されているかのテスト
     final Base base = baseList.get(0);
     final JDTLocation targetLocation = (JDTLocation) base.getTargetLocation();
-
-    assertEquals(targetLocation.node.toString(), "return n;\n");
+    assertThat(targetLocation.node.toString(), is("return n;\n"));
 
     final Operation operation = base.getOperation();
-    assertTrue(operation instanceof InsertOperation);
+    assertThat(operation instanceof InsertOperation, is(true));
 
     final InsertOperation insertOperation = (InsertOperation) operation;
     final Field field = insertOperation.getClass()
         .getDeclaredField("astNode");
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
-    assertEquals(node.toString(), "n--;\n");
+    assertThat(node.toString(), is("n--;\n"));
   }
 }
