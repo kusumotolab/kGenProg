@@ -1,9 +1,13 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.Statement;
+import org.omg.PortableInterceptor.INACTIVE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
@@ -30,14 +34,12 @@ public class RandomMutation extends Mutation {
     log.debug("enter exec(List<>)");
 
     final List<Base> bases = new ArrayList<>();
-    if (suspiciousenesses.isEmpty())
+    if (suspiciousenesses.isEmpty()) {
       return bases;
+    }
 
-    final List<Double> keyList = suspiciousenesses.stream()
-        .map(e -> Math.pow(e.getValue(), 2))
-        .collect(Collectors.toList());
-    final Roulette<Suspiciouseness> roulette = new Roulette<>(keyList, suspiciousenesses,
-        randomNumberGeneration);
+    final Roulette<Suspiciouseness> roulette = new Roulette<>(suspiciousenesses,
+        susp -> Math.pow(susp.getValue(), 2), randomNumberGeneration);
 
     for (int i = 0; i < numberOfBase; i++) {
       final Suspiciouseness suspiciouseness = roulette.exec();
@@ -80,28 +82,34 @@ public class RandomMutation extends Mutation {
     private final List<T> valueList = new ArrayList<>();
     private final RandomNumberGeneration randomNumberGeneration;
 
-    Roulette(final List<Double> keyList, final List<T> valueList,
+    Roulette(final List<T> valueList, final Function<T, Double> weightFunction,
         final RandomNumberGeneration randomNumberGeneration) {
+      final List<Double> weightList = valueList.stream()
+          .map(weightFunction)
+          .collect(Collectors.toList());
       double total = 0.0d;
-      for (Double key : keyList) {
-        total += key;
+      for (Double weight : weightList) {
+        total += weight;
         separateList.add(total);
       }
-      separateList.add(total);
       this.total = total;
       this.valueList.addAll(valueList);
       this.randomNumberGeneration = randomNumberGeneration;
     }
 
     T exec() {
-      final double key = randomNumberGeneration.getDouble(total);
-      for (int i = 0; i < separateList.size() - 1; i++) {
-        final Double separate = separateList.get(i);
-        if (key < separate) {
-          return valueList.get(i);
-        }
+      final double weight = randomNumberGeneration.getDouble(total);
+      final int searchResult = Collections.binarySearch(separateList, weight,
+          Comparator.naturalOrder());
+      final int index = convertToIndex(searchResult);
+      return valueList.get(index);
+    }
+
+    private int convertToIndex(final int searchResult) {
+      if (searchResult < 0) {
+        return -(searchResult + 1);
       }
-      return valueList.get(valueList.size() - 1);
+      return searchResult;
     }
   }
 }
