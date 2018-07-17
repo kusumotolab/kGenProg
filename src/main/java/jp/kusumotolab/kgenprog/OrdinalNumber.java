@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 public class OrdinalNumber extends AtomicInteger {
 
+  private static final long serialVersionUID = 1L;
+
   private static Logger log = LoggerFactory.getLogger(OrdinalNumber.class);
 
   public OrdinalNumber() {
