@@ -5,9 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
@@ -103,14 +101,14 @@ public class KGenProgMain {
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getFiles());
 
-    final StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
+    final KGenProgTimer timer = new KGenProgTimer(timeoutSeconds);
+    timer.start();
     final OrdinalNumber generation = new OrdinalNumber(1);
     final OrdinalNumber foundSolutions = new OrdinalNumber(0);
     GA: while (true) {
 
-      log.info("in the era of the " + generation.toString() + " generation (" + getTime(stopWatch)
-          + ")");
+      log.info(
+          "in the era of the " + generation.toString() + " generation (" + timer.toString() + ")");
 
       // 遺伝子を生成
       final List<Gene> genes = new ArrayList<>();
@@ -138,7 +136,7 @@ public class KGenProgMain {
           foundSolutions.incrementAndGet();
 
           log.info(
-              foundSolutions.toString() + " solution has been found (" + getTime(stopWatch) + ")");
+              foundSolutions.toString() + " solution has been found (" + timer.toString() + ")");
 
           completedVariants.add(variant);
 
@@ -151,7 +149,7 @@ public class KGenProgMain {
       }
 
       // 制限時間に達した場合には GA を抜ける
-      if (isTimedOut(stopWatch)) {
+      if (timer.isTimeout()) {
         log.info("reached the time limit");
         break;
       }
@@ -174,42 +172,12 @@ public class KGenProgMain {
   }
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
-    log.debug("enter reachedMaxGeneration()");
+    log.debug("enter reachedMaxGeneration(OrdinalNumber)");
     return this.maxGeneration <= generation.get();
   }
 
-  private boolean isTimedOut(final StopWatch stopWatch) {
-    log.debug("enter isTimedOut()");
-    final long elapsedSeconds = stopWatch.getTime(TimeUnit.SECONDS);
-    return elapsedSeconds > this.timeoutSeconds;
-  }
-
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
+    log.debug("enter areEnoughCompletedVariants(List<Variant>)");
     return this.requiredSolutions <= completedVariants.size();
-  }
-
-  public static String getTime(final StopWatch stopWatch) {
-    return getTime(stopWatch.getTime(TimeUnit.SECONDS));
-  }
-
-  public static String getTime(final long elapsedSeconds) {
-
-    final long hours = elapsedSeconds / 3600;
-    final long minutes = (elapsedSeconds % 3600) / 60;
-    final long seconds = (elapsedSeconds % 3600) % 60;
-
-    final StringBuilder text = new StringBuilder();
-    if (0 < hours) {
-      text.append(hours);
-      text.append(" hours ");
-    }
-    if (0 < minutes) {
-      text.append(minutes);
-      text.append(" minutes ");
-    }
-    text.append(seconds);
-    text.append(" seconds");
-
-    return text.toString();
   }
 }
