@@ -1,77 +1,50 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AssertStatement;
-import org.eclipse.jdt.core.dom.BreakStatement;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ContinueStatement;
-import org.eclipse.jdt.core.dom.DoStatement;
-import org.eclipse.jdt.core.dom.EmptyStatement;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.ForStatement;
-import org.eclipse.jdt.core.dom.IfStatement;
-import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.SwitchStatement;
-import org.eclipse.jdt.core.dom.SynchronizedStatement;
-import org.eclipse.jdt.core.dom.ThrowStatement;
-import org.eclipse.jdt.core.dom.TryStatement;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.WhileStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
-import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
-public class RandomMutation implements Mutation {
+public class RandomMutation extends Mutation {
 
   private static Logger log = LoggerFactory.getLogger(RandomMutation.class);
 
-  private List<Statement> candidates = new ArrayList<>();
-  private final RandomNumberGeneration randomNumberGeneration;
-
-  public RandomMutation() {
-    this.randomNumberGeneration = new RandomNumberGeneration();
+  public RandomMutation(int numberOfBase) {
+    super(numberOfBase);
   }
 
-  public RandomMutation(RandomNumberGeneration randomNumberGeneration) {
-    this.randomNumberGeneration = randomNumberGeneration;
+  public RandomMutation(final int numberOfBase,
+      final RandomNumberGeneration randomNumberGeneration) {
+    super(numberOfBase, randomNumberGeneration);
   }
 
-  @Override
-  public void setCandidates(List<GeneratedAST> candidates) {
-    log.debug("enter setCandidates(List<>)");
-
-    candidates.stream()
-        .sorted(Comparator.comparing(x -> x.getSourceFile().path))
-        .forEach(e -> {
-          final CompilationUnit unit = ((GeneratedJDTAST) e).getRoot();
-          final Visitor visitor = new Visitor();
-          unit.accept(visitor);
-          this.candidates.addAll(visitor.statements);
-        });
-    log.debug("exit setCandidates(List<>)");
-  }
-
-  @Override
-  public List<Base> exec(List<Suspiciouseness> suspiciousenesses) {
+  public List<Base> exec(final List<Suspiciouseness> suspiciousenesses) {
     log.debug("enter exec(List<>)");
 
-    List<Base> bases = suspiciousenesses.stream()
-        .sorted(Comparator.comparingDouble(Suspiciouseness::getValue)
-            .reversed())
-        .map(this::makeBase)
-        .collect(Collectors.toList());
+    final List<Base> bases = new ArrayList<>();
+    if (suspiciousenesses.isEmpty()) {
+      return bases;
+    }
+
+    final Roulette<Suspiciouseness> roulette = new Roulette<>(suspiciousenesses,
+        susp -> Math.pow(susp.getValue(), 2), randomNumberGeneration);
+
+    for (int i = 0; i < numberOfBase; i++) {
+      final Suspiciouseness suspiciouseness = roulette.exec();
+      final Base base = makeBase(suspiciouseness);
+      bases.add(base);
+    }
 
     log.debug("exit exec(List<>)");
     return bases;
@@ -84,7 +57,7 @@ public class RandomMutation implements Mutation {
 
   private Operation makeOperationAtRandom() {
     log.debug("enter makeOperationAtRandom()");
-    final int randomNumber = randomNumberGeneration.getRandomNumber(3);
+    final int randomNumber = randomNumberGeneration.getInt(3);
     switch (randomNumber) {
       case 0:
         return new DeleteOperation();
@@ -98,105 +71,44 @@ public class RandomMutation implements Mutation {
 
   private Statement chooseNodeAtRandom() {
     log.debug("enter chooseNodeAtRandom()");
-    return candidates.get(randomNumberGeneration.getRandomNumber(candidates.size()));
+    return candidates.get(randomNumberGeneration.getInt(candidates.size()));
   }
 
-  private class Visitor extends ASTVisitor {
+  class Roulette<T> {
 
-    private List<Statement> statements = new ArrayList<>();
+    private final double total;
+    private final List<Double> separateList = new ArrayList<>();
+    private final List<T> valueList = new ArrayList<>();
+    private final RandomNumberGeneration randomNumberGeneration;
 
-    private void addStatement(Statement statement) {
-      statements.add(statement);
+    Roulette(final List<T> valueList, final Function<T, Double> weightFunction,
+        final RandomNumberGeneration randomNumberGeneration) {
+      final List<Double> weightList = valueList.stream()
+          .map(weightFunction)
+          .collect(Collectors.toList());
+      double total = 0.0d;
+      for (Double weight : weightList) {
+        total += weight;
+        separateList.add(total);
+      }
+      this.total = total;
+      this.valueList.addAll(valueList);
+      this.randomNumberGeneration = randomNumberGeneration;
     }
 
-    @Override
-    public boolean visit(AssertStatement node) {
-      addStatement(node);
-      return super.visit(node);
+    T exec() {
+      final double weight = randomNumberGeneration.getDouble(total);
+      final int searchResult = Collections.binarySearch(separateList, weight,
+          Comparator.naturalOrder());
+      final int index = convertToIndex(searchResult);
+      return valueList.get(index);
     }
 
-    @Override
-    public boolean visit(BreakStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(ContinueStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(DoStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(EmptyStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(ExpressionStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(ForStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(IfStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(ReturnStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(SwitchStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(SynchronizedStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(ThrowStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(TryStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(VariableDeclarationStatement node) {
-      addStatement(node);
-      return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(WhileStatement node) {
-      addStatement(node);
-      return super.visit(node);
+    private int convertToIndex(final int searchResult) {
+      if (searchResult < 0) {
+        return -(searchResult + 1);
+      }
+      return searchResult;
     }
   }
 }
