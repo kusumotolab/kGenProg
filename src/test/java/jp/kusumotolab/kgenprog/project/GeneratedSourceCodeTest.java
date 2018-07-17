@@ -15,10 +15,18 @@ public class GeneratedSourceCodeTest {
 
     private final SourceFile file;
     private final List<Location> locations;
+    private final String messageDigest;
 
     public GeneratedASTMock(final SourceFile file, final List<Location> locations) {
       this.file = file;
       this.locations = locations;
+      this.messageDigest = "";
+    }
+
+    public GeneratedASTMock(final SourceFile file, final String messageDigest) {
+      this.file = file;
+      this.locations = null;
+      this.messageDigest = messageDigest;
     }
 
     @Override
@@ -44,6 +52,11 @@ public class GeneratedSourceCodeTest {
     @Override
     public List<Location> getAllLocations() {
       return locations;
+    }
+
+    @Override
+    public String getMessageDigest() {
+      return messageDigest;
     }
 
   }
@@ -72,6 +85,30 @@ public class GeneratedSourceCodeTest {
     assertThat(locations.get(3), is(l3));
     assertThat(locations.get(4), is(l4));
 
+  }
+
+  @Test
+  public void testGetMessageDigest01() {
+    final GeneratedAST ast1 = new GeneratedASTMock(new TargetSourceFile(Paths.get("a")), "aaa");
+    final GeneratedAST ast2 = new GeneratedASTMock(new TargetSourceFile(Paths.get("b")), "bbb");
+    final GeneratedSourceCode generatedSourceCode =
+        new GeneratedSourceCode(Arrays.asList(ast1, ast2));
+    assertThat(generatedSourceCode.getMessageDigest(), is("6547436690A26A399603A7096E876A2D"));
+  }
+
+  @Test
+  public void testGetMessageDigest02() {
+    final GeneratedAST ast1 = new GeneratedASTMock(new TargetSourceFile(Paths.get("a")), "aaa");
+    final GeneratedAST ast2 = new GeneratedASTMock(new TargetSourceFile(Paths.get("b")), "bbb");
+    final GeneratedAST ast3 = new GeneratedASTMock(new TargetSourceFile(Paths.get("c")), "ccc");
+
+    final GeneratedSourceCode generatedSourceCode1 =
+        new GeneratedSourceCode(Arrays.asList(ast1, ast2, ast3));
+    final GeneratedSourceCode generatedSourceCode2 =
+        new GeneratedSourceCode(Arrays.asList(ast2, ast3, ast1));
+
+    assertThat(generatedSourceCode1.getMessageDigest()
+        .equals(generatedSourceCode2.getMessageDigest()), is(true));
   }
 
 }
