@@ -166,7 +166,7 @@ public class DiffOutput implements ResultOutput {
       List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
 
-      unifiedDiff.forEach(System.out::println);
+      // unifiedDiff.forEach(System.out::println);
 
       Files.write(patchPath, unifiedDiff);
     } catch (IOException e) {
