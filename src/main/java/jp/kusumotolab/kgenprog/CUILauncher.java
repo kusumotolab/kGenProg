@@ -23,6 +23,8 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.DiffOutput;
+import jp.kusumotolab.kgenprog.project.ResultOutput;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -114,18 +116,21 @@ public class CUILauncher {
   public void launch() {
     log.debug("enter launch()");
 
-    TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getSourcePaths(),
+    final TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getSourcePaths(),
         getTestPaths(), getClassPaths(), JUnitVersion.JUNIT4);
 
-    FaultLocalization faultLocalization = new Ochiai();
-    Mutation mutation = new RandomMutation();
-    Crossover crossover = new SiglePointCrossover();
-    SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
-    SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    VariantSelection variantSelection = new DefaultVariantSelection();
+    final FaultLocalization faultLocalization = new Ochiai();
+    final Mutation mutation = new RandomMutation(10);
+    final Crossover crossover = new SiglePointCrossover();
+    final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
+    final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
+    final VariantSelection variantSelection = new DefaultVariantSelection();
+    final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    final ResultOutput resultGenerator = new DiffOutput(workingPath);
 
-    KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
-        crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection);
+    final KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
+        crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, resultGenerator,
+        workingPath);
     kGenProgMain.run();
 
     log.debug("exit launch()");
