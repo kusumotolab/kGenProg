@@ -307,13 +307,13 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testGetMessageDigest02() {
-    String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
-    String testSource2 =
+    final String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
+    final String testSource2 =
         "class A {\n\tpublic void a() {\n\t\t b(1);\n\t}\n\tpublic void b(int v){}\n}\n";
-    SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
-    GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
+    final SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
+    final GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
 
     assertThat(ast1.getMessageDigest()
         .equals(ast2.getMessageDigest()), is(true));
@@ -321,12 +321,12 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testGetMessageDigest03() {
-    String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
-    String testSource2 = "class A{public void a(){b(2);}public void b(int v){}}";
-    SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
-    GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
+    final String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
+    final String testSource2 = "class A{public void a(){b(2);}public void b(int v){}}";
+    final SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
+    final GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
 
     assertThat(ast1.getMessageDigest()
         .equals(ast2.getMessageDigest()), is(false));
