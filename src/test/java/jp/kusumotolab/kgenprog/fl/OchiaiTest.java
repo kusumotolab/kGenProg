@@ -23,7 +23,7 @@ public class OchiaiTest {
   public void testForExample01() {
 
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Variant initialVariant = targetProject.getInitialVariant();
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
@@ -47,7 +47,7 @@ public class OchiaiTest {
   public void testForExample02() {
 
     final Path rootDir = Paths.get("example/example02");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Variant initialVariant = targetProject.getInitialVariant();
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
@@ -70,7 +70,7 @@ public class OchiaiTest {
   @Test
   public void testForFailedProject() throws IOException {
     final Path rootDir = Paths.get("example/example00");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
 
     // TODO 一時的なSyserr対策．
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．

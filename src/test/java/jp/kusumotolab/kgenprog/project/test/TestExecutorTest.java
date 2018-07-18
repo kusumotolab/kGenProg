@@ -58,25 +58,25 @@ public class TestExecutorTest {
 
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
-        .toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
+        .toURL() });
     return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
   }
 
   private TestResults generateTestResultsForExample02() throws Exception {
     final Path rootDir = Paths.get("example/example02");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
-        .toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
+        .toURL() });
     return executor.exec(Arrays.asList(buggyCalculator, util),
         Arrays.asList(buggyCalculatorTest, utilTest));
   }
@@ -84,13 +84,13 @@ public class TestExecutorTest {
   @SuppressWarnings("unused")
   private TestResults generateTestResultsForExample03() throws Exception {
     final Path rootDir = Paths.get("example/example03");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
-        .toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
+        .toURL() });
     return executor.exec(Arrays.asList(buggyCalculator, util, inner, staticInner, outer),
         Arrays.asList(buggyCalculatorTest, utilTest));
   }

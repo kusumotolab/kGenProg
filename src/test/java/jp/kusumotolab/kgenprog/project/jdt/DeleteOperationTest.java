@@ -8,18 +8,18 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class DeleteOperationTest {
 
   @Test
   public void testDeleteStatement() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -30,11 +30,11 @@ public class DeleteOperationTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourceFile, statement);
+    JDTLocation location = new JDTLocation(testSourcePath, statement);
     DeleteOperation operation = new DeleteOperation();
 
     GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getFiles()
+    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
         .get(0);
     assertEquals("class A {\n  public void a(){\n    int a=0;\n  }\n}\n", newAST.getRoot()
         .toString());
@@ -45,10 +45,10 @@ public class DeleteOperationTest {
   @Test
   public void testDeleteStatementDirectly() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -59,7 +59,7 @@ public class DeleteOperationTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourceFile, statement);
+    JDTLocation location = new JDTLocation(testSourcePath, statement);
     DeleteOperation operation = new DeleteOperation();
 
     operation.applyDirectly(generatedSourceCode, location);

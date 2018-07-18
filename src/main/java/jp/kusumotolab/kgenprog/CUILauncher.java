@@ -25,9 +25,9 @@ import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.DiffOutput;
 import jp.kusumotolab.kgenprog.project.ResultOutput;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
-import jp.kusumotolab.kgenprog.project.TestSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -37,8 +37,8 @@ public class CUILauncher {
   private static Logger log = LoggerFactory.getLogger(CUILauncher.class);
   // region Fields
   private Path rootDir;
-  private List<SourceFile> sourceFiles = new ArrayList<>();
-  private List<SourceFile> testFiles = new ArrayList<>();
+  private List<SourcePath> sourcePaths = new ArrayList<>();
+  private List<SourcePath> testPaths = new ArrayList<>();
   private List<ClassPath> classPaths = new ArrayList<>();
   // endregion
 
@@ -55,29 +55,29 @@ public class CUILauncher {
     this.rootDir = Paths.get(rootDir);
   }
 
-  public List<SourceFile> getSourceFiles() {
-    log.debug("enter getSourceFiles()");
-    return sourceFiles;
+  public List<SourcePath> getSourcePaths() {
+    log.debug("enter getSourcePaths()");
+    return sourcePaths;
   }
 
   @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
       metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
-  public void setSourceFiles(String sourceFiles) {
-    log.debug("enter setSourceFiles(String)");
-    this.sourceFiles.add(new TargetSourceFile(Paths.get(sourceFiles)));
+  public void setSourcePaths(String sourcePaths) {
+    log.debug("enter setSourcePaths(String)");
+    this.sourcePaths.add(new TargetSourcePath(Paths.get(sourcePaths)));
   }
 
-  public List<SourceFile> getTestFiles() {
-    log.debug("enter getTestFiles()");
-    return testFiles;
+  public List<SourcePath> getTestPaths() {
+    log.debug("enter getTestPaths()");
+    return testPaths;
   }
 
   @Option(name = "-t", aliases = "--test", required = true,
       handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
       usage = "Paths of the root directories holding test codes")
-  public void setTestFiles(String testFiles) {
-    log.debug("enter setTestFiles(String)");
-    this.testFiles.add(new TestSourceFile(Paths.get(testFiles)));
+  public void setTestPaths(String testPaths) {
+    log.debug("enter setTestPaths(String)");
+    this.testPaths.add(new TestSourcePath(Paths.get(testPaths)));
   }
 
   public List<ClassPath> getClassPaths() {
@@ -116,8 +116,8 @@ public class CUILauncher {
   public void launch() {
     log.debug("enter launch()");
 
-    final TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getSourceFiles(),
-        getTestFiles(), getClassPaths(), JUnitVersion.JUNIT4);
+    final TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getSourcePaths(),
+        getTestPaths(), getClassPaths(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
     final Mutation mutation = new RandomMutation(10);

@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static java.util.stream.Collectors.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,13 +10,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
@@ -111,27 +111,27 @@ public class TestProcessBuilder {
     log.debug("enter joinFQNs(Collection<>)");
     return fqns.stream()
         .map(fqn -> fqn.value)
-        .collect(joining(TestExecutorMain.SEPARATOR));
+        .collect(Collectors.joining(TestExecutorMain.SEPARATOR));
   }
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
     log.debug("enter getTargetFQNs(BuildResults)");
-    return getFQNs(buildResults, this.targetProject.getSourceFiles());
+    return getFQNs(buildResults, this.targetProject.getSourcePaths());
   }
 
   private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
     log.debug("enter getTestFQNs(BuildResults)");
-    return getFQNs(buildResults, this.targetProject.getTestFiles());
+    return getFQNs(buildResults, this.targetProject.getTestPaths());
   }
 
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
-      final List<SourceFile> sources) {
+      final List<SourcePath> sources) {
     log.debug("enter getFQNs(BuildResults, List<>)");
     return sources.stream()
         .map(source -> buildResults.getPathToFQNs(source.path))
         .filter(fqn -> null != fqn)
         .flatMap(c -> c.stream())
-        .collect(toSet());
+        .collect(Collectors.toSet());
   }
 
   private final String jarFileTail = "-(\\d+\\.)+jar$";
@@ -160,7 +160,7 @@ public class TestProcessBuilder {
     final List<String> result = Stream.of(classpaths)
         .filter(cp -> filter.stream()
             .anyMatch(f -> cp.matches(".*" + f + jarFileTail)))
-        .collect(toList());
+        .collect(Collectors.toList());
 
     // 自身（TestProcessBuilder.class）へのcpを追加
     try {

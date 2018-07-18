@@ -99,7 +99,7 @@ public class KGenProgMain {
     selectedVariants.add(initialVariant);
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getFiles());
+        .getAsts());
 
     final KGenProgTimer timer = new KGenProgTimer(timeoutSeconds);
     timer.start();

@@ -98,8 +98,8 @@ public class RandomMutation extends Mutation {
 
     T exec() {
       final double weight = randomNumberGeneration.getDouble(total);
-      final int searchResult = Collections.binarySearch(separateList, weight,
-          Comparator.naturalOrder());
+      final int searchResult =
+          Collections.binarySearch(separateList, weight, Comparator.naturalOrder());
       final int index = convertToIndex(searchResult);
       return valueList.get(index);
     }

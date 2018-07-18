@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,7 +16,7 @@ import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
@@ -39,13 +40,13 @@ public class TestResultsTest {
 
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
-        .toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
+        .toURL() });
     return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
   }
 
@@ -81,24 +82,24 @@ public class TestResultsTest {
   public void checkFLMetricsInTestResultsForExample02() throws Exception {
     // actual確保のためにテストの実行
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] {outDir.toUri()
-        .toURL()});
+    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
+        .toURL() });
     final TestResults testResults =
         executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
     testResults.setBuildResults(buildResults);
 
     // expected確保の作業
     // まずast生成
-    final Path bcSourcePath = Paths.get(buggyCalculator.value.replaceAll("\\.", "/") + ".java");
-    final TargetSourceFile bcSourceFile = new TargetSourceFile(rootDir.resolve("src")
+    final Path bcSourcePath = Paths.get(buggyCalculator.value.replace(".", "/") + ".java");
+    final TargetSourcePath bcTargetSourcePath = new TargetSourcePath(rootDir.resolve("src")
         .resolve(bcSourcePath));
-    final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAST(bcSourceFile);
+    final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAst(bcTargetSourcePath);
 
     // astから5行目 (n--;) のlocationを取り出す
     final List<Location> locations1 = bcAst.inferLocations(5);
@@ -110,13 +111,13 @@ public class TestResultsTest {
 
     // 4メトリクスの取り出しとassertion
     final long a_ep1 =
-        testResults.getNumberOfPassedTestsExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, location1);
     final long a_ef1 =
-        testResults.getNumberOfFailedTestsExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, location1);
     final long a_np1 =
-        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
     final long a_nf1 =
-        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcSourceFile, location1);
+        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
     assertThat(a_ep1, is(2L)); // test01, test02
     assertThat(a_ef1, is(0L));
     assertThat(a_np1, is(1L)); // test04
@@ -133,13 +134,13 @@ public class TestResultsTest {
 
     // 4メトリクスの取り出しとassertion
     final long a_ep2 =
-        testResults.getNumberOfPassedTestsExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, location2);
     final long a_ef2 =
-        testResults.getNumberOfFailedTestsExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, location2);
     final long a_np2 =
-        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
     final long a_nf2 =
-        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcSourceFile, location2);
+        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
     assertThat(a_ep2, is(3L)); // test01, test02, test04
     assertThat(a_ef2, is(1L)); // test03
     assertThat(a_np2, is(0L));
@@ -202,9 +203,7 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath()
-        .toFile()
-        .exists(), is(true));
+    assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
@@ -279,9 +278,7 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath()
-        .toFile()
-        .exists(), is(true));
+    assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
@@ -296,9 +293,7 @@ public class TestResultsTest {
   @Test(expected = NoSuchFileException.class)
   public void testSerializeDeserialize05() throws Exception {
     // serializeファイルを消しておいて
-    TestResults.getSerFilePath()
-        .toFile()
-        .delete();
+    Files.deleteIfExists(TestResults.getSerFilePath());
 
     // deserializeでNoSuchFileExceptionが返ってくるはず
     TestResults.deserialize();

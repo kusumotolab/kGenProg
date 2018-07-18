@@ -11,23 +11,23 @@ import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class GeneratedJDTAST implements GeneratedAST {
 
   private final JDTASTConstruction construction;
   private final CompilationUnit root;
-  private final SourceFile sourceFile;
+  private final SourcePath sourcePath;
   private final List<List<Statement>> lineNumberToStatements;
   private final List<Location> allLocations;
   private final String primaryClassName;
   private final String sourceCode;
 
-  public GeneratedJDTAST(final JDTASTConstruction construction, final SourceFile sourceFile,
+  public GeneratedJDTAST(final JDTASTConstruction construction, final SourcePath sourcePath,
       final CompilationUnit root, final String source) {
     this.construction = construction;
     this.root = root;
-    this.sourceFile = sourceFile;
+    this.sourcePath = sourcePath;
     this.sourceCode = source;
 
     final StatementListVisitor visitor = new StatementListVisitor();
@@ -35,7 +35,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     this.lineNumberToStatements = visitor.getLineToStatements();
     this.allLocations = visitor.getStatements()
         .stream()
-        .map(v -> new JDTLocation(sourceFile, v))
+        .map(v -> new JDTLocation(sourcePath, v))
         .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
   }
@@ -46,8 +46,8 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public SourceFile getSourceFile() {
-    return sourceFile;
+  public SourcePath getSourcePath() {
+    return sourcePath;
   }
 
   @Override
@@ -73,7 +73,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
       return lineNumberToStatements.get(lineNumber)
           .stream()
-          .map(statement -> new JDTLocation(this.sourceFile, statement))
+          .map(statement -> new JDTLocation(this.sourcePath, statement))
           .collect(Collectors.toList());
     }
     return Collections.emptyList();
@@ -98,7 +98,7 @@ public class GeneratedJDTAST implements GeneratedAST {
           .getIdentifier();
 
     } else {
-      typeName = sourceFile.path.getFileName()
+      typeName = sourcePath.path.getFileName()
           .toString();
       final int idx = typeName.indexOf(".");
       if (idx > 0) {

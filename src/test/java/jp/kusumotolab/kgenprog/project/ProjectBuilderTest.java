@@ -18,9 +18,10 @@ public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample01() {
-    final TargetProject targetProject = TargetProjectFactory.create("example/example01");
+    final Path rootPath = Paths.get("example/example01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final Path outDirPath = Paths.get("example/example01/bin");
+    final Path outDirPath = rootPath.resolve("bin");
 
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
@@ -29,30 +30,31 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourcePath.path);
       pathToClasses.stream()
           .forEach(c -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(c);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
       fqns.stream()
           .forEach(f -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(f);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
   }
 
   @Test
   public void testBuildStringForExample02() {
-    final TargetProject targetProject = TargetProjectFactory.create("example/example02");
+    final Path rootPath = Paths.get("example/example02");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final Path outDirPath = Paths.get("example/example02/bin");
+    final Path outDirPath = rootPath.resolve("bin");
 
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
@@ -61,30 +63,31 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourcePath.path);
       pathToClasses.stream()
           .forEach(c -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(c);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
       fqns.stream()
           .forEach(f -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(f);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
   }
 
   @Test
   public void testBuildStringForExample03() {
-    final TargetProject targetProject = TargetProjectFactory.create("example/example03");
+    final Path rootPath = Paths.get("example/example03");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final Path outDirPath = Paths.get("example/example03/bin");
+    final Path outDirPath = rootPath.resolve("bin");
 
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
@@ -93,21 +96,21 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed, is(false));
     assertThat(buildResults.isMappingAvailable(), is(true));
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<Path> pathToClasses = buildResults.getPathToClasses(sourcePath.path);
       pathToClasses.stream()
           .forEach(c -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(c);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
 
-    for (final SourceFile sourceFile : targetProject.getSourceFiles()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourceFile.path);
+    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
       fqns.stream()
           .forEach(f -> {
             final Path correspondingSourcePath = buildResults.getPathToSource(f);
-            assertThat(correspondingSourcePath, is(sourceFile.path));
+            assertThat(correspondingSourcePath, is(sourcePath.path));
           });
     }
   }
@@ -115,11 +118,13 @@ public class ProjectBuilderTest {
   // TODO: https://github.com/kusumotolab/kGenProg/pull/154
   // @Test
   public void testRemovingOldClassFiles() throws Exception {
+    final Path basePath03 = Paths.get("example/example03");
+    final Path basePath02 = Paths.get("example/example02");
 
-    final Path workingDir = Paths.get("example/example03/bin");
+    final Path workingDir = basePath03.resolve("bin");
 
     // example03のビルドが成功するかテスト
-    final TargetProject targetProject03 = TargetProjectFactory.create("example/example03");
+    final TargetProject targetProject03 = TargetProjectFactory.create(basePath03);
     final ProjectBuilder projectBuilder03 = new ProjectBuilder(targetProject03);
     final BuildResults buildResults03 = projectBuilder03.build(targetProject03.getInitialVariant()
         .getGeneratedSourceCode(), workingDir);
@@ -127,7 +132,7 @@ public class ProjectBuilderTest {
     assertThat(buildResults03.isMappingAvailable(), is(true));
 
     // example02のビルドが成功するかテスト
-    final TargetProject targetProject02 = TargetProjectFactory.create("example/example02");
+    final TargetProject targetProject02 = TargetProjectFactory.create(basePath02);
     final ProjectBuilder projectBuilder02 = new ProjectBuilder(targetProject02);
     final BuildResults buildResults02 = projectBuilder02.build(targetProject02.getInitialVariant()
         .getGeneratedSourceCode(), workingDir);
@@ -137,9 +142,13 @@ public class ProjectBuilderTest {
     final Collection<File> classFiles =
         FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
     assertThat(classFiles, is(containsInAnyOrder( //
-        new File(workingDir + "/jp/kusumotolab/BuggyCalculator.class"), //
-        new File(workingDir + "/jp/kusumotolab/BuggyCalculatorTest.class"), //
-        new File(workingDir + "/jp/kusumotolab/Util.class"), //
-        new File(workingDir + "/jp/kusumotolab/UtilTest.class"))));
+        workingDir.resolve("jp/kusumotolab/BuggyCalculator.class")
+            .toFile(),
+        workingDir.resolve("jp/kusumotolab/BuggyCalculatorTest.class")
+            .toFile(),
+        workingDir.resolve("jp/kusumotolab/Util.class")
+            .toFile(),
+        workingDir.resolve("jp/kusumotolab/UtilTest.class")
+            .toFile())));
   }
 }
