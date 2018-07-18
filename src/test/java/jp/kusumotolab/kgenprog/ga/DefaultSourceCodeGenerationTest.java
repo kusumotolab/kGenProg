@@ -30,19 +30,19 @@ public class DefaultSourceCodeGenerationTest {
         .getGeneratedSourceCode();
 
     // ファイル数は同じはず
-    assertThat(generatedSourceCode.getFiles()
+    assertThat(generatedSourceCode.getAsts()
         .size(),
-        is(initialSourceCode.getFiles()
+        is(initialSourceCode.getAsts()
             .size()));
 
     // NoneOperationにより全てのソースコードが初期ソースコードと等価であるはず
-    for (int i = 0; i < targetProject.getSourceFiles()
+    for (int i = 0; i < targetProject.getSourcePaths()
         .size(); i++) {
       // TODO list内部要素の順序が変更されたらバグる
-      final String expected = initialSourceCode.getFiles()
+      final String expected = initialSourceCode.getAsts()
           .get(i)
           .getSourceCode();
-      final String actual = generatedSourceCode.getFiles()
+      final String actual = generatedSourceCode.getAsts()
           .get(i)
           .getSourceCode();
       assertThat(actual, is(expected));

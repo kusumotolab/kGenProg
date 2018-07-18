@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.Range;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
  * JDT AST の単一ノードを示すオブジェクト Operation のターゲットに利用する
@@ -21,11 +21,11 @@ final public class JDTLocation implements Location {
 
   final public ASTNode node;
 
-  private SourceFile sourceFile;
+  private SourcePath sourcePath;
 
-  public JDTLocation(SourceFile sourceFile, ASTNode node) {
+  public JDTLocation(SourcePath sourcePath, ASTNode node) {
     this.node = node;
-    this.sourceFile = sourceFile;
+    this.sourcePath = sourcePath;
   }
 
   public ASTNode locate(ASTNode otherASTRoot) {
@@ -84,8 +84,8 @@ final public class JDTLocation implements Location {
   }
 
   @Override
-  public SourceFile getSourceFile() {
-    return sourceFile;
+  public SourcePath getSourcePath() {
+    return sourcePath;
   }
 
   @Override

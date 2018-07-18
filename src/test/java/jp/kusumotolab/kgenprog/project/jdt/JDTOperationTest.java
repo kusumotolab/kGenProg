@@ -9,8 +9,8 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class JDTOperationTest {
 
@@ -18,15 +18,15 @@ public class JDTOperationTest {
   public void testApplyHandlingException() {
     final JDTOperation operation = new ExceptionOperation();
 
-    final SourceFile testSourceFile = new TargetSourceFile(
-        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+    final SourcePath testSourcePath = new TargetSourcePath(
+        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(
-        constructor.constructAST(Collections.singletonList(testSourceFile)));
+        constructor.constructAST(Collections.singletonList(testSourcePath)));
 
     final GeneratedSourceCode applied =
-        operation.apply(generatedSourceCode, new JDTLocation(testSourceFile, null));
+        operation.apply(generatedSourceCode, new JDTLocation(testSourcePath, null));
 
     assertThat(applied, is(GenerationFailedSourceCode.GENERATION_FAILED));
 

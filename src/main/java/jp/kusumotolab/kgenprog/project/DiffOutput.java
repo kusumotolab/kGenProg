@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,17 +45,19 @@ public class DiffOutput implements ResultOutput {
     modifiedCode.addAll(applyAllModificationDirectly(targetProject, modifiedVariants));
 
     for (GeneratedSourceCode code : modifiedCode) {
-      Path variantBasePath = Paths.get(workingDir + "/Variant" + (modifiedCode.indexOf(code) + 1));
+      final String variantDir = "variant" + modifiedCode.indexOf(code) + 1;
+      final Path variantBasePath = workingDir.resolve(variantDir);
+
       try {
         Files.createDirectory(variantBasePath);
       } catch (IOException e1) {
         // TODO 自動生成された catch ブロック
         e1.printStackTrace();
       }
-      for (GeneratedAST ast : code.getFiles()) {
+      for (GeneratedAST ast : code.getAsts()) {
         try {
           GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
-          Path originPath = getOriginPath(targetProject.getSourceFiles(), jdtAST.getSourceFile());
+          Path originPath = getOriginPath(targetProject.getSourcePaths(), jdtAST.getSourcePath());
 
           if (originPath == null) {
             continue;
@@ -68,11 +69,11 @@ public class DiffOutput implements ResultOutput {
               .rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
-            Path diffFile = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
+            Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
             edit.apply(document);
-            Files.write(diffFile, Arrays.asList(document.get()));
+            Files.write(diffFilePath, Arrays.asList(document.get()));
 
-            makePatchFile(originPath, diffFile,
+            makePatchFile(originPath, diffFilePath,
                 variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"));
           }
         } catch (MalformedTreeException e) {
@@ -92,7 +93,7 @@ public class DiffOutput implements ResultOutput {
    * @param variant
    */
   private void activateRecordModifications(GeneratedSourceCode code) {
-    for (GeneratedAST ast : code.getFiles()) {
+    for (GeneratedAST ast : code.getAsts()) {
       ((GeneratedJDTAST) ast).getRoot()
           .recordModifications();
     }
@@ -101,15 +102,15 @@ public class DiffOutput implements ResultOutput {
   /**
    * 変更前ファイルのパス取得
    *
-   * @param originFiles
-   * @param source
+   * @param originPaths
+   * @param sourcePath
    * @return
    */
-  private Path getOriginPath(List<SourceFile> originFiles, SourceFile source) {
-    for (SourceFile origin : originFiles) {
+  private Path getOriginPath(List<SourcePath> originPaths, SourcePath sourcePath) {
+    for (SourcePath originPath : originPaths) {
       try {
-        if (Files.isSameFile(origin.path, source.path)) {
-          return origin.path;
+        if (Files.isSameFile(originPath.path, sourcePath.path)) {
+          return originPath.path;
         }
       } catch (IOException e) {
         // TODO 自動生成された catch ブロック
@@ -149,13 +150,13 @@ public class DiffOutput implements ResultOutput {
    * originPath と diffFile の間のパッチを patchFile へ出力する
    * 
    * @param originPath
-   * @param diffFile
-   * @param patchFile
+   * @param diffPath
+   * @param patchPath
    */
-  private void makePatchFile(Path originPath, Path diffFile, Path patchFile) {
+  private void makePatchFile(Path originPath, Path diffPath, Path patchPath) {
     try {
       List<String> origin = Files.readAllLines(originPath);
-      List<String> modified = Files.readAllLines(diffFile);
+      List<String> modified = Files.readAllLines(diffPath);
 
       Patch<String> diff = DiffUtils.diff(origin, modified);
 
@@ -165,9 +166,9 @@ public class DiffOutput implements ResultOutput {
       List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
 
-      unifiedDiff.forEach(System.out::println);
+      // unifiedDiff.forEach(System.out::println);
 
-      Files.write(patchFile, unifiedDiff);
+      Files.write(patchPath, unifiedDiff);
     } catch (IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();

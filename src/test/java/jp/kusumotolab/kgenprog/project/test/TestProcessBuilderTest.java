@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Before;
@@ -33,15 +34,13 @@ public class TestProcessBuilderTest {
 
   @Before
   public void before() throws IOException {
-    TestResults.getSerFilePath()
-        .toFile()
-        .delete();
+    Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
   @Test
   public void testStart01() {
     final Path rootDir = Paths.get("example/example01");
-    final Path workingDir = rootDir.resolve("_bin");
+    final Path workingDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
 
     // main
@@ -111,7 +110,7 @@ public class TestProcessBuilderTest {
   @Test
   public void testBuildFailure01() throws IOException {
     final Path rootDir = Paths.get("example/example00");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
 
     // TODO 一時的なSyserr対策．
     // そもそもコンパイルエラー時にsyserr吐かないほうが良い．

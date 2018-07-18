@@ -9,7 +9,7 @@ public interface GeneratedAST {
 
   public String getPrimaryClassName();
 
-  public SourceFile getSourceFile();
+  public SourcePath getSourcePath();
 
   /**
    * 指定された行にあるASTのノードを推定する。候補が複数ある場合、ノードが表すソースコードが広い順にListに格納したものを返す。
