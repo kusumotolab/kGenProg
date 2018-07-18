@@ -1,15 +1,14 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -19,10 +18,34 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 public class RandomMutation extends Mutation {
 
   private static Logger log = LoggerFactory.getLogger(RandomMutation.class);
+  private Roulette<Statement> statementRoulette;
 
   public RandomMutation(final int numberOfBase,
       final RandomNumberGeneration randomNumberGeneration) {
     super(numberOfBase, randomNumberGeneration);
+  }
+
+  @Override
+  public void setCandidates(final List<GeneratedAST> candidates) {
+    log.debug("enter setCandidates(List<>)");
+    super.setCandidates(candidates);
+
+    this.candidates.sort(Comparator.comparingInt(statement -> {
+      final String string = statement.toString();
+      return string.length();
+    }));
+
+    final Function<Statement, Double> weightFunction = statement -> {
+      final String statementString = statement.toString();
+      final int statementLength = statementString.length();
+
+      final double inverse = 1 / ((double) statementLength);
+      return Math.pow(inverse, 2);
+    };
+
+    statementRoulette = new Roulette<>(this.candidates, weightFunction, randomNumberGeneration);
+
+    log.debug("exit setCandidates(List<>)");
   }
 
   public List<Base> exec(final List<Suspiciouseness> suspiciousenesses) {
@@ -33,8 +56,10 @@ public class RandomMutation extends Mutation {
       return bases;
     }
 
-    final Roulette<Suspiciouseness> roulette = new Roulette<>(suspiciousenesses,
-        susp -> Math.pow(susp.getValue(), 2), randomNumberGeneration);
+    final Function<Suspiciouseness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
+
+    final Roulette<Suspiciouseness> roulette =
+        new Roulette<>(suspiciousenesses, weightFunction, randomNumberGeneration);
 
     for (int i = 0; i < numberOfBase; i++) {
       final Suspiciouseness suspiciouseness = roulette.exec();
@@ -67,44 +92,6 @@ public class RandomMutation extends Mutation {
 
   private Statement chooseNodeAtRandom() {
     log.debug("enter chooseNodeAtRandom()");
-    return candidates.get(randomNumberGeneration.getInt(candidates.size()));
-  }
-
-  class Roulette<T> {
-
-    private final double total;
-    private final List<Double> separateList = new ArrayList<>();
-    private final List<T> valueList = new ArrayList<>();
-    private final RandomNumberGeneration randomNumberGeneration;
-
-    Roulette(final List<T> valueList, final Function<T, Double> weightFunction,
-        final RandomNumberGeneration randomNumberGeneration) {
-      final List<Double> weightList = valueList.stream()
-          .map(weightFunction)
-          .collect(Collectors.toList());
-      double total = 0.0d;
-      for (Double weight : weightList) {
-        total += weight;
-        separateList.add(total);
-      }
-      this.total = total;
-      this.valueList.addAll(valueList);
-      this.randomNumberGeneration = randomNumberGeneration;
-    }
-
-    T exec() {
-      final double weight = randomNumberGeneration.getDouble(total);
-      final int searchResult =
-          Collections.binarySearch(separateList, weight, Comparator.naturalOrder());
-      final int index = convertToIndex(searchResult);
-      return valueList.get(index);
-    }
-
-    private int convertToIndex(final int searchResult) {
-      if (searchResult < 0) {
-        return -(searchResult + 1);
-      }
-      return searchResult;
-    }
+    return statementRoulette.exec();
   }
 }
