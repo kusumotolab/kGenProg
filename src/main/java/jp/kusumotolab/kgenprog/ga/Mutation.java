@@ -35,10 +35,6 @@ public abstract class Mutation {
   protected final RandomNumberGeneration randomNumberGeneration;
   protected final int numberOfBase;
 
-  public Mutation(final int numberOfBase) {
-    this(numberOfBase, new RandomNumberGeneration());
-  }
-
   public Mutation(final int numberOfBase, final RandomNumberGeneration randomNumberGeneration) {
     this.randomNumberGeneration = randomNumberGeneration;
     this.numberOfBase = numberOfBase;
