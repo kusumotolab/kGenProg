@@ -291,4 +291,44 @@ public class GeneratedJDTASTTest {
 
 
   }
+
+  @Test
+  public void testGetMessageDigest01() {
+    final SourcePath testSourceFile = new TargetSourcePath(
+        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final List<GeneratedAST> asts =
+        constructor.constructAST(Collections.singletonList(testSourceFile));
+    final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
+
+    assertThat(jdtAst.getMessageDigest(), is("2770DD8D6E41A26A02F95939D03E89DF"));
+  }
+
+  @Test
+  public void testGetMessageDigest02() {
+    final String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
+    final String testSource2 =
+        "class A {\n\tpublic void a() {\n\t\t b(1);\n\t}\n\tpublic void b(int v){}\n}\n";
+    final SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
+    final GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
+
+    assertThat(ast1.getMessageDigest()
+        .equals(ast2.getMessageDigest()), is(true));
+  }
+
+  @Test
+  public void testGetMessageDigest03() {
+    final String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
+    final String testSource2 = "class A{public void a(){b(2);}public void b(int v){}}";
+    final SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
+    final GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
+
+    assertThat(ast1.getMessageDigest()
+        .equals(ast2.getMessageDigest()), is(false));
+  }
 }

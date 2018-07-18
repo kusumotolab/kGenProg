@@ -1,9 +1,13 @@
 package jp.kusumotolab.kgenprog.project;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.xml.bind.DatatypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,15 +17,18 @@ import org.slf4j.LoggerFactory;
 public class GeneratedSourceCode {
 
   private static Logger log = LoggerFactory.getLogger(GeneratedSourceCode.class);
+  private static final String DIGEST_ALGORITHM = "MD5";
 
   // TODO listは順序が保証されず重複を許容してしまう．Mapで名前から引ける方が外から使いやすい．
-  private List<GeneratedAST> asts;
-  private Map<SourcePath, GeneratedAST> pathToAst;
+  private final List<GeneratedAST> asts;
+  private final Map<SourcePath, GeneratedAST> pathToAst;
+  private final String messageDigest;
 
   public GeneratedSourceCode(List<GeneratedAST> asts) {
     this.asts = asts;
     pathToAst = asts.stream()
         .collect(Collectors.toMap(GeneratedAST::getSourcePath, v -> v));
+    this.messageDigest = createMessageDigest();
   }
 
   public List<GeneratedAST> getAsts() {
@@ -53,5 +60,27 @@ public class GeneratedSourceCode {
   public Range inferLineNumbers(Location location) {
     log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();
+  }
+
+  public String getMessageDigest() {
+    return messageDigest;
+  }
+
+  private String createMessageDigest() {
+    try {
+      final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
+
+      asts.stream()
+          .sorted(Comparator.comparing(v -> v.getSourcePath()
+              .toString()))
+          .map(GeneratedAST::getMessageDigest)
+          .map(String::getBytes)
+          .forEach(digest::update);
+
+      return DatatypeConverter.printHexBinary(digest.digest());
+
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
