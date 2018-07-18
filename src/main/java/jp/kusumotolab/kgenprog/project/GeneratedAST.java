@@ -30,4 +30,6 @@ public interface GeneratedAST {
   public List<Location> inferLocations(int lineNumber);
 
   public List<Location> getAllLocations();
+
+  public String getMessageDigest();
 }

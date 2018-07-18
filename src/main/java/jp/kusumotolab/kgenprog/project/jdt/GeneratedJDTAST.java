@@ -1,9 +1,12 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.xml.bind.DatatypeConverter;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier;
@@ -15,6 +18,8 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class GeneratedJDTAST implements GeneratedAST {
 
+  private static final String DIGEST_ALGORITHM = "MD5";
+
   private final JDTASTConstruction construction;
   private final CompilationUnit root;
   private final SourcePath sourcePath;
@@ -22,6 +27,7 @@ public class GeneratedJDTAST implements GeneratedAST {
   private final List<Location> allLocations;
   private final String primaryClassName;
   private final String sourceCode;
+  private final String messageDigest;
 
   public GeneratedJDTAST(final JDTASTConstruction construction, final SourcePath sourcePath,
       final CompilationUnit root, final String source) {
@@ -38,6 +44,7 @@ public class GeneratedJDTAST implements GeneratedAST {
         .map(v -> new JDTLocation(sourcePath, v))
         .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
+    this.messageDigest = createMessageDigest();
   }
 
   @Override
@@ -58,6 +65,11 @@ public class GeneratedJDTAST implements GeneratedAST {
   @Override
   public List<Location> getAllLocations() {
     return allLocations;
+  }
+
+  @Override
+  public String getMessageDigest() {
+    return messageDigest;
   }
 
   public CompilationUnit getRoot() {
@@ -114,6 +126,17 @@ public class GeneratedJDTAST implements GeneratedAST {
     } else {
       return packageName.getName()
           .getFullyQualifiedName() + "." + name;
+    }
+  }
+
+  private String createMessageDigest() {
+    try {
+      final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
+
+      return DatatypeConverter.printHexBinary(digest.digest(root.toString()
+          .getBytes()));
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
     }
   }
 }
