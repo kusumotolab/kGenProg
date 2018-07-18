@@ -8,14 +8,12 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class Ochiai implements FaultLocalization {
-
-  final String LINE_SEPARATOR = System.lineSeparator();
 
   private Logger log = LoggerFactory.getLogger(Ochiai.class);
 
@@ -31,18 +29,18 @@ public class Ochiai implements FaultLocalization {
     final List<Suspiciouseness> suspeciousenesses = new ArrayList<>();
 
     for (final GeneratedAST ast : variant.getGeneratedSourceCode()
-        .getFiles()) {
+        .getAsts()) {
       final String code = ast.getSourceCode();
-      final SourceFile file = ast.getSourceFile();
+      final SourcePath path = ast.getSourcePath();
       final int lastLineNumber = countLines(code);
 
       for (int line = 1; line <= lastLineNumber; line++) {
         final List<Location> locations = ast.inferLocations(line);
         if (!locations.isEmpty()) {
           final Location l = locations.get(locations.size() - 1);
-          final long ef = testResults.getNumberOfFailedTestsExecutingTheStatement(file, l);
-          final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(file, l);
-          final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(file, l);
+          final long ef = testResults.getNumberOfFailedTestsExecutingTheStatement(path, l);
+          final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, l);
+          final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, l);
           final double value = ef / Math.sqrt((ef + nf) * (ef + ep));
           if (0d < value) {
             final Suspiciouseness s = new Suspiciouseness(l, value);

@@ -51,15 +51,13 @@ public class TestExecutorMainTest {
 
   @Before
   public void before() throws IOException {
-    TestResults.getSerFilePath()
-        .toFile()
-        .delete();
+    Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
   @Test
   public void testMainSuccess01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
@@ -68,7 +66,7 @@ public class TestExecutorMainTest {
     TestExecutorMain.main(new String[] { //
         "-b", outDir.toString(), //
         "-s", buggyCalculator.toString(), //
-        "-t", buggyCalculatorTest.toString()});
+        "-t", buggyCalculatorTest.toString() });
 
     // serialize対象のファイルがあるはず
     assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
@@ -104,7 +102,7 @@ public class TestExecutorMainTest {
   @Test
   public void testMainSuccess02() throws Exception {
     final Path rootDir = Paths.get("example/example02");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
         .getGeneratedSourceCode();
@@ -113,7 +111,7 @@ public class TestExecutorMainTest {
     TestExecutorMain.main(new String[] { //
         "-b", outDir.toString(), //
         "-s", buggyCalculator.toString() + TestExecutorMain.SEPARATOR + util.toString(), //
-        "-t", buggyCalculatorTest.toString() + TestExecutorMain.SEPARATOR + utilTest.toString()});
+        "-t", buggyCalculatorTest.toString() + TestExecutorMain.SEPARATOR + utilTest.toString() });
 
     // serialize対象のファイルがあるはず
     assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
@@ -158,13 +156,13 @@ public class TestExecutorMainTest {
 
     // rootDirがバグってる
     final Path rootDir = Paths.get("example/example01xxxxxxxx");
-    final Path outDir = rootDir.resolve("_bin");
+    final Path outDir = rootDir.resolve("bin");
 
     // 例外を吐くはず（具体的にどの例外を吐くかはひとまず確認せず）
     TestExecutorMain.main(new String[] { //
         "-b", outDir.toString(), //
         "-s", buggyCalculator.toString(), //
-        "-t", buggyCalculatorTest.toString()});
+        "-t", buggyCalculatorTest.toString() });
   }
 
   @Test(expected = CmdLineException.class)
@@ -174,6 +172,6 @@ public class TestExecutorMainTest {
     TestExecutorMain.main(new String[] { //
         // "-b", outDir, // outDirを指定しない
         "-s", buggyCalculator.toString(), //
-        "-t", buggyCalculatorTest.toString()});
+        "-t", buggyCalculatorTest.toString() });
   }
 }
