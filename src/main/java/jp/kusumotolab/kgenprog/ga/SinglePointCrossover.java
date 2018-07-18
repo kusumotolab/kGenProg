@@ -16,13 +16,13 @@ public class SinglePointCrossover implements Crossover {
   private final int numberOfGene;
 
   public SinglePointCrossover(
-      RandomNumberGeneration randomNumberGeneration, int numberOfGene) {
+      final RandomNumberGeneration randomNumberGeneration, final int numberOfGene) {
     this.randomNumberGeneration = randomNumberGeneration;
     this.numberOfGene = numberOfGene;
   }
 
   public SinglePointCrossover(
-      RandomNumberGeneration randomNumberGeneration) {
+      final RandomNumberGeneration randomNumberGeneration) {
     this(randomNumberGeneration, 10);
   }
 

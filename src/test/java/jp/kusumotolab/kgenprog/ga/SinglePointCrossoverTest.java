@@ -54,15 +54,15 @@ public class SinglePointCrossoverTest {
     assertThat(result, is(true));
   }
 
-  private boolean containNoneOperationAndInsertOperation(Gene gene) {
+  private boolean containNoneOperationAndInsertOperation(final Gene gene) {
     final List<Operation> operations = gene.getBases()
         .stream()
         .map(Base::getOperation)
         .collect(Collectors.toList());
 
-    boolean containNoneOperation = operations.stream()
+    final boolean containNoneOperation = operations.stream()
         .anyMatch(e -> e instanceof NoneOperation);
-    boolean containInsertOperation = operations.stream()
+    final boolean containInsertOperation = operations.stream()
         .anyMatch(
             e -> e instanceof InsertOperation);
 
