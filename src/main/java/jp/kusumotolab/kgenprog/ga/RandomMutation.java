@@ -20,10 +20,6 @@ public class RandomMutation extends Mutation {
 
   private static Logger log = LoggerFactory.getLogger(RandomMutation.class);
 
-  public RandomMutation(int numberOfBase) {
-    super(numberOfBase);
-  }
-
   public RandomMutation(final int numberOfBase,
       final RandomNumberGeneration randomNumberGeneration) {
     super(numberOfBase, randomNumberGeneration);
