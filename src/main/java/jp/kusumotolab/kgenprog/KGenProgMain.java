@@ -100,47 +100,69 @@ public class KGenProgMain {
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
-    final long startTime = System.nanoTime();
-    int generation = 0;
-    while (true) {
 
-      // 制限時間に達したか，最大世代数に到達した場合には GA を抜ける
-      if (isTimedOut(startTime) || reachedMaxGeneration(generation++)) {
-        break;
-      }
+    final KGenProgTimer timer = new KGenProgTimer(timeoutSeconds);
+    timer.start();
+    final OrdinalNumber generation = new OrdinalNumber(1);
+    final OrdinalNumber foundSolutions = new OrdinalNumber(0);
+    GA: while (true) {
 
+      log.info(
+          "in the era of the " + generation.toString() + " generation (" + timer.toString() + ")");
+
+      // 遺伝子を生成
       final List<Gene> genes = new ArrayList<>();
-      for (Variant variant : selectedVariants) {
+      for (final Variant variant : selectedVariants) {
         final List<Suspiciouseness> suspiciousenesses =
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
-
         final List<Base> bases = mutation.exec(suspiciousenesses);
         genes.addAll(variant.getGene()
             .generateNextGenerationGenes(bases));
       }
-
       genes.addAll(crossover.exec(selectedVariants));
 
+      // 遺伝子をもとに変異プログラムを生成
       final List<Variant> currentGenerationVariants = new ArrayList<>();
       for (final Gene gene : genes) {
         final GeneratedSourceCode generatedSourceCode =
             sourceCodeGeneration.exec(gene, targetProject);
-
         final Fitness fitness =
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
-
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
         currentGenerationVariants.add(variant);
 
+        // 生成した変異プログラムが，すべてのテストケースをパスした場合
         if (0 == Double.compare(fitness.getValue(), 1.0d)) {
+          foundSolutions.incrementAndGet();
+
+          log.info(
+              foundSolutions.toString() + " solution has been found (" + timer.toString() + ")");
+
           completedVariants.add(variant);
 
-          // しきい値以上の completedVariants が生成された場合は，GAを抜ける
+          // しきい値以上の completedVariants が生成された場合は，GA を抜ける
           if (areEnoughCompletedVariants(completedVariants)) {
-            break;
+            log.info("reached the required solutions");
+            break GA;
           }
         }
       }
+
+      // 制限時間に達した場合には GA を抜ける
+      if (timer.isTimeout()) {
+        log.info("reached the time limit");
+        break;
+      }
+
+      // 最大世代数に到達した場合には GA を抜ける
+      if (reachedMaxGeneration(generation)) {
+        log.info("reached the maximum generation");
+        break;
+      }
+
+      // 次世代に向けての準備
+      selectedVariants = variantSelection.exec(currentGenerationVariants);
+      generation.getAndIncrement();
     }
 
     resultGenerator.outputResult(targetProject, completedVariants);
@@ -149,25 +171,13 @@ public class KGenProgMain {
     return completedVariants;
   }
 
-  private boolean reachedMaxGeneration(final int generation) {
-    log.debug("enter reachedMaxGeneration()");
-    return this.maxGeneration <= generation;
-  }
-
-  private boolean isTimedOut(final long startTime) {
-    log.debug("enter isTimedOut()");
-    final long elapsedTime = System.nanoTime() - startTime;
-    return elapsedTime > this.timeoutSeconds * 1000 * 1000 * 1000;
-  }
-
-  @SuppressWarnings("unused")
-  @Deprecated
-  private boolean isSuccess(List<Variant> variants) {
-    log.debug("enter isSuccess(List<>)");
-    return false;
+  private boolean reachedMaxGeneration(final OrdinalNumber generation) {
+    log.debug("enter reachedMaxGeneration(OrdinalNumber)");
+    return this.maxGeneration <= generation.get();
   }
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
+    log.debug("enter areEnoughCompletedVariants(List<Variant>)");
     return this.requiredSolutions <= completedVariants.size();
   }
 }
