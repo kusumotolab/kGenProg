@@ -16,7 +16,7 @@ import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.GenerationalVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
-import jp.kusumotolab.kgenprog.ga.SiglePointCrossover;
+import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
@@ -47,7 +47,7 @@ public class KGenProgMainTest {
         testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final Mutation mutation = new RandomMutation(10);
-    final Crossover crossover = new SiglePointCrossover();
+    final Crossover crossover = new SinglePointCrossover();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
@@ -75,7 +75,7 @@ public class KGenProgMainTest {
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final Mutation mutation = new RandomMutation(10);
-    final Crossover crossover = new SiglePointCrossover();
+    final Crossover crossover = new SinglePointCrossover();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection();
@@ -102,7 +102,7 @@ public class KGenProgMainTest {
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final Mutation mutation = new RandomMutation(10);
-    final Crossover crossover = new SiglePointCrossover();
+    final Crossover crossover = new SinglePointCrossover();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
