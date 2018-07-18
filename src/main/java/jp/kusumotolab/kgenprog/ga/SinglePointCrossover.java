@@ -9,6 +9,13 @@ public class SinglePointCrossover implements Crossover {
 
   private static Logger log = LoggerFactory.getLogger(SinglePointCrossover.class);
 
+  private final RandomNumberGeneration randomNumberGeneration;
+
+  public SinglePointCrossover(
+      RandomNumberGeneration randomNumberGeneration) {
+    this.randomNumberGeneration = randomNumberGeneration;
+  }
+
   @Override
   public List<Gene> exec(final List<Variant> variants) {
     log.debug("enter exec(List<>)");
