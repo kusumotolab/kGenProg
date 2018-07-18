@@ -3,7 +3,7 @@ package jp.kusumotolab.kgenprog.ga;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import java.lang.reflect.Field;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,15 +52,12 @@ public class RandomMutationTest {
     final String basePath = "example/example01/";
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final RandomMutation randomMutation = new RandomMutation(10, new TestNumberGeneration());
+    final RandomMutation randomMutation = new RandomMutation(15, new TestNumberGeneration());
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode()
-        .getAsts()
-        .stream()
-        .sorted(Comparator.comparing(x -> x.getSourcePath().path))
-        .collect(Collectors.toList())
+    final GeneratedAST generatedAST = new ArrayList<>(initialVariant.getGeneratedSourceCode()
+        .getAsts())
         .get(0);
     final SourcePath sourcePath = generatedAST.getSourcePath();
     final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
@@ -82,8 +79,7 @@ public class RandomMutationTest {
 
     // 正しく10個のBaseが生成されるかのテスト
     final List<Base> baseList = randomMutation.exec(suspiciousenesses);
-    assertThat(baseList.size(), is(10));
-
+    assertThat(baseList.size(), is(15));
 
     // Suspiciousenessが高い場所ほど多くの操作が生成されているかのテスト
     final Map<String, List<Base>> map = baseList.stream()
