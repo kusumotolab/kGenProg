@@ -15,12 +15,12 @@ public class SinglePointCrossover implements Crossover {
   private static Logger log = LoggerFactory.getLogger(SinglePointCrossover.class);
 
   private final RandomNumberGeneration randomNumberGeneration;
-  private final int numberOfGene;
+  private final int numberOfPair;
 
   public SinglePointCrossover(
-      final RandomNumberGeneration randomNumberGeneration, final int numberOfGene) {
+      final RandomNumberGeneration randomNumberGeneration, final int numberOfPair) {
     this.randomNumberGeneration = randomNumberGeneration;
-    this.numberOfGene = numberOfGene;
+    this.numberOfPair = numberOfPair;
   }
 
   public SinglePointCrossover(
@@ -32,17 +32,17 @@ public class SinglePointCrossover implements Crossover {
   public List<Gene> exec(final List<Variant> variants) {
     log.debug("enter exec(List<>)");
 
-    if (variants.isEmpty()) {
-      return Collections.emptyList();
-    }
-
     final List<Variant> filteredVariants = variants.stream()
         .filter(e -> !e.getGene()
             .getBases()
             .isEmpty())
         .collect(Collectors.toList());
 
-    return IntStream.range(0, numberOfGene / 2)
+    if (filteredVariants.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    return IntStream.range(0, numberOfPair)
         .mapToObj(e -> makeGenes(filteredVariants))
         .flatMap(Collection::stream)
         .collect(Collectors.toList());
