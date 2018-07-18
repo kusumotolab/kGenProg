@@ -18,7 +18,7 @@ public class SinglePointCrossoverTest {
 
     @Override
     public boolean getBoolean() {
-      return true;
+      return false;
     }
 
     @Override
