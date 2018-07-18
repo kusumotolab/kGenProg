@@ -1,7 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class EmptyTestResults extends TestResults {
 
@@ -17,25 +17,25 @@ public class EmptyTestResults extends TestResults {
   }
 
   @Override
-  public long getNumberOfPassedTestsExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfPassedTestsExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
     return 0;
   }
 
   @Override
-  public long getNumberOfFailedTestsExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfFailedTestsExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
     return 0;
   }
 
   @Override
-  public long getNumberOfPassedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfPassedTestsNotExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
     return 0;
   }
 
   @Override
-  public long getNumberOfFailedTestsNotExecutingTheStatement(final SourceFile sourceFile,
+  public long getNumberOfFailedTestsNotExecutingTheStatement(final SourcePath sourcePath,
       final Location location) {
     return 0;
   }

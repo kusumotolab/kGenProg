@@ -4,21 +4,21 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.SourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class DefaultProjectFactory implements IProjectFactory {
 
   private final Path rootPath;
-  private final List<SourceFile> sourceFiles;
-  private final List<SourceFile> testFiles;
+  private final List<SourcePath> sourcePaths;
+  private final List<SourcePath> testPaths;
   private final List<ClassPath> classPaths;
 
-  public DefaultProjectFactory(final Path rootPath, final List<SourceFile> sourceFiles,
-      final List<SourceFile> testFiles, List<ClassPath> classPaths, JUnitVersion junitVersion) {
+  public DefaultProjectFactory(final Path rootPath, final List<SourcePath> sourcePaths,
+      final List<SourcePath> testPaths, List<ClassPath> classPaths, JUnitVersion junitVersion) {
     this.rootPath = rootPath;
-    this.sourceFiles = sourceFiles;
-    this.testFiles = testFiles;
+    this.sourcePaths = sourcePaths;
+    this.testPaths = testPaths;
 
     // create new instance to avoid UnsupportedOperationException
     this.classPaths = new ArrayList<ClassPath>(classPaths);
@@ -27,7 +27,7 @@ public class DefaultProjectFactory implements IProjectFactory {
 
   @Override
   public TargetProject create() {
-    return new TargetProject(rootPath, sourceFiles, testFiles, classPaths);
+    return new TargetProject(rootPath, sourcePaths, testPaths, classPaths);
   }
 
   @Override

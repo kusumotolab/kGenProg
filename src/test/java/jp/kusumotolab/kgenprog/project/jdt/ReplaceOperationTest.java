@@ -11,18 +11,18 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.SourceFile;
-import jp.kusumotolab.kgenprog.project.TargetSourceFile;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class ReplaceOperationTest {
 
   @Test
   public void testReplaceStatement() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -31,7 +31,7 @@ public class ReplaceOperationTest {
         .get(0);
     MethodDeclaration method = type.getMethods()[0];
     Block block = method.getBody();
-    JDTLocation location = new JDTLocation(testSourceFile, block);
+    JDTLocation location = new JDTLocation(testSourcePath, block);
 
     // 置換対象生成
     Block replaceBlock = createReplacementBlockTarget();
@@ -39,7 +39,7 @@ public class ReplaceOperationTest {
     ReplaceOperation operation = new ReplaceOperation(replaceBlock);
 
     GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getFiles()
+    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
         .get(0);
     assertEquals("class A {\n  public void a(){\n    a();\n  }\n}\n", newAST.getRoot()
         .toString());
@@ -49,10 +49,10 @@ public class ReplaceOperationTest {
   @Test
   public void testReplaceStatementInList() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -63,7 +63,7 @@ public class ReplaceOperationTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourceFile, statement);
+    JDTLocation location = new JDTLocation(testSourcePath, statement);
 
     // 置換対象生成
     AST jdtAST = ast.getRoot()
@@ -75,7 +75,7 @@ public class ReplaceOperationTest {
     ReplaceOperation operation = new ReplaceOperation(replaceStatement);
 
     GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getFiles()
+    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
         .get(0);
     assertEquals("class A {\n  public void a(){\n    int a=0;\n    a();\n  }\n}\n", newAST.getRoot()
         .toString());
@@ -86,10 +86,10 @@ public class ReplaceOperationTest {
   @Test
   public void testReplaceStatementDirectly() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -98,7 +98,7 @@ public class ReplaceOperationTest {
         .get(0);
     MethodDeclaration method = type.getMethods()[0];
     Block block = method.getBody();
-    JDTLocation location = new JDTLocation(testSourceFile, block);
+    JDTLocation location = new JDTLocation(testSourcePath, block);
 
     // 置換対象生成
     Block replaceBlock = createReplacementBlockTarget();
@@ -113,10 +113,10 @@ public class ReplaceOperationTest {
   @Test
   public void testReplaceStatementInListDirectly() {
     String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("A.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, testSource);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
     GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -127,7 +127,7 @@ public class ReplaceOperationTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourceFile, statement);
+    JDTLocation location = new JDTLocation(testSourcePath, statement);
 
     // 置換対象生成
     Statement replaceStatement = createReplacementTarget();
@@ -141,10 +141,10 @@ public class ReplaceOperationTest {
 
   private Statement createReplacementTarget() {
     String target = "class B{ public void a() { a(); } }";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("B.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("B.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, target);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, target);
 
     TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
@@ -156,10 +156,10 @@ public class ReplaceOperationTest {
 
   private Block createReplacementBlockTarget() {
     String target = "class B{ public void a() { a(); } }";
-    SourceFile testSourceFile = new TargetSourceFile(Paths.get("B.java"));
+    SourcePath testSourcePath = new TargetSourcePath(Paths.get("B.java"));
 
     JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourceFile, target);
+    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, target);
 
     TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()

@@ -20,31 +20,30 @@ public class GeneratedSourceCode {
   private static final String DIGEST_ALGORITHM = "MD5";
 
   // TODO listは順序が保証されず重複を許容してしまう．Mapで名前から引ける方が外から使いやすい．
-  private final List<GeneratedAST> files;
-  private final Map<SourceFile, GeneratedAST> fileToAST;
+  private final List<GeneratedAST> asts;
+  private final Map<SourcePath, GeneratedAST> pathToAst;
   private final String messageDigest;
 
-  public GeneratedSourceCode(List<GeneratedAST> files) {
-    this.files = files;
-    fileToAST = files.stream()
-        .collect(Collectors.toMap(GeneratedAST::getSourceFile, v -> v));
+  public GeneratedSourceCode(List<GeneratedAST> asts) {
+    this.asts = asts;
+    pathToAst = asts.stream()
+        .collect(Collectors.toMap(GeneratedAST::getSourcePath, v -> v));
     this.messageDigest = createMessageDigest();
-
   }
 
-  public List<GeneratedAST> getFiles() {
-    log.debug("enter getFiles()");
-    return files;
+  public List<GeneratedAST> getAsts() {
+    log.debug("enter getAsts()");
+    return asts;
   }
 
-  public GeneratedAST getAST(SourceFile file) {
-    log.debug("enter getAST()");
-    return fileToAST.get(file);
+  public GeneratedAST getAst(SourcePath path) {
+    log.debug("enter getAst()");
+    return pathToAst.get(path);
   }
 
-  public List<Location> inferLocations(SourceFile file, int lineNumber) {
-    log.debug("enter inferLocations(SourceFile, int)");
-    GeneratedAST ast = getAST(file);
+  public List<Location> inferLocations(SourcePath path, int lineNumber) {
+    log.debug("enter inferLocations(SourcePath, int)");
+    GeneratedAST ast = getAst(path);
     if (ast == null) {
       return Collections.emptyList();
     }
@@ -52,7 +51,7 @@ public class GeneratedSourceCode {
   }
 
   public List<Location> getAllLocations() {
-    return files.stream()
+    return asts.stream()
         .flatMap(v -> v.getAllLocations()
             .stream())
         .collect(Collectors.toList());
@@ -71,8 +70,8 @@ public class GeneratedSourceCode {
     try {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
-      files.stream()
-          .sorted(Comparator.comparing(v -> v.getSourceFile()
+      asts.stream()
+          .sorted(Comparator.comparing(v -> v.getSourcePath()
               .toString()))
           .map(GeneratedAST::getMessageDigest)
           .map(String::getBytes)

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 public class ProjectBuilder {
 
   private static Logger log = LoggerFactory.getLogger(ProcessBuilder.class);
-  static private final String CLASSPATH_SEPARATOR = File.pathSeparator;
 
   private final TargetProject targetProject;
 
@@ -54,23 +54,29 @@ public class ProjectBuilder {
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
     // workingDir が存在しなければ生成
-    final File workingDireFile = workingDir.toFile();
-    if (!workingDireFile.exists()) {
-      workingDireFile.mkdirs();
+    if (Files.notExists(workingDir)) {
+      try {
+        Files.createDirectories(workingDir);
+      } catch (IOException e) {
+        log.error(e.getMessage(), e);
+
+        // TODO should be considered
+        return null;
+      }
     }
 
     // コンパイル対象の JavaFileObject を生成
     final Iterable<? extends JavaFileObject> javaFileObjects =
-        generateAllJavaFileObjects(generatedSourceCode.getFiles(), fileManager);
+        generateAllJavaFileObjects(generatedSourceCode.getAsts(), fileManager);
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
-    compilationOptions.add(workingDir.toFile()
-        .getAbsolutePath());
+    compilationOptions.add(workingDir.toAbsolutePath()
+        .toString());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
-    compilationOptions.add(String.join(CLASSPATH_SEPARATOR, this.targetProject.getClassPaths()
+    compilationOptions.add(String.join(File.pathSeparator, this.targetProject.getClassPaths()
         .stream()
         .map(cp -> cp.path.toString())
         .collect(Collectors.toList())));
@@ -116,9 +122,9 @@ public class ProjectBuilder {
     // TODO: https://github.com/kusumotolab/kGenProg/pull/154
     // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
 
-    final List<SourceFile> allSourceFiles = new ArrayList<>();
-    allSourceFiles.addAll(this.targetProject.getSourceFiles());
-    allSourceFiles.addAll(this.targetProject.getTestFiles());
+    final List<SourcePath> allSourcePaths = new ArrayList<>();
+    allSourcePaths.addAll(this.targetProject.getSourcePaths());
+    allSourcePaths.addAll(this.targetProject.getTestPaths());
 
     for (final File classFile : classFiles) {
 
@@ -137,10 +143,10 @@ public class ProjectBuilder {
       // 対応関係の構築
       final String partialPath = parser.getPartialPath();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(parser.getFQN());
-      SourceFile correspondingSourceFile = null;
-      for (final SourceFile sourceFile : allSourceFiles) {
-        if (sourceFile.path.endsWith(partialPath)) {
-          correspondingSourceFile = sourceFile;
+      SourcePath correspondingSourceFile = null;
+      for (final SourcePath sourcePath : allSourcePaths) {
+        if (sourcePath.path.endsWith(partialPath)) {
+          correspondingSourceFile = sourcePath;
           break;
         }
       }
@@ -169,7 +175,7 @@ public class ProjectBuilder {
     final Iterable<? extends JavaFileObject> targetIterator =
         generateJavaFileObjectsFromGeneratedAst(list);
     final Iterable<? extends JavaFileObject> testIterator =
-        generateJavaFileObjectsFromSourceFile(this.targetProject.getTestFiles(), fileManager);
+        generateJavaFileObjectsFromSourceFile(this.targetProject.getTestPaths(), fileManager);
 
     return Stream.concat( //
         StreamSupport.stream(targetIterator.spliterator(), false), //
@@ -193,13 +199,13 @@ public class ProjectBuilder {
   /**
    * ソースファイルから JavaFileObject を生成するメソッド
    * 
-   * @param files
+   * @param paths
    * @param fileManager
    * @return
    */
   private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromSourceFile(
-      final List<SourceFile> files, final StandardJavaFileManager fileManager) {
-    final Set<String> sourceFileNames = files.stream()
+      final List<SourcePath> paths, final StandardJavaFileManager fileManager) {
+    final Set<String> sourceFileNames = paths.stream()
         .map(f -> f.path.toString())
         .collect(Collectors.toSet());
     return fileManager.getJavaFileObjectsFromStrings(sourceFileNames);
