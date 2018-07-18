@@ -30,7 +30,7 @@ public class SinglePointCrossover implements Crossover {
   public List<Gene> exec(final List<Variant> variants) {
     log.debug("enter exec(List<>)");
 
-    if (variants.isEmpty() || randomNumberGeneration.getBoolean()) {
+    if (variants.isEmpty()) {
       return Collections.emptyList();
     }
 
