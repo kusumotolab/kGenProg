@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,12 +42,13 @@ public class SinglePointCrossover implements Crossover {
             .isEmpty())
         .collect(Collectors.toList());
 
-    return IntStream.range(0, numberOfGene)
-        .mapToObj(e -> makeGene(filteredVariants))
+    return IntStream.range(0, numberOfGene / 2)
+        .mapToObj(e -> makeGenes(filteredVariants))
+        .flatMap(Collection::stream)
         .collect(Collectors.toList());
   }
 
-  private Gene makeGene(final List<Variant> variants) {
+  private List<Gene> makeGenes(final List<Variant> variants) {
     final Variant variantA = variants.get(randomNumberGeneration.getInt(variants.size()));
     final Variant variantB = variants.get(randomNumberGeneration.getInt(variants.size()));
     final Gene geneA = variantA.getGene();
@@ -53,10 +56,15 @@ public class SinglePointCrossover implements Crossover {
     final List<Base> basesA = geneA.getBases();
     final List<Base> basesB = geneB.getBases();
     final int index = randomNumberGeneration.getInt(Math.min(basesA.size(), basesB.size()));
-    final List<Base> subListA = new ArrayList<>(basesA.subList(0, index));
-    final List<Base> subListB = basesB.subList(index, basesB.size());
-    subListA.addAll(subListB);
-    return new SimpleGene(subListA);
+    return Arrays.asList(
+        makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size())),
+        makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size()))
+    );
   }
 
+  private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {
+    final ArrayList<Base> bases = new ArrayList<>(basesA);
+    bases.addAll(basesB);
+    return new SimpleGene(bases);
+  }
 }
