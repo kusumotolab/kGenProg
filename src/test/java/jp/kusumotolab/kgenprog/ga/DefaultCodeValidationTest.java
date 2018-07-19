@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.ga;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.assertj.core.data.Offset;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -11,8 +10,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public class DefaultCodeValidationTest {
-
-  private final Offset<Double> offset = Offset.offset(0.00001d);
 
   @Test
   public void testExec() {
@@ -28,7 +25,8 @@ public class DefaultCodeValidationTest {
     final Fitness fitness =
         defaultCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
 
-    assertThat(fitness.getValue()).isCloseTo(0.75, offset);
+    final double expected = (double) 3 / 4; // 4 tests executed and 3 tests passed.
+    assertThat(fitness.getValue()).isEqualTo(expected);
   }
 
   @Test
