@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ public class DefaultSourceCodeGenerationTest {
 
   @Test
   public void noneOperationTest() {
-    final TargetProject targetProject = TargetProjectFactory.create("example/example01");
+    final TargetProject targetProject = TargetProjectFactory.create(Paths.get("example/example01"));
     final Variant initialVariant = targetProject.getInitialVariant();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
 

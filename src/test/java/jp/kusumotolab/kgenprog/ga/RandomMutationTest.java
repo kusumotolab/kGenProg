@@ -1,7 +1,10 @@
 package jp.kusumotolab.kgenprog.ga;
 
+import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +51,7 @@ public class RandomMutationTest {
 
   @Test
   public void testExec() throws NoSuchFieldException, IllegalAccessException {
-    final String basePath = "example/example01/";
+    final Path basePath = Paths.get("example/example01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final RandomMutation randomMutation = new RandomMutation(10, new TestNumberGeneration());
@@ -67,10 +70,12 @@ public class RandomMutationTest {
         .getRoot();
     final TypeDeclaration typeRoot = (TypeDeclaration) root.types()
         .get(0);
+
+    @SuppressWarnings("unchecked")
     final List<Statement> statements = typeRoot.getMethods()[0].getBody()
         .statements();
 
-    final double[] value = {0.8};
+    final double[] value = { 0.8 };
     final List<Suspiciouseness> suspiciousenesses = statements.stream()
         .map(e -> new JDTLocation(sourcePath, e))
         .map(e -> {
@@ -98,7 +103,7 @@ public class RandomMutationTest {
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
     final Base base = baseList.get(0);
     final JDTLocation targetLocation = (JDTLocation) base.getTargetLocation();
-    assertThat(targetLocation.node.toString()).isEqualToIgnoringNewLines("return n;");
+    assertThat(targetLocation.node).isSameSourceCodeAs("return n;");
 
     final Operation operation = base.getOperation();
     assertThat(operation).isInstanceOf(InsertOperation.class);
@@ -108,6 +113,6 @@ public class RandomMutationTest {
         .getDeclaredField("astNode");
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
-    assertThat(node.toString()).isEqualToIgnoringNewLines("n--;");
+    assertThat(node).isSameSourceCodeAs("n--;");
   }
 }
