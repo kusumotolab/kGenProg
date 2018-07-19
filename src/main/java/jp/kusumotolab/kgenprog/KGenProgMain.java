@@ -20,6 +20,7 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.ResultOutput;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
@@ -126,6 +127,9 @@ public class KGenProgMain {
       for (final Gene gene : genes) {
         final GeneratedSourceCode generatedSourceCode =
             sourceCodeGeneration.exec(gene, targetProject);
+        if (generatedSourceCode.equals(GenerationFailedSourceCode.GENERATION_FAILED)) {
+          continue;
+        }
         final Fitness fitness =
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
