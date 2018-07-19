@@ -1,8 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,16 +10,21 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TargetProjectTest {
 
+  private final String bc = "src/jp/kusumotolab/BuggyCalculator.java";
+  private final String bct = "src/jp/kusumotolab/BuggyCalculatorTest.java";
+  private final String ut = "src/jp/kusumotolab/Util.java";
+  private final String utt = "src/jp/kusumotolab/UtilTest.java";
+
   @Test
   public void testGenerate01() throws IOException {
     final Path basePath = Paths.get("example/example01");
     final TargetProject project = TargetProjectFactory.create(basePath);
 
-    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
-        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
+    final TargetSourcePath bcPath = new TargetSourcePath(basePath.resolve(bc));
+    final TestSourcePath bctPath = new TestSourcePath(basePath.resolve(bct));
 
-    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
-        new TestSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
+    assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath);
+    assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath);
   }
 
   @Test
@@ -29,13 +32,12 @@ public class TargetProjectTest {
     final Path basePath = Paths.get("example/example02");
     final TargetProject project = TargetProjectFactory.create(basePath);
 
-    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
-        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")))));
+    final TargetSourcePath bcPath = new TargetSourcePath(basePath.resolve(bc));
+    final TestSourcePath bctPath = new TestSourcePath(basePath.resolve(bct));
+    final TargetSourcePath utPath = new TargetSourcePath(basePath.resolve(ut));
+    final TestSourcePath uttPath = new TestSourcePath(basePath.resolve(utt));
 
-    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
-        new TestSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")), //
-        new TestSourcePath(basePath.resolve("src/jp/kusumotolab/UtilTest.java")))));
-
+    assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath, utPath);
+    assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath, uttPath);
   }
 }
