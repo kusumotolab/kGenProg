@@ -28,8 +28,12 @@ public class OchiaiTest {
 
     suspeciousnesses.sort(comparing(Suspiciouseness::getValue, reverseOrder()));
 
+    final double susp1 = 1 / Math.sqrt((1 + 0) * (1 + 1)); // 0.707107 (the most suspicious stmt)
+    final double susp2 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
+    final double susp3 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
+    final double susp4 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     assertThat(suspeciousnesses).extracting("value")
-        .containsExactly(0.7071067811865475d, 0.5d, 0.5d, 0.5d);
+        .containsExactly(susp1, susp2, susp3, susp4);
   }
 
   @Test
@@ -45,8 +49,12 @@ public class OchiaiTest {
 
     suspeciousnesses.sort(comparing(Suspiciouseness::getValue, reverseOrder()));
 
+    final double susp1 = 1 / Math.sqrt((1 + 0) * (1 + 1)); // 0.707107 (the most suspicious stmt)
+    final double susp2 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
+    final double susp3 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
+    final double susp4 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     assertThat(suspeciousnesses).extracting("value")
-        .containsExactly(0.7071067811865475d, 0.5d, 0.5d, 0.5d);
+        .containsExactly(susp1, susp2, susp3, susp4);
   }
 
   @Test
