@@ -16,16 +16,15 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestProcessBuilderTest {
 
-  final static TestFullyQualifiedName test01 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
-  final static TestFullyQualifiedName test02 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
-  final static TestFullyQualifiedName test03 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
-  final static TestFullyQualifiedName test04 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
-  final static TargetFullyQualifiedName buggyCalculator =
-      new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
+  final static String bc = "jp.kusumotolab.BuggyCalculator";
+  final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
+  final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
+  final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bct);
+
+  final static FullyQualifiedName test01 = new TestFullyQualifiedName(bct + ".test01");
+  final static FullyQualifiedName test02 = new TestFullyQualifiedName(bct + ".test02");
+  final static FullyQualifiedName test03 = new TestFullyQualifiedName(bct + ".test03");
+  final static FullyQualifiedName test04 = new TestFullyQualifiedName(bct + ".test04");
 
   @Before
   public void before() throws IOException {
@@ -44,7 +43,6 @@ public class TestProcessBuilderTest {
     final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
     // テストの結果はこうなるはず
-    assertThat(r.getExecutedTestFQNs()).hasSize(4);
     assertThat(r.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
     assertThat(r.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test02, test03, test04);
     assertThat(r.getTestResult(test01).failed).isFalse();

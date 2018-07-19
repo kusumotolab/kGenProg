@@ -17,42 +17,31 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestExecutorTest {
 
-  final static TargetFullyQualifiedName buggyCalculator =
-      new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
-  final static TestFullyQualifiedName buggyCalculatorTest =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
-  final static TargetFullyQualifiedName util = new TargetFullyQualifiedName("jp.kusumotolab.Util");
-  final static TestFullyQualifiedName utilTest =
-      new TestFullyQualifiedName("jp.kusumotolab.UtilTest");
+  final static String bc = "jp.kusumotolab.BuggyCalculator";
+  final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
+  final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
+  final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bct);
 
-  final static TargetFullyQualifiedName inner =
-      new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$InnerClass");
-  final static TargetFullyQualifiedName staticInner =
-      new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$StaticInnerClass");
-  final static TargetFullyQualifiedName outer =
-      new TargetFullyQualifiedName("jp.kusumotolab.OuterClass");
-  final static TargetFullyQualifiedName anonymousClass =
-      new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator$1");
+  final static String ut = "jp.kusumotolab.Util";
+  final static String utt = "jp.kusumotolab.UtilTest";
+  final static FullyQualifiedName util = new TargetFullyQualifiedName(ut);
+  final static FullyQualifiedName utilTest = new TestFullyQualifiedName(utt);
 
-  final static TestFullyQualifiedName test01 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
-  final static TestFullyQualifiedName test02 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
-  final static TestFullyQualifiedName test03 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
-  final static TestFullyQualifiedName test04 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
+  final static FullyQualifiedName inner = new TargetFullyQualifiedName(bc + "$InnerClass");
+  final static FullyQualifiedName stInner = new TargetFullyQualifiedName(bc + "$StaticInnerClass");
+  final static FullyQualifiedName anonymous = new TargetFullyQualifiedName(bc + "$1");
+  final static FullyQualifiedName outer = new TargetFullyQualifiedName("jp.kusumotolab.OuterClass");
 
-  final static TestFullyQualifiedName plusTest01 =
-      new TestFullyQualifiedName("jp.kusumotolab.UtilTest.plusTest01");
-  final static TestFullyQualifiedName plusTest02 =
-      new TestFullyQualifiedName("jp.kusumotolab.UtilTest.plusTest02");
-  final static TestFullyQualifiedName minusTest01 =
-      new TestFullyQualifiedName("jp.kusumotolab.UtilTest.minusTest01");
-  final static TestFullyQualifiedName minusTest02 =
-      new TestFullyQualifiedName("jp.kusumotolab.UtilTest.minusTest02");
-  final static TestFullyQualifiedName dummyTest01 =
-      new TestFullyQualifiedName("jp.kusumotolab.UtilTest.dummyTest01");
+  final static FullyQualifiedName test01 = new TestFullyQualifiedName(bct + ".test01");
+  final static FullyQualifiedName test02 = new TestFullyQualifiedName(bct + ".test02");
+  final static FullyQualifiedName test03 = new TestFullyQualifiedName(bct + ".test03");
+  final static FullyQualifiedName test04 = new TestFullyQualifiedName(bct + ".test04");
+
+  final static FullyQualifiedName plusTest01 = new TestFullyQualifiedName(utt + ".plusTest01");
+  final static FullyQualifiedName plusTest02 = new TestFullyQualifiedName(utt + ".plusTest02");
+  final static FullyQualifiedName minusTest01 = new TestFullyQualifiedName(utt + ".minusTest01");
+  final static FullyQualifiedName minusTest02 = new TestFullyQualifiedName(utt + ".minusTest02");
+  final static FullyQualifiedName dummyTest01 = new TestFullyQualifiedName(utt + ".dummyTest01");
 
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
@@ -91,7 +80,7 @@ public class TestExecutorTest {
 
     final TestExecutor executor = new TestExecutor();
     return executor.exec(new ClassPath(outDir),
-        Arrays.asList(buggyCalculator, util, inner, staticInner, outer),
+        Arrays.asList(buggyCalculator, util, inner, stInner, outer),
         Arrays.asList(buggyCalculatorTest, utilTest));
   }
 
@@ -147,12 +136,12 @@ public class TestExecutorTest {
         COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // plusTest01()ではBuggyCalculatorとUtilが実行されたはず
-    final TestResult plusTest01_result = r.getTestResult(plusTest01);
-    assertThat(plusTest01_result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator,
+    final TestResult plusTest01result = r.getTestResult(plusTest01);
+    assertThat(plusTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator,
         util);
 
     // plusTest01()で実行されたUtilのカバレッジはこうなるはず
-    assertThat(plusTest01_result.getCoverages(util).statuses).containsExactlyInAnyOrder(EMPTY,
+    assertThat(plusTest01result.getCoverages(util).statuses).containsExactlyInAnyOrder(EMPTY,
         NOT_COVERED, EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED,
         NOT_COVERED);
 
