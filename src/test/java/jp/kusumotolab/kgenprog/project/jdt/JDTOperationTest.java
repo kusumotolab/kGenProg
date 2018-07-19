@@ -1,7 +1,7 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
@@ -9,7 +9,6 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class JDTOperationTest {
@@ -18,17 +17,17 @@ public class JDTOperationTest {
   public void testApplyHandlingException() {
     final JDTOperation operation = new ExceptionOperation();
 
-    final SourcePath testSourcePath = new TargetSourcePath(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
+    final Path path = Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java");
+    final TargetSourcePath sourcePath = new TargetSourcePath(path);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(
-        constructor.constructAST(Collections.singletonList(testSourcePath)));
+    final GeneratedSourceCode generatedSourceCode =
+        new GeneratedSourceCode(constructor.constructAST(Collections.singletonList(sourcePath)));
 
     final GeneratedSourceCode applied =
-        operation.apply(generatedSourceCode, new JDTLocation(testSourcePath, null));
+        operation.apply(generatedSourceCode, new JDTLocation(sourcePath, null));
 
-    assertThat(applied, is(GenerationFailedSourceCode.GENERATION_FAILED));
+    assertThat(applied).isEqualTo(GenerationFailedSourceCode.GENERATION_FAILED);
 
   }
 
