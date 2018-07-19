@@ -84,13 +84,13 @@ public class TestResultsTest {
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
     final TestExecutor executor = new TestExecutor();
-    final TestResults testResults = executor.exec(new ClassPath(outDir),
-        Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
+    final TestResults tr = executor.exec(new ClassPath(outDir), Arrays.asList(buggyCalculator),
+        Arrays.asList(buggyCalculatorTest));
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
     // 一時的な実装．
-    testResults.setBuildResults(buildResults);
+    tr.setBuildResults(buildResults);
 
     // expected確保の作業
     // まずast生成
@@ -101,21 +101,17 @@ public class TestResultsTest {
 
     // astから5行目 (n--;) のlocationを取り出す
     final List<Location> locations1 = bcAst.inferLocations(5);
-    final Location location1 = locations1.get(locations1.size() - 1);
-    final JDTLocation jdtLocation1 = (JDTLocation) location1;
+    final Location loc1 = locations1.get(locations1.size() - 1);
+    final JDTLocation jdtLocation1 = (JDTLocation) loc1;
 
     // 一応locationの中身を確認しておく
     assertThat(jdtLocation1.node).isSameSourceCodeAs("n--;");
 
     // 4メトリクスの取り出しとassertion
-    final long a_ep1 =
-        testResults.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, location1);
-    final long a_ef1 =
-        testResults.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, location1);
-    final long a_np1 =
-        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
-    final long a_nf1 =
-        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
+    final long a_ep1 = tr.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, loc1);
+    final long a_ef1 = tr.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, loc1);
+    final long a_np1 = tr.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, loc1);
+    final long a_nf1 = tr.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, loc1);
 
     assertThat(a_ep1).isSameAs(2L); // test01, test02
     assertThat(a_ef1).isSameAs(0L);
@@ -124,21 +120,17 @@ public class TestResultsTest {
 
     // astから10行目 (return n;) のlocationを取り出す
     final List<Location> locations2 = bcAst.inferLocations(10);
-    final Location location2 = locations2.get(locations2.size() - 1);
-    final JDTLocation jdtLocation2 = (JDTLocation) location2;
+    final Location loc2 = locations2.get(locations2.size() - 1);
+    final JDTLocation jdtLocation2 = (JDTLocation) loc2;
 
     // 一応locationの中身を確認しておく
     assertThat(jdtLocation2.node).isSameSourceCodeAs("return n;");
 
     // 4メトリクスの取り出しとassertion
-    final long a_ep2 =
-        testResults.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, location2);
-    final long a_ef2 =
-        testResults.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, location2);
-    final long a_np2 =
-        testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
-    final long a_nf2 =
-        testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
+    final long a_ep2 = tr.getNumberOfPassedTestsExecutingTheStatement(bcTargetSourcePath, loc2);
+    final long a_ef2 = tr.getNumberOfFailedTestsExecutingTheStatement(bcTargetSourcePath, loc2);
+    final long a_np2 = tr.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, loc2);
+    final long a_nf2 = tr.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, loc2);
 
     assertThat(a_ep2).isSameAs(3L); // test01, test02, test04
     assertThat(a_ef2).isSameAs(1L); // test03
