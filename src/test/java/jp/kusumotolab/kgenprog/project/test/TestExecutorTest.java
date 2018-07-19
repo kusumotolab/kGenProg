@@ -7,11 +7,12 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -60,24 +61,25 @@ public class TestExecutorTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
-        .getGeneratedSourceCode();
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
-        .toURL() });
-    return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
+
+    final TestExecutor executor = new TestExecutor();
+    return executor.exec(new ClassPath(outDir), Arrays.asList(buggyCalculator),
+        Arrays.asList(buggyCalculatorTest));
   }
 
   private TestResults generateTestResultsForExample02() throws Exception {
     final Path rootDir = Paths.get("example/example02");
     final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
-        .getGeneratedSourceCode();
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
-        .toURL() });
-    return executor.exec(Arrays.asList(buggyCalculator, util),
+
+    final TestExecutor executor = new TestExecutor();
+    return executor.exec(new ClassPath(outDir), Arrays.asList(buggyCalculator, util),
         Arrays.asList(buggyCalculatorTest, utilTest));
   }
 
@@ -86,12 +88,13 @@ public class TestExecutorTest {
     final Path rootDir = Paths.get("example/example03");
     final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
-        .getGeneratedSourceCode();
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
-        .toURL() });
-    return executor.exec(Arrays.asList(buggyCalculator, util, inner, staticInner, outer),
+
+    final TestExecutor executor = new TestExecutor();
+    return executor.exec(new ClassPath(outDir),
+        Arrays.asList(buggyCalculator, util, inner, staticInner, outer),
         Arrays.asList(buggyCalculatorTest, utilTest));
   }
 

@@ -3,8 +3,10 @@ package jp.kusumotolab.kgenprog.project.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+import jp.kusumotolab.kgenprog.project.ClassPath;
 
 /**
  * 
@@ -28,18 +31,21 @@ import org.junit.runner.notification.RunListener;
  */
 class TestExecutor {
 
-  private final MemoryClassLoader memoryClassLoader;
+  private MemoryClassLoader memoryClassLoader;
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
   private final RuntimeData jacocoRuntimeData;
 
-  public TestExecutor(URL[] classpath) throws MalformedURLException {
-    // TODO oooooooooooooooooooooo
-    this.memoryClassLoader = new MemoryClassLoader(classpath);
-
+  public TestExecutor() {
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
+  }
+
+
+  public TestResults exec(final ClassPath classpath, final List<FullyQualifiedName> sourceFQNs,
+      final List<FullyQualifiedName> testFQNs) throws Exception {
+    return exec(Arrays.asList(classpath), sourceFQNs, testFQNs);
   }
 
   /**
@@ -51,9 +57,13 @@ class TestExecutor {
    * @return テストの実行結果（テスト成否やCoverage等）
    * @throws Exception
    */
-  public TestResults exec(final List<FullyQualifiedName> sourceFQNs,
-      final List<FullyQualifiedName> testFQNs) throws Exception {
+  public TestResults exec(final List<ClassPath> classpaths,
+      final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs)
+      throws Exception {
     final TestResults testResults = new TestResults();
+
+    final URL[] classpathUrls = convertClasspathsToURLs(classpaths);
+    this.memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     loadInstrumentedClasses(sourceFQNs);
     final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
@@ -70,6 +80,30 @@ class TestExecutor {
     }
 
     return testResults;
+  }
+
+  private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
+    return classpaths.stream()
+        .map(cp -> cp.path.toUri())
+        .map(uri -> toURL(uri))
+        .toArray(URL[]::new);
+  }
+
+  /**
+   * To avoid Malforme
+   * 
+   * @param uri
+   * @return
+   */
+  private URL toURL(final URI uri) {
+    try {
+      return uri.toURL();
+    } catch (MalformedURLException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    }
+    // TODO
+    return null;
   }
 
   /**

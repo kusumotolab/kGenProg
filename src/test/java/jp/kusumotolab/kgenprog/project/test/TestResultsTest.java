@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.test;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -12,7 +11,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.BuildResults;
+import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Location;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
@@ -42,12 +43,12 @@ public class TestResultsTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
-        .getGeneratedSourceCode();
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
-        .toURL() });
-    return executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
+    final TestExecutor executor = new TestExecutor();
+    return executor.exec(new ClassPath(outDir), Arrays.asList(buggyCalculator),
+        Arrays.asList(buggyCalculatorTest));
   }
 
   /**
@@ -84,14 +85,17 @@ public class TestResultsTest {
     final Path rootDir = Paths.get("example/example01");
     final Path outDir = rootDir.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final GeneratedSourceCode generatedSourceCode = targetProject.getInitialVariant()
-        .getGeneratedSourceCode();
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
-    final TestExecutor executor = new TestExecutor(new URL[] { outDir.toUri()
-        .toURL() });
-    final TestResults testResults =
-        executor.exec(Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
+    final TestExecutor executor = new TestExecutor();
+    final TestResults testResults = executor.exec(new ClassPath(outDir),
+        Arrays.asList(buggyCalculator), Arrays.asList(buggyCalculatorTest));
+
+    // TODO
+    // buildResultsのセットは本来，TestExcecutorでやるべき．
+    // 一時的な実装．
     testResults.setBuildResults(buildResults);
 
     // expected確保の作業
