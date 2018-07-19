@@ -3,10 +3,7 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -103,27 +100,27 @@ public class TestExecutorTest {
     final TestResults r = generateTestResultsForExample01();
 
     // example01で実行されたテストは4つのはず
-    assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder(test01, test02, test03, test04)));
+    assertThat(r.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test02, test03, test04);
 
     // テストの成否はこうなるはず
-    assertThat(r.getTestResult(test01).failed, is(false));
-    assertThat(r.getTestResult(test02).failed, is(false));
-    assertThat(r.getTestResult(test03).failed, is(true));
-    assertThat(r.getTestResult(test04).failed, is(false));
+    assertThat(r.getTestResult(test01).failed).isFalse();
+    assertThat(r.getTestResult(test02).failed).isFalse();
+    assertThat(r.getTestResult(test03).failed).isTrue();
+    assertThat(r.getTestResult(test04).failed).isFalse();
 
-    final TestResult test01_result = r.getTestResult(test01);
-    final TestResult test04_result = r.getTestResult(test04);
+    final TestResult tr01 = r.getTestResult(test01);
+    final TestResult tr04 = r.getTestResult(test04);
 
     // test01()ではBuggyCalculatorのみが実行されたはず
-    assertThat(test01_result.getExecutedTargetFQNs(), is(containsInAnyOrder(buggyCalculator)));
+    assertThat(tr01.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator);
 
     // test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
-    assertThat(test01_result.getCoverages(buggyCalculator).statuses, is(contains(EMPTY, COVERED,
-        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+    assertThat(tr01.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+        COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // test04()で実行されたbuggyCalculatorのバレッジはこうなるはず
-    assertThat(test04_result.getCoverages(buggyCalculator).statuses, is(contains(EMPTY, COVERED,
-        EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED)));
+    assertThat(tr04.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+        COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 
   @Test
@@ -131,33 +128,33 @@ public class TestExecutorTest {
     final TestResults r = generateTestResultsForExample02();
 
     // example02で実行されたテストは10個のはず
-    assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder(test01, test02, test03, test04,
-        plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01)));
+    assertThat(r.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test02, test03, test04,
+        plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01);
 
     // テストの成否はこうなるはず
-    assertThat(r.getTestResult(test01).failed, is(false));
-    assertThat(r.getTestResult(test02).failed, is(false));
-    assertThat(r.getTestResult(test03).failed, is(true));
-    assertThat(r.getTestResult(test04).failed, is(false));
+    assertThat(r.getTestResult(test01).failed).isFalse();
+    assertThat(r.getTestResult(test02).failed).isFalse();
+    assertThat(r.getTestResult(test03).failed).isTrue();
+    assertThat(r.getTestResult(test04).failed).isFalse();
 
-    final TestResult test01_result = r.getTestResult(test01);
+    final TestResult tr01 = r.getTestResult(test01);
 
     // test01()ではBuggyCalculatorとUtilが実行されたはず
-    assertThat(test01_result.getExecutedTargetFQNs(),
-        is(containsInAnyOrder(buggyCalculator, util)));
+    assertThat(tr01.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator, util);
 
     // test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
-    assertThat(test01_result.getCoverages(buggyCalculator).statuses, is(contains(EMPTY, COVERED,
-        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED)));
+    assertThat(tr01.getCoverages(buggyCalculator).statuses).containsExactlyInAnyOrder(EMPTY,
+        COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // plusTest01()ではBuggyCalculatorとUtilが実行されたはず
     final TestResult plusTest01_result = r.getTestResult(plusTest01);
-    assertThat(plusTest01_result.getExecutedTargetFQNs(),
-        is(containsInAnyOrder(buggyCalculator, util)));
+    assertThat(plusTest01_result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator,
+        util);
 
     // plusTest01()で実行されたUtilのカバレッジはこうなるはず
-    assertThat(plusTest01_result.getCoverages(util).statuses, is(contains(EMPTY, NOT_COVERED, EMPTY,
-        COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED)));
+    assertThat(plusTest01_result.getCoverages(util).statuses).containsExactlyInAnyOrder(EMPTY,
+        NOT_COVERED, EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED,
+        NOT_COVERED);
 
     // TODO 最後のNOT_COVERDだけ理解できない．謎．
   }
