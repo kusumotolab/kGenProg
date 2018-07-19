@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
-import static org.junit.Assert.assertEquals;
+import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import java.nio.file.Paths;
 import java.util.Collections;
 import org.eclipse.jdt.core.dom.AST;
@@ -16,137 +16,187 @@ import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class ReplaceOperationTest {
 
+  private final String source = new StringBuilder().append("")
+      .append("class A {")
+      .append("  public void a() {")
+      .append("    int i = 0;")
+      .append("    i = 1;")
+      .append("  }")
+      .append("}")
+      .toString();
+
   @Test
   public void testReplaceStatement() {
-    String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
-    GeneratedSourceCode generatedSourceCode =
+    final SourcePath path = new TargetSourcePath(Paths.get("A.java"));
+
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
-    Block block = method.getBody();
-    JDTLocation location = new JDTLocation(testSourcePath, block);
+    final MethodDeclaration method = type.getMethods()[0];
+    final Block block = method.getBody();
+    final JDTLocation location = new JDTLocation(path, block);
 
     // 置換対象生成
-    Block replaceBlock = createReplacementBlockTarget();
+    final Block replaceBlock = createReplacementBlockTarget();
 
-    ReplaceOperation operation = new ReplaceOperation(replaceBlock);
+    final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
 
-    GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
+    final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
+    final GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
         .get(0);
-    assertEquals("class A {\n  public void a(){\n    a();\n  }\n}\n", newAST.getRoot()
-        .toString());
 
+    final String expected = new StringBuilder().append("")
+        .append("class A {")
+        .append("  public void a() {")
+        // .append(" int i = 0;") // this block is expected to be replaced
+        // .append(" i = 1;")
+        .append("    xxx();") // as this
+        .append("  }")
+        .append("}")
+        .toString();
+
+    assertThat(newAST.getRoot()).isSameSourceCodeAs(expected);
   }
 
   @Test
   public void testReplaceStatementInList() {
-    String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
+    final SourcePath path = new TargetSourcePath(Paths.get("A.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
-    GeneratedSourceCode generatedSourceCode =
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody()
+    final MethodDeclaration method = type.getMethods()[0];
+    final Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourcePath, statement);
+    final JDTLocation location = new JDTLocation(path, statement);
 
     // 置換対象生成
-    AST jdtAST = ast.getRoot()
+    final AST jdtAST = ast.getRoot()
         .getAST();
-    MethodInvocation invocation = jdtAST.newMethodInvocation();
-    invocation.setName(jdtAST.newSimpleName("a"));
-    Statement replaceStatement = jdtAST.newExpressionStatement(invocation);
+    final MethodInvocation invocation = jdtAST.newMethodInvocation();
+    invocation.setName(jdtAST.newSimpleName("xxx"));
+    final Statement replaceStatement = jdtAST.newExpressionStatement(invocation);
 
-    ReplaceOperation operation = new ReplaceOperation(replaceStatement);
+    final ReplaceOperation operation = new ReplaceOperation(replaceStatement);
 
-    GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
+    final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
+    final GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
         .get(0);
-    assertEquals("class A {\n  public void a(){\n    int a=0;\n    a();\n  }\n}\n", newAST.getRoot()
-        .toString());
 
+    final String expected = new StringBuilder().append("")
+        .append("class A {")
+        .append("  public void a() {")
+        .append(" int i = 0;")
+        // .append(" i = 1;") // this statement is expected to be replaced
+        .append("    xxx();") // as this
+        .append("  }")
+        .append("}")
+        .toString();
+
+    assertThat(newAST.getRoot()).isSameSourceCodeAs(expected);
   }
 
 
   @Test
   public void testReplaceStatementDirectly() {
-    String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
+    final SourcePath path = new TargetSourcePath(Paths.get("A.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
-    GeneratedSourceCode generatedSourceCode =
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
-    Block block = method.getBody();
-    JDTLocation location = new JDTLocation(testSourcePath, block);
+    final MethodDeclaration method = type.getMethods()[0];
+    final Block block = method.getBody();
+    final JDTLocation location = new JDTLocation(path, block);
 
     // 置換対象生成
-    Block replaceBlock = createReplacementBlockTarget();
-    ReplaceOperation operation = new ReplaceOperation(replaceBlock);
+    final Block replaceBlock = createReplacementBlockTarget();
+    final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
 
     operation.applyDirectly(generatedSourceCode, location);
-    assertEquals("class A {\n  public void a(){\n    a();\n  }\n}\n", ast.getRoot()
-        .toString());
 
+    final String expected = new StringBuilder().append("")
+        .append("class A {")
+        .append("  public void a() {")
+        // .append(" int i = 0;") // this block is expected to be replaced
+        // .append(" i = 1;")
+        .append("    xxx();") // as this
+        .append("  }")
+        .append("}")
+        .toString();
+
+    assertThat(ast.getRoot()).isSameSourceCodeAs(expected);
   }
 
   @Test
   public void testReplaceStatementInListDirectly() {
-    String testSource = "class A{public void a(){int a = 0;a = 1;}}";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("A.java"));
+    final SourcePath path = new TargetSourcePath(Paths.get("A.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
-    GeneratedSourceCode generatedSourceCode =
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody()
+    final MethodDeclaration method = type.getMethods()[0];
+    final Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    JDTLocation location = new JDTLocation(testSourcePath, statement);
+    final JDTLocation location = new JDTLocation(path, statement);
 
     // 置換対象生成
-    Statement replaceStatement = createReplacementTarget();
-    ReplaceOperation operation = new ReplaceOperation(replaceStatement);
+    final Statement replaceStatement = createReplacementTarget();
+    final ReplaceOperation operation = new ReplaceOperation(replaceStatement);
 
     operation.applyDirectly(generatedSourceCode, location);
-    assertEquals("class A {\n  public void a(){\n    int a=0;\n    a();\n  }\n}\n", ast.getRoot()
-        .toString());
 
+
+    final String expected = new StringBuilder().append("")
+        .append("class A {")
+        .append("  public void a() {")
+        .append(" int i = 0;")
+        // .append(" i = 1;") // this statement is expected to be replaced
+        .append("    xxx();") // as this
+        .append("  }")
+        .append("}")
+        .toString();
+
+    assertThat(ast.getRoot()).isSameSourceCodeAs(expected);
   }
 
   private Statement createReplacementTarget() {
-    String target = "class B{ public void a() { a(); } }";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("B.java"));
+    final String source = new StringBuilder().append("")
+        .append("class B {")
+        .append("  public void b() {")
+        .append("    xxx();")
+        .append("  }")
+        .append("}")
+        .toString();
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, target);
+    final TargetSourcePath path = new TargetSourcePath(Paths.get("B.java"));
 
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
     return (Statement) type.getMethods()[0].getBody()
@@ -155,13 +205,20 @@ public class ReplaceOperationTest {
   }
 
   private Block createReplacementBlockTarget() {
-    String target = "class B{ public void a() { a(); } }";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("B.java"));
+    final String source = new StringBuilder().append("")
+        .append("class B {")
+        .append("  public void b() {")
+        .append("    xxx();")
+        .append("  }")
+        .append("}")
+        .toString();
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, target);
+    final TargetSourcePath path = new TargetSourcePath(Paths.get("B.java"));
 
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
     return type.getMethods()[0].getBody();
