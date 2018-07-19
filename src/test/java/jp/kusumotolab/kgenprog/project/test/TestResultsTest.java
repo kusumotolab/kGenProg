@@ -1,8 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static jp.kusumotolab.kgenprog.KGenProgAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -25,19 +24,14 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
 
 public class TestResultsTest {
 
-  final static FullyQualifiedName buggyCalculator =
-      new TargetFullyQualifiedName("jp.kusumotolab.BuggyCalculator");
-  final static FullyQualifiedName buggyCalculatorTest =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest");
+  final static String bc = "jp.kusumotolab.BuggyCalculator";
+  final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
+  final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bc + "Test");
 
-  final static FullyQualifiedName test01 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test01");
-  final static FullyQualifiedName test02 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test02");
-  final static FullyQualifiedName test03 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test03");
-  final static FullyQualifiedName test04 =
-      new TestFullyQualifiedName("jp.kusumotolab.BuggyCalculatorTest.test04");
+  final static FullyQualifiedName test01 = new TestFullyQualifiedName(bc + ".test01");
+  final static FullyQualifiedName test02 = new TestFullyQualifiedName(bc + ".test02");
+  final static FullyQualifiedName test03 = new TestFullyQualifiedName(bc + ".test03");
+  final static FullyQualifiedName test04 = new TestFullyQualifiedName(bc + ".test04");
 
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootDir = Paths.get("example/example01");
@@ -111,7 +105,7 @@ public class TestResultsTest {
     final JDTLocation jdtLocation1 = (JDTLocation) location1;
 
     // 一応locationの中身を確認しておく
-    assertThat(jdtLocation1.node.toString(), is("n--;\n"));
+    assertThat(jdtLocation1.node).isSameSourceCodeAs("n--;");
 
     // 4メトリクスの取り出しとassertion
     final long a_ep1 =
@@ -122,11 +116,11 @@ public class TestResultsTest {
         testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
     final long a_nf1 =
         testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location1);
-    assertThat(a_ep1, is(2L)); // test01, test02
-    assertThat(a_ef1, is(0L));
-    assertThat(a_np1, is(1L)); // test04
-    assertThat(a_nf1, is(1L)); // test03
 
+    assertThat(a_ep1).isSameAs(2L); // test01, test02
+    assertThat(a_ef1).isSameAs(0L);
+    assertThat(a_np1).isSameAs(1L); // test04
+    assertThat(a_nf1).isSameAs(1L); // test03
 
     // astから10行目 (return n;) のlocationを取り出す
     final List<Location> locations2 = bcAst.inferLocations(10);
@@ -134,7 +128,7 @@ public class TestResultsTest {
     final JDTLocation jdtLocation2 = (JDTLocation) location2;
 
     // 一応locationの中身を確認しておく
-    assertThat(jdtLocation2.node.toString(), is("return n;\n"));
+    assertThat(jdtLocation2.node).isSameSourceCodeAs("return n;");
 
     // 4メトリクスの取り出しとassertion
     final long a_ep2 =
@@ -145,10 +139,11 @@ public class TestResultsTest {
         testResults.getNumberOfPassedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
     final long a_nf2 =
         testResults.getNumberOfFailedTestsNotExecutingTheStatement(bcTargetSourcePath, location2);
-    assertThat(a_ep2, is(3L)); // test01, test02, test04
-    assertThat(a_ef2, is(1L)); // test03
-    assertThat(a_np2, is(0L));
-    assertThat(a_nf2, is(0L));
+
+    assertThat(a_ep2).isSameAs(3L); // test01, test02, test04
+    assertThat(a_ef2).isSameAs(1L); // test03
+    assertThat(a_np2).isSameAs(0L);
+    assertThat(a_nf2).isSameAs(0L);
   }
 
   /**
@@ -157,39 +152,44 @@ public class TestResultsTest {
   @Test
   public void testToString() throws Exception {
     final TestResults r = generateTestResultsForExample01();
-    final String expected = "" //
-        + "[\n" //
-        + "  {\n" //
-        + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test04\",\n" //
-        + "    \"wasFailed\": false,\n" //
-        + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}\n" //
-        + "    ]\n" //
-        + "  },\n" //
-        + "  {\n" //
-        + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test03\",\n" //
-        + "    \"wasFailed\": true,\n" //
-        + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}\n" //
-        + "    ]\n" //
-        + "  },\n" //
-        + "  {\n" //
-        + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test02\",\n" //
-        + "    \"wasFailed\": false,\n" //
-        + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}\n" //
-        + "    ]\n" //
-        + "  },\n" //
-        + "  {\n" //
-        + "    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test01\",\n" //
-        + "    \"wasFailed\": false,\n" //
-        + "    \"coverages\": [\n" //
-        + "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}\n" //
-        + "    ]\n" //
-        + "  }\n" //
-        + "]\n";
+    final String expected = new StringBuilder().append("")
+        .append("[")
+        .append("  {")
+        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test04\",")
+        .append("    \"wasFailed\": false,")
+        .append("    \"coverages\": [")
+        .append(
+            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
+        .append("    ]")
+        .append("  },")
+        .append("  {")
+        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test03\",")
+        .append("    \"wasFailed\": true,")
+        .append("    \"coverages\": [")
+        .append(
+            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
+        .append("    ]")
+        .append("  },")
+        .append("  {")
+        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test02\",")
+        .append("    \"wasFailed\": false,")
+        .append("    \"coverages\": [")
+        .append(
+            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
+        .append("    ]")
+        .append("  },")
+        .append("  {")
+        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test01\",")
+        .append("    \"wasFailed\": false,")
+        .append("    \"coverages\": [")
+        .append(
+            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
+        .append("    ]")
+        .append("  }")
+        .append("]")
+        .toString();
 
-    assertThat(normalizeCrLf(r.toString()), is(normalizeCrLf(expected)));
+    assertThat(r.toString()).isEqualToIgnoringNewLines(expected);
   }
 
   /**
@@ -207,13 +207,13 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
+    assertThat(TestResults.getSerFilePath()).exists();
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs(), is(containsInAnyOrder(test01, test03)));
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test03);
   }
 
   /**
@@ -236,7 +236,7 @@ public class TestResultsTest {
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs(), is(containsInAnyOrder(test01)));
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01);
   }
 
   /**
@@ -262,7 +262,7 @@ public class TestResultsTest {
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs(), is(containsInAnyOrder(test01, test03)));
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test03);
   }
 
   /**
@@ -282,13 +282,13 @@ public class TestResultsTest {
     TestResults.serialize(r1);
 
     // ファイルが存在するはず
-    assertThat(Files.exists(TestResults.getSerFilePath()), is(true));
+    assertThat(TestResults.getSerFilePath()).exists();
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs(), is(containsInAnyOrder(test01, test03)));
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test03);
   }
 
   /**
@@ -303,13 +303,4 @@ public class TestResultsTest {
     TestResults.deserialize();
   }
 
-  /**
-   * 改行コードのnormalizer
-   * 
-   * @param s
-   * @return
-   */
-  private String normalizeCrLf(final String s) {
-    return s.replaceAll("\\r|\\n", "\n");
-  }
 }
