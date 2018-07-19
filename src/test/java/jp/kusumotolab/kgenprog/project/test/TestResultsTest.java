@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static jp.kusumotolab.kgenprog.KGenProgAssertions.assertThat;
+import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
