@@ -1,9 +1,6 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -11,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.TargetSourcePath;
@@ -19,19 +17,29 @@ import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion
 
 public class TargetProjectFactoryTest {
 
+  // aliases for tested elements
+  private final static String bc = "src/jp/kusumotolab/BuggyCalculator.java";
+  private final static String bct = "src/jp/kusumotolab/BuggyCalculatorTest.java";
+  private final static String ut = "src/jp/kusumotolab/Util.java";
+  private final static String utt = "src/jp/kusumotolab/UtilTest.java";
+  private final static String ju = "lib/junit4/junit-4.12.jar";
+  private final static String hm = "lib/junit4/hamcrest-core-1.3.jar";
+
+  private final static ClassPath juPath = new ClassPath(Paths.get(ju));
+  private final static ClassPath hmPath = new ClassPath(Paths.get(hm));
+
   @Test
   public void testCreateByBasePath01() {
     final Path rootPath = Paths.get("example/example01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    assertThat(project.rootPath, is(rootPath));
-    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
-        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
-    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
-        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
-    assertThat(project.getClassPaths(), is(containsInAnyOrder( //
-        new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
-        new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
+    final TargetSourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath);
+    assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(juPath, hmPath);
   }
 
   @Test
@@ -39,43 +47,39 @@ public class TargetProjectFactoryTest {
     final Path rootPath = Paths.get("example/example02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    assertThat(project.rootPath, is(rootPath));
-    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
-        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")), //
-        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/Util.java")))));
-    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
-        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")),
-        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/UtilTest.java")))));
-    assertThat(project.getClassPaths(), is(containsInAnyOrder( //
-        new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
-        new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
+    final TargetSourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+    final TargetSourcePath utPath = new TargetSourcePath(rootPath.resolve(ut));
+    final TestSourcePath uttPath = new TestSourcePath(rootPath.resolve(utt));
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath, utPath);
+    assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath, uttPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(juPath, hmPath);
   }
 
   @Test
   public void testCreateByCompletelySpecified01() {
     final Path rootPath = Paths.get("example/example01");
-    final TargetProject project = TargetProjectFactory.create( //
-        rootPath, //
-        Arrays.asList( //
-            new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java"))),
-        Arrays.asList( //
-            new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java"))),
-        Arrays.asList(), //
-        JUnitVersion.JUNIT4);
 
-    assertThat(project.rootPath, is(rootPath));
-    assertThat(project.getSourcePaths(), is(containsInAnyOrder( //
-        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")))));
-    assertThat(project.getTestPaths(), is(containsInAnyOrder( //
-        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")))));
-    assertThat(project.getClassPaths(), is(containsInAnyOrder( //
-        new ClassPath(Paths.get("lib/junit4/junit-4.12.jar")),
-        new ClassPath(Paths.get("lib/junit4/hamcrest-core-1.3.jar")))));
+    final TargetSourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+
+    // 全パラメータを指定して生成
+    final TargetProject project = TargetProjectFactory.create(rootPath, Arrays.asList(bcPath),
+        Arrays.asList(bctPath), Collections.emptyList(), JUnitVersion.JUNIT4);
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath);
+    assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(juPath, hmPath);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testCreateFailure01() {
     final Path rootPath = Paths.get("example/example01xxxxxxxxx");
+
+    // Exception to be thrown
     TargetProjectFactory.create(rootPath);
   }
 
@@ -102,10 +106,15 @@ public class TargetProjectFactoryTest {
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
     // ダミーのbuild.xmlが存在するので，AntProjectBuilderが起動し，nullなTargetProjectが返ってくるはず
-    assertThat(project, is(nullValue()));
+    assertThat(project).isNull();
 
     // 後処理
     Files.delete(configPath);
     System.setErr(ps);
+
+    // TODO
+    // assertがfailするとファイルが削除されない．
+    // 作用を残したままになってしまい，他のテストが巻き込まれて死ぬ．
   }
+
 }
