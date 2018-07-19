@@ -3,19 +3,14 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
@@ -45,30 +40,28 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant()
-        .getGeneratedSourceCode());
+    final Variant variant = targetProject.getInitialVariant();
+    final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
     // テストの結果はこうなるはず
-    assertThat(r.getExecutedTestFQNs()
-        .size(), is(4));
-    assertThat(r.getSuccessRate(), is(1.0 * 3 / 4));
-    assertThat(r.getExecutedTestFQNs(), is(containsInAnyOrder(test01, test02, test03, test04)));
-    assertThat(r.getTestResult(test01).failed, is(false));
-    assertThat(r.getTestResult(test02).failed, is(false));
-    assertThat(r.getTestResult(test03).failed, is(true));
-    assertThat(r.getTestResult(test04).failed, is(false));
+    assertThat(r.getExecutedTestFQNs()).hasSize(4);
+    assertThat(r.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
+    assertThat(r.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test02, test03, test04);
+    assertThat(r.getTestResult(test01).failed).isFalse();
+    assertThat(r.getTestResult(test02).failed).isFalse();
+    assertThat(r.getTestResult(test03).failed).isTrue();
+    assertThat(r.getTestResult(test04).failed).isFalse();
+
+    final TestResult tr01 = r.getTestResult(test01);
+    final TestResult tr04 = r.getTestResult(test04);
 
     // BuggyCalculatorTest.test01 実行によるbuggyCalculatorのカバレッジはこうなるはず
-    assertThat(r.getTestResult(test01)
-        .getCoverages(buggyCalculator).statuses,
-        is(contains(EMPTY, COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY,
-            COVERED)));
+    assertThat(tr01.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+        COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // BuggyCalculatorTest.test04 実行によるbuggyCalculatorのバレッジはこうなるはず
-    assertThat(r.getTestResult(test04)
-        .getCoverages(buggyCalculator).statuses,
-        is(contains(EMPTY, COVERED, EMPTY, COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY,
-            COVERED)));
+    assertThat(tr04.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+        COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 
   @Test
@@ -81,11 +74,10 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant()
-        .getGeneratedSourceCode());
+    final Variant variant = targetProject.getInitialVariant();
+    final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
-    assertThat(r.getExecutedTestFQNs()
-        .size(), is(4));
+    assertThat(r.getExecutedTestFQNs()).hasSize(4);
   }
 
   @Test
@@ -100,11 +92,10 @@ public class TestProcessBuilderTest {
 
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant()
-        .getGeneratedSourceCode());
+    final Variant variant = targetProject.getInitialVariant();
+    final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
-    assertThat(r.getExecutedTestFQNs()
-        .size(), is(4));
+    assertThat(r.getExecutedTestFQNs()).hasSize(4);
   }
 
   @Test
@@ -112,28 +103,15 @@ public class TestProcessBuilderTest {
     final Path rootDir = Paths.get("example/example00");
     final Path outDir = rootDir.resolve("bin");
 
-    // TODO 一時的なSyserr対策．
-    // そもそもコンパイルエラー時にsyserr吐かないほうが良い．
-    final PrintStream ps = System.err;
-    System.setErr(new PrintStream(new OutputStream() {
-
-      @Override
-      public void write(int b) {} // 何もしないwriter
-    }));
-
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
-    final TestResults r = builder.start(targetProject.getInitialVariant()
-        .getGeneratedSourceCode());
+    final Variant variant = targetProject.getInitialVariant();
+    final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
-    assertThat(r.getExecutedTestFQNs(), is(empty()));
-    assertThat(r.getSuccessedTestResults(), is(empty()));
-    assertThat(r.getFailedTestResults(), is(empty()));
-    assertThat(r.getSuccessRate(), is(Double.NaN));
-
-    // 後処理
-    System.setErr(ps);
+    assertThat(r.getExecutedTestFQNs()).isEmpty();
+    assertThat(r.getSuccessedTestResults()).isEmpty();
+    assertThat(r.getFailedTestResults()).isEmpty();
+    assertThat(r.getSuccessRate()).isNaN();
   }
-
 
 }
