@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,9 +67,9 @@ public class DiffOutputTest {
     String modSource = new String(
         Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
 
-    assertThat(normalizeCrLf(modSource), is(normalizeCrLf(expected)));
-
     FileUtils.deleteDirectory(outdirPath.toFile());
+
+    assertThat(modSource).isEqualToNormalizingNewlines(expected);
   }
 
   @Test
@@ -112,9 +111,9 @@ public class DiffOutputTest {
     String modSource =
         new String(Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.Util.java")));
 
-    assertThat(normalizeCrLf(modSource), is(normalizeCrLf(expected)));
-
     FileUtils.deleteDirectory(outdirPath.toFile());
+
+    assertThat(modSource).isEqualToNormalizingNewlines(expected);
   }
 
   @Test
@@ -165,9 +164,9 @@ public class DiffOutputTest {
     String modSource = new String(
         Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
 
-    assertThat(normalizeCrLf(modSource), is(normalizeCrLf(expected)));
-
     FileUtils.deleteDirectory(outdirPath.toFile());
+
+    assertThat(modSource).isEqualToNormalizingNewlines(expected);
   }
 
   @SuppressWarnings("unchecked")
@@ -220,13 +219,9 @@ public class DiffOutputTest {
     String modSource = new String(
         Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
 
-    assertThat(normalizeCrLf(modSource), is(normalizeCrLf(expected)));
-
     FileUtils.deleteDirectory(outdirPath.toFile());
+
+    assertThat(modSource).isEqualToNormalizingNewlines(expected);
   }
 
-  private String normalizeCrLf(final String s) {
-    return s.replaceAll("\\r|\\n", "\n")
-        .trim();
-  }
 }
