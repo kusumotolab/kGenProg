@@ -86,7 +86,7 @@ public class GeneratedSourceCodeTest {
     final GeneratedAST ast2 = new GeneratedASTMock(p2, "bbb");
     final GeneratedSourceCode g = new GeneratedSourceCode(Arrays.asList(ast1, ast2));
 
-    assertThat(g.getMessageDigest()).isEqualTo("6547436690A26A399603A7096E876A2D");
+    assertThat(g.getMessageDigest()).isEqualTo("6547436690a26a399603a7096e876a2d");
   }
 
   @Test

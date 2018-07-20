@@ -63,6 +63,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.github.wumpz/diffutils
     compile group: 'com.github.wumpz', name: 'diffutils', version: '2.2'
 
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
+
     // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all
     // testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
 
