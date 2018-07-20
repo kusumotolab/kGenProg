@@ -17,11 +17,11 @@ public class TargetProjectTest {
 
   @Test
   public void testGenerate01() throws IOException {
-    final Path basePath = Paths.get("example/example01");
-    final TargetProject project = TargetProjectFactory.create(basePath);
+    final Path rootPath = Paths.get("example/example01");
+    final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final TargetSourcePath bcPath = new TargetSourcePath(basePath.resolve(bc));
-    final TestSourcePath bctPath = new TestSourcePath(basePath.resolve(bct));
+    final TargetSourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
 
     assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath);
     assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath);
@@ -29,13 +29,13 @@ public class TargetProjectTest {
 
   @Test
   public void testGenerate02() throws IOException {
-    final Path basePath = Paths.get("example/example02");
-    final TargetProject project = TargetProjectFactory.create(basePath);
+    final Path rootPath = Paths.get("example/example02");
+    final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final TargetSourcePath bcPath = new TargetSourcePath(basePath.resolve(bc));
-    final TestSourcePath bctPath = new TestSourcePath(basePath.resolve(bct));
-    final TargetSourcePath utPath = new TargetSourcePath(basePath.resolve(ut));
-    final TestSourcePath uttPath = new TestSourcePath(basePath.resolve(utt));
+    final TargetSourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+    final TargetSourcePath utPath = new TargetSourcePath(rootPath.resolve(ut));
+    final TestSourcePath uttPath = new TestSourcePath(rootPath.resolve(utt));
 
     assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath, utPath);
     assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath, uttPath);

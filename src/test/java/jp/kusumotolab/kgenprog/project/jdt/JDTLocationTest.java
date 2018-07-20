@@ -20,12 +20,12 @@ public class JDTLocationTest {
 
   @Test
   public void testInferLineNumbers() {
-    final Path rootDir = Paths.get("example/example01");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
 
-    final Path path = rootDir.resolve("src/jp/kusumotolab/BuggyCalculator.java");
+    final Path path = rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java");
     final TargetSourcePath sourcePath = new TargetSourcePath(path);
     final GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAst(sourcePath);
 
