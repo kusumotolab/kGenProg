@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.xml.bind.DatatypeConverter;
+import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +77,7 @@ public class GeneratedSourceCode {
           .map(String::getBytes)
           .forEach(digest::update);
 
-      return DatatypeConverter.printHexBinary(digest.digest());
+      return Hex.encodeHexString(digest.digest());
 
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
