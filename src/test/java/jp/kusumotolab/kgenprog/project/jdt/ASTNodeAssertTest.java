@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import java.util.Map;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -12,11 +13,13 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
+import org.junit.Before;
 import org.junit.Test;
 
 public class ASTNodeAssertTest {
 
-  private static final String SOURCE = new StringBuilder().append("")
+  // テスト対象のソースコード本文
+  private final String source = new StringBuilder().append("")
       .append("class A {")
       .append("  public void a() {")
       .append("    int n = 0;")
@@ -27,72 +30,81 @@ public class ASTNodeAssertTest {
       .append("}")
       .toString();
 
-  private static final CompilationUnit COMPILATION_UNIT = createCompilationUnit(SOURCE);
+  // テストで使われるactual要素
+  private ASTNode compilationUnit;
+  private ASTNode ifStatement;
+  private ASTNode expression;
+  private ASTNode statement1;
+  private ASTNode statement2;
+
+  @Before
+  public void before() {
+    // ASTのトラバーサルしてテストしたい要素を抜き出す
+
+    // @formatter:off
+    final CompilationUnit compilationUnit = createCompilationUnit(source);
+    final TypeDeclaration typeDecralation = (TypeDeclaration) compilationUnit.types().get(0);
+    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations().get(0);
+    final Block block = (Block) methodDecralation.getBody();
+    final Statement statement1 = (Statement) block.statements().get(0);       // "int n = 0;"
+    final IfStatement ifStatement = (IfStatement) block.statements().get(1);  // "if (n == 1) {...}"
+    final Expression expression = (Expression) ifStatement.getExpression();   // "n == 1"
+    final Block block2 = (Block) ifStatement.getThenStatement();
+    final Statement statement2 = (Statement) block2.statements().get(0);      // "System.out.println(n);"
+    // @formatter:on
+
+    // 抜き出した要素をセット
+    this.compilationUnit = compilationUnit;
+    this.ifStatement = ifStatement;
+    this.statement1 = statement1;
+    this.statement2 = statement2;
+    this.expression = expression;
+  }
 
   @Test
   public void testAssertForCompilationUnit() {
-    assertThat(COMPILATION_UNIT).isSameSourceCodeAs(COMPILATION_UNIT);
-    assertThat(COMPILATION_UNIT).isSameSourceCodeAs(SOURCE);
-    assertThat(COMPILATION_UNIT).isSameSourceCodeAs(SOURCE + "  ");
-    assertThat(COMPILATION_UNIT).isSameSourceCodeAs(SOURCE + "\n");
-    assertThat(COMPILATION_UNIT).isSameSourceCodeAs("\n" + SOURCE + "\n");
-    assertThat(COMPILATION_UNIT).isSameSourceCodeAs("\n  " + SOURCE + "  \n");
+    assertThat(compilationUnit).isSameSourceCodeAs(compilationUnit);
+    assertThat(compilationUnit).isSameSourceCodeAs(source);
+    assertThat(compilationUnit).isSameSourceCodeAs(source + "  ");
+    assertThat(compilationUnit).isSameSourceCodeAs(source + "\n");
+    assertThat(compilationUnit).isSameSourceCodeAs("\n" + source + "\n");
+    assertThat(compilationUnit).isSameSourceCodeAs("\n  " + source + "  \n");
   }
 
   @Test
   public void testAssertForStatement() {
-    // @formatter:off
-    final TypeDeclaration typeDecralation = (TypeDeclaration) COMPILATION_UNIT.types().get(0);
-    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations().get(0);
-    final Block block = (Block) methodDecralation.getBody();
-    final Statement statement = (Statement) block.statements().get(0); // "int n = 0;"
-    // @formatter:on
-
-    assertThat(statement).isSameSourceCodeAs(statement);
-    assertThat(statement).isSameSourceCodeAs(statement.toString());
-    assertThat(statement).isSameSourceCodeAs("int n=0;");
-    assertThat(statement).isSameSourceCodeAs("int n = 0;");
-    assertThat(statement).isSameSourceCodeAs("int n = 0;  ");
-    assertThat(statement).isSameSourceCodeAs("int n = 0;\n");
-    assertThat(statement).isSameSourceCodeAs("int n = 0;\n\n");
-    assertThat(statement).isSameSourceCodeAs("int n = 0;\n\n\r\n");
-    assertThat(statement).isSameSourceCodeAs("int   n   =   0  ;");
-    assertThat(statement).isSameSourceCodeAs("  int n = 0;");
-    assertThat(statement).isSameSourceCodeAs("  int n = 0;  ");
-    assertThat(statement).isSameSourceCodeAs("\n  int n = 0;");;
-    assertThat(statement).isSameSourceCodeAs("\nint\nn\n=\n0\n;\n");
+    assertThat(statement1).isSameSourceCodeAs((Statement) statement1);
+    assertThat((Statement) statement1).isSameSourceCodeAs(statement1);
+    assertThat(statement1).isSameSourceCodeAs(statement1);
+    assertThat(statement1).isSameSourceCodeAs(statement1.toString());
+    assertThat(statement1).isSameSourceCodeAs("int n=0;");
+    assertThat(statement1).isSameSourceCodeAs("int n = 0;");
+    assertThat(statement1).isSameSourceCodeAs("int n = 0;  ");
+    assertThat(statement1).isSameSourceCodeAs("int n = 0;\n");
+    assertThat(statement1).isSameSourceCodeAs("int n = 0;\n\n");
+    assertThat(statement1).isSameSourceCodeAs("int n = 0;\n\n\r\n");
+    assertThat(statement1).isSameSourceCodeAs("int   n   =   0  ;");
+    assertThat(statement1).isSameSourceCodeAs("  int n = 0;");
+    assertThat(statement1).isSameSourceCodeAs("  int n = 0;  ");
+    assertThat(statement1).isSameSourceCodeAs("\n  int n = 0;");;
+    assertThat(statement1).isSameSourceCodeAs("\nint\nn\n=\n0\n;\n");
   }
 
   @Test
   public void testAssertForMethodInvocation() {
-    // @formatter:off
-    final TypeDeclaration typeDecralation = (TypeDeclaration) COMPILATION_UNIT.types().get(0);
-    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations().get(0);
-    final Block block = (Block) methodDecralation.getBody();
-    final IfStatement ifStatement = (IfStatement) block.statements().get(1);
-    final Block block2 = (Block) ifStatement.getThenStatement();
-    final Statement statement = (Statement) block2.statements().get(0); // "System.out.println(n);"
-    // @formatter:on
-
-    assertThat(statement).isSameSourceCodeAs(statement);
-    assertThat(statement).isSameSourceCodeAs(statement.toString());
-    assertThat(statement).isSameSourceCodeAs("System.out.println(n);");
-    assertThat(statement).isSameSourceCodeAs("System.out.println(  n);");
-    assertThat(statement).isSameSourceCodeAs("System.out.println(n  );");
-    assertThat(statement).isSameSourceCodeAs("System.out.println(  n  );");
-    assertThat(statement).isSameSourceCodeAs("System.out.println(  n  )  ;");
+    assertThat(statement2).isSameSourceCodeAs(statement2);
+    assertThat(statement2).isSameSourceCodeAs(statement2.toString());
+    assertThat(statement2).isSameSourceCodeAs("System.out.println(n);");
+    assertThat(statement2).isSameSourceCodeAs("System.out.println(  n);");
+    assertThat(statement2).isSameSourceCodeAs("System.out.println(n  );");
+    assertThat(statement2).isSameSourceCodeAs("System.out.println(  n  );");
+    assertThat(statement2).isSameSourceCodeAs("System.out.println(  n  )  ;");
+    assertThat(statement2).isSameSourceCodeAs("  System.out.println(  n  )  ;");
+    assertThat(statement2).isSameSourceCodeAs("System\n.out\n.println\n(\nn\n)\n;");
   }
 
   @Test
   public void testAssertForExpression() {
-    // @formatter:off
-    final TypeDeclaration typeDecralation = (TypeDeclaration) COMPILATION_UNIT.types().get(0);
-    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations().get(0);
-    final Block block = (Block) methodDecralation.getBody();
-    final IfStatement ifStatement = (IfStatement) block.statements().get(1);
-    final Expression expression = (Expression) ifStatement.getExpression(); // "n == 1"
-    // @formatter:on
-
     assertThat(expression).isSameSourceCodeAs(expression);
     assertThat(expression).isSameSourceCodeAs(expression.toString());
     assertThat(expression).isSameSourceCodeAs("n==1");
@@ -105,13 +117,6 @@ public class ASTNodeAssertTest {
 
   @Test
   public void testAssertForIfStatement() {
-    // @formatter:off
-    final TypeDeclaration typeDecralation = (TypeDeclaration) COMPILATION_UNIT.types().get(0);
-    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations().get(0);
-    final Block block = (Block) methodDecralation.getBody();
-    final IfStatement ifStatement = (IfStatement) block.statements().get(1); // "if (n == 1) {...}"
-    // @formatter:on
-
     assertThat(ifStatement).isSameSourceCodeAs(ifStatement);
     assertThat(ifStatement).isSameSourceCodeAs(ifStatement.toString());
     assertThat(ifStatement).isSameSourceCodeAs("if(n==1){System.out.println(n);}");
