@@ -162,9 +162,10 @@ public class GeneratedJDTASTTest {
     @SuppressWarnings("unchecked")
     final List<ImportDeclaration> imports = ast.getRoot()
         .imports();
-    assertThat(imports).hasSize(1);
-    assertThat(imports.get(0)
-        .isStatic()).isTrue();
+
+    assertThat(imports).hasSize(1)
+        .extracting(ImportDeclaration::isStatic)
+        .containsOnly(true);
   }
 
   @Test
@@ -242,9 +243,9 @@ public class GeneratedJDTASTTest {
 
     assertThat(newJdtAst.inferLocations(11)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTLocation)
-        .extracting(loc -> ((JDTLocation) loc).node)
+        .extracting(loc -> (JDTLocation) loc)
+        .extracting(loc -> loc.node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
-
   }
 
   @Test
