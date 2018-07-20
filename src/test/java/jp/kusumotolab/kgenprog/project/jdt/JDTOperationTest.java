@@ -28,7 +28,7 @@ public class JDTOperationTest {
     final GeneratedSourceCode applied =
         operation.apply(generatedSourceCode, new JDTLocation(testSourcePath, null));
 
-    assertThat(applied, is(GenerationFailedSourceCode.GENERATION_FAILED));
+    assertThat(applied, is(GenerationFailedSourceCode.instance));
 
   }
 

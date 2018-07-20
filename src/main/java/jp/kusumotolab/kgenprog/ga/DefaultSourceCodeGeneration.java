@@ -26,7 +26,7 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
     }
 
     if (sourceCodeSet.contains(generatedSourceCode.getMessageDigest())) {
-      generatedSourceCode = GenerationFailedSourceCode.GENERATION_FAILED;
+      generatedSourceCode = GenerationFailedSourceCode.instance;
     } else {
       sourceCodeSet.add(generatedSourceCode.getMessageDigest());
     }

@@ -29,13 +29,13 @@ public class DefaultSourceCodeGenerationTest {
     // 1回目の生成は正しく生成される
     final GeneratedSourceCode firstGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
         targetProject);
-    assertThat(firstGeneratedSourceCode.equals(GenerationFailedSourceCode.GENERATION_FAILED),
+    assertThat(firstGeneratedSourceCode.equals(GenerationFailedSourceCode.instance),
         is(false));
 
     // 2回目の生成は失敗する
     final GeneratedSourceCode secondGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
         targetProject);
-    assertThat(secondGeneratedSourceCode.equals(GenerationFailedSourceCode.GENERATION_FAILED),
+    assertThat(secondGeneratedSourceCode.equals(GenerationFailedSourceCode.instance),
         is(true));
   }
 

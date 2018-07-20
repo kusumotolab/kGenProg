@@ -3,8 +3,6 @@ package jp.kusumotolab.kgenprog.ga;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Test;
@@ -50,7 +48,7 @@ public class DefaultCodeValidationTest {
 
   @Test
   public void testExecForBuildFailure02() {
-    final GeneratedSourceCode generatedSourceCode = GenerationFailedSourceCode.GENERATION_FAILED;
+    final GeneratedSourceCode generatedSourceCode = GenerationFailedSourceCode.instance;
     final DefaultCodeValidation defaultCodeValidation = new DefaultCodeValidation();
     final Fitness fitness =
         defaultCodeValidation.exec(generatedSourceCode, null, null);
