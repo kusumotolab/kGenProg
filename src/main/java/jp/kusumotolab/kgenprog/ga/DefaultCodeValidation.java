@@ -30,7 +30,7 @@ public class DefaultCodeValidation implements SourceCodeValidation {
   }
 
   private boolean shouldTryBuild(final GeneratedSourceCode sourceCode) {
-    return !sourceCode.equals(GenerationFailedSourceCode.GENERATION_FAILED);
+    return !sourceCode.equals(GenerationFailedSourceCode.instance);
   }
 
 }

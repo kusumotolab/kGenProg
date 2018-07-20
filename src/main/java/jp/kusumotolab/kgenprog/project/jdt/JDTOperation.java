@@ -26,7 +26,7 @@ public interface JDTOperation extends Operation {
       return new GeneratedSourceCode(newASTs);
     } catch (Exception e) {
       // e.printStackTrace();
-      return GenerationFailedSourceCode.GENERATION_FAILED;
+      return GenerationFailedSourceCode.instance;
     }
   }
 
