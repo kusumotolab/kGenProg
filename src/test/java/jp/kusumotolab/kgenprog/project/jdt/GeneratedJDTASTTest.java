@@ -306,13 +306,14 @@ public class GeneratedJDTASTTest {
     final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
 
-    assertThat(jdtAst.getMessageDigest()).isEqualTo("2770DD8D6E41A26A02F95939D03E89DF");
+    // assertThat(jdtAst.getMessageDigest()).isEqualTo("2770DD8D6E41A26A02F95939D03E89DF");
+    assertThat(jdtAst.getMessageDigest()).isEqualTo("2770dd8d6e41a26a02f95939d03e89df");
   }
 
   @Test
   public void testGetMessageDigest02() {
     final String source1 = "class A { public void a() { b(1); } public void b(int v){}}";
-    final String source2 = "class A { public void a() { b(1); } public void b(int v){}}         ";
+    final String source2 = "class A { public void a() { b(1); } public void b(int v){}}\n\n";
     final SourcePath path = new TargetSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST ast1 = constructor.constructAST(path, source1);
