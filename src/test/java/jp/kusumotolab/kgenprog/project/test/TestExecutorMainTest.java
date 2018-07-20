@@ -47,17 +47,17 @@ public class TestExecutorMainTest {
 
   @Test
   public void testMainSuccess01() throws Exception {
-    final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example01");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
+    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
 
     TestExecutorMain.main(new String[] { //
-        "-b", outDir.toString(), //
+        "-b", workPath.toString(), //
         "-s", buggyCalculator.toString(), //
-        "-t", buggyCalculatorTest.toString()});
+        "-t", buggyCalculatorTest.toString() });
 
     // serialize対象のファイルがあるはず
     assertThat(TestResults.getSerFilePath()).exists();
@@ -87,17 +87,17 @@ public class TestExecutorMainTest {
 
   @Test
   public void testMainSuccess02() throws Exception {
-    final Path rootDir = Paths.get("example/example02");
-    final Path outDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example02");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
+    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
 
     TestExecutorMain.main(new String[] { //
-        "-b", outDir.toString(), //
+        "-b", workPath.toString(), //
         "-s", buggyCalculator.toString() + TestExecutorMain.SEPARATOR + util.toString(), //
-        "-t", buggyCalculatorTest.toString() + TestExecutorMain.SEPARATOR + utilTest.toString()});
+        "-t", buggyCalculatorTest.toString() + TestExecutorMain.SEPARATOR + utilTest.toString() });
 
     // serialize対象のファイルがあるはず
     assertThat(TestResults.getSerFilePath()).exists();
@@ -137,17 +137,17 @@ public class TestExecutorMainTest {
   }
 
   @Test(expected = Exception.class)
-  public void testMainFailureByInvalidOutDir() throws Exception {
+  public void testMainFailureByInvalidrootPath() throws Exception {
 
-    // rootDirがバグってる
-    final Path rootDir = Paths.get("example/example01xxxxxxxx");
-    final Path outDir = rootDir.resolve("bin");
+    // rootPathがバグってる
+    final Path rootPath = Paths.get("example/example01xxxxxxxx");
+    final Path workPath = rootPath.resolve("bin");
 
     // 例外を吐くはず（具体的にどの例外を吐くかはひとまず確認せず）
     TestExecutorMain.main(new String[] { //
-        "-b", outDir.toString(), //
+        "-b", workPath.toString(), //
         "-s", buggyCalculator.toString(), //
-        "-t", buggyCalculatorTest.toString()});
+        "-t", buggyCalculatorTest.toString() });
   }
 
   @Test(expected = CmdLineException.class)
@@ -155,8 +155,8 @@ public class TestExecutorMainTest {
 
     // 例外を吐くはず
     TestExecutorMain.main(new String[] { //
-        // "-b", outDir, // outDirを指定しない
+        // "-b", workPath.toString(), // workPathを指定しない
         "-s", buggyCalculator.toString(), //
-        "-t", buggyCalculatorTest.toString()});
+        "-t", buggyCalculatorTest.toString() });
   }
 }

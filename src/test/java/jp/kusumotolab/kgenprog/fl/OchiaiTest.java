@@ -17,11 +17,11 @@ public class OchiaiTest {
 
   @Test
   public void testForExample01() {
-    final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example01");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciouseness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
@@ -38,11 +38,11 @@ public class OchiaiTest {
 
   @Test
   public void testForExample02() {
-    final Path rootDir = Paths.get("example/example02");
-    final Path outDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example02");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciouseness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
@@ -59,11 +59,11 @@ public class OchiaiTest {
 
   @Test
   public void testForFailedProject() throws IOException {
-    final Path rootDir = Paths.get("example/example00");
-    final Path outDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example00");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciouseness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);

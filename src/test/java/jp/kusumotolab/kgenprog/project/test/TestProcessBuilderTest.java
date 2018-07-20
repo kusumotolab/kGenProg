@@ -33,12 +33,12 @@ public class TestProcessBuilderTest {
 
   @Test
   public void testStart01() {
-    final Path rootDir = Paths.get("example/example01");
-    final Path workingDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example01");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
 
     // main
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
     final Variant variant = targetProject.getInitialVariant();
     final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
@@ -63,15 +63,15 @@ public class TestProcessBuilderTest {
   }
 
   @Test
-  public void testStartWithOtherWorkingDir01() {
-    final Path rootDir = Paths.get("example/example01");
+  public void testStartWithOtherworkPath01() {
+    final Path rootPath = Paths.get("example/example01");
 
-    // exampleとは全く別のworkingDirで動作確認
-    final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    // exampleとは全く別のworkPathで動作確認
+    final Path workPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
 
     // main
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
     final Variant variant = targetProject.getInitialVariant();
     final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
@@ -79,17 +79,17 @@ public class TestProcessBuilderTest {
   }
 
   @Test
-  public void testStartWithOtherWorkingDir02() {
+  public void testStartWithOtherworkPath02() {
     // 絶対パスにしてみる
-    final Path rootDir = Paths.get("example/example01")
+    final Path rootPath = Paths.get("example/example01")
         .toAbsolutePath();
 
-    // exampleとは全く別のworkingDirで動作確認
-    final Path workingDir = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    // exampleとは全く別のworkPathで動作確認
+    final Path workPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
 
     // main
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workingDir);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
     final Variant variant = targetProject.getInitialVariant();
     final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
@@ -98,11 +98,11 @@ public class TestProcessBuilderTest {
 
   @Test
   public void testBuildFailure01() throws IOException {
-    final Path rootDir = Paths.get("example/example00");
-    final Path outDir = rootDir.resolve("bin");
+    final Path rootPath = Paths.get("example/example00");
+    final Path workPath = rootPath.resolve("bin");
 
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, outDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
     final Variant variant = targetProject.getInitialVariant();
     final TestResults r = builder.start(variant.getGeneratedSourceCode());
 

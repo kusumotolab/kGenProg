@@ -13,11 +13,11 @@ public class DefaultCodeValidationTest {
 
   @Test
   public void testExec() {
-    final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("bin");
+    final Path rootPath = Paths.get("example/example01");
+    final Path workPath = rootPath.resolve("bin");
 
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, outDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, workPath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 
@@ -31,11 +31,11 @@ public class DefaultCodeValidationTest {
 
   @Test
   public void testExecForBuildFailure() {
-    final Path rootDir = Paths.get("example/example00");
-    final Path outDir = rootDir.resolve("bin");
+    final Path rootPath = Paths.get("example/example00");
+    final Path workPath = rootPath.resolve("bin");
 
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, outDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, workPath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 

@@ -29,8 +29,8 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
  */
 public class MemoryClassLoaderTest {
 
-  final static Path rootDir = Paths.get("example/example01");
-  final static Path workDir = rootDir.resolve("bin");
+  final static Path rootPath = Paths.get("example/example01");
+  final static Path workPath = rootPath.resolve("bin");
 
   final static String bc = "jp.kusumotolab.BuggyCalculator";
   final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
@@ -42,16 +42,16 @@ public class MemoryClassLoaderTest {
   @BeforeClass
   public static void beforeClass() {
     try {
-      FileUtils.deleteDirectory(workDir.toFile());
+      FileUtils.deleteDirectory(workPath.toFile());
     } catch (IOException e) {
       // TODO #97
       // temporal patch
       // nothing todo
     }
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, workDir);
+    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
   }
 
   @After
@@ -64,7 +64,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading01() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // 動的ロード
     final Class<?> clazz = loader.loadClass(bcfqn);
@@ -78,7 +78,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading02() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // 動的ロード（Override側のメソッドで試す）
     final Class<?> clazz = loader.loadClass(bcfqn.toString(), false);
@@ -92,7 +92,7 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading03() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // SystemLoaderで動的ロード，失敗するはず (Exceptionを期待)
     ClassLoader.getSystemClassLoader()
@@ -101,7 +101,7 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading04() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // リフレクションで動的ロード，失敗するはず (Exceptionを期待)
     // 処理自体は02と等価なはず
@@ -110,7 +110,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading05() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // リフレクション + MemoryLoaderで動的ロード，これは成功するはず
     final Class<?> clazz = Class.forName(bcfqn.toString(), true, loader);
@@ -120,7 +120,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC01() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // まず動的ロード
     Class<?> clazz = loader.loadClass(bcfqn);
@@ -145,7 +145,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC02() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // まず動的ロード
     final Class<?> clazz = loader.loadClass(bcfqn);
@@ -170,7 +170,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC03() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // まず動的ロード
     Class<?> clazz = loader.loadClass(bcfqn);
@@ -193,7 +193,7 @@ public class MemoryClassLoaderTest {
     assertThat(targetClassWR.get()).isNull();
 
     // もう一度ロードすると
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     clazz = loader.loadClass(bcfqn);
     targetClassWR = new WeakReference<>(clazz);
@@ -204,7 +204,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testJUnitWithMemoryLoader01() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // BuggyCalculatorTest（BCTest）をロードしておく
     final Class<?> clazz = loader.loadClass(bctfqn);
@@ -222,7 +222,7 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testJUnitWithMemoryLoader02() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // まず何もロードされていないはず
     assertThat(listLoadedClasses(loader)).isEmpty();
@@ -245,13 +245,13 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testAddDefinition01() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // .classファイルを探す
     final String className = bcfqn.toString()
         .replace(".", "/") + ".class";
     final Path buggyCalculatorClassFilePath = Paths.get(className);
-    final Path classFilePath = Files.walk(workDir)
+    final Path classFilePath = Files.walk(workPath)
         .filter(path -> path.endsWith(buggyCalculatorClassFilePath))
         .findFirst()
         .get();
@@ -269,7 +269,7 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassFormatError.class)
   public void testAddDefinition02() throws Exception {
-    loader = new MemoryClassLoader(workDir);
+    loader = new MemoryClassLoader(workPath);
 
     // 不正なバイトコードを生成
     final byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};

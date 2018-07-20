@@ -34,40 +34,15 @@ public class TestResultsTest {
   final static FullyQualifiedName test04 = new TestFullyQualifiedName(bc + ".test04");
 
   private TestResults generateTestResultsForExample01() throws Exception {
-    final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example01");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
+    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
     final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(outDir), Arrays.asList(buggyCalculator),
+    return executor.exec(new ClassPath(workPath), Arrays.asList(buggyCalculator),
         Arrays.asList(buggyCalculatorTest));
-  }
-
-  /**
-   * FLで用いる4メトリクスのテスト
-   */
-  @Test
-  public void checkFLMetricsInTestResultsForExample01() throws Exception {
-    // final TestResults r = generateTestResultsForExample01();
-    // final FullyQualifiedName bc = buggyCalculator; // alias for buggycalculator
-    //
-    // // example01でのbcの6行目（n++;）のテスト結果はこうなるはず
-    // assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 5),
-    // is(containsInAnyOrder(test01, test02)));
-    // assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 5), is(empty()));
-    // assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 5),
-    // is(containsInAnyOrder(test04)));
-    // assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 5),
-    // is(containsInAnyOrder(test03)));
-    //
-    // // example01でのbcの10行目（return n;）のテスト結果はこうなるはず
-    // assertThat(r.getPassedTestFQNsExecutingTheStatement(bc, 10),
-    // is(containsInAnyOrder(test01, test02, test04)));
-    // assertThat(r.getFailedTestFQNsExecutingTheStatement(bc, 10), is(containsInAnyOrder(test03)));
-    // assertThat(r.getPassedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
-    // assertThat(r.getFailedTestFQNsNotExecutingTheStatement(bc, 10), is(empty()));
   }
 
   /**
@@ -76,15 +51,15 @@ public class TestResultsTest {
   @Test
   public void checkFLMetricsInTestResultsForExample02() throws Exception {
     // actual確保のためにテストの実行
-    final Path rootDir = Paths.get("example/example01");
-    final Path outDir = rootDir.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Path rootPath = Paths.get("example/example01");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final BuildResults buildResults =
-        new ProjectBuilder(targetProject).build(generatedSourceCode, outDir);
+        new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
     final TestExecutor executor = new TestExecutor();
-    final TestResults tr = executor.exec(new ClassPath(outDir), Arrays.asList(buggyCalculator),
+    final TestResults tr = executor.exec(new ClassPath(workPath), Arrays.asList(buggyCalculator),
         Arrays.asList(buggyCalculatorTest));
 
     // TODO
@@ -95,7 +70,7 @@ public class TestResultsTest {
     // expected確保の作業
     // まずast生成
     final Path bcSourcePath = Paths.get(buggyCalculator.value.replace(".", "/") + ".java");
-    final TargetSourcePath bcTargetSourcePath = new TargetSourcePath(rootDir.resolve("src")
+    final TargetSourcePath bcTargetSourcePath = new TargetSourcePath(rootPath.resolve("src")
         .resolve(bcSourcePath));
     final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAst(bcTargetSourcePath);
 
