@@ -127,9 +127,6 @@ public class KGenProgMain {
       for (final Gene gene : genes) {
         final GeneratedSourceCode generatedSourceCode =
             sourceCodeGeneration.exec(gene, targetProject);
-        if (generatedSourceCode.equals(GenerationFailedSourceCode.GENERATION_FAILED)) {
-          continue;
-        }
         final Fitness fitness =
             sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
