@@ -21,10 +21,11 @@ public class DefaultVariantSelection implements VariantSelection {
   }
 
   @Override
-  public List<Variant> exec(List<Variant> variants) {
+  public List<Variant> exec(final List<Variant> variants) {
     log.debug("enter exec(List<>)");
 
     final List<Variant> list = variants.stream()
+        .filter(e -> !Double.isNaN(e.getFitness().getValue()))
         .sorted(Comparator.<Variant>comparingDouble(e -> e.getFitness()
             .getValue())
             .reversed())
