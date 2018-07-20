@@ -2,7 +2,9 @@ package jp.kusumotolab.kgenprog.project.jdt;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.atIndex;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.jdt.core.dom.AST;
@@ -24,7 +26,7 @@ public class GeneratedJDTASTTest {
 
   private static final String TEST_SOURCE_FILE_NAME = "A.java";
   private static final String TEST_SOURCE = new StringBuilder().append("")
-      // Line breaks must be included to inferLocation.
+      // Line breaks must be included to execute GeneratedJDTAST#inferLocation.
       .append("class A {\n")
       .append("  public void a() {\n")
       .append("    int n = 0;\n")
@@ -51,21 +53,33 @@ public class GeneratedJDTASTTest {
   @Test
   public void testInferASTNode01() {
     final List<Location> locations = ast.inferLocations(3);
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
+    expects.add("int n = 0;");
 
-    assertThat(locations).hasSize(2);
-    testLocation(locations.get(0), "{ int n = 0; if (n == 1) { System.out.println(n); }}");
-    testLocation(locations.get(1), "int n = 0;");
+    assertThat(locations).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1));
   }
 
   @Test
   public void testInferASTNode02() {
     final List<Location> locations = ast.inferLocations(5);
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
+    expects.add("if (n == 1) { System.out.println(n); }");
+    expects.add("{ System.out.println(n); }");
+    expects.add("System.out.println(n);");
 
-    assertThat(locations).hasSize(4);
-    testLocation(locations.get(0), "{ int n = 0; if (n == 1) { System.out.println(n); }}");
-    testLocation(locations.get(1), "if (n == 1) { System.out.println(n); }");
-    testLocation(locations.get(2), "{ System.out.println(n); }");
-    testLocation(locations.get(3), "System.out.println(n);");
+    assertThat(locations).hasSize(4)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(2)), atIndex(2))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(3)), atIndex(3));
   }
 
   @Test
@@ -78,17 +92,19 @@ public class GeneratedJDTASTTest {
   @Test
   public void testInferASTNode04() {
     final List<Location> locations = ast.inferLocations(9);
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ if (n < 0) { return -n; } return n;}");
+    expects.add("if (n < 0) { return -n;}");
+    expects.add("{ return -n;}");
+    expects.add("return -n;");
 
-    testLocation(locations.get(0), "{ if (n < 0) { return -n; } return n;}");
-    testLocation(locations.get(1), "if (n < 0) { return -n;}");
-    testLocation(locations.get(2), "{ return -n;}");
-    testLocation(locations.get(3), "return -n;");
-  }
-
-  private void testLocation(final Location target, final String expected) {
-    assertThat(target).isInstanceOf(JDTLocation.class);
-    final JDTLocation jdtLocation = (JDTLocation) target;
-    assertThat(jdtLocation.node).isSameSourceCodeAs(expected);
+    assertThat(locations).hasSize(4)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(2)), atIndex(2))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(3)), atIndex(3));
   }
 
   @Test
@@ -154,18 +170,31 @@ public class GeneratedJDTASTTest {
   @Test
   public void testGetAllLocations() {
     final List<Location> locations = ast.getAllLocations();
-    assertThat(locations).hasSize(10);
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
+    expects.add("int n = 0;");
+    expects.add("if (n == 1) { System.out.println(n); }");
+    expects.add("{ System.out.println(n); }");
+    expects.add("System.out.println(n);");
+    expects.add("{ if (n < 0) { return -n; } return n;}");
+    expects.add("if (n < 0) { return -n;}");
+    expects.add("{ return -n;}");
+    expects.add("return -n;");
+    expects.add("return n;");
 
-    testLocation(locations.get(0), "{ int n = 0; if (n == 1) { System.out.println(n); }}");
-    testLocation(locations.get(1), "int n = 0;");
-    testLocation(locations.get(2), "if (n == 1) { System.out.println(n); }");
-    testLocation(locations.get(3), "{ System.out.println(n); }");
-    testLocation(locations.get(4), "System.out.println(n);");
-    testLocation(locations.get(5), "{ if (n < 0) { return -n; } return n;}");
-    testLocation(locations.get(6), "if (n < 0) { return -n;}");
-    testLocation(locations.get(7), "{ return -n;}");
-    testLocation(locations.get(8), "return -n;");
-    testLocation(locations.get(9), "return n;");
+    assertThat(locations).hasSize(10)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(2)), atIndex(2))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(3)), atIndex(3))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(4)), atIndex(4))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(5)), atIndex(5))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(6)), atIndex(6))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(7)), atIndex(7))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(8)), atIndex(8))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(9)), atIndex(9));
   }
 
   @Test
@@ -178,8 +207,10 @@ public class GeneratedJDTASTTest {
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
 
-    testLocation(jdtAst.inferLocations(10)
-        .get(1), "return n;");
+    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
@@ -204,11 +235,15 @@ public class GeneratedJDTASTTest {
             .getAsts()
             .get(0);
 
-    testLocation(newJdtAst.inferLocations(10)
-        .get(1), "a();");
-    testLocation(newJdtAst.inferLocations(11)
-        .get(1), "return n;");
+    assertThat(newJdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("a();"), atIndex(1));
 
+    assertThat(newJdtAst.inferLocations(11)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
 
   }
 
@@ -222,8 +257,10 @@ public class GeneratedJDTASTTest {
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
 
-    testLocation(jdtAst.inferLocations(10)
-        .get(1), "return n;");
+    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
 
     // 削除位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
@@ -241,10 +278,10 @@ public class GeneratedJDTASTTest {
             .getAsts()
             .get(0);
 
-    testLocation(newJdtAst.inferLocations(4)
-        .get(1), "return n;");
-
-
+    assertThat(newJdtAst.inferLocations(4)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
   }
 
   @Test
@@ -257,8 +294,10 @@ public class GeneratedJDTASTTest {
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
 
-    testLocation(jdtAst.inferLocations(10)
-        .get(1), "return n;");
+    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
 
     // 置換位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
@@ -293,8 +332,10 @@ public class GeneratedJDTASTTest {
             .getAsts()
             .get(0);
 
-    testLocation(newJdtAst.inferLocations(8)
-        .get(1), "return n;");
+    assertThat(newJdtAst.inferLocations(8)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
   }
 
   @Test
@@ -306,7 +347,6 @@ public class GeneratedJDTASTTest {
     final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
 
-    // assertThat(jdtAst.getMessageDigest()).isEqualTo("2770DD8D6E41A26A02F95939D03E89DF");
     assertThat(jdtAst.getMessageDigest()).isEqualTo("2770dd8d6e41a26a02f95939d03e89df");
   }
 
