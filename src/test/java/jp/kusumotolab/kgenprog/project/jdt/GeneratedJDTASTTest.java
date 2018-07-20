@@ -302,7 +302,7 @@ public class GeneratedJDTASTTest {
         constructor.constructAST(Collections.singletonList(testSourceFile));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
 
-    assertThat(jdtAst.getMessageDigest(), is("2770DD8D6E41A26A02F95939D03E89DF"));
+    assertThat(jdtAst.getMessageDigest(), is("2770dd8d6e41a26a02f95939d03e89df"));
   }
 
   @Test

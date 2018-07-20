@@ -93,7 +93,7 @@ public class GeneratedSourceCodeTest {
     final GeneratedAST ast2 = new GeneratedASTMock(new TargetSourcePath(Paths.get("b")), "bbb");
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Arrays.asList(ast1, ast2));
-    assertThat(generatedSourceCode.getMessageDigest(), is("6547436690A26A399603A7096E876A2D"));
+    assertThat(generatedSourceCode.getMessageDigest(), is("6547436690a26a399603a7096e876a2d"));
   }
 
   @Test
