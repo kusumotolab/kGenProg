@@ -32,7 +32,7 @@ public class OchiaiTest {
     final double susp2 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp3 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp4 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
-    assertThat(suspeciousnesses).extracting("value")
+    assertThat(suspeciousnesses).extracting(Suspiciouseness::getValue)
         .containsExactly(susp1, susp2, susp3, susp4);
   }
 
@@ -53,7 +53,7 @@ public class OchiaiTest {
     final double susp2 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp3 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp4 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
-    assertThat(suspeciousnesses).extracting("value")
+    assertThat(suspeciousnesses).extracting(Suspiciouseness::getValue)
         .containsExactly(susp1, susp2, susp3, susp4);
   }
 
