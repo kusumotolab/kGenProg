@@ -34,11 +34,12 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
   public ASTNodeAssert isSameSourceCodeAs(final String sourceCode) {
     isNotNull();
 
-    final String _actual = format(actual.toString()).trim();
-    final String _expected = format(sourceCode).trim();
+    final String actualFormatted = format(actual.toString());
+    final String expectedFormatted = format(sourceCode);
 
-    if (!_actual.equals(_expected)) {
-      failWithMessage("Expected souce code to be <%s> but was <%s>", _expected, _actual);
+    if (!actualFormatted.equals(expectedFormatted)) {
+      failWithMessage("%nExpected souce code to be:%n <%s>%nbut was:%n <%s>", expectedFormatted,
+          actualFormatted);
     }
     return this;
   }
@@ -52,7 +53,6 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
   public ASTNodeAssert isSameSourceCodeAs(final ASTNode ast) {
     return isSameSourceCodeAs(ast.toString());
   }
-
 
   /**
    * eclipse.jdt.coreを使ったフォーマッタ．
@@ -74,7 +74,8 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
       failWithMessage("Source code <%s> cannot be formatted", source);
       return "";
     }
-    return document.get();
+    final String formatted = document.get();
+    return formatted.trim();
   }
 
   public static void main(String args[]) {
