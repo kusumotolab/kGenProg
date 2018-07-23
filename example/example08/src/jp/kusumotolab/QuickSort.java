@@ -8,6 +8,13 @@ public class QuickSort {
     quicksort(value, left, right);
   }
   
+  /**
+   * 無限ループするバグを含むメソッド
+   * 
+   * @param value
+   * @param left
+   * @param right
+   */
   private void quicksort(int[] value, int left, int right) {
 
     int i = left;
