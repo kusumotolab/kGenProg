@@ -146,7 +146,7 @@ public class KGenProgMainTest {
     kGenProgMain.run();
   }
   
-  @Test
+  //@Test
   public void testExample08() {
 
     final Path rootPath = Paths.get("example/example08");
@@ -155,7 +155,7 @@ public class KGenProgMainTest {
         new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/QuickSort.java")));
     final List<SourcePath> testSourceFiles = new ArrayList<>();
     testSourceFiles.add(
-        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/QuickSortTest.ava")));
+        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/QuickSortTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
