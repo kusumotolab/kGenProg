@@ -38,7 +38,7 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
     final String expectedFormatted = format(sourceCode);
 
     if (!actualFormatted.equals(expectedFormatted)) {
-      failWithMessage("%nExpected souce code to be:%n <%s>%nbut was:%n <%s>", expectedFormatted,
+      failWithMessage("Expected souce code to be:%n <%s>%nbut was:%n <%s>", expectedFormatted,
           actualFormatted);
     }
     return this;
@@ -61,7 +61,7 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
    * @return
    */
   private String format(final String source) {
-    final int kind = CodeFormatter.K_UNKNOWN;
+    final int kind = CodeFormatter.K_UNKNOWN; // necessary to compile partial source code (eg, n++;)
     final int indent = 0;
     final String sep = "\n";
     final TextEdit textEdit = FORMATTER.format(kind, source, 0, source.length(), indent, sep);
@@ -70,23 +70,11 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
 
     try {
       textEdit.apply(document);
-    } catch (MalformedTreeException | BadLocationException | NullPointerException e) {
+    } catch (final MalformedTreeException | BadLocationException | NullPointerException e) {
       failWithMessage("Source code <%s> cannot be formatted", source);
       return "";
     }
     final String formatted = document.get();
     return formatted.trim();
-  }
-
-  public static void main(String args[]) {
-    ASTNodeAssert a = new ASTNodeAssert(null);
-    System.out.println(a.format("int i;"));
-    System.out.println(a.format("int       i;"));
-    System.out.println(a.format("int       i;       i++;"));
-    // System.out.println(a.format("int i; i++"));
-    System.out.println(a.format("public class X{}"));
-    System.out.println(a.format("public void x(){}"));
-    System.out.println(a.format("public class X{ public void x(){} }"));
-    System.out.println(a.format("{ i++; }"));
   }
 }
