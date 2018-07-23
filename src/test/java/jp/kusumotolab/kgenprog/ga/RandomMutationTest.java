@@ -1,8 +1,10 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class RandomMutationTest {
 
   @Test
   public void testExec() throws NoSuchFieldException, IllegalAccessException {
-    final String basePath = "example/example01/";
+    final Path basePath = Paths.get("example/example01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final RandomMutation randomMutation = new RandomMutation(10, new TestNumberGeneration());
@@ -68,10 +70,12 @@ public class RandomMutationTest {
         .getRoot();
     final TypeDeclaration typeRoot = (TypeDeclaration) root.types()
         .get(0);
+
+    @SuppressWarnings("unchecked")
     final List<Statement> statements = typeRoot.getMethods()[0].getBody()
         .statements();
 
-    final double[] value = {0.8};
+    final double[] value = { 0.8 };
     final List<Suspiciouseness> suspiciousenesses = statements.stream()
         .map(e -> new JDTLocation(sourcePath, e))
         .map(e -> {
@@ -82,36 +86,33 @@ public class RandomMutationTest {
 
     // 正しく10個のBaseが生成されるかのテスト
     final List<Base> baseList = randomMutation.exec(suspiciousenesses);
-    assertThat(baseList.size(), is(10));
-
+    assertThat(baseList).hasSize(10);
 
     // Suspiciousenessが高い場所ほど多くの操作が生成されているかのテスト
     final Map<String, List<Base>> map = baseList.stream()
         .collect(Collectors.groupingBy(e -> ((JDTLocation) e.getTargetLocation()).node.toString()));
     final String weakSuspiciouseness = ((JDTLocation) suspiciousenesses.get(0)
-        .getLocation()).node
-        .toString();
+        .getLocation()).node.toString();
     final String strongSuspiciouseness = ((JDTLocation) suspiciousenesses.get(1)
-        .getLocation()).node
-        .toString();
-    final boolean result = map.get(weakSuspiciouseness)
-        .size() < map.get(strongSuspiciouseness)
-        .size();
-    assertThat(result, is(true));
+        .getLocation()).node.toString();
+
+    assertThat(map.get(weakSuspiciouseness)
+        .size()).isLessThan(map.get(strongSuspiciouseness)
+            .size());
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
     final Base base = baseList.get(0);
     final JDTLocation targetLocation = (JDTLocation) base.getTargetLocation();
-    assertThat(targetLocation.node.toString(), is("return n;\n"));
+    assertThat(targetLocation.node).isSameSourceCodeAs("return n;");
 
     final Operation operation = base.getOperation();
-    assertThat(operation instanceof InsertOperation, is(true));
+    assertThat(operation).isInstanceOf(InsertOperation.class);
 
     final InsertOperation insertOperation = (InsertOperation) operation;
     final Field field = insertOperation.getClass()
         .getDeclaredField("astNode");
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
-    assertThat(node.toString(), is("n--;\n"));
+    assertThat(node).isSameSourceCodeAs("n--;");
   }
 }
