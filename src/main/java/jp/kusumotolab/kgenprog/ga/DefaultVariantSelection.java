@@ -25,12 +25,19 @@ public class DefaultVariantSelection implements VariantSelection {
     log.debug("enter exec(List<>)");
 
     final List<Variant> list = variants.stream()
-        .filter(e -> !Double.isNaN(e.getFitness().getValue()))
-        .sorted(Comparator.<Variant>comparingDouble(e -> e.getFitness()
-            .getValue())
-            .reversed())
+        .sorted((o1, o2) -> compareFitness(o1.getFitness(), o2.getFitness()))
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
     return list;
+  }
+
+  private int compareFitness(final Fitness fitness1, final Fitness fitness2) {
+    if (Double.isNaN(fitness1.getValue())) {
+      return 1;
+    }
+    if (Double.isNaN(fitness2.getValue())) {
+      return -1;
+    }
+    return -Double.compare(fitness1.getValue(), fitness2.getValue());
   }
 }
