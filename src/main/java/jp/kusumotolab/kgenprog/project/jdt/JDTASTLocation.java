@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.Range;
+import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
@@ -89,7 +89,7 @@ final public class JDTASTLocation implements ASTLocation {
   }
 
   @Override
-  public Range inferLineNumbers() {
+  public LineNumberRange inferLineNumbers() {
     ASTNode root = this.node.getRoot();
 
     if (!(root instanceof CompilationUnit)) {
@@ -101,6 +101,6 @@ final public class JDTASTLocation implements ASTLocation {
     int start = compilationUnit.getLineNumber(this.node.getStartPosition());
     int end = compilationUnit.getLineNumber(this.node.getStartPosition() + this.node.getLength());
 
-    return new Range(start, end);
+    return new LineNumberRange(start, end);
   }
 }

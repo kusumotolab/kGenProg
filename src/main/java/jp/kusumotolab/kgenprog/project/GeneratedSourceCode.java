@@ -57,7 +57,7 @@ public class GeneratedSourceCode {
         .collect(Collectors.toList());
   }
 
-  public Range inferLineNumbers(ASTLocation location) {
+  public LineNumberRange inferLineNumbers(ASTLocation location) {
     log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();
   }

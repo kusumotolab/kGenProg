@@ -11,7 +11,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.Range;
+import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -39,14 +39,14 @@ public class JDTLocationTest {
         .get(0);
     final ASTLocation location1 = new JDTASTLocation(null, statement1);
 
-    assertThat(location1.inferLineNumbers()).isEqualTo(new Range(4, 9));
+    assertThat(location1.inferLineNumbers()).isEqualTo(new LineNumberRange(4, 9));
 
     final Statement statement2 = (Statement) method.getBody()
         .statements()
         .get(1);
     final ASTLocation location2 = new JDTASTLocation(null, statement2);
 
-    assertThat(location2.inferLineNumbers()).isEqualTo(new Range(10, 10));
+    assertThat(location2.inferLineNumbers()).isEqualTo(new LineNumberRange(10, 10));
   }
 
 }

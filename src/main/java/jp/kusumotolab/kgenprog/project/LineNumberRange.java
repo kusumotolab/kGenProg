@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-public class Range {
+public class LineNumberRange {
 
   /** 開始行番号 (この行を含む) */
   public final int start;
@@ -8,7 +8,7 @@ public class Range {
   /** 終了行番号 (この行を含む) */
   public final int end;
 
-  public Range(final int start, final int end) {
+  public LineNumberRange(final int start, final int end) {
     this.start = start;
     this.end = end;
   }
@@ -37,7 +37,7 @@ public class Range {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    Range other = (Range) obj;
+    LineNumberRange other = (LineNumberRange) obj;
     if (end != other.end) {
       return false;
     }
