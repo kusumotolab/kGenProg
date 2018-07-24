@@ -1,17 +1,40 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class DefaultSourceCodeGenerationTest {
+
+  @Test
+  public void testExec() {
+    final Path rootDir = Paths.get("example/example01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+
+    final Base base = new Base(null, new NoneOperation());
+    final SimpleGene gene = new SimpleGene(Collections.singletonList(base));
+    final DefaultSourceCodeGeneration defaultSourceCodeGeneration = new DefaultSourceCodeGeneration();
+
+    // 1回目の生成は正しく生成される
+    final GeneratedSourceCode firstGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
+        targetProject);
+    assertThat(firstGeneratedSourceCode).isNotEqualTo(GenerationFailedSourceCode.instance);
+
+    // 2回目の生成は失敗する
+    final GeneratedSourceCode secondGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
+        targetProject);
+    assertThat(secondGeneratedSourceCode).isEqualTo(GenerationFailedSourceCode.instance);
+  }
 
   @Test
   public void noneOperationTest() {
