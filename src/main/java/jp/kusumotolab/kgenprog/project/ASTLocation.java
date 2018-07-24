@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-public interface Location {
+public interface ASTLocation {
 
   public static Range NONE = new Range(0, -1);
 

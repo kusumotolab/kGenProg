@@ -27,9 +27,9 @@ public interface GeneratedAST {
    * 
    * @return 指定された行にあるASTノードを表すLocationのList
    */
-  public List<Location> inferLocations(int lineNumber);
+  public List<ASTLocation> inferLocations(int lineNumber);
 
-  public List<Location> getAllLocations();
+  public List<ASTLocation> getAllLocations();
 
   public String getMessageDigest();
 }

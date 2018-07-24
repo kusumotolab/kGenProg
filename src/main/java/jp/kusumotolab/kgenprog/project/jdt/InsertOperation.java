@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 
 public class InsertOperation implements JDTOperation {
 
@@ -19,7 +19,7 @@ public class InsertOperation implements JDTOperation {
   }
 
   @Override
-  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTLocation location,
+  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
       final ASTRewrite astRewrite) {
     final ASTNode target = location.locate(ast.getRoot());
     final ListRewrite listRewrite = astRewrite.getListRewrite(target.getParent(),
@@ -30,8 +30,8 @@ public class InsertOperation implements JDTOperation {
 
   @Override
   public GeneratedSourceCode applyDirectly(final GeneratedSourceCode generatedSourceCode,
-      final Location location) {
-    final JDTLocation jdtLocation = (JDTLocation) location;
+      final ASTLocation location) {
+    final JDTASTLocation jdtLocation = (JDTASTLocation) location;
 
     generatedSourceCode.getAsts()
         .stream()

@@ -2,8 +2,8 @@ package jp.kusumotolab.kgenprog.project;
 
 public interface Operation {
 
-  public GeneratedSourceCode apply(GeneratedSourceCode generatedSourceCode, Location location);
+  public GeneratedSourceCode apply(GeneratedSourceCode generatedSourceCode, ASTLocation location);
 
   public GeneratedSourceCode applyDirectly(GeneratedSourceCode generatedSourceCode,
-      Location location);
+      ASTLocation location);
 }

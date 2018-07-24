@@ -9,14 +9,14 @@ import org.eclipse.text.edits.MalformedTreeException;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
-import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.Operation;
 
 public interface JDTOperation extends Operation {
 
   @Override
   default public GeneratedSourceCode apply(final GeneratedSourceCode generatedSourceCode,
-      final Location location) {
+      final ASTLocation location) {
 
     try {
       final List<GeneratedAST> newASTs = generatedSourceCode.getAsts()
@@ -30,7 +30,7 @@ public interface JDTOperation extends Operation {
     }
   }
 
-  default public GeneratedAST applyEachAST(final GeneratedAST ast, final Location location) {
+  default public GeneratedAST applyEachAST(final GeneratedAST ast, final ASTLocation location) {
     if (!ast.getSourcePath()
         .equals(location.getSourcePath())) {
       return ast;
@@ -40,7 +40,7 @@ public interface JDTOperation extends Operation {
     final ASTRewrite astRewrite = ASTRewrite.create(jdtast.getRoot()
         .getAST());
 
-    applyToASTRewrite((GeneratedJDTAST) ast, (JDTLocation) location, astRewrite);
+    applyToASTRewrite((GeneratedJDTAST) ast, (JDTASTLocation) location, astRewrite);
 
     final Document document = new Document(jdtast.getSourceCode());
     try {
@@ -54,6 +54,6 @@ public interface JDTOperation extends Operation {
         .constructAST(ast.getSourcePath(), document.get());
   }
 
-  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTLocation location,
+  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
       final ASTRewrite astRewrite);
 }
