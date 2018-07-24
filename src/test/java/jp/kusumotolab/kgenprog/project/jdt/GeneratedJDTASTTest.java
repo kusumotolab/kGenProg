@@ -1,10 +1,10 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.atIndex;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.jdt.core.dom.AST;
@@ -25,156 +25,193 @@ import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 public class GeneratedJDTASTTest {
 
   private static final String TEST_SOURCE_FILE_NAME = "A.java";
-  private static final String TEST_SOURCE = "class A {\n" + "   public void a() {\n"
-      + "       int a = 0;\n" + "       if (a == 1) {\n" + "           System.out.println(a);\n"
-      + "       }\n" + "   }\n" + "   public int b(int a) {\n"
-      + "       if (a < 0) { return -a; }\n" + "       return a;\n" + "   }\n" + "}\n" + "";
+  private static final String TEST_SOURCE = new StringBuilder().append("")
+      // Line breaks must be included to execute GeneratedJDTAST#inferLocation.
+      .append("class A {\n")
+      .append("  public void a() {\n")
+      .append("    int n = 0;\n")
+      .append("    if (n == 1) {\n")
+      .append("      System.out.println(n);\n")
+      .append("    }\n")
+      .append("  }\n")
+      .append("  public int b(int n) {\n")
+      .append("    if (n < 0) { return -n; }\n")
+      .append("    return n;\n")
+      .append("  }\n")
+      .append("}\n")
+      .toString();
 
   private GeneratedJDTAST ast;
 
   @Before
   public void setup() {
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get(TEST_SOURCE_FILE_NAME));
-    JDTASTConstruction constructor = new JDTASTConstruction();
+    final SourcePath testSourcePath = new TargetSourcePath(Paths.get(TEST_SOURCE_FILE_NAME));
+    final JDTASTConstruction constructor = new JDTASTConstruction();
     this.ast = constructor.constructAST(testSourcePath, TEST_SOURCE);
   }
 
   @Test
   public void testInferASTNode01() {
-    List<Location> locations = ast.inferLocations(3);
+    final List<Location> locations = ast.inferLocations(3);
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
+    expects.add("int n = 0;");
 
-    assertThat(locations, hasSize(2));
-    testLocation(locations.get(0),
-        "{\n  int a=0;\n  if (a == 1) {\n    System.out.println(a);\n  }\n}\n");
-    testLocation(locations.get(1), "int a=0;\n");
+    assertThat(locations).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1));
   }
 
   @Test
   public void testInferASTNode02() {
-    List<Location> locations = ast.inferLocations(5);
+    final List<Location> locations = ast.inferLocations(5);
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
+    expects.add("if (n == 1) { System.out.println(n); }");
+    expects.add("{ System.out.println(n); }");
+    expects.add("System.out.println(n);");
 
-    assertThat(locations, hasSize(4));
-    testLocation(locations.get(0),
-        "{\n  int a=0;\n  if (a == 1) {\n    System.out.println(a);\n  }\n}\n");
-    testLocation(locations.get(1), "if (a == 1) {\n  System.out.println(a);\n}\n");
-    testLocation(locations.get(2), "{\n  System.out.println(a);\n}\n");
-    testLocation(locations.get(3), "System.out.println(a);\n");
+    assertThat(locations).hasSize(4)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(2)), atIndex(2))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(3)), atIndex(3));
   }
 
   @Test
   public void testInferASTNode03() {
-    List<Location> locations = ast.inferLocations(1);
+    final List<Location> locations = ast.inferLocations(1);
 
-    assertThat(locations.size(), is(0));
+    assertThat(locations).hasSize(0);
   }
 
   @Test
   public void testInferASTNode04() {
-    List<Location> locations = ast.inferLocations(9);
+    final List<Location> locations = ast.inferLocations(9);
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ if (n < 0) { return -n; } return n;}");
+    expects.add("if (n < 0) { return -n;}");
+    expects.add("{ return -n;}");
+    expects.add("return -n;");
 
-    testLocation(locations.get(0), "{\n  if (a < 0) {\n    return -a;\n  }\n  return a;\n}\n");
-    testLocation(locations.get(1), "if (a < 0) {\n  return -a;\n}\n");
-    testLocation(locations.get(2), "{\n  return -a;\n}\n");
-    testLocation(locations.get(3), "return -a;\n");
-  }
-
-  private void testLocation(Location target, String expected) {
-    assertThat(target, instanceOf(JDTLocation.class));
-    JDTLocation jdtLocation = (JDTLocation) target;
-    assertThat(jdtLocation.node.toString(), is(expected));
+    assertThat(locations).hasSize(4)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(2)), atIndex(2))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(3)), atIndex(3));
   }
 
   @Test
   public void testgetPrimaryClassName01() {
-    String testSource = "package a.b.c; class T1{} public class T2{}";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("a", "b", "c", "T2.java"));
+    final String source = "package a.b.c; class T1{} public class T2{}";
+    final SourcePath path = new TargetSourcePath(Paths.get("a/b/c/T2.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
 
-    assertThat(ast.getPrimaryClassName(), is("a.b.c.T2"));
+    assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.T2");
   }
 
   @Test
   public void testgetPrimaryClassName02() {
-    String testSource = "class T1{} public class T2{}";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("T2.java"));
+    final String source = "class T1{} public class T2{}";
+    final SourcePath path = new TargetSourcePath(Paths.get("T2.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
 
-    assertThat(ast.getPrimaryClassName(), is("T2"));
+    assertThat(ast.getPrimaryClassName()).isEqualTo("T2");
   }
 
   @Test
   public void testgetPrimaryClassName03() {
-    String testSource = "package a.b.c; class T1{} class T2{} class T3{}";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("a", "b", "c", "T2.java"));
+    final String source = "package a.b.c; class T1{} class T2{} class T3{}";
+    final SourcePath path = new TargetSourcePath(Paths.get("a/b/c/T2.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
 
-    assertThat(ast.getPrimaryClassName(), is("a.b.c.T1"));
+    assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.T1");
   }
 
   @Test
   public void testgetPrimaryClassName04() {
-    String testSource = "package a.b.c;";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("a", "b", "c", "package-info.java"));
+    final String source = "package a.b.c;";
+    final SourcePath path = new TargetSourcePath(Paths.get("a/b/c/package-info.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(path, source);
 
-    assertThat(ast.getPrimaryClassName(), is("a.b.c.package-info"));
+    assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.package-info");
   }
 
   @Test
   public void testStaticImport() {
-    String testSource = "import static java.lang.Math.max; class StaticImport{ }";
-    SourcePath testSourcePath = new TargetSourcePath(Paths.get("StaticImport.java"));
+    final String testSource = "import static java.lang.Math.max; class StaticImport{ }";
+    final SourcePath testSourcePath = new TargetSourcePath(Paths.get("StaticImport.java"));
 
-    JDTASTConstruction constructor = new JDTASTConstruction();
-    GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
+    final JDTASTConstruction constructor = new JDTASTConstruction();
+    final GeneratedJDTAST ast = constructor.constructAST(testSourcePath, testSource);
 
     @SuppressWarnings("unchecked")
-    List<ImportDeclaration> imports = ast.getRoot()
+    final List<ImportDeclaration> imports = ast.getRoot()
         .imports();
-    assertThat(imports.size(), is(1));
-    assertThat(imports.get(0)
-        .isStatic(), is(true));
+
+    assertThat(imports).hasSize(1)
+        .extracting(ImportDeclaration::isStatic)
+        .containsOnly(true);
   }
 
   @Test
   public void testGetAllLocations() {
     final List<Location> locations = ast.getAllLocations();
-    assertThat(locations, hasSize(10));
+    final List<String> expects = new ArrayList<>();
+    expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
+    expects.add("int n = 0;");
+    expects.add("if (n == 1) { System.out.println(n); }");
+    expects.add("{ System.out.println(n); }");
+    expects.add("System.out.println(n);");
+    expects.add("{ if (n < 0) { return -n; } return n;}");
+    expects.add("if (n < 0) { return -n;}");
+    expects.add("{ return -n;}");
+    expects.add("return -n;");
+    expects.add("return n;");
 
-    testLocation(locations.get(0),
-        "{\n  int a=0;\n  if (a == 1) {\n    System.out.println(a);\n  }\n}\n");
-    testLocation(locations.get(1), "int a=0;\n");
-    testLocation(locations.get(2), "if (a == 1) {\n  System.out.println(a);\n}\n");
-    testLocation(locations.get(3), "{\n  System.out.println(a);\n}\n");
-    testLocation(locations.get(4), "System.out.println(a);\n");
-
-    testLocation(locations.get(5), "{\n  if (a < 0) {\n    return -a;\n  }\n  return a;\n}\n");
-    testLocation(locations.get(6), "if (a < 0) {\n  return -a;\n}\n");
-    testLocation(locations.get(7), "{\n  return -a;\n}\n");
-    testLocation(locations.get(8), "return -a;\n");
-    testLocation(locations.get(9), "return a;\n");
+    assertThat(locations).hasSize(10)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(2)), atIndex(2))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(3)), atIndex(3))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(4)), atIndex(4))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(5)), atIndex(5))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(6)), atIndex(6))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(7)), atIndex(7))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(8)), atIndex(8))
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(9)), atIndex(9));
   }
 
   @Test
   public void testInferLocationAfterInsertOperation() {
-    final SourcePath testSourcePath = new TargetSourcePath(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
+    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final SourcePath path = new TargetSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final List<GeneratedAST> asts =
-        constructor.constructAST(Collections.singletonList(testSourcePath));
+    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
-    testLocation(jdtAst.inferLocations(10)
-        .get(1), "return n;\n");
+
+    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
@@ -184,7 +221,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTLocation location = new JDTLocation(testSourcePath, statement);
+    final JDTLocation location = new JDTLocation(path, statement);
 
     // 挿入対象生成
     final AST ast = jdtAst.getRoot()
@@ -198,26 +235,33 @@ public class GeneratedJDTASTTest {
         (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
             .getAsts()
             .get(0);
-    testLocation(newJdtAst.inferLocations(10)
-        .get(1), "a();\n");
-    testLocation(newJdtAst.inferLocations(11)
-        .get(1), "return n;\n");
 
+    assertThat(newJdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("a();"), atIndex(1));
 
+    assertThat(newJdtAst.inferLocations(11)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> (JDTLocation) loc)
+        .extracting(loc -> loc.node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
   }
 
   @Test
   public void testInferLocationAfterDeleteOperation() {
-    final SourcePath testSourcePath = new TargetSourcePath(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
+    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final SourcePath path = new TargetSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final List<GeneratedAST> asts =
-        constructor.constructAST(Collections.singletonList(testSourcePath));
+    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
-    testLocation(jdtAst.inferLocations(10)
-        .get(1), "return n;\n");
+
+    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
 
     // 削除位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
@@ -227,31 +271,34 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTLocation location = new JDTLocation(testSourcePath, statement);
+    final JDTLocation location = new JDTLocation(path, statement);
     final DeleteOperation operation = new DeleteOperation();
 
     final GeneratedJDTAST newJdtAst =
         (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
             .getAsts()
             .get(0);
-    testLocation(newJdtAst.inferLocations(4)
-        .get(1), "return n;\n");
 
-
+    assertThat(newJdtAst.inferLocations(4)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
   }
 
   @Test
   public void testInferLocationAfterReplaceOperation() {
-    final SourcePath testSourcePath = new TargetSourcePath(
-        Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java"));
+    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final SourcePath path = new TargetSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final List<GeneratedAST> asts =
-        constructor.constructAST(Collections.singletonList(testSourcePath));
+    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
     final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(asts);
-    testLocation(jdtAst.inferLocations(10)
-        .get(1), "return n;\n");
+
+    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
 
     // 置換位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) jdtAst.getRoot()
@@ -261,7 +308,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTLocation location = new JDTLocation(testSourcePath, statement);
+    final JDTLocation location = new JDTLocation(path, statement);
 
 
     // 置換対象の生成
@@ -279,56 +326,52 @@ public class GeneratedJDTASTTest {
     blockStatementList.add(ast.newExpressionStatement(methodInvocationA));
     blockStatementList.add(ast.newExpressionStatement(methodInvocationB));
 
-
     final ReplaceOperation operation = new ReplaceOperation(block);
 
     final GeneratedJDTAST newJdtAst =
         (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
             .getAsts()
             .get(0);
-    testLocation(newJdtAst.inferLocations(8)
-        .get(1), "return n;\n");
 
-
+    assertThat(newJdtAst.inferLocations(8)).hasSize(2)
+        .allMatch(loc -> loc instanceof JDTLocation)
+        .extracting(loc -> ((JDTLocation) loc).node)
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
   }
 
   @Test
   public void testGetMessageDigest01() {
-    final SourcePath testSourceFile = new TargetSourcePath(
-        Paths.get("example", "example01", "src", "jp", "kusumotolab", "BuggyCalculator.java"));
+    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final SourcePath path = new TargetSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final List<GeneratedAST> asts =
-        constructor.constructAST(Collections.singletonList(testSourceFile));
+    final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
 
-    assertThat(jdtAst.getMessageDigest(), is("2770DD8D6E41A26A02F95939D03E89DF"));
+    assertThat(jdtAst.getMessageDigest()).isEqualTo("2770dd8d6e41a26a02f95939d03e89df");
   }
 
   @Test
   public void testGetMessageDigest02() {
-    final String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
-    final String testSource2 =
-        "class A {\n\tpublic void a() {\n\t\t b(1);\n\t}\n\tpublic void b(int v){}\n}\n";
-    final SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
+    final String source1 = "class A { public void a() { b(1); } public void b(int v){}}";
+    final String source2 = "class A { public void a() { b(1); } public void b(int v){}}\n\n";
+    final SourcePath path = new TargetSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
-    final GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
+    final GeneratedJDTAST ast1 = constructor.constructAST(path, source1);
+    final GeneratedJDTAST ast2 = constructor.constructAST(path, source2);
 
-    assertThat(ast1.getMessageDigest()
-        .equals(ast2.getMessageDigest()), is(true));
+    assertThat(ast1.getMessageDigest()).isEqualTo(ast2.getMessageDigest());
   }
 
   @Test
   public void testGetMessageDigest03() {
-    final String testSource1 = "class A{public void a(){b(1);}public void b(int v){}}";
-    final String testSource2 = "class A{public void a(){b(2);}public void b(int v){}}";
-    final SourcePath testSourceFile = new TargetSourcePath(Paths.get("A.java"));
+    final String source1 = "class A { public void a() { b(1); } public void b(int v){}}";
+    final String source2 = "class A { public void a() { b(2); } public void b(int v){}}";
+    final SourcePath path = new TargetSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast1 = constructor.constructAST(testSourceFile, testSource1);
-    final GeneratedJDTAST ast2 = constructor.constructAST(testSourceFile, testSource2);
+    final GeneratedJDTAST ast1 = constructor.constructAST(path, source1);
+    final GeneratedJDTAST ast2 = constructor.constructAST(path, source2);
 
-    assertThat(ast1.getMessageDigest()
-        .equals(ast2.getMessageDigest()), is(false));
+    assertThat(ast1.getMessageDigest()).isNotEqualTo(ast2.getMessageDigest());
   }
 }

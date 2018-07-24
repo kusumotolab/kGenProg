@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.xml.bind.DatatypeConverter;
+import org.apache.commons.codec.binary.Hex;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier;
@@ -133,7 +133,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     try {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
-      return DatatypeConverter.printHexBinary(digest.digest(root.toString()
+      return Hex.encodeHexString(digest.digest(root.toString()
           .getBytes()));
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
