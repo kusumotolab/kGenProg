@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Ignore;
@@ -33,16 +34,17 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 @Ignore
 public class KGenProgMainTest {
 
+  final static String bc = "jp.kusumotolab.BuggyCalculator";
+  final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
+
   @Test
   public void testExample04() {
 
     final Path rootPath = Paths.get("example/example04");
-    final List<SourcePath> targetSourcePaths = new ArrayList<>();
-    targetSourcePaths
-        .add(new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
-    final List<SourcePath> testSourcePaths = new ArrayList<>();
-    testSourcePaths
-        .add(new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
+    final SourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final SourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+    final List<SourcePath> targetSourcePaths = Arrays.asList(bcPath);
+    final List<SourcePath> testSourcePaths = Arrays.asList(bctPath);
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourcePaths,
         testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -53,12 +55,12 @@ public class KGenProgMainTest {
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
-    final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
-    final ResultOutput resultGenerator = new DiffOutput(workingPath);
+    final Path outPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    final ResultOutput resultGenerator = new DiffOutput(outPath);
 
     final KGenProgMain kGenProgMain =
         new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-            sourceCodeValidation, variantSelection, resultGenerator, workingPath);
+            sourceCodeValidation, variantSelection, resultGenerator, outPath);
     kGenProgMain.run();
   }
 
@@ -66,15 +68,13 @@ public class KGenProgMainTest {
   public void testExample05() {
 
     final Path rootPath = Paths.get("example/example05");
-    final List<SourcePath> targetSourcePaths = new ArrayList<>();
-    targetSourcePaths
-        .add(new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
-    final List<SourcePath> testSourceFiles = new ArrayList<>();
-    testSourceFiles
-        .add(new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
+    final SourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final SourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+    final List<SourcePath> targetSourcePaths = Arrays.asList(bcPath);
+    final List<SourcePath> testSourcePaths = Arrays.asList(bctPath);
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourcePaths,
-        testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
+        testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
     final Mutation mutation = new RandomMutation(10, randomNumberGeneration);
@@ -82,11 +82,11 @@ public class KGenProgMainTest {
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection();
-    final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
-    final ResultOutput resultGenerator = new DiffOutput(workingPath);
+    final Path outPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    final ResultOutput resultGenerator = new DiffOutput(outPath);
     final KGenProgMain kGenProgMain =
         new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-            sourceCodeValidation, variantSelection, resultGenerator, workingPath);
+            sourceCodeValidation, variantSelection, resultGenerator, outPath);
     kGenProgMain.run();
   }
 
@@ -94,12 +94,39 @@ public class KGenProgMainTest {
   public void testExample06() {
 
     final Path rootPath = Paths.get("example/example06");
+    final SourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final SourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+    final List<SourcePath> targetSourcePaths = Arrays.asList(bcPath);
+    final List<SourcePath> testSourcePaths = Arrays.asList(bctPath);
+
+    final TargetProject project = TargetProjectFactory.create(rootPath, targetSourcePaths,
+        testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final FaultLocalization faultLocalization = new Ochiai();
+    final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
+    final Mutation mutation = new RandomMutation(10, randomNumberGeneration);
+    final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
+    final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
+    final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
+    final VariantSelection variantSelection = new GenerationalVariantSelection();
+    final Path outPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
+    final ResultOutput resultGenerator = new DiffOutput(outPath);
+
+    final KGenProgMain kGenProgMain =
+        new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
+            sourceCodeValidation, variantSelection, resultGenerator, outPath);
+    kGenProgMain.run();
+  }
+
+  @Test
+  public void testExample07() {
+
+    final Path rootPath = Paths.get("example/example07");
     final List<SourcePath> targetSourceFiles = new ArrayList<>();
-    targetSourceFiles
-        .add(new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java")));
+    targetSourceFiles.add(
+        new TargetSourcePath(rootPath.resolve("src/jp/kusumotolab/GreatestCommonDivider.java")));
     final List<SourcePath> testSourceFiles = new ArrayList<>();
-    testSourceFiles
-        .add(new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/BuggyCalculatorTest.java")));
+    testSourceFiles.add(
+        new TestSourcePath(rootPath.resolve("src/jp/kusumotolab/GreatestCommonDividerTest.java")));
 
     final TargetProject project = TargetProjectFactory.create(rootPath, targetSourceFiles,
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -115,7 +142,7 @@ public class KGenProgMainTest {
 
     final KGenProgMain kGenProgMain =
         new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-            sourceCodeValidation, variantSelection, resultGenerator, workingPath);
+            sourceCodeValidation, variantSelection, resultGenerator, workingPath, 60, 10, 1);
     kGenProgMain.run();
   }
 }

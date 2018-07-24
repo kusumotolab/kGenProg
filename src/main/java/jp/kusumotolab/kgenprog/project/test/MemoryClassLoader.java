@@ -1,7 +1,9 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +13,11 @@ import java.util.Map;
  * @see https://www.jacoco.org/jacoco/trunk/doc/examples/java/CoreTutorial.java
  */
 public class MemoryClassLoader extends URLClassLoader {
+
+  public MemoryClassLoader(Path path) throws MalformedURLException {
+    super(new URL[] {path.toUri()
+        .toURL()});
+  }
 
   public MemoryClassLoader(URL[] urls) {
     super(urls);
