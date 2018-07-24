@@ -5,17 +5,17 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
+import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 public class GeneratedSourceCodeTest {
 
   private static class GeneratedASTMock implements GeneratedAST {
 
     private final SourcePath path;
-    private final List<Location> locations;
+    private final List<ASTLocation> locations;
     private final String messageDigest;
 
-    public GeneratedASTMock(final SourcePath path, final List<Location> locations) {
+    public GeneratedASTMock(final SourcePath path, final List<ASTLocation> locations) {
       this.path = path;
       this.locations = locations;
       this.messageDigest = "";
@@ -43,12 +43,12 @@ public class GeneratedSourceCodeTest {
     }
 
     @Override
-    public List<Location> inferLocations(int lineNumber) {
+    public List<ASTLocation> inferLocations(int lineNumber) {
       return null;
     }
 
     @Override
-    public List<Location> getAllLocations() {
+    public List<ASTLocation> getAllLocations() {
       return locations;
     }
 
@@ -61,11 +61,11 @@ public class GeneratedSourceCodeTest {
 
   @Test
   public void testGetAllLocations() {
-    final Location l0 = new JDTLocation(null, null);
-    final Location l1 = new JDTLocation(null, null);
-    final Location l2 = new JDTLocation(null, null);
-    final Location l3 = new JDTLocation(null, null);
-    final Location l4 = new JDTLocation(null, null);
+    final ASTLocation l0 = new JDTASTLocation(null, null);
+    final ASTLocation l1 = new JDTASTLocation(null, null);
+    final ASTLocation l2 = new JDTASTLocation(null, null);
+    final ASTLocation l3 = new JDTASTLocation(null, null);
+    final ASTLocation l4 = new JDTASTLocation(null, null);
 
     final TargetSourcePath p1 = new TargetSourcePath(Paths.get("a"));
     final TargetSourcePath p2 = new TargetSourcePath(Paths.get("b"));
@@ -73,7 +73,7 @@ public class GeneratedSourceCodeTest {
     final GeneratedAST ast2 = new GeneratedASTMock(p2, Arrays.asList(l2, l3, l4));
 
     final GeneratedSourceCode g = new GeneratedSourceCode(Arrays.asList(ast1, ast2));
-    final List<Location> locations = g.getAllLocations();
+    final List<ASTLocation> locations = g.getAllLocations();
 
     assertThat(locations).containsExactly(l0, l1, l2, l3, l4);
   }

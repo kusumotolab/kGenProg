@@ -22,7 +22,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
-import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
+import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 public class RandomMutationTest {
 
@@ -77,7 +77,7 @@ public class RandomMutationTest {
 
     final double[] value = { 0.8 };
     final List<Suspiciouseness> suspiciousenesses = statements.stream()
-        .map(e -> new JDTLocation(sourcePath, e))
+        .map(e -> new JDTASTLocation(sourcePath, e))
         .map(e -> {
           value[0] += 0.1;
           return new Suspiciouseness(e, value[0]);
@@ -90,10 +90,10 @@ public class RandomMutationTest {
 
     // Suspiciousenessが高い場所ほど多くの操作が生成されているかのテスト
     final Map<String, List<Base>> map = baseList.stream()
-        .collect(Collectors.groupingBy(e -> ((JDTLocation) e.getTargetLocation()).node.toString()));
-    final String weakSuspiciouseness = ((JDTLocation) suspiciousenesses.get(0)
+        .collect(Collectors.groupingBy(e -> ((JDTASTLocation) e.getTargetLocation()).node.toString()));
+    final String weakSuspiciouseness = ((JDTASTLocation) suspiciousenesses.get(0)
         .getLocation()).node.toString();
-    final String strongSuspiciouseness = ((JDTLocation) suspiciousenesses.get(1)
+    final String strongSuspiciouseness = ((JDTASTLocation) suspiciousenesses.get(1)
         .getLocation()).node.toString();
 
     assertThat(map.get(weakSuspiciouseness)
@@ -102,7 +102,7 @@ public class RandomMutationTest {
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
     final Base base = baseList.get(0);
-    final JDTLocation targetLocation = (JDTLocation) base.getTargetLocation();
+    final JDTASTLocation targetLocation = (JDTASTLocation) base.getTargetLocation();
     assertThat(targetLocation.node).isSameSourceCodeAs("return n;");
 
     final Operation operation = base.getOperation();

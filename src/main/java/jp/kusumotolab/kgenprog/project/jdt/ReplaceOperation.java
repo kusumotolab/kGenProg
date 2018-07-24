@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 
 public class ReplaceOperation implements JDTOperation {
 
@@ -17,7 +17,7 @@ public class ReplaceOperation implements JDTOperation {
   }
 
   @Override
-  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTLocation location,
+  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
       final ASTRewrite astRewrite) {
     final ASTNode copiedNode = ASTNode.copySubtree(astRewrite.getAST(), astNode);
     astRewrite.replace(location.locate(ast.getRoot()), copiedNode, null);
@@ -25,8 +25,8 @@ public class ReplaceOperation implements JDTOperation {
 
   @Override
   public GeneratedSourceCode applyDirectly(final GeneratedSourceCode generatedSourceCode,
-      final Location location) {
-    final JDTLocation jdtLocation = (JDTLocation) location;
+      final ASTLocation location) {
+    final JDTASTLocation jdtLocation = (JDTASTLocation) location;
 
     generatedSourceCode.getAsts()
         .stream()

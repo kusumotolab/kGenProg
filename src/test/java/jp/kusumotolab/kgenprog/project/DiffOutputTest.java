@@ -24,7 +24,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
-import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
+import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 public class DiffOutputTest {
@@ -54,7 +54,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     DeleteOperation operation = new DeleteOperation();
-    JDTLocation location = new JDTLocation(
+    JDTASTLocation location = new JDTASTLocation(
         new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
@@ -99,7 +99,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     DeleteOperation operation = new DeleteOperation();
-    JDTLocation location = new JDTLocation(
+    JDTASTLocation location = new JDTASTLocation(
         new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
@@ -141,7 +141,7 @@ public class DiffOutputTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    JDTLocation location = new JDTLocation(
+    JDTASTLocation location = new JDTASTLocation(
         new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
@@ -194,7 +194,7 @@ public class DiffOutputTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    JDTLocation location = new JDTLocation(
+    JDTASTLocation location = new JDTASTLocation(
         new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 

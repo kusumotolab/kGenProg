@@ -14,13 +14,13 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
-import jp.kusumotolab.kgenprog.project.jdt.JDTLocation;
+import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 public class TestResultsTest {
 
@@ -75,9 +75,9 @@ public class TestResultsTest {
     final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAst(bcTargetSourcePath);
 
     // astから5行目 (n--;) のlocationを取り出す
-    final List<Location> locations1 = bcAst.inferLocations(5);
-    final Location loc1 = locations1.get(locations1.size() - 1);
-    final JDTLocation jdtLocation1 = (JDTLocation) loc1;
+    final List<ASTLocation> locations1 = bcAst.inferLocations(5);
+    final ASTLocation loc1 = locations1.get(locations1.size() - 1);
+    final JDTASTLocation jdtLocation1 = (JDTASTLocation) loc1;
 
     // 一応locationの中身を確認しておく
     assertThat(jdtLocation1.node).isSameSourceCodeAs("n--;");
@@ -94,9 +94,9 @@ public class TestResultsTest {
     assertThat(a_nf1).isSameAs(1L); // test03
 
     // astから10行目 (return n;) のlocationを取り出す
-    final List<Location> locations2 = bcAst.inferLocations(10);
-    final Location loc2 = locations2.get(locations2.size() - 1);
-    final JDTLocation jdtLocation2 = (JDTLocation) loc2;
+    final List<ASTLocation> locations2 = bcAst.inferLocations(10);
+    final ASTLocation loc2 = locations2.get(locations2.size() - 1);
+    final JDTASTLocation jdtLocation2 = (JDTASTLocation) loc2;
 
     // 一応locationの中身を確認しておく
     assertThat(jdtLocation2.node).isSameSourceCodeAs("return n;");
