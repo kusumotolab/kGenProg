@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.Test;
 
 public class DefaultVariantSelectionTest {
@@ -41,5 +43,28 @@ public class DefaultVariantSelectionTest {
     final List<Variant> variants = Collections.emptyList();
     final List<Variant> resultVariants = variantSelection.exec(variants);
     assertThat(resultVariants).hasSize(0);
+  }
+
+  @Test
+  public void testExecForNan() {
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+    final List<Variant> variants = new ArrayList<>();
+
+    final List<Variant> nanVariants = IntStream.range(0, 10)
+        .mapToObj(e -> new SimpleFitness(Double.NaN))
+        .map(e -> new Variant(null, e, null))
+        .collect(Collectors.toList());
+
+    variants.addAll(nanVariants);
+
+    final List<Variant> result1 = variantSelection.exec(variants);
+
+    assertThat(result1).hasSize(10);
+
+    final Variant normalVariant = new Variant(null, new SimpleFitness(0.5d), null);
+    variants.add(normalVariant);
+    final List<Variant> result2 = variantSelection.exec(variants);
+    assertThat(result2).hasSize(10);
+    assertThat(result2.get(0)).isEqualTo(normalVariant);
   }
 }
