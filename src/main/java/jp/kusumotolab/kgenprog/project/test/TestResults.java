@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.Range;
+import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class TestResults implements Serializable {
@@ -116,7 +116,7 @@ public class TestResults implements Serializable {
     // GeneratedSourceCode#inferLineNumbers(Location) を使うか Location#inferLineNumbers()を使うか．
     // 後者の方が嫉妬の度合いが低そう
     // final Range correspondingRange = this.buildResults.sourceCode.inferLineNumbers(location);
-    final Range correspondingRange = location.inferLineNumbers();
+    final LineNumberRange correspondingRange = location.inferLineNumbers();
 
     // TODO location:lineNum = 1:N の時の対策が必要．ひとまずNの一行目だけを使う．
     final int correspondingLineNumber = correspondingRange.start;
