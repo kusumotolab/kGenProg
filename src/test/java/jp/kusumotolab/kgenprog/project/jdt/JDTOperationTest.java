@@ -27,8 +27,7 @@ public class JDTOperationTest {
     final GeneratedSourceCode applied =
         operation.apply(generatedSourceCode, new JDTLocation(sourcePath, null));
 
-    assertThat(applied).isEqualTo(GenerationFailedSourceCode.GENERATION_FAILED);
-
+    assertThat(applied).isEqualTo(GenerationFailedSourceCode.instance);
   }
 
   static class ExceptionOperation implements JDTOperation {
