@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,16 +41,13 @@ public class SinglePointCrossoverTest {
     final Variant insertOperationVariant = new Variant(new SimpleGene(insertBases), null, null);
 
     final RandomNumberGeneration randomNumberGeneration = new TestNumberGeneration();
-    final SinglePointCrossover singlePointCrossover = new SinglePointCrossover(
-        randomNumberGeneration);
+    final SinglePointCrossover singlePointCrossover =
+        new SinglePointCrossover(randomNumberGeneration);
 
-    final List<Gene> genes = singlePointCrossover.exec(
-        Arrays.asList(noneOperationVariant, insertOperationVariant));
+    final List<Gene> genes =
+        singlePointCrossover.exec(Arrays.asList(noneOperationVariant, insertOperationVariant));
 
-    final boolean result = genes.stream()
-        .anyMatch(this::containNoneOperationAndInsertOperation);
-
-    assertThat(result, is(true));
+    assertThat(genes).anyMatch(this::containNoneOperationAndInsertOperation);
   }
 
   private boolean containNoneOperationAndInsertOperation(final Gene gene) {
@@ -63,8 +59,7 @@ public class SinglePointCrossoverTest {
     final boolean containNoneOperation = operations.stream()
         .anyMatch(e -> e instanceof NoneOperation);
     final boolean containInsertOperation = operations.stream()
-        .anyMatch(
-            e -> e instanceof InsertOperation);
+        .anyMatch(e -> e instanceof InsertOperation);
 
     return containNoneOperation && containInsertOperation;
   }
