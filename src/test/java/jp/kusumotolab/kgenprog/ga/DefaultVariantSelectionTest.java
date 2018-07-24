@@ -59,12 +59,12 @@ public class DefaultVariantSelectionTest {
 
     final List<Variant> result1 = variantSelection.exec(variants);
 
-    assertThat(result1).hasSize(0);
+    assertThat(result1).hasSize(10);
 
     final Variant normalVariant = new Variant(null, new SimpleFitness(0.5d), null);
     variants.add(normalVariant);
     final List<Variant> result2 = variantSelection.exec(variants);
-    assertThat(result2).hasSize(1);
+    assertThat(result2).hasSize(10);
     assertThat(result2.get(0)).isEqualTo(normalVariant);
   }
 }
