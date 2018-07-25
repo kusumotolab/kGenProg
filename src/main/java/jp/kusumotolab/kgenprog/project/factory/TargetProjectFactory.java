@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.ClassPath;
@@ -25,14 +24,15 @@ public class TargetProjectFactory {
     return applicableFactory.create();
   }
 
-  /**
-   * @see TargetProjectFactory#create
-   * @param rootPath
-   * @return
-   */
-  public static TargetProject create(final String rootPath) {
-    return create(Paths.get(rootPath));
-  }
+  // /**
+  // * @see TargetProjectFactory#create
+  // * @param rootPath
+  // * @return
+  // */
+  // @Deprecated
+  // public static TargetProject create(final String rootPath) {
+  // return create(Paths.get(rootPath));
+  // }
 
   /**
    * TargetProjectを生成するファクトリメソッド． 全パラメータを指定する必要あり．

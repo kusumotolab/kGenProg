@@ -1,13 +1,14 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.File;
-import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import jp.kusumotolab.kgenprog.project.ClassPath;
 
 public final class TestExecutorMain {
 
@@ -34,13 +35,12 @@ public final class TestExecutorMain {
     final CmdLineParser parser = new CmdLineParser(main);
     parser.parseArgument(args);
 
-    final URL binUrl = Paths.get(main.binDir)
-        .toUri()
-        .toURL();
-    final TestExecutor executor = new TestExecutor(new URL[] {binUrl});
+    final TestExecutor executor = new TestExecutor();
+    final List<ClassPath> cps = Arrays.asList(new ClassPath(Paths.get(main.binDir)));
+    final List<FullyQualifiedName> targets = createTargetFQNs(main.sourceClass);
+    final List<FullyQualifiedName> tests = createTestFQNs(main.testClass);
+    final TestResults testResults = executor.exec(cps, targets, tests);
 
-    final TestResults testResults =
-        executor.exec(createTargetFQNs(main.sourceClass), createTestFQNs(main.testClass));
     TestResults.serialize(testResults);
 
   }
