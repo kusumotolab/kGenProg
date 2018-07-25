@@ -41,7 +41,7 @@ public class GeneratedSourceCode {
     return pathToAst.get(path);
   }
 
-  public List<Location> inferLocations(SourcePath path, int lineNumber) {
+  public List<ASTLocation> inferLocations(SourcePath path, int lineNumber) {
     log.debug("enter inferLocations(SourcePath, int)");
     GeneratedAST ast = getAst(path);
     if (ast == null) {
@@ -50,14 +50,14 @@ public class GeneratedSourceCode {
     return ast.inferLocations(lineNumber);
   }
 
-  public List<Location> getAllLocations() {
+  public List<ASTLocation> getAllLocations() {
     return asts.stream()
         .flatMap(v -> v.getAllLocations()
             .stream())
         .collect(Collectors.toList());
   }
 
-  public Range inferLineNumbers(Location location) {
+  public LineNumberRange inferLineNumbers(ASTLocation location) {
     log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();
   }

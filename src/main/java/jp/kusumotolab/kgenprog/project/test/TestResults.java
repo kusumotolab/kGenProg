@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.BuildResults;
-import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.Range;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class TestResults implements Serializable {
@@ -104,7 +104,7 @@ public class TestResults implements Serializable {
    * @param failed
    * @return
    */
-  private long getNumberOfTests(final SourcePath sourcePath, final Location location,
+  private long getNumberOfTests(final SourcePath sourcePath, final ASTLocation location,
       final Coverage.Status status, final boolean failed) {
 
     // 翻訳1: SourcePath → [FQN]
@@ -116,7 +116,7 @@ public class TestResults implements Serializable {
     // GeneratedSourceCode#inferLineNumbers(Location) を使うか Location#inferLineNumbers()を使うか．
     // 後者の方が嫉妬の度合いが低そう
     // final Range correspondingRange = this.buildResults.sourceCode.inferLineNumbers(location);
-    final Range correspondingRange = location.inferLineNumbers();
+    final LineNumberRange correspondingRange = location.inferLineNumbers();
 
     // TODO location:lineNum = 1:N の時の対策が必要．ひとまずNの一行目だけを使う．
     final int correspondingLineNumber = correspondingRange.start;
@@ -159,7 +159,7 @@ public class TestResults implements Serializable {
    * @return
    */
   public long getNumberOfPassedTestsExecutingTheStatement(final SourcePath sourcePath,
-      final Location location) {
+      final ASTLocation location) {
     return getNumberOfTests(sourcePath, location, Coverage.Status.COVERED, false);
   }
 
@@ -171,7 +171,7 @@ public class TestResults implements Serializable {
    * @return
    */
   public long getNumberOfFailedTestsExecutingTheStatement(final SourcePath sourcePath,
-      final Location location) {
+      final ASTLocation location) {
     return getNumberOfTests(sourcePath, location, Coverage.Status.COVERED, true);
   }
 
@@ -183,7 +183,7 @@ public class TestResults implements Serializable {
    * @return
    */
   public long getNumberOfPassedTestsNotExecutingTheStatement(final SourcePath sourcePath,
-      final Location location) {
+      final ASTLocation location) {
     return getNumberOfTests(sourcePath, location, Coverage.Status.NOT_COVERED, false);
   }
 
@@ -195,7 +195,7 @@ public class TestResults implements Serializable {
    * @return
    */
   public long getNumberOfFailedTestsNotExecutingTheStatement(final SourcePath sourcePath,
-      final Location location) {
+      final ASTLocation location) {
     return getNumberOfTests(sourcePath, location, Coverage.Status.NOT_COVERED, true);
   }
 

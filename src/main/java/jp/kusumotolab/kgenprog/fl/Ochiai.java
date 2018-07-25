@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
@@ -35,9 +35,9 @@ public class Ochiai implements FaultLocalization {
       final int lastLineNumber = countLines(code);
 
       for (int line = 1; line <= lastLineNumber; line++) {
-        final List<Location> locations = ast.inferLocations(line);
+        final List<ASTLocation> locations = ast.inferLocations(line);
         if (!locations.isEmpty()) {
-          final Location l = locations.get(locations.size() - 1);
+          final ASTLocation l = locations.get(locations.size() - 1);
           final long ef = testResults.getNumberOfFailedTestsExecutingTheStatement(path, l);
           final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, l);
           final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, l);

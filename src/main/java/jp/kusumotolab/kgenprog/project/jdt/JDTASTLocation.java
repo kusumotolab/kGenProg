@@ -6,8 +6,8 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
-import jp.kusumotolab.kgenprog.project.Location;
-import jp.kusumotolab.kgenprog.project.Range;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
@@ -17,13 +17,13 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
  * @author r-arima
  *
  */
-final public class JDTLocation implements Location {
+final public class JDTASTLocation implements ASTLocation {
 
   final public ASTNode node;
 
   private SourcePath sourcePath;
 
-  public JDTLocation(SourcePath sourcePath, ASTNode node) {
+  public JDTASTLocation(SourcePath sourcePath, ASTNode node) {
     this.node = node;
     this.sourcePath = sourcePath;
   }
@@ -89,11 +89,11 @@ final public class JDTLocation implements Location {
   }
 
   @Override
-  public Range inferLineNumbers() {
+  public LineNumberRange inferLineNumbers() {
     ASTNode root = this.node.getRoot();
 
     if (!(root instanceof CompilationUnit)) {
-      return Location.NONE;
+      return ASTLocation.NONE;
     }
 
     CompilationUnit compilationUnit = (CompilationUnit) root;
@@ -101,6 +101,6 @@ final public class JDTLocation implements Location {
     int start = compilationUnit.getLineNumber(this.node.getStartPosition());
     int end = compilationUnit.getLineNumber(this.node.getStartPosition() + this.node.getLength());
 
-    return new Range(start, end);
+    return new LineNumberRange(start, end);
   }
 }

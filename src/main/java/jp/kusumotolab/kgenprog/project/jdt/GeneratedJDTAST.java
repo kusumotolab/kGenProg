@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class GeneratedJDTAST implements GeneratedAST {
@@ -24,7 +24,7 @@ public class GeneratedJDTAST implements GeneratedAST {
   private final CompilationUnit root;
   private final SourcePath sourcePath;
   private final List<List<Statement>> lineNumberToStatements;
-  private final List<Location> allLocations;
+  private final List<ASTLocation> allLocations;
   private final String primaryClassName;
   private final String sourceCode;
   private final String messageDigest;
@@ -41,7 +41,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     this.lineNumberToStatements = visitor.getLineToStatements();
     this.allLocations = visitor.getStatements()
         .stream()
-        .map(v -> new JDTLocation(sourcePath, v))
+        .map(v -> new JDTASTLocation(sourcePath, v))
         .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
     this.messageDigest = createMessageDigest();
@@ -63,7 +63,7 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public List<Location> getAllLocations() {
+  public List<ASTLocation> getAllLocations() {
     return allLocations;
   }
 
@@ -81,11 +81,11 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public List<Location> inferLocations(final int lineNumber) {
+  public List<ASTLocation> inferLocations(final int lineNumber) {
     if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
       return lineNumberToStatements.get(lineNumber)
           .stream()
-          .map(statement -> new JDTLocation(this.sourcePath, statement))
+          .map(statement -> new JDTASTLocation(this.sourcePath, statement))
           .collect(Collectors.toList());
     }
     return Collections.emptyList();

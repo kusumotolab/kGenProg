@@ -1,8 +1,8 @@
 package jp.kusumotolab.kgenprog.project;
 
-public interface Location {
+public interface ASTLocation {
 
-  public static Range NONE = new Range(0, -1);
+  public static LineNumberRange NONE = new LineNumberRange(0, -1);
 
   public SourcePath getSourcePath();
 
@@ -11,5 +11,5 @@ public interface Location {
    * 
    * @return 行番号の範囲
    */
-  public Range inferLineNumbers();
+  public LineNumberRange inferLineNumbers();
 }

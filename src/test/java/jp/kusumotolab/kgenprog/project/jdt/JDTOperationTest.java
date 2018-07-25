@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
-import jp.kusumotolab.kgenprog.project.Location;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.TargetSourcePath;
 
 public class JDTOperationTest {
@@ -25,7 +25,7 @@ public class JDTOperationTest {
         new GeneratedSourceCode(constructor.constructAST(Collections.singletonList(sourcePath)));
 
     final GeneratedSourceCode applied =
-        operation.apply(generatedSourceCode, new JDTLocation(sourcePath, null));
+        operation.apply(generatedSourceCode, new JDTASTLocation(sourcePath, null));
 
     assertThat(applied).isEqualTo(GenerationFailedSourceCode.instance);
   }
@@ -34,12 +34,12 @@ public class JDTOperationTest {
 
     @Override
     public GeneratedSourceCode applyDirectly(final GeneratedSourceCode generatedSourceCode,
-        final Location location) {
+        final ASTLocation location) {
       throw new IllegalArgumentException();
     }
 
     @Override
-    public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTLocation location,
+    public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
         final ASTRewrite astRewrite) {
       throw new IllegalArgumentException();
     }
