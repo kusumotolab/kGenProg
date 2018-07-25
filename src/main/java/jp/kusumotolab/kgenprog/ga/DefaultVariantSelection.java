@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -32,6 +31,9 @@ public class DefaultVariantSelection implements VariantSelection {
   }
 
   private int compareFitness(final Fitness fitness1, final Fitness fitness2) {
+    if (Double.isNaN(fitness1.getValue()) && Double.isNaN(fitness2.getValue())) {
+      return 0;
+    }
     if (Double.isNaN(fitness1.getValue())) {
       return 1;
     }
