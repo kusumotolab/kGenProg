@@ -155,7 +155,7 @@ public class KGenProgMainTest {
             sourceCodeValidation, variantSelection, resultGenerator, workingPath, 60, 10, 1);
     kGenProgMain.run();
   }
-  
+
   //@Test
   public void testExample08() {
 
@@ -171,7 +171,9 @@ public class KGenProgMainTest {
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
-    final Mutation mutation = new RandomMutation(10, randomNumberGeneration);
+    final RouletteStatementSelection statementSelection = new RouletteStatementSelection(
+        randomNumberGeneration);
+    final Mutation mutation = new RandomMutation(10, randomNumberGeneration, statementSelection);
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
