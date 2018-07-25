@@ -18,9 +18,11 @@ import jp.kusumotolab.kgenprog.ga.GenerationalVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.RandomNumberGeneration;
+import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.StatementSelection;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.DiffOutput;
 import jp.kusumotolab.kgenprog.project.ResultOutput;
@@ -50,7 +52,9 @@ public class KGenProgMainTest {
         testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
-    final Mutation mutation = new RandomMutation(10, randomNumberGeneration);
+    final StatementSelection statementSelection = new RouletteStatementSelection(
+        randomNumberGeneration);
+    final Mutation mutation = new RandomMutation(10, randomNumberGeneration, statementSelection);
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
@@ -77,7 +81,9 @@ public class KGenProgMainTest {
         testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
-    final Mutation mutation = new RandomMutation(10, randomNumberGeneration);
+    final StatementSelection statementSelection = new RouletteStatementSelection(
+        randomNumberGeneration);
+    final Mutation mutation = new RandomMutation(10, randomNumberGeneration, statementSelection);
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
@@ -103,7 +109,9 @@ public class KGenProgMainTest {
         testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
-    final Mutation mutation = new RandomMutation(10, randomNumberGeneration);
+    final StatementSelection statementSelection = new RouletteStatementSelection(
+        randomNumberGeneration);
+    final Mutation mutation = new RandomMutation(10, randomNumberGeneration, statementSelection);
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
@@ -132,7 +140,9 @@ public class KGenProgMainTest {
         testSourceFiles, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
-    final Mutation mutation = new RandomMutation(10, randomNumberGeneration);
+    final StatementSelection statementSelection = new RouletteStatementSelection(
+        randomNumberGeneration);
+    final Mutation mutation = new RandomMutation(10, randomNumberGeneration, statementSelection);
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,15 +54,16 @@ public class RandomMutationTest {
     final Path basePath = Paths.get("example/example01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final RandomMutation randomMutation = new RandomMutation(10, new TestNumberGeneration());
+    final TestNumberGeneration randomNumberGeneration = new TestNumberGeneration();
+    final StatementSelection statementSelection = new RouletteStatementSelection(
+        randomNumberGeneration);
+    final RandomMutation randomMutation = new RandomMutation(15, new TestNumberGeneration(),
+        statementSelection);
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final GeneratedAST generatedAST = initialVariant.getGeneratedSourceCode()
-        .getAsts()
-        .stream()
-        .sorted(Comparator.comparing(x -> x.getSourcePath().path))
-        .collect(Collectors.toList())
+    final GeneratedAST generatedAST = new ArrayList<>(initialVariant.getGeneratedSourceCode()
+        .getAsts())
         .get(0);
     final SourcePath sourcePath = generatedAST.getSourcePath();
     final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
@@ -71,11 +72,10 @@ public class RandomMutationTest {
     final TypeDeclaration typeRoot = (TypeDeclaration) root.types()
         .get(0);
 
-    @SuppressWarnings("unchecked")
-    final List<Statement> statements = typeRoot.getMethods()[0].getBody()
+    @SuppressWarnings("unchecked") final List<Statement> statements = typeRoot.getMethods()[0].getBody()
         .statements();
 
-    final double[] value = { 0.8 };
+    final double[] value = {0.8};
     final List<Suspiciouseness> suspiciousenesses = statements.stream()
         .map(e -> new JDTASTLocation(sourcePath, e))
         .map(e -> {
@@ -86,7 +86,7 @@ public class RandomMutationTest {
 
     // 正しく10個のBaseが生成されるかのテスト
     final List<Base> baseList = randomMutation.exec(suspiciousenesses);
-    assertThat(baseList).hasSize(10);
+    assertThat(baseList).hasSize(15);
 
     // Suspiciousenessが高い場所ほど多くの操作が生成されているかのテスト
     final Map<String, List<Base>> map = baseList.stream()
@@ -98,7 +98,7 @@ public class RandomMutationTest {
 
     assertThat(map.get(weakSuspiciouseness)
         .size()).isLessThan(map.get(strongSuspiciouseness)
-            .size());
+        .size());
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
     final Base base = baseList.get(0);
@@ -113,6 +113,6 @@ public class RandomMutationTest {
         .getDeclaredField("astNode");
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
-    assertThat(node).isSameSourceCodeAs("n--;");
+    assertThat(node).isSameSourceCodeAs("n++;");
   }
 }
