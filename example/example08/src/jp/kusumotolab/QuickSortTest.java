@@ -53,6 +53,12 @@ public class QuickSortTest {
     assertArrayEquals(expected, array);
   }
 
-
+  @Test(timeout = 2000)
+  public void test07() {
+    int[] array = {6, 5, 9, 4, 1, 7, 2, 3, 8, 1};
+    int[] expected = {1, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    new QuickSort().quicksort(array);
+    assertArrayEquals(expected, array);
+  }
 
 }
