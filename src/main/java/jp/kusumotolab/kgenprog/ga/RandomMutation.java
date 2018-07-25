@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import org.eclipse.jdt.core.dom.Statement;
@@ -17,33 +16,22 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 public class RandomMutation extends Mutation {
 
-  private static Logger log = LoggerFactory.getLogger(RandomMutation.class);
-  private Roulette<Statement> statementRoulette;
+  private static final Logger log = LoggerFactory.getLogger(RandomMutation.class);
+  private final StatementSelection statementSelection;
 
   public RandomMutation(final int numberOfBase,
-      final RandomNumberGeneration randomNumberGeneration) {
+      final RandomNumberGeneration randomNumberGeneration,
+      final StatementSelection statementSelection) {
     super(numberOfBase, randomNumberGeneration);
+    this.statementSelection = statementSelection;
   }
 
   @Override
   public void setCandidates(final List<GeneratedAST> candidates) {
     log.debug("enter setCandidates(List<>)");
+
     super.setCandidates(candidates);
-
-    this.candidates.sort(Comparator.comparingInt(statement -> {
-      final String string = statement.toString();
-      return string.length();
-    }));
-
-    final Function<Statement, Double> weightFunction = statement -> {
-      final String statementString = statement.toString();
-      final int statementLength = statementString.length();
-
-      final double inverse = 1 / ((double) statementLength);
-      return Math.pow(inverse, 2);
-    };
-
-    statementRoulette = new Roulette<>(this.candidates, weightFunction, randomNumberGeneration);
+    statementSelection.setCandidates(this.candidates);
 
     log.debug("exit setCandidates(List<>)");
   }
@@ -92,6 +80,6 @@ public class RandomMutation extends Mutation {
 
   private Statement chooseNodeAtRandom() {
     log.debug("enter chooseNodeAtRandom()");
-    return statementRoulette.exec();
+    return statementSelection.exec();
   }
 }
