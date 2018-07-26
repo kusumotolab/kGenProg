@@ -101,14 +101,14 @@ public class KGenProgMain {
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final KGenProgTimer timer = new KGenProgTimer(timeoutSeconds);
-    timer.start();
+    final StopWatch stopwatch = new StopWatch(timeoutSeconds);
+    stopwatch.start();
     final OrdinalNumber generation = new OrdinalNumber(1);
     final OrdinalNumber foundSolutions = new OrdinalNumber(0);
     GA: while (true) {
 
       log.info(
-          "in the era of the " + generation.toString() + " generation (" + timer.toString() + ")");
+          "in the era of the " + generation.toString() + " generation (" + stopwatch.toString() + ")");
 
       // 遺伝子を生成
       final List<Gene> genes = new ArrayList<>();
@@ -136,7 +136,7 @@ public class KGenProgMain {
           foundSolutions.incrementAndGet();
 
           log.info(
-              foundSolutions.toString() + " solution has been found (" + timer.toString() + ")");
+              foundSolutions.toString() + " solution has been found (" + stopwatch.toString() + ")");
 
           completedVariants.add(variant);
 
@@ -149,7 +149,7 @@ public class KGenProgMain {
       }
 
       // 制限時間に達した場合には GA を抜ける
-      if (timer.isTimeout()) {
+      if (stopwatch.isTimeout()) {
         log.info("reached the time limit");
         break;
       }

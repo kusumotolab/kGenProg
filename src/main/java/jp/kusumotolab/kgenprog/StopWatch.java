@@ -1,17 +1,16 @@
 package jp.kusumotolab.kgenprog;
 
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class KGenProgTimer extends StopWatch {
+public class StopWatch extends org.apache.commons.lang3.time.StopWatch {
 
-  private static Logger log = LoggerFactory.getLogger(KGenProgTimer.class);
+  private static Logger log = LoggerFactory.getLogger(StopWatch.class);
 
   public final long timeoutSeconds;
 
-  public KGenProgTimer(final long timeoutSeconds) {
+  public StopWatch(final long timeoutSeconds) {
     this.timeoutSeconds = timeoutSeconds;
   }
 
