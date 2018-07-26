@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class DeleteOperationTest {
 
@@ -23,7 +23,7 @@ public class DeleteOperationTest {
 
   @Test
   public void testDeleteStatement() {
-    final TargetSourcePath path = new TargetSourcePath(Paths.get("A.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST ast = constructor.constructAST(path, source);
     final GeneratedSourceCode generatedSourceCode =
@@ -57,7 +57,7 @@ public class DeleteOperationTest {
 
   @Test
   public void testDeleteStatementDirectly() {
-    final TargetSourcePath path = new TargetSourcePath(Paths.get("A.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST ast = constructor.constructAST(path, source);

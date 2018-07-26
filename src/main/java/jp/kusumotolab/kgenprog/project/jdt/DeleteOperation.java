@@ -21,11 +21,11 @@ public class DeleteOperation implements JDTOperation {
 
     generatedSourceCode.getAsts()
         .stream()
-        .filter(ast -> ast.getSourcePath()
-            .equals(location.getSourcePath()))
+        .filter(ast -> ast.getProductSourcePath()
+            .equals(location.getProductSourcePath()))
         .forEach(ast -> {
-          if (ast.getSourcePath()
-              .equals(location.getSourcePath())) {
+          if (ast.getProductSourcePath()
+              .equals(location.getProductSourcePath())) {
             final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
             final ASTNode target = jdtLocation.locate(unit);
             target.delete();

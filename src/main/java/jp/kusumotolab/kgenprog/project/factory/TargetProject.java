@@ -10,31 +10,32 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
 
   public final Path rootPath; // TODO ひとまずrootPathだけpublicに．他フィールドは要検討
-  private final List<SourcePath> sourcePaths;
-  private final List<SourcePath> testPaths;
+  private final List<ProductSourcePath> productSourcePaths;
+  private final List<TestSourcePath> testSourcePaths;
   private final List<ClassPath> classPaths;
 
   // Must be package-private. Should be created only from TargetProjectFactory#create
-  TargetProject(final Path rootPath, final List<SourcePath> sourcePaths,
-      final List<SourcePath> testPaths, List<ClassPath> classPaths) {
+  TargetProject(final Path rootPath, final List<ProductSourcePath> productSourcePaths,
+      final List<TestSourcePath> testSourcePaths, List<ClassPath> classPaths) {
     this.rootPath = rootPath;
-    this.sourcePaths = sourcePaths;
-    this.testPaths = testPaths;
+    this.productSourcePaths = productSourcePaths;
+    this.testSourcePaths = testSourcePaths;
     this.classPaths = classPaths;
   }
 
-  public List<SourcePath> getSourcePaths() {
-    return sourcePaths;
+  public List<ProductSourcePath> getProductSourcePaths() {
+    return productSourcePaths;
   }
 
-  public List<SourcePath> getTestPaths() {
-    return testPaths;
+  public List<TestSourcePath> getTestSourcePaths() {
+    return testSourcePaths;
   }
 
   public List<ClassPath> getClassPaths() {

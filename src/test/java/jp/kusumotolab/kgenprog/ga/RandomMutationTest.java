@@ -17,7 +17,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.Operation;
-import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
@@ -55,24 +55,24 @@ public class RandomMutationTest {
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final TestNumberGeneration randomNumberGeneration = new TestNumberGeneration();
-    final StatementSelection statementSelection = new RouletteStatementSelection(
-        randomNumberGeneration);
-    final RandomMutation randomMutation = new RandomMutation(15, new TestNumberGeneration(),
-        statementSelection);
+    final StatementSelection statementSelection =
+        new RouletteStatementSelection(randomNumberGeneration);
+    final RandomMutation randomMutation =
+        new RandomMutation(15, new TestNumberGeneration(), statementSelection);
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
     final GeneratedAST generatedAST = new ArrayList<>(initialVariant.getGeneratedSourceCode()
-        .getAsts())
-        .get(0);
-    final SourcePath sourcePath = generatedAST.getSourcePath();
+        .getAsts()).get(0);
+    final ProductSourcePath sourcePath = generatedAST.getProductSourcePath();
     final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
         .getRoot()
         .getRoot();
     final TypeDeclaration typeRoot = (TypeDeclaration) root.types()
         .get(0);
 
-    @SuppressWarnings("unchecked") final List<Statement> statements = typeRoot.getMethods()[0].getBody()
+    @SuppressWarnings("unchecked")
+    final List<Statement> statements = typeRoot.getMethods()[0].getBody()
         .statements();
 
     final double[] value = {0.8};
@@ -90,7 +90,8 @@ public class RandomMutationTest {
 
     // Suspiciousenessが高い場所ほど多くの操作が生成されているかのテスト
     final Map<String, List<Base>> map = baseList.stream()
-        .collect(Collectors.groupingBy(e -> ((JDTASTLocation) e.getTargetLocation()).node.toString()));
+        .collect(
+            Collectors.groupingBy(e -> ((JDTASTLocation) e.getTargetLocation()).node.toString()));
     final String weakSuspiciouseness = ((JDTASTLocation) suspiciousenesses.get(0)
         .getLocation()).node.toString();
     final String strongSuspiciouseness = ((JDTASTLocation) suspiciousenesses.get(1)
@@ -98,7 +99,7 @@ public class RandomMutationTest {
 
     assertThat(map.get(weakSuspiciouseness)
         .size()).isLessThan(map.get(strongSuspiciouseness)
-        .size());
+            .size());
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
     final Base base = baseList.get(0);

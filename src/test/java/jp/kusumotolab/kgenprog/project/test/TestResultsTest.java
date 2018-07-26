@@ -16,7 +16,7 @@ import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
@@ -70,7 +70,7 @@ public class TestResultsTest {
     // expected確保の作業
     // まずast生成
     final Path bcSourcePath = Paths.get(buggyCalculator.value.replace(".", "/") + ".java");
-    final TargetSourcePath bcTargetSourcePath = new TargetSourcePath(rootPath.resolve("src")
+    final ProductSourcePath bcTargetSourcePath = new ProductSourcePath(rootPath.resolve("src")
         .resolve(bcSourcePath));
     final GeneratedJDTAST bcAst = (GeneratedJDTAST) generatedSourceCode.getAst(bcTargetSourcePath);
 

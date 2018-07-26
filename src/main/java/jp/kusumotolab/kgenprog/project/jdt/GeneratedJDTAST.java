@@ -12,9 +12,9 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class GeneratedJDTAST implements GeneratedAST {
 
@@ -22,18 +22,18 @@ public class GeneratedJDTAST implements GeneratedAST {
 
   private final JDTASTConstruction construction;
   private final CompilationUnit root;
-  private final SourcePath sourcePath;
+  private final ProductSourcePath productSourcePath;
   private final List<List<Statement>> lineNumberToStatements;
   private final List<ASTLocation> allLocations;
   private final String primaryClassName;
   private final String sourceCode;
   private final String messageDigest;
 
-  public GeneratedJDTAST(final JDTASTConstruction construction, final SourcePath sourcePath,
-      final CompilationUnit root, final String source) {
+  public GeneratedJDTAST(final JDTASTConstruction construction,
+      final ProductSourcePath productSourcePath, final CompilationUnit root, final String source) {
     this.construction = construction;
     this.root = root;
-    this.sourcePath = sourcePath;
+    this.productSourcePath = productSourcePath;
     this.sourceCode = source;
 
     final StatementListVisitor visitor = new StatementListVisitor();
@@ -41,7 +41,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     this.lineNumberToStatements = visitor.getLineToStatements();
     this.allLocations = visitor.getStatements()
         .stream()
-        .map(v -> new JDTASTLocation(sourcePath, v))
+        .map(v -> new JDTASTLocation(productSourcePath, v))
         .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
     this.messageDigest = createMessageDigest();
@@ -53,8 +53,8 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public SourcePath getSourcePath() {
-    return sourcePath;
+  public ProductSourcePath getProductSourcePath() {
+    return productSourcePath;
   }
 
   @Override
@@ -85,7 +85,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
       return lineNumberToStatements.get(lineNumber)
           .stream()
-          .map(statement -> new JDTASTLocation(this.sourcePath, statement))
+          .map(statement -> new JDTASTLocation(this.productSourcePath, statement))
           .collect(Collectors.toList());
     }
     return Collections.emptyList();
@@ -110,7 +110,7 @@ public class GeneratedJDTAST implements GeneratedAST {
           .getIdentifier();
 
     } else {
-      typeName = sourcePath.path.getFileName()
+      typeName = productSourcePath.path.getFileName()
           .toString();
       final int idx = typeName.indexOf(".");
       if (idx > 0) {

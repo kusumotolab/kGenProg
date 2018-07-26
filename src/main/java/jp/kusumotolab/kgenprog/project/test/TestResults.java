@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
-import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class TestResults implements Serializable {
 
@@ -98,18 +98,18 @@ public class TestResults implements Serializable {
   /**
    * FLで用いる4メトリクスのprivateなParameterized-Method
    * 
-   * @param sourcePath
+   * @param productSourcePath
    * @param location
    * @param status
    * @param failed
    * @return
    */
-  private long getNumberOfTests(final SourcePath sourcePath, final ASTLocation location,
-      final Coverage.Status status, final boolean failed) {
+  private long getNumberOfTests(final ProductSourcePath productSourcePath,
+      final ASTLocation location, final Coverage.Status status, final boolean failed) {
 
     // 翻訳1: SourcePath → [FQN]
     final Set<FullyQualifiedName> correspondingFqns =
-        this.buildResults.getPathToFQNs(sourcePath.path);
+        this.buildResults.getPathToFQNs(productSourcePath.path);
 
     // 翻訳2: location → 行番号
     // TODO
@@ -154,49 +154,49 @@ public class TestResults implements Serializable {
   /**
    * a_ep
    * 
-   * @param sourcePath
+   * @param productSourcePath
    * @param location
    * @return
    */
-  public long getNumberOfPassedTestsExecutingTheStatement(final SourcePath sourcePath,
+  public long getNumberOfPassedTestsExecutingTheStatement(final ProductSourcePath productSourcePath,
       final ASTLocation location) {
-    return getNumberOfTests(sourcePath, location, Coverage.Status.COVERED, false);
+    return getNumberOfTests(productSourcePath, location, Coverage.Status.COVERED, false);
   }
 
   /**
    * a_ef
    * 
-   * @param sourcePath
+   * @param productSourcePath
    * @param location
    * @return
    */
-  public long getNumberOfFailedTestsExecutingTheStatement(final SourcePath sourcePath,
+  public long getNumberOfFailedTestsExecutingTheStatement(final ProductSourcePath productSourcePath,
       final ASTLocation location) {
-    return getNumberOfTests(sourcePath, location, Coverage.Status.COVERED, true);
+    return getNumberOfTests(productSourcePath, location, Coverage.Status.COVERED, true);
   }
 
   /**
    * a_np
    * 
-   * @param sourcePath
+   * @param productSourcePath
    * @param location
    * @return
    */
-  public long getNumberOfPassedTestsNotExecutingTheStatement(final SourcePath sourcePath,
-      final ASTLocation location) {
-    return getNumberOfTests(sourcePath, location, Coverage.Status.NOT_COVERED, false);
+  public long getNumberOfPassedTestsNotExecutingTheStatement(
+      final ProductSourcePath productSourcePath, final ASTLocation location) {
+    return getNumberOfTests(productSourcePath, location, Coverage.Status.NOT_COVERED, false);
   }
 
   /**
    * a_nf
    * 
-   * @param sourcePath
+   * @param productSourcePath
    * @param location
    * @return
    */
-  public long getNumberOfFailedTestsNotExecutingTheStatement(final SourcePath sourcePath,
-      final ASTLocation location) {
-    return getNumberOfTests(sourcePath, location, Coverage.Status.NOT_COVERED, true);
+  public long getNumberOfFailedTestsNotExecutingTheStatement(
+      final ProductSourcePath productSourcePath, final ASTLocation location) {
+    return getNumberOfTests(productSourcePath, location, Coverage.Status.NOT_COVERED, true);
   }
 
   /**

@@ -4,7 +4,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class TargetProjectFactory {
@@ -38,14 +39,14 @@ public class TargetProjectFactory {
    * TargetProjectを生成するファクトリメソッド． 全パラメータを指定する必要あり．
    * 
    * @param rootPath 対象のルートパス
-   * @param sourcePaths
-   * @param testPaths
+   * @param sourceSourcePaths
+   * @param testSourcePaths
    * @param classPaths
    * @return TargetProject
    */
-  public static TargetProject create(final Path rootPath, final List<SourcePath> sourcePaths,
-      final List<SourcePath> testPaths, List<ClassPath> classPaths, JUnitVersion junitVersion) {
-    return new DefaultProjectFactory(rootPath, sourcePaths, testPaths, classPaths, junitVersion)
+  public static TargetProject create(final Path rootPath, final List<ProductSourcePath> sourceSourcePaths,
+      final List<TestSourcePath> testSourcePaths, List<ClassPath> classPaths, JUnitVersion junitVersion) {
+    return new DefaultProjectFactory(rootPath, sourceSourcePaths, testSourcePaths, classPaths, junitVersion)
         .create();
   }
 
