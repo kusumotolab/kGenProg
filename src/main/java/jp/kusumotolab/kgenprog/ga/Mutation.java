@@ -52,7 +52,7 @@ public abstract class Mutation {
     log.debug("exit setCandidates(List<>)");
   }
 
-  public abstract List<Base> exec(List<Suspiciousness> suspiciousenesses);
+  public abstract List<Base> exec(List<Suspiciousness> suspiciousnesses);
 
   private class Visitor extends ASTVisitor {
 

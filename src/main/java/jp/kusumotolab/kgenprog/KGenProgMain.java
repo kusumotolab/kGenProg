@@ -113,9 +113,9 @@ public class KGenProgMain {
       // 遺伝子を生成
       final List<Gene> genes = new ArrayList<>();
       for (final Variant variant : selectedVariants) {
-        final List<Suspiciousness> suspiciousenesses =
+        final List<Suspiciousness> suspiciousnesses =
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
-        final List<Base> bases = mutation.exec(suspiciousenesses);
+        final List<Base> bases = mutation.exec(suspiciousnesses);
         genes.addAll(variant.getGene()
             .generateNextGenerationGenes(bases));
       }

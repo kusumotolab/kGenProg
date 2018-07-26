@@ -36,22 +36,22 @@ public class RandomMutation extends Mutation {
     log.debug("exit setCandidates(List<>)");
   }
 
-  public List<Base> exec(final List<Suspiciousness> suspiciousenesses) {
+  public List<Base> exec(final List<Suspiciousness> suspiciousnesses) {
     log.debug("enter exec(List<>)");
 
     final List<Base> bases = new ArrayList<>();
-    if (suspiciousenesses.isEmpty()) {
+    if (suspiciousnesses.isEmpty()) {
       return bases;
     }
 
     final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
 
     final Roulette<Suspiciousness> roulette =
-        new Roulette<>(suspiciousenesses, weightFunction, randomNumberGeneration);
+        new Roulette<>(suspiciousnesses, weightFunction, randomNumberGeneration);
 
     for (int i = 0; i < numberOfBase; i++) {
-      final Suspiciousness suspiciouseness = roulette.exec();
-      final Base base = makeBase(suspiciouseness);
+      final Suspiciousness suspiciousness = roulette.exec();
+      final Base base = makeBase(suspiciousness);
       bases.add(base);
     }
 
@@ -59,9 +59,9 @@ public class RandomMutation extends Mutation {
     return bases;
   }
 
-  private Base makeBase(Suspiciousness suspiciouseness) {
-    log.debug("enter makeBase(Suspiciouseness)");
-    return new Base(suspiciouseness.getLocation(), makeOperationAtRandom());
+  private Base makeBase(Suspiciousness suspiciousness) {
+    log.debug("enter makeBase(Suspiciousness)");
+    return new Base(suspiciousness.getLocation(), makeOperationAtRandom());
   }
 
   private Operation makeOperationAtRandom() {

@@ -76,7 +76,7 @@ public class RandomMutationTest {
         .statements();
 
     final double[] value = {0.8};
-    final List<Suspiciousness> suspiciousenesses = statements.stream()
+    final List<Suspiciousness> suspiciousnesses = statements.stream()
         .map(e -> new JDTASTLocation(sourcePath, e))
         .map(e -> {
           value[0] += 0.1;
@@ -85,20 +85,20 @@ public class RandomMutationTest {
         .collect(Collectors.toList());
 
     // 正しく10個のBaseが生成されるかのテスト
-    final List<Base> baseList = randomMutation.exec(suspiciousenesses);
+    final List<Base> baseList = randomMutation.exec(suspiciousnesses);
     assertThat(baseList).hasSize(15);
 
-    // Suspiciousenessが高い場所ほど多くの操作が生成されているかのテスト
+    // Suspiciousnessが高い場所ほど多くの操作が生成されているかのテスト
     final Map<String, List<Base>> map = baseList.stream()
         .collect(
             Collectors.groupingBy(e -> ((JDTASTLocation) e.getTargetLocation()).node.toString()));
-    final String weakSuspiciouseness = ((JDTASTLocation) suspiciousenesses.get(0)
+    final String weakSuspiciousness = ((JDTASTLocation) suspiciousnesses.get(0)
         .getLocation()).node.toString();
-    final String strongSuspiciouseness = ((JDTASTLocation) suspiciousenesses.get(1)
+    final String strongSuspiciousness = ((JDTASTLocation) suspiciousnesses.get(1)
         .getLocation()).node.toString();
 
-    assertThat(map.get(weakSuspiciouseness)
-        .size()).isLessThan(map.get(strongSuspiciouseness)
+    assertThat(map.get(weakSuspiciousness)
+        .size()).isLessThan(map.get(strongSuspiciousness)
             .size());
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
