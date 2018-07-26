@@ -31,7 +31,7 @@ public class Ochiai implements FaultLocalization {
     for (final GeneratedAST ast : variant.getGeneratedSourceCode()
         .getAsts()) {
       final String code = ast.getSourceCode();
-      final ProductSourcePath path = (ProductSourcePath) ast.getProductSourcePath();
+      final ProductSourcePath path = ast.getProductSourcePath();
       final int lastLineNumber = countLines(code);
 
       for (int line = 1; line <= lastLineNumber; line++) {
