@@ -9,7 +9,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class JDTOperationTest {
 
@@ -18,14 +18,14 @@ public class JDTOperationTest {
     final JDTOperation operation = new ExceptionOperation();
 
     final Path path = Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java");
-    final TargetSourcePath sourcePath = new TargetSourcePath(path);
+    final ProductSourcePath productSourcePath = new ProductSourcePath(path);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
-        new GeneratedSourceCode(constructor.constructAST(Collections.singletonList(sourcePath)));
+        new GeneratedSourceCode(constructor.constructAST(Collections.singletonList(productSourcePath)));
 
     final GeneratedSourceCode applied =
-        operation.apply(generatedSourceCode, new JDTASTLocation(sourcePath, null));
+        operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null));
 
     assertThat(applied).isEqualTo(GenerationFailedSourceCode.instance);
   }

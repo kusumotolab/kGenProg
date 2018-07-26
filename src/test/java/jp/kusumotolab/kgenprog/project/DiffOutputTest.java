@@ -55,7 +55,7 @@ public class DiffOutputTest {
         .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTASTLocation location = new JDTASTLocation(
-        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
@@ -100,7 +100,7 @@ public class DiffOutputTest {
         .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTASTLocation location = new JDTASTLocation(
-        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -142,7 +142,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     JDTASTLocation location = new JDTASTLocation(
-        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     // 挿入対象生成
@@ -195,7 +195,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     JDTASTLocation location = new JDTASTLocation(
-        new TargetSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
+        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     // 挿入対象生成

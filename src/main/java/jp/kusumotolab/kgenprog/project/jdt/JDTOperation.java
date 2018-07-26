@@ -31,8 +31,8 @@ public interface JDTOperation extends Operation {
   }
 
   default public GeneratedAST applyEachAST(final GeneratedAST ast, final ASTLocation location) {
-    if (!ast.getSourcePath()
-        .equals(location.getSourcePath())) {
+    if (!ast.getProductSourcePath()
+        .equals(location.getProductSourcePath())) {
       return ast;
     }
 
@@ -51,7 +51,7 @@ public interface JDTOperation extends Operation {
     }
 
     return jdtast.getConstruction()
-        .constructAST(ast.getSourcePath(), document.get());
+        .constructAST(ast.getProductSourcePath(), document.get());
   }
 
   public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,

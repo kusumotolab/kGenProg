@@ -5,10 +5,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
@@ -31,7 +31,7 @@ public class Ochiai implements FaultLocalization {
     for (final GeneratedAST ast : variant.getGeneratedSourceCode()
         .getAsts()) {
       final String code = ast.getSourceCode();
-      final SourcePath path = ast.getSourcePath();
+      final ProductSourcePath path = ast.getProductSourcePath();
       final int lastLineNumber = countLines(code);
 
       for (int line = 1; line <= lastLineNumber; line++) {

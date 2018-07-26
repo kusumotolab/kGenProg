@@ -55,7 +55,7 @@ public class DefaultSourceCodeGenerationTest {
     assertThat(generatedSourceCode.getAsts()).hasSameSizeAs(initialSourceCode.getAsts());
 
     // NoneOperationにより全てのソースコードが初期ソースコードと等価であるはず
-    for (int i = 0; i < targetProject.getSourcePaths()
+    for (int i = 0; i < targetProject.getProductSourcePaths()
         .size(); i++) {
       // TODO list内部要素の順序が変更されたらバグる
       final String expected = initialSourceCode.getAsts()

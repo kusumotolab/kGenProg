@@ -116,18 +116,18 @@ public class TestProcessBuilder {
 
   private Set<FullyQualifiedName> getTargetFQNs(final BuildResults buildResults) {
     log.debug("enter getTargetFQNs(BuildResults)");
-    return getFQNs(buildResults, this.targetProject.getSourcePaths());
+    return getFQNs(buildResults, this.targetProject.getProductSourcePaths());
   }
 
   private Set<FullyQualifiedName> getTestFQNs(final BuildResults buildResults) {
     log.debug("enter getTestFQNs(BuildResults)");
-    return getFQNs(buildResults, this.targetProject.getTestPaths());
+    return getFQNs(buildResults, this.targetProject.getTestSourcePaths());
   }
 
   private Set<FullyQualifiedName> getFQNs(final BuildResults buildResults,
-      final List<SourcePath> sources) {
+      final List<? extends SourcePath> sourcesPaths) {
     log.debug("enter getFQNs(BuildResults, List<>)");
-    return sources.stream()
+    return sourcesPaths.stream()
         .map(source -> buildResults.getPathToFQNs(source.path))
         .filter(fqn -> null != fqn)
         .flatMap(c -> c.stream())

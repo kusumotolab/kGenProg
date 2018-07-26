@@ -35,8 +35,8 @@ public class InsertOperation implements JDTOperation {
 
     generatedSourceCode.getAsts()
         .stream()
-        .filter(ast -> ast.getSourcePath()
-            .equals(location.getSourcePath()))
+        .filter(ast -> ast.getProductSourcePath()
+            .equals(location.getProductSourcePath()))
         .forEach(ast -> {
           final CompilationUnit unit = ((GeneratedJDTAST) ast).getRoot();
           final ASTNode target = jdtLocation.locate(unit);

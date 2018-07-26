@@ -28,16 +28,16 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
-      final Set<Path> paths = buildResults.getPathToClasses(sourcePath.path);
+    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
+      final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
       assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(sourcePath.path);
+          .containsOnly(productSourcePath.path);
     }
 
-    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
+    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
       assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(sourcePath.path);
+          .containsOnly(productSourcePath.path);
     }
   }
 
@@ -54,16 +54,16 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
-      final Set<Path> paths = buildResults.getPathToClasses(sourcePath.path);
+    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
+      final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
       assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(sourcePath.path);
+          .containsOnly(productSourcePath.path);
     }
 
-    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
+    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
       assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(sourcePath.path);
+          .containsOnly(productSourcePath.path);
     }
   }
 
@@ -80,16 +80,16 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
-      final Set<Path> paths = buildResults.getPathToClasses(sourcePath.path);
+    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
+      final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
       assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(sourcePath.path);
+          .containsOnly(productSourcePath.path);
     }
 
-    for (final SourcePath sourcePath : targetProject.getSourcePaths()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(sourcePath.path);
+    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
       assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(sourcePath.path);
+          .containsOnly(productSourcePath.path);
     }
   }
 
@@ -122,7 +122,7 @@ public class ProjectBuilderTest {
     assertThat(buildResults02.isMappingAvailable()).isTrue();
 
     final Collection<File> classFiles =
-        FileUtils.listFiles(workPath.toFile(), new String[] { "class" }, true);
+        FileUtils.listFiles(workPath.toFile(), new String[] {"class"}, true);
     final Path e1 = workPath.resolve("jp/kusumotolab/BuggyCalculator.class");
     final Path e2 = workPath.resolve("jp/kusumotolab/BuggyCalculatorTest.class");
     final Path e3 = workPath.resolve("jp/kusumotolab/Util.class");
