@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,5 +67,27 @@ public class DefaultVariantSelectionTest {
     final List<Variant> result2 = variantSelection.exec(variants);
     assertThat(result2).hasSize(10);
     assertThat(result2.get(0)).isEqualTo(normalVariant);
+  }
+
+  @Test
+  public void testExecForNanCompare() {
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+
+    final List<Variant> nanVariants = IntStream.range(0, 100)
+        .mapToObj(e -> {
+          if (e == 50) {
+            return new SimpleFitness(1.0d);
+          }
+          return new SimpleFitness(Double.NaN);
+        })
+        .map(e -> new Variant(null, e, null))
+        .collect(Collectors.toList());
+
+    try {
+      final List<Variant> result = variantSelection.exec(nanVariants);
+      assertThat(result).hasSize(10);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
   }
 }
