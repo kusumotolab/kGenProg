@@ -57,7 +57,8 @@ public class DiffOutput implements ResultOutput {
       for (GeneratedAST ast : code.getAsts()) {
         try {
           GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
-          Path originPath = getOriginPath(targetProject.getSourcePaths(), jdtAST.getSourcePath());
+          Path originPath =
+              getOriginPath(targetProject.getProductSourcePaths(), jdtAST.getProductSourcePath());
 
           if (originPath == null) {
             continue;
@@ -106,7 +107,7 @@ public class DiffOutput implements ResultOutput {
    * @param sourcePath
    * @return
    */
-  private Path getOriginPath(List<SourcePath> originPaths, SourcePath sourcePath) {
+  private Path getOriginPath(List<ProductSourcePath> originPaths, SourcePath sourcePath) {
     for (SourcePath originPath : originPaths) {
       try {
         if (Files.isSameFile(originPath.path, sourcePath.path)) {

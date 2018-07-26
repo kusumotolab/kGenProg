@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class InsertOperationTest {
 
@@ -23,10 +23,10 @@ public class InsertOperationTest {
         .append("}")
         .toString();
 
-    final TargetSourcePath path = new TargetSourcePath(Paths.get("A.java"));
+    final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast));
 
@@ -38,7 +38,7 @@ public class InsertOperationTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(sourcePath, statement);
 
     // 挿入対象生成
     final Statement insertStatement = createInsertionTarget();
@@ -72,7 +72,7 @@ public class InsertOperationTest {
         .append("}")
         .toString();
 
-    final TargetSourcePath sourcePath = new TargetSourcePath(Paths.get("A.java"));
+    final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
@@ -117,10 +117,10 @@ public class InsertOperationTest {
         .append("}")
         .toString();
 
-    final TargetSourcePath testSourcePath = new TargetSourcePath(Paths.get("B.java"));
+    final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("B.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(testSourcePath, source);
+    final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
 
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()

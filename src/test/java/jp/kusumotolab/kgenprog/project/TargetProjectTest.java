@@ -20,11 +20,11 @@ public class TargetProjectTest {
     final Path rootPath = Paths.get("example/example01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final TargetSourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
     final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
 
-    assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath);
-    assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath);
+    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(bcPath);
+    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(bctPath);
   }
 
   @Test
@@ -32,12 +32,12 @@ public class TargetProjectTest {
     final Path rootPath = Paths.get("example/example02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final TargetSourcePath bcPath = new TargetSourcePath(rootPath.resolve(bc));
+    final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
     final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
-    final TargetSourcePath utPath = new TargetSourcePath(rootPath.resolve(ut));
+    final ProductSourcePath utPath = new ProductSourcePath(rootPath.resolve(ut));
     final TestSourcePath uttPath = new TestSourcePath(rootPath.resolve(utt));
 
-    assertThat(project.getSourcePaths()).containsExactlyInAnyOrder(bcPath, utPath);
-    assertThat(project.getTestPaths()).containsExactlyInAnyOrder(bctPath, uttPath);
+    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(bcPath, utPath);
+    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(bctPath, uttPath);
   }
 }

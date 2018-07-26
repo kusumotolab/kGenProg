@@ -27,7 +27,7 @@ public class GeneratedSourceCode {
   public GeneratedSourceCode(List<GeneratedAST> asts) {
     this.asts = asts;
     pathToAst = asts.stream()
-        .collect(Collectors.toMap(GeneratedAST::getSourcePath, v -> v));
+        .collect(Collectors.toMap(GeneratedAST::getProductSourcePath, v -> v));
     this.messageDigest = createMessageDigest();
   }
 
@@ -71,7 +71,7 @@ public class GeneratedSourceCode {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
       asts.stream()
-          .sorted(Comparator.comparing(v -> v.getSourcePath()
+          .sorted(Comparator.comparing(v -> v.getProductSourcePath()
               .toString()))
           .map(GeneratedAST::getMessageDigest)
           .map(String::getBytes)

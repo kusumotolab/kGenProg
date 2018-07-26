@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
-import jp.kusumotolab.kgenprog.project.TargetSourcePath;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
@@ -26,8 +26,8 @@ public class JDTLocationTest {
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
 
     final Path path = rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java");
-    final TargetSourcePath sourcePath = new TargetSourcePath(path);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAst(sourcePath);
+    final ProductSourcePath productSourcePath = new ProductSourcePath(path);
+    final GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAst(productSourcePath);
 
     final CompilationUnit root = ast.getRoot();
     final TypeDeclaration type = (TypeDeclaration) root.types()
