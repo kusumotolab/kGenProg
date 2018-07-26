@@ -87,8 +87,7 @@ public class KGenProgMainTest {
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
-        .allMatch(variant -> variant.getFitness()
-            .getValue() == 1.0);
+        .allMatch(Variant::isCompleted);
   }
 
   @Ignore // Be ignored but should not be ignored
@@ -102,8 +101,7 @@ public class KGenProgMainTest {
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
-        .allMatch(variant -> variant.getFitness()
-            .getValue() == 1.0);
+        .allMatch(Variant::isCompleted);
   }
 
   @Ignore // Be ignored but should not be ignored
@@ -117,8 +115,7 @@ public class KGenProgMainTest {
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
-        .allMatch(variant -> variant.getFitness()
-            .getValue() == 1.0);
+        .allMatch(Variant::isCompleted);
   }
 
   @Ignore
@@ -135,8 +132,7 @@ public class KGenProgMainTest {
 
     // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
     assertThat(variants).hasSize(1)
-        .allMatch(variant -> variant.getFitness()
-            .getValue() == 1.0);
+        .allMatch(Variant::isCompleted);
   }
 
   @Ignore
@@ -155,7 +151,6 @@ public class KGenProgMainTest {
 
     // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
     assertThat(variants).hasSize(1)
-        .allMatch(variant -> variant.getFitness()
-            .getValue() == 1.0);
+        .allMatch(Variant::isCompleted);
   }
 }

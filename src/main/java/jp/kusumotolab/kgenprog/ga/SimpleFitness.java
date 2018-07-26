@@ -7,6 +7,7 @@ public class SimpleFitness implements Fitness {
 
   private static Logger log = LoggerFactory.getLogger(Fitness.class);
 
+  public static double COMPLETE_VALUE = 1.0d;
   final private double value;
 
   public SimpleFitness(double value) {
@@ -19,4 +20,8 @@ public class SimpleFitness implements Fitness {
     return value;
   }
 
+  @Override
+  public boolean isCompleted() {
+    return 0 == Double.compare(value, COMPLETE_VALUE);
+  }
 }

@@ -28,12 +28,10 @@ public class GenerationalVariantSelection extends DefaultVariantSelection {
     final List<Variant> variantsForSelection = new ArrayList<>();
 
     if (!generations.isEmpty()) {
-      // TODO #171 で導入するAPIを使うべき
       // 最後の世代のうち，Fitness が 1.0でないものを variantsForSelection に追加
       final List<Variant> lastGenerationVariants = generations.get(generations.size() - 1);
       variantsForSelection.addAll(lastGenerationVariants.stream()
-          .filter(v -> 0 != Double.compare(v.getFitness()
-              .getValue(), 1.0d))
+          .filter(variant -> !variant.isCompleted())
           .collect(Collectors.toList()));
     }
 

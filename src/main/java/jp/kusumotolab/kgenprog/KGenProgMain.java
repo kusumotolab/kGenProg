@@ -132,7 +132,7 @@ public class KGenProgMain {
         currentGenerationVariants.add(variant);
 
         // 生成した変異プログラムが，すべてのテストケースをパスした場合
-        if (0 == Double.compare(fitness.getValue(), 1.0d)) {
+        if (fitness.isCompleted()) {
           foundSolutions.incrementAndGet();
 
           log.info(

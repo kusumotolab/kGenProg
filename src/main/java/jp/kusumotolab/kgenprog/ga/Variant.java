@@ -19,7 +19,9 @@ public class Variant {
     this.generatedSourceCode = generatedSourceCode;
   }
 
-
+  public boolean isCompleted() {
+    return fitness.isCompleted();
+  }
 
   public Gene getGene() {
     log.debug("enter getGene()");
