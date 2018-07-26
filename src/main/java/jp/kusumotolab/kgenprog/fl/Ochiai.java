@@ -26,7 +26,7 @@ public class Ochiai implements FaultLocalization {
     final TestResults testResults = testExecutor.start(generatedSourceCode);
 
 
-    final List<Suspiciousness> suspeciousnesses = new ArrayList<>();
+    final List<Suspiciousness> suspiciousnesses = new ArrayList<>();
 
     for (final GeneratedAST ast : variant.getGeneratedSourceCode()
         .getAsts()) {
@@ -44,13 +44,13 @@ public class Ochiai implements FaultLocalization {
           final double value = ef / Math.sqrt((ef + nf) * (ef + ep));
           if (0d < value) {
             final Suspiciousness s = new Suspiciousness(l, value);
-            suspeciousnesses.add(s);
+            suspiciousnesses.add(s);
           }
         }
       }
     }
 
-    return suspeciousnesses;
+    return suspiciousnesses;
   }
 
   private int countLines(final String text) {
