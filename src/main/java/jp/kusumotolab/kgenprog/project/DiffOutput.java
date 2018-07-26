@@ -107,7 +107,7 @@ public class DiffOutput implements ResultOutput {
    * @param sourcePath
    * @return
    */
-  private Path getOriginPath(List<? extends SourcePath> originPaths, SourcePath sourcePath) {
+  private Path getOriginPath(List<ProductSourcePath> originPaths, SourcePath sourcePath) {
     for (SourcePath originPath : originPaths) {
       try {
         if (Files.isSameFile(originPath.path, sourcePath.path)) {
