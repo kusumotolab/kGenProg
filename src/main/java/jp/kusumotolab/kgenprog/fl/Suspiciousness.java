@@ -4,15 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 
-public class Suspiciouseness {
+public class Suspiciousness {
 
-  private static Logger log = LoggerFactory.getLogger(Suspiciouseness.class);
+  private static Logger log = LoggerFactory.getLogger(Suspiciousness.class);
 
   // 疑惑値とその場所のリスト
   final private ASTLocation location;
   final private double value;
 
-  public Suspiciouseness(ASTLocation location, double value) {
+  public Suspiciousness(ASTLocation location, double value) {
     this.location = location;
     this.value = value;
   }

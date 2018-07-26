@@ -6,7 +6,7 @@ import java.util.function.Function;
 import org.eclipse.jdt.core.dom.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
@@ -36,22 +36,22 @@ public class RandomMutation extends Mutation {
     log.debug("exit setCandidates(List<>)");
   }
 
-  public List<Base> exec(final List<Suspiciouseness> suspiciousenesses) {
+  public List<Base> exec(final List<Suspiciousness> suspiciousnesses) {
     log.debug("enter exec(List<>)");
 
     final List<Base> bases = new ArrayList<>();
-    if (suspiciousenesses.isEmpty()) {
+    if (suspiciousnesses.isEmpty()) {
       return bases;
     }
 
-    final Function<Suspiciouseness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
+    final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
 
-    final Roulette<Suspiciouseness> roulette =
-        new Roulette<>(suspiciousenesses, weightFunction, randomNumberGeneration);
+    final Roulette<Suspiciousness> roulette =
+        new Roulette<>(suspiciousnesses, weightFunction, randomNumberGeneration);
 
     for (int i = 0; i < numberOfBase; i++) {
-      final Suspiciouseness suspiciouseness = roulette.exec();
-      final Base base = makeBase(suspiciouseness);
+      final Suspiciousness suspiciousness = roulette.exec();
+      final Base base = makeBase(suspiciousness);
       bases.add(base);
     }
 
@@ -59,9 +59,9 @@ public class RandomMutation extends Mutation {
     return bases;
   }
 
-  private Base makeBase(Suspiciouseness suspiciouseness) {
-    log.debug("enter makeBase(Suspiciouseness)");
-    return new Base(suspiciouseness.getLocation(), makeOperationAtRandom());
+  private Base makeBase(Suspiciousness suspiciousness) {
+    log.debug("enter makeBase(Suspiciousness)");
+    return new Base(suspiciousness.getLocation(), makeOperationAtRandom());
   }
 
   private Operation makeOperationAtRandom() {

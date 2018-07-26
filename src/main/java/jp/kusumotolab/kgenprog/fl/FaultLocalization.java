@@ -7,6 +7,6 @@ import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
 public interface FaultLocalization {
 
-  public List<Suspiciouseness> exec(TargetProject targetProject, Variant variant,
+  public List<Suspiciousness> exec(TargetProject targetProject, Variant variant,
       TestProcessBuilder testExecutor);
 }

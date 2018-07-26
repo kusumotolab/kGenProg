@@ -18,7 +18,7 @@ public class Ochiai implements FaultLocalization {
   private Logger log = LoggerFactory.getLogger(Ochiai.class);
 
   @Override
-  public List<Suspiciouseness> exec(final TargetProject targetProject, final Variant variant,
+  public List<Suspiciousness> exec(final TargetProject targetProject, final Variant variant,
       final TestProcessBuilder testExecutor) {
     log.debug("enter exec(TargetProject, Variant, TestProcessBuilder)");
 
@@ -26,7 +26,7 @@ public class Ochiai implements FaultLocalization {
     final TestResults testResults = testExecutor.start(generatedSourceCode);
 
 
-    final List<Suspiciouseness> suspeciousenesses = new ArrayList<>();
+    final List<Suspiciousness> suspiciousnesses = new ArrayList<>();
 
     for (final GeneratedAST ast : variant.getGeneratedSourceCode()
         .getAsts()) {
@@ -43,14 +43,14 @@ public class Ochiai implements FaultLocalization {
           final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, l);
           final double value = ef / Math.sqrt((ef + nf) * (ef + ep));
           if (0d < value) {
-            final Suspiciouseness s = new Suspiciouseness(l, value);
-            suspeciousenesses.add(s);
+            final Suspiciousness s = new Suspiciousness(l, value);
+            suspiciousnesses.add(s);
           }
         }
       }
     }
 
-    return suspeciousenesses;
+    return suspiciousnesses;
   }
 
   private int countLines(final String text) {

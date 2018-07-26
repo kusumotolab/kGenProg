@@ -23,7 +23,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
@@ -52,7 +52,7 @@ public abstract class Mutation {
     log.debug("exit setCandidates(List<>)");
   }
 
-  public abstract List<Base> exec(List<Suspiciouseness> suspiciousenesses);
+  public abstract List<Base> exec(List<Suspiciousness> suspiciousnesses);
 
   private class Visitor extends ASTVisitor {
 
