@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.SourcePath;
@@ -76,11 +76,11 @@ public class RandomMutationTest {
         .statements();
 
     final double[] value = {0.8};
-    final List<Suspiciouseness> suspiciousenesses = statements.stream()
+    final List<Suspiciousness> suspiciousenesses = statements.stream()
         .map(e -> new JDTASTLocation(sourcePath, e))
         .map(e -> {
           value[0] += 0.1;
-          return new Suspiciouseness(e, value[0]);
+          return new Suspiciousness(e, value[0]);
         })
         .collect(Collectors.toList());
 

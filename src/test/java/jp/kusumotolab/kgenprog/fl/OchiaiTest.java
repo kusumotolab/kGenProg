@@ -24,15 +24,15 @@ public class OchiaiTest {
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
 
     final FaultLocalization fl = new Ochiai();
-    final List<Suspiciouseness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
+    final List<Suspiciousness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
 
-    suspeciousnesses.sort(comparing(Suspiciouseness::getValue, reverseOrder()));
+    suspeciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
     final double susp1 = 1 / Math.sqrt((1 + 0) * (1 + 1)); // 0.707107 (the most suspicious stmt)
     final double susp2 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp3 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp4 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
-    assertThat(suspeciousnesses).extracting(Suspiciouseness::getValue)
+    assertThat(suspeciousnesses).extracting(Suspiciousness::getValue)
         .containsExactly(susp1, susp2, susp3, susp4);
   }
 
@@ -45,15 +45,15 @@ public class OchiaiTest {
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
 
     final FaultLocalization fl = new Ochiai();
-    final List<Suspiciouseness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
+    final List<Suspiciousness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
 
-    suspeciousnesses.sort(comparing(Suspiciouseness::getValue, reverseOrder()));
+    suspeciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
     final double susp1 = 1 / Math.sqrt((1 + 0) * (1 + 1)); // 0.707107 (the most suspicious stmt)
     final double susp2 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp3 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
     final double susp4 = 1 / Math.sqrt((1 + 0) * (1 + 3)); // 0.50
-    assertThat(suspeciousnesses).extracting(Suspiciouseness::getValue)
+    assertThat(suspeciousnesses).extracting(Suspiciousness::getValue)
         .containsExactly(susp1, susp2, susp3, susp4);
   }
 
@@ -66,7 +66,7 @@ public class OchiaiTest {
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
 
     final FaultLocalization fl = new Ochiai();
-    final List<Suspiciouseness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
+    final List<Suspiciousness> suspeciousnesses = fl.exec(targetProject, initialVariant, builder);
 
     assertThat(suspeciousnesses).isEmpty();
   }

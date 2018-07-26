@@ -6,7 +6,7 @@ import java.util.function.Function;
 import org.eclipse.jdt.core.dom.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
@@ -36,7 +36,7 @@ public class RandomMutation extends Mutation {
     log.debug("exit setCandidates(List<>)");
   }
 
-  public List<Base> exec(final List<Suspiciouseness> suspiciousenesses) {
+  public List<Base> exec(final List<Suspiciousness> suspiciousenesses) {
     log.debug("enter exec(List<>)");
 
     final List<Base> bases = new ArrayList<>();
@@ -44,13 +44,13 @@ public class RandomMutation extends Mutation {
       return bases;
     }
 
-    final Function<Suspiciouseness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
+    final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
 
-    final Roulette<Suspiciouseness> roulette =
+    final Roulette<Suspiciousness> roulette =
         new Roulette<>(suspiciousenesses, weightFunction, randomNumberGeneration);
 
     for (int i = 0; i < numberOfBase; i++) {
-      final Suspiciouseness suspiciouseness = roulette.exec();
+      final Suspiciousness suspiciouseness = roulette.exec();
       final Base base = makeBase(suspiciouseness);
       bases.add(base);
     }
@@ -59,7 +59,7 @@ public class RandomMutation extends Mutation {
     return bases;
   }
 
-  private Base makeBase(Suspiciouseness suspiciouseness) {
+  private Base makeBase(Suspiciousness suspiciouseness) {
     log.debug("enter makeBase(Suspiciouseness)");
     return new Base(suspiciouseness.getLocation(), makeOperationAtRandom());
   }

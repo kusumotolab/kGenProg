@@ -9,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.fl.Suspiciouseness;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Crossover;
 import jp.kusumotolab.kgenprog.ga.Fitness;
@@ -114,7 +114,7 @@ public class KGenProgMain {
       // 遺伝子を生成
       final List<Gene> genes = new ArrayList<>();
       for (final Variant variant : selectedVariants) {
-        final List<Suspiciouseness> suspiciousenesses =
+        final List<Suspiciousness> suspiciousenesses =
             faultLocalization.exec(targetProject, variant, testProcessBuilder);
         final List<Base> bases = mutation.exec(suspiciousenesses);
         genes.addAll(variant.getGene()
