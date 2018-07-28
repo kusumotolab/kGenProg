@@ -76,7 +76,7 @@ public class DefaultVariantSelectionTest {
     final List<Variant> nanVariants = IntStream.range(0, 100)
         .mapToObj(e -> {
           if (e == 50) {
-            return new SimpleFitness(1.0d);
+            return new SimpleFitness(SimpleFitness.MAXIMUM_VALUE);
           }
           return new SimpleFitness(Double.NaN);
         })
