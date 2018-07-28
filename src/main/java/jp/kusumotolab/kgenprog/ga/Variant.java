@@ -20,7 +20,7 @@ public class Variant {
   }
 
   public boolean isCompleted() {
-    return fitness.isCompleted();
+    return fitness.isMaximum();
   }
 
   public Gene getGene() {

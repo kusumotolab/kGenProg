@@ -4,5 +4,5 @@ public interface Fitness {
 
   public double getValue();
 
-  public boolean isCompleted();
+  public boolean isMaximum();
 }

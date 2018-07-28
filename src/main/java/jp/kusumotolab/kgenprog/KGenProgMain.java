@@ -107,8 +107,8 @@ public class KGenProgMain {
     final OrdinalNumber foundSolutions = new OrdinalNumber(0);
     GA: while (true) {
 
-      log.info(
-          "in the era of the " + generation.toString() + " generation (" + stopwatch.toString() + ")");
+      log.info("in the era of the " + generation.toString() + " generation (" + stopwatch.toString()
+          + ")");
 
       // 遺伝子を生成
       final List<Gene> genes = new ArrayList<>();
@@ -132,11 +132,11 @@ public class KGenProgMain {
         currentGenerationVariants.add(variant);
 
         // 生成した変異プログラムが，すべてのテストケースをパスした場合
-        if (fitness.isCompleted()) {
+        if (variant.isCompleted()) {
           foundSolutions.incrementAndGet();
 
-          log.info(
-              foundSolutions.toString() + " solution has been found (" + stopwatch.toString() + ")");
+          log.info(foundSolutions.toString() + " solution has been found (" + stopwatch.toString()
+              + ")");
 
           completedVariants.add(variant);
 

@@ -7,7 +7,7 @@ public class SimpleFitness implements Fitness {
 
   private static Logger log = LoggerFactory.getLogger(Fitness.class);
 
-  public static double COMPLETE_VALUE = 1.0d;
+  public static double MAXIMUM_VALUE = 1.0d;
   final private double value;
 
   public SimpleFitness(double value) {
@@ -21,7 +21,8 @@ public class SimpleFitness implements Fitness {
   }
 
   @Override
-  public boolean isCompleted() {
-    return 0 == Double.compare(value, COMPLETE_VALUE);
+  public boolean isMaximum() {
+    log.debug("enter isMaximum()");
+    return 0 == Double.compare(value, MAXIMUM_VALUE);
   }
 }
