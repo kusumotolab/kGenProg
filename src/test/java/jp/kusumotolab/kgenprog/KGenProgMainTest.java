@@ -55,8 +55,8 @@ public class KGenProgMainTest {
   private KGenProgMain createMain(final Path rootPath, final Path productPath,
       final Path testPath) {
 
-    final ProductSourcePath productSourcePath = new ProductSourcePath(rootPath.resolve(bc));
-    final TestSourcePath testSourcePath = new TestSourcePath(rootPath.resolve(bct));
+    final ProductSourcePath productSourcePath = new ProductSourcePath(productPath);
+    final TestSourcePath testSourcePath = new TestSourcePath(testPath);
     final List<ProductSourcePath> productSourcePaths = Arrays.asList(productSourcePath);
     final List<TestSourcePath> testSourcePaths = Arrays.asList(testSourcePath);
 
