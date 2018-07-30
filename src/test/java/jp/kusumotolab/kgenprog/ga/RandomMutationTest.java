@@ -55,7 +55,7 @@ public class RandomMutationTest {
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final TestNumberGeneration randomNumberGeneration = new TestNumberGeneration();
-    final StatementSelection statementSelection =
+    final CandidateSelection statementSelection =
         new RouletteStatementSelection(randomNumberGeneration);
     final RandomMutation randomMutation =
         new RandomMutation(15, new TestNumberGeneration(), statementSelection);

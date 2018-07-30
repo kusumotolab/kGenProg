@@ -13,6 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
+import jp.kusumotolab.kgenprog.ga.CandidateSelection;
 import jp.kusumotolab.kgenprog.ga.Crossover;
 import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
@@ -24,7 +25,6 @@ import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.StatementSelection;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.DiffOutput;
@@ -64,7 +64,7 @@ public class KGenProgMainTest {
         testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
-    final StatementSelection statementSelection =
+    final CandidateSelection statementSelection =
         new RouletteStatementSelection(randomNumberGeneration);
     final Mutation mutation = new RandomMutation(10, randomNumberGeneration, statementSelection);
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
