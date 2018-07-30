@@ -3,11 +3,10 @@ package jp.kusumotolab.kgenprog.ga;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -17,23 +16,11 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 public class RandomMutation extends Mutation {
 
   private static final Logger log = LoggerFactory.getLogger(RandomMutation.class);
-  private final StatementSelection statementSelection;
 
   public RandomMutation(final int numberOfBase,
       final RandomNumberGeneration randomNumberGeneration,
-      final StatementSelection statementSelection) {
-    super(numberOfBase, randomNumberGeneration);
-    this.statementSelection = statementSelection;
-  }
-
-  @Override
-  public void setCandidates(final List<GeneratedAST> candidates) {
-    log.debug("enter setCandidates(List<>)");
-
-    super.setCandidates(candidates);
-    statementSelection.setCandidates(this.candidates);
-
-    log.debug("exit setCandidates(List<>)");
+      final CandidateSelection candidateSelection) {
+    super(numberOfBase, randomNumberGeneration, candidateSelection);
   }
 
   public List<Base> exec(final List<Suspiciousness> suspiciousnesses) {
@@ -59,7 +46,7 @@ public class RandomMutation extends Mutation {
     return bases;
   }
 
-  private Base makeBase(Suspiciousness suspiciousness) {
+  private Base makeBase(final Suspiciousness suspiciousness) {
     log.debug("enter makeBase(Suspiciousness)");
     return new Base(suspiciousness.getLocation(), makeOperationAtRandom());
   }
@@ -78,8 +65,8 @@ public class RandomMutation extends Mutation {
     return new NoneOperation();
   }
 
-  private Statement chooseNodeAtRandom() {
+  private ASTNode chooseNodeAtRandom() {
     log.debug("enter chooseNodeAtRandom()");
-    return statementSelection.exec();
+    return candidateSelection.exec();
   }
 }

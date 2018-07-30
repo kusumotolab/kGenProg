@@ -1,13 +1,12 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import org.eclipse.jdt.core.dom.Statement;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
-public class RouletteStatementSelection implements StatementSelection {
+public class RouletteStatementSelection implements CandidateSelection {
 
-  private List<Statement> candidates;
   private final RandomNumberGeneration randomNumberGeneration;
   private Roulette<Statement> roulette;
 
@@ -16,13 +15,8 @@ public class RouletteStatementSelection implements StatementSelection {
   }
 
   @Override
-  public void setCandidates(final List<Statement> candidates) {
-    this.candidates = candidates;
-
-    this.candidates.sort(Comparator.comparingInt(statement -> {
-      final String string = statement.toString();
-      return string.length();
-    }));
+  public void setCandidates(final List<GeneratedAST> candidates) {
+    final StatementVisitor visitor = new StatementVisitor(candidates);
 
     final Function<Statement, Double> weightFunction = statement -> {
       final String statementString = statement.toString();
@@ -32,7 +26,8 @@ public class RouletteStatementSelection implements StatementSelection {
       return Math.pow(inverse, 2);
     };
 
-    roulette = new Roulette<>(this.candidates, weightFunction, randomNumberGeneration);
+    final List<Statement> statements = visitor.getStatements();
+    roulette = new Roulette<>(statements, weightFunction, randomNumberGeneration);
   }
 
   @Override
