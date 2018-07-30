@@ -27,6 +27,10 @@ public class StatementVisitor extends ASTVisitor {
 
   private List<Statement> statements = new ArrayList<>();
 
+  public StatementVisitor(final Statement statement) {
+    statement.accept(this);
+  }
+
   public StatementVisitor(final List<GeneratedAST> generatedASTS) {
     for (GeneratedAST generatedAST : generatedASTS) {
       final CompilationUnit unit = ((GeneratedJDTAST) generatedAST).getRoot();

@@ -19,15 +19,20 @@ public class RouletteStatementSelection implements CandidateSelection {
     final StatementVisitor visitor = new StatementVisitor(candidates);
 
     final Function<Statement, Double> weightFunction = statement -> {
-      final String statementString = statement.toString();
-      final int statementLength = statementString.length();
+      final int statementWeight = getStatementWeight(statement);
 
-      final double inverse = 1 / ((double) statementLength);
+      final double inverse = 1 / ((double) statementWeight);
       return Math.pow(inverse, 2);
     };
 
     final List<Statement> statements = visitor.getStatements();
     roulette = new Roulette<>(statements, weightFunction, randomNumberGeneration);
+  }
+
+  protected int getStatementWeight(Statement statement) {
+    final StatementVisitor statementVisitor = new StatementVisitor(statement);
+    final List<Statement> statements = statementVisitor.getStatements();
+    return statements.size();
   }
 
   @Override

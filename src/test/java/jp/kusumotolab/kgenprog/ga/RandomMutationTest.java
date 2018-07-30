@@ -114,6 +114,6 @@ public class RandomMutationTest {
         .getDeclaredField("astNode");
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
-    assertThat(node).isSameSourceCodeAs("n++;");
+    assertThat(node).isSameSourceCodeAs("return n;");
   }
 }
