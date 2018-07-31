@@ -53,7 +53,7 @@ public class CUILauncher {
       usage = "Path of a root directory of a target project")
   public void setRootDir(String rootDir) {
     log.debug("enter setRootDir(String)");
-    this.rootDir = Paths.get(rootDir);
+    this.rootDir = Paths.get(rootDir).toAbsolutePath();
   }
 
   public List<ProductSourcePath> getProductSourcePaths() {
@@ -65,7 +65,7 @@ public class CUILauncher {
       metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
   public void setProductSourcePaths(String sourcePaths) {
     log.debug("enter setSourcePaths(String)");
-    this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths)));
+    this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths).toAbsolutePath()));
   }
 
   public List<TestSourcePath> getTestSourcePaths() {
@@ -78,7 +78,7 @@ public class CUILauncher {
       usage = "Paths of the root directories holding test codes")
   public void setTestSourcePaths(String testPaths) {
     log.debug("enter setTestPaths(String)");
-    this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths)));
+    this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths).toAbsolutePath()));
   }
 
   public List<ClassPath> getClassPaths() {
@@ -90,7 +90,7 @@ public class CUILauncher {
       metaVar = "<class path> ...", usage = "Class paths required to build the target project")
   public void setClassPaths(String classPaths) {
     log.debug("enter setClassPaths(String)");
-    this.classPaths.add(new ClassPath(Paths.get(classPaths)));
+    this.classPaths.add(new ClassPath(Paths.get(classPaths).toAbsolutePath()));
   }
 
   // endregion
