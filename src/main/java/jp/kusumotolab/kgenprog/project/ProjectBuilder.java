@@ -103,15 +103,14 @@ public class ProjectBuilder {
       e.printStackTrace();
     }
 
-    final boolean isFailed = !task.call();
+    final boolean isBuildFailed = !task.call();
+    if (isBuildFailed) {
+      log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
+      return EmptyBuildResults.instance;
+    }
 
     final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, isFailed, workPath, diagnostics);
-
-    if (buildResults.isBuildFailed) {
-      log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
-      return buildResults;
-    }
+        new BuildResults(generatedSourceCode, workPath, diagnostics);
 
     // ソースファイルとクラスファイルのマッピング
     final Collection<File> classFiles =
