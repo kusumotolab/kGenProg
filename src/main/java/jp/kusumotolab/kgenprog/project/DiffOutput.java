@@ -10,6 +10,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
@@ -21,6 +23,7 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class DiffOutput implements ResultOutput {
 
+  private Logger log = LoggerFactory.getLogger(DiffOutput.class);
   private final Path workingDir;
 
   public DiffOutput(Path workingDir) {
@@ -149,7 +152,7 @@ public class DiffOutput implements ResultOutput {
 
   /***
    * originPath と diffFile の間のパッチを patchFile へ出力する
-   * 
+   *
    * @param originPath
    * @param diffPath
    * @param patchPath
@@ -167,7 +170,7 @@ public class DiffOutput implements ResultOutput {
       List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
 
-      // unifiedDiff.forEach(System.out::println);
+      unifiedDiff.forEach(e -> log.info(e));
 
       Files.write(patchPath, unifiedDiff);
     } catch (IOException e) {
