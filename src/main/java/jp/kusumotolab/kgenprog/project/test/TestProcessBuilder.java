@@ -52,7 +52,6 @@ public class TestProcessBuilder {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
     // ビルド失敗時の特殊処理
-    // TODO BuildResults自体もNullableなのでNullObjectパターン適用すべきか．
     if (buildResults.isBuildFailed) {
       return EmptyTestResults.instance;
     }

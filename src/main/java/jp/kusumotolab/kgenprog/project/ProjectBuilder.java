@@ -44,24 +44,22 @@ public class ProjectBuilder {
 
   /**
    * @param generatedSourceCode null でなければ与えられた generatedSourceCode からビルド．null の場合は，初期ソースコードからビルド
-   * @param workingDir バイトコード出力ディレクトリ
+   * @param workPath バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
-  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path workingDir) {
+  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path workPath) {
     log.debug("enter build(GeneratedSourceCode, Path)");
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
     // workingDir が存在しなければ生成
-    if (Files.notExists(workingDir)) {
+    if (Files.notExists(workPath)) {
       try {
-        Files.createDirectories(workingDir);
-      } catch (IOException e) {
+        Files.createDirectories(workPath);
+      } catch (final Exception e) {
         log.error(e.getMessage(), e);
-
-        // TODO should be considered
-        return null;
+        return EmptyBuildResults.instance;
       }
     }
 
@@ -71,7 +69,7 @@ public class ProjectBuilder {
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
-    compilationOptions.add(workingDir.toAbsolutePath()
+    compilationOptions.add(workPath.toAbsolutePath()
         .toString());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
@@ -108,7 +106,7 @@ public class ProjectBuilder {
     final boolean isFailed = !task.call();
 
     final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, isFailed, workingDir, diagnostics);
+        new BuildResults(generatedSourceCode, isFailed, workPath, diagnostics);
 
     if (buildResults.isBuildFailed) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
@@ -117,7 +115,7 @@ public class ProjectBuilder {
 
     // ソースファイルとクラスファイルのマッピング
     final Collection<File> classFiles =
-        FileUtils.listFiles(workingDir.toFile(), new String[] {"class"}, true);
+        FileUtils.listFiles(workPath.toFile(), new String[] {"class"}, true);
 
     // TODO: https://github.com/kusumotolab/kGenProg/pull/154
     // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
