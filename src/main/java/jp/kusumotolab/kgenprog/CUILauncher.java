@@ -76,7 +76,7 @@ public class CUILauncher {
   @Option(name = "-t", aliases = "--test", required = true,
       handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
       usage = "Paths of the root directories holding test codes")
-  public void setSourceTestPaths(String testPaths) {
+  public void setTestSourcePaths(String testPaths) {
     log.debug("enter setTestPaths(String)");
     this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths)));
   }
