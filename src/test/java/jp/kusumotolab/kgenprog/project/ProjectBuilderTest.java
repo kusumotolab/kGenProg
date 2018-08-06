@@ -17,7 +17,7 @@ public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample00() {
-    final Path rootPath = Paths.get("example/example00");
+    final Path rootPath = Paths.get("example/BuildFailure01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);

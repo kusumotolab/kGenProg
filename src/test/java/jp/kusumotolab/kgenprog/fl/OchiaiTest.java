@@ -59,7 +59,7 @@ public class OchiaiTest {
 
   @Test
   public void testForFailedProject() throws IOException {
-    final Path rootPath = Paths.get("example/example00");
+    final Path rootPath = Paths.get("example/BuildFailure01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
