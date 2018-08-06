@@ -20,7 +20,7 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ResultOutput;
+import jp.kusumotolab.kgenprog.project.ResultGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
@@ -36,7 +36,7 @@ public class KGenProgMain {
   private final SourceCodeValidation sourceCodeValidation;
   private final VariantSelection variantSelection;
   private final TestProcessBuilder testProcessBuilder;
-  private final ResultOutput resultGenerator;
+  private final ResultGenerator resultGenerator;
 
   // 以下，一時的なフィールド #146 で解決すべき
   private final long timeoutSeconds;
@@ -52,7 +52,7 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final ResultOutput resultGenerator, final Path workingPath) {
+      final ResultGenerator resultGenerator, final Path workingPath) {
 
     this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
         sourceCodeValidation, variantSelection, resultGenerator, workingPath, 60, 10, 1);
@@ -62,7 +62,7 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final ResultOutput resultGenerator, final Path workingPath, final long timeout,
+      final ResultGenerator resultGenerator, final Path workingPath, final long timeout,
       final int maxGeneration, final int requiredSolutions) {
 
     this.workingPath = workingPath;
@@ -165,7 +165,7 @@ public class KGenProgMain {
       generation.getAndIncrement();
     }
 
-    resultGenerator.outputResult(targetProject, completedVariants);
+    resultGenerator.exec(targetProject, completedVariants);
 
     log.debug("exit run()");
     return completedVariants;

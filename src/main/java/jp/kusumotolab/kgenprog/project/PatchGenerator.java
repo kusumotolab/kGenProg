@@ -21,17 +21,17 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
-public class DiffOutput implements ResultOutput {
+public class PatchGenerator implements ResultGenerator {
 
-  private Logger log = LoggerFactory.getLogger(DiffOutput.class);
+  private Logger log = LoggerFactory.getLogger(PatchGenerator.class);
   private final Path workingDir;
 
-  public DiffOutput(Path workingDir) {
+  public PatchGenerator(Path workingDir) {
     this.workingDir = workingDir;
   }
 
   @Override
-  public void outputResult(TargetProject targetProject, List<Variant> modifiedVariants) {
+  public void exec(TargetProject targetProject, List<Variant> modifiedVariants) {
 
     List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
 

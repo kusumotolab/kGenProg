@@ -34,7 +34,7 @@ public class DiffOutputTest {
   public void testDiffOutput1() throws IOException {
     Path basePath = Paths.get("example/example01");
     final Path outdirPath = basePath.resolve("modified");
-    DiffOutput diffOutput = new DiffOutput(outdirPath);
+    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
@@ -62,7 +62,7 @@ public class DiffOutputTest {
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
-    diffOutput.outputResult(project, modVariant);
+    patchGenerator.exec(project, modVariant);
 
     String modSource = new String(
         Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
@@ -76,7 +76,7 @@ public class DiffOutputTest {
   public void testDiffOutput2() throws IOException {
     Path basePath = Paths.get("example/example03");
     final Path outdirPath = basePath.resolve("modified");
-    DiffOutput diffOutput = new DiffOutput(outdirPath);
+    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "\n" + "public class Util {\n"
         + "\tpublic static int plus(int n) {\n" + "\t}\n" + "\n"
@@ -106,7 +106,7 @@ public class DiffOutputTest {
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
-    diffOutput.outputResult(project, modVariant);
+    patchGenerator.exec(project, modVariant);
 
     String modSource =
         new String(Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.Util.java")));
@@ -120,7 +120,7 @@ public class DiffOutputTest {
   public void testDiffOutput3() throws IOException {
     Path basePath = Paths.get("example/example01");
     final Path outdirPath = basePath.resolve("modified");
-    DiffOutput diffOutput = new DiffOutput(outdirPath);
+    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    if (n > 0) {\n" + "      n--;\n"
@@ -159,7 +159,7 @@ public class DiffOutputTest {
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
-    diffOutput.outputResult(project, modVariant);
+    patchGenerator.exec(project, modVariant);
 
     String modSource = new String(
         Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
@@ -174,7 +174,7 @@ public class DiffOutputTest {
   public void testDiffOutput4() throws IOException {
     Path basePath = Paths.get("example/example01/");
     final Path outdirPath = basePath.resolve("modified");
-    DiffOutput diffOutput = new DiffOutput(outdirPath);
+    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
     String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    {\n" + "\t\ta();\n" + "\t}\n"
@@ -214,7 +214,7 @@ public class DiffOutputTest {
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
-    diffOutput.outputResult(project, modVariant);
+    patchGenerator.exec(project, modVariant);
 
     String modSource = new String(
         Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
