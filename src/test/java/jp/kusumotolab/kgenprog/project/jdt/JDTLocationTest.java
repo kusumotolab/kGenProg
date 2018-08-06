@@ -20,7 +20,7 @@ public class JDTLocationTest {
 
   @Test
   public void testInferLineNumbers() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/CloseToZero01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();

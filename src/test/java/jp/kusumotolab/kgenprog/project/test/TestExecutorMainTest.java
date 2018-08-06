@@ -47,7 +47,7 @@ public class TestExecutorMainTest {
 
   @Test
   public void testMainSuccess01() throws Exception {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/CloseToZero01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
@@ -87,7 +87,7 @@ public class TestExecutorMainTest {
 
   @Test
   public void testMainSuccess02() throws Exception {
-    final Path rootPath = Paths.get("example/example02");
+    final Path rootPath = Paths.get("example/CloseToZero02");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
@@ -140,7 +140,7 @@ public class TestExecutorMainTest {
   public void testMainFailureByInvalidrootPath() throws Exception {
 
     // rootPathがバグってる
-    final Path rootPath = Paths.get("example/example01xxxxxxxx");
+    final Path rootPath = Paths.get("example/CloseToZero01xxxxxxxx");
     final Path workPath = rootPath.resolve("bin");
 
     // 例外を吐くはず（具体的にどの例外を吐くかはひとまず確認せず）

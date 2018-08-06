@@ -32,7 +32,7 @@ public class DiffOutputTest {
 
   @Test
   public void testDiffOutput1() throws IOException {
-    Path basePath = Paths.get("example/example01");
+    Path basePath = Paths.get("example/CloseToZero01");
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
@@ -74,7 +74,7 @@ public class DiffOutputTest {
 
   @Test
   public void testDiffOutput2() throws IOException {
-    Path basePath = Paths.get("example/example03");
+    Path basePath = Paths.get("example/CloseToZero03");
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
@@ -118,7 +118,7 @@ public class DiffOutputTest {
 
   @Test
   public void testDiffOutput3() throws IOException {
-    Path basePath = Paths.get("example/example01");
+    Path basePath = Paths.get("example/CloseToZero01");
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
@@ -172,7 +172,7 @@ public class DiffOutputTest {
   @SuppressWarnings("unchecked")
   @Test
   public void testDiffOutput4() throws IOException {
-    Path basePath = Paths.get("example/example01/");
+    Path basePath = Paths.get("example/CloseToZero01/");
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 

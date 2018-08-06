@@ -17,7 +17,7 @@ public class JDTOperationTest {
   public void testApplyHandlingException() {
     final JDTOperation operation = new ExceptionOperation();
 
-    final Path path = Paths.get("example/example01/src/jp/kusumotolab/BuggyCalculator.java");
+    final Path path = Paths.get("example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java");
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();

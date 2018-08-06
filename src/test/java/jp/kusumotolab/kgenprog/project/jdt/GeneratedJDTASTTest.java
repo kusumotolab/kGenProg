@@ -199,7 +199,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterInsertOperation() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
@@ -249,7 +249,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterDeleteOperation() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
@@ -286,7 +286,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterReplaceOperation() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
@@ -340,7 +340,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testGetMessageDigest01() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();

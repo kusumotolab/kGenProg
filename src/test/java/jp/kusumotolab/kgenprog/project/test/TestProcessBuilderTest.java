@@ -33,7 +33,7 @@ public class TestProcessBuilderTest {
 
   @Test
   public void testStart01() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/CloseToZero01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
 
@@ -64,7 +64,7 @@ public class TestProcessBuilderTest {
 
   @Test
   public void testStartWithOtherworkPath01() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/CloseToZero01");
 
     // exampleとは全く別のworkPathで動作確認
     final Path workPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-tmp");
@@ -81,7 +81,7 @@ public class TestProcessBuilderTest {
   @Test
   public void testStartWithOtherworkPath02() {
     // 絶対パスにしてみる
-    final Path rootPath = Paths.get("example/example01")
+    final Path rootPath = Paths.get("example/CloseToZero01")
         .toAbsolutePath();
 
     // exampleとは全く別のworkPathで動作確認

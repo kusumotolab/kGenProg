@@ -29,7 +29,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
  */
 public class MemoryClassLoaderTest {
 
-  final static Path rootPath = Paths.get("example/example01");
+  final static Path rootPath = Paths.get("example/CloseToZero01");
   final static Path workPath = rootPath.resolve("bin");
 
   final static String bc = "jp.kusumotolab.BuggyCalculator";

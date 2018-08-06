@@ -31,7 +31,7 @@ public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample01() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/CloseToZero01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
@@ -57,7 +57,7 @@ public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample02() {
-    final Path rootPath = Paths.get("example/example02");
+    final Path rootPath = Paths.get("example/CloseToZero02");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
@@ -83,7 +83,7 @@ public class ProjectBuilderTest {
 
   @Test
   public void testBuildStringForExample03() {
-    final Path rootPath = Paths.get("example/example03");
+    final Path rootPath = Paths.get("example/CloseToZero03");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
@@ -110,8 +110,8 @@ public class ProjectBuilderTest {
   // TODO: https://github.com/kusumotolab/kGenProg/pull/154
   // @Test
   public void testRemovingOldClassFiles() throws Exception {
-    final Path rootPath03 = Paths.get("example/example03");
-    final Path rootPath02 = Paths.get("example/example02");
+    final Path rootPath03 = Paths.get("example/CloseToZero03");
+    final Path rootPath02 = Paths.get("example/CloseToZero02");
 
     final Path workPath = rootPath03.resolve("bin");
 
