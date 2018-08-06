@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,17 +61,11 @@ public class PatchGenerator implements ResultGenerator {
       for (GeneratedAST ast : code.getAsts()) {
         try {
           GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
-          Path originPath =
-              getOriginPath(targetProject.getProductSourcePaths(), jdtAST.getProductSourcePath());
-
-          if (originPath == null) {
-            continue;
-          }
+          Path originPath = jdtAST.getProductSourcePath().path;
 
           // 修正ファイル作成
           Document document = new Document(new String(Files.readAllBytes(originPath)));
-          TextEdit edit = jdtAST.getRoot()
-              .rewrite(document, null);
+          TextEdit edit = jdtAST.getRoot().rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
             Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
@@ -98,30 +93,8 @@ public class PatchGenerator implements ResultGenerator {
    */
   private void activateRecordModifications(GeneratedSourceCode code) {
     for (GeneratedAST ast : code.getAsts()) {
-      ((GeneratedJDTAST) ast).getRoot()
-          .recordModifications();
+      ((GeneratedJDTAST) ast).getRoot().recordModifications();
     }
-  }
-
-  /**
-   * 変更前ファイルのパス取得
-   *
-   * @param originPaths
-   * @param sourcePath
-   * @return
-   */
-  private Path getOriginPath(List<ProductSourcePath> originPaths, SourcePath sourcePath) {
-    for (SourcePath originPath : originPaths) {
-      try {
-        if (Files.isSameFile(originPath.path, sourcePath.path)) {
-          return originPath.path;
-        }
-      } catch (IOException e) {
-        // TODO 自動生成された catch ブロック
-        e.printStackTrace();
-      }
-    }
-    return null;
   }
 
   /***
@@ -136,13 +109,10 @@ public class PatchGenerator implements ResultGenerator {
     List<GeneratedSourceCode> modified = new ArrayList<>();
 
     for (Variant variant : modifiedVariants) {
-      GeneratedSourceCode targetCode = targetProject.getInitialVariant()
-          .getGeneratedSourceCode();
+      GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
       activateRecordModifications(targetCode);
-      for (Base base : variant.getGene()
-          .getBases()) {
-        targetCode = base.getOperation()
-            .applyDirectly(targetCode, base.getTargetLocation());
+      for (Base base : variant.getGene().getBases()) {
+        targetCode = base.getOperation().applyDirectly(targetCode, base.getTargetLocation());
       }
       modified.add(targetCode);
     }
@@ -164,8 +134,7 @@ public class PatchGenerator implements ResultGenerator {
 
       Patch<String> diff = DiffUtils.diff(origin, modified);
 
-      String fileName = originPath.getFileName()
-          .toString();
+      String fileName = originPath.getFileName().toString();
 
       List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
