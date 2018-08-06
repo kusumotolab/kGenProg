@@ -49,7 +49,7 @@ public class PatchGenerator implements ResultGenerator {
     modifiedCode.addAll(applyAllModificationDirectly(targetProject, modifiedVariants));
 
     for (GeneratedSourceCode code : modifiedCode) {
-      final String variantDir = "variant" + modifiedCode.indexOf(code) + 1;
+      final String variantDir = "variant" + (modifiedCode.indexOf(code) + 1);
       final Path variantBasePath = workingDir.resolve(variantDir);
 
       try {

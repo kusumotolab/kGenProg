@@ -65,7 +65,7 @@ public class PatchGeneratorTest {
     patchGenerator.exec(project, modVariant);
 
     String modSource = new String(
-        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+        Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -109,7 +109,7 @@ public class PatchGeneratorTest {
     patchGenerator.exec(project, modVariant);
 
     String modSource =
-        new String(Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.Util.java")));
+        new String(Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.Util.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -162,7 +162,7 @@ public class PatchGeneratorTest {
     patchGenerator.exec(project, modVariant);
 
     String modSource = new String(
-        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+        Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -217,7 +217,7 @@ public class PatchGeneratorTest {
     patchGenerator.exec(project, modVariant);
 
     String modSource = new String(
-        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+        Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
