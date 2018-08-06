@@ -34,7 +34,7 @@ public class TestResultsTest {
   final static FullyQualifiedName test04 = new TestFullyQualifiedName(bc + ".test04");
 
   private TestResults generateTestResultsForExample01() throws Exception {
-    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
@@ -51,7 +51,7 @@ public class TestResultsTest {
   @Test
   public void checkFLMetricsInTestResultsForExample02() throws Exception {
     // actual確保のためにテストの実行
-    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();

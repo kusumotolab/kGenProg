@@ -1,61 +1,56 @@
 package example;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Arrays;
-
 public class BuggyCalculator {
-	public int close_to_zero(int n) {
-		if (n > 0) {
-			n = Util.minus(n);
-		} else {
-			n = Util.plus(n);
-		}
-		// 内部クラスの生成と実行
-		InnerClass innerClass = new InnerClass();
-		innerClass.exec();
 
-		// 静的内部クラスの実行
-		StaticInnerClass.exec();
+  /**
+   * 整数をゼロに一つ近づけるメソッド
+   * 
+   * bug: 0を与えたときに0であるべきが1になる
+   * 
+   * fix1: 'if(n==0){return n;}' をメソッド冒頭に追加<br>
+   * fix2: 'if(n==0){return n;}' をelseブロックの冒頭に追加<br>
+   * fix3: 'if(n==0){n--;};' をelseブロックの冒頭に追加<br>
+   * fix4: 'else if(n==0){}' をif-elseの間に追加
+   * 
+   * @param n
+   * @return
+   */
+  public int close_to_zero(int n) {
+    if (n > 0) {
+      n--;
+    } else {
+      n++;
+    }
+    return n;
+  }
 
-		// 外部クラスの生成と実行
-		OuterClass outerClass = new OuterClass();
-		outerClass.exec();
+  // 再利用されるべきメソッド1
+  public int reuse_me1(int n) {
+    if (n == 0) { // fix1とfix2で再利用されるStatement
+      return n;
+    }
+    return 0;
+  }
 
-		// 無名クラスの生成と利用
-		PrintStream printStream = new PrintStream(new PrintStream(new OutputStream() {
-			@Override
-			public void write(int b) {
-				b++; // do nothing but be measured by jacoco 
-			}
-		}));
-		printStream.write(3); // call anonymous class
-		printStream.close();
+  // 再利用されるべきメソッド2
+  public void reuse_me2(int n) {
+    if (n == 0) { // fix3で再利用されるStatement
+      n--;
+    }
+  }
 
-		// ラムダの利用
-		Arrays.asList("xxx").stream().map(s -> s.toString());
+  // 再利用されるべきメソッド3
+  public void reuse_me3(int n) {
+    if (n > 0) {
+    } else if (n == 0) { // fix4で再利用されるStatement
+    }
+  }
 
-		return n;
-	}
-
-	// a simple inner class                            
-	class InnerClass {
-		void exec() {
-			new String(); // do nothing but be measured by jacoco
-		}
-	}
-
-	// a static inner class                            
-	static class StaticInnerClass {
-		static void exec() {
-			new String(); // do nothing but be measured by jacoco
-		}
-	}
-}
-
-class OuterClass {
-	void exec() {
-		new String(); // do nothing but be measured by jacoco
-	}
+  // 再利用されても意味のないメソッド群
+  public void reuse_me_fake(int n) {
+    int i = 0;
+    i++;
+    n += i;
+  }
 
 }

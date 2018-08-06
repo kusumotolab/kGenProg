@@ -44,7 +44,7 @@ public class TestExecutorTest {
   final static FullyQualifiedName dummyTest01 = new TestFullyQualifiedName(utt + ".dummyTest01");
 
   private TestResults generateTestResultsForExample01() throws Exception {
-    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
@@ -57,7 +57,7 @@ public class TestExecutorTest {
   }
 
   private TestResults generateTestResultsForExample02() throws Exception {
-    final Path rootPath = Paths.get("example/CloseToZero02");
+    final Path rootPath = Paths.get("example/BuildSuccess02");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
@@ -71,7 +71,7 @@ public class TestExecutorTest {
 
   @SuppressWarnings("unused")
   private TestResults generateTestResultsForExample03() throws Exception {
-    final Path rootPath = Paths.get("example/CloseToZero03");
+    final Path rootPath = Paths.get("example/BuildSuccess03");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();

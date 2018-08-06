@@ -30,7 +30,7 @@ public class TargetProjectFactoryTest {
 
   @Test
   public void testCreateByBasePath01() {
-    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
     final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
@@ -44,7 +44,7 @@ public class TargetProjectFactoryTest {
 
   @Test
   public void testCreateByBasePath02() {
-    final Path rootPath = Paths.get("example/CloseToZero02");
+    final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
     final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
@@ -60,7 +60,7 @@ public class TargetProjectFactoryTest {
 
   @Test
   public void testCreateByCompletelySpecified01() {
-    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
 
     final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
     final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
@@ -77,7 +77,7 @@ public class TargetProjectFactoryTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testCreateFailure01() {
-    final Path rootPath = Paths.get("example/CloseToZero01xxxxxxxxx");
+    final Path rootPath = Paths.get("example/BuildSuccess01xxxxxxxxx");
 
     // Exception to be thrown
     TargetProjectFactory.create(rootPath);
@@ -88,7 +88,7 @@ public class TargetProjectFactoryTest {
     // Factoryとして正しく振る舞っているかを確認．
     // スタブを実行する一時的なテスト．
 
-    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
 
     // runtime exceptionを隠すためにsystem.errを退避して無効化
     final PrintStream ps = System.err;

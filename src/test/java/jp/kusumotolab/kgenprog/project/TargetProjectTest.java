@@ -17,7 +17,7 @@ public class TargetProjectTest {
 
   @Test
   public void testGenerate01() throws IOException {
-    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
     final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
@@ -29,7 +29,7 @@ public class TargetProjectTest {
 
   @Test
   public void testGenerate02() throws IOException {
-    final Path rootPath = Paths.get("example/CloseToZero02");
+    final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
     final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));

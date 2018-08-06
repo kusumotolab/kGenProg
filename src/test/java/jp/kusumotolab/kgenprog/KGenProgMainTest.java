@@ -79,7 +79,7 @@ public class KGenProgMainTest {
 
   @Test
   public void testExample04() {
-    final Path rootPath = Paths.get("example/CloseToZero04");
+    final Path rootPath = Paths.get("example/CloseToZero01");
     final Path productPath = rootPath.resolve(bc);
     final Path testPath = rootPath.resolve(bct);
 
@@ -93,7 +93,7 @@ public class KGenProgMainTest {
   @Ignore // Be ignored but should not be ignored
   @Test
   public void testExample05() {
-    final Path rootPath = Paths.get("example/CloseToZero05");
+    final Path rootPath = Paths.get("example/CloseToZero02");
     final Path productPath = rootPath.resolve(bc);
     final Path testPath = rootPath.resolve(bct);
 
@@ -107,7 +107,7 @@ public class KGenProgMainTest {
   @Ignore // Be ignored but should not be ignored
   @Test
   public void testExample06() {
-    final Path rootPath = Paths.get("example/CloseToZero06");
+    final Path rootPath = Paths.get("example/CloseToZero03");
     final Path productPath = rootPath.resolve(bc);
     final Path testPath = rootPath.resolve(bct);
 
