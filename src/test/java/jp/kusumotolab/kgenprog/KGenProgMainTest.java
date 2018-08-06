@@ -121,7 +121,7 @@ public class KGenProgMainTest {
   @Ignore
   @Test
   public void testExample07() {
-    final Path rootPath = Paths.get("example/example07");
+    final Path rootPath = Paths.get("example/GCD01");
     final String gcd = "src/jp/kusumotolab/GreatestCommonDivider.java";
     final String gcdt = "src/jp/kusumotolab/GreatestCommonDividerTest.java";
     final Path productPath = rootPath.resolve(gcd);
