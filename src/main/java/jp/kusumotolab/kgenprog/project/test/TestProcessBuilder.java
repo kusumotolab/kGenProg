@@ -51,7 +51,8 @@ public class TestProcessBuilder {
 
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode, this.workingDir);
 
-    // ビルド失敗時の特殊処理
+    // performance patch: ビルド失敗時の特殊処理
+    // see: https://github.com/kusumotolab/kGenProg/pull/224#pullrequestreview-143431939
     if (buildResults.isBuildFailed) {
       return EmptyTestResults.instance;
     }

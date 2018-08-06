@@ -106,6 +106,7 @@ public class TestProcessBuilderTest {
     final Variant variant = targetProject.getInitialVariant();
     final TestResults r = builder.start(variant.getGeneratedSourceCode());
 
+    assertThat(r).isInstanceOf(EmptyTestResults.class);
     assertThat(r.getExecutedTestFQNs()).isEmpty();
     assertThat(r.getSuccessedTestResults()).isEmpty();
     assertThat(r.getFailedTestResults()).isEmpty();
