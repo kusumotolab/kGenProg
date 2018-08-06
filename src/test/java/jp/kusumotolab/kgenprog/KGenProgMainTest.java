@@ -138,7 +138,7 @@ public class KGenProgMainTest {
   @Ignore
   @Test
   public void testExample08() {
-    final Path rootPath = Paths.get("example/exmaple08");
+    final Path rootPath = Paths.get("example/QuickSort01");
     final String qs = "src/jp/kusumotolab/QuickSort.java";
     final String qst = "src/jp/kusumotolab/QuickSortTest.java";
     final Path productPath = rootPath.resolve(qs);
