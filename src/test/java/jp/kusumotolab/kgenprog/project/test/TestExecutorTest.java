@@ -17,20 +17,20 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestExecutorTest {
 
-  final static String bc = "jp.kusumotolab.BuggyCalculator";
-  final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
+  final static String bc = "example.BuggyCalculator";
+  final static String bct = "example.BuggyCalculatorTest";
   final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
   final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bct);
 
-  final static String ut = "jp.kusumotolab.Util";
-  final static String utt = "jp.kusumotolab.UtilTest";
+  final static String ut = "example.Util";
+  final static String utt = "example.UtilTest";
   final static FullyQualifiedName util = new TargetFullyQualifiedName(ut);
   final static FullyQualifiedName utilTest = new TestFullyQualifiedName(utt);
 
   final static FullyQualifiedName inner = new TargetFullyQualifiedName(bc + "$InnerClass");
   final static FullyQualifiedName stInner = new TargetFullyQualifiedName(bc + "$StaticInnerClass");
   final static FullyQualifiedName anonymous = new TargetFullyQualifiedName(bc + "$1");
-  final static FullyQualifiedName outer = new TargetFullyQualifiedName("jp.kusumotolab.OuterClass");
+  final static FullyQualifiedName outer = new TargetFullyQualifiedName("example.OuterClass");
 
   final static FullyQualifiedName test01 = new TestFullyQualifiedName(bct + ".test01");
   final static FullyQualifiedName test02 = new TestFullyQualifiedName(bct + ".test02");

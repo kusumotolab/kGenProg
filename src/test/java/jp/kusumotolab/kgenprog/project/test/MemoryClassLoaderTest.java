@@ -32,8 +32,8 @@ public class MemoryClassLoaderTest {
   final static Path rootPath = Paths.get("example/CloseToZero01");
   final static Path workPath = rootPath.resolve("bin");
 
-  final static String bc = "jp.kusumotolab.BuggyCalculator";
-  final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
+  final static String bc = "example.BuggyCalculator";
+  final static String bct = "example.BuggyCalculatorTest";
   final static FullyQualifiedName bcfqn = new TargetFullyQualifiedName(bc);
   final static FullyQualifiedName bctfqn = new TestFullyQualifiedName(bct);
 

@@ -10,10 +10,10 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TargetProjectTest {
 
-  private final String bc = "src/jp/kusumotolab/BuggyCalculator.java";
-  private final String bct = "src/jp/kusumotolab/BuggyCalculatorTest.java";
-  private final String ut = "src/jp/kusumotolab/Util.java";
-  private final String utt = "src/jp/kusumotolab/UtilTest.java";
+  private final String bc = "src/example/BuggyCalculator.java";
+  private final String bct = "src/example/BuggyCalculatorTest.java";
+  private final String ut = "src/example/Util.java";
+  private final String utt = "src/example/UtilTest.java";
 
   @Test
   public void testGenerate01() throws IOException {

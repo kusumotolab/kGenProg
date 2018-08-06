@@ -16,8 +16,8 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestProcessBuilderTest {
 
-  final static String bc = "jp.kusumotolab.BuggyCalculator";
-  final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
+  final static String bc = "example.BuggyCalculator";
+  final static String bct = "example.BuggyCalculatorTest";
   final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
   final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bct);
 

@@ -199,7 +199,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterInsertOperation() {
-    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/example/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
@@ -249,7 +249,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterDeleteOperation() {
-    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/example/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
@@ -286,7 +286,7 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterReplaceOperation() {
-    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/example/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
@@ -340,14 +340,14 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testGetMessageDigest01() {
-    final String bc = "example/CloseToZero01/src/jp/kusumotolab/BuggyCalculator.java";
+    final String bc = "example/CloseToZero01/src/example/BuggyCalculator.java";
     final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
 
-    assertThat(jdtAst.getMessageDigest()).isEqualTo("2770dd8d6e41a26a02f95939d03e89df");
+    assertThat(jdtAst.getMessageDigest()).isEqualTo("b870f71ce95c6a6192b6e4f205ad8b64");
   }
 
   @Test

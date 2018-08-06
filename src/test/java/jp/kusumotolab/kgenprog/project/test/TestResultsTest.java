@@ -24,7 +24,7 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 public class TestResultsTest {
 
-  final static String bc = "jp.kusumotolab.BuggyCalculator";
+  final static String bc = "example.BuggyCalculator";
   final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
   final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bc + "Test");
 
@@ -122,35 +122,35 @@ public class TestResultsTest {
     final String expected = new StringBuilder().append("")
         .append("[")
         .append("  {")
-        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test04\",")
+        .append("    \"executedTestFQN\": \"example.BuggyCalculatorTest.test02\",")
         .append("    \"wasFailed\": false,")
         .append("    \"coverages\": [")
         .append(
-            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
+            "      {\"executedTargetFQN\": \"example.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
         .append("    ]")
         .append("  },")
         .append("  {")
-        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test03\",")
+        .append("    \"executedTestFQN\": \"example.BuggyCalculatorTest.test03\",")
         .append("    \"wasFailed\": true,")
         .append("    \"coverages\": [")
         .append(
-            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
+            "      {\"executedTargetFQN\": \"example.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
         .append("    ]")
         .append("  },")
         .append("  {")
-        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test02\",")
+        .append("    \"executedTestFQN\": \"example.BuggyCalculatorTest.test04\",")
         .append("    \"wasFailed\": false,")
         .append("    \"coverages\": [")
         .append(
-            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
+            "      {\"executedTargetFQN\": \"example.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
         .append("    ]")
         .append("  },")
         .append("  {")
-        .append("    \"executedTestFQN\": \"jp.kusumotolab.BuggyCalculatorTest.test01\",")
+        .append("    \"executedTestFQN\": \"example.BuggyCalculatorTest.test01\",")
         .append("    \"wasFailed\": false,")
         .append("    \"coverages\": [")
         .append(
-            "      {\"executedTargetFQN\": \"jp.kusumotolab.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
+            "      {\"executedTargetFQN\": \"example.BuggyCalculator\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
         .append("    ]")
         .append("  }")
         .append("]")

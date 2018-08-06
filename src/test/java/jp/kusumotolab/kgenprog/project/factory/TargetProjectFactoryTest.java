@@ -18,10 +18,10 @@ import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion
 public class TargetProjectFactoryTest {
 
   // aliases for tested elements
-  private final static String bc = "src/jp/kusumotolab/BuggyCalculator.java";
-  private final static String bct = "src/jp/kusumotolab/BuggyCalculatorTest.java";
-  private final static String ut = "src/jp/kusumotolab/Util.java";
-  private final static String utt = "src/jp/kusumotolab/UtilTest.java";
+  private final static String bc = "src/example/BuggyCalculator.java";
+  private final static String bct = "src/example/BuggyCalculatorTest.java";
+  private final static String ut = "src/example/Util.java";
+  private final static String utt = "src/example/UtilTest.java";
   private final static String ju = "lib/junit4/junit-4.12.jar";
   private final static String hm = "lib/junit4/hamcrest-core-1.3.jar";
 

@@ -25,7 +25,7 @@ public class JDTLocationTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
 
-    final Path path = rootPath.resolve("src/jp/kusumotolab/BuggyCalculator.java");
+    final Path path = rootPath.resolve("src/example/BuggyCalculator.java");
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);
     final GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAst(productSourcePath);
 

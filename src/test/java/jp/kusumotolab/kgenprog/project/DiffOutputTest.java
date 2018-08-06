@@ -36,7 +36,7 @@ public class DiffOutputTest {
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
+    String expected = "package example;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
 
     TargetProject project = TargetProjectFactory.create(basePath);
@@ -55,8 +55,7 @@ public class DiffOutputTest {
         .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        statement);
+        new ProductSourcePath(basePath.resolve("src/example/BuggyCalculator.java")), statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -65,7 +64,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     String modSource = new String(
-        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+        Files.readAllBytes(outdirPath.resolve("variant01/example.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -78,7 +77,7 @@ public class DiffOutputTest {
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "\n" + "public class Util {\n"
+    String expected = "package example;\n" + "\n" + "public class Util {\n"
         + "\tpublic static int plus(int n) {\n" + "\t}\n" + "\n"
         + "\tpublic static int minus(int n) {\n" + "\t\treturn n - 1;\n" + "\t}\n" + "\n"
         + "\t// テストからのみ実行されるダミー関数\n" + "\tpublic static void dummy() {\n" + "\t\tnew String();\n"
@@ -100,7 +99,7 @@ public class DiffOutputTest {
         .get(0);
     DeleteOperation operation = new DeleteOperation();
     JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Util.java")), statement);
 
     GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
     List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -109,7 +108,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     String modSource =
-        new String(Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.Util.java")));
+        new String(Files.readAllBytes(outdirPath.resolve("variant01/example.Util.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -122,7 +121,7 @@ public class DiffOutputTest {
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
+    String expected = "package example;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    if (n > 0) {\n" + "      n--;\n"
         + "    }\n" + " else {\n" + "      n++;\n" + "    }\n" + "    a();\n" + "\treturn n;\n"
         + "  }\n" + "}\n\n";
@@ -142,8 +141,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        statement);
+        new ProductSourcePath(basePath.resolve("src/example/BuggyCalculator.java")), statement);
 
     // 挿入対象生成
     AST jdtAST = ast.getRoot()
@@ -162,7 +160,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     String modSource = new String(
-        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+        Files.readAllBytes(outdirPath.resolve("variant01/example.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -176,7 +174,7 @@ public class DiffOutputTest {
     final Path outdirPath = basePath.resolve("modified");
     DiffOutput diffOutput = new DiffOutput(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
+    String expected = "package example;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    {\n" + "\t\ta();\n" + "\t}\n"
         + "    return n;\n" + "  }\n" + "}\n\n";
 
@@ -195,8 +193,7 @@ public class DiffOutputTest {
         .statements()
         .get(0);
     JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        statement);
+        new ProductSourcePath(basePath.resolve("src/example/BuggyCalculator.java")), statement);
 
     // 挿入対象生成
     AST jdtAST = ast.getRoot()
@@ -217,7 +214,7 @@ public class DiffOutputTest {
     diffOutput.outputResult(project, modVariant);
 
     String modSource = new String(
-        Files.readAllBytes(outdirPath.resolve("variant01/jp.kusumotolab.BuggyCalculator.java")));
+        Files.readAllBytes(outdirPath.resolve("variant01/example.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 

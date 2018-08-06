@@ -37,8 +37,8 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class KGenProgMainTest {
 
-  final static String bc = "src/jp/kusumotolab/BuggyCalculator.java";
-  final static String bct = "src/jp/kusumotolab/BuggyCalculatorTest.java";
+  final static String bc = "src/example/BuggyCalculator.java";
+  final static String bct = "src/example/BuggyCalculatorTest.java";
 
   final Path workPath = Paths.get("tmp/work");
   final Path outPath = Paths.get("tmp/out");
@@ -122,8 +122,8 @@ public class KGenProgMainTest {
   @Test
   public void testExample07() {
     final Path rootPath = Paths.get("example/GCD01");
-    final String gcd = "src/jp/kusumotolab/GreatestCommonDivider.java";
-    final String gcdt = "src/jp/kusumotolab/GreatestCommonDividerTest.java";
+    final String gcd = "src/example/GreatestCommonDivider.java";
+    final String gcdt = "src/example/GreatestCommonDividerTest.java";
     final Path productPath = rootPath.resolve(gcd);
     final Path testPath = rootPath.resolve(gcdt);
 
@@ -139,8 +139,8 @@ public class KGenProgMainTest {
   @Test
   public void testExample08() {
     final Path rootPath = Paths.get("example/QuickSort01");
-    final String qs = "src/jp/kusumotolab/QuickSort.java";
-    final String qst = "src/jp/kusumotolab/QuickSortTest.java";
+    final String qs = "src/example/QuickSort.java";
+    final String qst = "src/example/QuickSortTest.java";
     final Path productPath = rootPath.resolve(qs);
     final Path testPath = rootPath.resolve(qst);
 
