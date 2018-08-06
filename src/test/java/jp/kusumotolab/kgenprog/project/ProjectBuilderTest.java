@@ -16,6 +16,20 @@ import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 public class ProjectBuilderTest {
 
   @Test
+  public void testBuildStringForExample00() {
+    final Path rootPath = Paths.get("example/example00");
+    final Path workPath = rootPath.resolve("bin");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, workPath);
+
+    assertThat(buildResults).isInstanceOf(EmptyBuildResults.class);
+    assertThat(buildResults.isBuildFailed).isTrue();
+  }
+
+  @Test
   public void testBuildStringForExample01() {
     final Path rootPath = Paths.get("example/example01");
     final Path workPath = rootPath.resolve("bin");

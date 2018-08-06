@@ -31,6 +31,17 @@ public class BuildResults {
   public final GeneratedSourceCode sourceCode;
 
   /**
+   * 
+   * @param sourceCode ビルド元となったソースコード
+   * @param outDir クラスファイル生成ディレクトリ
+   * @param diagnostics ビルド時の詳細情報
+   */
+  public BuildResults(final GeneratedSourceCode sourceCode, final Path outDir,
+      final DiagnosticCollector<JavaFileObject> diagnostics) {
+    this(sourceCode, false, outDir, diagnostics);
+  }
+
+  /**
    * コンストラクタ（後で書き換え TODO）
    * 
    * @param sourceCode ビルド元となったソースコード
@@ -38,7 +49,7 @@ public class BuildResults {
    * @param outDir クラスファイル生成ディレクトリ
    * @param diagnostics ビルド時の詳細情報
    */
-  public BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
+  protected BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
       final Path outDir, final DiagnosticCollector<JavaFileObject> diagnostics) {
     this.sourceCode = sourceCode;
     this.isBuildFailed = isBuildFailed;
