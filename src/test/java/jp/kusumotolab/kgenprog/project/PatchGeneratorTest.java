@@ -27,11 +27,11 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
-public class DiffOutputTest {
+public class PatchGeneratorTest {
 
 
   @Test
-  public void testDiffOutput1() throws IOException {
+  public void testPatchGenerator1() throws IOException {
     Path basePath = Paths.get("example/example01");
     final Path outdirPath = basePath.resolve("modified");
     PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
@@ -73,7 +73,7 @@ public class DiffOutputTest {
   }
 
   @Test
-  public void testDiffOutput2() throws IOException {
+  public void testPatchGenerator2() throws IOException {
     Path basePath = Paths.get("example/example03");
     final Path outdirPath = basePath.resolve("modified");
     PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
@@ -117,7 +117,7 @@ public class DiffOutputTest {
   }
 
   @Test
-  public void testDiffOutput3() throws IOException {
+  public void testPatchGenerator3() throws IOException {
     Path basePath = Paths.get("example/example01");
     final Path outdirPath = basePath.resolve("modified");
     PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
@@ -171,7 +171,7 @@ public class DiffOutputTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testDiffOutput4() throws IOException {
+  public void testPatchGenerator4() throws IOException {
     Path basePath = Paths.get("example/example01/");
     final Path outdirPath = basePath.resolve("modified");
     PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
