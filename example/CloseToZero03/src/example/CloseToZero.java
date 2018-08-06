@@ -1,6 +1,6 @@
 package example;
 
-public class BuggyCalculator {
+public class CloseToZero {
 
   /**
    * 整数をゼロに一つ近づけるメソッド

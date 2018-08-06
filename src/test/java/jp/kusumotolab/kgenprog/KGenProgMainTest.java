@@ -37,8 +37,8 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class KGenProgMainTest {
 
-  final static String bc = "src/example/BuggyCalculator.java";
-  final static String bct = "src/example/BuggyCalculatorTest.java";
+  final static String ctz = "src/example/CloseToZero.java";
+  final static String ctzt = "src/example/CloseToZeroTest.java";
 
   final Path workPath = Paths.get("tmp/work");
   final Path outPath = Paths.get("tmp/out");
@@ -78,10 +78,10 @@ public class KGenProgMainTest {
   }
 
   @Test
-  public void testExample04() {
+  public void testCloseToZero01() {
     final Path rootPath = Paths.get("example/CloseToZero01");
-    final Path productPath = rootPath.resolve(bc);
-    final Path testPath = rootPath.resolve(bct);
+    final Path productPath = rootPath.resolve(ctz);
+    final Path testPath = rootPath.resolve(ctzt);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
@@ -92,10 +92,10 @@ public class KGenProgMainTest {
 
   @Ignore // Be ignored but should not be ignored
   @Test
-  public void testExample05() {
+  public void testCloseToZero02() {
     final Path rootPath = Paths.get("example/CloseToZero02");
-    final Path productPath = rootPath.resolve(bc);
-    final Path testPath = rootPath.resolve(bct);
+    final Path productPath = rootPath.resolve(ctz);
+    final Path testPath = rootPath.resolve(ctzt);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
@@ -106,10 +106,10 @@ public class KGenProgMainTest {
 
   @Ignore // Be ignored but should not be ignored
   @Test
-  public void testExample06() {
+  public void testCloseToZero03() {
     final Path rootPath = Paths.get("example/CloseToZero03");
-    final Path productPath = rootPath.resolve(bc);
-    final Path testPath = rootPath.resolve(bct);
+    final Path productPath = rootPath.resolve(ctz);
+    final Path testPath = rootPath.resolve(ctzt);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
@@ -120,7 +120,7 @@ public class KGenProgMainTest {
 
   @Ignore
   @Test
-  public void testExample07() {
+  public void testGCD01() {
     final Path rootPath = Paths.get("example/GCD01");
     final String gcd = "src/example/GreatestCommonDivider.java";
     final String gcdt = "src/example/GreatestCommonDividerTest.java";
@@ -137,7 +137,7 @@ public class KGenProgMainTest {
 
   @Ignore
   @Test
-  public void testExample08() {
+  public void testQuickSort01() {
     final Path rootPath = Paths.get("example/QuickSort01");
     final String qs = "src/example/QuickSort.java";
     final String qst = "src/example/QuickSortTest.java";
