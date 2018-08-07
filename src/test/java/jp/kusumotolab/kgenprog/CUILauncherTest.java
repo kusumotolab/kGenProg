@@ -31,7 +31,7 @@ public class CUILauncherTest {
   }
 
   @Test
-  public void testSetProductSourcePathsAndGetProductSourcePaths01() {
+  public void testAddProductSourcePathsAndGetProductSourcePaths01() {
     launcher.addProductSourcePath("./src/main/java");
     assertThat(launcher.getProductSourcePaths()).contains(
         new ProductSourcePath(Paths.get("./src/main/java")
@@ -39,7 +39,7 @@ public class CUILauncherTest {
   }
 
   @Test
-  public void testSetProductSourcePathsAndGetProductSourcePaths02() {
+  public void testAddProductSourcePathsAndGetProductSourcePaths02() {
     launcher.addProductSourcePath("./src/main/java");
     launcher.addProductSourcePath("./src/main/kotlin");
     launcher.addProductSourcePath("./src/main/resources");
@@ -53,7 +53,7 @@ public class CUILauncherTest {
   }
 
   @Test
-  public void testSetTestSourcePathsAndGetTestSourcePaths01() {
+  public void testAddTestSourcePathsAndGetTestSourcePaths01() {
     launcher.addTestSourcePath("./src/test/java");
     assertThat(launcher.getTestSourcePaths()).contains(
         new TestSourcePath(Paths.get("./src/test/java")
@@ -61,7 +61,7 @@ public class CUILauncherTest {
   }
 
   @Test
-  public void testSetTestSourcePathsAndGetTestSourcePaths02() {
+  public void testAddTestSourcePathsAndGetTestSourcePaths02() {
     launcher.addTestSourcePath("./src/test/java");
     launcher.addTestSourcePath("./src/test/kotlin");
     launcher.addTestSourcePath("./src/test/resources");
@@ -75,7 +75,7 @@ public class CUILauncherTest {
   }
 
   @Test
-  public void testSetClassPathsAndGetClassPaths01() {
+  public void testAddClassPathsAndGetClassPaths01() {
     launcher.addClassPath("./lib");
     assertThat(launcher.getClassPaths())
         .contains(new ClassPath(Paths.get("./lib")
@@ -83,10 +83,10 @@ public class CUILauncherTest {
   }
 
   @Test
-  public void testSetClassPathsAndGetClassPaths02() {
     launcher.addClassPath("./lib01");
     launcher.addClassPath("./lib02");
     launcher.addClassPath("./lib03");
+  public void testAddClassPathsAndGetClassPaths02() {
     assertThat(launcher.getClassPaths())
         .contains(new ClassPath(Paths.get("./lib01")
             .toAbsolutePath()))
