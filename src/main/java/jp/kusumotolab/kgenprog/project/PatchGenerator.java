@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +64,8 @@ public class PatchGenerator implements ResultGenerator {
 
           // 修正ファイル作成
           Document document = new Document(new String(Files.readAllBytes(originPath)));
-          TextEdit edit = jdtAST.getRoot().rewrite(document, null);
+          TextEdit edit = jdtAST.getRoot()
+              .rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
             Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
@@ -93,7 +93,8 @@ public class PatchGenerator implements ResultGenerator {
    */
   private void activateRecordModifications(GeneratedSourceCode code) {
     for (GeneratedAST ast : code.getAsts()) {
-      ((GeneratedJDTAST) ast).getRoot().recordModifications();
+      ((GeneratedJDTAST) ast).getRoot()
+          .recordModifications();
     }
   }
 
@@ -109,10 +110,13 @@ public class PatchGenerator implements ResultGenerator {
     List<GeneratedSourceCode> modified = new ArrayList<>();
 
     for (Variant variant : modifiedVariants) {
-      GeneratedSourceCode targetCode = targetProject.getInitialVariant().getGeneratedSourceCode();
+      GeneratedSourceCode targetCode = targetProject.getInitialVariant()
+          .getGeneratedSourceCode();
       activateRecordModifications(targetCode);
-      for (Base base : variant.getGene().getBases()) {
-        targetCode = base.getOperation().applyDirectly(targetCode, base.getTargetLocation());
+      for (Base base : variant.getGene()
+          .getBases()) {
+        targetCode = base.getOperation()
+            .applyDirectly(targetCode, base.getTargetLocation());
       }
       modified.add(targetCode);
     }
@@ -134,7 +138,8 @@ public class PatchGenerator implements ResultGenerator {
 
       Patch<String> diff = DiffUtils.diff(origin, modified);
 
-      String fileName = originPath.getFileName().toString();
+      String fileName = originPath.getFileName()
+          .toString();
 
       List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
