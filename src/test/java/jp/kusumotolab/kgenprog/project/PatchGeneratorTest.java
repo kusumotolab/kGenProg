@@ -32,39 +32,39 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator1() throws IOException {
-    Path basePath = Paths.get("example/example01");
+    final Path basePath = Paths.get("example/example01");
     final Path outdirPath = basePath.resolve("modified");
-    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
+    final String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
 
-    TargetProject project = TargetProjectFactory.create(basePath);
-    Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final TargetProject project = TargetProjectFactory.create(basePath);
+    final Variant originVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
     // 削除位置の Location 作成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody()
+    final MethodDeclaration method = type.getMethods()[0];
+    final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    DeleteOperation operation = new DeleteOperation();
-    JDTASTLocation location = new JDTASTLocation(
+    final DeleteOperation operation = new DeleteOperation();
+    final JDTASTLocation location = new JDTASTLocation(
         new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
-    GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
-    List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
+    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
-    String modifiedSourceCode = new String(
+    final String modifiedSourceCode = new String(
         Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
@@ -74,41 +74,41 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator2() throws IOException {
-    Path basePath = Paths.get("example/example03");
+    final Path basePath = Paths.get("example/example03");
     final Path outdirPath = basePath.resolve("modified");
-    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "\n" + "public class Util {\n"
+    final String expected = "package jp.kusumotolab;\n" + "\n" + "public class Util {\n"
         + "\tpublic static int plus(int n) {\n" + "\t}\n" + "\n"
         + "\tpublic static int minus(int n) {\n" + "\t\treturn n - 1;\n" + "\t}\n" + "\n"
         + "\t// テストからのみ実行されるダミー関数\n" + "\tpublic static void dummy() {\n" + "\t\tnew String();\n"
         + "\t}\n" + "}\n\n";
 
-    TargetProject project = TargetProjectFactory.create(basePath);
-    Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final TargetProject project = TargetProjectFactory.create(basePath);
+    final Variant originVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
     // 削除位置の Location 作成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody()
+    final MethodDeclaration method = type.getMethods()[0];
+    final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    DeleteOperation operation = new DeleteOperation();
-    JDTASTLocation location = new JDTASTLocation(
+    final DeleteOperation operation = new DeleteOperation();
+    final JDTASTLocation location = new JDTASTLocation(
         new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
 
-    GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
-    List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
+    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
-    String modifiedSourceCode =
+    final String modifiedSourceCode =
         new String(Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.Util.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
@@ -118,50 +118,50 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator3() throws IOException {
-    Path basePath = Paths.get("example/example01");
+    final Path basePath = Paths.get("example/example01");
     final Path outdirPath = basePath.resolve("modified");
-    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
+    final String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    if (n > 0) {\n" + "      n--;\n"
         + "    }\n" + " else {\n" + "      n++;\n" + "    }\n" + "    a();\n" + "\treturn n;\n"
         + "  }\n" + "}\n\n";
 
-    TargetProject project = TargetProjectFactory.create(basePath);
-    Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final TargetProject project = TargetProjectFactory.create(basePath);
+    final Variant originVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
     // 挿入位置のLocation生成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
-    Statement statement = (Statement) method.getBody()
+    final MethodDeclaration method = type.getMethods()[0];
+    final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    JDTASTLocation location = new JDTASTLocation(
+    final JDTASTLocation location = new JDTASTLocation(
         new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     // 挿入対象生成
-    AST jdtAST = ast.getRoot()
+    final AST jdtAST = ast.getRoot()
         .getAST();
-    MethodInvocation invocation = jdtAST.newMethodInvocation();
+    final MethodInvocation invocation = jdtAST.newMethodInvocation();
     invocation.setName(jdtAST.newSimpleName("a"));
-    Statement insertStatement = jdtAST.newExpressionStatement(invocation);
+    final Statement insertStatement = jdtAST.newExpressionStatement(invocation);
 
-    InsertOperation operation = new InsertOperation(insertStatement);
+    final InsertOperation operation = new InsertOperation(insertStatement);
 
-    GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
 
-    List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
+    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
-    String modifiedSourceCode = new String(
+    final String modifiedSourceCode = new String(
         Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
@@ -172,51 +172,51 @@ public class PatchGeneratorTest {
   @SuppressWarnings("unchecked")
   @Test
   public void testPatchGenerator4() throws IOException {
-    Path basePath = Paths.get("example/example01/");
+    final Path basePath = Paths.get("example/example01/");
     final Path outdirPath = basePath.resolve("modified");
-    PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
+    final String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
         + "  public int close_to_zero(  int n){\n" + "    {\n" + "\t\ta();\n" + "\t}\n"
         + "    return n;\n" + "  }\n" + "}\n\n";
 
-    TargetProject project = TargetProjectFactory.create(basePath);
-    Variant originVariant = project.getInitialVariant();
-    GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final TargetProject project = TargetProjectFactory.create(basePath);
+    final Variant originVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
     // 挿入位置のLocation生成
-    TypeDeclaration type = (TypeDeclaration) ast.getRoot()
+    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
-    MethodDeclaration method = type.getMethods()[0];
+    final MethodDeclaration method = type.getMethods()[0];
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    JDTASTLocation location = new JDTASTLocation(
+    final JDTASTLocation location = new JDTASTLocation(
         new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
         statement);
 
     // 挿入対象生成
-    AST jdtAST = ast.getRoot()
+    final AST jdtAST = ast.getRoot()
         .getAST();
-    MethodInvocation invocation = jdtAST.newMethodInvocation();
+    final MethodInvocation invocation = jdtAST.newMethodInvocation();
     invocation.setName(jdtAST.newSimpleName("a"));
     statement = jdtAST.newExpressionStatement(invocation);
-    Block replaceBlock = jdtAST.newBlock();
+    final Block replaceBlock = jdtAST.newBlock();
     replaceBlock.statements()
         .add(statement);
 
-    ReplaceOperation operation = new ReplaceOperation(replaceBlock);
+    final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
 
-    GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
-    List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
+    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
-    String modifiedSourceCode = new String(
+    final String modifiedSourceCode = new String(
         Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
