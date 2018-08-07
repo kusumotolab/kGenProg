@@ -107,7 +107,7 @@ public class PatchGenerator implements ResultGenerator {
    */
   private List<GeneratedSourceCode> applyAllModificationDirectly(TargetProject targetProject,
       List<Variant> modifiedVariants) {
-    List<GeneratedSourceCode> modified = new ArrayList<>();
+    List<GeneratedSourceCode> modifiedSourceCode = new ArrayList<>();
 
     for (Variant variant : modifiedVariants) {
       GeneratedSourceCode targetCode = targetProject.getInitialVariant()
@@ -118,10 +118,10 @@ public class PatchGenerator implements ResultGenerator {
         targetCode = base.getOperation()
             .applyDirectly(targetCode, base.getTargetLocation());
       }
-      modified.add(targetCode);
+      modifiedSourceCode.add(targetCode);
     }
 
-    return modified;
+    return modifiedSourceCode;
   }
 
   /***
@@ -134,9 +134,9 @@ public class PatchGenerator implements ResultGenerator {
   private void makePatchFile(Path originPath, Path diffPath, Path patchPath) {
     try {
       final List<String> origin = Files.readAllLines(originPath);
-      final List<String> modified = Files.readAllLines(diffPath);
+      final List<String> modifiedSourceCode = Files.readAllLines(diffPath);
 
-      Patch<String> diff = DiffUtils.diff(origin, modified);
+      Patch<String> diff = DiffUtils.diff(origin, modifiedSourceCode);
 
       String fileName = originPath.getFileName()
           .toString();

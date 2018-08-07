@@ -64,12 +64,12 @@ public class PatchGeneratorTest {
 
     patchGenerator.exec(project, modVariant);
 
-    String modSource = new String(
+    String modifiedSourceCode = new String(
         Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
-    assertThat(modSource).isEqualToNormalizingNewlines(expected);
+    assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
 
   @Test
@@ -108,12 +108,12 @@ public class PatchGeneratorTest {
 
     patchGenerator.exec(project, modVariant);
 
-    String modSource =
+    String modifiedSourceCode =
         new String(Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.Util.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
-    assertThat(modSource).isEqualToNormalizingNewlines(expected);
+    assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
 
   @Test
@@ -161,12 +161,12 @@ public class PatchGeneratorTest {
 
     patchGenerator.exec(project, modVariant);
 
-    String modSource = new String(
+    String modifiedSourceCode = new String(
         Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
-    assertThat(modSource).isEqualToNormalizingNewlines(expected);
+    assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
 
   @SuppressWarnings("unchecked")
@@ -216,12 +216,12 @@ public class PatchGeneratorTest {
 
     patchGenerator.exec(project, modVariant);
 
-    String modSource = new String(
+    String modifiedSourceCode = new String(
         Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
-    assertThat(modSource).isEqualToNormalizingNewlines(expected);
+    assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
 
 }
