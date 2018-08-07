@@ -13,7 +13,7 @@ import java.nio.file.Paths;
  */
 public class ExampleAlias {
 
-  // Src（パス）へのエイリアス
+  // Srcパスへのエイリアス
   public static class Src {
 
     public final static Path Foo = Paths.get("src/example/Foo.java");
@@ -25,7 +25,7 @@ public class ExampleAlias {
     public final static Path BazTest = appendTest(Baz);
   }
 
-  // Binへのエイリアス
+  // Binパスへのエイリアス
   public static class Bin {
 
     public final static Path Foo = sourceToBin(Src.Foo);
@@ -75,19 +75,19 @@ public class ExampleAlias {
 
 
   private static Path sourceToBin(final Path path) {
-    final String pathName = path.toString();
-    return Paths.get(pathName.replace("src" + File.separator, "") // binファイルはsrcディレクトリ外
+    final String pathStr = path.toString();
+    return Paths.get(pathStr.replace("src" + File.separator, "") // binファイルはsrcディレクトリ外
         .replace(".java", ".class")); // 拡張子の修正
   }
 
   private static Path appendTest(final Path path) {
-    final String pathName = path.toString();
-    return Paths.get(pathName.replace(".java", "Test.java"));
+    final String pathStr = path.toString();
+    return Paths.get(pathStr.replace(".java", "Test.java"));
   }
 
   private static FullyQualifiedName pathToFqn(final Path path) {
-    final String pathName = path.toString();
-    final String fqn = pathName.replace("src" + File.separator, "") // srcディレクトリ指定を削除
+    final String pathStr = path.toString();
+    final String fqn = pathStr.replace("src" + File.separator, "") // srcディレクトリ指定を削除
         .replace(".java", "") // 拡張子を削除
         .replace(File.separator, "."); // セパレータを.に置換
 
