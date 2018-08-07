@@ -33,7 +33,7 @@ public class PatchGenerator implements ResultGenerator {
   @Override
   public void exec(final TargetProject targetProject, final List<Variant> modifiedVariants) {
 
-    List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
+    final List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
 
     // 出力先ディレクトリ作成
     if (!Files.exists(workingDir)) {
@@ -107,7 +107,7 @@ public class PatchGenerator implements ResultGenerator {
    */
   private List<GeneratedSourceCode> applyAllModificationDirectly(TargetProject targetProject,
       List<Variant> modifiedVariants) {
-    List<GeneratedSourceCode> modifiedSourceCode = new ArrayList<>();
+    final List<GeneratedSourceCode> modifiedSourceCode = new ArrayList<>();
 
     for (Variant variant : modifiedVariants) {
       GeneratedSourceCode targetCode = targetProject.getInitialVariant()
