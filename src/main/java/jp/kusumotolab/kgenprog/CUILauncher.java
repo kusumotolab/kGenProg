@@ -63,8 +63,8 @@ public class CUILauncher {
 
   @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
       metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
-  public void setProductSourcePaths(String sourcePaths) {
-    log.debug("enter setSourcePaths(String)");
+  public void addProductSourcePath(String sourcePaths) {
+    log.debug("enter addSourcePath(String)");
     this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths).toAbsolutePath()));
   }
 
@@ -76,8 +76,8 @@ public class CUILauncher {
   @Option(name = "-t", aliases = "--test", required = true,
       handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
       usage = "Paths of the root directories holding test codes")
-  public void setTestSourcePaths(String testPaths) {
-    log.debug("enter setTestPaths(String)");
+  public void addTestSourcePath(String testPaths) {
+    log.debug("enter addTestPath(String)");
     this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths).toAbsolutePath()));
   }
 
@@ -88,8 +88,8 @@ public class CUILauncher {
 
   @Option(name = "-c", aliases = "--cp", required = true, handler = StringArrayOptionHandler.class,
       metaVar = "<class path> ...", usage = "Class paths required to build the target project")
-  public void setClassPaths(String classPaths) {
-    log.debug("enter setClassPaths(String)");
+  public void addClassPath(String classPaths) {
+    log.debug("enter addClassPath(String)");
     this.classPaths.add(new ClassPath(Paths.get(classPaths).toAbsolutePath()));
   }
 

@@ -32,7 +32,7 @@ public class CUILauncherTest {
 
   @Test
   public void testSetProductSourcePathsAndGetProductSourcePaths01() {
-    launcher.setProductSourcePaths("./src/main/java");
+    launcher.addProductSourcePath("./src/main/java");
     assertThat(launcher.getProductSourcePaths()).contains(
         new ProductSourcePath(Paths.get("./src/main/java")
             .toAbsolutePath()));
@@ -40,9 +40,9 @@ public class CUILauncherTest {
 
   @Test
   public void testSetProductSourcePathsAndGetProductSourcePaths02() {
-    launcher.setProductSourcePaths("./src/main/java");
-    launcher.setProductSourcePaths("./src/main/kotlin");
-    launcher.setProductSourcePaths("./src/main/resources");
+    launcher.addProductSourcePath("./src/main/java");
+    launcher.addProductSourcePath("./src/main/kotlin");
+    launcher.addProductSourcePath("./src/main/resources");
     assertThat(launcher.getProductSourcePaths())
         .contains(new ProductSourcePath(Paths.get("./src/main/java")
             .toAbsolutePath()))
@@ -54,7 +54,7 @@ public class CUILauncherTest {
 
   @Test
   public void testSetTestSourcePathsAndGetTestSourcePaths01() {
-    launcher.setTestSourcePaths("./src/test/java");
+    launcher.addTestSourcePath("./src/test/java");
     assertThat(launcher.getTestSourcePaths()).contains(
         new TestSourcePath(Paths.get("./src/test/java")
             .toAbsolutePath()));
@@ -62,9 +62,9 @@ public class CUILauncherTest {
 
   @Test
   public void testSetTestSourcePathsAndGetTestSourcePaths02() {
-    launcher.setTestSourcePaths("./src/test/java");
-    launcher.setTestSourcePaths("./src/test/kotlin");
-    launcher.setTestSourcePaths("./src/test/resources");
+    launcher.addTestSourcePath("./src/test/java");
+    launcher.addTestSourcePath("./src/test/kotlin");
+    launcher.addTestSourcePath("./src/test/resources");
     assertThat(launcher.getTestSourcePaths())
         .contains(new TestSourcePath(Paths.get("./src/test/java")
             .toAbsolutePath()))
@@ -76,7 +76,7 @@ public class CUILauncherTest {
 
   @Test
   public void testSetClassPathsAndGetClassPaths01() {
-    launcher.setClassPaths("./lib");
+    launcher.addClassPath("./lib");
     assertThat(launcher.getClassPaths())
         .contains(new ClassPath(Paths.get("./lib")
             .toAbsolutePath()));
@@ -84,9 +84,9 @@ public class CUILauncherTest {
 
   @Test
   public void testSetClassPathsAndGetClassPaths02() {
-    launcher.setClassPaths("./lib01");
-    launcher.setClassPaths("./lib02");
-    launcher.setClassPaths("./lib03");
+    launcher.addClassPath("./lib01");
+    launcher.addClassPath("./lib02");
+    launcher.addClassPath("./lib03");
     assertThat(launcher.getClassPaths())
         .contains(new ClassPath(Paths.get("./lib01")
             .toAbsolutePath()))
