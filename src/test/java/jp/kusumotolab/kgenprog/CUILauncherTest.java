@@ -26,73 +26,69 @@ public class CUILauncherTest {
   @Test
   public void testSetRootDirAndGetRootDir() {
     launcher.setRootDir("./");
-    assertThat(launcher.getRootDir()).isEqualTo(Paths.get("./")
-        .toAbsolutePath());
+    assertThat(launcher.getRootDir()).isEqualTo(Paths.get("./"));
   }
 
   @Test
   public void testAddProductSourcePathsAndGetProductSourcePaths01() {
     launcher.addProductSourcePath("./src/main/java");
-    assertThat(launcher.getProductSourcePaths()).contains(
-        new ProductSourcePath(Paths.get("./src/main/java")
-            .toAbsolutePath()));
+    assertThat(launcher.getProductSourcePaths())
+        .containsExactly(new ProductSourcePath(Paths.get("./src/main/java")));
   }
 
+  /**
+   * 複数パスを追加するテスト． CUILauncher ではディレクトリが存在するかどうかはチェックしていないため， 存在しないパスを指定しても例外は発生しない．
+   */
   @Test
   public void testAddProductSourcePathsAndGetProductSourcePaths02() {
     launcher.addProductSourcePath("./src/main/java");
-    launcher.addProductSourcePath("./src/main/kotlin");
+    launcher.addProductSourcePath("./src/main/kotlin"); // 実在しないパス
     launcher.addProductSourcePath("./src/main/resources");
     assertThat(launcher.getProductSourcePaths())
-        .contains(new ProductSourcePath(Paths.get("./src/main/java")
-            .toAbsolutePath()))
-        .contains(new ProductSourcePath(Paths.get("./src/main/kotlin")
-            .toAbsolutePath()))
-        .contains(new ProductSourcePath(Paths.get("./src/main/resources")
-            .toAbsolutePath()));
+        .containsExactlyInAnyOrder(new ProductSourcePath(Paths.get("./src/main/java")),
+            new ProductSourcePath(Paths.get("./src/main/kotlin")), // 実在しないパスを含んでいてもよい
+            new ProductSourcePath(Paths.get("./src/main/resources")));
   }
 
   @Test
   public void testAddTestSourcePathsAndGetTestSourcePaths01() {
     launcher.addTestSourcePath("./src/test/java");
-    assertThat(launcher.getTestSourcePaths()).contains(
-        new TestSourcePath(Paths.get("./src/test/java")
-            .toAbsolutePath()));
+    assertThat(launcher.getTestSourcePaths())
+        .containsExactly(new TestSourcePath(Paths.get("./src/test/java")));
   }
 
+  /**
+   * 複数パスを追加するテスト． CUILauncher ではディレクトリが存在するかどうかはチェックしていないため， 存在しないパスを指定しても例外は発生しない．
+   */
   @Test
   public void testAddTestSourcePathsAndGetTestSourcePaths02() {
     launcher.addTestSourcePath("./src/test/java");
-    launcher.addTestSourcePath("./src/test/kotlin");
+    launcher.addTestSourcePath("./src/test/kotlin");  // 実在しないパス
     launcher.addTestSourcePath("./src/test/resources");
     assertThat(launcher.getTestSourcePaths())
-        .contains(new TestSourcePath(Paths.get("./src/test/java")
-            .toAbsolutePath()))
-        .contains(new TestSourcePath(Paths.get("./src/test/kotlin")
-            .toAbsolutePath()))
-        .contains(new TestSourcePath(Paths.get("./src/test/resources")
-            .toAbsolutePath()));
+        .containsExactlyInAnyOrder(new TestSourcePath(Paths.get("./src/test/java")),
+            new TestSourcePath(Paths.get("./src/test/kotlin")), // 実在しないパスを含んでいてもよい
+            new TestSourcePath(Paths.get("./src/test/resources")));
   }
 
   @Test
   public void testAddClassPathsAndGetClassPaths01() {
     launcher.addClassPath("./lib");
     assertThat(launcher.getClassPaths())
-        .contains(new ClassPath(Paths.get("./lib")
-            .toAbsolutePath()));
+        .containsExactly(new ClassPath(Paths.get("./lib")));
   }
 
+  /**
+   * 複数パスを追加するテスト． CUILauncher ではディレクトリが存在するかどうかはチェックしていないため， 存在しないパスを指定しても例外は発生しない．
+   */
   @Test
-    launcher.addClassPath("./lib01");
-    launcher.addClassPath("./lib02");
-    launcher.addClassPath("./lib03");
   public void testAddClassPathsAndGetClassPaths02() {
+    launcher.addClassPath("./lib01"); // 実在しないパス
+    launcher.addClassPath("./lib02"); // 実在しないパス
+    launcher.addClassPath("./lib03"); // 実在しないパス
     assertThat(launcher.getClassPaths())
-        .contains(new ClassPath(Paths.get("./lib01")
-            .toAbsolutePath()))
-        .contains(new ClassPath(Paths.get("./lib02")
-            .toAbsolutePath()))
-        .contains(new ClassPath(Paths.get("./lib03")
-            .toAbsolutePath()));
+        .containsExactlyInAnyOrder(new ClassPath(Paths.get("./lib01")), // 実在しないパスを含んでいてもよい
+            new ClassPath(Paths.get("./lib02")), // 実在しないパスを含んでいてもよい
+            new ClassPath(Paths.get("./lib03"))); // 実在しないパスを含んでいてもよい
   }
 }
