@@ -19,6 +19,7 @@ public class ExampleAlias {
     public final static Path Foo = Paths.get("src/example/Foo.java");
     public final static Path Bar = Paths.get("src/example/Bar.java");
     public final static Path Baz = Paths.get("src/example/Baz.java");
+
     public final static Path FooTest = appendTest(Foo);
     public final static Path BarTest = appendTest(Bar);
     public final static Path BazTest = appendTest(Baz);
@@ -30,6 +31,7 @@ public class ExampleAlias {
     public final static Path Foo = sourceToBin(Src.Foo);
     public final static Path Bar = sourceToBin(Src.Bar);
     public final static Path Baz = sourceToBin(Src.Baz);
+
     public final static Path FooTest = sourceToBin(Src.FooTest);
     public final static Path BarTest = sourceToBin(Src.BarTest);
     public final static Path BazTest = sourceToBin(Src.BazTest);
@@ -50,6 +52,7 @@ public class ExampleAlias {
     public final static FullyQualifiedName FooTest02 = appendFqn(FooTest, ".test02");
     public final static FullyQualifiedName FooTest03 = appendFqn(FooTest, ".test03");
     public final static FullyQualifiedName FooTest04 = appendFqn(FooTest, ".test04");
+
     public final static FullyQualifiedName BarTest01 = appendFqn(BarTest, ".test01");
     public final static FullyQualifiedName BarTest02 = appendFqn(BarTest, ".test02");
     public final static FullyQualifiedName BarTest03 = appendFqn(BarTest, ".test03");
