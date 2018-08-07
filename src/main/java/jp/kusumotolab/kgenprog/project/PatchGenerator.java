@@ -23,7 +23,7 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class PatchGenerator implements ResultGenerator {
 
-  private Logger log = LoggerFactory.getLogger(PatchGenerator.class);
+  private static Logger log = LoggerFactory.getLogger(PatchGenerator.class);
   private final Path workingDir;
 
   public PatchGenerator(Path workingDir) {
@@ -31,7 +31,7 @@ public class PatchGenerator implements ResultGenerator {
   }
 
   @Override
-  public void exec(TargetProject targetProject, List<Variant> modifiedVariants) {
+  public void exec(final TargetProject targetProject, final List<Variant> modifiedVariants) {
 
     List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
 
@@ -59,16 +59,16 @@ public class PatchGenerator implements ResultGenerator {
       }
       for (GeneratedAST ast : code.getAsts()) {
         try {
-          GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
-          Path originPath = jdtAST.getProductSourcePath().path;
+          final GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
+          final Path originPath = jdtAST.getProductSourcePath().path;
 
           // 修正ファイル作成
-          Document document = new Document(new String(Files.readAllBytes(originPath)));
-          TextEdit edit = jdtAST.getRoot()
+          final Document document = new Document(new String(Files.readAllBytes(originPath)));
+          final TextEdit edit = jdtAST.getRoot()
               .rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
-            Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
+            final Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
             edit.apply(document);
             Files.write(diffFilePath, Arrays.asList(document.get()));
 
@@ -133,15 +133,15 @@ public class PatchGenerator implements ResultGenerator {
    */
   private void makePatchFile(Path originPath, Path diffPath, Path patchPath) {
     try {
-      List<String> origin = Files.readAllLines(originPath);
-      List<String> modified = Files.readAllLines(diffPath);
+      final List<String> origin = Files.readAllLines(originPath);
+      final List<String> modified = Files.readAllLines(diffPath);
 
       Patch<String> diff = DiffUtils.diff(origin, modified);
 
       String fileName = originPath.getFileName()
           .toString();
 
-      List<String> unifiedDiff =
+      final List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
 
       unifiedDiff.forEach(e -> log.info(e));
