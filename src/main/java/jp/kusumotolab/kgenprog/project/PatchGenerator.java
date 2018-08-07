@@ -133,16 +133,16 @@ public class PatchGenerator implements ResultGenerator {
    */
   private void makePatchFile(Path originPath, Path diffPath, Path patchPath) {
     try {
-      final List<String> origin = Files.readAllLines(originPath);
+      final List<String> originalSourceCode = Files.readAllLines(originPath);
       final List<String> modifiedSourceCode = Files.readAllLines(diffPath);
 
-      Patch<String> diff = DiffUtils.diff(origin, modifiedSourceCode);
+      Patch<String> diff = DiffUtils.diff(originalSourceCode, modifiedSourceCode);
 
       String fileName = originPath.getFileName()
           .toString();
 
       final List<String> unifiedDiff =
-          UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
+          UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, originalSourceCode, diff, 3);
 
       unifiedDiff.forEach(e -> log.info(e));
 
