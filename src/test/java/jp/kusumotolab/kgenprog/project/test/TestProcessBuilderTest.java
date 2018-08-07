@@ -3,11 +3,11 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest01Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest02Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest03Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest04Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest01;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest02;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest03;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest04;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,26 +39,26 @@ public class TestProcessBuilderTest {
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
-        FooTest01Fqn, FooTest02Fqn, FooTest03Fqn, FooTest04Fqn);
+        FooTest01, FooTest02, FooTest03, FooTest04);
 
     // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FooTest01Fqn).failed).isFalse();
-    assertThat(result.getTestResult(FooTest02Fqn).failed).isFalse();
-    assertThat(result.getTestResult(FooTest03Fqn).failed).isTrue();
-    assertThat(result.getTestResult(FooTest04Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest01).failed).isFalse();
+    assertThat(result.getTestResult(FooTest02).failed).isFalse();
+    assertThat(result.getTestResult(FooTest03).failed).isTrue();
+    assertThat(result.getTestResult(FooTest04).failed).isFalse();
 
     // よってテストの成功率はこうなる
     assertThat(result.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
 
-    final TestResult fooTest01result = result.getTestResult(FooTest01Fqn);
-    final TestResult fooTest04result = result.getTestResult(FooTest04Fqn);
+    final TestResult fooTest01result = result.getTestResult(FooTest01);
+    final TestResult fooTest04result = result.getTestResult(FooTest04);
 
     // FooTest.test01 実行によるFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    assertThat(fooTest01result.getCoverages(Foo).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // FooTest.test04 実行によるFooのバレッジはこうなるはず
-    assertThat(fooTest04result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    assertThat(fooTest04result.getCoverages(Foo).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 

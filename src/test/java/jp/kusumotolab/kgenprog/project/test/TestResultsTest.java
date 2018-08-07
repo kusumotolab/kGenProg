@@ -1,10 +1,10 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest01Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest03Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTestFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest01;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest03;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -36,7 +36,7 @@ public class TestResultsTest {
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
     final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(FooFqn), Arrays.asList(FooTestFqn));
+    return executor.exec(new ClassPath(workPath), Arrays.asList(Foo), Arrays.asList(FooTest));
   }
 
   /**
@@ -54,7 +54,7 @@ public class TestResultsTest {
         new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
     final TestExecutor executor = new TestExecutor();
     final TestResults result =
-        executor.exec(new ClassPath(workPath), Arrays.asList(FooFqn), Arrays.asList(FooTestFqn));
+        executor.exec(new ClassPath(workPath), Arrays.asList(Foo), Arrays.asList(FooTest));
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
@@ -63,7 +63,7 @@ public class TestResultsTest {
 
     // expected確保の作業
     // まずast生成
-    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(ExampleAlias.Foo));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(ExampleAlias.Src.Foo));
     final GeneratedJDTAST fooAst = (GeneratedJDTAST) generatedSourceCode.getAst(fooPath);
 
     // astから5行目 (n--;) のlocationを取り出す
@@ -159,8 +159,8 @@ public class TestResultsTest {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加
-    r1.add(new TestResult(FooTest01Fqn, false, Collections.emptyMap()));
-    r1.add(new TestResult(FooTest03Fqn, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest01, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest03, false, Collections.emptyMap()));
 
     // serializeして
     TestResults.serialize(r1);
@@ -172,7 +172,7 @@ public class TestResultsTest {
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01Fqn, FooTest03Fqn);
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01, FooTest03);
   }
 
   /**
@@ -183,19 +183,19 @@ public class TestResultsTest {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加
-    r1.add(new TestResult(FooTest01Fqn, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest01, false, Collections.emptyMap()));
 
     // serializeして
     TestResults.serialize(r1);
 
     // serialize後に03を追加
-    r1.add(new TestResult(FooTest03Fqn, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest03, false, Collections.emptyMap()));
 
     // deserializeして
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01Fqn);
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01);
   }
 
   /**
@@ -206,13 +206,13 @@ public class TestResultsTest {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加
-    r1.add(new TestResult(FooTest01Fqn, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest01, false, Collections.emptyMap()));
 
     // serializeして
     TestResults.serialize(r1);
 
     // serialize後に03を追加
-    r1.add(new TestResult(FooTest03Fqn, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest03, false, Collections.emptyMap()));
 
     // serializeして
     TestResults.serialize(r1);
@@ -221,7 +221,7 @@ public class TestResultsTest {
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01Fqn, FooTest03Fqn);
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01, FooTest03);
   }
 
   /**
@@ -232,10 +232,10 @@ public class TestResultsTest {
     final TestResults r1 = new TestResults();
 
     // ダミーな内部要素を追加（重複するtest03を追加）
-    r1.add(new TestResult(FooTest01Fqn, false, Collections.emptyMap()));
-    r1.add(new TestResult(FooTest03Fqn, false, Collections.emptyMap()));
-    r1.add(new TestResult(FooTest03Fqn, false, Collections.emptyMap()));
-    r1.add(new TestResult(FooTest03Fqn, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest01, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest03, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest03, false, Collections.emptyMap()));
+    r1.add(new TestResult(FooTest03, false, Collections.emptyMap()));
 
     // serializeして
     TestResults.serialize(r1);
@@ -247,7 +247,7 @@ public class TestResultsTest {
     final TestResults r2 = TestResults.deserialize();
 
     // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01Fqn, FooTest03Fqn);
+    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FooTest01, FooTest03);
   }
 
   /**

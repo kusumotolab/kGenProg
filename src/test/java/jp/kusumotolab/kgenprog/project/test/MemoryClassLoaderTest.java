@@ -32,8 +32,8 @@ public class MemoryClassLoaderTest {
   final static Path rootPath = Paths.get("example/BuildSuccess01");
   final static Path workPath = rootPath.resolve("bin");
 
-  final static FullyQualifiedName sourceFqn = ExampleAlias.FooFqn;
-  final static FullyQualifiedName testFqn = ExampleAlias.FooTestFqn;
+  final static FullyQualifiedName sourceFqn = ExampleAlias.Fqn.Foo;
+  final static FullyQualifiedName testFqn = ExampleAlias.Fqn.FooTest;
 
   static MemoryClassLoader loader;
 

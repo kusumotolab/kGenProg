@@ -3,23 +3,23 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest01Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest02Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest03Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest04Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest05Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTestFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazAnonymousFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazInnerFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazOuterFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazStaticInnerFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooFqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest01Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest02Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest03Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest04Fqn;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTestFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Bar;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest01;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest02;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest03;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest04;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest05;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazAnonymous;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazInner;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazOuter;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazStaticInner;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest01;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest02;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest03;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest04;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,7 +43,7 @@ public class TestExecutorTest {
     new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
 
     final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(FooFqn), Arrays.asList(FooTestFqn));
+    return executor.exec(new ClassPath(workPath), Arrays.asList(Foo), Arrays.asList(FooTest));
   }
 
   private TestResults generateTestResultsForExample02() throws Exception {
@@ -55,8 +55,8 @@ public class TestExecutorTest {
     new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
 
     final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(FooFqn, BarFqn),
-        Arrays.asList(FooTestFqn, BarTestFqn));
+    return executor.exec(new ClassPath(workPath), Arrays.asList(Foo, Bar),
+        Arrays.asList(FooTest, BarTest));
   }
 
   @SuppressWarnings("unused")
@@ -70,8 +70,8 @@ public class TestExecutorTest {
 
     final TestExecutor executor = new TestExecutor();
     return executor.exec(new ClassPath(workPath),
-        Arrays.asList(FooFqn, BarFqn, BazInnerFqn, BazStaticInnerFqn, BazAnonymousFqn, BazOuterFqn),
-        Arrays.asList(FooTestFqn, BarTestFqn));
+        Arrays.asList(Foo, Bar, BazInner, BazStaticInner, BazAnonymous, BazOuter),
+        Arrays.asList(FooTest, BarTest));
   }
 
   @Test
@@ -80,26 +80,26 @@ public class TestExecutorTest {
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
-        FooTest01Fqn, FooTest02Fqn, FooTest03Fqn, FooTest04Fqn);
+        FooTest01, FooTest02, FooTest03, FooTest04);
 
     // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FooTest01Fqn).failed).isFalse();
-    assertThat(result.getTestResult(FooTest02Fqn).failed).isFalse();
-    assertThat(result.getTestResult(FooTest03Fqn).failed).isTrue();
-    assertThat(result.getTestResult(FooTest04Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest01).failed).isFalse();
+    assertThat(result.getTestResult(FooTest02).failed).isFalse();
+    assertThat(result.getTestResult(FooTest03).failed).isTrue();
+    assertThat(result.getTestResult(FooTest04).failed).isFalse();
 
     // よってテストの成功率はこうなる
     assertThat(result.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
 
-    final TestResult fooTest01result = result.getTestResult(FooTest01Fqn);
-    final TestResult fooTest04result = result.getTestResult(FooTest04Fqn);
+    final TestResult fooTest01result = result.getTestResult(FooTest01);
+    final TestResult fooTest04result = result.getTestResult(FooTest04);
 
     // FooTest.test01 実行によるFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    assertThat(fooTest01result.getCoverages(Foo).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // FooTest.test04 実行によるFooのバレッジはこうなるはず
-    assertThat(fooTest04result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    assertThat(fooTest04result.getCoverages(Foo).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 
@@ -109,37 +109,36 @@ public class TestExecutorTest {
 
     // 実行されたテストは10個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
-        FooTest01Fqn, FooTest02Fqn, FooTest03Fqn, FooTest04Fqn, //
-        BarTest01Fqn, BarTest02Fqn, BarTest03Fqn, BarTest04Fqn, BarTest05Fqn);
+        FooTest01, FooTest02, FooTest03, FooTest04, //
+        BarTest01, BarTest02, BarTest03, BarTest04, BarTest05);
 
     // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FooTest01Fqn).failed).isFalse();
-    assertThat(result.getTestResult(FooTest02Fqn).failed).isFalse();
-    assertThat(result.getTestResult(FooTest03Fqn).failed).isTrue();
-    assertThat(result.getTestResult(FooTest04Fqn).failed).isFalse();
-    assertThat(result.getTestResult(BarTest01Fqn).failed).isFalse();
-    assertThat(result.getTestResult(BarTest02Fqn).failed).isFalse();
-    assertThat(result.getTestResult(BarTest03Fqn).failed).isFalse();
-    assertThat(result.getTestResult(BarTest04Fqn).failed).isFalse();
-    assertThat(result.getTestResult(BarTest05Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest01).failed).isFalse();
+    assertThat(result.getTestResult(FooTest02).failed).isFalse();
+    assertThat(result.getTestResult(FooTest03).failed).isTrue();
+    assertThat(result.getTestResult(FooTest04).failed).isFalse();
+    assertThat(result.getTestResult(BarTest01).failed).isFalse();
+    assertThat(result.getTestResult(BarTest02).failed).isFalse();
+    assertThat(result.getTestResult(BarTest03).failed).isFalse();
+    assertThat(result.getTestResult(BarTest04).failed).isFalse();
+    assertThat(result.getTestResult(BarTest05).failed).isFalse();
 
-    final TestResult fooTest01result = result.getTestResult(FooTest01Fqn);
+    final TestResult fooTest01result = result.getTestResult(FooTest01);
 
     // FooTest.test01()ではFooとBarが実行されたはず
-    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FooFqn, BarFqn);
+    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(Foo, Bar);
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(FooFqn).statuses).containsExactlyInAnyOrder(EMPTY,
-        COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
+    assertThat(fooTest01result.getCoverages(Foo).statuses).containsExactlyInAnyOrder(EMPTY, COVERED,
+        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // BarTest.test01()ではFooとBarが実行されたはず
-    final TestResult barTest01r = result.getTestResult(BarTest01Fqn);
-    assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FooFqn, BarFqn);
+    final TestResult barTest01r = result.getTestResult(BarTest01);
+    assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(Foo, Bar);
 
     // BarTest.test01()で実行されたBarのカバレッジはこうなるはず
-    assertThat(barTest01r.getCoverages(BarFqn).statuses).containsExactlyInAnyOrder(EMPTY,
-        NOT_COVERED, EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED,
-        NOT_COVERED);
+    assertThat(barTest01r.getCoverages(Bar).statuses).containsExactlyInAnyOrder(EMPTY, NOT_COVERED,
+        EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED);
 
     // TODO 最後のNOT_COVERDだけ理解できない．謎．
   }

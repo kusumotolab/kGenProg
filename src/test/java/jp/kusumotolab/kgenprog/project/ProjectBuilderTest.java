@@ -11,6 +11,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.test.ExampleAlias.Bin;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class ProjectBuilderTest {
@@ -137,10 +138,10 @@ public class ProjectBuilderTest {
 
     final Collection<File> classFiles =
         FileUtils.listFiles(workPath.toFile(), new String[] {"class"}, true);
-    final Path e1 = workPath.resolve("example/Foo.class");
-    final Path e2 = workPath.resolve("example/FooTest.class");
-    final Path e3 = workPath.resolve("example/Bar.class");
-    final Path e4 = workPath.resolve("example/BarTest.class");
+    final Path e1 = workPath.resolve(Bin.Foo);
+    final Path e2 = workPath.resolve(Bin.FooTest);
+    final Path e3 = workPath.resolve(Bin.Bar);
+    final Path e4 = workPath.resolve(Bin.BarTest);
 
     assertThat(classFiles).extracting(File::toPath)
         .containsExactlyInAnyOrder(e1, e2, e3, e4);

@@ -1,13 +1,11 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Bar;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Baz;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Foo;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Hamcrest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Junit;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Bar;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.BarTest;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Baz;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.BazTest;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Foo;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.FooTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,11 +20,12 @@ import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
+import jp.kusumotolab.kgenprog.project.test.ExampleAlias.Lib;
 
 public class TargetProjectFactoryTest {
 
-  private final static ClassPath junitPath = new ClassPath(Paths.get(Junit));
-  private final static ClassPath hamcrestPath = new ClassPath(Paths.get(Hamcrest));
+  private final static ClassPath junitClassPath = new ClassPath(Lib.Junit);
+  private final static ClassPath hamcrestClassPath = new ClassPath(Lib.Hamcrest);
 
   @Test
   public void testCreateByBasePath01() {
@@ -39,7 +38,7 @@ public class TargetProjectFactoryTest {
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitPath, hamcrestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
   }
 
   @Test
@@ -55,7 +54,7 @@ public class TargetProjectFactoryTest {
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath, barPath);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath, barTestPath);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitPath, hamcrestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
   }
 
   @Test
@@ -75,7 +74,7 @@ public class TargetProjectFactoryTest {
         bazPath);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath, barTestPath,
         bazTestPath);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitPath, hamcrestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
   }
 
   @Test
@@ -92,7 +91,7 @@ public class TargetProjectFactoryTest {
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitPath, hamcrestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
   }
 
   @Test(expected = IllegalArgumentException.class)
