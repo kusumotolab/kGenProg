@@ -17,7 +17,7 @@ public class OchiaiTest {
 
   @Test
   public void testForExample01() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
@@ -38,7 +38,7 @@ public class OchiaiTest {
 
   @Test
   public void testForExample02() {
-    final Path rootPath = Paths.get("example/example02");
+    final Path rootPath = Paths.get("example/BuildSuccess02");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
@@ -59,7 +59,7 @@ public class OchiaiTest {
 
   @Test
   public void testForFailedProject() throws IOException {
-    final Path rootPath = Paths.get("example/example00");
+    final Path rootPath = Paths.get("example/BuildFailure01");
     final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();

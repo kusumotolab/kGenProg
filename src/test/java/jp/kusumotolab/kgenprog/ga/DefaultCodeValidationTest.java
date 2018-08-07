@@ -13,7 +13,7 @@ public class DefaultCodeValidationTest {
 
   @Test
   public void testExec() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final Path workPath = rootPath.resolve("bin");
 
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
@@ -31,7 +31,7 @@ public class DefaultCodeValidationTest {
 
   @Test
   public void testExecForBuildFailure() {
-    final Path rootPath = Paths.get("example/example00");
+    final Path rootPath = Paths.get("example/BuildFailure01");
     final Path workPath = rootPath.resolve("bin");
 
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);

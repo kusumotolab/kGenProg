@@ -29,13 +29,11 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
  */
 public class MemoryClassLoaderTest {
 
-  final static Path rootPath = Paths.get("example/example01");
+  final static Path rootPath = Paths.get("example/BuildSuccess01");
   final static Path workPath = rootPath.resolve("bin");
 
-  final static String bc = "jp.kusumotolab.BuggyCalculator";
-  final static String bct = "jp.kusumotolab.BuggyCalculatorTest";
-  final static FullyQualifiedName bcfqn = new TargetFullyQualifiedName(bc);
-  final static FullyQualifiedName bctfqn = new TestFullyQualifiedName(bct);
+  final static FullyQualifiedName sourceFqn = ExampleAlias.Fqn.Foo;
+  final static FullyQualifiedName testFqn = ExampleAlias.Fqn.FooTest;
 
   static MemoryClassLoader loader;
 
@@ -67,13 +65,13 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(workPath);
 
     // 動的ロード
-    final Class<?> clazz = loader.loadClass(bcfqn);
+    final Class<?> clazz = loader.loadClass(sourceFqn);
     final Object instance = clazz.newInstance();
 
     // きちんと存在するか？その名前は正しいか？
     assertThat(instance).isNotNull();
-    assertThat(instance.toString()).startsWith(bcfqn.toString());
-    assertThat(clazz.getName()).isEqualTo(bcfqn.toString());
+    assertThat(instance.toString()).startsWith(sourceFqn.toString());
+    assertThat(clazz.getName()).isEqualTo(sourceFqn.toString());
   }
 
   @Test
@@ -81,13 +79,13 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(workPath);
 
     // 動的ロード（Override側のメソッドで試す）
-    final Class<?> clazz = loader.loadClass(bcfqn.toString(), false);
+    final Class<?> clazz = loader.loadClass(sourceFqn.toString(), false);
     final Object instance = clazz.newInstance();
 
     // きちんと存在するか？その名前は正しいか？
     assertThat(instance).isNotNull();
-    assertThat(instance.toString()).startsWith(bcfqn.toString());
-    assertThat(clazz.getName()).isEqualTo(bcfqn.toString());
+    assertThat(instance.toString()).startsWith(sourceFqn.toString());
+    assertThat(clazz.getName()).isEqualTo(sourceFqn.toString());
   }
 
   @Test(expected = ClassNotFoundException.class)
@@ -96,7 +94,7 @@ public class MemoryClassLoaderTest {
 
     // SystemLoaderで動的ロード，失敗するはず (Exceptionを期待)
     ClassLoader.getSystemClassLoader()
-        .loadClass(bcfqn.toString());
+        .loadClass(sourceFqn.toString());
   }
 
   @Test(expected = ClassNotFoundException.class)
@@ -105,7 +103,7 @@ public class MemoryClassLoaderTest {
 
     // リフレクションで動的ロード，失敗するはず (Exceptionを期待)
     // 処理自体は02と等価なはず
-    Class.forName(bcfqn.toString());
+    Class.forName(sourceFqn.toString());
   }
 
   @Test
@@ -113,9 +111,9 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(workPath);
 
     // リフレクション + MemoryLoaderで動的ロード，これは成功するはず
-    final Class<?> clazz = Class.forName(bcfqn.toString(), true, loader);
+    final Class<?> clazz = Class.forName(sourceFqn.toString(), true, loader);
 
-    assertThat(clazz.getName()).isEqualTo(bcfqn.toString());
+    assertThat(clazz.getName()).isEqualTo(sourceFqn.toString());
   }
 
   @Test
@@ -123,7 +121,7 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(workPath);
 
     // まず動的ロード
-    Class<?> clazz = loader.loadClass(bcfqn);
+    Class<?> clazz = loader.loadClass(sourceFqn);
 
     // 弱参照（アンロードの監視）の準備
     final WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -148,7 +146,7 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(workPath);
 
     // まず動的ロード
-    final Class<?> clazz = loader.loadClass(bcfqn);
+    final Class<?> clazz = loader.loadClass(sourceFqn);
 
     // 弱参照（アンロードの監視）の準備
     final WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -173,7 +171,7 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(workPath);
 
     // まず動的ロード
-    Class<?> clazz = loader.loadClass(bcfqn);
+    Class<?> clazz = loader.loadClass(sourceFqn);
 
     // 弱参照（アンロードの監視）の準備
     WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -195,7 +193,7 @@ public class MemoryClassLoaderTest {
     // もう一度ロードすると
     loader = new MemoryClassLoader(workPath);
 
-    clazz = loader.loadClass(bcfqn);
+    clazz = loader.loadClass(sourceFqn);
     targetClassWR = new WeakReference<>(clazz);
 
     // ロードされているはず
@@ -206,8 +204,8 @@ public class MemoryClassLoaderTest {
   public void testJUnitWithMemoryLoader01() throws Exception {
     loader = new MemoryClassLoader(workPath);
 
-    // BuggyCalculatorTest（BCTest）をロードしておく
-    final Class<?> clazz = loader.loadClass(bctfqn);
+    // CloseToZeroTestをロードしておく
+    final Class<?> clazz = loader.loadClass(testFqn);
 
     // テストを実行
     // * ここでBCTestのClassLoaderには上記MemoryClassLoaderが紐づく（自身をロードしたローダーが指定される）
@@ -228,10 +226,10 @@ public class MemoryClassLoaderTest {
     assertThat(listLoadedClasses(loader)).isEmpty();
 
     // テストだけをロード
-    final Class<?> clazz = loader.loadClass(bctfqn);
+    final Class<?> clazz = loader.loadClass(testFqn);
 
     // BCTestがロードされているはず
-    assertThat(listLoadedClasses(loader)).contains(bctfqn.toString());
+    assertThat(listLoadedClasses(loader)).contains(testFqn.toString());
 
     // テストを実行
     // * ここでBCTestのClassLoaderには上記MemoryClassLoaderが紐づく（自身をロードしたローダーが指定される）
@@ -240,7 +238,7 @@ public class MemoryClassLoaderTest {
     junitCore.run(clazz);
 
     // 上記テストの実行により，BCTestに加えBCもロードされているはず
-    assertThat(listLoadedClasses(loader)).contains(bctfqn.toString(), bcfqn.toString());
+    assertThat(listLoadedClasses(loader)).contains(testFqn.toString(), sourceFqn.toString());
   }
 
   @Test
@@ -248,11 +246,11 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader(workPath);
 
     // .classファイルを探す
-    final String className = bcfqn.toString()
+    final String className = sourceFqn.toString()
         .replace(".", "/") + ".class";
-    final Path buggyCalculatorClassFilePath = Paths.get(className);
+    final Path classpath = Paths.get(className);
     final Path classFilePath = Files.walk(workPath)
-        .filter(path -> path.endsWith(buggyCalculatorClassFilePath))
+        .filter(path -> path.endsWith(classpath))
         .findFirst()
         .get();
 
@@ -260,11 +258,11 @@ public class MemoryClassLoaderTest {
     final byte[] byteCode = Files.readAllBytes(classFilePath);
 
     // addDefinitionで定義追加
-    loader.addDefinition(bcfqn, byteCode);
+    loader.addDefinition(sourceFqn, byteCode);
 
     // クラスロードできるはず
-    final Class<?> clazz = loader.loadClass(bcfqn);
-    assertThat(clazz.getName()).hasToString(bcfqn.toString());
+    final Class<?> clazz = loader.loadClass(sourceFqn);
+    assertThat(clazz.getName()).hasToString(sourceFqn.toString());
   }
 
   @Test(expected = ClassFormatError.class)
@@ -275,10 +273,10 @@ public class MemoryClassLoaderTest {
     final byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};
 
     // addDefinitionで定義追加
-    loader.addDefinition(bcfqn, invalidByteCode);
+    loader.addDefinition(sourceFqn, invalidByteCode);
 
     // クラスロード（バグるはず）
-    loader.loadClass(bcfqn);
+    loader.loadClass(sourceFqn);
   }
 
   /**
