@@ -48,8 +48,7 @@ public class PatchGenerator implements ResultGenerator {
     modifiedCode.addAll(applyAllModificationDirectly(targetProject, modifiedVariants));
 
     for (GeneratedSourceCode code : modifiedCode) {
-      final String variantDir = "variant" + (modifiedCode.indexOf(code) + 1);
-      final Path variantBasePath = workingDir.resolve(variantDir);
+      final Path variantBasePath = makeDirName(modifiedCode.indexOf(code) + 1);
 
       try {
         Files.createDirectory(variantBasePath);
@@ -68,7 +67,8 @@ public class PatchGenerator implements ResultGenerator {
               .rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
-            final Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
+            final Path diffFilePath =
+                variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
             edit.apply(document);
             Files.write(diffFilePath, Arrays.asList(document.get()));
 
@@ -154,5 +154,15 @@ public class PatchGenerator implements ResultGenerator {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
+  }
+
+  /***
+   * 出力ディレクトリ名の生成
+   *
+   * @param variantNum
+   * @return
+   */
+  private Path makeDirName(int variantNum) {
+    return workingDir.resolve("variant" + variantNum);
   }
 }
