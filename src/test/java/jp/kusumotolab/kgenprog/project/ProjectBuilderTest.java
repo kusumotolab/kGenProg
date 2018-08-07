@@ -16,6 +16,8 @@ import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class ProjectBuilderTest {
 
+  private final String[] javaExtension = new String[] {"class"};
+
   @Test
   public void testBuildStringForExample00() {
     final Path rootPath = Paths.get("example/BuildFailure01");
@@ -43,6 +45,12 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
+    final Collection<File> classFiles = FileUtils.listFiles(workPath.toFile(), javaExtension, true);
+    final Path foo = workPath.resolve(Bin.Foo);
+    final Path fooTest = workPath.resolve(Bin.FooTest);
+    assertThat(classFiles).extracting(c -> c.toPath())
+        .containsExactlyInAnyOrder(foo, fooTest);
+
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
       assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
@@ -69,6 +77,14 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
+    final Collection<File> classFiles = FileUtils.listFiles(workPath.toFile(), javaExtension, true);
+    final Path foo = workPath.resolve(Bin.Foo);
+    final Path fooTest = workPath.resolve(Bin.FooTest);
+    final Path bar = workPath.resolve(Bin.Bar);
+    final Path barTest = workPath.resolve(Bin.BarTest);
+    assertThat(classFiles).extracting(c -> c.toPath())
+        .containsExactlyInAnyOrder(foo, fooTest, bar, barTest);
+
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
       assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
@@ -94,6 +110,21 @@ public class ProjectBuilderTest {
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
+
+    final Collection<File> classFiles = FileUtils.listFiles(workPath.toFile(), javaExtension, true);
+    final Path foo = workPath.resolve(Bin.Foo);
+    final Path fooTest = workPath.resolve(Bin.FooTest);
+    final Path bar = workPath.resolve(Bin.Bar);
+    final Path barTest = workPath.resolve(Bin.BarTest);
+    final Path baz = workPath.resolve(Bin.Baz);
+    final Path bazTest = workPath.resolve(Bin.BazTest);
+    final Path inner = workPath.resolve(Bin.BazInner);
+    final Path staticInner = workPath.resolve(Bin.BazStaticInner);
+    final Path anonymous = workPath.resolve(Bin.BazAnonymous);
+    final Path outer = workPath.resolve(Bin.BazOuter);
+    assertThat(classFiles).extracting(c -> c.toPath())
+        .containsExactlyInAnyOrder(foo, fooTest, bar, barTest, baz, bazTest, inner, staticInner,
+            anonymous, outer);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
