@@ -137,10 +137,10 @@ public class ProjectBuilderTest {
 
     final Collection<File> classFiles =
         FileUtils.listFiles(workPath.toFile(), new String[] {"class"}, true);
-    final Path e1 = workPath.resolve("example.BuggyCalculator.class");
-    final Path e2 = workPath.resolve("example.BuggyCalculatorTest.class");
-    final Path e3 = workPath.resolve("example.Util.class");
-    final Path e4 = workPath.resolve("example.UtilTest.class");
+    final Path e1 = workPath.resolve("example/Foo.class");
+    final Path e2 = workPath.resolve("example/FooTest.class");
+    final Path e3 = workPath.resolve("example/Bar.class");
+    final Path e4 = workPath.resolve("example/BarTest.class");
 
     assertThat(classFiles).extracting(File::toPath)
         .containsExactlyInAnyOrder(e1, e2, e3, e4);
