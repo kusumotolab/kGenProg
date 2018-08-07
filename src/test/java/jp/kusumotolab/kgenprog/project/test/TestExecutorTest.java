@@ -3,6 +3,23 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest01Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest02Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest03Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest04Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTest05Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BarTestFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazAnonymousFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazInnerFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazOuterFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.BazStaticInnerFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest01Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest02Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest03Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest04Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTestFqn;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,32 +34,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestExecutorTest {
 
-  final static String bc = "example.BuggyCalculator";
-  final static String bct = "example.BuggyCalculatorTest";
-  final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
-  final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bct);
-
-  final static String ut = "example.Util";
-  final static String utt = "example.UtilTest";
-  final static FullyQualifiedName util = new TargetFullyQualifiedName(ut);
-  final static FullyQualifiedName utilTest = new TestFullyQualifiedName(utt);
-
-  final static FullyQualifiedName inner = new TargetFullyQualifiedName(bc + "$InnerClass");
-  final static FullyQualifiedName stInner = new TargetFullyQualifiedName(bc + "$StaticInnerClass");
-  final static FullyQualifiedName anonymous = new TargetFullyQualifiedName(bc + "$1");
-  final static FullyQualifiedName outer = new TargetFullyQualifiedName("example.OuterClass");
-
-  final static FullyQualifiedName test01 = new TestFullyQualifiedName(bct + ".test01");
-  final static FullyQualifiedName test02 = new TestFullyQualifiedName(bct + ".test02");
-  final static FullyQualifiedName test03 = new TestFullyQualifiedName(bct + ".test03");
-  final static FullyQualifiedName test04 = new TestFullyQualifiedName(bct + ".test04");
-
-  final static FullyQualifiedName plusTest01 = new TestFullyQualifiedName(utt + ".plusTest01");
-  final static FullyQualifiedName plusTest02 = new TestFullyQualifiedName(utt + ".plusTest02");
-  final static FullyQualifiedName minusTest01 = new TestFullyQualifiedName(utt + ".minusTest01");
-  final static FullyQualifiedName minusTest02 = new TestFullyQualifiedName(utt + ".minusTest02");
-  final static FullyQualifiedName dummyTest01 = new TestFullyQualifiedName(utt + ".dummyTest01");
-
   private TestResults generateTestResultsForExample01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final Path workPath = rootPath.resolve("bin");
@@ -52,8 +43,7 @@ public class TestExecutorTest {
     new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
 
     final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(buggyCalculator),
-        Arrays.asList(buggyCalculatorTest));
+    return executor.exec(new ClassPath(workPath), Arrays.asList(FooFqn), Arrays.asList(FooTestFqn));
   }
 
   private TestResults generateTestResultsForExample02() throws Exception {
@@ -65,8 +55,8 @@ public class TestExecutorTest {
     new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
 
     final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(buggyCalculator, util),
-        Arrays.asList(buggyCalculatorTest, utilTest));
+    return executor.exec(new ClassPath(workPath), Arrays.asList(FooFqn, BarFqn),
+        Arrays.asList(FooTestFqn, BarTestFqn));
   }
 
   @SuppressWarnings("unused")
@@ -80,72 +70,84 @@ public class TestExecutorTest {
 
     final TestExecutor executor = new TestExecutor();
     return executor.exec(new ClassPath(workPath),
-        Arrays.asList(buggyCalculator, util, inner, stInner, outer),
-        Arrays.asList(buggyCalculatorTest, utilTest));
+        Arrays.asList(FooFqn, BarFqn, BazInnerFqn, BazStaticInnerFqn, BazAnonymousFqn, BazOuterFqn),
+        Arrays.asList(FooTestFqn, BarTestFqn));
   }
 
   @Test
-  public void testTestExecutorForExample01() throws Exception {
-    final TestResults r = generateTestResultsForExample01();
+  public void testTestExecutorForBuildSuccess01() throws Exception {
+    final TestResults result = generateTestResultsForExample01();
 
-    // example01で実行されたテストは4つのはず
-    assertThat(r.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test02, test03, test04);
+    // 実行されたテストは4個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FooTest01Fqn, FooTest02Fqn, FooTest03Fqn, FooTest04Fqn);
 
-    // テストの成否はこうなるはず
-    assertThat(r.getTestResult(test01).failed).isFalse();
-    assertThat(r.getTestResult(test02).failed).isFalse();
-    assertThat(r.getTestResult(test03).failed).isTrue();
-    assertThat(r.getTestResult(test04).failed).isFalse();
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FooTest01Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest02Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest03Fqn).failed).isTrue();
+    assertThat(result.getTestResult(FooTest04Fqn).failed).isFalse();
 
-    final TestResult tr01 = r.getTestResult(test01);
-    final TestResult tr04 = r.getTestResult(test04);
+    // よってテストの成功率はこうなる
+    assertThat(result.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
 
-    // test01()ではBuggyCalculatorのみが実行されたはず
-    assertThat(tr01.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator);
+    final TestResult fooTest01result = result.getTestResult(FooTest01Fqn);
+    final TestResult fooTest04result = result.getTestResult(FooTest04Fqn);
 
-    // test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
-    assertThat(tr01.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    // FooTest.test01 実行によるFooのカバレッジはこうなるはず
+    assertThat(fooTest01result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
-    // test04()で実行されたbuggyCalculatorのバレッジはこうなるはず
-    assertThat(tr04.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    // FooTest.test04 実行によるFooのバレッジはこうなるはず
+    assertThat(fooTest04result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 
   @Test
-  public void testTestExecutorForExample02() throws Exception {
-    final TestResults r = generateTestResultsForExample02();
+  public void testTestExecutorForBuildSuccess02() throws Exception {
+    final TestResults result = generateTestResultsForExample02();
 
-    // example02で実行されたテストは10個のはず
-    assertThat(r.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test02, test03, test04,
-        plusTest01, plusTest02, minusTest01, minusTest02, dummyTest01);
+    // 実行されたテストは10個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FooTest01Fqn, FooTest02Fqn, FooTest03Fqn, FooTest04Fqn, //
+        BarTest01Fqn, BarTest02Fqn, BarTest03Fqn, BarTest04Fqn, BarTest05Fqn);
 
-    // テストの成否はこうなるはず
-    assertThat(r.getTestResult(test01).failed).isFalse();
-    assertThat(r.getTestResult(test02).failed).isFalse();
-    assertThat(r.getTestResult(test03).failed).isTrue();
-    assertThat(r.getTestResult(test04).failed).isFalse();
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FooTest01Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest02Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest03Fqn).failed).isTrue();
+    assertThat(result.getTestResult(FooTest04Fqn).failed).isFalse();
+    assertThat(result.getTestResult(BarTest01Fqn).failed).isFalse();
+    assertThat(result.getTestResult(BarTest02Fqn).failed).isFalse();
+    assertThat(result.getTestResult(BarTest03Fqn).failed).isFalse();
+    assertThat(result.getTestResult(BarTest04Fqn).failed).isFalse();
+    assertThat(result.getTestResult(BarTest05Fqn).failed).isFalse();
 
-    final TestResult tr01 = r.getTestResult(test01);
+    final TestResult fooTest01result = result.getTestResult(FooTest01Fqn);
 
-    // test01()ではBuggyCalculatorとUtilが実行されたはず
-    assertThat(tr01.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator, util);
+    // FooTest.test01()ではFooとBarが実行されたはず
+    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FooFqn, BarFqn);
 
-    // test01()で実行されたBuggyCalculatorのカバレッジはこうなるはず
-    assertThat(tr01.getCoverages(buggyCalculator).statuses).containsExactlyInAnyOrder(EMPTY,
+    // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
+    assertThat(fooTest01result.getCoverages(FooFqn).statuses).containsExactlyInAnyOrder(EMPTY,
         COVERED, EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
-    // plusTest01()ではBuggyCalculatorとUtilが実行されたはず
-    final TestResult plusTest01result = r.getTestResult(plusTest01);
-    assertThat(plusTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(buggyCalculator,
-        util);
+    // BarTest.test01()ではFooとBarが実行されたはず
+    final TestResult barTest01r = result.getTestResult(BarTest01Fqn);
+    assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FooFqn, BarFqn);
 
-    // plusTest01()で実行されたUtilのカバレッジはこうなるはず
-    assertThat(plusTest01result.getCoverages(util).statuses).containsExactlyInAnyOrder(EMPTY,
+    // BarTest.test01()で実行されたBarのカバレッジはこうなるはず
+    assertThat(barTest01r.getCoverages(BarFqn).statuses).containsExactlyInAnyOrder(EMPTY,
         NOT_COVERED, EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED,
         NOT_COVERED);
 
     // TODO 最後のNOT_COVERDだけ理解できない．謎．
+  }
+
+  @Test
+  public void testTestExecutorForBuildSuccess03() throws Exception {
+    // TODO
+    // Should confirm BuildSuccess03
   }
 
 }

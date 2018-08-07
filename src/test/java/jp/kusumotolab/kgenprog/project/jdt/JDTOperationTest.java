@@ -17,12 +17,12 @@ public class JDTOperationTest {
   public void testApplyHandlingException() {
     final JDTOperation operation = new ExceptionOperation();
 
-    final Path path = Paths.get("example/BuildSuccess01/src/example/BuggyCalculator.java");
+    final Path path = Paths.get("example/BuildSuccess01/src/example/Foo.java");
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedSourceCode generatedSourceCode =
-        new GeneratedSourceCode(constructor.constructAST(Collections.singletonList(productSourcePath)));
+    final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(
+        constructor.constructAST(Collections.singletonList(productSourcePath)));
 
     final GeneratedSourceCode applied =
         operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null));

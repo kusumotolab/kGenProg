@@ -3,6 +3,11 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooFqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest01Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest02Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest03Fqn;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.FooTest04Fqn;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,16 +20,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class TestProcessBuilderTest {
-
-  final static String bc = "example.BuggyCalculator";
-  final static String bct = "example.BuggyCalculatorTest";
-  final static FullyQualifiedName buggyCalculator = new TargetFullyQualifiedName(bc);
-  final static FullyQualifiedName buggyCalculatorTest = new TestFullyQualifiedName(bct);
-
-  final static FullyQualifiedName test01 = new TestFullyQualifiedName(bct + ".test01");
-  final static FullyQualifiedName test02 = new TestFullyQualifiedName(bct + ".test02");
-  final static FullyQualifiedName test03 = new TestFullyQualifiedName(bct + ".test03");
-  final static FullyQualifiedName test04 = new TestFullyQualifiedName(bct + ".test04");
 
   @Before
   public void before() throws IOException {
@@ -40,25 +35,30 @@ public class TestProcessBuilderTest {
     // main
     final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
     final Variant variant = targetProject.getInitialVariant();
-    final TestResults r = builder.start(variant.getGeneratedSourceCode());
+    final TestResults result = builder.start(variant.getGeneratedSourceCode());
 
-    // テストの結果はこうなるはず
-    assertThat(r.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
-    assertThat(r.getExecutedTestFQNs()).containsExactlyInAnyOrder(test01, test02, test03, test04);
-    assertThat(r.getTestResult(test01).failed).isFalse();
-    assertThat(r.getTestResult(test02).failed).isFalse();
-    assertThat(r.getTestResult(test03).failed).isTrue();
-    assertThat(r.getTestResult(test04).failed).isFalse();
+    // 実行されたテストは4個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FooTest01Fqn, FooTest02Fqn, FooTest03Fqn, FooTest04Fqn);
 
-    final TestResult tr01 = r.getTestResult(test01);
-    final TestResult tr04 = r.getTestResult(test04);
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FooTest01Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest02Fqn).failed).isFalse();
+    assertThat(result.getTestResult(FooTest03Fqn).failed).isTrue();
+    assertThat(result.getTestResult(FooTest04Fqn).failed).isFalse();
 
-    // BuggyCalculatorTest.test01 実行によるbuggyCalculatorのカバレッジはこうなるはず
-    assertThat(tr01.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    // よってテストの成功率はこうなる
+    assertThat(result.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
+
+    final TestResult fooTest01result = result.getTestResult(FooTest01Fqn);
+    final TestResult fooTest04result = result.getTestResult(FooTest04Fqn);
+
+    // FooTest.test01 実行によるFooのカバレッジはこうなるはず
+    assertThat(fooTest01result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
-    // BuggyCalculatorTest.test04 実行によるbuggyCalculatorのバレッジはこうなるはず
-    assertThat(tr04.getCoverages(buggyCalculator).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    // FooTest.test04 実行によるFooのバレッジはこうなるはず
+    assertThat(fooTest04result.getCoverages(FooFqn).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 

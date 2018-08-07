@@ -4,12 +4,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-public class BuggyCalculator {
-	public int close_to_zero(int n) {
+public class Baz {
+	public int baz(int n) {
 		if (n > 0) {
-			n = Util.minus(n);
+			n = Bar.bar1(n);
 		} else {
-			n = Util.plus(n);
+			n = Bar.bar2(n);
 		}
 		// 内部クラスの生成と実行
 		InnerClass innerClass = new InnerClass();

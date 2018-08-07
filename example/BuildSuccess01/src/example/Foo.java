@@ -1,6 +1,6 @@
 package example;
-public class BuggyCalculator {
-  public int close_to_zero(  int n){
+public class Foo {
+  public int foo(  int n){
     if (n > 0) {
       n--;
     }
