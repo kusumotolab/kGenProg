@@ -103,6 +103,10 @@ public class CUILauncher {
     this.classPaths.add(new ClassPath(Paths.get(classPaths)));
   }
 
+  public Level getLogLevel() {
+    return rootLogger.getLevel();
+  }
+
   // endregion
 
   public static void main(String[] args) {
