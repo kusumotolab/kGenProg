@@ -32,12 +32,12 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator1() throws IOException {
-    final Path basePath = Paths.get("example/example01");
+    final Path basePath = Paths.get("example/BuildSuccess01");
     final Path outdirPath = basePath.resolve("modified");
     final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    final String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
-        + "  public int close_to_zero(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
+    final String expected = "package example;\n" + "public class Foo {\n"
+        + "  public int foo(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Variant originVariant = project.getInitialVariant();
@@ -55,17 +55,17 @@ public class PatchGeneratorTest {
         .get(0);
     final DeleteOperation operation = new DeleteOperation();
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
 
-    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final GeneratedSourceCode code =
+        operation.apply(originVariant.getGeneratedSourceCode(), location);
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
-    final String modifiedSourceCode = new String(
-        Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
+    final String modifiedSourceCode =
+        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Foo.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -74,15 +74,24 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator2() throws IOException {
-    final Path basePath = Paths.get("example/example03");
+    final Path basePath = Paths.get("example/BuildSuccess03");
     final Path outdirPath = basePath.resolve("modified");
     final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    final String expected = "package jp.kusumotolab;\n" + "\n" + "public class Util {\n"
-        + "\tpublic static int plus(int n) {\n" + "\t}\n" + "\n"
-        + "\tpublic static int minus(int n) {\n" + "\t\treturn n - 1;\n" + "\t}\n" + "\n"
-        + "\t// テストからのみ実行されるダミー関数\n" + "\tpublic static void dummy() {\n" + "\t\tnew String();\n"
-        + "\t}\n" + "}\n\n";
+    final String expected = new StringBuilder().append("")
+        .append("package example;\n")
+        .append("public class Bar {\n")
+        .append("  public static int bar1(  int n){\n")
+        // .append(" return n + 1;\n")
+        .append("  }\n")
+        .append("  public static int bar2(  int n){\n")
+        .append("    return n - 1;\n")
+        .append("  }\n")
+        .append("  public static void bar3(){\n")
+        .append("    new String();\n")
+        .append("  }\n")
+        .append("}\n\n")
+        .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Variant originVariant = project.getInitialVariant();
@@ -100,16 +109,17 @@ public class PatchGeneratorTest {
         .get(0);
     final DeleteOperation operation = new DeleteOperation();
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/Util.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement);
 
-    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final GeneratedSourceCode code =
+        operation.apply(originVariant.getGeneratedSourceCode(), location);
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
     final String modifiedSourceCode =
-        new String(Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.Util.java")));
+        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Bar.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -118,14 +128,14 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator3() throws IOException {
-    final Path basePath = Paths.get("example/example01");
+    final Path basePath = Paths.get("example/BuildSuccess01");
     final Path outdirPath = basePath.resolve("modified");
     final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    final String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
-        + "  public int close_to_zero(  int n){\n" + "    if (n > 0) {\n" + "      n--;\n"
-        + "    }\n" + " else {\n" + "      n++;\n" + "    }\n" + "    a();\n" + "\treturn n;\n"
-        + "  }\n" + "}\n\n";
+    final String expected =
+        "package example;\n" + "public class Foo {\n" + "  public int foo(  int n){\n"
+            + "    if (n > 0) {\n" + "      n--;\n" + "    }\n" + " else {\n" + "      n++;\n"
+            + "    }\n" + "    a();\n" + "\treturn n;\n" + "  }\n" + "}\n\n";
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Variant originVariant = project.getInitialVariant();
@@ -142,8 +152,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -154,15 +163,16 @@ public class PatchGeneratorTest {
 
     final InsertOperation operation = new InsertOperation(insertStatement);
 
-    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final GeneratedSourceCode code =
+        operation.apply(originVariant.getGeneratedSourceCode(), location);
 
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
-    final String modifiedSourceCode = new String(
-        Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
+    final String modifiedSourceCode =
+        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Foo.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 
@@ -172,13 +182,13 @@ public class PatchGeneratorTest {
   @SuppressWarnings("unchecked")
   @Test
   public void testPatchGenerator4() throws IOException {
-    final Path basePath = Paths.get("example/example01/");
+    final Path basePath = Paths.get("example/BuildSuccess01/");
     final Path outdirPath = basePath.resolve("modified");
     final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    final String expected = "package jp.kusumotolab;\n" + "public class BuggyCalculator {\n"
-        + "  public int close_to_zero(  int n){\n" + "    {\n" + "\t\ta();\n" + "\t}\n"
-        + "    return n;\n" + "  }\n" + "}\n\n";
+    final String expected =
+        "package example;\n" + "public class Foo {\n" + "  public int foo(  int n){\n" + "    {\n"
+            + "\t\ta();\n" + "\t}\n" + "    return n;\n" + "  }\n" + "}\n\n";
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Variant originVariant = project.getInitialVariant();
@@ -195,8 +205,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/jp/kusumotolab/BuggyCalculator.java")),
-        statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -210,14 +219,15 @@ public class PatchGeneratorTest {
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
 
-    final GeneratedSourceCode code = operation.apply(originVariant.getGeneratedSourceCode(), location);
+    final GeneratedSourceCode code =
+        operation.apply(originVariant.getGeneratedSourceCode(), location);
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
     patchGenerator.exec(project, modVariant);
 
-    final String modifiedSourceCode = new String(
-        Files.readAllBytes(outdirPath.resolve("variant1/jp.kusumotolab.BuggyCalculator.java")));
+    final String modifiedSourceCode =
+        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Foo.java")));
 
     FileUtils.deleteDirectory(outdirPath.toFile());
 

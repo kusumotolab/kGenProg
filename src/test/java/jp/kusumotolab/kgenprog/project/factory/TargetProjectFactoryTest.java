@@ -1,5 +1,11 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Bar;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.BarTest;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Baz;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.BazTest;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Foo;
+import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.FooTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,70 +20,83 @@ import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
+import jp.kusumotolab.kgenprog.project.test.ExampleAlias.Lib;
 
 public class TargetProjectFactoryTest {
 
-  // aliases for tested elements
-  private final static String bc = "src/jp/kusumotolab/BuggyCalculator.java";
-  private final static String bct = "src/jp/kusumotolab/BuggyCalculatorTest.java";
-  private final static String ut = "src/jp/kusumotolab/Util.java";
-  private final static String utt = "src/jp/kusumotolab/UtilTest.java";
-  private final static String ju = "lib/junit4/junit-4.12.jar";
-  private final static String hm = "lib/junit4/hamcrest-core-1.3.jar";
-
-  private final static ClassPath juPath = new ClassPath(Paths.get(ju));
-  private final static ClassPath hmPath = new ClassPath(Paths.get(hm));
+  private final static ClassPath junitClassPath = new ClassPath(Lib.Junit);
+  private final static ClassPath hamcrestClassPath = new ClassPath(Lib.Hamcrest);
 
   @Test
   public void testCreateByBasePath01() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
-    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Foo));
+    final TestSourcePath fooTestPath = new TestSourcePath(rootPath.resolve(FooTest));
 
     assertThat(project.rootPath).isSameAs(rootPath);
-    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(bcPath);
-    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(bctPath);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(juPath, hmPath);
+    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath);
+    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
   }
 
   @Test
   public void testCreateByBasePath02() {
-    final Path rootPath = Paths.get("example/example02");
+    final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
-    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
-    final ProductSourcePath utPath = new ProductSourcePath(rootPath.resolve(ut));
-    final TestSourcePath uttPath = new TestSourcePath(rootPath.resolve(utt));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Foo));
+    final TestSourcePath fooTestPath = new TestSourcePath(rootPath.resolve(FooTest));
+    final ProductSourcePath barPath = new ProductSourcePath(rootPath.resolve(Bar));
+    final TestSourcePath barTestPath = new TestSourcePath(rootPath.resolve(BarTest));
 
     assertThat(project.rootPath).isSameAs(rootPath);
-    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(bcPath, utPath);
-    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(bctPath, uttPath);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(juPath, hmPath);
+    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath, barPath);
+    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath, barTestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
+  }
+
+  @Test
+  public void testCreateByBasePath03() {
+    final Path rootPath = Paths.get("example/BuildSuccess03");
+    final TargetProject project = TargetProjectFactory.create(rootPath);
+
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Foo));
+    final TestSourcePath fooTestPath = new TestSourcePath(rootPath.resolve(FooTest));
+    final ProductSourcePath barPath = new ProductSourcePath(rootPath.resolve(Bar));
+    final TestSourcePath barTestPath = new TestSourcePath(rootPath.resolve(BarTest));
+    final ProductSourcePath bazPath = new ProductSourcePath(rootPath.resolve(Baz));
+    final TestSourcePath bazTestPath = new TestSourcePath(rootPath.resolve(BazTest));
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath, barPath,
+        bazPath);
+    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath, barTestPath,
+        bazTestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
   }
 
   @Test
   public void testCreateByCompletelySpecified01() {
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
 
-    final ProductSourcePath bcPath = new ProductSourcePath(rootPath.resolve(bc));
-    final TestSourcePath bctPath = new TestSourcePath(rootPath.resolve(bct));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Foo));
+    final TestSourcePath fooTestPath = new TestSourcePath(rootPath.resolve(FooTest));
 
     // 全パラメータを指定して生成
-    final TargetProject project = TargetProjectFactory.create(rootPath, Arrays.asList(bcPath),
-        Arrays.asList(bctPath), Collections.emptyList(), JUnitVersion.JUNIT4);
+    final TargetProject project = TargetProjectFactory.create(rootPath, Arrays.asList(fooPath),
+        Arrays.asList(fooTestPath), Collections.emptyList(), JUnitVersion.JUNIT4);
 
     assertThat(project.rootPath).isSameAs(rootPath);
-    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(bcPath);
-    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(bctPath);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(juPath, hmPath);
+    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath);
+    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(junitClassPath, hamcrestClassPath);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testCreateFailure01() {
-    final Path rootPath = Paths.get("example/example01xxxxxxxxx");
+    final Path rootPath = Paths.get("example/NonExistentProject");
 
     // Exception to be thrown
     TargetProjectFactory.create(rootPath);
@@ -88,7 +107,7 @@ public class TargetProjectFactoryTest {
     // Factoryとして正しく振る舞っているかを確認．
     // スタブを実行する一時的なテスト．
 
-    final Path rootPath = Paths.get("example/example01");
+    final Path rootPath = Paths.get("example/BuildSuccess01");
 
     // runtime exceptionを隠すためにsystem.errを退避して無効化
     final PrintStream ps = System.err;
@@ -115,6 +134,7 @@ public class TargetProjectFactoryTest {
     // TODO
     // assertがfailするとファイルが削除されない．
     // 作用を残したままになってしまい，他のテストが巻き込まれて死ぬ．
+    // https://github.com/kusumotolab/kGenProg/issues/97
   }
 
 }

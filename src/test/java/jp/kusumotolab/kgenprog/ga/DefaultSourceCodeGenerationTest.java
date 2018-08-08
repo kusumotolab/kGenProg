@@ -18,7 +18,7 @@ public class DefaultSourceCodeGenerationTest {
 
   @Test
   public void testExec() {
-    final Path rootDir = Paths.get("example/example01");
+    final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
 
     final Base base = new Base(null, new NoneOperation());
@@ -38,7 +38,7 @@ public class DefaultSourceCodeGenerationTest {
 
   @Test
   public void noneOperationTest() {
-    final TargetProject targetProject = TargetProjectFactory.create(Paths.get("example/example01"));
+    final TargetProject targetProject = TargetProjectFactory.create(Paths.get("example/BuildSuccess01"));
     final Variant initialVariant = targetProject.getInitialVariant();
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
 

@@ -199,8 +199,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterInsertOperation() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
+    final String foo = "example/BuildSuccess01/src/example/Foo.java";
+    final ProductSourcePath path = new ProductSourcePath(Paths.get(foo));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
@@ -249,8 +249,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterDeleteOperation() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
+    final String source = "example/BuildSuccess01/src/example/Foo.java";
+    final ProductSourcePath path = new ProductSourcePath(Paths.get(source));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
@@ -286,8 +286,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterReplaceOperation() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
+    final String source = "example/BuildSuccess01/src/example/Foo.java";
+    final ProductSourcePath path = new ProductSourcePath(Paths.get(source));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
@@ -340,14 +340,14 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testGetMessageDigest01() {
-    final String bc = "example/example01/src/jp/kusumotolab/BuggyCalculator.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(bc));
+    final String source = "example/BuildSuccess01/src/example/Foo.java";
+    final ProductSourcePath path = new ProductSourcePath(Paths.get(source));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final List<GeneratedAST> asts = constructor.constructAST(Collections.singletonList(path));
     final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
 
-    assertThat(jdtAst.getMessageDigest()).isEqualTo("2770dd8d6e41a26a02f95939d03e89df");
+    assertThat(jdtAst.getMessageDigest()).isEqualTo("203afcb54181c234b8450eb5e02efdf8");
   }
 
   @Test

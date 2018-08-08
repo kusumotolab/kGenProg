@@ -51,7 +51,7 @@ public class RandomMutationTest {
 
   @Test
   public void testExec() throws NoSuchFieldException, IllegalAccessException {
-    final Path basePath = Paths.get("example/example01");
+    final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final TestNumberGeneration randomNumberGeneration = new TestNumberGeneration();
