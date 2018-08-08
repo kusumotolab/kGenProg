@@ -36,8 +36,12 @@ public class PatchGeneratorTest {
     final Path outdirPath = basePath.resolve("modified");
     final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    final String expected = "package example;\n" + "public class Foo {\n"
-        + "  public int foo(  int n){\n" + "    return n;\n" + "  }\n" + "}\n\n";
+    final String expected = new StringBuilder().append("package example;\n")
+        .append("public class Foo {\n")
+        .append("  public int foo(  int n){\n")
+        .append("    return n;\n" + "  }\n")
+        .append("}\n\n")
+        .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Variant originVariant = project.getInitialVariant();
@@ -132,10 +136,20 @@ public class PatchGeneratorTest {
     final Path outdirPath = basePath.resolve("modified");
     final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    final String expected =
-        "package example;\n" + "public class Foo {\n" + "  public int foo(  int n){\n"
-            + "    if (n > 0) {\n" + "      n--;\n" + "    }\n" + " else {\n" + "      n++;\n"
-            + "    }\n" + "    a();\n" + "\treturn n;\n" + "  }\n" + "}\n\n";
+    final String expected = new StringBuilder().append("package example;\n")
+        .append("public class Foo {\n")
+        .append("  public int foo(  int n){\n")
+        .append("    if (n > 0) {\n")
+        .append("      n--;\n")
+        .append("    }\n")
+        .append(" else {\n")
+        .append("      n++;\n")
+        .append("    }\n")
+        .append("    a();\n")
+        .append("\treturn n;\n")
+        .append("  }\n")
+        .append("}\n\n")
+        .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Variant originVariant = project.getInitialVariant();
@@ -186,9 +200,16 @@ public class PatchGeneratorTest {
     final Path outdirPath = basePath.resolve("modified");
     final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
 
-    final String expected =
-        "package example;\n" + "public class Foo {\n" + "  public int foo(  int n){\n" + "    {\n"
-            + "\t\ta();\n" + "\t}\n" + "    return n;\n" + "  }\n" + "}\n\n";
+    final String expected = new StringBuilder().append("package example;\n")
+        .append("public class Foo {\n")
+        .append("  public int foo(  int n){\n")
+        .append("    {\n")
+        .append("\t\ta();\n")
+        .append("\t}\n")
+        .append("    return n;\n")
+        .append("  }\n")
+        .append("}\n\n")
+        .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Variant originVariant = project.getInitialVariant();
