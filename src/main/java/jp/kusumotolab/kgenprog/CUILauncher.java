@@ -10,6 +10,7 @@ import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.Crossover;
@@ -41,6 +42,15 @@ public class CUILauncher {
   private List<ProductSourcePath> productSourcePaths = new ArrayList<>();
   private List<TestSourcePath> testSourcePaths = new ArrayList<>();
   private List<ClassPath> classPaths = new ArrayList<>();
+  private ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+  // endregion
+
+  // region Constructor
+
+  CUILauncher() {
+    rootLogger.setLevel(Level.INFO);
+  }
+
   // endregion
 
   // region Getter/Setter
