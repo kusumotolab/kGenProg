@@ -107,6 +107,13 @@ public class CUILauncher {
     return rootLogger.getLevel();
   }
 
+  @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.")
+  public void setLogLevelDebug(boolean isVerbose) {
+    log.debug("enter setLogLevelDebug(boolean)");
+    log.info("log level was set DEBUG");
+    rootLogger.setLevel(Level.DEBUG);
+  }
+
   // endregion
 
   public static void main(String[] args) {
