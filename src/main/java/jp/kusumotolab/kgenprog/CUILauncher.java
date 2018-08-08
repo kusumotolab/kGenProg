@@ -86,7 +86,7 @@ public class CUILauncher {
     return classPaths;
   }
 
-  @Option(name = "-c", aliases = "--cp", required = true, handler = StringArrayOptionHandler.class,
+  @Option(name = "-c", aliases = "--cp", handler = StringArrayOptionHandler.class,
       metaVar = "<class path> ...", usage = "Class paths required to build the target project")
   public void setClassPaths(String classPaths) {
     log.debug("enter setClassPaths(String)");
