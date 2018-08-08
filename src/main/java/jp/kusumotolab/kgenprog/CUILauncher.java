@@ -114,6 +114,13 @@ public class CUILauncher {
     rootLogger.setLevel(Level.DEBUG);
   }
 
+  @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.")
+  public void setLogLevelError(boolean isQuiet) {
+    log.debug("enter setLogLevelError(boolean)");
+    log.info("log level was set ERROR");
+    rootLogger.setLevel(Level.ERROR);
+  }
+
   // endregion
 
   public static void main(String[] args) {
