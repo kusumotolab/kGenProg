@@ -35,12 +35,12 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class CUILauncher {
 
-  private static Logger log = LoggerFactory.getLogger(CUILauncher.class);
+  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
   // region Fields
   private Path rootDir;
-  private List<ProductSourcePath> productSourcePaths = new ArrayList<>();
-  private List<TestSourcePath> testSourcePaths = new ArrayList<>();
-  private List<ClassPath> classPaths = new ArrayList<>();
+  private final List<ProductSourcePath> productSourcePaths = new ArrayList<>();
+  private final List<TestSourcePath> testSourcePaths = new ArrayList<>();
+  private final List<ClassPath> classPaths = new ArrayList<>();
   // endregion
 
   // region Getter/Setter
@@ -51,7 +51,7 @@ public class CUILauncher {
 
   @Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>",
       usage = "Path of a root directory of a target project")
-  public void setRootDir(String rootDir) {
+  public void setRootDir(final String rootDir) {
     log.debug("enter setRootDir(String)");
     this.rootDir = Paths.get(rootDir);
   }
@@ -63,7 +63,7 @@ public class CUILauncher {
 
   @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
       metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
-  public void addProductSourcePath(String sourcePaths) {
+  public void addProductSourcePath(final String sourcePaths) {
     log.debug("enter addSourcePath(String)");
     this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths)));
   }
@@ -76,7 +76,7 @@ public class CUILauncher {
   @Option(name = "-t", aliases = "--test", required = true,
       handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
       usage = "Paths of the root directories holding test codes")
-  public void addTestSourcePath(String testPaths) {
+  public void addTestSourcePath(final String testPaths) {
     log.debug("enter addTestPath(String)");
     this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths)));
   }
@@ -88,22 +88,22 @@ public class CUILauncher {
 
   @Option(name = "-c", aliases = "--cp", required = true, handler = StringArrayOptionHandler.class,
       metaVar = "<class path> ...", usage = "Class paths required to build the target project")
-  public void addClassPath(String classPaths) {
+  public void addClassPath(final String classPaths) {
     log.debug("enter addClassPath(String)");
     this.classPaths.add(new ClassPath(Paths.get(classPaths)));
   }
 
   // endregion
 
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
     log.info("start kGenProg");
 
-    CUILauncher launcher = new CUILauncher();
-    CmdLineParser parser = new CmdLineParser(launcher);
+    final CUILauncher launcher = new CUILauncher();
+    final CmdLineParser parser = new CmdLineParser(launcher);
 
     try {
       parser.parseArgument(args);
-    } catch (CmdLineException e) {
+    } catch (final CmdLineException e) {
       log.error(e.getMessage());
       // System.err.println(e.getMessage());
       parser.printUsage(System.err);
@@ -117,7 +117,8 @@ public class CUILauncher {
   public void launch() {
     log.debug("enter launch()");
 
-    final TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getProductSourcePaths(),
+    final TargetProject targetProject = TargetProjectFactory.create(getRootDir(),
+        getProductSourcePaths(),
         getTestSourcePaths(), getClassPaths(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
