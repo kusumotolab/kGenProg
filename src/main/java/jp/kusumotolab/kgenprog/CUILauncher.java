@@ -42,7 +42,8 @@ public class CUILauncher {
   private List<ProductSourcePath> productSourcePaths = new ArrayList<>();
   private List<TestSourcePath> testSourcePaths = new ArrayList<>();
   private List<ClassPath> classPaths = new ArrayList<>();
-  private ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+  private final ch.qos.logback.classic.Logger rootLogger =
+      (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
   // endregion
 
   // region Constructor
