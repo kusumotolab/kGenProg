@@ -7,9 +7,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.data.ExecutionDataStore;
@@ -288,13 +288,10 @@ class TestExecutor {
       final FullyQualifiedName testMethodFQN = getTestMethodName(description);
       final boolean isFailed = isFailed(description);
 
-      final Map<FullyQualifiedName, Coverage> coverages = new HashMap<>();
-      coverageBuilder.getClasses()
+      final Map<FullyQualifiedName, Coverage> coverages = coverageBuilder.getClasses()
           .stream()
-          .forEach(c -> {
-            final Coverage cc = new Coverage(c);
-            coverages.put(cc.executedTargetFQN, cc);
-          });
+          .map(Coverage::new)
+          .collect(Collectors.toMap(c -> c.executedTargetFQN, c -> c));
 
       final TestResult testResult = new TestResult(testMethodFQN, isFailed, coverages);
       testResults.add(testResult);
