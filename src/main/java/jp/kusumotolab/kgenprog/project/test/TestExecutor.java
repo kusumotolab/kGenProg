@@ -37,9 +37,9 @@ class TestExecutor {
   private final RuntimeData jacocoRuntimeData;
 
   public TestExecutor() {
-    this.jacocoRuntime = new LoggerRuntime();
-    this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
-    this.jacocoRuntimeData = new RuntimeData();
+    jacocoRuntime = new LoggerRuntime();
+    jacocoInstrumenter = new Instrumenter(jacocoRuntime);
+    jacocoRuntimeData = new RuntimeData();
   }
 
 
@@ -63,7 +63,7 @@ class TestExecutor {
     final TestResults testResults = new TestResults();
 
     final URL[] classpathUrls = convertClasspathsToURLs(classpaths);
-    this.memoryClassLoader = new MemoryClassLoader(classpathUrls);
+    memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     loadInstrumentedClasses(sourceFQNs);
     final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
@@ -132,7 +132,7 @@ class TestExecutor {
    */
   private byte[] getInstrumentedClassBinary(final FullyQualifiedName fqn) throws Exception {
     final InputStream is = getClassFileInputStream(fqn);
-    final byte[] bytes = this.jacocoInstrumenter.instrument(is, "");
+    final byte[] bytes = jacocoInstrumenter.instrument(is, "");
     is.close();
     return bytes;
   }
@@ -147,8 +147,8 @@ class TestExecutor {
    */
   private Class<?> loadClass(final FullyQualifiedName fqn, final byte[] bytes)
       throws ClassNotFoundException {
-    this.memoryClassLoader.addDefinition(fqn, bytes);
-    return this.memoryClassLoader.loadClass(fqn); // force load instrumented class.
+    memoryClassLoader.addDefinition(fqn, bytes);
+    return memoryClassLoader.loadClass(fqn); // force load instrumented class.
   }
 
   /**
@@ -187,8 +187,8 @@ class TestExecutor {
     public CoverageMeasurementListener(List<FullyQualifiedName> measuredFQNs,
         TestResults storedTestResults) throws Exception {
       jacocoRuntime.startup(jacocoRuntimeData);
-      this.testResults = storedTestResults;
-      this.measuredClasses = measuredFQNs;
+      testResults = storedTestResults;
+      measuredClasses = measuredFQNs;
     }
 
     @Override
