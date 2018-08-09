@@ -141,7 +141,8 @@ public class PatchGenerator implements ResultGenerator {
       final List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, originalSourceCode, diff, 3);
       unifiedDiff.add(0, "");
-      final String unifiedDiffInString = unifiedDiff.stream().collect(Collectors.joining(System.getProperty("line.separator")));
+      final String unifiedDiffInString = unifiedDiff.stream()
+          .collect(Collectors.joining(System.getProperty("line.separator")));
 
       log.info(unifiedDiffInString);
 
