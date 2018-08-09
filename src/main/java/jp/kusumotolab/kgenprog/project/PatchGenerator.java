@@ -24,7 +24,7 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class PatchGenerator implements ResultGenerator {
 
-  private static Logger log = LoggerFactory.getLogger(PatchGenerator.class);
+  private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
   private final Path workingDir;
 
   public PatchGenerator(final Path workingDir) {
@@ -92,7 +92,7 @@ public class PatchGenerator implements ResultGenerator {
    *
    * @param variant
    */
-  private void activateRecordModifications(GeneratedSourceCode code) {
+  private void activateRecordModifications(final GeneratedSourceCode code) {
     for (final GeneratedAST ast : code.getAsts()) {
       ((GeneratedJDTAST) ast).getRoot()
           .recordModifications();
