@@ -145,8 +145,8 @@ public class CUILauncher {
   public void launch() {
     log.debug("enter launch()");
 
-    final TargetProject targetProject = TargetProjectFactory.create(getRootDir(), getProductSourcePaths(),
-        getTestSourcePaths(), getClassPaths(), JUnitVersion.JUNIT4);
+    final TargetProject targetProject = TargetProjectFactory.create(getRootDir(),
+        getProductSourcePaths(), getTestSourcePaths(), getClassPaths(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
     final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
