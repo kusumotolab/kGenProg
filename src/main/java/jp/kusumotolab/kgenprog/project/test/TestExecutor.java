@@ -131,8 +131,10 @@ class TestExecutor {
    * @throws Exception
    */
   private byte[] getInstrumentedClassBinary(final FullyQualifiedName fqn) throws Exception {
-    final InputStream inputStream = getClassFileInputStream(fqn);
-    return this.jacocoInstrumenter.instrument(inputStream, "");
+    final InputStream is = getClassFileInputStream(fqn);
+    final byte[] bytes = this.jacocoInstrumenter.instrument(is, "");
+    is.close();
+    return bytes;
   }
 
   /**
@@ -269,7 +271,9 @@ class TestExecutor {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        analyzer.analyzeClass(getClassFileInputStream(measuredClass), measuredClass.value);
+        final InputStream is = getClassFileInputStream(measuredClass);
+        analyzer.analyzeClass(is, measuredClass.value);
+        is.close();
       }
     }
 
