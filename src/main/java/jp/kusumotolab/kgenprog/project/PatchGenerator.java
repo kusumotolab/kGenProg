@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -21,70 +22,63 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
-public class DiffOutput implements ResultOutput {
+public class PatchGenerator implements ResultGenerator {
 
-  private Logger log = LoggerFactory.getLogger(DiffOutput.class);
+  private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
   private final Path workingDir;
 
-  public DiffOutput(Path workingDir) {
+  public PatchGenerator(final Path workingDir) {
     this.workingDir = workingDir;
   }
 
   @Override
-  public void outputResult(TargetProject targetProject, List<Variant> modifiedVariants) {
-
-    List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
-
+  public void exec(final TargetProject targetProject, final List<Variant> modifiedVariants) {
     // 出力先ディレクトリ作成
     if (!Files.exists(workingDir)) {
       try {
         Files.createDirectory(workingDir);
-      } catch (IOException e) {
+      } catch (final IOException e) {
         // TODO 自動生成された catch ブロック
         e.printStackTrace();
       }
     }
 
+    final List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
     modifiedCode.addAll(applyAllModificationDirectly(targetProject, modifiedVariants));
 
-    for (GeneratedSourceCode code : modifiedCode) {
-      final String variantDir = "variant" + modifiedCode.indexOf(code) + 1;
-      final Path variantBasePath = workingDir.resolve(variantDir);
-
+    for (final GeneratedSourceCode code : modifiedCode) {
+      final Path variantBasePath = makeDirName(modifiedCode.indexOf(code) + 1);
       try {
         Files.createDirectory(variantBasePath);
-      } catch (IOException e1) {
+      } catch (final IOException e1) {
         // TODO 自動生成された catch ブロック
         e1.printStackTrace();
       }
-      for (GeneratedAST ast : code.getAsts()) {
-        try {
-          GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
-          Path originPath =
-              getOriginPath(targetProject.getProductSourcePaths(), jdtAST.getProductSourcePath());
 
-          if (originPath == null) {
-            continue;
-          }
+      for (final GeneratedAST ast : code.getAsts()) {
+        try {
+          final GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
+          final Path originPath = jdtAST.getProductSourcePath().path;
 
           // 修正ファイル作成
-          Document document = new Document(new String(Files.readAllBytes(originPath)));
-          TextEdit edit = jdtAST.getRoot()
+          final Document document = new Document(new String(Files.readAllBytes(originPath)));
+          final TextEdit edit = jdtAST.getRoot()
               .rewrite(document, null);
           // その AST が変更されているかどうか判定
           if (edit.getChildren().length != 0) {
-            Path diffFilePath = variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
+            final Path diffFilePath =
+                variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".java");
             edit.apply(document);
             Files.write(diffFilePath, Arrays.asList(document.get()));
 
             makePatchFile(originPath, diffFilePath,
                 variantBasePath.resolve(jdtAST.getPrimaryClassName() + ".patch"));
           }
-        } catch (MalformedTreeException e) {
+        } catch (final MalformedTreeException e) {
           e.printStackTrace();
-        } catch (BadLocationException e) {
+        } catch (final BadLocationException e) {
           e.printStackTrace();
-        } catch (IOException e) {
+        } catch (final IOException e) {
           e.printStackTrace();
         }
       }
@@ -96,32 +90,11 @@ public class DiffOutput implements ResultOutput {
    *
    * @param variant
    */
-  private void activateRecordModifications(GeneratedSourceCode code) {
-    for (GeneratedAST ast : code.getAsts()) {
+  private void activateRecordModifications(final GeneratedSourceCode code) {
+    for (final GeneratedAST ast : code.getAsts()) {
       ((GeneratedJDTAST) ast).getRoot()
           .recordModifications();
     }
-  }
-
-  /**
-   * 変更前ファイルのパス取得
-   *
-   * @param originPaths
-   * @param sourcePath
-   * @return
-   */
-  private Path getOriginPath(List<ProductSourcePath> originPaths, SourcePath sourcePath) {
-    for (SourcePath originPath : originPaths) {
-      try {
-        if (Files.isSameFile(originPath.path, sourcePath.path)) {
-          return originPath.path;
-        }
-      } catch (IOException e) {
-        // TODO 自動生成された catch ブロック
-        e.printStackTrace();
-      }
-    }
-    return null;
   }
 
   /***
@@ -131,23 +104,23 @@ public class DiffOutput implements ResultOutput {
    * @param modifiedVariants
    * @return
    */
-  private List<GeneratedSourceCode> applyAllModificationDirectly(TargetProject targetProject,
-      List<Variant> modifiedVariants) {
-    List<GeneratedSourceCode> modified = new ArrayList<>();
+  private List<GeneratedSourceCode> applyAllModificationDirectly(final TargetProject targetProject,
+      final List<Variant> modifiedVariants) {
+    final List<GeneratedSourceCode> modifiedSourceCode = new ArrayList<>();
 
-    for (Variant variant : modifiedVariants) {
+    for (final Variant variant : modifiedVariants) {
       GeneratedSourceCode targetCode = targetProject.getInitialVariant()
           .getGeneratedSourceCode();
       activateRecordModifications(targetCode);
-      for (Base base : variant.getGene()
+      for (final Base base : variant.getGene()
           .getBases()) {
         targetCode = base.getOperation()
             .applyDirectly(targetCode, base.getTargetLocation());
       }
-      modified.add(targetCode);
+      modifiedSourceCode.add(targetCode);
     }
 
-    return modified;
+    return modifiedSourceCode;
   }
 
   /***
@@ -157,28 +130,39 @@ public class DiffOutput implements ResultOutput {
    * @param diffPath
    * @param patchPath
    */
-  private void makePatchFile(Path originPath, Path diffPath, Path patchPath) {
+  private void makePatchFile(final Path originPath, final Path diffPath, final Path patchPath) {
     try {
-      List<String> origin = Files.readAllLines(originPath);
-      List<String> modified = Files.readAllLines(diffPath);
+      final List<String> originalSourceCode = Files.readAllLines(originPath);
+      final List<String> modifiedSourceCode = Files.readAllLines(diffPath);
 
-      Patch<String> diff = DiffUtils.diff(origin, modified);
-
-      String fileName = originPath.getFileName()
+      final Patch<String> diff = DiffUtils.diff(originalSourceCode, modifiedSourceCode);
+      final String fileName = originPath.getFileName()
           .toString();
+      final List<String> unifiedDiff =
+          UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, originalSourceCode, diff, 3);
+      unifiedDiff.add(0, "");
+      final String unifiedDiffInString = unifiedDiff.stream()
+          .collect(Collectors.joining(System.getProperty("line.separator")));
 
-      List<String> unifiedDiff =
-          UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
-
-      unifiedDiff.forEach(e -> log.info(e));
+      log.info(unifiedDiffInString);
 
       Files.write(patchPath, unifiedDiff);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
-    } catch (DiffException e) {
+    } catch (final DiffException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
+  }
+
+  /***
+   * 出力ディレクトリ名の生成
+   *
+   * @param variantNum
+   * @return
+   */
+  private Path makeDirName(final int variantNum) {
+    return workingDir.resolve("variant" + variantNum);
   }
 }
