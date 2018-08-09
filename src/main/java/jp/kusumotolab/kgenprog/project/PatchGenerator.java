@@ -33,9 +33,6 @@ public class PatchGenerator implements ResultGenerator {
 
   @Override
   public void exec(final TargetProject targetProject, final List<Variant> modifiedVariants) {
-
-    final List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
-
     // 出力先ディレクトリ作成
     if (!Files.exists(workingDir)) {
       try {
@@ -46,17 +43,18 @@ public class PatchGenerator implements ResultGenerator {
       }
     }
 
+    final List<GeneratedSourceCode> modifiedCode = new ArrayList<>();
     modifiedCode.addAll(applyAllModificationDirectly(targetProject, modifiedVariants));
 
     for (final GeneratedSourceCode code : modifiedCode) {
       final Path variantBasePath = makeDirName(modifiedCode.indexOf(code) + 1);
-
       try {
         Files.createDirectory(variantBasePath);
       } catch (final IOException e1) {
         // TODO 自動生成された catch ブロック
         e1.printStackTrace();
       }
+
       for (final GeneratedAST ast : code.getAsts()) {
         try {
           final GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
@@ -138,15 +136,11 @@ public class PatchGenerator implements ResultGenerator {
       final List<String> modifiedSourceCode = Files.readAllLines(diffPath);
 
       final Patch<String> diff = DiffUtils.diff(originalSourceCode, modifiedSourceCode);
-
       final String fileName = originPath.getFileName()
           .toString();
-
       final List<String> unifiedDiff =
           UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, originalSourceCode, diff, 3);
-
       unifiedDiff.add(0, "");
-
       final String unifiedDiffInString = unifiedDiff.stream().collect(Collectors.joining(System.getProperty("line.separator")));
 
       log.info(unifiedDiffInString);

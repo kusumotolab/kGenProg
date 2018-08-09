@@ -29,7 +29,6 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 public class PatchGeneratorTest {
 
-
   @Test
   public void testPatchGenerator1() throws IOException {
     final Path basePath = Paths.get("example/BuildSuccess01");
@@ -57,10 +56,10 @@ public class PatchGeneratorTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final DeleteOperation operation = new DeleteOperation();
     final JDTASTLocation location = new JDTASTLocation(
         new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
 
+    final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -111,10 +110,10 @@ public class PatchGeneratorTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final DeleteOperation operation = new DeleteOperation();
     final JDTASTLocation location = new JDTASTLocation(
         new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement);
 
+    final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -176,10 +175,8 @@ public class PatchGeneratorTest {
     final Statement insertStatement = jdtAST.newExpressionStatement(invocation);
 
     final InsertOperation operation = new InsertOperation(insertStatement);
-
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
-
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
 
@@ -239,7 +236,6 @@ public class PatchGeneratorTest {
         .add(statement);
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
-
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
     final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
@@ -254,5 +250,4 @@ public class PatchGeneratorTest {
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
-
 }
