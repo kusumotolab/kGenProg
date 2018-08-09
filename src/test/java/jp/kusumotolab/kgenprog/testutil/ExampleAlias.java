@@ -1,8 +1,11 @@
-package jp.kusumotolab.kgenprog.project.test;
+package jp.kusumotolab.kgenprog.testutil;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.TestFullyQualifiedName;
 
 /**
  * example/BuildSuccess01-03に対応するクラス名等のエイリアス． <br>

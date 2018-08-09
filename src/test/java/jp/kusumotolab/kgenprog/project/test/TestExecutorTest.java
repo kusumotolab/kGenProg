@@ -3,27 +3,30 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Bar;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest01;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest02;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest03;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest04;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest05;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazAnonymous;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazInner;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazOuter;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BazStaticInner;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest01;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest02;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest03;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Bar;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest02;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest05;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazAnonymous;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazInner;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazOuter;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazStaticInner;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest02;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest04;
 import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ClassPath;
@@ -31,52 +34,34 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestExecutorTest {
 
-  private TestResults generateTestResultsForExample01() throws Exception {
-    final Path rootPath = Paths.get("example/BuildSuccess01");
-    final Path workPath = rootPath.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
+  private final static Path WorkPath = Paths.get("tmp/work");
 
-    final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+  @Before
+  public void before() throws IOException {
+    TestUtil.deleteWorkDirectory(WorkPath);
   }
 
-  private TestResults generateTestResultsForExample02() throws Exception {
-    final Path rootPath = Paths.get("example/BuildSuccess02");
-    final Path workPath = rootPath.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
-
-    final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(Foo, Bar),
-        Arrays.asList(FooTest, BarTest));
-  }
-
-  @SuppressWarnings("unused")
-  private TestResults generateTestResultsForExample03() throws Exception {
-    final Path rootPath = Paths.get("example/BuildSuccess03");
-    final Path workPath = rootPath.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
-
-    final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath),
-        Arrays.asList(Foo, Bar, BazInner, BazStaticInner, BazAnonymous, BazOuter),
-        Arrays.asList(FooTest, BarTest));
+  @After
+  public void after() throws IOException {
+    TestUtil.deleteWorkDirectory(WorkPath);
   }
 
   @Test
   public void testTestExecutorForBuildSuccess01() throws Exception {
-    final TestResults result = generateTestResultsForExample01();
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode, WorkPath);
+
+    final TestExecutor executor = new TestExecutor();
+    final TestResults result =
+        executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo), Arrays.asList(FooTest));
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -105,7 +90,16 @@ public class TestExecutorTest {
 
   @Test
   public void testTestExecutorForBuildSuccess02() throws Exception {
-    final TestResults result = generateTestResultsForExample02();
+    final Path rootPath = Paths.get("example/BuildSuccess02");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode, WorkPath);
+
+    final TestExecutor executor = new TestExecutor();
+    final TestResults result = executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo, Bar),
+        Arrays.asList(FooTest, BarTest));
 
     // 実行されたテストは10個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -145,8 +139,23 @@ public class TestExecutorTest {
 
   @Test
   public void testTestExecutorForBuildSuccess03() throws Exception {
+
+    final Path rootPath = Paths.get("example/BuildSuccess03");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode, WorkPath);
+
+    final TestExecutor executor = new TestExecutor();
+    final TestResults result = executor.exec(new ClassPath(WorkPath),
+        Arrays.asList(Foo, Bar, BazInner, BazStaticInner, BazAnonymous, BazOuter),
+        Arrays.asList(FooTest, BarTest));
+
+
     // TODO
     // Should confirm BuildSuccess03
+    result.toString(); // to avoid unused warnings
   }
 
 }

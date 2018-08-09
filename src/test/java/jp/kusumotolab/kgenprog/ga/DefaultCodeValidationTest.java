@@ -1,21 +1,32 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class DefaultCodeValidationTest {
+
+  private final static Path workPath = Paths.get("tmp/work");
+
+  @Before
+  public void before() throws IOException {
+    TestUtil.deleteWorkDirectory(workPath);
+    Files.deleteIfExists(TestResults.getSerFilePath());
+  }
 
   @Test
   public void testExec() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
-    final Path workPath = rootPath.resolve("bin");
-
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, workPath);
     final Variant initialVariant = targetProject.getInitialVariant();
@@ -32,8 +43,6 @@ public class DefaultCodeValidationTest {
   @Test
   public void testExecForBuildFailure() {
     final Path rootPath = Paths.get("example/BuildFailure01");
-    final Path workPath = rootPath.resolve("bin");
-
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, workPath);
     final Variant initialVariant = targetProject.getInitialVariant();
