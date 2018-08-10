@@ -16,11 +16,11 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class DefaultCodeValidationTest {
 
-  private final static Path workPath = Paths.get("tmp/work");
+  private final static Path WorkPath = Paths.get("tmp/work");
 
   @Before
   public void before() throws IOException {
-    TestUtil.deleteWorkDirectory(workPath);
+    TestUtil.deleteWorkDirectory(WorkPath);
     Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
@@ -28,7 +28,7 @@ public class DefaultCodeValidationTest {
   public void testExec() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, workPath);
+    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, WorkPath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 
@@ -44,7 +44,7 @@ public class DefaultCodeValidationTest {
   public void testExecForBuildFailure() {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, workPath);
+    final TestProcessBuilder testProcessBuilder = new TestProcessBuilder(targetProject, WorkPath);
     final Variant initialVariant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 

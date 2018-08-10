@@ -37,16 +37,16 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class KGenProgMainTest {
 
-  final static String ctz = "src/example/CloseToZero.java";
-  final static String ctzt = "src/example/CloseToZeroTest.java";
+  private final static String Ctz = "src/example/CloseToZero.java";
+  private final static String Ctzt = "src/example/CloseToZeroTest.java";
 
-  final Path workPath = Paths.get("tmp/work");
-  final Path outPath = Paths.get("tmp/out");
+  private final static Path WorkPath = Paths.get("tmp/work");
+  private final static Path OutPath = Paths.get("tmp/out");
 
   @Before
   public void before() throws IOException {
-    FileUtils.deleteDirectory(workPath.toFile());
-    FileUtils.deleteDirectory(outPath.toFile());
+    FileUtils.deleteDirectory(WorkPath.toFile());
+    FileUtils.deleteDirectory(OutPath.toFile());
   }
 
   /*
@@ -71,17 +71,17 @@ public class KGenProgMainTest {
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
-    final ResultGenerator resultGenerator = new PatchGenerator(outPath);
+    final ResultGenerator resultGenerator = new PatchGenerator(OutPath);
 
     return new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, resultGenerator, workPath);
+        sourceCodeValidation, variantSelection, resultGenerator, WorkPath);
   }
 
   @Test
   public void testCloseToZero01() {
     final Path rootPath = Paths.get("example/CloseToZero01");
-    final Path productPath = rootPath.resolve(ctz);
-    final Path testPath = rootPath.resolve(ctzt);
+    final Path productPath = rootPath.resolve(Ctz);
+    final Path testPath = rootPath.resolve(Ctzt);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
@@ -94,8 +94,8 @@ public class KGenProgMainTest {
   @Test
   public void testCloseToZero02() {
     final Path rootPath = Paths.get("example/CloseToZero02");
-    final Path productPath = rootPath.resolve(ctz);
-    final Path testPath = rootPath.resolve(ctzt);
+    final Path productPath = rootPath.resolve(Ctz);
+    final Path testPath = rootPath.resolve(Ctzt);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
@@ -108,8 +108,8 @@ public class KGenProgMainTest {
   @Test
   public void testCloseToZero03() {
     final Path rootPath = Paths.get("example/CloseToZero03");
-    final Path productPath = rootPath.resolve(ctz);
-    final Path testPath = rootPath.resolve(ctzt);
+    final Path productPath = rootPath.resolve(Ctz);
+    final Path testPath = rootPath.resolve(Ctzt);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
