@@ -3,11 +3,11 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest01;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest02;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest03;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest02;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest04;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,22 +18,25 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestProcessBuilderTest {
 
+  private final static Path WorkPath = Paths.get("tmp/work");
+
   @Before
   public void before() throws IOException {
+    TestUtil.deleteWorkDirectory(WorkPath);
     Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
   @Test
   public void testStart01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
-    final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
 
     // main
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, WorkPath);
     final Variant variant = targetProject.getInitialVariant();
     final TestResults result = builder.start(variant.getGeneratedSourceCode());
 
@@ -99,10 +102,9 @@ public class TestProcessBuilderTest {
   @Test
   public void testBuildFailure01() throws IOException {
     final Path rootPath = Paths.get("example/BuildFailure01");
-    final Path workPath = rootPath.resolve("bin");
 
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, WorkPath);
     final Variant variant = targetProject.getInitialVariant();
     final TestResults r = builder.start(variant.getGeneratedSourceCode());
 

@@ -7,21 +7,30 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class OchiaiTest {
+
+  private final static Path WorkPath = Paths.get("tmp/work");
+
+  @Before
+  public void before() throws IOException {
+    System.gc();
+    TestUtil.deleteWorkDirectory(WorkPath);
+  }
 
   @Test
   public void testForExample01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
-    final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, WorkPath);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses = fl.exec(targetProject, initialVariant, builder);
@@ -39,10 +48,9 @@ public class OchiaiTest {
   @Test
   public void testForExample02() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
-    final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, WorkPath);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses = fl.exec(targetProject, initialVariant, builder);
@@ -60,10 +68,9 @@ public class OchiaiTest {
   @Test
   public void testForFailedProject() throws IOException {
     final Path rootPath = Paths.get("example/BuildFailure01");
-    final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, workPath);
+    final TestProcessBuilder builder = new TestProcessBuilder(targetProject, WorkPath);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses = fl.exec(targetProject, initialVariant, builder);

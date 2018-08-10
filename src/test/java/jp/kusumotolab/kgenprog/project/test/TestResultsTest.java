@@ -1,11 +1,12 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest01;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
 import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -25,18 +27,17 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestResultsTest {
 
-  private TestResults generateTestResultsForExample01() throws Exception {
-    final Path rootPath = Paths.get("example/BuildSuccess01");
-    final Path workPath = rootPath.resolve("bin");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
-    final TestExecutor executor = new TestExecutor();
-    return executor.exec(new ClassPath(workPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+  private final static Path WorkPath = Paths.get("tmp/work");
+
+  @Before
+  public void before() throws IOException {
+    TestUtil.deleteWorkDirectory(WorkPath);
+    Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
   /**
@@ -46,15 +47,15 @@ public class TestResultsTest {
   public void checkFLMetricsInTestResultsForExample02() throws Exception {
     // actual確保のためにテストの実行
     final Path rootPath = Paths.get("example/BuildSuccess01");
-    final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final BuildResults buildResults =
-        new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
+        new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
+
     final TestExecutor executor = new TestExecutor();
     final TestResults result =
-        executor.exec(new ClassPath(workPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+        executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo), Arrays.asList(FooTest));
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
@@ -110,7 +111,16 @@ public class TestResultsTest {
    */
   @Test
   public void testToString() throws Exception {
-    final TestResults r = generateTestResultsForExample01();
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
+
+    final TestExecutor executor = new TestExecutor();
+    final TestResults result =
+        executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+
     final String expected = new StringBuilder().append("")
         .append("[")
         .append("  {")
@@ -148,7 +158,7 @@ public class TestResultsTest {
         .append("]")
         .toString();
 
-    assertThat(r.toString()).isEqualToIgnoringNewLines(expected);
+    assertThat(result.toString()).isEqualToIgnoringNewLines(expected);
   }
 
   /**

@@ -39,15 +39,16 @@ public class TargetProjectFactory {
    * TargetProjectを生成するファクトリメソッド． 全パラメータを指定する必要あり．
    * 
    * @param rootPath 対象のルートパス
-   * @param sourceSourcePaths
+   * @param productSourcePaths
    * @param testSourcePaths
    * @param classPaths
    * @return TargetProject
    */
-  public static TargetProject create(final Path rootPath, final List<ProductSourcePath> sourceSourcePaths,
-      final List<TestSourcePath> testSourcePaths, List<ClassPath> classPaths, JUnitVersion junitVersion) {
-    return new DefaultProjectFactory(rootPath, sourceSourcePaths, testSourcePaths, classPaths, junitVersion)
-        .create();
+  public static TargetProject create(final Path rootPath,
+      final List<ProductSourcePath> productSourcePaths, final List<TestSourcePath> testSourcePaths,
+      List<ClassPath> classPaths, JUnitVersion junitVersion) {
+    return new DefaultProjectFactory(rootPath, productSourcePaths, testSourcePaths, classPaths,
+        junitVersion).create();
   }
 
   /**
