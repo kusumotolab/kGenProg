@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -14,16 +15,32 @@ public class CUILauncherTest {
   private CUILauncher launcher;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     launcher = new CUILauncher();
   }
 
   @After
-  public void tearDown() throws Exception {
+  public void tearDown() {
     launcher = null;
   }
 
   @Test
+  public void getLogLevel() {
+    assertThat(launcher.getLogLevel()).isEqualTo(Level.INFO);
+  }
+
+  @Test
+  public void setLogLevelDebug() {
+    launcher.setLogLevelDebug(true);
+    assertThat(launcher.getLogLevel()).isEqualTo(Level.DEBUG);
+  }
+
+  @Test
+  public void setLogLevelError() {
+    launcher.setLogLevelError(true);
+    assertThat(launcher.getLogLevel()).isEqualTo(Level.ERROR);
+  }
+  
   public void testSetRootDirAndGetRootDir() {
     launcher.setRootDir("./");
     assertThat(launcher.getRootDir()).isEqualTo(Paths.get("./"));
