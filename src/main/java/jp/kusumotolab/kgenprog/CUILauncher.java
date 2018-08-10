@@ -36,14 +36,14 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class CUILauncher {
 
-  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
   // region Fields
-  private Path rootDir;
+  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
+  private final List<ClassPath> classPaths = new ArrayList<>();
   private final List<ProductSourcePath> productSourcePaths = new ArrayList<>();
   private final List<TestSourcePath> testSourcePaths = new ArrayList<>();
-  private final List<ClassPath> classPaths = new ArrayList<>();
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+  private Path rootDir;
   // endregion
 
   // region Constructor
