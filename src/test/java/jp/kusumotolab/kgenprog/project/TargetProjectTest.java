@@ -1,11 +1,11 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Bar;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.BarTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Baz;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.BazTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.Foo;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Src.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.Bar;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.BarTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.Baz;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.BazTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.Foo;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.FooTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;

@@ -3,19 +3,19 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Bar;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest01;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest02;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest03;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest04;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.BarTest05;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest01;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest02;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest03;
-import static jp.kusumotolab.kgenprog.project.test.ExampleAlias.Fqn.FooTest04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Bar;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest02;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest05;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest02;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest04;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,25 +29,29 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestExecutorMainTest {
 
+  private final static Path WorkPath = Paths.get("tmp/work");
+
   @Before
   public void before() throws IOException {
+    TestUtil.deleteWorkDirectory(WorkPath);
     Files.deleteIfExists(TestResults.getSerFilePath());
   }
 
   @Test
   public void testMainForBuildSuccess01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
-    final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode, WorkPath);
 
     TestExecutorMain.main(new String[] { //
-        "-b", workPath.toString(), //
+        "-b", WorkPath.toString(), //
         "-s", Foo.toString(), //
         "-t", FooTest.toString()});
 
@@ -81,17 +85,18 @@ public class TestExecutorMainTest {
         COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 
+
   @Test
   public void testMainForBuildSuccess02() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess02");
-    final Path workPath = rootPath.resolve("bin");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, workPath);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode, WorkPath);
 
     TestExecutorMain.main(new String[] { //
-        "-b", workPath.toString(), //
+        "-b", WorkPath.toString(), //
         "-s", Foo.toString() + TestExecutorMain.SEPARATOR + Bar.toString(), //
         "-t", FooTest.toString() + TestExecutorMain.SEPARATOR + BarTest.toString()});
 
@@ -138,9 +143,8 @@ public class TestExecutorMainTest {
 
   @Test(expected = Exception.class)
   public void testMainFailureByInvalidrootPath() throws Exception {
-    // rootPathがバグってる
-    final Path rootPath = Paths.get("example/NonExistenceProject");
-    final Path workPath = rootPath.resolve("bin");
+    // workPathがバグってる
+    final Path workPath = Paths.get("tmp/NonExistenceWorkDir");
 
     // 例外を吐くはず（具体的にどの例外を吐くかはひとまず確認せず）
     TestExecutorMain.main(new String[] { //
