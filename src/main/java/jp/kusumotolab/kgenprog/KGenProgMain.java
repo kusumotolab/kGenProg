@@ -170,7 +170,7 @@ public class KGenProgMain {
       final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
       log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
       for (final Result result : results) {
-        log.info(result.getDiffInString());
+        log.info(result.getDiff());
       }
     }
 
