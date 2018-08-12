@@ -20,7 +20,6 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.Result;
 import jp.kusumotolab.kgenprog.project.ResultGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
