@@ -167,7 +167,7 @@ public class KGenProgMain {
       generation.getAndIncrement();
     }
 
-    for (Variant completedVariant : completedVariants) {
+    for (final Variant completedVariant : completedVariants) {
       final List<Result> patches = resultGenerator.exec(targetProject, completedVariant);
       log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
       for (final Result patch : patches) {

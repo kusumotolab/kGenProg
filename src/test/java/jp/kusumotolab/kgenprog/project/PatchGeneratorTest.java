@@ -61,7 +61,7 @@ public class PatchGeneratorTest {
     final Variant modVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
@@ -113,7 +113,7 @@ public class PatchGeneratorTest {
     final Variant modVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
@@ -172,7 +172,7 @@ public class PatchGeneratorTest {
     final Variant modVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
@@ -231,7 +231,7 @@ public class PatchGeneratorTest {
     final Variant modVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
