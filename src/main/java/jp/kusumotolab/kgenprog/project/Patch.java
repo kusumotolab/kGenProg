@@ -31,6 +31,7 @@ public class Patch implements Result {
     return diff;
   }
 
+  @Override
   public String getDiffInString() {
     diff.add(0, "");
     return diff.stream()

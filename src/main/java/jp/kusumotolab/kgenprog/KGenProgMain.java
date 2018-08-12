@@ -168,10 +168,10 @@ public class KGenProgMain {
     }
 
     for (final Variant completedVariant : completedVariants) {
-      final List<Result> patches = resultGenerator.exec(targetProject, completedVariant);
+      final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
       log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
-      for (final Result patch : patches) {
-        log.info(((Patch) patch).getDiffInString());
+      for (final Result result : results) {
+        log.info(result.getDiffInString());
       }
     }
 
