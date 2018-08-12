@@ -160,7 +160,7 @@ public class CUILauncher {
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection();
     final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
-    final ResultGenerator resultGenerator = new PatchGenerator(workingPath);
+    final ResultGenerator resultGenerator = new PatchGenerator();
 
     final KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
         crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, resultGenerator,

@@ -71,7 +71,7 @@ public class KGenProgMainTest {
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
-    final ResultGenerator resultGenerator = new PatchGenerator(outPath);
+    final ResultGenerator resultGenerator = new PatchGenerator();
 
     return new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
         sourceCodeValidation, variantSelection, resultGenerator, workPath);

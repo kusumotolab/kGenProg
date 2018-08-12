@@ -20,6 +20,8 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.Patch;
+import jp.kusumotolab.kgenprog.project.Result;
 import jp.kusumotolab.kgenprog.project.ResultGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
@@ -165,7 +167,13 @@ public class KGenProgMain {
       generation.getAndIncrement();
     }
 
-    resultGenerator.exec(targetProject, completedVariants);
+    for (Variant completedVariant : completedVariants) {
+      final List<Result> patches = resultGenerator.exec(targetProject, completedVariant);
+      log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
+      for (final Result patch : patches) {
+        log.info(((Patch) patch).getDiffInString());
+      }
+    }
 
     log.debug("exit run()");
     return completedVariants;

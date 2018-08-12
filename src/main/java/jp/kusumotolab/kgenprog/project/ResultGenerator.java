@@ -6,5 +6,5 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public interface ResultGenerator {
 
-  public void exec(final TargetProject targetProject, final List<Variant> modified);
+  public List<Result> exec(final TargetProject targetProject, final Variant modified);
 }
