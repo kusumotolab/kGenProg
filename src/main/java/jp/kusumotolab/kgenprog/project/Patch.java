@@ -27,12 +27,8 @@ public class Patch implements Result {
     return containts;
   }
 
-  public List<String> getDiff() {
-    return diff;
-  }
-
   @Override
-  public String getDiffInString() {
+  public String getDiff() {
     diff.add(0, "");
     return diff.stream()
         .collect(Collectors.joining(System.getProperty("line.separator")));
