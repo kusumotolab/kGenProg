@@ -44,6 +44,9 @@ public class CUILauncher {
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
   private Path rootDir;
+  private int headcount = 100;
+  private int maxGeneration = 10;
+  private long timeLimit = 60;
   // endregion
 
   // region Constructor
@@ -120,6 +123,37 @@ public class CUILauncher {
     log.debug("enter setLogLevelError(boolean)");
     log.info("log level was set ERROR");
     rootLogger.setLevel(Level.ERROR);
+  }
+
+  public int getHeadcount() {
+    return headcount;
+  }
+
+  @Option(name = "-h", aliases = "--headcount",
+      usage = "The number of how many variants are generated maximally in a generation")
+  public void setHeadcount(int headcount) {
+    log.debug("enter setHeadcount(int)");
+    this.headcount = headcount;
+  }
+
+  public int getMaxGeneration() {
+    return maxGeneration;
+  }
+
+  @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation")
+  public void setMaxGeneration(int maxGeneration) {
+    log.debug("enter setMaxGeneration(int)");
+    this.maxGeneration = maxGeneration;
+  }
+
+  public long getTimeLimit() {
+    return timeLimit;
+  }
+
+  @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
+  public void setTimeLimit(long timeLimit) {
+    log.debug("enter setTimeLimit(long)");
+    this.timeLimit = timeLimit;
   }
 
   // endregion
