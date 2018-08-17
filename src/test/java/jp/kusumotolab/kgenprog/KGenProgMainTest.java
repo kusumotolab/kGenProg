@@ -118,6 +118,20 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
+  @Ignore // Be ignored but should not be ignored
+  @Test
+  public void testCloseToZero04() {
+    final Path rootPath = Paths.get("example/CloseToZero04");
+    final Path productPath = rootPath.resolve(ProductName);
+    final Path testPath = rootPath.resolve(TestName);
+
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
+    final List<Variant> variants = kGenProgMain.run();
+
+    assertThat(variants).hasSize(1)
+        .allMatch(Variant::isCompleted);
+  }
+
   @Ignore
   @Test
   public void testGCD01() {
