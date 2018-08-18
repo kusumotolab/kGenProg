@@ -166,6 +166,7 @@ public class KGenProgMain {
       generation.getAndIncrement();
     }
 
+    //生成されたバリアントのパッチ出力
     outputPatch(completedVariants);
 
     log.debug("exit run()");

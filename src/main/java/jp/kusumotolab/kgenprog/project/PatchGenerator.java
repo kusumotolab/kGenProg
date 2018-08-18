@@ -46,6 +46,7 @@ public class PatchGenerator implements ResultGenerator {
         if (edit.getChildren().length != 0) {
           edit.apply(document);
 
+          //Patch オブジェクトの生成
           final String fileName = jdtAST.getPrimaryClassName();
           final List<String> modifiedSourceCode = Arrays.asList(document.get()
               .split(document.getDefaultLineDelimiter()));
