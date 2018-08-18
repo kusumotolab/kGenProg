@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 public class Patch implements Result {
 
   private final String fileName;
-  private final List<String> containts;
+  private final List<String> contents;
   private final List<String> diff;
 
   public Patch(final String fileName, final List<String> containts, final List<String> diff) {
     this.fileName = fileName;
-    this.containts = containts;
+    this.contents = containts;
     this.diff = diff;
   }
 
@@ -24,7 +24,7 @@ public class Patch implements Result {
   }
 
   public List<String> getContaints() {
-    return containts;
+    return contents;
   }
 
   @Override
@@ -37,7 +37,7 @@ public class Patch implements Result {
   public void write(final String path) {
     final Path outputPath = Paths.get(path);
     try {
-      Files.write(outputPath.resolve(fileName + ".java"), containts);
+      Files.write(outputPath.resolve(fileName + ".java"), contents);
       Files.write(outputPath.resolve(fileName + ".patch"), diff);
     } catch (final IOException e) {
       // TODO 自動生成された catch ブロック

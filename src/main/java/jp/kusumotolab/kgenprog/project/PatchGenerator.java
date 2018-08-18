@@ -47,10 +47,10 @@ public class PatchGenerator implements ResultGenerator {
           edit.apply(document);
 
           final String fileName = jdtAST.getPrimaryClassName();
-          final List<String> modified = Arrays.asList(document.get()
+          final List<String> modifiedSourceCode = Arrays.asList(document.get()
               .split(document.getDefaultLineDelimiter()));
-          final List<String> diff = makeDiff(fileName, Files.readAllLines(originPath), modified);
-          patches.add(new Patch(fileName, modified, diff));
+          final List<String> diff = makeDiff(fileName, Files.readAllLines(originPath), modifiedSourceCode);
+          patches.add(new Patch(fileName, modifiedSourceCode, diff));
         }
       } catch (final MalformedTreeException e) {
         e.printStackTrace();
