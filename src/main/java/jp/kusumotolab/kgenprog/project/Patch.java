@@ -28,8 +28,7 @@ public class Patch implements Result {
   public String getDiff() {
     List<String> formattedDiff = new ArrayList<>(diff);
     formattedDiff.add(0, "");
-    return formattedDiff.stream()
-        .collect(Collectors.joining(System.getProperty("line.separator")));
+    return String.join(System.lineSeparator(), formattedDiff);
   }
 
   public void write(final String path) {

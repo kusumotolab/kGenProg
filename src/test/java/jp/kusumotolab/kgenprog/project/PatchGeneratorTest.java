@@ -63,9 +63,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = patch.getContaints()
-        .stream()
-        .collect(Collectors.joining("\n"));
+    final String modifiedSourceCode = String.join("\n", patch.getContaints());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -115,9 +113,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = patch.getContaints()
-        .stream()
-        .collect(Collectors.joining("\n"));
+    final String modifiedSourceCode = String.join("\n", patch.getContaints());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -174,9 +170,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = patch.getContaints()
-        .stream()
-        .collect(Collectors.joining("\n"));
+    final String modifiedSourceCode = String.join("\n", patch.getContaints());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -233,9 +227,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = patch.getContaints()
-        .stream()
-        .collect(Collectors.joining("\n"));
+    final String modifiedSourceCode = String.join("\n", patch.getContaints());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
