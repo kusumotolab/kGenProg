@@ -53,7 +53,7 @@ public class PatchGenerator implements ResultGenerator {
           patches.add(new Patch(fileName, modifiedSourceCode, diff));
         }
       } catch (final MalformedTreeException | BadLocationException | IOException e) {
-        e.printStackTrace();
+        throw new RuntimeException(e);
       }
     }
     log.debug("exit exec(TargetProject, Variant)");

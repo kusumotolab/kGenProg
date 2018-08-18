@@ -7,8 +7,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Patch implements Result {
+
+  private static final Logger log = LoggerFactory.getLogger(Patch.class);
 
   public final String fileName;
   private final List<String> contents;
@@ -37,8 +41,7 @@ public class Patch implements Result {
       Files.write(outputPath.resolve(fileName + ".java"), contents);
       Files.write(outputPath.resolve(fileName + ".patch"), diff);
     } catch (final IOException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
     }
   }
 }
