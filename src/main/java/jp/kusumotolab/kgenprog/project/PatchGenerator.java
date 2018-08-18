@@ -52,11 +52,7 @@ public class PatchGenerator implements ResultGenerator {
           final List<String> diff = makeDiff(fileName, Files.readAllLines(originPath), modifiedSourceCode);
           patches.add(new Patch(fileName, modifiedSourceCode, diff));
         }
-      } catch (final MalformedTreeException e) {
-        e.printStackTrace();
-      } catch (final BadLocationException e) {
-        e.printStackTrace();
-      } catch (final IOException e) {
+      } catch (final MalformedTreeException | BadLocationException | IOException e) {
         e.printStackTrace();
       }
     }
