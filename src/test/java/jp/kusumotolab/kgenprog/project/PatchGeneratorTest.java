@@ -58,10 +58,10 @@ public class PatchGeneratorTest {
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final Variant modVariant =
+    final Variant modifiedVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
@@ -110,10 +110,10 @@ public class PatchGeneratorTest {
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final Variant modVariant =
+    final Variant modifiedVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
@@ -169,10 +169,10 @@ public class PatchGeneratorTest {
     final InsertOperation operation = new InsertOperation(insertStatement);
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final Variant modVariant =
+    final Variant modifiedVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
@@ -228,10 +228,10 @@ public class PatchGeneratorTest {
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
     final GeneratedSourceCode code =
         operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final Variant modVariant =
+    final Variant modifiedVariant =
         new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modVariant)
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = patch.getContaints()
         .stream()
