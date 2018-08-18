@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +26,9 @@ public class Patch implements Result {
 
   @Override
   public String getDiff() {
-    diff.add(0, "");
-    return diff.stream()
+    List<String> formattedDiff = new ArrayList<>(diff);
+    formattedDiff.add(0, "");
+    return formattedDiff.stream()
         .collect(Collectors.joining(System.getProperty("line.separator")));
   }
 
