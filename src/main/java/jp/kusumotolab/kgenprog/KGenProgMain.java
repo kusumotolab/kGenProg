@@ -166,13 +166,7 @@ public class KGenProgMain {
       generation.getAndIncrement();
     }
 
-    for (final Variant completedVariant : completedVariants) {
-      final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
-      log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
-      for (final Result result : results) {
-        log.info(result.getDiff());
-      }
-    }
+    outputPatch(completedVariants);
 
     log.debug("exit run()");
     return completedVariants;
@@ -186,5 +180,15 @@ public class KGenProgMain {
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     log.debug("enter areEnoughCompletedVariants(List<Variant>)");
     return this.requiredSolutions <= completedVariants.size();
+  }
+
+  private void outputPatch(List<Variant> completedVariants) {
+    for (final Variant completedVariant : completedVariants) {
+      final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
+      log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
+      for (final Result result : results) {
+        log.info(result.getDiff());
+      }
+    }
   }
 }
