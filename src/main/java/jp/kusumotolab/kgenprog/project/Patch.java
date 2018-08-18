@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class Patch implements Result {
 
-  private final String fileName;
+  public final String fileName;
   private final List<String> contents;
   private final List<String> diff;
 
@@ -17,10 +17,6 @@ public class Patch implements Result {
     this.fileName = fileName;
     this.contents = containts;
     this.diff = diff;
-  }
-
-  public String getName() {
-    return fileName;
   }
 
   public List<String> getContaints() {
