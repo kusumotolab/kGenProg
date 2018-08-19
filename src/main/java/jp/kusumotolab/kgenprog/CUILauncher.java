@@ -192,13 +192,13 @@ public class CUILauncher {
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection = new DefaultVariantSelection();
+    final VariantSelection variantSelection = new DefaultVariantSelection(getHeadcount());
     final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
     final ResultGenerator resultGenerator = new PatchGenerator(workingPath);
 
     final KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
         crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, resultGenerator,
-        workingPath);
+        workingPath, getTimeLimit(), getMaxGeneration(), 1);
     kGenProgMain.run();
 
     log.debug("exit launch()");
