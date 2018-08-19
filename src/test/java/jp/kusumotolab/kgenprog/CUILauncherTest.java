@@ -40,7 +40,8 @@ public class CUILauncherTest {
     launcher.setLogLevelError(true);
     assertThat(launcher.getLogLevel()).isEqualTo(Level.ERROR);
   }
-  
+
+  @Test
   public void testSetRootDirAndGetRootDir() {
     launcher.setRootDir("./");
     assertThat(launcher.getRootDir()).isEqualTo(Paths.get("./"));
