@@ -25,18 +25,18 @@ public class CUILauncherTest {
   }
 
   @Test
-  public void getLogLevel() {
+  public void testGetLogLevel() {
     assertThat(launcher.getLogLevel()).isEqualTo(Level.INFO);
   }
 
   @Test
-  public void setLogLevelDebug() {
+  public void testSetLogLevelDebug() {
     launcher.setLogLevelDebug(true);
     assertThat(launcher.getLogLevel()).isEqualTo(Level.DEBUG);
   }
 
   @Test
-  public void setLogLevelError() {
+  public void testSetLogLevelError() {
     launcher.setLogLevelError(true);
     assertThat(launcher.getLogLevel()).isEqualTo(Level.ERROR);
   }
