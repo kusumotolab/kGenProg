@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.slf4j.Logger;
@@ -18,9 +19,9 @@ public class RandomMutation extends Mutation {
   private static final Logger log = LoggerFactory.getLogger(RandomMutation.class);
 
   public RandomMutation(final int numberOfBase,
-      final RandomNumberGeneration randomNumberGeneration,
+      final Random random,
       final CandidateSelection candidateSelection) {
-    super(numberOfBase, randomNumberGeneration, candidateSelection);
+    super(numberOfBase, random, candidateSelection);
   }
 
   public List<Base> exec(final List<Suspiciousness> suspiciousnesses) {
@@ -34,7 +35,7 @@ public class RandomMutation extends Mutation {
     final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
 
     final Roulette<Suspiciousness> roulette =
-        new Roulette<>(suspiciousnesses, weightFunction, randomNumberGeneration);
+        new Roulette<>(suspiciousnesses, weightFunction, random);
 
     for (int i = 0; i < numberOfBase; i++) {
       final Suspiciousness suspiciousness = roulette.exec();
@@ -53,7 +54,7 @@ public class RandomMutation extends Mutation {
 
   private Operation makeOperationAtRandom() {
     log.debug("enter makeOperationAtRandom()");
-    final int randomNumber = randomNumberGeneration.getInt(3);
+    final int randomNumber = random.nextInt(3);
     switch (randomNumber) {
       case 0:
         return new DeleteOperation();

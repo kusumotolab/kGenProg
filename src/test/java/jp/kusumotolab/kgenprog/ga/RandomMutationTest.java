@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -26,25 +27,20 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 public class RandomMutationTest {
 
-  private class TestNumberGeneration extends RandomNumberGeneration {
+  private class MockRandom extends Random {
 
     @Override
-    public int getInt() {
+    public int nextInt() {
       return 0;
     }
 
     @Override
-    public int getInt(int divisor) {
+    public int nextInt(int divisor) {
       return 1;
     }
 
     @Override
-    public double getDouble(double max) {
-      return super.getDouble(max);
-    }
-
-    @Override
-    public boolean getBoolean() {
+    public boolean nextBoolean() {
       return true;
     }
   }
@@ -54,11 +50,12 @@ public class RandomMutationTest {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final Variant initialVariant = targetProject.getInitialVariant();
-    final TestNumberGeneration randomNumberGeneration = new TestNumberGeneration();
+    final Random random = new MockRandom();
+    random.setSeed(0);
     final CandidateSelection statementSelection =
-        new RouletteStatementSelection(randomNumberGeneration);
+        new RouletteStatementSelection(random);
     final RandomMutation randomMutation =
-        new RandomMutation(15, new TestNumberGeneration(), statementSelection);
+        new RandomMutation(15, random, statementSelection);
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
@@ -84,7 +81,7 @@ public class RandomMutationTest {
         })
         .collect(Collectors.toList());
 
-    // 正しく10個のBaseが生成されるかのテスト
+    // 正しく15個のBaseが生成されるかのテスト
     final List<Base> baseList = randomMutation.exec(suspiciousnesses);
     assertThat(baseList).hasSize(15);
 
@@ -114,6 +111,6 @@ public class RandomMutationTest {
         .getDeclaredField("astNode");
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
-    assertThat(node).isSameSourceCodeAs("return n;");
+    assertThat(node).isSameSourceCodeAs("n--;");
   }
 }
