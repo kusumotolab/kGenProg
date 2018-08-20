@@ -74,7 +74,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
 
       switch (attributes.getValue("kind")){
         case "src":
-          final Path sourceRootPath = Paths.get(attributes.getValue("path"));
+          final Path sourceRootPath = rootPath.resolve(Paths.get(attributes.getValue("path")));
           for (final Path javaSourcePath : collectJavaSourcePath(sourceRootPath)) {
             if(javaSourcePath.toString().endsWith("Test.java"))
               testSourcePaths.add(new TestSourcePath(javaSourcePath));
