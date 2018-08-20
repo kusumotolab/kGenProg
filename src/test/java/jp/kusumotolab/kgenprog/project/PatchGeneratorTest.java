@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -63,7 +62,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getContaints());
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -113,7 +112,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getContaints());
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -170,7 +169,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getContaints());
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -227,7 +226,7 @@ public class PatchGeneratorTest {
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getContaints());
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }

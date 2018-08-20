@@ -20,8 +20,8 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Result;
-import jp.kusumotolab.kgenprog.project.ResultGenerator;
+import jp.kusumotolab.kgenprog.project.Patch;
+import jp.kusumotolab.kgenprog.project.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
 
@@ -37,7 +37,7 @@ public class KGenProgMain {
   private final SourceCodeValidation sourceCodeValidation;
   private final VariantSelection variantSelection;
   private final TestProcessBuilder testProcessBuilder;
-  private final ResultGenerator resultGenerator;
+  private final PatchGenerator patchGenerator;
 
   // 以下，一時的なフィールド #146 で解決すべき
   private final long timeoutSeconds;
@@ -53,17 +53,17 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final ResultGenerator resultGenerator, final Path workingPath) {
+      final PatchGenerator patchGenerator, final Path workingPath) {
 
     this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, resultGenerator, workingPath, 60, 10, 1);
+        sourceCodeValidation, variantSelection, patchGenerator, workingPath, 60, 10, 1);
   }
 
   public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final ResultGenerator resultGenerator, final Path workingPath, final long timeout,
+      final PatchGenerator patchGenerator, final Path workingPath, final long timeout,
       final int maxGeneration, final int requiredSolutions) {
 
     this.workingPath = workingPath;
@@ -83,7 +83,7 @@ public class KGenProgMain {
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
     this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingPath);
-    this.resultGenerator = resultGenerator;
+    this.patchGenerator = patchGenerator;
 
     this.timeoutSeconds = timeout;
     this.maxGeneration = maxGeneration;
@@ -166,8 +166,8 @@ public class KGenProgMain {
       generation.getAndIncrement();
     }
 
-    //生成されたバリアントのパッチ出力
-    outputPatch(completedVariants);
+    // 生成されたバリアントのパッチ出力
+    logPatch(completedVariants);
 
     log.debug("exit run()");
     return completedVariants;
@@ -183,13 +183,13 @@ public class KGenProgMain {
     return this.requiredSolutions <= completedVariants.size();
   }
 
-  private void outputPatch(final List<Variant> completedVariants) {
+  private void logPatch(final List<Variant> completedVariants) {
     log.debug("enter outputPatch(List<Variant>)");
     for (final Variant completedVariant : completedVariants) {
-      final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
+      final List<Patch> patches = patchGenerator.exec(targetProject, completedVariant);
       log.info(makeVariantId(completedVariants, completedVariant));
-      for (final Result result : results) {
-        log.info(result.getDiff());
+      for (final Patch patch : patches) {
+        log.info(System.lineSeparator() + patch.getDiff());
       }
     }
   }
