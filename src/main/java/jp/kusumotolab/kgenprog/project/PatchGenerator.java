@@ -30,10 +30,10 @@ public class PatchGenerator implements ResultGenerator {
 
     final List<Result> patches = new ArrayList<>();
 
-    final GeneratedSourceCode modifiedCode =
+    final GeneratedSourceCode modifiedSourceCode =
         applyAllModificationDirectly(targetProject, modifiedVariants);
 
-    for (final GeneratedAST ast : modifiedCode.getAsts()) {
+    for (final GeneratedAST ast : modifiedSourceCode.getAsts()) {
       try {
         final GeneratedJDTAST jdtAST = (GeneratedJDTAST) ast;
         final Path originPath = jdtAST.getProductSourcePath().path;
@@ -48,10 +48,10 @@ public class PatchGenerator implements ResultGenerator {
 
           //Patch オブジェクトの生成
           final String fileName = jdtAST.getPrimaryClassName();
-          final List<String> modifiedSourceCode = Arrays.asList(document.get()
+          final List<String> modifiedSourceCodeLines = Arrays.asList(document.get()
               .split(document.getDefaultLineDelimiter()));
-          final List<String> diff = makeDiff(fileName, Files.readAllLines(originPath), modifiedSourceCode);
-          patches.add(new Patch(fileName, modifiedSourceCode, diff));
+          final List<String> diff = makeDiff(fileName, Files.readAllLines(originPath), modifiedSourceCodeLines);
+          patches.add(new Patch(fileName, modifiedSourceCodeLines, diff));
         }
       } catch (final MalformedTreeException | BadLocationException | IOException e) {
         throw new RuntimeException(e);
