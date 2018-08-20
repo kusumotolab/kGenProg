@@ -16,7 +16,6 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.BuildResults;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
@@ -25,19 +24,13 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
-import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestResultsTest {
 
-  private final static Path WorkPath = Paths.get("tmp/work");
-  private final static ClassPath classPath = new ClassPath(WorkPath);
   private final static long timeoutSeconds = 60;
 
   @Before
-  public void before() throws IOException {
-    TestUtil.deleteWorkDirectory(WorkPath);
-    Files.deleteIfExists(TestResults.getSerFilePath());
-  }
+  public void before() throws IOException {}
 
   /**
    * FLで用いる4メトリクスのテスト
