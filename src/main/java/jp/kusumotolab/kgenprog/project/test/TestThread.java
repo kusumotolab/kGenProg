@@ -41,9 +41,9 @@ class TestThread extends Thread {
 
   public TestThread(final List<ClassPath> classPaths, final List<FullyQualifiedName> sourceFQNs,
       final List<FullyQualifiedName> testFQNs) {
-    jacocoRuntime = new LoggerRuntime();
-    jacocoInstrumenter = new Instrumenter(jacocoRuntime);
-    jacocoRuntimeData = new RuntimeData();
+    this.jacocoRuntime = new LoggerRuntime();
+    this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
+    this.jacocoRuntimeData = new RuntimeData();
 
     // Execution params
     this.classPaths = classPaths;
@@ -78,7 +78,7 @@ class TestThread extends Thread {
       // TODO
       // junitCore.run(Classes<?>...)による一括実行を使えないか？
       // 速度改善するかも．jacocoとの連携が難しい．listenerを再利用すると結果がバグる
-      for (Class<?> junitClass : junitClasses) {
+      for (final Class<?> junitClass : junitClasses) {
         final JUnitCore junitCore = new JUnitCore();
         final CoverageMeasurementListener listener =
             new CoverageMeasurementListener(sourceFQNs, testResults);
