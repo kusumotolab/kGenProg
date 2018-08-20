@@ -28,7 +28,6 @@ import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.ResultGenerator;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -195,11 +194,11 @@ public class CUILauncher {
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection(getHeadcount());
     final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
-    final ResultGenerator resultGenerator = new PatchGenerator(workingPath);
+    final PatchGenerator patchGenerator = new PatchGenerator();
 
     final KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
-        crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, resultGenerator,
-        workingPath, getTimeLimit(), getMaxGeneration(), 1);
+        crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, patchGenerator,
+        workingPath);
     kGenProgMain.run();
 
     log.debug("exit launch()");
