@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.ga;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
@@ -11,17 +12,17 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
 public class SinglePointCrossoverTest {
 
-  private class TestNumberGeneration extends RandomNumberGeneration {
+  private class MockRandom extends Random {
 
     private int counter = 0;
 
     @Override
-    public boolean getBoolean() {
+    public boolean nextBoolean() {
       return false;
     }
 
     @Override
-    public int getInt(int divisor) {
+    public int nextInt(int divisor) {
       counter += 1;
       return counter % divisor;
     }
@@ -40,9 +41,10 @@ public class SinglePointCrossoverTest {
     final Variant noneOperationVariant = new Variant(new SimpleGene(noneBases), null, null);
     final Variant insertOperationVariant = new Variant(new SimpleGene(insertBases), null, null);
 
-    final RandomNumberGeneration randomNumberGeneration = new TestNumberGeneration();
+    final Random random = new MockRandom();
+    random.setSeed(0);
     final SinglePointCrossover singlePointCrossover =
-        new SinglePointCrossover(randomNumberGeneration);
+        new SinglePointCrossover(random);
 
     final List<Gene> genes =
         singlePointCrossover.exec(Arrays.asList(noneOperationVariant, insertOperationVariant));

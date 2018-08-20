@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.slf4j.Logger;
@@ -14,18 +15,18 @@ public class SinglePointCrossover implements Crossover {
 
   private static Logger log = LoggerFactory.getLogger(SinglePointCrossover.class);
 
-  private final RandomNumberGeneration randomNumberGeneration;
+  private final Random random;
   private final int numberOfPair;
 
   public SinglePointCrossover(
-      final RandomNumberGeneration randomNumberGeneration, final int numberOfPair) {
-    this.randomNumberGeneration = randomNumberGeneration;
+      final Random random, final int numberOfPair) {
+    this.random = random;
     this.numberOfPair = numberOfPair;
   }
 
   public SinglePointCrossover(
-      final RandomNumberGeneration randomNumberGeneration) {
-    this(randomNumberGeneration, 10);
+      final Random random) {
+    this(random, 10);
   }
 
   @Override
@@ -49,13 +50,13 @@ public class SinglePointCrossover implements Crossover {
   }
 
   private List<Gene> makeGenes(final List<Variant> variants) {
-    final Variant variantA = variants.get(randomNumberGeneration.getInt(variants.size()));
-    final Variant variantB = variants.get(randomNumberGeneration.getInt(variants.size()));
+    final Variant variantA = variants.get(random.nextInt(variants.size()));
+    final Variant variantB = variants.get(random.nextInt(variants.size()));
     final Gene geneA = variantA.getGene();
     final Gene geneB = variantB.getGene();
     final List<Base> basesA = geneA.getBases();
     final List<Base> basesB = geneB.getBases();
-    final int index = randomNumberGeneration.getInt(Math.min(basesA.size(), basesB.size()));
+    final int index = random.nextInt(Math.min(basesA.size(), basesB.size()));
     return Arrays.asList(
         makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size())),
         makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size()))
