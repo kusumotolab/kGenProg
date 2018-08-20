@@ -12,6 +12,8 @@ import jp.kusumotolab.kgenprog.project.ClassPath;
 
 public final class TestExecutorMain {
 
+  private final static long timeoutSeconds = 60;
+
   @Option(name = "-b", aliases = "--bindir", required = true, usage = "Specify a bin directory")
   private String binDir;
 
@@ -35,14 +37,13 @@ public final class TestExecutorMain {
     final CmdLineParser parser = new CmdLineParser(main);
     parser.parseArgument(args);
 
-    final TestExecutor executor = new TestExecutor();
+    final TestExecutor executor = new TestExecutor(timeoutSeconds);
     final List<ClassPath> cps = Arrays.asList(new ClassPath(Paths.get(main.binDir)));
     final List<FullyQualifiedName> targets = createTargetFQNs(main.sourceClass);
     final List<FullyQualifiedName> tests = createTestFQNs(main.testClass);
     final TestResults testResults = executor.exec(cps, targets, tests);
 
     TestResults.serialize(testResults);
-
   }
 
   private static List<FullyQualifiedName> createTargetFQNs(final String names) {

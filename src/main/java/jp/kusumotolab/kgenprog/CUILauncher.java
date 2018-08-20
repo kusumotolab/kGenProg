@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -19,7 +20,6 @@ import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
-import jp.kusumotolab.kgenprog.ga.RandomNumberGeneration;
 import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
@@ -35,14 +35,17 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class CUILauncher {
 
-  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
   // region Fields
-  private Path rootDir;
+  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
+  private final List<ClassPath> classPaths = new ArrayList<>();
   private final List<ProductSourcePath> productSourcePaths = new ArrayList<>();
   private final List<TestSourcePath> testSourcePaths = new ArrayList<>();
-  private final List<ClassPath> classPaths = new ArrayList<>();
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+  private Path rootDir;
+  private int headcount = 100;
+  private int maxGeneration = 10;
+  private long timeLimit = 60;
   // endregion
 
   // region Constructor
@@ -121,6 +124,37 @@ public class CUILauncher {
     rootLogger.setLevel(Level.ERROR);
   }
 
+  public int getHeadcount() {
+    return headcount;
+  }
+
+  @Option(name = "-h", aliases = "--headcount",
+      usage = "The number of how many variants are generated maximally in a generation")
+  public void setHeadcount(int headcount) {
+    log.debug("enter setHeadcount(int)");
+    this.headcount = headcount;
+  }
+
+  public int getMaxGeneration() {
+    return maxGeneration;
+  }
+
+  @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation")
+  public void setMaxGeneration(int maxGeneration) {
+    log.debug("enter setMaxGeneration(int)");
+    this.maxGeneration = maxGeneration;
+  }
+
+  public long getTimeLimit() {
+    return timeLimit;
+  }
+
+  @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
+  public void setTimeLimit(long timeLimit) {
+    log.debug("enter setTimeLimit(long)");
+    this.timeLimit = timeLimit;
+  }
+
   // endregion
 
   public static void main(final String[] args) {
@@ -149,15 +183,16 @@ public class CUILauncher {
         getProductSourcePaths(), getTestSourcePaths(), getClassPaths(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
-    final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
+    final Random random = new Random();
+    random.setSeed(0);
     final RouletteStatementSelection rouletteStatementSelection =
-        new RouletteStatementSelection(randomNumberGeneration);
+        new RouletteStatementSelection(random);
     final Mutation mutation =
-        new RandomMutation(10, randomNumberGeneration, rouletteStatementSelection);
-    final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
+        new RandomMutation(10, random, rouletteStatementSelection);
+    final Crossover crossover = new SinglePointCrossover(random);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection = new DefaultVariantSelection();
+    final VariantSelection variantSelection = new DefaultVariantSelection(getHeadcount());
     final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
     final PatchGenerator patchGenerator = new PatchGenerator();
 

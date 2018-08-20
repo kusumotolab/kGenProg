@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -15,13 +16,14 @@ public class RouletteTest {
 
   @Test
   public void exec() {
-    final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
+    final Random random = new Random();
+    random.setSeed(0);
     final List<Integer> indexList = IntStream.range(0, 10)
         .boxed()
         .collect(Collectors.toList());
     final Function<Integer, Double> weightFunction = Integer::doubleValue;
     final Roulette<Integer> roulette = new Roulette<>(indexList, weightFunction,
-        randomNumberGeneration);
+        random);
 
     final Map<Integer, Integer> map = new HashMap<>();
     for (int i = 0; i < 1000; i++) {
