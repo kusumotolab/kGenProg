@@ -2,13 +2,9 @@ package jp.kusumotolab.kgenprog.project;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -32,19 +28,18 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator1() throws IOException {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Path outdirPath = basePath.resolve("modified");
-    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator();
 
     final String expected = new StringBuilder().append("package example;\n")
         .append("public class Foo {\n")
         .append("  public int foo(  int n){\n")
         .append("    return n;\n" + "  }\n")
-        .append("}\n\n")
+        .append("}")
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originVariant = project.getInitialVariant();
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final Variant originalVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
@@ -61,16 +56,13 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code =
-        operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
+        operation.apply(originalVariant.getGeneratedSourceCode(), location);
+    final Variant modifiedVariant =
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    patchGenerator.exec(project, modVariant);
-
-    final String modifiedSourceCode =
-        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Foo.java")));
-
-    FileUtils.deleteDirectory(outdirPath.toFile());
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+        .get(0);
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -78,8 +70,7 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator2() throws IOException {
     final Path basePath = Paths.get("example/BuildSuccess03");
-    final Path outdirPath = basePath.resolve("modified");
-    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator();
 
     final String expected = new StringBuilder().append("")
         .append("package example;\n")
@@ -93,12 +84,12 @@ public class PatchGeneratorTest {
         .append("  public static void bar3(){\n")
         .append("    new String();\n")
         .append("  }\n")
-        .append("}\n\n")
+        .append("}")
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originVariant = project.getInitialVariant();
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final Variant originalVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
@@ -115,16 +106,13 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code =
-        operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
+        operation.apply(originalVariant.getGeneratedSourceCode(), location);
+    final Variant modifiedVariant =
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    patchGenerator.exec(project, modVariant);
-
-    final String modifiedSourceCode =
-        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Bar.java")));
-
-    FileUtils.deleteDirectory(outdirPath.toFile());
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+        .get(0);
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -132,8 +120,7 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator3() throws IOException {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Path outdirPath = basePath.resolve("modified");
-    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator();
 
     final String expected = new StringBuilder().append("package example;\n")
         .append("public class Foo {\n")
@@ -147,12 +134,12 @@ public class PatchGeneratorTest {
         .append("    a();\n")
         .append("\treturn n;\n")
         .append("  }\n")
-        .append("}\n\n")
+        .append("}")
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originVariant = project.getInitialVariant();
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final Variant originalVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
@@ -176,16 +163,13 @@ public class PatchGeneratorTest {
 
     final InsertOperation operation = new InsertOperation(insertStatement);
     final GeneratedSourceCode code =
-        operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
+        operation.apply(originalVariant.getGeneratedSourceCode(), location);
+    final Variant modifiedVariant =
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    patchGenerator.exec(project, modVariant);
-
-    final String modifiedSourceCode =
-        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Foo.java")));
-
-    FileUtils.deleteDirectory(outdirPath.toFile());
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+        .get(0);
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -194,8 +178,7 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator4() throws IOException {
     final Path basePath = Paths.get("example/BuildSuccess01/");
-    final Path outdirPath = basePath.resolve("modified");
-    final PatchGenerator patchGenerator = new PatchGenerator(outdirPath);
+    final PatchGenerator patchGenerator = new PatchGenerator();
 
     final String expected = new StringBuilder().append("package example;\n")
         .append("public class Foo {\n")
@@ -205,12 +188,12 @@ public class PatchGeneratorTest {
         .append("\t}\n")
         .append("    return n;\n")
         .append("  }\n")
-        .append("}\n\n")
+        .append("}")
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originVariant = project.getInitialVariant();
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originVariant.getGeneratedSourceCode()
+    final Variant originalVariant = project.getInitialVariant();
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
 
@@ -237,16 +220,13 @@ public class PatchGeneratorTest {
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
     final GeneratedSourceCode code =
-        operation.apply(originVariant.getGeneratedSourceCode(), location);
-    final List<Variant> modVariant = new ArrayList<Variant>(Arrays.asList(
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code)));
+        operation.apply(originalVariant.getGeneratedSourceCode(), location);
+    final Variant modifiedVariant =
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
 
-    patchGenerator.exec(project, modVariant);
-
-    final String modifiedSourceCode =
-        new String(Files.readAllBytes(outdirPath.resolve("variant1/example.Foo.java")));
-
-    FileUtils.deleteDirectory(outdirPath.toFile());
+    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+        .get(0);
+    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }

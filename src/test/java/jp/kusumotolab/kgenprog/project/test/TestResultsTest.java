@@ -33,6 +33,8 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class TestResultsTest {
 
   private final static Path WorkPath = Paths.get("tmp/work");
+  private final static ClassPath classPath = new ClassPath(WorkPath);
+  private final static long timeoutSeconds = 60;
 
   @Before
   public void before() throws IOException {
@@ -53,9 +55,9 @@ public class TestResultsTest {
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor();
+    final TestExecutor executor = new TestExecutor(timeoutSeconds);
     final TestResults result =
-        executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
@@ -117,9 +119,9 @@ public class TestResultsTest {
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor();
+    final TestExecutor executor = new TestExecutor(timeoutSeconds);
     final TestResults result =
-        executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
 
     final String expected = new StringBuilder().append("")
         .append("[")

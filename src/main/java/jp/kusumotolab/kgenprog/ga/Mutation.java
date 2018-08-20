@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.List;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -10,13 +11,13 @@ public abstract class Mutation {
 
   private static Logger log = LoggerFactory.getLogger(Mutation.class);
 
-  protected final RandomNumberGeneration randomNumberGeneration;
+  protected final Random random;
   protected final int numberOfBase;
   protected final CandidateSelection candidateSelection;
 
-  public Mutation(final int numberOfBase, final RandomNumberGeneration randomNumberGeneration,
+  public Mutation(final int numberOfBase, final Random random,
       final CandidateSelection candidateSelection) {
-    this.randomNumberGeneration = randomNumberGeneration;
+    this.random = random;
     this.numberOfBase = numberOfBase;
     this.candidateSelection = candidateSelection;
   }

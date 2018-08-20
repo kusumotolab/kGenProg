@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -19,7 +20,6 @@ import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
-import jp.kusumotolab.kgenprog.ga.RandomNumberGeneration;
 import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
@@ -28,7 +28,6 @@ import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.ResultGenerator;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -184,21 +183,22 @@ public class CUILauncher {
         getProductSourcePaths(), getTestSourcePaths(), getClassPaths(), JUnitVersion.JUNIT4);
 
     final FaultLocalization faultLocalization = new Ochiai();
-    final RandomNumberGeneration randomNumberGeneration = new RandomNumberGeneration();
+    final Random random = new Random();
+    random.setSeed(0);
     final RouletteStatementSelection rouletteStatementSelection =
-        new RouletteStatementSelection(randomNumberGeneration);
+        new RouletteStatementSelection(random);
     final Mutation mutation =
-        new RandomMutation(10, randomNumberGeneration, rouletteStatementSelection);
-    final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
+        new RandomMutation(10, random, rouletteStatementSelection);
+    final Crossover crossover = new SinglePointCrossover(random);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection(getHeadcount());
     final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
-    final ResultGenerator resultGenerator = new PatchGenerator(workingPath);
+    final PatchGenerator patchGenerator = new PatchGenerator();
 
     final KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
-        crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, resultGenerator,
-        workingPath, getTimeLimit(), getMaxGeneration(), 1);
+        crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, patchGenerator,
+        workingPath);
     kGenProgMain.run();
 
     log.debug("exit launch()");
