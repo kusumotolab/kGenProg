@@ -53,8 +53,9 @@ public class PatchGenerator implements ResultGenerator {
           final List<String> diff = makeDiff(fileName, Files.readAllLines(originPath), modifiedSourceCodeLines);
           patches.add(new Patch(fileName, modifiedSourceCodeLines, diff));
         }
-      } catch (final MalformedTreeException | BadLocationException | IOException e) {
-        throw new RuntimeException(e);
+      } catch (final MalformedTreeException | BadLocationException | IOException | DiffException e) {
+        log.error(e.getMessage());
+        return new ArrayList<>();
       }
     }
     log.debug("exit exec(TargetProject, Variant)");
@@ -104,12 +105,8 @@ public class PatchGenerator implements ResultGenerator {
    * @return
    */
   private List<String> makeDiff(final String fileName, final List<String> origin,
-      final List<String> modified) {
-    try {
+      final List<String> modified) throws DiffException {
       final com.github.difflib.patch.Patch<String> diff = DiffUtils.diff(origin, modified);
       return UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
-    } catch (final DiffException e) {
-      throw new RuntimeException(e);
-    }
   }
 }
