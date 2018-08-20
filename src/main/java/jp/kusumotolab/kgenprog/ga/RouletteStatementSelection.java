@@ -1,17 +1,18 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
 public class RouletteStatementSelection implements CandidateSelection {
 
-  private final RandomNumberGeneration randomNumberGeneration;
+  private final Random random;
   private Roulette<Statement> roulette;
 
-  public RouletteStatementSelection(final RandomNumberGeneration randomNumberGeneration) {
-    this.randomNumberGeneration = randomNumberGeneration;
+  public RouletteStatementSelection(final Random random) {
+    this.random = random;
   }
 
   @Override
@@ -26,7 +27,7 @@ public class RouletteStatementSelection implements CandidateSelection {
     };
 
     final List<Statement> statements = visitor.getStatements();
-    roulette = new Roulette<>(statements, weightFunction, randomNumberGeneration);
+    roulette = new Roulette<>(statements, weightFunction, random);
   }
 
   protected int getStatementWeight(Statement statement) {
