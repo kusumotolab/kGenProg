@@ -165,6 +165,7 @@ public class TestExecutorTest {
   @Test
   public void testTestExecutorForBuildSuccess04() throws Exception {
 
+    // 無限ループする題材
     final Path rootPath = Paths.get("example/BuildSuccess04");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
@@ -172,6 +173,7 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode, WorkPath);
 
+    // タイムアウト時間を短めに設定（CI高速化のため）
     final long timeout = 1;
     final TestExecutor executor = new TestExecutor(timeout);
     final TestResults result =
