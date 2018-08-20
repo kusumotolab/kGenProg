@@ -19,16 +19,6 @@ public class EmptyBuildResults extends BuildResults {
   }
 
   @Override
-  public void addMapping(final Path pathToSource, final Path pathToClass) {
-    // do nothing
-  }
-
-  @Override
-  public Set<Path> getPathToClasses(final Path pathToSource) {
-    return Collections.emptySet();
-  }
-
-  @Override
   public Set<FullyQualifiedName> getPathToFQNs(final Path pathToSource) {
     return Collections.emptySet();
   }

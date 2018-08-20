@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,9 +13,8 @@ import java.util.Map;
  */
 public class MemoryClassLoader extends URLClassLoader {
 
-  public MemoryClassLoader(Path path) throws MalformedURLException {
-    super(new URL[] {path.toUri()
-        .toURL()});
+  public MemoryClassLoader() throws MalformedURLException {
+    this(new URL[] {});
   }
 
   public MemoryClassLoader(URL[] urls) {

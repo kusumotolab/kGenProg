@@ -1,8 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
@@ -19,7 +16,6 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.BuildResults;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
@@ -28,19 +24,13 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
-import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestResultsTest {
 
-  private final static Path WorkPath = Paths.get("tmp/work");
-  private final static ClassPath classPath = new ClassPath(WorkPath);
   private final static long timeoutSeconds = 60;
 
   @Before
-  public void before() throws IOException {
-    TestUtil.deleteWorkDirectory(WorkPath);
-    Files.deleteIfExists(TestResults.getSerFilePath());
-  }
+  public void before() throws IOException {}
 
   /**
    * FLで用いる4メトリクスのテスト
@@ -52,12 +42,10 @@ public class TestResultsTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    final BuildResults buildResults =
-        new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
+    final BuildResults buildResults = new ProjectBuilder(targetProject).build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode);
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
@@ -117,11 +105,10 @@ public class TestResultsTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
+    new ProjectBuilder(targetProject).build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode);
 
     final String expected = new StringBuilder().append("")
         .append("[")

@@ -71,4 +71,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.10.0'
+    
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
 }

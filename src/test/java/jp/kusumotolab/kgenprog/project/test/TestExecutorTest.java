@@ -4,55 +4,38 @@ import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Bar;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest04;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest05;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazAnonymous;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazInner;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazOuter;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazStaticInner;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest04;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Qux;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.QuxTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestExecutorTest {
 
-  private final static Path WorkPath = Paths.get("tmp/work");
-  private final static ClassPath classPath = new ClassPath(WorkPath);
   private final static long timeoutSeconds = 60;
 
   @Before
-  public void before() throws IOException {
-    TestUtil.deleteWorkDirectory(WorkPath);
-  }
+  public void before() throws IOException {}
 
   @After
-  public void after() throws IOException {
-    TestUtil.deleteWorkDirectory(WorkPath);
-  }
+  public void after() throws IOException {}
 
   @Test
   public void testTestExecutorForBuildSuccess01() throws Exception {
@@ -61,11 +44,10 @@ public class TestExecutorTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode, WorkPath);
+    projectBuilder.build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -99,11 +81,10 @@ public class TestExecutorTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode, WorkPath);
+    projectBuilder.build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result = executor.exec(Arrays.asList(classPath), Arrays.asList(Foo, Bar),
-        Arrays.asList(FooTest, BarTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode);
 
     // 実行されたテストは10個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -149,13 +130,10 @@ public class TestExecutorTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode, WorkPath);
+    projectBuilder.build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result = executor.exec(Arrays.asList(classPath),
-        Arrays.asList(Foo, Bar, BazInner, BazStaticInner, BazAnonymous, BazOuter),
-        Arrays.asList(FooTest, BarTest));
-
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode);
 
     // TODO
     // Should confirm BuildSuccess03
@@ -171,13 +149,12 @@ public class TestExecutorTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode, WorkPath);
+    projectBuilder.build(generatedSourceCode);
 
     // タイムアウト時間を短めに設定（CI高速化のため）
     final long timeout = 1;
-    final TestExecutor executor = new TestExecutor(timeout);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Qux), Arrays.asList(QuxTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeout);
+    final TestResults result = executor.exec(generatedSourceCode);
 
     // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
     assertThat(result).isInstanceOf(EmptyTestResults.class);

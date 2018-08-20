@@ -23,7 +23,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMain {
 
@@ -36,7 +36,7 @@ public class KGenProgMain {
   private final SourceCodeGeneration sourceCodeGeneration;
   private final SourceCodeValidation sourceCodeValidation;
   private final VariantSelection variantSelection;
-  private final TestProcessBuilder testProcessBuilder;
+  private final TestExecutor testExecutor;
   private final PatchGenerator patchGenerator;
 
   // 以下，一時的なフィールド #146 で解決すべき
@@ -82,7 +82,10 @@ public class KGenProgMain {
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-    this.testProcessBuilder = new TestProcessBuilder(targetProject, this.workingPath);
+
+    // TODO Should be retrieved from config
+    this.testExecutor = new TestExecutor(targetProject, 60);
+
     this.patchGenerator = patchGenerator;
 
     this.timeoutSeconds = timeout;
@@ -115,7 +118,7 @@ public class KGenProgMain {
       final List<Gene> genes = new ArrayList<>();
       for (final Variant variant : selectedVariants) {
         final List<Suspiciousness> suspiciousnesses =
-            faultLocalization.exec(targetProject, variant, testProcessBuilder);
+            faultLocalization.exec(targetProject, variant, testExecutor);
         final List<Base> bases = mutation.exec(suspiciousnesses);
         genes.addAll(variant.getGene()
             .generateNextGenerationGenes(bases));
@@ -128,7 +131,7 @@ public class KGenProgMain {
         final GeneratedSourceCode generatedSourceCode =
             sourceCodeGeneration.exec(gene, targetProject);
         final Fitness fitness =
-            sourceCodeValidation.exec(generatedSourceCode, targetProject, testProcessBuilder);
+            sourceCodeValidation.exec(generatedSourceCode, targetProject, testExecutor);
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
         currentGenerationVariants.add(variant);
 

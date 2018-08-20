@@ -4,25 +4,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
+import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
-import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 /**
  * 
@@ -32,7 +34,7 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class MemoryClassLoaderTest {
 
   final static Path RootPath = Paths.get("example/BuildSuccess01");
-  final static Path WorkPath = Paths.get("tmp/work");
+  static BuildResults buildResults;
 
   final static FullyQualifiedName sourceFqn = ExampleAlias.Fqn.Foo;
   final static FullyQualifiedName testFqn = ExampleAlias.Fqn.FooTest;
@@ -41,14 +43,25 @@ public class MemoryClassLoaderTest {
 
   @BeforeClass
   public static void beforeClass() {
-    TestUtil.deleteWorkDirectory(WorkPath);
-
     // 一度だけビルドしておく
     final TargetProject targetProject = TargetProjectFactory.create(RootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode, WorkPath);
+    buildResults = projectBuilder.build(generatedSourceCode);
+  }
+
+  @Before
+  public void before() throws MalformedURLException {
+    setupMemoryClassLoader();
+  }
+
+  private void setupMemoryClassLoader() throws MalformedURLException {
+    Loader = new MemoryClassLoader();
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    final List<CompilationUnit> units = compilationPackage.getUnits();
+    units.forEach(unit -> Loader.addDefinition(new TargetFullyQualifiedName(unit.getName()),
+        unit.getBytecode()));
   }
 
   @After
@@ -60,8 +73,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading01() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // 動的ロード
     final Class<?> clazz = Loader.loadClass(sourceFqn);
     final Object instance = clazz.newInstance();
@@ -74,8 +85,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading02() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // 動的ロード（Override側のメソッドで試す）
     final Class<?> clazz = Loader.loadClass(sourceFqn.toString(), false);
     final Object instance = clazz.newInstance();
@@ -88,8 +97,6 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading03() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // SystemLoaderで動的ロード，失敗するはず (Exceptionを期待)
     ClassLoader.getSystemClassLoader()
         .loadClass(sourceFqn.toString());
@@ -97,8 +104,6 @@ public class MemoryClassLoaderTest {
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading04() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // リフレクションで動的ロード，失敗するはず (Exceptionを期待)
     // 処理自体は02と等価なはず
     Class.forName(sourceFqn.toString());
@@ -106,8 +111,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testDynamicClassLoading05() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // リフレクション + MemoryLoaderで動的ロード，これは成功するはず
     final Class<?> clazz = Class.forName(sourceFqn.toString(), true, Loader);
 
@@ -116,8 +119,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC01() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // まず動的ロード
     Class<?> clazz = Loader.loadClass(sourceFqn);
 
@@ -141,8 +142,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC02() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // まず動的ロード
     final Class<?> clazz = Loader.loadClass(sourceFqn);
 
@@ -166,8 +165,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testClassUnloadingByGC03() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // まず動的ロード
     Class<?> clazz = Loader.loadClass(sourceFqn);
 
@@ -189,7 +186,7 @@ public class MemoryClassLoaderTest {
     assertThat(targetClassWR.get()).isNull();
 
     // もう一度ロードすると
-    Loader = new MemoryClassLoader(WorkPath);
+    setupMemoryClassLoader();
 
     clazz = Loader.loadClass(sourceFqn);
     targetClassWR = new WeakReference<>(clazz);
@@ -200,8 +197,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testJUnitWithMemoryLoader01() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // CloseToZeroTestをロードしておく
     final Class<?> clazz = Loader.loadClass(testFqn);
 
@@ -218,8 +213,6 @@ public class MemoryClassLoaderTest {
 
   @Test
   public void testJUnitWithMemoryLoader02() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // まず何もロードされていないはず
     assertThat(listLoadedClasses(Loader)).isEmpty();
 
@@ -239,37 +232,8 @@ public class MemoryClassLoaderTest {
     assertThat(listLoadedClasses(Loader)).contains(testFqn.toString(), sourceFqn.toString());
   }
 
-  @Test
-  public void testAddDefinition01() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
-    // 対象の.classファイル名を生成
-    final String sourceName = sourceFqn.toString();
-    final String className = sourceName.replace(".", "/") + ".class";
-    final Path classpath = Paths.get(className);
-
-    // workフォルダから対象の.classファイルを探す
-    try (final Stream<Path> paths = Files.walk(WorkPath)) {
-      final Path classFilePath = paths.filter(path -> path.endsWith(classpath))
-          .findFirst()
-          .get();
-
-      // .classファイルを直接読み込んでメモリに格納
-      final byte[] byteCode = Files.readAllBytes(classFilePath);
-
-      // addDefinitionで定義追加
-      Loader.addDefinition(sourceFqn, byteCode);
-
-      // クラスロードできるはず
-      final Class<?> clazz = Loader.loadClass(sourceFqn);
-      assertThat(clazz.getName()).hasToString(sourceFqn.toString());
-    }
-  }
-
   @Test(expected = ClassFormatError.class)
   public void testAddDefinition02() throws Exception {
-    Loader = new MemoryClassLoader(WorkPath);
-
     // 不正なバイトコードを生成
     final byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};
 

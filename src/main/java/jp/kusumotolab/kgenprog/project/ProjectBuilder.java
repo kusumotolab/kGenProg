@@ -1,16 +1,9 @@
 package jp.kusumotolab.kgenprog.project;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Writer;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,14 +14,16 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
+import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
+import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
+import jp.kusumotolab.kgenprog.project.build.JavaSourceFromString;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
@@ -47,30 +42,19 @@ public class ProjectBuilder {
    * @param workPath バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
-  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path workPath) {
-    log.debug("enter build(GeneratedSourceCode, Path)");
+  public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
+    log.debug("enter build(GeneratedSourceCode)");
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-    final StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-
-    // workingDir が存在しなければ生成
-    if (Files.notExists(workPath)) {
-      try {
-        Files.createDirectories(workPath);
-      } catch (final Exception e) {
-        log.error(e.getMessage(), e);
-        return EmptyBuildResults.instance;
-      }
-    }
+    final StandardJavaFileManager standardFileManager =
+        compiler.getStandardFileManager(null, null, null);
+    final InMemoryClassManager inMemoryFileManager = new InMemoryClassManager(standardFileManager);
 
     // コンパイル対象の JavaFileObject を生成
     final Iterable<? extends JavaFileObject> javaFileObjects =
-        generateAllJavaFileObjects(generatedSourceCode.getAsts(), fileManager);
+        generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
 
     final List<String> compilationOptions = new ArrayList<>();
-    compilationOptions.add("-d");
-    compilationOptions.add(workPath.toAbsolutePath()
-        .toString());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
@@ -95,10 +79,10 @@ public class ProjectBuilder {
 
       @Override
       public void close() throws IOException {}
-    }, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
+    }, inMemoryFileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
     try {
-      fileManager.close();
+      inMemoryFileManager.close();
     } catch (final IOException e) {
       e.printStackTrace();
     }
@@ -109,12 +93,10 @@ public class ProjectBuilder {
       return EmptyBuildResults.instance;
     }
 
+    final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
+    final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
     final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, workPath, diagnostics);
-
-    // ソースファイルとクラスファイルのマッピング
-    final Collection<File> classFiles =
-        FileUtils.listFiles(workPath.toFile(), new String[] {"class"}, true);
+        new BuildResults(generatedSourceCode, compilationPackage, diagnostics);
 
     // TODO: https://github.com/kusumotolab/kGenProg/pull/154
     // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
@@ -123,7 +105,7 @@ public class ProjectBuilder {
     allSourcePaths.addAll(this.targetProject.getProductSourcePaths());
     allSourcePaths.addAll(this.targetProject.getTestSourcePaths());
 
-    for (final File classFile : classFiles) {
+    for (final CompilationUnit compilationUnit : compilationUnits) {
 
       // TODO: https://github.com/kusumotolab/kGenProg/pull/154
       // 更新されたファイルの中に classFile が含まれていない場合は削除．この機能はとりあえず無しで問題ない
@@ -135,7 +117,7 @@ public class ProjectBuilder {
       // }
 
       // クラスファイルのパース
-      final ClassParser parser = this.parse(classFile);
+      final ClassParser parser = this.parse(compilationUnit);
 
       // 対応関係の構築
       final String partialPath = parser.getPartialPath();
@@ -148,8 +130,6 @@ public class ProjectBuilder {
         }
       }
       if (null != correspondingSourceFile) {
-        buildResults.addMapping(correspondingSourceFile.path,
-            Paths.get(classFile.getAbsolutePath()));
         buildResults.addMapping(correspondingSourceFile.path, fqn);
       } else {
         buildResults.setMappingAvailable(false);
@@ -159,13 +139,6 @@ public class ProjectBuilder {
     return buildResults;
   }
 
-  /**
-   * すべて（ターゲットソースファイルとテストコード）の JavaFileObject を生成するメソッド
-   * 
-   * @param list
-   * @param fileManager
-   * @return
-   */
   private Iterable<? extends JavaFileObject> generateAllJavaFileObjects(
       final List<GeneratedAST> list, final StandardJavaFileManager fileManager) {
 
@@ -189,7 +162,7 @@ public class ProjectBuilder {
   private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
       final List<GeneratedAST> asts) {
     return asts.stream()
-        .map(JavaSourceFromString::new)
+        .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode()))
         .collect(Collectors.toSet());
   }
 
@@ -208,19 +181,13 @@ public class ProjectBuilder {
     return fileManager.getJavaFileObjectsFromStrings(sourceFileNames);
   }
 
-
-  private ClassParser parse(final File classFile) {
-    log.debug("enter parse(File)");
-    try (final InputStream is = new FileInputStream(classFile)) {
-      final ClassReader reader = new ClassReader(is);
-      final ClassParser parser = new ClassParser(Opcodes.ASM6);
-      reader.accept(parser, ClassReader.SKIP_CODE);
-      log.debug("exit parse(File)");
-      return parser;
-    } catch (final Exception e) {
-      e.printStackTrace();
-      return null;
-    }
+  private ClassParser parse(final CompilationUnit compilationUnit) {
+    log.debug("enter parse(CompilationUnit)");
+    final ClassReader reader = new ClassReader(compilationUnit.getBytecode());
+    final ClassParser parser = new ClassParser(Opcodes.ASM6);
+    reader.accept(parser, ClassReader.SKIP_CODE);
+    log.debug("exit parse(File)");
+    return parser;
   }
 
   // TODO: https://github.com/kusumotolab/kGenProg/pull/154
@@ -249,25 +216,5 @@ public class ProjectBuilder {
       }
     }
     return updatedFiles;
-  }
-}
-
-
-class JavaSourceFromString extends SimpleJavaFileObject {
-
-  final String code;
-
-  JavaSourceFromString(final GeneratedAST ast) {
-    this(ast.getPrimaryClassName(), ast.getSourceCode());
-  }
-
-  JavaSourceFromString(final String name, final String code) {
-    super(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
-    this.code = code;
-  }
-
-  @Override
-  public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-    return code;
   }
 }
