@@ -20,20 +20,23 @@ public class TestExecutor {
   }
 
   public TestResults exec(final List<ClassPath> classPath,
-      final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs) {
+      final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs)
+      throws ExecutionException {
 
     final TestThread testThread = new TestThread(classPath, sourceFQNs, testFQNs);
 
-    ExecutorService executor = Executors.newSingleThreadExecutor();
-
+    final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
     try {
       future.get(timeoutSeconds, TimeUnit.SECONDS);
-    } catch (final InterruptedException | ExecutionException e) {
+    } catch (final ExecutionException e) {
+      // Executor側での例外をそのまま通す．
+      throw e;
+    } catch (final InterruptedException e) {
       // TODO Should handle safely
       e.printStackTrace();
-    } catch (TimeoutException e) {
+    } catch (final TimeoutException e) {
       return EmptyTestResults.instance;
     }
 

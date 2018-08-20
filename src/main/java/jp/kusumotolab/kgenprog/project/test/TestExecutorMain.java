@@ -44,7 +44,6 @@ public final class TestExecutorMain {
     final TestResults testResults = executor.exec(cps, targets, tests);
 
     TestResults.serialize(testResults);
-
   }
 
   private static List<FullyQualifiedName> createTargetFQNs(final String names) {

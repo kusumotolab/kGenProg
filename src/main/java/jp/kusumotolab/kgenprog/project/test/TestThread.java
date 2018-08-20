@@ -87,6 +87,9 @@ class TestThread extends Thread {
       }
     } catch (Exception e) {
       // TODO
+      // Should handle safely
+      // ひとまず本クラスをThreadで包むためにRuntimeExceptionでエラーを吐く．
+      throw new RuntimeException(e);
     }
     this.testResults = testResults;
   }
