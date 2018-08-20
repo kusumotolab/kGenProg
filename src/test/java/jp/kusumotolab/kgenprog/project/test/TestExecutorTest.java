@@ -20,6 +20,8 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Qux;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.QuxTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -39,6 +41,8 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class TestExecutorTest {
 
   private final static Path WorkPath = Paths.get("tmp/work");
+  private final static ClassPath classPath = new ClassPath(WorkPath);
+  private final static long timeoutSeconds = 60;
 
   @Before
   public void before() throws IOException {
@@ -59,9 +63,9 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor();
+    final TestExecutor executor = new TestExecutor(timeoutSeconds);
     final TestResults result =
-        executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -97,8 +101,8 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor();
-    final TestResults result = executor.exec(new ClassPath(WorkPath), Arrays.asList(Foo, Bar),
+    final TestExecutor executor = new TestExecutor(timeoutSeconds);
+    final TestResults result = executor.exec(Arrays.asList(classPath), Arrays.asList(Foo, Bar),
         Arrays.asList(FooTest, BarTest));
 
     // 実行されたテストは10個のはず
@@ -147,8 +151,8 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor();
-    final TestResults result = executor.exec(new ClassPath(WorkPath),
+    final TestExecutor executor = new TestExecutor(timeoutSeconds);
+    final TestResults result = executor.exec(Arrays.asList(classPath),
         Arrays.asList(Foo, Bar, BazInner, BazStaticInner, BazAnonymous, BazOuter),
         Arrays.asList(FooTest, BarTest));
 
@@ -158,4 +162,22 @@ public class TestExecutorTest {
     result.toString(); // to avoid unused warnings
   }
 
+  @Test
+  public void testTestExecutorForBuildSuccess04() throws Exception {
+
+    final Path rootPath = Paths.get("example/BuildSuccess04");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode, WorkPath);
+
+    final long timeout = 1;
+    final TestExecutor executor = new TestExecutor(timeout);
+    final TestResults result =
+        executor.exec(Arrays.asList(classPath), Arrays.asList(Qux), Arrays.asList(QuxTest));
+
+    // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
+    assertThat(result).isInstanceOf(EmptyTestResults.class);
+  }
 }

@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,23 +28,32 @@ import jp.kusumotolab.kgenprog.project.ClassPath;
  * @author shinsuke
  *
  */
-class TestExecutor {
+class TestThread extends Thread {
 
   private MemoryClassLoader memoryClassLoader;
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
   private final RuntimeData jacocoRuntimeData;
+  private final List<ClassPath> classPaths;
+  private final List<FullyQualifiedName> sourceFQNs;
+  private final List<FullyQualifiedName> testFQNs;
+  private TestResults testResults; // used for return value in multi thread
 
-  public TestExecutor() {
+  public TestThread(final List<ClassPath> classPaths, final List<FullyQualifiedName> sourceFQNs,
+      final List<FullyQualifiedName> testFQNs) {
     jacocoRuntime = new LoggerRuntime();
     jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     jacocoRuntimeData = new RuntimeData();
+
+    // Execution params
+    this.classPaths = classPaths;
+    this.sourceFQNs = sourceFQNs;
+    this.testFQNs = testFQNs;
+
   }
 
-
-  public TestResults exec(final ClassPath classpath, final List<FullyQualifiedName> sourceFQNs,
-      final List<FullyQualifiedName> testFQNs) throws Exception {
-    return exec(Arrays.asList(classpath), sourceFQNs, testFQNs);
+  public TestResults getTestResults() {
+    return this.testResults;
   }
 
   /**
@@ -57,29 +65,30 @@ class TestExecutor {
    * @return テストの実行結果（テスト成否やCoverage等）
    * @throws Exception
    */
-  public TestResults exec(final List<ClassPath> classpaths,
-      final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs)
-      throws Exception {
+  public void run() {
     final TestResults testResults = new TestResults();
 
-    final URL[] classpathUrls = convertClasspathsToURLs(classpaths);
+    final URL[] classpathUrls = convertClasspathsToURLs(classPaths);
     memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
-    loadInstrumentedClasses(sourceFQNs);
-    final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
+    try {
+      loadInstrumentedClasses(sourceFQNs);
+      final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
 
-    // TODO
-    // junitCore.run(Classes<?>...)による一括実行を使えないか？
-    // 速度改善するかも．jacocoとの連携が難しい．listenerを再利用すると結果がバグる
-    for (Class<?> junitClass : junitClasses) {
-      final JUnitCore junitCore = new JUnitCore();
-      final CoverageMeasurementListener listener =
-          new CoverageMeasurementListener(sourceFQNs, testResults);
-      junitCore.addListener(listener);
-      junitCore.run(junitClass);
+      // TODO
+      // junitCore.run(Classes<?>...)による一括実行を使えないか？
+      // 速度改善するかも．jacocoとの連携が難しい．listenerを再利用すると結果がバグる
+      for (Class<?> junitClass : junitClasses) {
+        final JUnitCore junitCore = new JUnitCore();
+        final CoverageMeasurementListener listener =
+            new CoverageMeasurementListener(sourceFQNs, testResults);
+        junitCore.addListener(listener);
+        junitCore.run(junitClass);
+      }
+    } catch (Exception e) {
+      // TODO
     }
-
-    return testResults;
+    this.testResults = testResults;
   }
 
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
