@@ -25,13 +25,13 @@ public class PatchGenerator implements ResultGenerator {
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
   @Override
-  public List<Result> exec(final TargetProject targetProject, final Variant modifiedVariants) {
+  public List<Result> exec(final TargetProject targetProject, final Variant modifiedVariant) {
     log.debug("enter exec(TargetProject, Variant)");
 
     final List<Result> patches = new ArrayList<>();
 
     final GeneratedSourceCode modifiedSourceCode =
-        applyAllModificationDirectly(targetProject, modifiedVariants);
+        applyAllModificationDirectly(targetProject, modifiedVariant);
 
     for (final GeneratedAST ast : modifiedSourceCode.getAsts()) {
       try {
