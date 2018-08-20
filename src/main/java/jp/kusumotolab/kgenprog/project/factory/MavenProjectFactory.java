@@ -75,12 +75,12 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
         .collect(Collectors.toList()));
   }
 
-  private void searchJavaFiles(File directory, List<File> results) {
-    File[] files = directory.listFiles();
+  private void searchJavaFiles(final File directory, final List<File> results) {
+    final File[] files = directory.listFiles();
     if (files == null) {
       return;
     }
-    for (File file : files) {
+    for (final File file : files) {
       if (file.isFile() && file.getName()
           .toLowerCase()
           .endsWith(".java")) {
@@ -99,7 +99,9 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
       final Model model = reader.read(new FileReader(pomFile));
       final Path homePath = Paths.get(System.getProperty("user.home"));
       final Path m2Path = Paths.get(homePath.toString(), ".m2", "repository");
-      for (Dependency dependency : model.getDependencies()) {
+      for (final Object object : model.getDependencies()) {
+        if (!(object instanceof Dependency)) continue;
+        final Dependency dependency = (Dependency) object;
         final List<String> splits = new ArrayList<>(Arrays.asList(dependency.getGroupId()
             .split("\\.")));
         splits.add(0, m2Path.toString());
