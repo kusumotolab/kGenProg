@@ -42,6 +42,7 @@ public class PatchGenerator {
 
   /***
    * patch オブジェクトの生成を行う
+   *
    * @param ast
    * @return
    * @throws IOException
