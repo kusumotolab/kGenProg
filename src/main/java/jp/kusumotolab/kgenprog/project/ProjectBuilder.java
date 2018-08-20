@@ -14,10 +14,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
@@ -50,8 +53,9 @@ public class ProjectBuilder {
     log.debug("enter build(GeneratedSourceCode, Path)");
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-    final InMemoryClassManager fileManager =
-        new InMemoryClassManager(compiler.getStandardFileManager(null, null, null));
+    final StandardJavaFileManager standardFileManager =
+        compiler.getStandardFileManager(null, null, null);
+    final InMemoryClassManager inMemoryFileManager = new InMemoryClassManager(standardFileManager);
 
     // workingDir が存在しなければ生成
     if (Files.notExists(workPath)) {
@@ -59,13 +63,19 @@ public class ProjectBuilder {
         Files.createDirectories(workPath);
       } catch (final Exception e) {
         log.error(e.getMessage(), e);
+        try {
+          inMemoryFileManager.close();
+        } catch (IOException e1) {
+          // TODO 自動生成された catch ブロック
+          e1.printStackTrace();
+        }
         return EmptyBuildResults.instance;
       }
     }
 
     // コンパイル対象の JavaFileObject を生成
     final Iterable<? extends JavaFileObject> javaFileObjects =
-        generateJavaFileObjectsFromGeneratedAst(generatedSourceCode.getAsts());
+        generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
 
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-d");
@@ -95,10 +105,10 @@ public class ProjectBuilder {
 
       @Override
       public void close() throws IOException {}
-    }, fileManager, diagnostics, compilationOptions, null, javaFileObjects);
+    }, inMemoryFileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
     try {
-      fileManager.close();
+      inMemoryFileManager.close();
     } catch (final IOException e) {
       e.printStackTrace();
     }
@@ -109,7 +119,7 @@ public class ProjectBuilder {
       return EmptyBuildResults.instance;
     }
 
-    final List<CompilationUnit> compilationUnits = fileManager.getAllClasses();
+    final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
     final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
     final BuildResults buildResults =
         new BuildResults(generatedSourceCode, workPath, compilationPackage, diagnostics);
@@ -161,6 +171,20 @@ public class ProjectBuilder {
     return buildResults;
   }
 
+  private Iterable<? extends JavaFileObject> generateAllJavaFileObjects(
+      final List<GeneratedAST> list, final StandardJavaFileManager fileManager) {
+
+    final Iterable<? extends JavaFileObject> targetIterator =
+        generateJavaFileObjectsFromGeneratedAst(list);
+    final Iterable<? extends JavaFileObject> testIterator =
+        generateJavaFileObjectsFromSourceFile(this.targetProject.getTestSourcePaths(), fileManager);
+
+    return Stream.concat( //
+        StreamSupport.stream(targetIterator.spliterator(), false), //
+        StreamSupport.stream(testIterator.spliterator(), false))
+        .collect(Collectors.toSet());
+  }
+
   /**
    * GeneratedAST の List からJavaFileObject を生成するメソッド
    * 
@@ -172,6 +196,21 @@ public class ProjectBuilder {
     return asts.stream()
         .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode()))
         .collect(Collectors.toSet());
+  }
+
+  /**
+   * ソースファイルから JavaFileObject を生成するメソッド
+   * 
+   * @param paths
+   * @param fileManager
+   * @return
+   */
+  private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromSourceFile(
+      final List<? extends SourcePath> paths, final StandardJavaFileManager fileManager) {
+    final Set<String> sourceFileNames = paths.stream()
+        .map(f -> f.path.toString())
+        .collect(Collectors.toSet());
+    return fileManager.getJavaFileObjectsFromStrings(sourceFileNames);
   }
 
   private ClassParser parse(final File classFile) {

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,13 @@ import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
+import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
  * 
@@ -38,18 +45,26 @@ class TestThread extends Thread {
   private final List<FullyQualifiedName> sourceFQNs;
   private final List<FullyQualifiedName> testFQNs;
   private TestResults testResults; // used for return value in multi thread
+  private BuildResults buildResults;
 
-  public TestThread(final List<ClassPath> classPaths, final List<FullyQualifiedName> sourceFQNs,
-      final List<FullyQualifiedName> testFQNs) {
+  private final GeneratedSourceCode generatedSourceCode;
+  private final TargetProject targetProject;
+
+  public TestThread(final GeneratedSourceCode generatedSourceCode,
+      final TargetProject targetProject, final List<ClassPath> classPaths,
+      final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs) {
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
 
     // Execution params
+    // TODO should be deleted
     this.classPaths = classPaths;
     this.sourceFQNs = sourceFQNs;
     this.testFQNs = testFQNs;
 
+    this.generatedSourceCode = generatedSourceCode;
+    this.targetProject = targetProject;
   }
 
   public TestResults getTestResults() {
@@ -66,6 +81,8 @@ class TestThread extends Thread {
    * @throws Exception
    */
   public void run() {
+    buildResults = buildProject();
+
     final TestResults testResults = new TestResults();
 
     final URL[] classpathUrls = convertClasspathsToURLs(classPaths);
@@ -92,6 +109,11 @@ class TestThread extends Thread {
       throw new RuntimeException(e);
     }
     this.testResults = testResults;
+  }
+
+  private BuildResults buildProject() {
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    return projectBuilder.build(generatedSourceCode, Paths.get("tmp"));
   }
 
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
@@ -125,11 +147,24 @@ class TestThread extends Thread {
    * @return 書き換えたクラスオブジェクトs
    * @throws Exception
    */
-  private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
+  private List<Class<?>> __loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
       throws Exception {
     final List<Class<?>> loadedClasses = new ArrayList<>();
     for (final FullyQualifiedName fqn : fqns) {
       final byte[] instrumentedData = getInstrumentedClassBinary(fqn);
+      loadedClasses.add(loadClass(fqn, instrumentedData));
+    }
+    return loadedClasses;
+  }
+
+  private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
+      throws Exception {
+    final List<Class<?>> loadedClasses = new ArrayList<>();
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+
+    for (final FullyQualifiedName fqn : fqns) {
+      final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
+      final byte[] instrumentedData = getInstrumentedClassBinary(compilatinoUnit.getBytecode());
       loadedClasses.add(loadClass(fqn, instrumentedData));
     }
     return loadedClasses;
@@ -146,6 +181,11 @@ class TestThread extends Thread {
     final InputStream is = getClassFileInputStream(fqn);
     final byte[] bytes = jacocoInstrumenter.instrument(is, "");
     is.close();
+    return bytes;
+  }
+
+  private byte[] getInstrumentedClassBinary(final byte[] byteCode) throws Exception {
+    final byte[] bytes = jacocoInstrumenter.instrument(byteCode, "");
     return bytes;
   }
 
@@ -283,9 +323,15 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        final InputStream is = getClassFileInputStream(measuredClass);
-        analyzer.analyzeClass(is, measuredClass.value);
-        is.close();
+        // 生のソースのISを取り出す
+        // final InputStream is = getClassFileInputStream(measuredClass);
+        // analyzer.analyzeClass(is, measuredClass.value);
+
+        final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+        final CompilationUnit compilatinoUnit =
+            compilationPackage.getCompilationUnit(measuredClass.value);
+        final byte[] bytecode = compilatinoUnit.getBytecode();
+        analyzer.analyzeClass(bytecode, measuredClass.value);
       }
     }
 

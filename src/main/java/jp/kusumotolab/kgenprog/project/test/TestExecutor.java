@@ -8,22 +8,35 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class TestExecutor {
 
-  final private long timeoutSeconds;
+  private final TargetProject targetProject;
+  private final long timeoutSeconds;
 
-  public TestExecutor(final long timeoutSeconds) {
+  public TestExecutor(final TargetProject targetProject, final long timeoutSeconds) {
+    this.targetProject = targetProject;
+
     // TODO
     // timeoutSecondsはconfigから取り出すべき
     this.timeoutSeconds = timeoutSeconds;
   }
 
-  public TestResults exec(final List<ClassPath> classPath,
-      final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs)
-      throws ExecutionException {
 
-    final TestThread testThread = new TestThread(classPath, sourceFQNs, testFQNs);
+  // これを活かす
+  public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
+    return null;
+  }
+
+  // これは死ぬ
+  public TestResults exec(final GeneratedSourceCode generatedSourceCode,
+      final List<ClassPath> classPath, final List<FullyQualifiedName> sourceFQNs,
+      final List<FullyQualifiedName> testFQNs) throws ExecutionException {
+
+    final TestThread testThread =
+        new TestThread(generatedSourceCode, targetProject, classPath, sourceFQNs, testFQNs);
 
     final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<?> future = executor.submit(testThread);

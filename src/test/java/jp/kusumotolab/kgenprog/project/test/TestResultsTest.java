@@ -55,9 +55,9 @@ public class TestResultsTest {
     final BuildResults buildResults =
         new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
+        Arrays.asList(Foo), Arrays.asList(FooTest));
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
@@ -119,9 +119,9 @@ public class TestResultsTest {
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
+        Arrays.asList(Foo), Arrays.asList(FooTest));
 
     final String expected = new StringBuilder().append("")
         .append("[")

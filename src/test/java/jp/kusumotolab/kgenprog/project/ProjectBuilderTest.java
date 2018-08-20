@@ -207,7 +207,7 @@ public class ProjectBuilderTest {
     // buildResultsからバイトコードを取り出す
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     final List<CompilationUnit> units = compilationPackage.getUnits();
-    assertThat(units).hasSize(1);
+    assertThat(units).hasSize(2);
 
     final CompilationUnit unit = compilationPackage.getUnits()
         .get(0);

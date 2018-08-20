@@ -37,11 +37,11 @@ public final class TestExecutorMain {
     final CmdLineParser parser = new CmdLineParser(main);
     parser.parseArgument(args);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
+    final TestExecutor executor = new TestExecutor(null, timeoutSeconds); // bug
     final List<ClassPath> cps = Arrays.asList(new ClassPath(Paths.get(main.binDir)));
     final List<FullyQualifiedName> targets = createTargetFQNs(main.sourceClass);
     final List<FullyQualifiedName> tests = createTestFQNs(main.testClass);
-    final TestResults testResults = executor.exec(cps, targets, tests);
+    final TestResults testResults = executor.exec(null, cps, targets, tests); // bug
 
     TestResults.serialize(testResults);
   }

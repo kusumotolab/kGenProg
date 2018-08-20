@@ -63,9 +63,9 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
+        Arrays.asList(Foo), Arrays.asList(FooTest));
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -101,9 +101,9 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result = executor.exec(Arrays.asList(classPath), Arrays.asList(Foo, Bar),
-        Arrays.asList(FooTest, BarTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
+        Arrays.asList(Foo, Bar), Arrays.asList(FooTest, BarTest));
 
     // 実行されたテストは10個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -151,8 +151,8 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode, WorkPath);
 
-    final TestExecutor executor = new TestExecutor(timeoutSeconds);
-    final TestResults result = executor.exec(Arrays.asList(classPath),
+    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
         Arrays.asList(Foo, Bar, BazInner, BazStaticInner, BazAnonymous, BazOuter),
         Arrays.asList(FooTest, BarTest));
 
@@ -175,9 +175,9 @@ public class TestExecutorTest {
 
     // タイムアウト時間を短めに設定（CI高速化のため）
     final long timeout = 1;
-    final TestExecutor executor = new TestExecutor(timeout);
-    final TestResults result =
-        executor.exec(Arrays.asList(classPath), Arrays.asList(Qux), Arrays.asList(QuxTest));
+    final TestExecutor executor = new TestExecutor(targetProject, timeout);
+    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
+        Arrays.asList(Qux), Arrays.asList(QuxTest));
 
     // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
     assertThat(result).isInstanceOf(EmptyTestResults.class);
