@@ -40,6 +40,13 @@ public class PatchGenerator {
     return patches;
   }
 
+  /***
+   * patch オブジェクトの生成を行う
+   * @param ast
+   * @return
+   * @throws IOException
+   * @throws DiffException
+   */
   private Patch makePatch(GeneratedAST ast) throws IOException, DiffException {
     final Path originPath = ast.getProductSourcePath().path;
 
