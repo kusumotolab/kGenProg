@@ -31,13 +31,6 @@ public class JDTOperationTest {
   }
 
   static class ExceptionOperation implements JDTOperation {
-
-    @Override
-    public GeneratedSourceCode applyDirectly(final GeneratedSourceCode generatedSourceCode,
-        final ASTLocation location) {
-      throw new IllegalArgumentException();
-    }
-
     @Override
     public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
         final ASTRewrite astRewrite) {
