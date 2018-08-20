@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class BuildResults {
@@ -30,15 +31,19 @@ public class BuildResults {
   // ビルド元となったソースコード
   public final GeneratedSourceCode sourceCode;
 
+  private CompilationPackage compilationPackage;
+
   /**
    * 
    * @param sourceCode ビルド元となったソースコード
    * @param outDir クラスファイル生成ディレクトリ
+   * @param compilationPackage バイトコード
    * @param diagnostics ビルド時の詳細情報
    */
   public BuildResults(final GeneratedSourceCode sourceCode, final Path outDir,
+      final CompilationPackage compilationPackage,
       final DiagnosticCollector<JavaFileObject> diagnostics) {
-    this(sourceCode, false, outDir, diagnostics);
+    this(sourceCode, false, outDir, compilationPackage, diagnostics);
   }
 
   /**
@@ -50,10 +55,12 @@ public class BuildResults {
    * @param diagnostics ビルド時の詳細情報
    */
   protected BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
-      final Path outDir, final DiagnosticCollector<JavaFileObject> diagnostics) {
+      final Path outDir, final CompilationPackage compilationPackage,
+      final DiagnosticCollector<JavaFileObject> diagnostics) {
     this.sourceCode = sourceCode;
     this.isBuildFailed = isBuildFailed;
     this.outDir = outDir;
+    this.compilationPackage = compilationPackage;
     this.diagnostics = diagnostics;
     this.sourceToClassMap = new HashMap<>();
     this.classToSourceMap = new HashMap<>();
