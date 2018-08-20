@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TestProcessBuilder;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class Ochiai implements FaultLocalization {
@@ -19,11 +19,11 @@ public class Ochiai implements FaultLocalization {
 
   @Override
   public List<Suspiciousness> exec(final TargetProject targetProject, final Variant variant,
-      final TestProcessBuilder testExecutor) {
-    log.debug("enter exec(TargetProject, Variant, TestProcessBuilder)");
+      final TestExecutor testExecutor) {
+    log.debug("enter exec(TargetProject, Variant, TestExecutor)");
 
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    final TestResults testResults = testExecutor.start(generatedSourceCode);
+    final TestResults testResults = testExecutor.exec(generatedSourceCode);
 
 
     final List<Suspiciousness> suspiciousnesses = new ArrayList<>();

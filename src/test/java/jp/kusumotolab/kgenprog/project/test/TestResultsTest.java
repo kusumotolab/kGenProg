@@ -1,8 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
@@ -52,12 +49,10 @@ public class TestResultsTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    final BuildResults buildResults =
-        new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
+    final BuildResults buildResults = new ProjectBuilder(targetProject).build(generatedSourceCode);
 
     final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
-    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
-        Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestResults result = executor.exec(generatedSourceCode);
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
@@ -117,11 +112,10 @@ public class TestResultsTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    new ProjectBuilder(targetProject).build(generatedSourceCode, WorkPath);
+    new ProjectBuilder(targetProject).build(generatedSourceCode);
 
     final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
-    final TestResults result = executor.exec(generatedSourceCode, Arrays.asList(classPath),
-        Arrays.asList(Foo), Arrays.asList(FooTest));
+    final TestResults result = executor.exec(generatedSourceCode);
 
     final String expected = new StringBuilder().append("")
         .append("[")

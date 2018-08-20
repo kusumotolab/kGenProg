@@ -13,12 +13,11 @@ import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 public class BuildResults {
 
   public final boolean isBuildFailed;
-  public final Path outDir;
+
   // TODO コンパイルできないときのエラー情報はほんとにこの型でいいか？
   public final DiagnosticCollector<JavaFileObject> diagnostics;
 
   // ソースとクラスファイル間のマッピング
-  private final Map<Path, Set<Path>> sourceToClassMap;
   private final Map<Path, Path> classToSourceMap;
 
   // ソースとFQN間のマッピング
@@ -36,14 +35,13 @@ public class BuildResults {
   /**
    * 
    * @param sourceCode ビルド元となったソースコード
-   * @param outDir クラスファイル生成ディレクトリ
    * @param compilationPackage バイトコード
    * @param diagnostics ビルド時の詳細情報
    */
-  public BuildResults(final GeneratedSourceCode sourceCode, final Path outDir,
+  public BuildResults(final GeneratedSourceCode sourceCode,
       final CompilationPackage compilationPackage,
       final DiagnosticCollector<JavaFileObject> diagnostics) {
-    this(sourceCode, false, outDir, compilationPackage, diagnostics);
+    this(sourceCode, false, compilationPackage, diagnostics);
   }
 
   /**
@@ -51,18 +49,15 @@ public class BuildResults {
    * 
    * @param sourceCode ビルド元となったソースコード
    * @param isBuildFailed ビルドの成否
-   * @param outDir クラスファイル生成ディレクトリ
    * @param diagnostics ビルド時の詳細情報
    */
   protected BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
-      final Path outDir, final CompilationPackage compilationPackage,
+      final CompilationPackage compilationPackage,
       final DiagnosticCollector<JavaFileObject> diagnostics) {
     this.sourceCode = sourceCode;
     this.isBuildFailed = isBuildFailed;
-    this.outDir = outDir;
     this.compilationPackage = compilationPackage;
     this.diagnostics = diagnostics;
-    this.sourceToClassMap = new HashMap<>();
     this.classToSourceMap = new HashMap<>();
     this.fqnToSourceMap = new HashMap<>();
     this.sourceToFQNMap = new HashMap<>();
@@ -71,32 +66,6 @@ public class BuildResults {
 
   public CompilationPackage getCompilationPackage() {
     return compilationPackage;
-  }
-
-  /**
-   * ソースファイルとクラスファイル間のマッピングを追加する
-   * 
-   * @param pathToSource ソースファイルのPath
-   * @param pathToClass クラスファイルのPath
-   */
-  public void addMapping(final Path pathToSource, final Path pathToClass) {
-    Set<Path> pathToClasses = this.sourceToClassMap.get(pathToSource);
-    if (null == pathToClasses) {
-      pathToClasses = new HashSet<>();
-      this.sourceToClassMap.put(pathToSource, pathToClasses);
-    }
-    pathToClasses.add(pathToClass);
-    this.classToSourceMap.put(pathToClass, pathToSource);
-  }
-
-  /**
-   * 引数で与えたソースファイルに対応するクラスファイルのPath（PathのSet）を返す
-   * 
-   * @param pathToSource ソースファイルの Path
-   * @return 引数で与えたソースファイルに対応するクラスファイルの Path の Set
-   */
-  public Set<Path> getPathToClasses(final Path pathToSource) {
-    return this.sourceToClassMap.get(pathToSource);
   }
 
   /**

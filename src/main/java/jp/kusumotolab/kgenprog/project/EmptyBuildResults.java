@@ -15,17 +15,7 @@ public class EmptyBuildResults extends BuildResults {
   public static final EmptyBuildResults instance = new EmptyBuildResults();
 
   private EmptyBuildResults() {
-    super(null, true, null, null, null);
-  }
-
-  @Override
-  public void addMapping(final Path pathToSource, final Path pathToClass) {
-    // do nothing
-  }
-
-  @Override
-  public Set<Path> getPathToClasses(final Path pathToSource) {
-    return Collections.emptySet();
+    super(null, true, null, null);
   }
 
   @Override

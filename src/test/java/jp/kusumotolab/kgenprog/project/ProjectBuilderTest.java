@@ -1,24 +1,21 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.Bar;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.BarTest;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.Baz;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.BazAnonymous;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.BazInner;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.BazOuter;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.BazStaticInner;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.BazTest;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.Foo;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Bin.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Bar;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Baz;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazAnonymous;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazInner;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazOuter;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazStaticInner;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
@@ -34,7 +31,6 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class ProjectBuilderTest {
 
   private final static Path WorkPath = Paths.get("tmp/work");
-  private final static String[] BinExtension = new String[] {"class"};
 
   @Before
   public void before() throws IOException {
@@ -42,13 +38,13 @@ public class ProjectBuilderTest {
   }
 
   @Test
-  public void testBuildStringForExample00() {
+  public void testBuildStringForBuildFailure01() {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, WorkPath);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults).isInstanceOf(EmptyBuildResults.class);
     assertThat(buildResults.isBuildFailed).isTrue();
@@ -61,22 +57,14 @@ public class ProjectBuilderTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, WorkPath);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    final Collection<File> classFiles = FileUtils.listFiles(WorkPath.toFile(), BinExtension, true);
-    final Path foo = WorkPath.resolve(Foo);
-    final Path fooTest = WorkPath.resolve(FooTest);
-    assertThat(classFiles).extracting(c -> c.toPath())
-        .containsExactlyInAnyOrder(foo, fooTest);
-
-    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
-      final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
-      assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(productSourcePath.path);
-    }
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+        .containsExactlyInAnyOrder(Foo.value, FooTest.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
@@ -92,24 +80,14 @@ public class ProjectBuilderTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, WorkPath);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    final Collection<File> classFiles = FileUtils.listFiles(WorkPath.toFile(), BinExtension, true);
-    final Path foo = WorkPath.resolve(Foo);
-    final Path fooTest = WorkPath.resolve(FooTest);
-    final Path bar = WorkPath.resolve(Bar);
-    final Path barTest = WorkPath.resolve(BarTest);
-    assertThat(classFiles).extracting(c -> c.toPath())
-        .containsExactlyInAnyOrder(foo, fooTest, bar, barTest);
-
-    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
-      final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
-      assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(productSourcePath.path);
-    }
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
@@ -125,31 +103,16 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
-    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, WorkPath);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    final Collection<File> classFiles = FileUtils.listFiles(WorkPath.toFile(), BinExtension, true);
-    final Path foo = WorkPath.resolve(Foo);
-    final Path fooTest = WorkPath.resolve(FooTest);
-    final Path bar = WorkPath.resolve(Bar);
-    final Path barTest = WorkPath.resolve(BarTest);
-    final Path baz = WorkPath.resolve(Baz);
-    final Path bazTest = WorkPath.resolve(BazTest);
-    final Path inner = WorkPath.resolve(BazInner);
-    final Path staticInner = WorkPath.resolve(BazStaticInner);
-    final Path anonymous = WorkPath.resolve(BazAnonymous);
-    final Path outer = WorkPath.resolve(BazOuter);
-    assertThat(classFiles).extracting(c -> c.toPath())
-        .containsExactlyInAnyOrder(foo, fooTest, bar, barTest, baz, bazTest, inner, staticInner,
-            anonymous, outer);
-
-    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
-      final Set<Path> paths = buildResults.getPathToClasses(productSourcePath.path);
-      assertThat(paths).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(productSourcePath.path);
-    }
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value, Baz.value,
+            BazTest.value, BazInner.value, BazStaticInner.value, BazAnonymous.value,
+            BazOuter.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
@@ -168,7 +131,7 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder03 = new ProjectBuilder(targetProject03);
     final Variant variant03 = targetProject03.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode03 = variant03.getGeneratedSourceCode();
-    final BuildResults buildResults03 = projectBuilder03.build(generatedSourceCode03, WorkPath);
+    final BuildResults buildResults03 = projectBuilder03.build(generatedSourceCode03);
 
     assertThat(buildResults03.isBuildFailed).isFalse();
     assertThat(buildResults03.isMappingAvailable()).isTrue();
@@ -179,19 +142,14 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder02 = new ProjectBuilder(targetProject02);
     final Variant variant02 = targetProject02.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode02 = variant02.getGeneratedSourceCode();
-    final BuildResults buildResults02 = projectBuilder02.build(generatedSourceCode02, WorkPath);
+    final BuildResults buildResults02 = projectBuilder02.build(generatedSourceCode02);
 
     assertThat(buildResults02.isBuildFailed).isFalse();
     assertThat(buildResults02.isMappingAvailable()).isTrue();
 
-    final Collection<File> classFiles = FileUtils.listFiles(WorkPath.toFile(), BinExtension, true);
-    final Path e1 = WorkPath.resolve(Foo);
-    final Path e2 = WorkPath.resolve(FooTest);
-    final Path e3 = WorkPath.resolve(Bar);
-    final Path e4 = WorkPath.resolve(BarTest);
-
-    assertThat(classFiles).extracting(File::toPath)
-        .containsExactlyInAnyOrder(e1, e2, e3, e4);
+    final CompilationPackage compilationPackage = buildResults02.getCompilationPackage();
+    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value);
   }
 
 
@@ -202,7 +160,7 @@ public class ProjectBuilderTest {
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, WorkPath);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     // buildResultsからバイトコードを取り出す
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
@@ -211,7 +169,7 @@ public class ProjectBuilderTest {
 
     final CompilationUnit unit = compilationPackage.getUnits()
         .get(0);
-    final MemoryClassLoader loader = new MemoryClassLoader(Paths.get(""));
+    final MemoryClassLoader loader = new MemoryClassLoader();
     final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(unit.getName());
     loader.addDefinition(fqn, unit.getBytecode());
 

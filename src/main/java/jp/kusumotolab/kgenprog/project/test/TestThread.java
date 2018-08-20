@@ -1,11 +1,9 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +24,7 @@ import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -41,9 +40,6 @@ class TestThread extends Thread {
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
   private final RuntimeData jacocoRuntimeData;
-  private final List<ClassPath> classPaths;
-  private final List<FullyQualifiedName> sourceFQNs;
-  private final List<FullyQualifiedName> testFQNs;
   private TestResults testResults; // used for return value in multi thread
   private BuildResults buildResults;
 
@@ -51,17 +47,10 @@ class TestThread extends Thread {
   private final TargetProject targetProject;
 
   public TestThread(final GeneratedSourceCode generatedSourceCode,
-      final TargetProject targetProject, final List<ClassPath> classPaths,
-      final List<FullyQualifiedName> sourceFQNs, final List<FullyQualifiedName> testFQNs) {
+      final TargetProject targetProject) {
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
-
-    // Execution params
-    // TODO should be deleted
-    this.classPaths = classPaths;
-    this.sourceFQNs = sourceFQNs;
-    this.testFQNs = testFQNs;
 
     this.generatedSourceCode = generatedSourceCode;
     this.targetProject = targetProject;
@@ -82,6 +71,10 @@ class TestThread extends Thread {
    */
   public void run() {
     buildResults = buildProject();
+
+    final List<ClassPath> classPaths = targetProject.getClassPaths();
+    final List<FullyQualifiedName> sourceFQNs = getTargetFQNs();
+    final List<FullyQualifiedName> testFQNs = getTestFQNs();
 
     final TestResults testResults = new TestResults();
 
@@ -108,13 +101,33 @@ class TestThread extends Thread {
       // ひとまず本クラスをThreadで包むためにRuntimeExceptionでエラーを吐く．
       throw new RuntimeException(e);
     }
+
+    // TODO 翻訳のための一時的な処理
+    testResults.setBuildResults(buildResults);
     this.testResults = testResults;
   }
 
   private BuildResults buildProject() {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    return projectBuilder.build(generatedSourceCode, Paths.get("tmp"));
+    return projectBuilder.build(generatedSourceCode);
   }
+
+  private List<FullyQualifiedName> getTargetFQNs() {
+    return getFQNs(targetProject.getProductSourcePaths());
+  }
+
+  private List<FullyQualifiedName> getTestFQNs() {
+    return getFQNs(targetProject.getTestSourcePaths());
+  }
+
+  private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
+    return sourcesPaths.stream()
+        .map(source -> buildResults.getPathToFQNs(source.path))
+        .filter(fqn -> null != fqn)
+        .flatMap(c -> c.stream())
+        .collect(Collectors.toList());
+  }
+
 
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
     return classpaths.stream()
@@ -140,23 +153,6 @@ class TestThread extends Thread {
     return null;
   }
 
-  /**
-   * jacoco計測のためのクラス書き換えを行い，その書き換えたバイト配列をクラスロードする．
-   * 
-   * @param fqns 書き換え対象（計測対象）クラスのFQNs
-   * @return 書き換えたクラスオブジェクトs
-   * @throws Exception
-   */
-  private List<Class<?>> __loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
-      throws Exception {
-    final List<Class<?>> loadedClasses = new ArrayList<>();
-    for (final FullyQualifiedName fqn : fqns) {
-      final byte[] instrumentedData = getInstrumentedClassBinary(fqn);
-      loadedClasses.add(loadClass(fqn, instrumentedData));
-    }
-    return loadedClasses;
-  }
-
   private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
       throws Exception {
     final List<Class<?>> loadedClasses = new ArrayList<>();
@@ -168,20 +164,6 @@ class TestThread extends Thread {
       loadedClasses.add(loadClass(fqn, instrumentedData));
     }
     return loadedClasses;
-  }
-
-  /**
-   * jacoco計測のためのクラス書き換えを行ったバイト配列を返す． クラスローダーに対する作用はなし．
-   * 
-   * @param fqn 書き換え対象（計測対象）クラスのFQNs
-   * @return 書き換えたクラスオブジェクトのバイナリ
-   * @throws Exception
-   */
-  private byte[] getInstrumentedClassBinary(final FullyQualifiedName fqn) throws Exception {
-    final InputStream is = getClassFileInputStream(fqn);
-    final byte[] bytes = jacocoInstrumenter.instrument(is, "");
-    is.close();
-    return bytes;
   }
 
   private byte[] getInstrumentedClassBinary(final byte[] byteCode) throws Exception {
@@ -201,17 +183,6 @@ class TestThread extends Thread {
       throws ClassNotFoundException {
     memoryClassLoader.addDefinition(fqn, bytes);
     return memoryClassLoader.loadClass(fqn); // force load instrumented class.
-  }
-
-  /**
-   * ファイルシステムから.classファイルへのInputStreamを取り出す．
-   * 
-   * @param fqn 読み込み対象のFQN
-   * @return
-   */
-  private InputStream getClassFileInputStream(final FullyQualifiedName fqn) {
-    final String resource = fqn.value.replace('.', '/') + ".class";
-    return memoryClassLoader.getResourceAsStream(resource);
   }
 
   /**

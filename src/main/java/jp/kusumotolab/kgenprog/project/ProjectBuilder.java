@@ -1,15 +1,9 @@
 package jp.kusumotolab.kgenprog.project;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +16,6 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
@@ -49,38 +42,19 @@ public class ProjectBuilder {
    * @param workPath バイトコード出力ディレクトリ
    * @return ビルドに関するさまざまな情報
    */
-  public BuildResults build(final GeneratedSourceCode generatedSourceCode, final Path workPath) {
-    log.debug("enter build(GeneratedSourceCode, Path)");
+  public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
+    log.debug("enter build(GeneratedSourceCode)");
 
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager standardFileManager =
         compiler.getStandardFileManager(null, null, null);
     final InMemoryClassManager inMemoryFileManager = new InMemoryClassManager(standardFileManager);
 
-    // workingDir が存在しなければ生成
-    if (Files.notExists(workPath)) {
-      try {
-        Files.createDirectories(workPath);
-      } catch (final Exception e) {
-        log.error(e.getMessage(), e);
-        try {
-          inMemoryFileManager.close();
-        } catch (IOException e1) {
-          // TODO 自動生成された catch ブロック
-          e1.printStackTrace();
-        }
-        return EmptyBuildResults.instance;
-      }
-    }
-
     // コンパイル対象の JavaFileObject を生成
     final Iterable<? extends JavaFileObject> javaFileObjects =
         generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
 
     final List<String> compilationOptions = new ArrayList<>();
-    compilationOptions.add("-d");
-    compilationOptions.add(workPath.toAbsolutePath()
-        .toString());
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
@@ -122,11 +96,7 @@ public class ProjectBuilder {
     final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
     final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
     final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, workPath, compilationPackage, diagnostics);
-
-    // ソースファイルとクラスファイルのマッピング
-    final Collection<File> classFiles =
-        FileUtils.listFiles(workPath.toFile(), new String[] {"class"}, true);
+        new BuildResults(generatedSourceCode, compilationPackage, diagnostics);
 
     // TODO: https://github.com/kusumotolab/kGenProg/pull/154
     // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
@@ -135,7 +105,7 @@ public class ProjectBuilder {
     allSourcePaths.addAll(this.targetProject.getProductSourcePaths());
     allSourcePaths.addAll(this.targetProject.getTestSourcePaths());
 
-    for (final File classFile : classFiles) {
+    for (final CompilationUnit compilationUnit : compilationUnits) {
 
       // TODO: https://github.com/kusumotolab/kGenProg/pull/154
       // 更新されたファイルの中に classFile が含まれていない場合は削除．この機能はとりあえず無しで問題ない
@@ -147,7 +117,7 @@ public class ProjectBuilder {
       // }
 
       // クラスファイルのパース
-      final ClassParser parser = this.parse(classFile);
+      final ClassParser parser = this.parse(compilationUnit);
 
       // 対応関係の構築
       final String partialPath = parser.getPartialPath();
@@ -160,8 +130,6 @@ public class ProjectBuilder {
         }
       }
       if (null != correspondingSourceFile) {
-        buildResults.addMapping(correspondingSourceFile.path,
-            Paths.get(classFile.getAbsolutePath()));
         buildResults.addMapping(correspondingSourceFile.path, fqn);
       } else {
         buildResults.setMappingAvailable(false);
@@ -213,18 +181,13 @@ public class ProjectBuilder {
     return fileManager.getJavaFileObjectsFromStrings(sourceFileNames);
   }
 
-  private ClassParser parse(final File classFile) {
-    log.debug("enter parse(File)");
-    try (final InputStream is = new FileInputStream(classFile)) {
-      final ClassReader reader = new ClassReader(is);
-      final ClassParser parser = new ClassParser(Opcodes.ASM6);
-      reader.accept(parser, ClassReader.SKIP_CODE);
-      log.debug("exit parse(File)");
-      return parser;
-    } catch (final Exception e) {
-      e.printStackTrace();
-      return null;
-    }
+  private ClassParser parse(final CompilationUnit compilationUnit) {
+    log.debug("enter parse(CompilationUnit)");
+    final ClassReader reader = new ClassReader(compilationUnit.getBytecode());
+    final ClassParser parser = new ClassParser(Opcodes.ASM6);
+    reader.accept(parser, ClassReader.SKIP_CODE);
+    log.debug("exit parse(File)");
+    return parser;
   }
 
   // TODO: https://github.com/kusumotolab/kGenProg/pull/154
