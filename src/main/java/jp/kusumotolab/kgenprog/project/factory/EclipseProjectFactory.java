@@ -49,7 +49,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
 
   @Override
   public boolean isApplicable() {
-    return false;
+    return getConfigPath().size() > 0;
   }
 
   @Override
