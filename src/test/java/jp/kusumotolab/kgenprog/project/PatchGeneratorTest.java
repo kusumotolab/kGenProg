@@ -131,8 +131,8 @@ public class PatchGeneratorTest {
         .append(" else {\n")
         .append("      n++;\n")
         .append("    }\n")
-        .append("    a();\n")
-        .append("\treturn n;\n")
+        .append("\ta();\n")
+        .append("    return n;\n")
         .append("  }\n")
         .append("}")
         .toString();
