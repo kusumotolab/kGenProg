@@ -1,0 +1,15 @@
+[submodule "example/Math02"]
+	path = example/Math02
+	url = https://github.com/Spirals-Team/defects4j-repair.git
+[submodule "example/Math70"]
+	path = example/Math70
+	url = https://github.com/Spirals-Team/defects4j-repair.git
+[submodule "example/Math73"]
+	path = example/Math73
+	url = https://github.com/Spirals-Team/defects4j-repair.git
+[submodule "example/Math05"]
+	path = example/Math05
+	url = https://github.com/Spirals-Team/defects4j-repair.git
+[submodule "example/Math85"]
+	path = example/Math85
+	url = https://github.com/Spirals-Team/defects4j-repair.git
