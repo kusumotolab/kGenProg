@@ -31,27 +31,7 @@ public class PatchGenerator {
 
     for (final GeneratedAST ast : modifiedAsts) {
       try {
-        final Path originPath = ast.getProductSourcePath().path;
-
-        final String modifiedSourceCodeText = ast.getSourceCode();
-        final Document document = new Document(modifiedSourceCodeText);
-
-        // Patch オブジェクトの生成
-        final String fileName = ast.getPrimaryClassName();
-        final String delimiter = document.getDefaultLineDelimiter();
-        final List<String> modifiedSourceCodeLines =
-            Arrays.asList(modifiedSourceCodeText.split(delimiter));
-        final List<String> originalSouceCodeLines = Files.readAllLines(originPath);
-        final List<String> diffLines =
-            makeDiff(fileName, originalSouceCodeLines, modifiedSourceCodeLines);
-
-        if(0 == diffLines.size()) {
-          continue;
-        }
-
-        final Patch patch =
-            new Patch(diffLines, fileName, originalSouceCodeLines, modifiedSourceCodeLines);
-        patches.add(patch);
+        patches.add(makePatch(ast));
       } catch (final MalformedTreeException | IOException | DiffException e) {
         log.error(e.getMessage());
         return Collections.emptyList();
@@ -59,6 +39,23 @@ public class PatchGenerator {
     }
     log.debug("exit exec(TargetProject, Variant)");
     return patches;
+  }
+
+  private Patch makePatch(GeneratedAST ast) throws IOException, DiffException {
+    final Path originPath = ast.getProductSourcePath().path;
+
+    final String modifiedSourceCodeText = ast.getSourceCode();
+    final Document document = new Document(modifiedSourceCodeText);
+
+    final String fileName = ast.getPrimaryClassName();
+    final String delimiter = document.getDefaultLineDelimiter();
+    final List<String> modifiedSourceCodeLines =
+        Arrays.asList(modifiedSourceCodeText.split(delimiter));
+    final List<String> originalSouceCodeLines = Files.readAllLines(originPath);
+    final List<String> diffLines =
+        makeDiff(fileName, originalSouceCodeLines, modifiedSourceCodeLines);
+
+    return new Patch(diffLines, fileName, originalSouceCodeLines, modifiedSourceCodeLines);
   }
 
   /***
