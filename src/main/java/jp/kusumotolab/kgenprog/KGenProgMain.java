@@ -187,10 +187,14 @@ public class KGenProgMain {
     log.debug("enter outputPatch(List<Variant>)");
     for (final Variant completedVariant : completedVariants) {
       final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
-      log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
+      log.info(makeVariantId(completedVariants, completedVariant));
       for (final Result result : results) {
         log.info(result.getDiff());
       }
     }
+  }
+
+  private String makeVariantId(final List<Variant> variants, final Variant variant) {
+    return "variant" + (variants.indexOf(variant) + 1);
   }
 }
