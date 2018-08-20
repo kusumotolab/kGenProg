@@ -69,6 +69,10 @@ public class BuildResults {
     this.isMappingAvaiable = true;
   }
 
+  public CompilationPackage getCompilationPackage() {
+    return compilationPackage;
+  }
+
   /**
    * ソースファイルとクラスファイル間のマッピングを追加する
    * 

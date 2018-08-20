@@ -16,14 +16,19 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
+import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.MemoryClassLoader;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class ProjectBuilderTest {
@@ -187,5 +192,33 @@ public class ProjectBuilderTest {
 
     assertThat(classFiles).extracting(File::toPath)
         .containsExactlyInAnyOrder(e1, e2, e3, e4);
+  }
+
+
+  @Test
+  public void testBuildForInMemoryByteCode01() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode, WorkPath);
+
+    // buildResultsからバイトコードを取り出す
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    final List<CompilationUnit> units = compilationPackage.getUnits();
+    assertThat(units).hasSize(1);
+
+    final CompilationUnit unit = compilationPackage.getUnits()
+        .get(0);
+    final MemoryClassLoader loader = new MemoryClassLoader(Paths.get(""));
+    final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(unit.getName());
+    loader.addDefinition(fqn, unit.getBytecode());
+
+    // バイトコードが正しいのでうまくロードできるはず
+    loader.loadClass(fqn);
+
+    loader.close();
+
   }
 }
