@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -12,6 +13,7 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 public class MavenProjectFactoryTest {
 
   @Test
+  @Ignore
   public void create() {
     final Path path = Paths.get("example", "BuildSuccess05");
     final MavenProjectFactory mavenProjectFactory = new MavenProjectFactory(path);
