@@ -82,7 +82,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
               productSourcePaths.add(new ProductSourcePath(javaSourcePath));
           }
           break;
-        case "path":
+        case "lib":
           final Path classpath = Paths.get(attributes.getValue("path"));
           // 絶対パスか調べる
           if(classpath.isAbsolute())
