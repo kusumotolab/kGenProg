@@ -30,9 +30,7 @@ import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
- * 
  * @author shinsuke
- *
  */
 class TestThread extends Thread {
 
@@ -63,11 +61,6 @@ class TestThread extends Thread {
   /**
    * JaCoCo + JUnitの実行． sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．
    * 実行対象のclasspathは通ってることが前提．
-   * 
-   * @param sourceFQNs 計測対象のソースコードのFQNのリスト
-   * @param testFQNs 実行する単体テストのFQNのリスト
-   * @return テストの実行結果（テスト成否やCoverage等）
-   * @throws Exception
    */
   public void run() {
     buildResults = buildProject();
@@ -138,7 +131,7 @@ class TestThread extends Thread {
 
   /**
    * To avoid Malforme
-   * 
+   *
    * @param uri
    * @return
    */
@@ -161,7 +154,11 @@ class TestThread extends Thread {
     for (final FullyQualifiedName fqn : fqns) {
       final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
       final byte[] instrumentedData = getInstrumentedClassBinary(compilatinoUnit.getBytecode());
-      loadedClasses.add(loadClass(fqn, instrumentedData));
+
+      memoryClassLoader.addDefinition(fqn, instrumentedData);
+    }
+    for (final FullyQualifiedName fqn : fqns) {
+      loadedClasses.add(loadClass(fqn));
     }
     return loadedClasses;
   }
@@ -173,25 +170,22 @@ class TestThread extends Thread {
 
   /**
    * MemoryClassLoaderを使ったクラスロード．
-   * 
+   *
    * @param fqn
-   * @param bytes
    * @return
    * @throws ClassNotFoundException
    */
-  private Class<?> loadClass(final FullyQualifiedName fqn, final byte[] bytes)
+  private Class<?> loadClass(final FullyQualifiedName fqn)
       throws ClassNotFoundException {
-    memoryClassLoader.addDefinition(fqn, bytes);
     return memoryClassLoader.loadClass(fqn); // force load instrumented class.
   }
 
   /**
    * JUnit実行のイベントリスナー．内部クラス． JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
-   * 
-   * メモ：JUnitには「テスト成功時」のイベントリスナーがないので，テスト成否をDescriptionに強引に追記して管理
-   * 
-   * @author shinsuke
    *
+   * メモ：JUnitには「テスト成功時」のイベントリスナーがないので，テスト成否をDescriptionに強引に追記して管理
+   *
+   * @author shinsuke
    */
   class CoverageMeasurementListener extends RunListener {
 
@@ -202,7 +196,7 @@ class TestThread extends Thread {
 
     /**
      * constructor
-     * 
+     *
      * @param measuredFQNs 計測対象のクラス名一覧
      * @param storedTestResults テスト実行結果の保存先
      * @throws Exception
@@ -238,7 +232,7 @@ class TestThread extends Thread {
 
     /**
      * Failureオブジェクトの持つDescriptionに，当該テストがfailしたことをメモする．
-     * 
+     *
      * @param failure
      */
     private void noteTestExecutionFail(Failure failure) {
@@ -248,7 +242,7 @@ class TestThread extends Thread {
 
     /**
      * Descriptionから当該テストがfailしたかどうかを返す．
-     * 
+     *
      * @param description
      * @return テストがfailしたかどうか
      */
@@ -259,7 +253,7 @@ class TestThread extends Thread {
 
     /**
      * Descriptionから実行したテストメソッドのFQNを取り出す．
-     * 
+     *
      * @param description
      * @return
      */
@@ -270,7 +264,7 @@ class TestThread extends Thread {
 
     /**
      * jacocoにより計測した行ごとのCoverageを回収し，TestResultsに格納する．
-     * 
+     *
      * @throws IOException
      */
     private void collectRuntimeData(final Description description) throws IOException {
@@ -281,7 +275,7 @@ class TestThread extends Thread {
 
     /**
      * jacocoにより計測した行ごとのCoverageを回収する．
-     * 
+     *
      * @param coverageBuilder 計測したCoverageを格納する保存先
      * @throws IOException
      */
@@ -308,7 +302,7 @@ class TestThread extends Thread {
 
     /**
      * 回収したCoverageを型変換しTestResultsに格納する．
-     * 
+     *
      * @param coverageBuilder Coverageが格納されたビルダー
      * @param description テストの実行情報
      */

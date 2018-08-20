@@ -31,6 +31,7 @@ import jp.kusumotolab.kgenprog.project.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
+import jp.kusumotolab.kgenprog.project.factory.MavenProjectFactory;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
@@ -54,13 +55,17 @@ public class KGenProgMainTest {
   private KGenProgMain createMain(final Path rootPath, final Path productPath,
       final Path testPath) {
 
-    final ProductSourcePath productSourcePath = new ProductSourcePath(productPath);
-    final TestSourcePath testSourcePath = new TestSourcePath(testPath);
-    final List<ProductSourcePath> productSourcePaths = Arrays.asList(productSourcePath);
-    final List<TestSourcePath> testSourcePaths = Arrays.asList(testSourcePath);
+//    final ProductSourcePath productSourcePath = new ProductSourcePath(productPath);
+//    final TestSourcePath testSourcePath = new TestSourcePath(testPath);
+//    final List<ProductSourcePath> productSourcePaths = Arrays.asList(productSourcePath);
+//    final List<TestSourcePath> testSourcePaths = Arrays.asList(testSourcePath);
 
-    final TargetProject project = TargetProjectFactory.create(rootPath, productSourcePaths,
-        testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final MavenProjectFactory mavenProjectFactory = new MavenProjectFactory(
+        Paths.get("/Users/matsumotojunnosuke/Downloads/defects4j-repair-d54663c67b5e5bb6eef07bc6273d9cf4b6060a93"));
+    final TargetProject project = mavenProjectFactory.create();
+//    final TargetProject project = TargetProjectFactory.create(rootPath, productSourcePaths,
+//        testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    project.setTestSourcePaths(Arrays.asList(new TestSourcePath(Paths.get("/Users/matsumotojunnosuke/Downloads/defects4j-repair-d54663c67b5e5bb6eef07bc6273d9cf4b6060a93/src/test/java/org/apache/commons/math3/complex/ComplexTest.java"))));
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random();
     final CandidateSelection statementSelection =
@@ -73,7 +78,7 @@ public class KGenProgMainTest {
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     return new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, WorkPath);
+        sourceCodeValidation, variantSelection, patchGenerator, WorkPath, 600, 100, 1);
   }
 
   @Test

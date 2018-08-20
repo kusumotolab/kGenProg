@@ -18,7 +18,7 @@ public class TargetProject {
 
   public final Path rootPath; // TODO ひとまずrootPathだけpublicに．他フィールドは要検討
   private final List<ProductSourcePath> productSourcePaths;
-  private final List<TestSourcePath> testSourcePaths;
+  private List<TestSourcePath> testSourcePaths;
   private final List<ClassPath> classPaths;
 
   // Must be package-private. Should be created only from TargetProjectFactory#create
@@ -54,6 +54,9 @@ public class TargetProject {
   private List<GeneratedAST> constructAST() {
     // TODO: ここにDIする方法を検討
     return new JDTASTConstruction().constructAST(this);
+  }
+  public void setTestSourcePaths(final List<TestSourcePath> testSourcePaths) {
+    this.testSourcePaths = testSourcePaths;
   }
 
 }
