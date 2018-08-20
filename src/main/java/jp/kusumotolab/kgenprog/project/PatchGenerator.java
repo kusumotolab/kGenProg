@@ -30,7 +30,12 @@ public class PatchGenerator {
 
     for (final GeneratedAST ast : modifiedAsts) {
       try {
-        patches.add(makePatch(ast));
+        Patch patch = makePatch(ast);
+        String diff = patch.getDiff();
+        if (0 == diff.length()) {
+          continue;
+        }
+        patches.add(patch);
       } catch (final IOException | DiffException e) {
         log.error(e.getMessage());
         return Collections.emptyList();
