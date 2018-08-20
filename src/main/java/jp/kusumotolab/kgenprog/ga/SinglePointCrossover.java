@@ -18,14 +18,12 @@ public class SinglePointCrossover implements Crossover {
   private final Random random;
   private final int numberOfPair;
 
-  public SinglePointCrossover(
-      final Random random, final int numberOfPair) {
+  public SinglePointCrossover(final Random random, final int numberOfPair) {
     this.random = random;
     this.numberOfPair = numberOfPair;
   }
 
-  public SinglePointCrossover(
-      final Random random) {
+  public SinglePointCrossover(final Random random) {
     this(random, 10);
   }
 

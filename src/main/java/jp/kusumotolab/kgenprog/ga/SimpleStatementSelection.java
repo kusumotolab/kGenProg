@@ -5,13 +5,13 @@ import java.util.Random;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
+// 使っていないが比較用で置いておく
 public class SimpleStatementSelection implements CandidateSelection {
 
   private final Random random;
   private StatementVisitor visitor;
 
-  public SimpleStatementSelection(
-      Random random) {
+  public SimpleStatementSelection(Random random) {
     this.random = random;
   }
 
