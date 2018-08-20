@@ -9,7 +9,9 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class EclipseProjectFactoryTest {
-  private final static ClassPath Junit = new ClassPath(Paths.get("example/BuildSuccess06/lib/junit-4.12.jar"));
+
+  private final static ClassPath Junit = new ClassPath(
+      Paths.get("example/BuildSuccess06/lib/junit-4.12.jar"));
 
   @Test
   public void testCreateBySingleEclipseProject() {

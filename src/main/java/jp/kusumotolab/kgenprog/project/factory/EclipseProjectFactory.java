@@ -34,7 +34,8 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
       final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
       final SAXParser saxParser = saxParserFactory.newSAXParser();
       final ClassPathHandler classPathHandler = new ClassPathHandler();
-      saxParser.parse(Paths.get(rootPath.toString(), CONFIG_FILE_NAME).toString(), classPathHandler);
+      saxParser.parse(Paths.get(rootPath.toString(), CONFIG_FILE_NAME)
+          .toString(), classPathHandler);
 
       return new TargetProject(rootPath,
           classPathHandler.getProductSourcePaths(),
@@ -69,34 +70,40 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
         final String qName,
         final Attributes attributes) {
 
-      if(!qName.equals("classpathentry"))
+      if (!qName.equals("classpathentry")) {
         return;
+      }
 
-      switch (attributes.getValue("kind")){
+      switch (attributes.getValue("kind")) {
         case "src":
           final Path sourceRootPath = rootPath.resolve(Paths.get(attributes.getValue("path")));
           for (final Path javaSourcePath : collectJavaSourcePath(sourceRootPath)) {
-            if(javaSourcePath.toString().endsWith("Test.java"))
+            if (javaSourcePath.toString()
+                .endsWith("Test.java")) {
               testSourcePaths.add(new TestSourcePath(javaSourcePath));
-            else
+            } else {
               productSourcePaths.add(new ProductSourcePath(javaSourcePath));
+            }
           }
           break;
         case "lib":
           final Path classpath = Paths.get(attributes.getValue("path"));
           // 絶対パスか調べる
-          if(classpath.isAbsolute())
+          if (classpath.isAbsolute()) {
             classPaths.add(new ClassPath(classpath));
-          else
-            classPaths.add(new ClassPath(Paths.get(rootPath.toString(), classpath.toString()).normalize()));
+          } else {
+            classPaths.add(new ClassPath(Paths.get(rootPath.toString(), classpath.toString())
+                .normalize()));
+          }
           break;
       }
     }
 
-    private List<Path> collectJavaSourcePath(final Path sourceRootPath){
+    private List<Path> collectJavaSourcePath(final Path sourceRootPath) {
       try {
         return Files.walk(sourceRootPath)
-            .filter(e -> e.toString().endsWith(".java"))
+            .filter(e -> e.toString()
+                .endsWith(".java"))
             .collect(Collectors.toList());
       } catch (IOException e) {
         log.error(e.getMessage(), e);
@@ -104,15 +111,15 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
       return new ArrayList<>();
     }
 
-    List<ClassPath> getClassPaths(){
+    List<ClassPath> getClassPaths() {
       return classPaths;
     }
 
-    List<ProductSourcePath> getProductSourcePaths(){
+    List<ProductSourcePath> getProductSourcePaths() {
       return productSourcePaths;
     }
 
-    List<TestSourcePath> getTestSourcePaths(){
+    List<TestSourcePath> getTestSourcePaths() {
       return testSourcePaths;
     }
   }
