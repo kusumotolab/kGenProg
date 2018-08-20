@@ -184,6 +184,7 @@ public class KGenProgMain {
   }
 
   private void outputPatch(final List<Variant> completedVariants) {
+    log.debug("enter outputPatch(List<Variant>)");
     for (final Variant completedVariant : completedVariants) {
       final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
       log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
