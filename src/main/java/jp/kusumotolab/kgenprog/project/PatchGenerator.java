@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.jface.text.Document;
-import org.eclipse.text.edits.MalformedTreeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
@@ -32,7 +31,7 @@ public class PatchGenerator {
     for (final GeneratedAST ast : modifiedAsts) {
       try {
         patches.add(makePatch(ast));
-      } catch (final MalformedTreeException | IOException | DiffException e) {
+      } catch (final IOException | DiffException e) {
         log.error(e.getMessage());
         return Collections.emptyList();
       }
