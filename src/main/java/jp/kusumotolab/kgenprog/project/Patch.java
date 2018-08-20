@@ -30,7 +30,7 @@ public class Patch implements Result {
 
   @Override
   public String getDiff() {
-    List<String> formattedDiff = new ArrayList<>(diff);
+    final List<String> formattedDiff = new ArrayList<>(diff);
     formattedDiff.add(0, "");
     return String.join(System.lineSeparator(), formattedDiff);
   }

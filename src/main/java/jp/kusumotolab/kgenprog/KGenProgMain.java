@@ -183,7 +183,7 @@ public class KGenProgMain {
     return this.requiredSolutions <= completedVariants.size();
   }
 
-  private void outputPatch(List<Variant> completedVariants) {
+  private void outputPatch(final List<Variant> completedVariants) {
     for (final Variant completedVariant : completedVariants) {
       final List<Result> results = resultGenerator.exec(targetProject, completedVariant);
       log.info("variant" + (completedVariants.indexOf(completedVariant) + 1));
