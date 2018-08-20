@@ -100,13 +100,13 @@ public class PatchGenerator implements ResultGenerator {
    * UnifiedDiff 形式の diff を返す．
    *
    * @param fileName
-   * @param origin
-   * @param modified
+   * @param originalSourceCodeLines
+   * @param modifiedSourceCodeLines
    * @return
    */
-  private List<String> makeDiff(final String fileName, final List<String> origin,
-      final List<String> modified) throws DiffException {
-      final com.github.difflib.patch.Patch<String> diff = DiffUtils.diff(origin, modified);
-      return UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, origin, diff, 3);
+  private List<String> makeDiff(final String fileName, final List<String> originalSourceCodeLines,
+      final List<String> modifiedSourceCodeLines) throws DiffException {
+      final com.github.difflib.patch.Patch<String> diff = DiffUtils.diff(originalSourceCodeLines, modifiedSourceCodeLines);
+      return UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, originalSourceCodeLines, diff, 3);
   }
 }
