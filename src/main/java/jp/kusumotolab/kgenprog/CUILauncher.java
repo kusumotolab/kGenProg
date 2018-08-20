@@ -36,14 +36,17 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class CUILauncher {
 
-  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
   // region Fields
-  private Path rootDir;
+  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
+  private final List<ClassPath> classPaths = new ArrayList<>();
   private final List<ProductSourcePath> productSourcePaths = new ArrayList<>();
   private final List<TestSourcePath> testSourcePaths = new ArrayList<>();
-  private final List<ClassPath> classPaths = new ArrayList<>();
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+  private Path rootDir;
+  private int headcount = 100;
+  private int maxGeneration = 10;
+  private long timeLimit = 60;
   // endregion
 
   // region Constructor
@@ -122,6 +125,37 @@ public class CUILauncher {
     rootLogger.setLevel(Level.ERROR);
   }
 
+  public int getHeadcount() {
+    return headcount;
+  }
+
+  @Option(name = "-h", aliases = "--headcount",
+      usage = "The number of how many variants are generated maximally in a generation")
+  public void setHeadcount(int headcount) {
+    log.debug("enter setHeadcount(int)");
+    this.headcount = headcount;
+  }
+
+  public int getMaxGeneration() {
+    return maxGeneration;
+  }
+
+  @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation")
+  public void setMaxGeneration(int maxGeneration) {
+    log.debug("enter setMaxGeneration(int)");
+    this.maxGeneration = maxGeneration;
+  }
+
+  public long getTimeLimit() {
+    return timeLimit;
+  }
+
+  @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
+  public void setTimeLimit(long timeLimit) {
+    log.debug("enter setTimeLimit(long)");
+    this.timeLimit = timeLimit;
+  }
+
   // endregion
 
   public static void main(final String[] args) {
@@ -158,13 +192,13 @@ public class CUILauncher {
     final Crossover crossover = new SinglePointCrossover(randomNumberGeneration);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection = new DefaultVariantSelection();
+    final VariantSelection variantSelection = new DefaultVariantSelection(getHeadcount());
     final Path workingPath = Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-work");
     final ResultGenerator resultGenerator = new PatchGenerator(workingPath);
 
     final KGenProgMain kGenProgMain = new KGenProgMain(targetProject, faultLocalization, mutation,
         crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, resultGenerator,
-        workingPath);
+        workingPath, getTimeLimit(), getMaxGeneration(), 1);
     kGenProgMain.run();
 
     log.debug("exit launch()");
