@@ -47,7 +47,7 @@ public class PatchGenerator {
    * @throws IOException
    * @throws DiffException
    */
-  private Patch makePatch(GeneratedAST ast) throws IOException, DiffException {
+  private Patch makePatch(final GeneratedAST ast) throws IOException, DiffException {
     final Path originPath = ast.getProductSourcePath().path;
 
     final String modifiedSourceCodeText = ast.getSourceCode();
