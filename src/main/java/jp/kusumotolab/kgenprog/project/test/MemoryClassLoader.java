@@ -61,8 +61,16 @@ public class MemoryClassLoader extends URLClassLoader {
     if (bytes != null) {
       try {
         return defineClass(name.toString(), bytes, 0, bytes.length);
-      } catch (final LinkageError e) {
-        return findLoadedClass(name.toString());
+      } catch (final ClassFormatError e) {
+        // クラスのロードに失敗した，可能性はバイナリが不正か，二重ロード．
+
+        // 既にロードされているクラスを探してみる（二重ロードの可能性を考える）
+        final Class<?> clazz = findLoadedClass(name.toString());
+
+        // それでも無理ならおそらくバイナリ不正っぽい
+        if (null == clazz) {
+          throw e;
+        }
       }
     }
     return super.loadClass(name.toString(), resolve);
