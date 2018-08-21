@@ -121,7 +121,6 @@ class TestThread extends Thread {
         .collect(Collectors.toList());
   }
 
-
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
     return classpaths.stream()
         .map(cp -> cp.path.toUri())
@@ -130,7 +129,7 @@ class TestThread extends Thread {
   }
 
   /**
-   * To avoid Malforme
+   * To avoid Malform uri in lambda expression
    *
    * @param uri
    * @return
@@ -153,32 +152,18 @@ class TestThread extends Thread {
 
     for (final FullyQualifiedName fqn : fqns) {
       final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
-      final byte[] instrumentedData = getInstrumentedClassBinary(compilatinoUnit.getBytecode());
+      final byte[] bytecode = compilatinoUnit.getBytecode();
+      final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
 
-      memoryClassLoader.addDefinition(fqn, instrumentedData);
+      memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
     }
     for (final FullyQualifiedName fqn : fqns) {
-      loadedClasses.add(loadClass(fqn));
+      final Class<?> clazz = memoryClassLoader.loadClass(fqn); // force load instrumented class.
+      loadedClasses.add(clazz);
     }
     return loadedClasses;
   }
 
-  private byte[] getInstrumentedClassBinary(final byte[] byteCode) throws Exception {
-    final byte[] bytes = jacocoInstrumenter.instrument(byteCode, "");
-    return bytes;
-  }
-
-  /**
-   * MemoryClassLoaderを使ったクラスロード．
-   *
-   * @param fqn
-   * @return
-   * @throws ClassNotFoundException
-   */
-  private Class<?> loadClass(final FullyQualifiedName fqn)
-      throws ClassNotFoundException {
-    return memoryClassLoader.loadClass(fqn); // force load instrumented class.
-  }
 
   /**
    * JUnit実行のイベントリスナー．内部クラス． JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
