@@ -75,7 +75,7 @@ class TestThread extends Thread {
     memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      loadInstrumentedClasses(sourceFQNs);
+      loadInstrumentedClasses(sourceFQNs); // こちらの返り値はいらない
       final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
 
       // TODO
@@ -146,17 +146,14 @@ class TestThread extends Thread {
   }
 
   private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
-      throws Exception {
+      throws ClassNotFoundException, IOException {
+    addAllDefinitions(fqns);
+    return loadAllClasses(fqns);
+  }
+
+  private List<Class<?>> loadAllClasses(final List<FullyQualifiedName> fqns)
+      throws ClassNotFoundException {
     final List<Class<?>> loadedClasses = new ArrayList<>();
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-
-    for (final FullyQualifiedName fqn : fqns) {
-      final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
-      final byte[] bytecode = compilatinoUnit.getBytecode();
-      final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
-
-      memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
-    }
     for (final FullyQualifiedName fqn : fqns) {
       final Class<?> clazz = memoryClassLoader.loadClass(fqn); // force load instrumented class.
       loadedClasses.add(clazz);
@@ -164,6 +161,21 @@ class TestThread extends Thread {
     return loadedClasses;
   }
 
+  /***
+   * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．
+   * 
+   * @param fqns
+   * @throws IOException
+   */
+  private void addAllDefinitions(final List<FullyQualifiedName> fqns) throws IOException {
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    for (final FullyQualifiedName fqn : fqns) {
+      final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
+      final byte[] bytecode = compilatinoUnit.getBytecode();
+      final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
+      memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
+    }
+  }
 
   /**
    * JUnit実行のイベントリスナー．内部クラス． JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
@@ -273,10 +285,6 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        // 生のソースのISを取り出す
-        // final InputStream is = getClassFileInputStream(measuredClass);
-        // analyzer.analyzeClass(is, measuredClass.value);
-
         final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
         final CompilationUnit compilatinoUnit =
             compilationPackage.getCompilationUnit(measuredClass.value);
