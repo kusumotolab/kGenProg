@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,7 +65,7 @@ class TestThread extends Thread {
     buildResults = buildProject();
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
-    final List<FullyQualifiedName> sourceFQNs = getTargetFQNs();
+    final List<FullyQualifiedName> targetFQNs = getTargetFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
 
     final TestResults testResults = new TestResults();
@@ -75,7 +74,7 @@ class TestThread extends Thread {
     memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      loadInstrumentedClasses(sourceFQNs); // こちらの返り値はいらない
+      loadInstrumentedClasses(targetFQNs); // こちらの返り値はいらない
       final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
 
       // TODO
@@ -84,7 +83,7 @@ class TestThread extends Thread {
       for (final Class<?> junitClass : junitClasses) {
         final JUnitCore junitCore = new JUnitCore();
         final CoverageMeasurementListener listener =
-            new CoverageMeasurementListener(sourceFQNs, testResults);
+            new CoverageMeasurementListener(targetFQNs, testResults);
         junitCore.addListener(listener);
         junitCore.run(junitClass);
       }
@@ -145,20 +144,32 @@ class TestThread extends Thread {
     return null;
   }
 
+  /**
+   * 指定fqnsの全てを定義追加・ロードを行い，クラスオブジェクトの集合を返す．
+   * 
+   * @param fqns
+   * @return
+   * @throws ClassNotFoundException
+   * @throws IOException
+   */
   private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
       throws ClassNotFoundException, IOException {
     addAllDefinitions(fqns);
     return loadAllClasses(fqns);
   }
 
+  /**
+   * 全クラスを定義内からロードしてクラスオブジェクトの集合を返す．
+   * 
+   * @param fqns
+   * @return
+   * @throws ClassNotFoundException
+   */
   private List<Class<?>> loadAllClasses(final List<FullyQualifiedName> fqns)
       throws ClassNotFoundException {
-    final List<Class<?>> loadedClasses = new ArrayList<>();
-    for (final FullyQualifiedName fqn : fqns) {
-      final Class<?> clazz = memoryClassLoader.loadClass(fqn); // force load instrumented class.
-      loadedClasses.add(clazz);
-    }
-    return loadedClasses;
+    return fqns.stream()
+        .map(fqn -> loadClass(fqn))
+        .collect(Collectors.toList());
   }
 
   /***
@@ -175,6 +186,22 @@ class TestThread extends Thread {
       final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
       memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
     }
+  }
+
+  /**
+   * 単一クラスをロードしてクラスオブジェクトを返す． Lambdaの中での例外回避のため．
+   * 
+   * @param fqn
+   * @return
+   */
+  private Class<?> loadClass(final FullyQualifiedName fqn) {
+    try {
+      return memoryClassLoader.loadClass(fqn);
+    } catch (ClassNotFoundException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    }
+    return null;
   }
 
   /**
