@@ -39,8 +39,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.jdt/org.eclipse.jdt.core
     compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.13.102'
 
-    // https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin
-    compile group: 'org.jacoco', name: 'jacoco-maven-plugin', version: '0.8.1'
+    // https://mvnrepository.com/artifact/org.jacoco/org.jacoco.core
+    compile group: 'org.jacoco', name: 'org.jacoco.core', version: '0.8.1'
 
     // https://mvnrepository.com/artifact/commons-io/commons-io
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
