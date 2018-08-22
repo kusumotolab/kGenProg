@@ -14,19 +14,20 @@ public class DefaultCodeValidation implements SourceCodeValidation {
   private static Logger log = LoggerFactory.getLogger(DefaultCodeValidation.class);
 
   @Override
-  public Fitness exec(final GeneratedSourceCode sourceCode, final TargetProject project,
+  public void exec(final Variant variant, final TargetProject project,
       final TestExecutor testExecutor) {
-    log.debug("enter exec(GeneratedSourceCode, TargetProject, TestProcessBuilder)");
+    log.debug("enter exec(Variant, TargetProject, TestProcessBuilder)");
 
     final TestResults testResults;
-
+    final GeneratedSourceCode sourceCode = variant.getGeneratedSourceCode();
     if (shouldTryBuild(sourceCode)) {
       testResults = testExecutor.exec(sourceCode);
     } else {
       testResults = EmptyTestResults.instance;
     }
 
-    return new SimpleFitness(testResults.getSuccessRate());
+    variant.setTestResults(testResults);
+    variant.setFitness(new SimpleFitness(testResults.getSuccessRate()));
   }
 
   private boolean shouldTryBuild(final GeneratedSourceCode sourceCode) {

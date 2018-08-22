@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -52,10 +54,8 @@ public class RandomMutationTest {
     final Variant initialVariant = targetProject.getInitialVariant();
     final Random random = new MockRandom();
     random.setSeed(0);
-    final CandidateSelection statementSelection =
-        new RouletteStatementSelection(random);
-    final RandomMutation randomMutation =
-        new RandomMutation(15, random, statementSelection);
+    final CandidateSelection statementSelection = new RouletteStatementSelection(random);
+    final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection);
     randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
@@ -81,12 +81,16 @@ public class RandomMutationTest {
         })
         .collect(Collectors.toList());
 
-    // 正しく15個のBaseが生成されるかのテスト
-    final List<Base> baseList = randomMutation.exec(suspiciousnesses);
-    assertThat(baseList).hasSize(15);
+    final Variant variant = new Variant(new SimpleGene(Collections.emptyList()));
+    variant.setSuspiciousnesses(suspiciousnesses);
+
+    // 正しく15個のVariantが生成されるかのテスト
+    final List<Variant> variantList = randomMutation.exec(Arrays.asList(variant));
+    assertThat(variantList).hasSize(15);
 
     // Suspiciousnessが高い場所ほど多くの操作が生成されているかのテスト
-    final Map<String, List<Base>> map = baseList.stream()
+    final Map<String, List<Base>> map = variantList.stream()
+        .map(this::getLastBase)
         .collect(
             Collectors.groupingBy(e -> ((JDTASTLocation) e.getTargetLocation()).node.toString()));
     final String weakSuspiciousness = ((JDTASTLocation) suspiciousnesses.get(0)
@@ -99,7 +103,7 @@ public class RandomMutationTest {
             .size());
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
-    final Base base = baseList.get(0);
+    final Base base = getLastBase(variantList.get(0));
     final JDTASTLocation targetLocation = (JDTASTLocation) base.getTargetLocation();
     assertThat(targetLocation.node).isSameSourceCodeAs("return n;");
 
@@ -112,5 +116,15 @@ public class RandomMutationTest {
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
     assertThat(node).isSameSourceCodeAs("n--;");
+  }
+
+  private Base getLastBase(final Variant variant) {
+    final List<Base> bases = variant.getGene()
+        .getBases();
+    
+    if (bases.size() == 0) {
+      return null;
+    }
+    return bases.get(bases.size() - 1);
   }
 }

@@ -23,16 +23,18 @@ public class DefaultSourceCodeGenerationTest {
 
     final Base base = new Base(null, new NoneOperation());
     final SimpleGene gene = new SimpleGene(Collections.singletonList(base));
+    final Variant variant1 = new Variant(gene);
+    final Variant variant2 = new Variant(gene);
     final DefaultSourceCodeGeneration defaultSourceCodeGeneration = new DefaultSourceCodeGeneration();
 
     // 1回目の生成は正しく生成される
-    final GeneratedSourceCode firstGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
-        targetProject);
+    defaultSourceCodeGeneration.exec(variant1, targetProject);
+    final GeneratedSourceCode firstGeneratedSourceCode = variant1.getGeneratedSourceCode();
     assertThat(firstGeneratedSourceCode).isNotEqualTo(GenerationFailedSourceCode.instance);
 
     // 2回目の生成は失敗する
-    final GeneratedSourceCode secondGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
-        targetProject);
+    defaultSourceCodeGeneration.exec(variant2, targetProject);
+    final GeneratedSourceCode secondGeneratedSourceCode = variant2.getGeneratedSourceCode();
     assertThat(secondGeneratedSourceCode).isEqualTo(GenerationFailedSourceCode.instance);
   }
 
@@ -48,8 +50,10 @@ public class DefaultSourceCodeGenerationTest {
 
     // noneBaseを適用した単一のGeneを取り出す
     final Gene gene = genes.get(0);
+    final Variant variant = new Variant(gene);
 
-    final GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
+    sourceCodeGeneration.exec(variant, targetProject);
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final GeneratedSourceCode initialSourceCode = initialVariant.getGeneratedSourceCode();
 
     assertThat(generatedSourceCode.getAsts()).hasSameSizeAs(initialSourceCode.getAsts());

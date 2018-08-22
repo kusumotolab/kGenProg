@@ -24,27 +24,31 @@ public class RandomMutation extends Mutation {
     super(numberOfBase, random, candidateSelection);
   }
 
-  public List<Base> exec(final List<Suspiciousness> suspiciousnesses) {
-    log.debug("enter exec(List<>)");
+  public List<Variant> exec(final List<Variant> variants) {
+    log.debug("enter exec(List<Variant>)");
 
-    final List<Base> bases = new ArrayList<>();
-    if (suspiciousnesses.isEmpty()) {
-      return bases;
+    final List<Variant> generatedVariants = new ArrayList<>();
+    if (variants.isEmpty()) {
+      return generatedVariants;
     }
 
-    final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
-
-    final Roulette<Suspiciousness> roulette =
-        new Roulette<>(suspiciousnesses, weightFunction, random);
-
-    for (int i = 0; i < numberOfBase; i++) {
-      final Suspiciousness suspiciousness = roulette.exec();
-      final Base base = makeBase(suspiciousness);
-      bases.add(base);
+    for(Variant variant : variants) {
+      final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
+  
+      final Roulette<Suspiciousness> roulette =
+          new Roulette<>(variant.getSuspiciousnesses(), weightFunction, random);
+  
+      for (int i = 0; i < numberOfBase; i++) {
+        final Suspiciousness suspiciousness = roulette.exec();
+        final Base base = makeBase(suspiciousness);
+        final Gene gene = makeGene(variant.getGene(), base);
+        generatedVariants.add(new Variant(gene));
+      }
+    
     }
 
     log.debug("exit exec(List<>)");
-    return bases;
+    return generatedVariants;
   }
 
   private Base makeBase(final Suspiciousness suspiciousness) {
@@ -69,5 +73,11 @@ public class RandomMutation extends Mutation {
   private ASTNode chooseNodeAtRandom() {
     log.debug("enter chooseNodeAtRandom()");
     return candidateSelection.exec();
+  }
+  
+  private Gene makeGene(final Gene parent, final Base base) {
+    List<Base> bases = new ArrayList<>(parent.getBases());
+    bases.add(base);
+    return new SimpleGene(bases);
   }
 }

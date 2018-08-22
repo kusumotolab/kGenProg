@@ -38,16 +38,18 @@ public class SinglePointCrossoverTest {
     final List<Base> insertBases = Arrays.asList(insertOperationBase, insertOperationBase,
         insertOperationBase, insertOperationBase, insertOperationBase);
 
-    final Variant noneOperationVariant = new Variant(new SimpleGene(noneBases), null, null);
-    final Variant insertOperationVariant = new Variant(new SimpleGene(insertBases), null, null);
+    final Variant noneOperationVariant = new Variant(new SimpleGene(noneBases));
+    final Variant insertOperationVariant = new Variant(new SimpleGene(insertBases));
 
     final Random random = new MockRandom();
     random.setSeed(0);
-    final SinglePointCrossover singlePointCrossover =
-        new SinglePointCrossover(random);
+    final SinglePointCrossover singlePointCrossover = new SinglePointCrossover(random);
 
     final List<Gene> genes =
-        singlePointCrossover.exec(Arrays.asList(noneOperationVariant, insertOperationVariant));
+        singlePointCrossover.exec(Arrays.asList(noneOperationVariant, insertOperationVariant))
+            .stream()
+            .map(Variant::getGene)
+            .collect(Collectors.toList());
 
     assertThat(genes).anyMatch(this::containNoneOperationAndInsertOperation);
   }

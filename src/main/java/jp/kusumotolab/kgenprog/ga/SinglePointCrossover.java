@@ -28,7 +28,7 @@ public class SinglePointCrossover implements Crossover {
   }
 
   @Override
-  public List<Gene> exec(final List<Variant> variants) {
+  public List<Variant> exec(final List<Variant> variants) {
     log.debug("enter exec(List<>)");
 
     final List<Variant> filteredVariants = variants.stream()
@@ -44,6 +44,7 @@ public class SinglePointCrossover implements Crossover {
     return IntStream.range(0, numberOfPair)
         .mapToObj(e -> makeGenes(filteredVariants))
         .flatMap(Collection::stream)
+        .map(Variant::new)
         .collect(Collectors.toList());
   }
 

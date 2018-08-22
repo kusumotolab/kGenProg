@@ -58,7 +58,8 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
+    modifiedVariant.setGeneratedSourceCode(code);
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
@@ -108,7 +109,8 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
+    modifiedVariant.setGeneratedSourceCode(code);
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
@@ -165,7 +167,8 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
+    modifiedVariant.setGeneratedSourceCode(code);
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);
@@ -222,7 +225,8 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), null, code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
+    modifiedVariant.setGeneratedSourceCode(code);
 
     final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
         .get(0);

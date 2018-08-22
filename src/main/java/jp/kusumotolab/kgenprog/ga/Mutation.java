@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
 public abstract class Mutation {
@@ -29,6 +28,6 @@ public abstract class Mutation {
     log.debug("exit setCandidates(List<>)");
   }
 
-  public abstract List<Base> exec(List<Suspiciousness> suspiciousnesses);
+  public abstract List<Variant> exec(List<Variant> variants);
 
 }

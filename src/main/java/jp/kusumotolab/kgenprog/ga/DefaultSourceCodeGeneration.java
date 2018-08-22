@@ -12,14 +12,16 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
   private static Logger log = LoggerFactory.getLogger(DefaultCodeValidation.class);
 
-  private Set<String> sourceCodeSet = new HashSet<>();
+  private final Set<String> sourceCodeSet = new HashSet<>();
 
   @Override
-  public GeneratedSourceCode exec(Gene gene, TargetProject targetProject) {
-    log.debug("enter exec(Gene, TargetProject)");
+  public void exec(final Variant variant, final TargetProject targetProject) {
+    log.debug("enter exec(Variant, TargetProject)");
 
     final Variant initialVariant = targetProject.getInitialVariant();
     GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
+    final Gene gene = variant.getGene();
+
     for (Base base : gene.getBases()) {
       generatedSourceCode = base.getOperation()
           .apply(generatedSourceCode, base.getTargetLocation());
@@ -31,8 +33,8 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
       sourceCodeSet.add(generatedSourceCode.getMessageDigest());
     }
 
-    log.debug("exit exec(Gene, TargetProject)");
-    return generatedSourceCode;
-  }
+    variant.setGeneratedSourceCode(generatedSourceCode);
 
+    log.debug("exit exec(Gene, TargetProject)");
+  }
 }

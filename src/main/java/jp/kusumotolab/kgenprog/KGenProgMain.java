@@ -9,17 +9,13 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Crossover;
-import jp.kusumotolab.kgenprog.ga.Fitness;
-import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -96,56 +92,44 @@ public class KGenProgMain {
   public List<Variant> run() {
     log.debug("enter run()");
 
-    final List<Variant> completedVariants = new ArrayList<>();
-
-    List<Variant> selectedVariants = new ArrayList<>();
     final Variant initialVariant = targetProject.getInitialVariant();
-    selectedVariants.add(initialVariant);
+    final VariantStore variantStore = new VariantStore(initialVariant);
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
     final StopWatch stopwatch = new StopWatch(timeoutSeconds);
     stopwatch.start();
-    final OrdinalNumber generation = new OrdinalNumber(1);
-    final OrdinalNumber foundSolutions = new OrdinalNumber(0);
+
     GA: while (true) {
 
-      log.info("in the era of the " + generation.toString() + " generation (" + stopwatch.toString()
-          + ")");
+      log.info("in the era of the " + variantStore.getGenerationNumber()
+          .toString() + " generation (" + stopwatch.toString() + ")");
 
-      // 遺伝子を生成
-      final List<Gene> genes = new ArrayList<>();
-      for (final Variant variant : selectedVariants) {
-        final List<Suspiciousness> suspiciousnesses =
-            faultLocalization.exec(targetProject, variant, testExecutor);
-        final List<Base> bases = mutation.exec(suspiciousnesses);
-        genes.addAll(variant.getGene()
-            .generateNextGenerationGenes(bases));
-      }
-      genes.addAll(crossover.exec(selectedVariants));
+      // Fault localization
+      variantStore.getCurrentVariants()
+          .forEach(variant -> faultLocalization.exec(targetProject, variant, testExecutor));
 
-      // 遺伝子をもとに変異プログラムを生成
+      // 変異プログラムを生成
       final List<Variant> currentGenerationVariants = new ArrayList<>();
-      for (final Gene gene : genes) {
-        final GeneratedSourceCode generatedSourceCode =
-            sourceCodeGeneration.exec(gene, targetProject);
-        final Fitness fitness =
-            sourceCodeValidation.exec(generatedSourceCode, targetProject, testExecutor);
-        final Variant variant = new Variant(gene, fitness, generatedSourceCode);
-        currentGenerationVariants.add(variant);
+      currentGenerationVariants.addAll(mutation.exec(variantStore.getCurrentVariants()));
+      currentGenerationVariants.addAll(crossover.exec(variantStore.getCurrentVariants()));
+
+      for (final Variant variant : currentGenerationVariants) {
+        // コード生成
+        sourceCodeGeneration.exec(variant, targetProject);
+
+        // 変異プログラムの評価
+        sourceCodeValidation.exec(variant, targetProject, testExecutor);
 
         // 生成した変異プログラムが，すべてのテストケースをパスした場合
         if (variant.isCompleted()) {
-          foundSolutions.incrementAndGet();
-
-          log.info(foundSolutions.toString() + " solution has been found (" + stopwatch.toString()
-              + ")");
-
-          completedVariants.add(variant);
+          variantStore.addFoundSolution(variant);
+          log.info(variantStore.getFoundSolutionsNumber()
+              .toString() + " solution has been found (" + stopwatch.toString() + ")");
 
           // しきい値以上の completedVariants が生成された場合は，GA を抜ける
-          if (areEnoughCompletedVariants(completedVariants)) {
+          if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
             log.info("reached the required solutions");
             break GA;
           }
@@ -159,21 +143,21 @@ public class KGenProgMain {
       }
 
       // 最大世代数に到達した場合には GA を抜ける
-      if (reachedMaxGeneration(generation)) {
+      if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
         log.info("reached the maximum generation");
         break;
       }
 
       // 次世代に向けての準備
-      selectedVariants = variantSelection.exec(currentGenerationVariants);
-      generation.getAndIncrement();
+      variantStore.setNextGenerationVariants(
+          variantSelection.exec(variantStore.getCurrentVariants(), currentGenerationVariants));
     }
 
     // 生成されたバリアントのパッチ出力
-    logPatch(completedVariants);
+    logPatch(variantStore.getFoundSolutions());
 
     log.debug("exit run()");
-    return completedVariants;
+    return variantStore.getFoundSolutions();
   }
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {

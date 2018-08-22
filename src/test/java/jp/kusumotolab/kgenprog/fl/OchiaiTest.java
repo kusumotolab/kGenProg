@@ -33,8 +33,8 @@ public class OchiaiTest {
     final TestExecutor testExecutor = new TestExecutor(targetProject);
 
     final FaultLocalization fl = new Ochiai();
-    final List<Suspiciousness> suspiciousnesses =
-        fl.exec(targetProject, initialVariant, testExecutor);
+    fl.exec(targetProject, initialVariant, testExecutor);
+    final List<Suspiciousness> suspiciousnesses = initialVariant.getSuspiciousnesses();
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
@@ -54,8 +54,8 @@ public class OchiaiTest {
     final TestExecutor testExecutor = new TestExecutor(targetProject);
 
     final FaultLocalization fl = new Ochiai();
-    final List<Suspiciousness> suspiciousnesses =
-        fl.exec(targetProject, initialVariant, testExecutor);
+    fl.exec(targetProject, initialVariant, testExecutor);
+    final List<Suspiciousness> suspiciousnesses = initialVariant.getSuspiciousnesses();
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
@@ -75,8 +75,8 @@ public class OchiaiTest {
     final TestExecutor testExecutor = new TestExecutor(targetProject);
 
     final FaultLocalization fl = new Ochiai();
-    final List<Suspiciousness> suspiciousnesses =
-        fl.exec(targetProject, initialVariant, testExecutor);
+    fl.exec(targetProject, initialVariant, testExecutor);
+    final List<Suspiciousness> suspiciousnesses = initialVariant.getSuspiciousnesses();
 
     assertThat(suspiciousnesses).isEmpty();
   }
