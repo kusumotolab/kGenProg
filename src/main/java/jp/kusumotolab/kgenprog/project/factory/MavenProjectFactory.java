@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.maven.model.Dependency;
@@ -102,25 +103,34 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
   }
 
   private List<ClassPath> resolveClassPath(Path rootPath) {
-    final List<ClassPath> list = new ArrayList<>();
     final Path pomFilePath = rootPath.resolve(CONFIG_FILE_NAME);
-    final MavenXpp3Reader reader = new MavenXpp3Reader();
+    return extractDependencyPaths(pomFilePath).stream()
+        .map(ClassPath::new)
+        .collect(Collectors.toList());
+  }
+
+  private List<Path> extractDependencyPaths(final Path pomFilePath) {
+    final List<Path> list = new ArrayList<>();
     try {
-      final Model model = reader.read(Files.newBufferedReader(pomFilePath));
       final String userHome = System.getProperty("user.home");
+      final MavenXpp3Reader reader = new MavenXpp3Reader();
+      final Model model = reader.read(Files.newBufferedReader(pomFilePath));
       final Path repositoryPath = Paths.get(userHome)
           .resolve(".m2")
           .resolve("repository");
+
       for (final Object object : model.getDependencies()) {
         if (!(object instanceof Dependency)) {
           continue;
         }
         final Dependency dependency = (Dependency) object;
+
         Path path = repositoryPath;
         final String groupId = dependency.getGroupId();
         for (String string : groupId.split("\\.")) {
           path = path.resolve(string);
         }
+
         final Path libPath = path.resolve(dependency.getArtifactId())
             .resolve(dependency.getVersion());
         final File libDirectory = libPath.toFile();
@@ -130,12 +140,18 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
 
         Files.find(libPath, Integer.MAX_VALUE, (p, attr) -> p.toFile()
             .getName()
-            .endsWith(".java"))
-            .map(ClassPath::new)
+            .endsWith(".jar"))
+            .forEach(list::add);
+
+        Files.find(libPath, Integer.MAX_VALUE, (p, attr) -> p.toFile()
+            .getName()
+            .endsWith(".pom"))
+            .map(this::extractDependencyPaths)
+            .flatMap(Collection::stream)
             .forEach(list::add);
       }
     } catch (final IOException | XmlPullParserException e) {
-      log.debug(e.getMessage());
+      log.error(e.getMessage());
     }
     return list;
   }

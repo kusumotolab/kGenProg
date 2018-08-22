@@ -30,7 +30,7 @@ public class MavenProjectFactoryTest {
         Paths.get(path.toString(), "src", "test", "java", "example", "FooTest.java")));
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
-    assertThat(classPaths).hasSize(1);
+    assertThat(classPaths).hasSize(2);
     assertThat(classPaths.get(0)
         .toString()).endsWith("junit-4.12.jar");
   }
