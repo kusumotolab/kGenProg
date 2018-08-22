@@ -35,8 +35,8 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
       final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
       final SAXParser saxParser = saxParserFactory.newSAXParser();
       final ClassPathHandler classPathHandler = new ClassPathHandler();
-      saxParser.parse(Paths.get(rootPath.toString(), CONFIG_FILE_NAME)
-          .toString(), classPathHandler);
+      final Path configFilePath = rootPath.resolve(Paths.get(CONFIG_FILE_NAME));
+      saxParser.parse(configFilePath.toString(), classPathHandler);
 
       return new TargetProject(rootPath,
           classPathHandler.getProductSourcePaths(),
