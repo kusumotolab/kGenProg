@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,7 +46,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
     } catch (final SAXException | ParserConfigurationException | IOException e) {
       log.error(e.getMessage(), e);
     }
-    return new TargetProject(rootPath, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    return new TargetProject(rootPath, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
   }
 
   @Override
@@ -108,7 +109,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
       } catch (final IOException e) {
         log.error(e.getMessage(), e);
       }
-      return new ArrayList<>();
+      return Collections.emptyList();
     }
 
     List<ClassPath> getClassPaths() {
