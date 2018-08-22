@@ -1,12 +1,14 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.maven.model.Dependency;
@@ -22,21 +24,14 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 public class MavenProjectFactory extends BuildToolProjectFactory {
 
   private final static String CONFIG_FILE_NAME = "pom.xml";
-
-  private static final Logger log = LoggerFactory.getLogger(MavenProjectFactory.class);
+  private final static Logger log = LoggerFactory.getLogger(MavenProjectFactory.class);
 
   private final Path rootPath;
-  private final List<ProductSourcePath> sourcePaths;
-  private final List<TestSourcePath> testSourcePaths;
-  private final List<ClassPath> classPaths;
 
   public MavenProjectFactory(final Path rootPath) {
     super(rootPath);
 
     this.rootPath = rootPath;
-    sourcePaths = new ArrayList<>();
-    testSourcePaths = new ArrayList<>();
-    classPaths = new ArrayList<>();
   }
 
   @Override
@@ -51,76 +46,97 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
 
   @Override
   public TargetProject create() {
-    resolveSourcePath();
-    resolveTestPath();
-    resolveClassPath();
-    return new TargetProject(rootPath, sourcePaths, testSourcePaths, classPaths);
+    final List<ProductSourcePath> sourcePathList = resolveSourcePath(rootPath);
+    final List<TestSourcePath> testSourcePathList = resolveTestPath(rootPath);
+    final List<ClassPath> classPathList = resolveClassPath(rootPath);
+    return new TargetProject(rootPath, sourcePathList, testSourcePathList, classPathList);
   }
 
-  private void resolveSourcePath() {
-    final Path path = Paths.get(rootPath.toString(), "src", "main", "java");
-    final List<File> files = new ArrayList<>();
-    searchJavaFiles(new File(path.toString()), files);
-    sourcePaths.addAll(files.stream()
-        .map(e -> new ProductSourcePath(e.toPath()))
-        .collect(Collectors.toList()));
+  private List<ProductSourcePath> resolveSourcePath(Path rootPath) {
+    final Path path = rootPath.resolve("src")
+        .resolve("main")
+        .resolve("java");
+    final List<Path> javaFilePaths = searchJavaFilePaths(path);
+    return javaFilePaths.stream()
+        .map(ProductSourcePath::new)
+        .collect(Collectors.toList());
   }
 
-  private void resolveTestPath() {
-    final Path path = Paths.get(rootPath.toString(), "src", "test", "java");
-    final List<File> files = new ArrayList<>();
-    searchJavaFiles(new File(path.toString()), files);
-    testSourcePaths.addAll(files.stream()
-        .map(e -> new TestSourcePath(e.toPath()))
-        .collect(Collectors.toList()));
+  private List<TestSourcePath> resolveTestPath(Path rootPath) {
+    final Path path = rootPath.resolve("src")
+        .resolve("test")
+        .resolve("java");
+    final List<Path> javaFilePaths = searchJavaFilePaths(path);
+    return javaFilePaths.stream()
+        .map(TestSourcePath::new)
+        .collect(Collectors.toList());
   }
 
-  private void searchJavaFiles(final File directory, final List<File> results) {
-    final File[] files = directory.listFiles();
-    if (files == null) {
-      return;
-    }
-    for (final File file : files) {
-      if (file.isFile() && file.getName()
-          .toLowerCase()
-          .endsWith(".java")) {
-        results.add(file);
-      } else if (file.isDirectory()) {
-        searchJavaFiles(file, results);
+  private class JavaFileVisitor extends SimpleFileVisitor<Path> {
+
+    private final List<Path> javaFilePathList = new ArrayList<>();
+
+    @Override
+    public FileVisitResult visitFile(final Path path, final BasicFileAttributes attrs) {
+      final Path fileName = path.getFileName();
+      final String pathString = fileName.toString();
+      if (pathString.endsWith(".java")) {
+        javaFilePathList.add(path);
       }
+      return FileVisitResult.CONTINUE;
+    }
+
+    List<Path> getJavaFilePathList() {
+      return javaFilePathList;
     }
   }
 
-  private void resolveClassPath() {
-    final Path pomFilePath = Paths.get(rootPath.toString(), CONFIG_FILE_NAME);
-    final File pomFile = new File(pomFilePath.toString());
+  private List<Path> searchJavaFilePaths(final Path rootPath) {
+    final JavaFileVisitor visitor = new JavaFileVisitor();
+    try {
+      Files.walkFileTree(rootPath, visitor);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return visitor.getJavaFilePathList();
+  }
+
+  private List<ClassPath> resolveClassPath(Path rootPath) {
+    final List<ClassPath> list = new ArrayList<>();
+    final Path pomFilePath = rootPath.resolve(CONFIG_FILE_NAME);
     final MavenXpp3Reader reader = new MavenXpp3Reader();
     try {
-      final Model model = reader.read(new FileReader(pomFile));
-      final Path homePath = Paths.get(System.getProperty("user.home"));
-      final Path m2Path = Paths.get(homePath.toString(), ".m2", "repository");
+      final Model model = reader.read(Files.newBufferedReader(pomFilePath));
+      final String userHome = System.getProperty("user.home");
+      final Path repositoryPath = Paths.get(userHome)
+          .resolve(".m2")
+          .resolve("repository");
       for (final Object object : model.getDependencies()) {
-        if (!(object instanceof Dependency)) continue;
-        final Dependency dependency = (Dependency) object;
-        final List<String> splits = new ArrayList<>(Arrays.asList(dependency.getGroupId()
-            .split("\\.")));
-        splits.add(0, m2Path.toString());
-        splits.add(dependency.getArtifactId());
-        splits.add(dependency.getVersion());
-        final String path = String.join(File.separator, splits);
-        final File file = new File(path);
-        if (!file.isDirectory()) {
+        if (!(object instanceof Dependency)) {
           continue;
         }
-        for (File f : file.listFiles()) {
-          if (f.getAbsolutePath()
-              .endsWith(".jar")) {
-            classPaths.add(new ClassPath(f.toPath()));
-          }
+        final Dependency dependency = (Dependency) object;
+        Path path = repositoryPath;
+        final String groupId = dependency.getGroupId();
+        for (String string : groupId.split("\\.")) {
+          path = path.resolve(string);
         }
+        final Path libPath = path.resolve(dependency.getArtifactId())
+            .resolve(dependency.getVersion());
+        final File libDirectory = libPath.toFile();
+        if (!libDirectory.isDirectory()) {
+          continue;
+        }
+
+        Files.find(libPath, Integer.MAX_VALUE, (p, attr) -> p.toFile()
+            .getName()
+            .endsWith(".java"))
+            .map(ClassPath::new)
+            .forEach(list::add);
       }
-    } catch (IOException | XmlPullParserException e) {
+    } catch (final IOException | XmlPullParserException e) {
       log.debug(e.getMessage());
     }
+    return list;
   }
 }
