@@ -24,7 +24,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
   private final static Logger log = LoggerFactory.getLogger(EclipseProjectFactory.class);
   private final static String CONFIG_FILE_NAME = ".classpath";
 
-  public EclipseProjectFactory(Path rootPath) {
+  public EclipseProjectFactory(final Path rootPath) {
     super(rootPath);
   }
 
@@ -42,7 +42,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
           classPathHandler.getTestSourcePaths(),
           classPathHandler.getClassPaths());
 
-    } catch (SAXException | ParserConfigurationException | IOException e) {
+    } catch (final SAXException | ParserConfigurationException | IOException e) {
       log.error(e.getMessage(), e);
     }
     return new TargetProject(rootPath, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
@@ -105,7 +105,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
             .filter(e -> e.toString()
                 .endsWith(".java"))
             .collect(Collectors.toList());
-      } catch (IOException e) {
+      } catch (final IOException e) {
         log.error(e.getMessage(), e);
       }
       return new ArrayList<>();
