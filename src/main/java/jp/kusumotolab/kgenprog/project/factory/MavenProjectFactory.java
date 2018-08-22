@@ -133,18 +133,15 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
 
         final Path libPath = path.resolve(dependency.getArtifactId())
             .resolve(dependency.getVersion());
-        final File libDirectory = libPath.toFile();
-        if (!libDirectory.isDirectory()) {
+        if (!Files.isDirectory(libPath)) {
           continue;
         }
 
-        Files.find(libPath, Integer.MAX_VALUE, (p, attr) -> p.toFile()
-            .getName()
+        Files.find(libPath, Integer.MAX_VALUE, (p, attr) -> p.toString()
             .endsWith(".jar"))
             .forEach(list::add);
 
-        Files.find(libPath, Integer.MAX_VALUE, (p, attr) -> p.toFile()
-            .getName()
+        Files.find(libPath, Integer.MAX_VALUE, (p, attr) -> p.toString()
             .endsWith(".pom"))
             .map(this::extractDependencyPaths)
             .flatMap(Collection::stream)
