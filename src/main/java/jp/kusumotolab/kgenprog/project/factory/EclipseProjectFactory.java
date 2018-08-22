@@ -93,8 +93,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
           if (classpath.isAbsolute()) {
             classPaths.add(new ClassPath(classpath));
           } else {
-            classPaths.add(new ClassPath(Paths.get(rootPath.toString(), classpath.toString())
-                .normalize()));
+            classPaths.add(new ClassPath(rootPath.resolve(classpath)));
           }
           break;
       }
