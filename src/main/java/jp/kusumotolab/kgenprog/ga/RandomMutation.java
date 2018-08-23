@@ -29,7 +29,7 @@ public class RandomMutation extends Mutation {
 
     final List<Variant> generatedVariants = new ArrayList<>();
 
-    for(Variant variant : variants) {
+    for(final Variant variant : variants) {
       final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
   
       final Roulette<Suspiciousness> roulette =

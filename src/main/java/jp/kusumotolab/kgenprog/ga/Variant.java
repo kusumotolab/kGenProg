@@ -55,7 +55,7 @@ public class Variant {
     this.generatedSourceCode = generatedSourceCode;
   }
 
-  public void setTestResults(TestResults testResults) {
+  public void setTestResults(final TestResults testResults) {
     log.debug("enter setTestResults(TestResults)");
     this.testResults = testResults;
   }
