@@ -29,6 +29,7 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 public class RandomMutationTest {
 
+  @SuppressWarnings("serial")
   private class MockRandom extends Random {
 
     @Override

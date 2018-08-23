@@ -12,6 +12,7 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
 public class SinglePointCrossoverTest {
 
+  @SuppressWarnings("serial")
   private class MockRandom extends Random {
 
     private int counter = 0;

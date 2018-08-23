@@ -12,10 +12,10 @@ public class Variant {
   private static Logger log = LoggerFactory.getLogger(Variant.class);
 
   private final Gene gene;
-  private Fitness fitness;
   private GeneratedSourceCode generatedSourceCode;
-  private List<Suspiciousness> suspiciousnesses;
   private TestResults testResults;
+  private Fitness fitness;
+  private List<Suspiciousness> suspiciousnesses;
 
   public Variant(final Gene gene) {
     this.gene = gene;
@@ -30,24 +30,34 @@ public class Variant {
     return gene;
   }
 
-  public Fitness getFitness() {
-    log.debug("enter getFitness()");
-    return fitness;
-  }
-  
-  public List<Suspiciousness> getSuspiciousnesses(){
-    log.debug("enter getSuspiciousnesses()");
-    return suspiciousnesses;
-  }
-  
   public GeneratedSourceCode getGeneratedSourceCode() {
     log.debug("enter getGeneratedSourceCode()");
     return generatedSourceCode;
   }
-  
+
   public TestResults getTestResults() {
     log.debug("enter getTestResults()");
     return testResults;
+  }
+
+  public Fitness getFitness() {
+    log.debug("enter getFitness()");
+    return fitness;
+  }
+
+  public List<Suspiciousness> getSuspiciousnesses() {
+    log.debug("enter getSuspiciousnesses()");
+    return suspiciousnesses;
+  }
+
+  public void setGeneratedSourceCode(final GeneratedSourceCode generatedSourceCode) {
+    log.debug("enter setGeneratedSourceCode(GeneratedSourceCode)");
+    this.generatedSourceCode = generatedSourceCode;
+  }
+
+  public void setTestResults(TestResults testResults) {
+    log.debug("enter setTestResults(TestResults)");
+    this.testResults = testResults;
   }
 
   public void setFitness(final Fitness fitness) {
@@ -55,18 +65,8 @@ public class Variant {
     this.fitness = fitness;
   }
 
-  public void setGeneratedSourceCode(final GeneratedSourceCode generatedSourceCode) {
-    log.debug("enter setGeneratedSourceCode(GeneratedSourceCode)");
-    this.generatedSourceCode = generatedSourceCode;
-  }
-  
   public void setSuspiciousnesses(final List<Suspiciousness> suspiciousnesses) {
     log.debug("enter setSuspiciousnesses(List<Suspiciousness>)");
     this.suspiciousnesses = suspiciousnesses;
-  }
-
-  public void setTestResults(TestResults testResults) {
-    log.debug("enter setTestResults(TestResults)");
-    this.testResults = testResults;
   }
 }

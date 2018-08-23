@@ -28,9 +28,6 @@ public class RandomMutation extends Mutation {
     log.debug("enter exec(List<Variant>)");
 
     final List<Variant> generatedVariants = new ArrayList<>();
-    if (variants.isEmpty()) {
-      return generatedVariants;
-    }
 
     for(Variant variant : variants) {
       final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
@@ -76,7 +73,7 @@ public class RandomMutation extends Mutation {
   }
   
   private Gene makeGene(final Gene parent, final Base base) {
-    List<Base> bases = new ArrayList<>(parent.getBases());
+    final List<Base> bases = new ArrayList<>(parent.getBases());
     bases.add(base);
     return new SimpleGene(bases);
   }

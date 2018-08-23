@@ -8,17 +8,17 @@ import jp.kusumotolab.kgenprog.OrdinalNumber;
 public class VariantStore {
 
   private List<Variant> currentVariants;
+  private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
-  private final OrdinalNumber foundSolutions;
   
   public VariantStore(final Variant ...initialVariants) {
     this(Arrays.asList(initialVariants));
   }
   
   public VariantStore(final List<Variant> initialVariants) {
-    currentVariants = new ArrayList<>(initialVariants);
+    currentVariants = initialVariants;
+    foundSolutions = new ArrayList<>();
     generation = new OrdinalNumber(1);
-    foundSolutions = new OrdinalNumber(0);
   }
   
   public OrdinalNumber getGenerationNumber() {
@@ -26,7 +26,7 @@ public class VariantStore {
   }
   
   public OrdinalNumber getFoundSolutionsNumber() {
-    return foundSolutions;
+    return new OrdinalNumber(foundSolutions.size());
   }
 
   public List<Variant> getCurrentVariants() {
@@ -34,12 +34,11 @@ public class VariantStore {
   }
   
   public void addFoundSolution(final Variant variant) {
-    
+    foundSolutions.add(variant);
   }
 
   public List<Variant> getFoundSolutions() {
-    // TODO Auto-generated method stub
-    return null;
+    return foundSolutions;
   }
   
   public void setNextGenerationVariants(final List<Variant> variants) {
