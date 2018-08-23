@@ -84,7 +84,7 @@ public class KGenProgMain {
     this.variantSelection = variantSelection;
 
     // TODO Should be retrieved from config
-    this.testExecutor = new TestExecutor(targetProject, 60);
+    this.testExecutor = new TestExecutor(targetProject, 600);
 
     this.patchGenerator = patchGenerator;
 
