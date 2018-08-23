@@ -63,8 +63,7 @@ public class KGenProgMainTest {
         testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random();
-    final CandidateSelection statementSelection =
-        new RouletteStatementSelection(random);
+    final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(10, random, statementSelection);
     final Crossover crossover = new SinglePointCrossover(random);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
@@ -73,7 +72,7 @@ public class KGenProgMainTest {
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     return new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, WorkPath);
+        sourceCodeValidation, variantSelection, patchGenerator, WorkPath, 600, 100, 1);
   }
 
   @Test
