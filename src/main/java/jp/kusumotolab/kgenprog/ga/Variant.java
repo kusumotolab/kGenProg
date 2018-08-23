@@ -8,17 +8,21 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class Variant {
-
   private static Logger log = LoggerFactory.getLogger(Variant.class);
 
   private final Gene gene;
-  private GeneratedSourceCode generatedSourceCode;
-  private TestResults testResults;
-  private Fitness fitness;
-  private List<Suspiciousness> suspiciousnesses;
+  private final GeneratedSourceCode generatedSourceCode;
+  private final TestResults testResults;
+  private final Fitness fitness;
+  private final List<Suspiciousness> suspiciousnesses;
 
-  public Variant(final Gene gene) {
+  public Variant(final Gene gene, final GeneratedSourceCode generatedSourceCode, final TestResults testResults,
+      final Fitness fitness, List<Suspiciousness> suspiciousnesses) {
     this.gene = gene;
+    this.generatedSourceCode = generatedSourceCode;
+    this.testResults = testResults;
+    this.fitness = fitness;
+    this.suspiciousnesses = suspiciousnesses;
   }
 
   public boolean isCompleted() {
@@ -44,29 +48,14 @@ public class Variant {
     log.debug("enter getFitness()");
     return fitness;
   }
-
-  public List<Suspiciousness> getSuspiciousnesses() {
-    log.debug("enter getSuspiciousnesses()");
+  
+  public List<Suspiciousness> getSuspiciousnesses(){
+    log.debug("enter getSuspiciousnesses");
     return suspiciousnesses;
   }
-
-  public void setGeneratedSourceCode(final GeneratedSourceCode generatedSourceCode) {
-    log.debug("enter setGeneratedSourceCode(GeneratedSourceCode)");
-    this.generatedSourceCode = generatedSourceCode;
-  }
-
-  public void setTestResults(final TestResults testResults) {
-    log.debug("enter setTestResults(TestResults)");
-    this.testResults = testResults;
-  }
-
-  public void setFitness(final Fitness fitness) {
-    log.debug("enter setFitness(Fitness)");
-    this.fitness = fitness;
-  }
-
-  public void setSuspiciousnesses(final List<Suspiciousness> suspiciousnesses) {
-    log.debug("enter setSuspiciousnesses(List<Suspiciousness>)");
-    this.suspiciousnesses = suspiciousnesses;
+  
+  public Object getStatus() {
+    // TODO impl.
+    return null;
   }
 }

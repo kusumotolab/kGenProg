@@ -28,6 +28,6 @@ public abstract class Mutation {
     log.debug("exit setCandidates(List<>)");
   }
 
-  public abstract List<Variant> exec(List<Variant> variants);
+  public abstract List<Variant> exec(VariantStore variantStore);
 
 }

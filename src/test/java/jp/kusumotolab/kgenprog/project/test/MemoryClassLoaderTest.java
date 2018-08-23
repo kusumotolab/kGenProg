@@ -25,6 +25,7 @@ import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 /**
  * 
@@ -45,7 +46,7 @@ public class MemoryClassLoaderTest {
   public static void beforeClass() {
     // 一度だけビルドしておく
     final TargetProject targetProject = TargetProjectFactory.create(RootPath);
-    final Variant variant = targetProject.getInitialVariant();
+    final Variant variant = TestUtil.createVariant(targetProject);
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     buildResults = projectBuilder.build(generatedSourceCode);

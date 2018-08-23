@@ -24,6 +24,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestResultsTest {
 
@@ -40,7 +41,7 @@ public class TestResultsTest {
     // actual確保のためにテストの実行
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
+    final Variant variant = TestUtil.createVariant(targetProject);
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final BuildResults buildResults = new ProjectBuilder(targetProject).build(generatedSourceCode);
 
@@ -103,7 +104,7 @@ public class TestResultsTest {
   public void testToString() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
+    final Variant variant = TestUtil.createVariant(targetProject);
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode);
 

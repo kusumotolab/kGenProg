@@ -1,9 +1,8 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public interface SourceCodeValidation {
 
-  public void exec(Variant variant, TargetProject project, TestExecutor testExecutor);
+  public Fitness exec(VariantStore variantStore, TestResults testResults);
 }

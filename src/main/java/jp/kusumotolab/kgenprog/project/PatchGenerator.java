@@ -20,20 +20,20 @@ import com.github.difflib.algorithm.DiffException;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class PatchGenerator {
 
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
-  public List<Patch> exec(final TargetProject targetProject, final Variant modifiedVariant) {
+  public List<Patch> exec(final VariantStore variantStore, final Variant modifiedVariant) {
     log.debug("enter exec(TargetProject, Variant)");
 
     final List<Patch> patches = new ArrayList<>();
 
     final GeneratedSourceCode modifiedSourceCode =
-        applyAllModificationDirectly(targetProject, modifiedVariant);
+        applyAllModificationDirectly(variantStore, modifiedVariant);
 
     for (final GeneratedAST ast : modifiedSourceCode.getAsts()) {
       try {
@@ -94,13 +94,13 @@ public class PatchGenerator {
   /***
    * 初期 ast に対して，修正された ast へ実行された全変更内容をクローンを生成せずに適用
    *
-   * @param targetProject
+   * @param variantStore
    * @param modifiedVariant
    * @return
    */
-  private GeneratedSourceCode applyAllModificationDirectly(final TargetProject targetProject,
+  private GeneratedSourceCode applyAllModificationDirectly(final VariantStore variantStore,
       final Variant modifiedVariant) {
-    GeneratedSourceCode targetCode = targetProject.getInitialVariant()
+    GeneratedSourceCode targetCode = variantStore.getInitialVariant()
         .getGeneratedSourceCode();
     activateRecordModifications(targetCode);
     final Gene gene = modifiedVariant.getGene();

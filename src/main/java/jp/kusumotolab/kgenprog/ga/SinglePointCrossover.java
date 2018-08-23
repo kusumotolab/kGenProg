@@ -28,10 +28,11 @@ public class SinglePointCrossover implements Crossover {
   }
 
   @Override
-  public List<Variant> exec(final List<Variant> variants) {
+  public List<Variant> exec(final VariantStore variantStore) {
     log.debug("enter exec(List<>)");
 
-    final List<Variant> filteredVariants = variants.stream()
+    final List<Variant> filteredVariants = variantStore.getCurrentVariants()
+        .stream()
         .filter(e -> !e.getGene()
             .getBases()
             .isEmpty())
@@ -44,7 +45,7 @@ public class SinglePointCrossover implements Crossover {
     return IntStream.range(0, numberOfPair)
         .mapToObj(e -> makeGenes(filteredVariants))
         .flatMap(Collection::stream)
-        .map(Variant::new)
+        .map(variantStore::createVariant)
         .collect(Collectors.toList());
   }
 
@@ -56,10 +57,8 @@ public class SinglePointCrossover implements Crossover {
     final List<Base> basesA = geneA.getBases();
     final List<Base> basesB = geneB.getBases();
     final int index = random.nextInt(Math.min(basesA.size(), basesB.size()));
-    return Arrays.asList(
-        makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size())),
-        makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size()))
-    );
+    return Arrays.asList(makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size())),
+        makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size())));
   }
 
   private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {

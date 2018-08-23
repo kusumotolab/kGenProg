@@ -93,8 +93,7 @@ public class DefaultVariantSelectionTest {
   }
 
   private Variant createVariant(final Fitness fitness) {
-    final Variant variant = new Variant(null);
-    variant.setFitness(fitness);
+    final Variant variant = new Variant(null, null, null, fitness, null);
     return variant;
   }
 }

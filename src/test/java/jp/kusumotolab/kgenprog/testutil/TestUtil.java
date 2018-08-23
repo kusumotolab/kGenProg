@@ -4,7 +4,22 @@ import static org.assertj.core.api.Assertions.fail;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
+import jp.kusumotolab.kgenprog.fl.Ochiai;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
+import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
+import jp.kusumotolab.kgenprog.ga.Fitness;
+import jp.kusumotolab.kgenprog.ga.Gene;
+import jp.kusumotolab.kgenprog.ga.SimpleGene;
+import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class TestUtil {
 
@@ -16,6 +31,16 @@ public class TestUtil {
         fail("Couldn't delete work dir [" + path.toString() + "]");
       }
     }
+  }
+  
+  public static Variant createVariant(final TargetProject project) {
+    final Gene gene = new SimpleGene(Collections.emptyList());
+    final List<GeneratedAST> constructAST = new JDTASTConstruction().constructAST(project);
+    final GeneratedSourceCode sourceCode = new GeneratedSourceCode(constructAST);
+    final TestResults testResults = new TestExecutor(project).exec(sourceCode);
+    final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
+    final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
+    return new Variant(gene, sourceCode, testResults, fitness, suspiciousnesses);
   }
 
 }

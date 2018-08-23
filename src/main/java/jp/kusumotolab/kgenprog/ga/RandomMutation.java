@@ -18,33 +18,33 @@ public class RandomMutation extends Mutation {
 
   private static final Logger log = LoggerFactory.getLogger(RandomMutation.class);
 
-  public RandomMutation(final int numberOfBase,
-      final Random random,
+  public RandomMutation(final int numberOfBase, final Random random,
       final CandidateSelection candidateSelection) {
     super(numberOfBase, random, candidateSelection);
   }
 
-  public List<Variant> exec(final List<Variant> variants) {
-    log.debug("enter exec(List<Variant>)");
+  public List<Variant> exec(final VariantStore variantStore) {
+    log.debug("enter exec(VariantStore)");
 
     final List<Variant> generatedVariants = new ArrayList<>();
 
-    for(final Variant variant : variants) {
+    for (final Variant variant : variantStore.getCurrentVariants()) {
+      final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
       final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
-  
+
       final Roulette<Suspiciousness> roulette =
-          new Roulette<>(variant.getSuspiciousnesses(), weightFunction, random);
-  
+          new Roulette<>(suspiciousnesses, weightFunction, random);
+
       for (int i = 0; i < numberOfBase; i++) {
         final Suspiciousness suspiciousness = roulette.exec();
         final Base base = makeBase(suspiciousness);
         final Gene gene = makeGene(variant.getGene(), base);
-        generatedVariants.add(new Variant(gene));
+        generatedVariants.add(variantStore.createVariant(gene));
       }
-    
+
     }
 
-    log.debug("exit exec(List<>)");
+    log.debug("exit exec(VariantStore)");
     return generatedVariants;
   }
 
@@ -71,7 +71,7 @@ public class RandomMutation extends Mutation {
     log.debug("enter chooseNodeAtRandom()");
     return candidateSelection.exec();
   }
-  
+
   private Gene makeGene(final Gene parent, final Base base) {
     final List<Base> bases = new ArrayList<>(parent.getBases());
     bases.add(base);

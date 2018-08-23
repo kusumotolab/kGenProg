@@ -1,17 +1,10 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
-import jp.kusumotolab.kgenprog.ga.Gene;
-import jp.kusumotolab.kgenprog.ga.SimpleGene;
-import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
-import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
 
@@ -40,19 +33,4 @@ public class TargetProject {
   public List<ClassPath> getClassPaths() {
     return classPaths;
   }
-
-  public Variant getInitialVariant() {
-    final Gene gene = new SimpleGene(Collections.emptyList());
-    final Variant variant = new Variant(gene);
-    variant.setGeneratedSourceCode(new GeneratedSourceCode(constructAST()));
-
-    return variant;
-  }
-
-  // hitori
-  private List<GeneratedAST> constructAST() {
-    // TODO: ここにDIする方法を検討
-    return new JDTASTConstruction().constructAST(this);
-  }
-
 }

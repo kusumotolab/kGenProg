@@ -1,8 +1,8 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
 public interface SourceCodeGeneration {
 
-  public void exec(Variant variant, TargetProject targetProject);
+  public GeneratedSourceCode exec(VariantStore variantStore, Gene gene);
 }

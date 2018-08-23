@@ -15,6 +15,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.SimpleGene;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -22,6 +23,7 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class PatchGeneratorTest {
 
@@ -38,7 +40,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = project.getInitialVariant();
+    final Variant originalVariant = TestUtil.createVariant(project);
+    final VariantStore variantStore = getVariantStore(originalVariant);
     final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
@@ -58,10 +61,9 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
-    modifiedVariant.setGeneratedSourceCode(code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+    final Patch patch = (Patch) patchGenerator.exec(variantStore, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
@@ -89,7 +91,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = project.getInitialVariant();
+    final Variant originalVariant = TestUtil.createVariant(project);
+    final VariantStore variantStore = getVariantStore(originalVariant);
     final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
@@ -109,10 +112,9 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
-    modifiedVariant.setGeneratedSourceCode(code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+    final Patch patch = (Patch) patchGenerator.exec(variantStore, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
@@ -140,7 +142,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = project.getInitialVariant();
+    final Variant originalVariant = TestUtil.createVariant(project);
+    final VariantStore variantStore = getVariantStore(originalVariant);
     final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
@@ -167,10 +170,9 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
-    modifiedVariant.setGeneratedSourceCode(code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+    final Patch patch = (Patch) patchGenerator.exec(variantStore, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
@@ -195,7 +197,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = project.getInitialVariant();
+    final Variant originalVariant = TestUtil.createVariant(project);
+    final VariantStore variantStore = getVariantStore(originalVariant);
     final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
         .getAsts()
         .get(0);
@@ -225,13 +228,17 @@ public class PatchGeneratorTest {
     final GeneratedSourceCode code =
         operation.apply(originalVariant.getGeneratedSourceCode(), location);
     final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))));
-    modifiedVariant.setGeneratedSourceCode(code);
+        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(project, modifiedVariant)
+    final Patch patch = (Patch) patchGenerator.exec(variantStore, modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
+  }
+  
+  @SuppressWarnings("deprecation")
+  private VariantStore getVariantStore(final Variant initialVariant) {
+    return new VariantStore(initialVariant);
   }
 }

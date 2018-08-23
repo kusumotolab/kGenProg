@@ -15,6 +15,7 @@ import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class JDTLocationTest {
 
@@ -22,7 +23,7 @@ public class JDTLocationTest {
   public void testInferLineNumbers() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
+    final Variant variant = TestUtil.createVariant(targetProject);
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
 
     final Path path = rootPath.resolve("src/example/Foo.java");

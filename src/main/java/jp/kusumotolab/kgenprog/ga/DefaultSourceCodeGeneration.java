@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
@@ -15,12 +14,11 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
   private final Set<String> sourceCodeSet = new HashSet<>();
 
   @Override
-  public void exec(final Variant variant, final TargetProject targetProject) {
+  public GeneratedSourceCode exec(final VariantStore variantStore, final Gene gene) {
     log.debug("enter exec(Variant, TargetProject)");
 
-    final Variant initialVariant = targetProject.getInitialVariant();
+    final Variant initialVariant = variantStore.getInitialVariant();
     GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
-    final Gene gene = variant.getGene();
 
     for (Base base : gene.getBases()) {
       generatedSourceCode = base.getOperation()
@@ -33,8 +31,7 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
       sourceCodeSet.add(generatedSourceCode.getMessageDigest());
     }
 
-    variant.setGeneratedSourceCode(generatedSourceCode);
-
     log.debug("exit exec(Gene, TargetProject)");
+    return generatedSourceCode;
   }
 }

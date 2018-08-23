@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -26,6 +25,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class RandomMutationTest {
 
@@ -47,12 +47,12 @@ public class RandomMutationTest {
       return true;
     }
   }
-
+  
   @Test
   public void testExec() throws NoSuchFieldException, IllegalAccessException {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
-    final Variant initialVariant = targetProject.getInitialVariant();
+    final Variant initialVariant = TestUtil.createVariant(targetProject);
     final Random random = new MockRandom();
     random.setSeed(0);
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
@@ -82,11 +82,11 @@ public class RandomMutationTest {
         })
         .collect(Collectors.toList());
 
-    final Variant variant = new Variant(new SimpleGene(Collections.emptyList()));
-    variant.setSuspiciousnesses(suspiciousnesses);
-
+    final Variant variant = new Variant(null, null, null, null, suspiciousnesses);
+    final VariantStore variantStore = new MockVariantStore(Arrays.asList(variant));
+    
     // 正しく15個のVariantが生成されるかのテスト
-    final List<Variant> variantList = randomMutation.exec(Arrays.asList(variant));
+    final List<Variant> variantList = randomMutation.exec(variantStore);
     assertThat(variantList).hasSize(15);
 
     // Suspiciousnessが高い場所ほど多くの操作が生成されているかのテスト
