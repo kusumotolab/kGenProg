@@ -111,11 +111,11 @@ public class KGenProgMain {
           .forEach(variant -> faultLocalization.exec(targetProject, variant, testExecutor));
 
       // 変異プログラムを生成
-      final List<Variant> currentGenerationVariants = new ArrayList<>();
-      currentGenerationVariants.addAll(mutation.exec(variantStore.getCurrentVariants()));
-      currentGenerationVariants.addAll(crossover.exec(variantStore.getCurrentVariants()));
+      final List<Variant> nextGenerationVariants = new ArrayList<>();
+      nextGenerationVariants.addAll(mutation.exec(variantStore.getCurrentVariants()));
+      nextGenerationVariants.addAll(crossover.exec(variantStore.getCurrentVariants()));
 
-      for (final Variant variant : currentGenerationVariants) {
+      for (final Variant variant : nextGenerationVariants) {
         // コード生成
         sourceCodeGeneration.exec(variant, targetProject);
 
@@ -150,7 +150,7 @@ public class KGenProgMain {
 
       // 次世代に向けての準備
       variantStore.setNextGenerationVariants(
-          variantSelection.exec(variantStore.getCurrentVariants(), currentGenerationVariants));
+          variantSelection.exec(variantStore.getCurrentVariants(), nextGenerationVariants));
     }
 
     // 生成されたバリアントのパッチ出力
