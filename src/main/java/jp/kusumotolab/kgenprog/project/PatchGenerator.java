@@ -31,7 +31,7 @@ public class PatchGenerator {
       try {
         final Patch patch = makePatch(ast);
         final String diff = patch.getDiff();
-        if (0 == diff.length()) {
+        if (diff.isEmpty()) {
           continue;
         }
         patches.add(patch);
