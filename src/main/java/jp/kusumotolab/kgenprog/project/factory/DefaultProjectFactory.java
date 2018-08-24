@@ -8,7 +8,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
-public class DefaultProjectFactory implements IProjectFactory {
+public class DefaultProjectFactory implements ProjectFactory {
 
   private final Path rootPath;
   private final List<ProductSourcePath> productSourcePaths;

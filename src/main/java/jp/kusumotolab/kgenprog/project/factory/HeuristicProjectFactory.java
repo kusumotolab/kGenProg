@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
-public class HeuristicProjectFactory implements IProjectFactory {
+public class HeuristicProjectFactory implements ProjectFactory {
 
   final Path rootPath;
 

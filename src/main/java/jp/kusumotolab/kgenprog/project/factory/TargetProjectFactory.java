@@ -18,8 +18,8 @@ public class TargetProjectFactory {
    * @return TargetProject
    */
   public static TargetProject create(final Path rootPath) {
-    IProjectFactory applicableFactory = instanceProjectFactories(rootPath).stream()
-        .filter(IProjectFactory::isApplicable)
+    ProjectFactory applicableFactory = instanceProjectFactories(rootPath).stream()
+        .filter(ProjectFactory::isApplicable)
         .findFirst()
         .orElse(new HeuristicProjectFactory(rootPath));
     return applicableFactory.create();
@@ -57,7 +57,7 @@ public class TargetProjectFactory {
    * @param rootPath
    * @return
    */
-  private static List<IProjectFactory> instanceProjectFactories(final Path rootPath) {
+  private static List<ProjectFactory> instanceProjectFactories(final Path rootPath) {
     return Arrays.asList(new AntProjectFactory(rootPath), new MavenProjectFactory(rootPath),
         new GradleProjectFactory(rootPath));
   }

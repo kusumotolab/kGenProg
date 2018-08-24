@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
-public interface IProjectFactory {
+public interface ProjectFactory {
 
   /**
    * TargetProjectを生成する．
