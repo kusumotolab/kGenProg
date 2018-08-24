@@ -30,8 +30,8 @@ public class PatchGenerator {
 
     for (final GeneratedAST ast : modifiedAsts) {
       try {
-        Patch patch = makePatch(ast);
-        String diff = patch.getDiff();
+        final Patch patch = makePatch(ast);
+        final String diff = patch.getDiff();
         if (0 == diff.length()) {
           continue;
         }
