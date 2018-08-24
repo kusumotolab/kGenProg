@@ -14,13 +14,12 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class PatchGenerator {
 
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
-  public List<Patch> exec(final TargetProject targetProject, final Variant modifiedVariant) {
+  public List<Patch> exec(final Variant modifiedVariant) {
     log.debug("enter exec(TargetProject, Variant)");
 
     final List<Patch> patches = new ArrayList<>();
