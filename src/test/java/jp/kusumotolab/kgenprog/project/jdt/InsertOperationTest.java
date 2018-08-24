@@ -61,53 +61,6 @@ public class InsertOperationTest {
     assertThat(newAST.getRoot()).isSameSourceCodeAs(expected);
   }
 
-  @Test
-  public void testInsertStatementDirectly() {
-    final String source = new StringBuilder().append("")
-        .append("class A {")
-        .append("  public void a() {")
-        .append("    int i = 0;")
-        .append("    i = 1;")
-        .append("  }")
-        .append("}")
-        .toString();
-
-    final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("A.java"));
-
-    final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
-    final GeneratedSourceCode generatedSourceCode =
-        new GeneratedSourceCode(Collections.singletonList(ast));
-
-    // 挿入位置のLocation生成
-    final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
-        .types()
-        .get(0);
-    final MethodDeclaration method = type.getMethods()[0];
-    final Statement statement = (Statement) method.getBody()
-        .statements()
-        .get(1);
-    final JDTASTLocation location = new JDTASTLocation(sourcePath, statement);
-
-    // 挿入対象生成
-    final Statement insertStatement = createInsertionTarget();
-    final InsertOperation operation = new InsertOperation(insertStatement);
-
-    operation.applyDirectly(generatedSourceCode, location);
-
-    final String expected = new StringBuilder().append("")
-        .append("class A {")
-        .append("  public void a() {")
-        .append("    int i = 0;")
-        .append("    i = 1;")
-        .append("    xxx();") // inserted statement
-        .append("  }")
-        .append("}")
-        .toString();
-
-    assertThat(ast.getRoot()).isSameSourceCodeAs(expected);
-  }
-
   private Statement createInsertionTarget() {
     final String source = new StringBuilder().append("")
         .append("class B {")
