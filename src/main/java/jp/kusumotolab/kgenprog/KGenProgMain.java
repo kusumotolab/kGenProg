@@ -189,7 +189,7 @@ public class KGenProgMain {
   private void logPatch(final List<Variant> completedVariants) {
     log.debug("enter outputPatch(List<Variant>)");
     for (final Variant completedVariant : completedVariants) {
-      final List<Patch> patches = patchGenerator.exec(targetProject, completedVariant);
+      final List<Patch> patches = patchGenerator.exec(completedVariant);
       log.info(makeVariantId(completedVariants, completedVariant));
       for (final Patch patch : patches) {
         log.info(System.lineSeparator() + patch.getDiff());
