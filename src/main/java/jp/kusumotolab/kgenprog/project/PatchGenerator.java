@@ -63,11 +63,11 @@ public class PatchGenerator {
     final String delimiter = document.getDefaultLineDelimiter();
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));
-    final List<String> originalSouceCodeLines = Files.readAllLines(originPath);
+    final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
     final List<String> diffLines =
-        makeDiff(fileName, originalSouceCodeLines, modifiedSourceCodeLines);
+        makeDiff(fileName, originalSourceCodeLines, modifiedSourceCodeLines);
 
-    return new Patch(diffLines, fileName, originalSouceCodeLines, modifiedSourceCodeLines);
+    return new Patch(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
   }
 
   /***
