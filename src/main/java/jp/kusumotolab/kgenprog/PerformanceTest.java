@@ -22,8 +22,6 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -50,13 +48,11 @@ public class PerformanceTest {
       final Path testPath, final long timeout, final int maxGeneration,
       final int requiredSolutions) {
 
-    final ProductSourcePath productSourcePath = new ProductSourcePath(productPath);
-    final TestSourcePath testSourcePath = new TestSourcePath(testPath);
-    final List<ProductSourcePath> productSourcePaths = Arrays.asList(productSourcePath);
-    final List<TestSourcePath> testSourcePaths = Arrays.asList(testSourcePath);
+    final List<Path> productPaths = Arrays.asList(productPath);
+    final List<Path> testPaths = Arrays.asList(testPath);
 
-    final TargetProject project = TargetProjectFactory.create(rootPath, productSourcePaths,
-        testSourcePaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final TargetProject project = TargetProjectFactory.create(rootPath, productPaths, testPaths,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random();
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);

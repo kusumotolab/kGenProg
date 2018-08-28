@@ -38,8 +38,8 @@ public class CUILauncher {
   // region Fields
   private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
   private final List<ClassPath> classPaths = new ArrayList<>();
-  private final List<ProductSourcePath> productSourcePaths = new ArrayList<>();
-  private final List<TestSourcePath> testSourcePaths = new ArrayList<>();
+  private final List<Path> productSourcePaths = new ArrayList<>();
+  private final List<Path> testSourcePaths = new ArrayList<>();
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
   private Path rootDir;
@@ -69,7 +69,7 @@ public class CUILauncher {
     this.rootDir = Paths.get(rootDir);
   }
 
-  public List<ProductSourcePath> getProductSourcePaths() {
+  public List<Path> getProductSourcePaths() {
     log.debug("enter getSourcePaths()");
     return productSourcePaths;
   }
@@ -78,10 +78,10 @@ public class CUILauncher {
       metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
   public void addProductSourcePath(final String sourcePaths) {
     log.debug("enter addSourcePath(String)");
-    this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths)));
+    this.productSourcePaths.add(Paths.get(sourcePaths));
   }
 
-  public List<TestSourcePath> getTestSourcePaths() {
+  public List<Path> getTestSourcePaths() {
     log.debug("enter getTestPaths()");
     return testSourcePaths;
   }
@@ -91,7 +91,7 @@ public class CUILauncher {
       usage = "Paths of the root directories holding test codes")
   public void addTestSourcePath(final String testPaths) {
     log.debug("enter addTestPath(String)");
-    this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths)));
+    this.testSourcePaths.add(Paths.get(testPaths));
   }
 
   public List<ClassPath> getClassPaths() {

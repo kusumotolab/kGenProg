@@ -79,16 +79,18 @@ public class TargetProjectFactoryTest {
   public void testCreateByCompletelySpecified01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
 
-    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Foo));
-    final TestSourcePath fooTestPath = new TestSourcePath(rootPath.resolve(FooTest));
+    final Path fooPath = rootPath.resolve(Foo);
+    final Path fooTestPath = rootPath.resolve(FooTest);
 
     // 全パラメータを指定して生成
     final TargetProject project = TargetProjectFactory.create(rootPath, Arrays.asList(fooPath),
         Arrays.asList(fooTestPath), Collections.emptyList(), JUnitVersion.JUNIT4);
 
     assertThat(project.rootPath).isSameAs(rootPath);
-    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(fooPath);
-    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTestPath);
+    assertThat(project.getProductSourcePaths())
+        .containsExactlyInAnyOrder(new ProductSourcePath(fooPath));
+    assertThat(project.getTestSourcePaths())
+        .containsExactlyInAnyOrder(new TestSourcePath(fooTestPath));
     assertThat(project.getClassPaths()).containsExactlyInAnyOrder(Junit, Hamcrest);
   }
 
