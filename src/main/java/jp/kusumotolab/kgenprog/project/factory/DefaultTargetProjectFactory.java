@@ -15,16 +15,16 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
-public class DefaultProjectFactory implements ProjectFactory {
+public class DefaultTargetProjectFactory implements ProjectFactory {
 
-  private static final Logger log = LoggerFactory.getLogger(DefaultProjectFactory.class);
+  private static final Logger log = LoggerFactory.getLogger(DefaultTargetProjectFactory.class);
 
   private final Path rootPath;
   private final List<ProductSourcePath> productSourcePaths;
   private final List<TestSourcePath> testSourcePaths;
   private final List<ClassPath> classPaths;
 
-  public DefaultProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
+  public DefaultTargetProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
 
     this.rootPath = rootPath;
