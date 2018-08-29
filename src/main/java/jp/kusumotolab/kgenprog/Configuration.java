@@ -12,6 +12,7 @@ import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -51,8 +52,7 @@ public class Configuration {
   // region Constructor
 
   private Configuration(Builder builder) {
-    targetProject = TargetProjectFactory.create(builder.rootDir, builder.productSourcePaths,
-        builder.testSourcePaths, builder.classPaths, JUnitVersion.JUNIT4);
+    targetProject = builder.targetProject;
     workingDir = builder.workingDir;
     headcount = builder.headcount;
     maxGeneration = builder.maxGeneration;
@@ -103,31 +103,35 @@ public class Configuration {
     private List<ProductSourcePath> productSourcePaths;
     private List<TestSourcePath> testSourcePaths;
     private List<ClassPath> classPaths = new ArrayList<>();
-    private Path workingDir;
-    private int headcount = 100;
-    private int maxGeneration = 10;
-    private long timeLimit = 60;
-    private int requiredSolutionsCount = 1;
-    private Level logLevel = Level.INFO;
-    // endregion
-
-    // region Initializer block
-    {
-      try {
-        workingDir = Files.createTempDirectory("kgenprog-work");
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
+    private TargetProject targetProject;
+    private Path workingDir = DEFAULT_WORKING_DIR;
+    private int headcount = DEFAULT_HEADCOUNT;
+    private int maxGeneration = DEFAULT_MAX_GENERATION;
+    private long timeLimit = DEFAULT_TIME_LIMIT;
+    private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
+    private Level logLevel = DEFAULT_LOG_LEVEL;
     // endregion
 
     // region Constructors
+
+    public Builder(Path rootDir, Path productSourcePath, Path testSourcePath) {
+      this(rootDir, new ProductSourcePath(productSourcePath), new TestSourcePath(testSourcePath));
+    }
+
+    public Builder(Path rootDir, ProductSourcePath productSourcePath,
+        TestSourcePath testSourcePath) {
+      this(rootDir, ImmutableList.of(productSourcePath), ImmutableList.of(testSourcePath));
+    }
 
     public Builder(Path rootDir, List<ProductSourcePath> productSourcePaths,
         List<TestSourcePath> testSourcePaths) {
       this.rootDir = rootDir;
       this.productSourcePaths = productSourcePaths;
       this.testSourcePaths = testSourcePaths;
+    }
+
+    public Builder(TargetProject targetProject) {
+      this.targetProject = targetProject;
     }
 
     private Builder() {
@@ -146,6 +150,11 @@ public class Configuration {
     // region Methods
 
     public Configuration build() {
+      if (targetProject == null) {
+        targetProject = TargetProjectFactory.create(rootDir, productSourcePaths,
+            testSourcePaths, classPaths, JUnitVersion.JUNIT4);
+      }
+
       return new Configuration(this);
     }
 
