@@ -6,9 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ch.qos.logback.classic.Level;
-import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class CUILauncherTest {
 
@@ -50,8 +47,7 @@ public class CUILauncherTest {
   @Test
   public void testAddProductSourcePathsAndGetProductSourcePaths01() {
     launcher.addProductSourcePath("./src/main/java");
-    assertThat(launcher.getProductSourcePaths())
-        .containsExactly(new ProductSourcePath(Paths.get("./src/main/java")));
+    assertThat(launcher.getProductSourcePaths()).containsExactly(Paths.get("./src/main/java"));
   }
 
   /**
@@ -62,17 +58,16 @@ public class CUILauncherTest {
     launcher.addProductSourcePath("./src/main/java");
     launcher.addProductSourcePath("./src/main/kotlin"); // 実在しないパス
     launcher.addProductSourcePath("./src/main/resources");
-    assertThat(launcher.getProductSourcePaths())
-        .containsExactlyInAnyOrder(new ProductSourcePath(Paths.get("./src/main/java")),
-            new ProductSourcePath(Paths.get("./src/main/kotlin")), // 実在しないパスを含んでいてもよい
-            new ProductSourcePath(Paths.get("./src/main/resources")));
+    assertThat(launcher.getProductSourcePaths()).containsExactlyInAnyOrder(
+        Paths.get("./src/main/java"), //
+        Paths.get("./src/main/kotlin"), // 実在しないパスを含んでいてもよい
+        Paths.get("./src/main/resources"));
   }
 
   @Test
   public void testAddTestSourcePathsAndGetTestSourcePaths01() {
     launcher.addTestSourcePath("./src/test/java");
-    assertThat(launcher.getTestSourcePaths())
-        .containsExactly(new TestSourcePath(Paths.get("./src/test/java")));
+    assertThat(launcher.getTestSourcePaths()).containsExactly(Paths.get("./src/test/java"));
   }
 
   /**
@@ -81,19 +76,18 @@ public class CUILauncherTest {
   @Test
   public void testAddTestSourcePathsAndGetTestSourcePaths02() {
     launcher.addTestSourcePath("./src/test/java");
-    launcher.addTestSourcePath("./src/test/kotlin");  // 実在しないパス
+    launcher.addTestSourcePath("./src/test/kotlin"); // 実在しないパス
     launcher.addTestSourcePath("./src/test/resources");
-    assertThat(launcher.getTestSourcePaths())
-        .containsExactlyInAnyOrder(new TestSourcePath(Paths.get("./src/test/java")),
-            new TestSourcePath(Paths.get("./src/test/kotlin")), // 実在しないパスを含んでいてもよい
-            new TestSourcePath(Paths.get("./src/test/resources")));
+    assertThat(launcher.getTestSourcePaths()).containsExactlyInAnyOrder(
+        Paths.get("./src/test/java"), //
+        Paths.get("./src/test/kotlin"), // 実在しないパスを含んでいてもよい
+        Paths.get("./src/test/resources"));
   }
 
   @Test
   public void testAddClassPathsAndGetClassPaths01() {
     launcher.addClassPath("./lib");
-    assertThat(launcher.getClassPaths())
-        .containsExactly(new ClassPath(Paths.get("./lib")));
+    assertThat(launcher.getClassPaths()).containsExactly(Paths.get("./lib"));
   }
 
   /**
@@ -104,10 +98,9 @@ public class CUILauncherTest {
     launcher.addClassPath("./lib01"); // 実在しないパス
     launcher.addClassPath("./lib02"); // 実在しないパス
     launcher.addClassPath("./lib03"); // 実在しないパス
-    assertThat(launcher.getClassPaths())
-        .containsExactlyInAnyOrder(new ClassPath(Paths.get("./lib01")), // 実在しないパスを含んでいてもよい
-            new ClassPath(Paths.get("./lib02")), // 実在しないパスを含んでいてもよい
-            new ClassPath(Paths.get("./lib03"))); // 実在しないパスを含んでいてもよい
+    assertThat(launcher.getClassPaths()).containsExactlyInAnyOrder(Paths.get("./lib01"), // 実在しないパスを含んでいてもよい
+        Paths.get("./lib02"), // 実在しないパスを含んでいてもよい
+        Paths.get("./lib03")); // 実在しないパスを含んでいてもよい
   }
 
   @Test
