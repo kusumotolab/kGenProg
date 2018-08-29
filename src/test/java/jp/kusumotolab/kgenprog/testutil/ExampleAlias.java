@@ -19,6 +19,9 @@ public class ExampleAlias {
   // Srcパスへのエイリアス
   public static class Src {
 
+    public final static Path Dir = Paths.get("src");
+    public final static Path DirTest = Paths.get("test");
+
     public final static Path Foo = Paths.get("src/example/Foo.java");
     public final static Path Bar = Paths.get("src/example/Bar.java");
     public final static Path Baz = Paths.get("src/example/Baz.java");

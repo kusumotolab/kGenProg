@@ -10,10 +10,14 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazStaticInner;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazTest;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.Dir;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.DirTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import org.junit.Before;
@@ -21,6 +25,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
@@ -113,6 +118,34 @@ public class ProjectBuilderTest {
         .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value, Baz.value,
             BazTest.value, BazInner.value, BazStaticInner.value, BazAnonymous.value,
             BazOuter.value);
+
+    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
+      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
+      assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
+          .containsOnly(productSourcePath.path);
+    }
+  }
+
+  @Test
+  public void testBuildStringForBuildSuccess07() {
+    final Path rootPath = Paths.get("example/BuildSuccess07");
+    final Path srcPath = rootPath.resolve(Dir);
+    final Path testPath = rootPath.resolve(DirTest);
+    final TargetProject targetProject =
+        TargetProjectFactory.create(rootPath, Arrays.asList(srcPath), Arrays.asList(testPath),
+            new ArrayList<Path>(), JUnitVersion.JUNIT4);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
+
+    assertThat(buildResults.isBuildFailed).isFalse();
+    assertThat(buildResults.isMappingAvailable()).isTrue();
+
+
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
