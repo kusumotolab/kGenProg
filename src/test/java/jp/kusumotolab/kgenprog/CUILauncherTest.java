@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ch.qos.logback.classic.Level;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 
 public class CUILauncherTest {
 
@@ -88,7 +87,7 @@ public class CUILauncherTest {
   @Test
   public void testAddClassPathsAndGetClassPaths01() {
     launcher.addClassPath("./lib");
-    assertThat(launcher.getClassPaths()).containsExactly(new ClassPath(Paths.get("./lib")));
+    assertThat(launcher.getClassPaths()).containsExactly(Paths.get("./lib"));
   }
 
   /**
@@ -99,10 +98,9 @@ public class CUILauncherTest {
     launcher.addClassPath("./lib01"); // 実在しないパス
     launcher.addClassPath("./lib02"); // 実在しないパス
     launcher.addClassPath("./lib03"); // 実在しないパス
-    assertThat(launcher.getClassPaths()).containsExactlyInAnyOrder(
-        new ClassPath(Paths.get("./lib01")), // 実在しないパスを含んでいてもよい
-        new ClassPath(Paths.get("./lib02")), // 実在しないパスを含んでいてもよい
-        new ClassPath(Paths.get("./lib03"))); // 実在しないパスを含んでいてもよい
+    assertThat(launcher.getClassPaths()).containsExactlyInAnyOrder(Paths.get("./lib01"), // 実在しないパスを含んでいてもよい
+        Paths.get("./lib02"), // 実在しないパスを含んでいてもよい
+        Paths.get("./lib03")); // 実在しないパスを含んでいてもよい
   }
 
   @Test

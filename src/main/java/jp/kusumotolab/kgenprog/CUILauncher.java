@@ -25,7 +25,6 @@ import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -35,7 +34,7 @@ public class CUILauncher {
 
   // region Fields
   private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
-  private final List<ClassPath> classPaths = new ArrayList<>();
+  private final List<Path> classPaths = new ArrayList<>();
   private final List<Path> productSourcePaths = new ArrayList<>();
   private final List<Path> testSourcePaths = new ArrayList<>();
   private final ch.qos.logback.classic.Logger rootLogger =
@@ -92,7 +91,7 @@ public class CUILauncher {
     this.testSourcePaths.add(Paths.get(testPaths));
   }
 
-  public List<ClassPath> getClassPaths() {
+  public List<Path> getClassPaths() {
     log.debug("enter getClassPaths()");
     return classPaths;
   }
@@ -101,7 +100,7 @@ public class CUILauncher {
       metaVar = "<class path> ...", usage = "Class paths required to build the target project")
   public void addClassPath(final String classPaths) {
     log.debug("enter addClassPath(String)");
-    this.classPaths.add(new ClassPath(Paths.get(classPaths)));
+    this.classPaths.add(Paths.get(classPaths));
   }
 
   public Level getLogLevel() {
@@ -185,8 +184,7 @@ public class CUILauncher {
     random.setSeed(0);
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);
-    final Mutation mutation =
-        new RandomMutation(10, random, rouletteStatementSelection);
+    final Mutation mutation = new RandomMutation(10, random, rouletteStatementSelection);
     final Crossover crossover = new SinglePointCrossover(random);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
