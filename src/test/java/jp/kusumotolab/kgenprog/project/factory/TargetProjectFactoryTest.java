@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -140,4 +141,28 @@ public class TargetProjectFactoryTest {
 
   }
 
+  @Test
+  public void testCreateBySpecifingPathsForProductAndTest() {
+    final Path rootPath = Paths.get("example/BuildSuccess07");
+    final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
+    final TargetProject project = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
+
+    // *Testのパス名の中の "src" を "test" に書き換え
+    final String fooTestStr = FooTest.toString()
+        .replace("src", "test");
+    final String barTestStr = BarTest.toString()
+        .replace("src", "test");
+
+    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(Foo));
+    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(fooTestStr));
+    final ProductSourcePath bar = new ProductSourcePath(rootPath.resolve(Bar));
+    final TestSourcePath barTest = new TestSourcePath(rootPath.resolve(barTestStr));
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo, bar);
+    assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTest, barTest);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(Junit, Hamcrest);
+  }
 }
