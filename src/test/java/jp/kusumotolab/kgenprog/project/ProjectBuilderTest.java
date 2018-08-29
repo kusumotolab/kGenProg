@@ -10,14 +10,12 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazStaticInner;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazTest;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.Dir;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.DirTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.junit.Before;
@@ -129,11 +127,10 @@ public class ProjectBuilderTest {
   @Test
   public void testBuildStringForBuildSuccess07() {
     final Path rootPath = Paths.get("example/BuildSuccess07");
-    final Path srcPath = rootPath.resolve(Dir);
-    final Path testPath = rootPath.resolve(DirTest);
-    final TargetProject targetProject =
-        TargetProjectFactory.create(rootPath, Arrays.asList(srcPath), Arrays.asList(testPath),
-            new ArrayList<Path>(), JUnitVersion.JUNIT4);
+    final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final Variant variant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
