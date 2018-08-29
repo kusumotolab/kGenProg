@@ -23,6 +23,22 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 public class Configuration {
 
   // region Fields
+  public static final int DEFAULT_MAX_GENERATION = 10;
+  public static final int DEFAULT_HEADCOUNT = 100;
+  public static final int DEFAULT_REQUIRED_SOLUTIONS_COUNT = 1;
+  public static final long DEFAULT_TIME_LIMIT = 60;
+  public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
+  public static final Path DEFAULT_WORKING_DIR;
+
+  static {
+    try {
+      DEFAULT_WORKING_DIR = Files.createTempDirectory("kgenprog-work");
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException("Creating a temporary directory has failed.");
+    }
+  }
+
   private final TargetProject targetProject;
   private final Path workingDir;
   private final int headcount;
