@@ -49,8 +49,6 @@ public class CUILauncher {
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
   private Path rootDir;
-  private Path kGenProgDir = Paths.get(System.getProperty("user.dir"))
-      .toAbsolutePath();
   private int headcount = 100;
   private int maxGeneration = 10;
   private long timeLimit = 60;
@@ -161,16 +159,6 @@ public class CUILauncher {
   public void setTimeLimit(long timeLimit) {
     log.debug("enter setTimeLimit(long)");
     this.timeLimit = timeLimit;
-  }
-
-  @Option(name = "-k", aliases = "--kgenprog-dir", metaVar = "<path>",
-      usage = "Path of kGenProg directory")
-  public void setKGenProgDir(final String kGenProgDir) {
-    this.kGenProgDir = Paths.get(kGenProgDir);
-  }
-
-  public Path getKGenProgDir() {
-    return kGenProgDir;
   }
 
   // endregion
@@ -284,10 +272,6 @@ public class CUILauncher {
 
     commandLineOptions.add("--time-limit");
     commandLineOptions.add(Long.toString(getTimeLimit()));
-
-    commandLineOptions.add("--kgenprog-dir");
-    commandLineOptions.add(getKGenProgDir().toAbsolutePath()
-        .toString());
 
     final File workDir = getRootDir().toFile();
     final ProcessBuilder processBuilder = new ProcessBuilder(commandLineOptions).directory(workDir);
