@@ -1,10 +1,19 @@
 package jp.kusumotolab.kgenprog;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -40,6 +49,8 @@ public class CUILauncher {
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
   private Path rootDir;
+  private Path kGenProgDir = Paths.get(System.getProperty("user.dir"))
+      .toAbsolutePath();
   private int headcount = 100;
   private int maxGeneration = 10;
   private long timeLimit = 60;
@@ -152,6 +163,16 @@ public class CUILauncher {
     this.timeLimit = timeLimit;
   }
 
+  @Option(name = "-k", aliases = "--kgenprog-dir", metaVar = "<path>",
+      usage = "Path of kGenProg directory")
+  public void setKGenProgDir(final String kGenProgDir) {
+    this.kGenProgDir = Paths.get(kGenProgDir);
+  }
+
+  public Path getKGenProgDir() {
+    return kGenProgDir;
+  }
+
   // endregion
 
   public static void main(final String[] args) {
@@ -168,7 +189,19 @@ public class CUILauncher {
       parser.printUsage(System.err);
       System.exit(1);
     }
-    launcher.launch();
+
+    final Path currentDir = Paths.get(System.getProperty("user.dir"));
+    final Path projectRootDir = launcher.getRootDir();
+    try {
+      if (Files.isSameFile(currentDir, projectRootDir)) {
+        launcher.launch();
+      } else {
+        launcher.launchAsAnotherProcess();
+      }
+    } catch (final IOException e) {
+      log.error("directory \"{}\" is not accessible", projectRootDir);
+      System.exit(1);
+    }
 
     log.info("end kGenProg");
   }
@@ -198,5 +231,129 @@ public class CUILauncher {
     kGenProgMain.run();
 
     log.debug("exit launch()");
+  }
+
+  public void launchAsAnotherProcess() {
+    final List<String> commandLineOptions = new ArrayList<>();
+
+    // System.out.println("classpath : " + System.getProperty("java.class.path"));
+
+    commandLineOptions.add("java");
+
+    commandLineOptions.add("-classpath");
+    final String classpathOfCurrentProcess = System.getProperty("java.class.path");
+    commandLineOptions.add(classpathOfCurrentProcess);
+
+    commandLineOptions.add("jp.kusumotolab.kgenprog.CUILauncher");
+
+    commandLineOptions.add("--root-dir");
+    commandLineOptions.add(".");
+
+    commandLineOptions.add("--src");
+    for (final Path productSourcePath : getProductSourcePaths()) {
+      commandLineOptions.add(productSourcePath.toString());
+    }
+
+    commandLineOptions.add("--test");
+    for (final Path testSourcePath : getTestSourcePaths()) {
+      commandLineOptions.add(testSourcePath.toString());
+    }
+
+    final List<Path> classPaths = getClassPaths();
+    if (!classPaths.isEmpty()) {
+      commandLineOptions.add("--cp");
+      for (final Path classPath : classPaths) {
+        commandLineOptions.add(classPath.toAbsolutePath()
+            .toString());
+      }
+    }
+
+    if (Level.DEBUG == getLogLevel()) {
+      commandLineOptions.add("-v");
+    }
+
+    if (Level.ERROR == getLogLevel()) {
+      commandLineOptions.add("q");
+    }
+
+    commandLineOptions.add("--headcount");
+    commandLineOptions.add(Integer.toString(getHeadcount()));
+
+    commandLineOptions.add("--max-generation");
+    commandLineOptions.add(Integer.toString(getMaxGeneration()));
+
+    commandLineOptions.add("--time-limit");
+    commandLineOptions.add(Long.toString(getTimeLimit()));
+
+    commandLineOptions.add("--kgenprog-dir");
+    commandLineOptions.add(getKGenProgDir().toAbsolutePath()
+        .toString());
+
+    final File workDir = getRootDir().toFile();
+    final ProcessBuilder processBuilder = new ProcessBuilder(commandLineOptions).directory(workDir);
+
+    try {
+      final ConcurrentLinkedQueue<String> outputBuffer = new ConcurrentLinkedQueue<>();
+      final Process process = processBuilder.start();
+      final InputStreamThread it =
+          new InputStreamThread(process.getInputStream(), StandardCharsets.UTF_8, outputBuffer);
+      final InputStreamThread et =
+          new InputStreamThread(process.getErrorStream(), StandardCharsets.UTF_8, outputBuffer);
+      it.start();
+      et.start();
+
+      while (process.isAlive() || !outputBuffer.isEmpty()) {
+        if (!outputBuffer.isEmpty()) {
+          final String line = outputBuffer.poll();
+          System.out.println(line);
+        }
+        try {
+          Thread.sleep(10);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+
+      process.waitFor();
+      it.alive = false;
+      et.alive = false;
+      it.join();
+      et.join();
+
+    } catch (final IOException e) {
+      log.error("IO error happend in starting the KGenProg main process");
+      System.exit(1);
+    } catch (final InterruptedException e) {
+      log.error("the KGenProg main process has terminated improperly");
+      System.exit(1);
+    }
+  }
+
+  class InputStreamThread extends Thread {
+
+    boolean alive;
+    private BufferedReader inputBuffer;
+    private ConcurrentLinkedQueue<String> outputBuffer;
+
+    public InputStreamThread(final InputStream is, final Charset charset,
+        final ConcurrentLinkedQueue<String> outputBuffer) {
+      this.alive = true;
+      this.outputBuffer = outputBuffer;
+      this.inputBuffer = new BufferedReader(new InputStreamReader(is, charset));
+    }
+
+    @Override
+    public void run() {
+      while (alive) {
+        try {
+          final String line = inputBuffer.readLine();
+          if (null != line) {
+            outputBuffer.add(line);
+          }
+        } catch (final IOException e) {
+          log.error(e.getMessage());
+        }
+      }
+    }
   }
 }

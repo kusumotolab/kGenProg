@@ -135,4 +135,12 @@ public class CUILauncherTest {
     launcher.setTimeLimit(3600);
     assertThat(launcher.getTimeLimit()).isEqualTo(3600);
   }
+
+  @Test
+  public void testCloseToZero03() {
+    launcher.setRootDir("example/CloseToZero03");
+    launcher.addProductSourcePath("src/example/CloseToZero.java");
+    launcher.addTestSourcePath("src/example/CloseToZeroTest.java");
+    launcher.launchAsAnotherProcess();
+  }
 }
