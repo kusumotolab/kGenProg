@@ -1,12 +1,9 @@
 package jp.kusumotolab.kgenprog;
 
 import java.util.Random;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
-import jp.kusumotolab.kgenprog.Configuration.Builder;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.Crossover;
@@ -31,19 +28,9 @@ public class CUILauncher {
   public static void main(final String[] args) {
     log.info("start kGenProg");
 
-    final Builder builder = Builder.getBuilderForCmdLineParser();
-    final CmdLineParser parser = new CmdLineParser(builder);
-
-    try {
-      parser.parseArgument(args);
-    } catch (final CmdLineException e) {
-      log.error(e.getMessage());
-      // System.err.println(e.getMessage());
-      parser.printUsage(System.err);
-      System.exit(1);
-    }
+    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
     final CUILauncher launcher = new CUILauncher();
-    launcher.launch(builder.build());
+    launcher.launch(config);
 
     log.info("end kGenProg");
   }

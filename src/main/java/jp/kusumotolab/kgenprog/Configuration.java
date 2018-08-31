@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 import org.slf4j.Logger;
@@ -139,15 +141,22 @@ public class Configuration {
 
     // endregion
 
-    // region Static method
-
-    public static Builder getBuilderForCmdLineParser() {
-      return new Builder();
-    }
-
-    // endregion
-
     // region Methods
+
+    public static Configuration buildFromCmdLineArgs(String[] args) {
+      final Builder builder = new Builder();
+      final CmdLineParser parser = new CmdLineParser(builder);
+
+      try {
+        parser.parseArgument(args);
+      } catch (final CmdLineException e) {
+        log.error(e.getMessage());
+        parser.printUsage(System.err);
+        System.exit(1);
+      }
+
+      return builder.build();
+    }
 
     public Configuration build() {
       if (targetProject == null) {
