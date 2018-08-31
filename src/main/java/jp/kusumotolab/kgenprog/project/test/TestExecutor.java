@@ -16,12 +16,12 @@ public class TestExecutor {
   private final long timeoutSeconds;
 
   public TestExecutor(final Configuration config) {
-    this(config.getTargetProject(), config.getTimeLimit());
+    this(config.getTargetProject(), config.getTimeLimitSeconds());
   }
 
   @Deprecated
   public TestExecutor(final TargetProject targetProject) {
-    this(targetProject, Configuration.DEFAULT_TIME_LIMIT);
+    this(targetProject, Configuration.DEFAULT_TIME_LIMIT.getSeconds());
   }
 
   @Deprecated

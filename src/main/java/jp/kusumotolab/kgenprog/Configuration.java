@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Configuration {
   public static final int DEFAULT_MAX_GENERATION = 10;
   public static final int DEFAULT_HEADCOUNT = 100;
   public static final int DEFAULT_REQUIRED_SOLUTIONS_COUNT = 1;
-  public static final long DEFAULT_TIME_LIMIT = 60;
+  public static final Duration DEFAULT_TIME_LIMIT = Duration.ofSeconds(60);
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_WORKING_DIR;
 
@@ -46,7 +47,7 @@ public class Configuration {
   private final Path workingDir;
   private final int headcount;
   private final int maxGeneration;
-  private final long timeLimit;
+  private final Duration timeLimit;
   private final int requiredSolutionsCount;
   private final Level logLevel;
   // endregion
@@ -83,7 +84,11 @@ public class Configuration {
     return maxGeneration;
   }
 
-  public long getTimeLimit() {
+  public long getTimeLimitSeconds() {
+    return getTimeLimit().getSeconds();
+  }
+
+  public Duration getTimeLimit() {
     return timeLimit;
   }
 
@@ -109,7 +114,7 @@ public class Configuration {
     private Path workingDir = DEFAULT_WORKING_DIR;
     private int headcount = DEFAULT_HEADCOUNT;
     private int maxGeneration = DEFAULT_MAX_GENERATION;
-    private long timeLimit = DEFAULT_TIME_LIMIT;
+    private Duration timeLimit = DEFAULT_TIME_LIMIT;
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
     private Level logLevel = DEFAULT_LOG_LEVEL;
     // endregion
@@ -192,7 +197,12 @@ public class Configuration {
       return this;
     }
 
-    public Builder setTimeLimit(long timeLimit) {
+    public Builder setTimeLimitSeconds(long timeLimitSeconds) {
+      this.timeLimit = Duration.ofSeconds(timeLimitSeconds);
+      return this;
+    }
+
+    public Builder setTimeLimit(Duration timeLimit) {
       this.timeLimit = timeLimit;
       return this;
     }
@@ -270,7 +280,7 @@ public class Configuration {
     @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
     private void setTimeLimitFromCmdLimeParser(long timeLimit) {
       log.debug("enter setTimeLimit(long)");
-      this.timeLimit = timeLimit;
+      this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
     @Option(name = "-e", aliases = "--required-solutions", usage = "The number of solutions needed to be searched")
