@@ -48,7 +48,8 @@ public class CUILauncher {
   private final List<Path> testSourcePaths = new ArrayList<>();
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-  private Path rootDir;
+  private Path rootDir = Paths.get(System.getProperty("user.dir"))
+      .toAbsolutePath();
   private int headcount = 100;
   private int maxGeneration = 10;
   private long timeLimit = 60;
@@ -68,7 +69,7 @@ public class CUILauncher {
     return rootDir;
   }
 
-  @Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>",
+  @Option(name = "-r", aliases = "--root-dir", required = false, metaVar = "<path>",
       usage = "Path of a root directory of a target project")
   public void setRootDir(final String rootDir) {
     log.debug("enter setRootDir(String)");
@@ -180,16 +181,21 @@ public class CUILauncher {
 
     final Path currentDir = Paths.get(System.getProperty("user.dir"));
     final Path projectRootDir = launcher.getRootDir();
+
     try {
-      if (Files.isSameFile(currentDir, projectRootDir)) {
-        launcher.launch();
-      } else {
-        launcher.launchAsAnotherProcess();
+      if (!Files.isSameFile(currentDir, projectRootDir)) {
+        log.warn(
+            "The directory where kGenProg is running is different from the root directory of the given target project.");
+        log.warn(
+            "If the target project include test cases with file I/O, such test cases won't run correctly.");
+        log.warn("We recommend that you run kGenProg with the root directory of the target project as the current directory.");
       }
     } catch (final IOException e) {
       log.error("directory \"{}\" is not accessible", projectRootDir);
       System.exit(1);
     }
+
+    launcher.launch();
 
     log.info("end kGenProg");
   }

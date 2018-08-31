@@ -141,6 +141,7 @@ public class CUILauncherTest {
     launcher.setRootDir("example/CloseToZero03");
     launcher.addProductSourcePath("src/example/CloseToZero.java");
     launcher.addTestSourcePath("src/example/CloseToZeroTest.java");
-    launcher.launchAsAnotherProcess();
+    launcher.setLogLevelDebug(true);
+    launcher.launch();
   }
 }
