@@ -1,13 +1,11 @@
 package jp.kusumotolab.kgenprog;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jp.kusumotolab.kgenprog.Configuration.Builder;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Base;
@@ -29,7 +27,7 @@ public class KGenProgMain {
 
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
-  private final TargetProject targetProject;
+  private final Configuration config;
   private final FaultLocalization faultLocalization;
   private final Mutation mutation;
   private final Crossover crossover;
@@ -39,16 +37,24 @@ public class KGenProgMain {
   private final TestExecutor testExecutor;
   private final PatchGenerator patchGenerator;
 
-  // 以下，一時的なフィールド #146 で解決すべき
-  private final long timeoutSeconds;
-  private final int maxGeneration;
-  private final int requiredSolutions;
+  public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
+      final Mutation mutation, final Crossover crossover,
+      final SourceCodeGeneration sourceCodeGeneration,
+      final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
+      final PatchGenerator patchGenerator) {
 
-  // TODO #146
-  // workingdirのパスを一時的にMainに記述
-  // 別クラスが管理すべき情報？
-  public final Path workingPath;
+    this.config = config;
+    this.faultLocalization = faultLocalization;
+    this.mutation = mutation;
+    this.crossover = crossover;
+    this.sourceCodeGeneration = sourceCodeGeneration;
+    this.sourceCodeValidation = sourceCodeValidation;
+    this.variantSelection = variantSelection;
+    this.testExecutor = new TestExecutor(config);
+    this.patchGenerator = patchGenerator;
+  }
 
+  @Deprecated
   public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
@@ -56,9 +62,12 @@ public class KGenProgMain {
       final PatchGenerator patchGenerator, final Path workingPath) {
 
     this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, workingPath, 60, 10, 1);
+        sourceCodeValidation, variantSelection, patchGenerator, workingPath,
+        Configuration.DEFAULT_TIME_LIMIT, Configuration.DEFAULT_MAX_GENERATION,
+        Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
   }
 
+  @Deprecated
   public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
@@ -66,31 +75,21 @@ public class KGenProgMain {
       final PatchGenerator patchGenerator, final Path workingPath, final long timeout,
       final int maxGeneration, final int requiredSolutions) {
 
-    this.workingPath = workingPath;
-    try {
-      if (Files.exists(this.workingPath)) {
-        FileUtils.deleteDirectory(this.workingPath.toFile());
-      }
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
+    Configuration.Builder builder = new Builder(targetProject)
+        .setWorkingDir(workingPath)
+        .setTimeLimit(timeout)
+        .setMaxGeneration(maxGeneration)
+        .setRequiredSolutionsCount(requiredSolutions);
 
-    this.targetProject = targetProject;
+    this.config = builder.build();
     this.faultLocalization = faultLocalization;
     this.mutation = mutation;
     this.crossover = crossover;
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-
-    // TODO Should be retrieved from config
-    this.testExecutor = new TestExecutor(targetProject, 600);
-
+    this.testExecutor = new TestExecutor(config);
     this.patchGenerator = patchGenerator;
-
-    this.timeoutSeconds = timeout;
-    this.maxGeneration = maxGeneration;
-    this.requiredSolutions = requiredSolutions;
   }
 
   public List<Variant> run() {
@@ -99,13 +98,14 @@ public class KGenProgMain {
     final List<Variant> completedVariants = new ArrayList<>();
 
     List<Variant> selectedVariants = new ArrayList<>();
-    final Variant initialVariant = targetProject.getInitialVariant();
+    final Variant initialVariant = config.getTargetProject()
+        .getInitialVariant();
     selectedVariants.add(initialVariant);
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final StopWatch stopwatch = new StopWatch(timeoutSeconds);
+    final StopWatch stopwatch = new StopWatch(this.config.getTimeLimit());
     stopwatch.start();
     final OrdinalNumber generation = new OrdinalNumber(1);
     final OrdinalNumber foundSolutions = new OrdinalNumber(0);
@@ -118,7 +118,7 @@ public class KGenProgMain {
       final List<Gene> genes = new ArrayList<>();
       for (final Variant variant : selectedVariants) {
         final List<Suspiciousness> suspiciousnesses =
-            faultLocalization.exec(targetProject, variant, testExecutor);
+            faultLocalization.exec(config.getTargetProject(), variant, testExecutor);
         final List<Base> bases = mutation.exec(suspiciousnesses);
         genes.addAll(variant.getGene()
             .generateNextGenerationGenes(bases));
@@ -129,9 +129,9 @@ public class KGenProgMain {
       final List<Variant> currentGenerationVariants = new ArrayList<>();
       for (final Gene gene : genes) {
         final GeneratedSourceCode generatedSourceCode =
-            sourceCodeGeneration.exec(gene, targetProject);
+            sourceCodeGeneration.exec(gene, config.getTargetProject());
         final Fitness fitness =
-            sourceCodeValidation.exec(generatedSourceCode, targetProject, testExecutor);
+            sourceCodeValidation.exec(generatedSourceCode, config.getTargetProject(), testExecutor);
         final Variant variant = new Variant(gene, fitness, generatedSourceCode);
         currentGenerationVariants.add(variant);
 
@@ -178,12 +178,12 @@ public class KGenProgMain {
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
     log.debug("enter reachedMaxGeneration(OrdinalNumber)");
-    return this.maxGeneration <= generation.get();
+    return this.config.getMaxGeneration() <= generation.get();
   }
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     log.debug("enter areEnoughCompletedVariants(List<Variant>)");
-    return this.requiredSolutions <= completedVariants.size();
+    return this.config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
   private void logPatch(final List<Variant> completedVariants) {
