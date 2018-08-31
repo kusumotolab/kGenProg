@@ -6,24 +6,27 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class TestExecutor {
 
-  private static final long DEFAULT_TIMEOUT_SECONDS = 600;
   private final TargetProject targetProject;
   private final long timeoutSeconds;
 
-  public TestExecutor(final TargetProject targetProject) {
-    this(targetProject, DEFAULT_TIMEOUT_SECONDS);
+  public TestExecutor(final Configuration config) {
+    this(config.getTargetProject(), config.getTimeLimit());
   }
 
+  @Deprecated
+  public TestExecutor(final TargetProject targetProject) {
+    this(targetProject, Configuration.DEFAULT_TIME_LIMIT);
+  }
+
+  @Deprecated
   public TestExecutor(final TargetProject targetProject, final long timeoutSeconds) {
     this.targetProject = targetProject;
-
-    // TODO
-    // timeoutSecondsはconfigから取り出すべき
     this.timeoutSeconds = timeoutSeconds;
   }
 
