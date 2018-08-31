@@ -63,7 +63,7 @@ public class KGenProgMain {
 
     this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
         sourceCodeValidation, variantSelection, patchGenerator, workingPath,
-        Configuration.DEFAULT_TIME_LIMIT, Configuration.DEFAULT_MAX_GENERATION,
+        Configuration.DEFAULT_TIME_LIMIT.getSeconds(), Configuration.DEFAULT_MAX_GENERATION,
         Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
   }
 
@@ -77,7 +77,7 @@ public class KGenProgMain {
 
     Configuration.Builder builder = new Builder(targetProject)
         .setWorkingDir(workingPath)
-        .setTimeLimit(timeout)
+        .setTimeLimitSeconds(timeout)
         .setMaxGeneration(maxGeneration)
         .setRequiredSolutionsCount(requiredSolutions);
 
@@ -105,7 +105,7 @@ public class KGenProgMain {
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final StopWatch stopwatch = new StopWatch(this.config.getTimeLimit());
+    final StopWatch stopwatch = new StopWatch(this.config.getTimeLimitSeconds());
     stopwatch.start();
     final OrdinalNumber generation = new OrdinalNumber(1);
     final OrdinalNumber foundSolutions = new OrdinalNumber(0);
