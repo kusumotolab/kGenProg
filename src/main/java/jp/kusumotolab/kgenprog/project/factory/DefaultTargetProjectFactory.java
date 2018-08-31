@@ -27,26 +27,34 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
   public DefaultTargetProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
 
+    log.info(
+        "enter DefaultTargetProjectFatory(Path, List<Path>, List<Path>, List<Path>, JUnitVersion");
+
     this.rootPath = rootPath;
-    this.productSourcePaths = getFilePaths(pathsForProductSource, ".java").stream()
+    this.productSourcePaths = getFilePaths(rootPath, pathsForProductSource, ".java").stream()
         .map(ProductSourcePath::new)
         .collect(Collectors.toList());
-    this.testSourcePaths = getFilePaths(pathsForTestSource, ".java").stream()
+    this.testSourcePaths = getFilePaths(rootPath, pathsForTestSource, ".java").stream()
         .map(TestSourcePath::new)
         .collect(Collectors.toList());
-    this.classPaths = getFilePaths(pathsForClass, ".class", ".jar").stream()
+    this.classPaths = getFilePaths(rootPath, pathsForClass, ".class", ".jar").stream()
         .map(ClassPath::new)
         .collect(Collectors.toList());
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
+
+    log.info(
+        "exit DefaultTargetProjectFatory(Path, List<Path>, List<Path>, List<Path>, JUnitVersion");
   }
 
   @Override
   public TargetProject create() {
+    log.info("enter create()");
     return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPaths);
   }
 
   @Override
   public boolean isApplicable() {
+    log.info("enter isApplicable()");
     return true;
   }
 
@@ -56,9 +64,12 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
    * @param paths
    * @return
    */
-  private static List<Path> getFilePaths(final List<Path> paths, String... suffixes) {
+  private static List<Path> getFilePaths(final Path projectRootPath, final List<Path> paths,
+      String... suffixes) {
     final List<Path> javaFilePaths = new ArrayList<>();
-    for (final Path path : paths) {
+    for (final Path pathInProject : paths) {
+
+      final Path path = projectRootPath.resolve(pathInProject);
 
       if (Files.isRegularFile(path) && endsWith(path, suffixes)) {
         javaFilePaths.add(path);
