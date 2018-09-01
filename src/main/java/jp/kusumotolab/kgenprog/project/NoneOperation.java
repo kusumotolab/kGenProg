@@ -6,10 +6,4 @@ public class NoneOperation implements Operation {
   public GeneratedSourceCode apply(GeneratedSourceCode generatedSourceCode, ASTLocation location) {
     return generatedSourceCode;
   }
-
-  @Override
-  public GeneratedSourceCode applyDirectly(GeneratedSourceCode generatedSourceCode,
-      ASTLocation location) {
-    return generatedSourceCode;
-  }
 }

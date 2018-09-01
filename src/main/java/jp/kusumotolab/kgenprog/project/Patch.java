@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +34,7 @@ public class Patch {
   }
 
   public String getDiff() {
-    final List<String> formattedDiff = new ArrayList<>(diff);
-    return String.join(System.lineSeparator(), formattedDiff);
+    return String.join(System.lineSeparator(), diff);
   }
 
   public void write(final String path) {
@@ -48,5 +46,4 @@ public class Patch {
       log.error(e.getMessage(), e);
     }
   }
-
 }

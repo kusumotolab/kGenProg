@@ -25,10 +25,7 @@ import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -37,9 +34,9 @@ public class CUILauncher {
 
   // region Fields
   private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
-  private final List<ClassPath> classPaths = new ArrayList<>();
-  private final List<ProductSourcePath> productSourcePaths = new ArrayList<>();
-  private final List<TestSourcePath> testSourcePaths = new ArrayList<>();
+  private final List<Path> classPaths = new ArrayList<>();
+  private final List<Path> productSourcePaths = new ArrayList<>();
+  private final List<Path> testSourcePaths = new ArrayList<>();
   private final ch.qos.logback.classic.Logger rootLogger =
       (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
   private Path rootDir;
@@ -69,7 +66,7 @@ public class CUILauncher {
     this.rootDir = Paths.get(rootDir);
   }
 
-  public List<ProductSourcePath> getProductSourcePaths() {
+  public List<Path> getProductSourcePaths() {
     log.debug("enter getSourcePaths()");
     return productSourcePaths;
   }
@@ -78,10 +75,10 @@ public class CUILauncher {
       metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
   public void addProductSourcePath(final String sourcePaths) {
     log.debug("enter addSourcePath(String)");
-    this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths)));
+    this.productSourcePaths.add(Paths.get(sourcePaths));
   }
 
-  public List<TestSourcePath> getTestSourcePaths() {
+  public List<Path> getTestSourcePaths() {
     log.debug("enter getTestPaths()");
     return testSourcePaths;
   }
@@ -91,10 +88,10 @@ public class CUILauncher {
       usage = "Paths of the root directories holding test codes")
   public void addTestSourcePath(final String testPaths) {
     log.debug("enter addTestPath(String)");
-    this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths)));
+    this.testSourcePaths.add(Paths.get(testPaths));
   }
 
-  public List<ClassPath> getClassPaths() {
+  public List<Path> getClassPaths() {
     log.debug("enter getClassPaths()");
     return classPaths;
   }
@@ -103,7 +100,7 @@ public class CUILauncher {
       metaVar = "<class path> ...", usage = "Class paths required to build the target project")
   public void addClassPath(final String classPaths) {
     log.debug("enter addClassPath(String)");
-    this.classPaths.add(new ClassPath(Paths.get(classPaths)));
+    this.classPaths.add(Paths.get(classPaths));
   }
 
   public Level getLogLevel() {
@@ -187,8 +184,7 @@ public class CUILauncher {
     random.setSeed(0);
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);
-    final Mutation mutation =
-        new RandomMutation(10, random, rouletteStatementSelection);
+    final Mutation mutation = new RandomMutation(10, random, rouletteStatementSelection);
     final Crossover crossover = new SinglePointCrossover(random);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
