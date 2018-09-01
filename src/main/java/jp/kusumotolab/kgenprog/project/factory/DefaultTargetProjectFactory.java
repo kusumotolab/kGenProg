@@ -54,7 +54,7 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
 
   @Override
   public boolean isApplicable() {
-    log.info("enter isApplicable()");
+    log.debug("enter isApplicable()");
     return true;
   }
 
