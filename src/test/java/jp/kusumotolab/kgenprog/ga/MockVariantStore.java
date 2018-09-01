@@ -16,4 +16,10 @@ class MockVariantStore extends VariantStore {
   public List<Variant> getCurrentVariants(){
     return currentVariants;
   }
+  
+  @Override
+  public Variant createVariant(final Gene gene) {
+    
+    return new Variant(gene, null, null, null, null);
+  }
 }

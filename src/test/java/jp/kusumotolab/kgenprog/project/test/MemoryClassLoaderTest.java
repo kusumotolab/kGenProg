@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
@@ -46,8 +45,7 @@ public class MemoryClassLoaderTest {
   public static void beforeClass() {
     // 一度だけビルドしておく
     final TargetProject targetProject = TargetProjectFactory.create(RootPath);
-    final Variant variant = TestUtil.createVariant(targetProject);
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     buildResults = projectBuilder.build(generatedSourceCode);
   }

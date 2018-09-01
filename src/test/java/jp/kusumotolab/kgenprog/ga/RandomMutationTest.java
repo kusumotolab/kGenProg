@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -18,6 +19,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -47,21 +49,19 @@ public class RandomMutationTest {
       return true;
     }
   }
-  
+
   @Test
   public void testExec() throws NoSuchFieldException, IllegalAccessException {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
-    final Variant initialVariant = TestUtil.createVariant(targetProject);
+    final GeneratedSourceCode sourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final Random random = new MockRandom();
     random.setSeed(0);
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection);
-    randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getAsts());
+    randomMutation.setCandidates(sourceCode.getAsts());
 
-    final GeneratedAST generatedAST = new ArrayList<>(initialVariant.getGeneratedSourceCode()
-        .getAsts()).get(0);
+    final GeneratedAST generatedAST = new ArrayList<>(sourceCode.getAsts()).get(0);
     final ProductSourcePath sourcePath = generatedAST.getProductSourcePath();
     final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
         .getRoot()
@@ -82,9 +82,10 @@ public class RandomMutationTest {
         })
         .collect(Collectors.toList());
 
-    final Variant variant = new Variant(null, null, null, null, suspiciousnesses);
+    final Gene initialGene = new SimpleGene(Collections.emptyList());
+    final Variant variant = new Variant(initialGene, null, null, null, suspiciousnesses);
     final VariantStore variantStore = new MockVariantStore(Arrays.asList(variant));
-    
+
     // 正しく15個のVariantが生成されるかのテスト
     final List<Variant> variantList = randomMutation.exec(variantStore);
     assertThat(variantList).hasSize(15);
@@ -122,7 +123,7 @@ public class RandomMutationTest {
   private Base getLastBase(final Variant variant) {
     final List<Base> bases = variant.getGene()
         .getBases();
-    
+
     if (bases.size() == 0) {
       return null;
     }
