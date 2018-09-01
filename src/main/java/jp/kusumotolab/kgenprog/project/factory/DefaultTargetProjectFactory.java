@@ -27,7 +27,7 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
   public DefaultTargetProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
 
-    log.info(
+    log.debug(
         "enter DefaultTargetProjectFatory(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
 
     this.rootPath = rootPath;
@@ -42,13 +42,13 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
         .collect(Collectors.toList());
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
 
-    log.info(
+    log.debug(
         "exit DefaultTargetProjectFatory(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
   }
 
   @Override
   public TargetProject create() {
-    log.info("enter create()");
+    log.debug("enter create()");
     return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPaths);
   }
 
