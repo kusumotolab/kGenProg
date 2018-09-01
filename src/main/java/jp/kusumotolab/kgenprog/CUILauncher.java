@@ -198,24 +198,6 @@ public class CUILauncher {
   public void launch() {
     log.debug("enter launch()");
 
-    final ClassLoader classLoader = CUILauncher.class.getClassLoader();
-    final URL junit3junit = classLoader.getResource("junit3/junit-3.8.2.jar");
-    final URL junit4junit = classLoader.getResource("junit4/junit-4.12.jar");
-    final URL junit4hamcrest = classLoader.getResource("junit4/hamcrest-core-1.3.jar");
-
-    try {
-
-      System.err.println("1 junit3junit: " + junit3junit.toURI());
-      System.err.println("1 junit4junit: " + junit4junit.toURI());
-      System.err.println("1 junit4hamcrest: " + junit4hamcrest.toURI());
-
-      System.err.println("2 junit3junit: " + Paths.get(junit3junit.toURI()));
-      System.err.println("2 junit4junit: " + Paths.get(junit4junit.toURI()));
-      System.err.println("2 junit4hamcrest: " + Paths.get(junit4hamcrest.toURI()));
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-    }
-
     final TargetProject targetProject = TargetProjectFactory.create(getRootDir(),
         getProductSourcePaths(), getTestSourcePaths(), getClassPaths(), JUnitVersion.JUNIT4);
 
