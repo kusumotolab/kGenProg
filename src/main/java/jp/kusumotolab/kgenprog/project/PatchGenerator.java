@@ -20,7 +20,6 @@ public class PatchGenerator {
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
   public List<Patch> exec(final Variant modifiedVariant) {
-
     log.debug("enter exec(Variant)");
 
     final List<Patch> patches = new ArrayList<>();
@@ -46,7 +45,7 @@ public class PatchGenerator {
 
   /***
    * patch オブジェクトの生成を行う
-   * 
+   *
    * @param ast
    * @return
    * @throws IOException

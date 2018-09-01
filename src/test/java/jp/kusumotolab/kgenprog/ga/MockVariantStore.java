@@ -19,7 +19,6 @@ class MockVariantStore extends VariantStore {
   
   @Override
   public Variant createVariant(final Gene gene) {
-    
     return new Variant(gene, null, null, null, null);
   }
 }
