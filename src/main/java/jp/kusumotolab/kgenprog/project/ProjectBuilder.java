@@ -50,22 +50,23 @@ public class ProjectBuilder {
         compiler.getStandardFileManager(null, null, null);
     final InMemoryClassManager inMemoryFileManager = new InMemoryClassManager(standardFileManager);
 
-    // コンパイル対象の JavaFileObject を生成
-    final Iterable<? extends JavaFileObject> javaFileObjects =
-        generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
-
+    // コンパイルの引数を生成
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
     compilationOptions.add("-classpath");
     compilationOptions.add(String.join(File.pathSeparator, this.targetProject.getClassPaths()
         .stream()
-        .map(cp -> cp.path.toString())
+        .map(cp -> cp.url.toString())
         .collect(Collectors.toList())));
     compilationOptions.add("-verbose");
-
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
     final List<String> verboseLines = new ArrayList<>();
+
+    // コンパイル対象の JavaFileObject を生成
+    final Iterable<? extends JavaFileObject> javaFileObjects =
+        generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
+
     final CompilationTask task = compiler.getTask(new Writer() {
 
       @Override
@@ -81,6 +82,8 @@ public class ProjectBuilder {
       public void close() throws IOException {}
     }, inMemoryFileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
+    compilationOptions.forEach(System.out::println);
+
     try {
       inMemoryFileManager.close();
     } catch (final IOException e) {
@@ -89,6 +92,8 @@ public class ProjectBuilder {
 
     final boolean isBuildFailed = !task.call();
     if (isBuildFailed) {
+      diagnostics.getDiagnostics()
+          .forEach(System.err::println);
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
       return EmptyBuildResults.instance;
     }
