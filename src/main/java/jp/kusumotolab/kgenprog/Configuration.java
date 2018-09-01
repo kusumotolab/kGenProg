@@ -17,9 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
-import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -107,9 +104,9 @@ public class Configuration {
     // region Fields
     private static final Logger log = LoggerFactory.getLogger(Builder.class);
     private Path rootDir;
-    private List<ProductSourcePath> productSourcePaths;
-    private List<TestSourcePath> testSourcePaths;
-    private List<ClassPath> classPaths = new ArrayList<>();
+    private List<Path> productPaths = new ArrayList<>();
+    private List<Path> testPaths = new ArrayList<>();
+    private List<Path> classPaths = new ArrayList<>();
     private TargetProject targetProject;
     private Path workingDir = DEFAULT_WORKING_DIR;
     private int headcount = DEFAULT_HEADCOUNT;
@@ -121,20 +118,14 @@ public class Configuration {
 
     // region Constructors
 
-    public Builder(Path rootDir, Path productSourcePath, Path testSourcePath) {
-      this(rootDir, new ProductSourcePath(productSourcePath), new TestSourcePath(testSourcePath));
+    public Builder(Path rootDir, Path productPath, Path testPath) {
+      this(rootDir, ImmutableList.of(productPath), ImmutableList.of(testPath));
     }
 
-    public Builder(Path rootDir, ProductSourcePath productSourcePath,
-        TestSourcePath testSourcePath) {
-      this(rootDir, ImmutableList.of(productSourcePath), ImmutableList.of(testSourcePath));
-    }
-
-    public Builder(Path rootDir, List<ProductSourcePath> productSourcePaths,
-        List<TestSourcePath> testSourcePaths) {
+    public Builder(Path rootDir, List<Path> productPaths, List<Path> testPaths) {
       this.rootDir = rootDir;
-      this.productSourcePaths = productSourcePaths;
-      this.testSourcePaths = testSourcePaths;
+      this.productPaths = productPaths;
+      this.testPaths = testPaths;
     }
 
     public Builder(TargetProject targetProject) {
@@ -165,19 +156,19 @@ public class Configuration {
 
     public Configuration build() {
       if (targetProject == null) {
-        targetProject = TargetProjectFactory.create(rootDir, productSourcePaths,
-            testSourcePaths, classPaths, JUnitVersion.JUNIT4);
+        targetProject = TargetProjectFactory.create(rootDir, productPaths,
+            testPaths, classPaths, JUnitVersion.JUNIT4);
       }
 
       return new Configuration(this);
     }
 
-    public Builder addClasPaths(Collection<ClassPath> classPaths) {
+    public Builder addClasPaths(Collection<Path> classPaths) {
       this.classPaths.addAll(classPaths);
       return this;
     }
 
-    public Builder addClasPath(ClassPath classPath) {
+    public Builder addClasPath(Path classPath) {
       this.classPaths.add(classPath);
       return this;
     }
@@ -234,27 +225,24 @@ public class Configuration {
 
     @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
         metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
-    private void addProductSourcePathFromCmdLineParser(final String sourcePaths) {
+    private void addProductSourcePathFromCmdLineParser(final String sourcePath) {
       log.debug("enter addSourcePath(String)");
-      this.productSourcePaths = new ArrayList<>();
-      this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths)));
+      this.productPaths.add(Paths.get(sourcePath));
     }
 
     @Option(name = "-t", aliases = "--test", required = true,
         handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
         usage = "Paths of the root directories holding test codes")
-    private void addTestSourcePathFromCmdLineParser(final String testPaths) {
+    private void addTestSourcePathFromCmdLineParser(final String testPath) {
       log.debug("enter addTestPath(String)");
-      this.testSourcePaths = new ArrayList<>();
-      this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths)));
+      this.testPaths.add(Paths.get(testPath));
     }
 
     @Option(name = "-c", aliases = "--cp", handler = StringArrayOptionHandler.class,
         metaVar = "<class path> ...", usage = "Class paths required to build the target project")
-    private void addClassPathFromCmdLineParser(final String classPaths) {
+    private void addClassPathFromCmdLineParser(final String classPath) {
       log.debug("enter addClassPath(String)");
-      this.classPaths = new ArrayList<>();
-      this.classPaths.add(new ClassPath(Paths.get(classPaths)));
+      this.classPaths.add(Paths.get(classPath));
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
