@@ -16,14 +16,13 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class DefaultSourceCodeGenerationTest {
-  
+
   @Test
   public void testExec() {
     final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Variant initialVariant = TestUtil.createVariant(targetProject);
-    final VariantStore variantStore = getVariantStore(initialVariant);
-    
+    final VariantStore variantStore = getVariantStore(initialVariant); 
     final Base base = new Base(null, new NoneOperation());
     final SimpleGene gene = new SimpleGene(Collections.singletonList(base));
     final DefaultSourceCodeGeneration defaultSourceCodeGeneration = new DefaultSourceCodeGeneration();
@@ -43,7 +42,6 @@ public class DefaultSourceCodeGenerationTest {
     final Variant initialVariant = TestUtil.createVariant(targetProject);
     final VariantStore variantStore = getVariantStore(initialVariant);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
-
     final Gene simpleGene = new SimpleGene(new ArrayList<>());
     final Base noneBase = new Base(null, new NoneOperation());
     final List<Gene> genes = simpleGene.generateNextGenerationGenes(Arrays.asList(noneBase));
