@@ -122,7 +122,8 @@ class TestThread extends Thread {
 
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
     return classpaths.stream()
-        .map(cp -> cp.url)
+        .map(cp -> cp.path.toUri())
+        .map(uri -> toURL(uri))
         .toArray(URL[]::new);
   }
 

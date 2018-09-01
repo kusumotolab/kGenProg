@@ -57,7 +57,7 @@ public class ProjectBuilder {
     compilationOptions.add("-classpath");
     compilationOptions.add(String.join(File.pathSeparator, this.targetProject.getClassPaths()
         .stream()
-        .map(cp -> cp.url.toString())
+        .map(cp -> cp.path.toString())
         .collect(Collectors.toList())));
     compilationOptions.add("-verbose");
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
@@ -82,8 +82,6 @@ public class ProjectBuilder {
       public void close() throws IOException {}
     }, inMemoryFileManager, diagnostics, compilationOptions, null, javaFileObjects);
 
-    compilationOptions.forEach(System.out::println);
-
     try {
       inMemoryFileManager.close();
     } catch (final IOException e) {
@@ -92,8 +90,6 @@ public class ProjectBuilder {
 
     final boolean isBuildFailed = !task.call();
     if (isBuildFailed) {
-      diagnostics.getDiagnostics()
-          .forEach(System.err::println);
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
       return EmptyBuildResults.instance;
     }
