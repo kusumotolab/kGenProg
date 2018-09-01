@@ -227,14 +227,14 @@ public class Configuration {
 
     @Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>",
         usage = "Path of a root directory of a target project")
-    private void setRootDirFromCmdLimeParser(final String rootDir) {
+    private void setRootDirFromCmdLineParser(final String rootDir) {
       log.debug("enter setRootDir(String)");
       this.rootDir = Paths.get(rootDir);
     }
 
     @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
         metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
-    private void addProductSourcePathFromCmdLimeParser(final String sourcePaths) {
+    private void addProductSourcePathFromCmdLineParser(final String sourcePaths) {
       log.debug("enter addSourcePath(String)");
       this.productSourcePaths = new ArrayList<>();
       this.productSourcePaths.add(new ProductSourcePath(Paths.get(sourcePaths)));
@@ -243,7 +243,7 @@ public class Configuration {
     @Option(name = "-t", aliases = "--test", required = true,
         handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
         usage = "Paths of the root directories holding test codes")
-    private void addTestSourcePathFromCmdLimeParser(final String testPaths) {
+    private void addTestSourcePathFromCmdLineParser(final String testPaths) {
       log.debug("enter addTestPath(String)");
       this.testSourcePaths = new ArrayList<>();
       this.testSourcePaths.add(new TestSourcePath(Paths.get(testPaths)));
@@ -251,7 +251,7 @@ public class Configuration {
 
     @Option(name = "-c", aliases = "--cp", handler = StringArrayOptionHandler.class,
         metaVar = "<class path> ...", usage = "Class paths required to build the target project")
-    private void addClassPathFromCmdLimeParser(final String classPaths) {
+    private void addClassPathFromCmdLineParser(final String classPaths) {
       log.debug("enter addClassPath(String)");
       this.classPaths = new ArrayList<>();
       this.classPaths.add(new ClassPath(Paths.get(classPaths)));
@@ -259,45 +259,45 @@ public class Configuration {
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
         usage = "Path of a working directory")
-    private void setWorkingDirFromCmdLimeParser(final String workingDir) {
+    private void setWorkingDirFromCmdLineParser(final String workingDir) {
       log.debug("enter setWorkingDir(String)");
       this.workingDir = Paths.get(workingDir);
     }
 
     @Option(name = "-h", aliases = "--headcount",
         usage = "The number of how many variants are generated maximally in a generation")
-    private void setHeadcountFromCmdLimeParser(int headcount) {
+    private void setHeadcountFromCmdLineParser(int headcount) {
       log.debug("enter setHeadcount(int)");
       this.headcount = headcount;
     }
 
     @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation")
-    private void setMaxGenerationFromCmdLimeParser(int maxGeneration) {
+    private void setMaxGenerationFromCmdLineParser(int maxGeneration) {
       log.debug("enter setMaxGeneration(int)");
       this.maxGeneration = maxGeneration;
     }
 
     @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
-    private void setTimeLimitFromCmdLimeParser(long timeLimit) {
+    private void setTimeLimitFromCmdLineParser(long timeLimit) {
       log.debug("enter setTimeLimit(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
     @Option(name = "-e", aliases = "--required-solutions", usage = "The number of solutions needed to be searched")
-    private void setRequiredSolutionsCountFromCmdLimeParser(int requiredSolutionsCount) {
+    private void setRequiredSolutionsCountFromCmdLineParser(int requiredSolutionsCount) {
       log.debug("enter setTimeLimit(long)");
       this.requiredSolutionsCount = requiredSolutionsCount;
     }
 
     @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.")
-    private void setLogLevelDebugFromCmdLimeParser(boolean isVerbose) {
+    private void setLogLevelDebugFromCmdLineParser(boolean isVerbose) {
       log.debug("enter setLogLevelDebug(boolean)");
       log.info("log level has been set DEBUG");
       logLevel = Level.DEBUG;
     }
 
     @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.")
-    private void setLogLevelErrorFromCmdLimeParser(boolean isQuiet) {
+    private void setLogLevelErrorFromCmdLineParser(boolean isQuiet) {
       log.debug("enter setLogLevelError(boolean)");
       log.info("log level has been set ERROR");
       logLevel = Level.ERROR;
