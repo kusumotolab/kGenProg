@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,9 +29,7 @@ import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
- * 
  * @author shinsuke
- *
  */
 class TestThread extends Thread {
 
@@ -63,17 +60,12 @@ class TestThread extends Thread {
   /**
    * JaCoCo + JUnitの実行． sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．
    * 実行対象のclasspathは通ってることが前提．
-   * 
-   * @param sourceFQNs 計測対象のソースコードのFQNのリスト
-   * @param testFQNs 実行する単体テストのFQNのリスト
-   * @return テストの実行結果（テスト成否やCoverage等）
-   * @throws Exception
    */
   public void run() {
     buildResults = buildProject();
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
-    final List<FullyQualifiedName> sourceFQNs = getTargetFQNs();
+    final List<FullyQualifiedName> targetFQNs = getTargetFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
 
     final TestResults testResults = new TestResults();
@@ -82,7 +74,7 @@ class TestThread extends Thread {
     memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      loadInstrumentedClasses(sourceFQNs);
+      loadInstrumentedClasses(targetFQNs); // こちらの返り値はいらない
       final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
 
       // TODO
@@ -91,7 +83,7 @@ class TestThread extends Thread {
       for (final Class<?> junitClass : junitClasses) {
         final JUnitCore junitCore = new JUnitCore();
         final CoverageMeasurementListener listener =
-            new CoverageMeasurementListener(sourceFQNs, testResults);
+            new CoverageMeasurementListener(targetFQNs, testResults);
         junitCore.addListener(listener);
         junitCore.run(junitClass);
       }
@@ -128,7 +120,6 @@ class TestThread extends Thread {
         .collect(Collectors.toList());
   }
 
-
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
     return classpaths.stream()
         .map(cp -> cp.path.toUri())
@@ -137,8 +128,8 @@ class TestThread extends Thread {
   }
 
   /**
-   * To avoid Malforme
-   * 
+   * To avoid Malform uri in lambda expression
+   *
    * @param uri
    * @return
    */
@@ -153,45 +144,72 @@ class TestThread extends Thread {
     return null;
   }
 
+  /**
+   * 指定fqnsの全てを定義追加・ロードを行い，クラスオブジェクトの集合を返す．
+   * 
+   * @param fqns
+   * @return
+   * @throws ClassNotFoundException
+   * @throws IOException
+   */
   private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
-      throws Exception {
-    final List<Class<?>> loadedClasses = new ArrayList<>();
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-
-    for (final FullyQualifiedName fqn : fqns) {
-      final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
-      final byte[] instrumentedData = getInstrumentedClassBinary(compilatinoUnit.getBytecode());
-      loadedClasses.add(loadClass(fqn, instrumentedData));
-    }
-    return loadedClasses;
-  }
-
-  private byte[] getInstrumentedClassBinary(final byte[] byteCode) throws Exception {
-    final byte[] bytes = jacocoInstrumenter.instrument(byteCode, "");
-    return bytes;
+      throws ClassNotFoundException, IOException {
+    addAllDefinitions(fqns);
+    return loadAllClasses(fqns);
   }
 
   /**
-   * MemoryClassLoaderを使ったクラスロード．
+   * 全クラスを定義内からロードしてクラスオブジェクトの集合を返す．
    * 
-   * @param fqn
-   * @param bytes
+   * @param fqns
    * @return
    * @throws ClassNotFoundException
    */
-  private Class<?> loadClass(final FullyQualifiedName fqn, final byte[] bytes)
+  private List<Class<?>> loadAllClasses(final List<FullyQualifiedName> fqns)
       throws ClassNotFoundException {
-    memoryClassLoader.addDefinition(fqn, bytes);
-    return memoryClassLoader.loadClass(fqn); // force load instrumented class.
+    return fqns.stream()
+        .map(fqn -> loadClass(fqn))
+        .collect(Collectors.toList());
+  }
+
+  /***
+   * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．
+   * 
+   * @param fqns
+   * @throws IOException
+   */
+  private void addAllDefinitions(final List<FullyQualifiedName> fqns) throws IOException {
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    for (final FullyQualifiedName fqn : fqns) {
+      final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
+      final byte[] bytecode = compilatinoUnit.getBytecode();
+      final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
+      memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
+    }
+  }
+
+  /**
+   * 単一クラスをロードしてクラスオブジェクトを返す． Lambdaの中での例外回避のため．
+   * 
+   * @param fqn
+   * @return
+   */
+  private Class<?> loadClass(final FullyQualifiedName fqn) {
+    try {
+      return memoryClassLoader.loadClass(fqn);
+    } catch (ClassNotFoundException e) {
+      // TODO 自動生成された catch ブロック
+      e.printStackTrace();
+    }
+    return null;
   }
 
   /**
    * JUnit実行のイベントリスナー．内部クラス． JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
-   * 
-   * メモ：JUnitには「テスト成功時」のイベントリスナーがないので，テスト成否をDescriptionに強引に追記して管理
-   * 
-   * @author shinsuke
    *
+   * メモ：JUnitには「テスト成功時」のイベントリスナーがないので，テスト成否をDescriptionに強引に追記して管理
+   *
+   * @author shinsuke
    */
   class CoverageMeasurementListener extends RunListener {
 
@@ -202,7 +220,7 @@ class TestThread extends Thread {
 
     /**
      * constructor
-     * 
+     *
      * @param measuredFQNs 計測対象のクラス名一覧
      * @param storedTestResults テスト実行結果の保存先
      * @throws Exception
@@ -238,7 +256,7 @@ class TestThread extends Thread {
 
     /**
      * Failureオブジェクトの持つDescriptionに，当該テストがfailしたことをメモする．
-     * 
+     *
      * @param failure
      */
     private void noteTestExecutionFail(Failure failure) {
@@ -248,7 +266,7 @@ class TestThread extends Thread {
 
     /**
      * Descriptionから当該テストがfailしたかどうかを返す．
-     * 
+     *
      * @param description
      * @return テストがfailしたかどうか
      */
@@ -259,7 +277,7 @@ class TestThread extends Thread {
 
     /**
      * Descriptionから実行したテストメソッドのFQNを取り出す．
-     * 
+     *
      * @param description
      * @return
      */
@@ -270,7 +288,7 @@ class TestThread extends Thread {
 
     /**
      * jacocoにより計測した行ごとのCoverageを回収し，TestResultsに格納する．
-     * 
+     *
      * @throws IOException
      */
     private void collectRuntimeData(final Description description) throws IOException {
@@ -281,7 +299,7 @@ class TestThread extends Thread {
 
     /**
      * jacocoにより計測した行ごとのCoverageを回収する．
-     * 
+     *
      * @param coverageBuilder 計測したCoverageを格納する保存先
      * @throws IOException
      */
@@ -294,10 +312,6 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        // 生のソースのISを取り出す
-        // final InputStream is = getClassFileInputStream(measuredClass);
-        // analyzer.analyzeClass(is, measuredClass.value);
-
         final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
         final CompilationUnit compilatinoUnit =
             compilationPackage.getCompilationUnit(measuredClass.value);
@@ -308,7 +322,7 @@ class TestThread extends Thread {
 
     /**
      * 回収したCoverageを型変換しTestResultsに格納する．
-     * 
+     *
      * @param coverageBuilder Coverageが格納されたビルダー
      * @param description テストの実行情報
      */

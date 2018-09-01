@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
-import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class JDTOperationTest {
@@ -31,13 +30,6 @@ public class JDTOperationTest {
   }
 
   static class ExceptionOperation implements JDTOperation {
-
-    @Override
-    public GeneratedSourceCode applyDirectly(final GeneratedSourceCode generatedSourceCode,
-        final ASTLocation location) {
-      throw new IllegalArgumentException();
-    }
-
     @Override
     public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
         final ASTRewrite astRewrite) {

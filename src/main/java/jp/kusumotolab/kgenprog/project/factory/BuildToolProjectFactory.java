@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
-public abstract class BuildToolProjectFactory implements IProjectFactory {
+public abstract class BuildToolProjectFactory implements ProjectFactory {
 
   protected final Path rootPath;
 

@@ -82,7 +82,7 @@ public class KGenProgMain {
     this.variantSelection = variantSelection;
 
     // TODO Should be retrieved from config
-    this.testExecutor = new TestExecutor(targetProject, 60);
+    this.testExecutor = new TestExecutor(targetProject, 600);
     this.astConstruction = new JDTASTConstruction();
 
     this.patchGenerator = patchGenerator;
@@ -168,7 +168,7 @@ public class KGenProgMain {
     List<Variant> completedVariants = variantStore.getFoundSolutions();
     log.debug("enter outputPatch(VariantStore)");
     for (final Variant completedVariant : completedVariants) {
-      final List<Patch> patches = patchGenerator.exec(variantStore, completedVariant);
+      final List<Patch> patches = patchGenerator.exec(completedVariant);
       log.info(makeVariantId(completedVariants, completedVariant));
       for (final Patch patch : patches) {
         log.info(System.lineSeparator() + patch.getDiff());
