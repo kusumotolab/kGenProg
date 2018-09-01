@@ -17,6 +17,9 @@ public class BuildResults {
   // TODO コンパイルできないときのエラー情報はほんとにこの型でいいか？
   public final DiagnosticCollector<JavaFileObject> diagnostics;
 
+  // ビルド実行時のテキスト出力
+  public final String buildProgressText;
+
   // ソースとクラスファイル間のマッピング
   private final Map<Path, Path> classToSourceMap;
 
@@ -37,11 +40,12 @@ public class BuildResults {
    * @param sourceCode ビルド元となったソースコード
    * @param compilationPackage バイトコード
    * @param diagnostics ビルド時の詳細情報
+   * @param buildProgressText ビルド実行時のテキスト出力
    */
   public BuildResults(final GeneratedSourceCode sourceCode,
       final CompilationPackage compilationPackage,
-      final DiagnosticCollector<JavaFileObject> diagnostics) {
-    this(sourceCode, false, compilationPackage, diagnostics);
+      final DiagnosticCollector<JavaFileObject> diagnostics, final String buildProgressText) {
+    this(sourceCode, false, compilationPackage, diagnostics, buildProgressText);
   }
 
   /**
@@ -50,14 +54,16 @@ public class BuildResults {
    * @param sourceCode ビルド元となったソースコード
    * @param isBuildFailed ビルドの成否
    * @param diagnostics ビルド時の詳細情報
+   * @param buildProgressText ビルド実行時のテキスト出力
    */
   protected BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
       final CompilationPackage compilationPackage,
-      final DiagnosticCollector<JavaFileObject> diagnostics) {
+      final DiagnosticCollector<JavaFileObject> diagnostics, final String buildProgressText) {
     this.sourceCode = sourceCode;
     this.isBuildFailed = isBuildFailed;
     this.compilationPackage = compilationPackage;
     this.diagnostics = diagnostics;
+    this.buildProgressText = buildProgressText;
     this.classToSourceMap = new HashMap<>();
     this.fqnToSourceMap = new HashMap<>();
     this.sourceToFQNMap = new HashMap<>();
