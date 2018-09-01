@@ -7,7 +7,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class TestExecutor {
@@ -31,12 +30,11 @@ public class TestExecutor {
 
   // これを活かす
   public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
-    if (shouldTryBuild(generatedSourceCode)) {
+    if(!generatedSourceCode.isGenerationSuccess()) {
       return EmptyTestResults.instance;
     }
     
     final TestThread testThread = new TestThread(generatedSourceCode, targetProject);
-
     final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
@@ -54,10 +52,6 @@ public class TestExecutor {
     }
 
     return testThread.getTestResults();
-  }
-  
-  private boolean shouldTryBuild(final GeneratedSourceCode sourceCode) {
-    return !sourceCode.equals(GenerationFailedSourceCode.instance);
   }
 
   // これは死ぬ
