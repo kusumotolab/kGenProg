@@ -35,12 +35,17 @@ public class TestUtil {
   
   public static Variant createVariant(final TargetProject project) {
     final Gene gene = new SimpleGene(Collections.emptyList());
-    final List<GeneratedAST> constructAST = new JDTASTConstruction().constructAST(project);
-    final GeneratedSourceCode sourceCode = new GeneratedSourceCode(constructAST);
+    final GeneratedSourceCode sourceCode = createGeneratedSourceCode(project);
     final TestResults testResults = new TestExecutor(project).exec(sourceCode);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
     final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
     return new Variant(gene, sourceCode, testResults, fitness, suspiciousnesses);
+  }
+  
+  public static GeneratedSourceCode createGeneratedSourceCode(final TargetProject project) {
+    final List<GeneratedAST> constructAST = new JDTASTConstruction().constructAST(project);
+    final GeneratedSourceCode sourceCode = new GeneratedSourceCode(constructAST);
+    return sourceCode;
   }
 
 }

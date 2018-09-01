@@ -39,9 +39,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = TestUtil.createVariant(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
-        .getAsts()
+    final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
         .get(0);
 
     // 削除位置の Location 作成
@@ -56,10 +55,9 @@ public class PatchGeneratorTest {
         new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
 
     final DeleteOperation operation = new DeleteOperation();
-    final GeneratedSourceCode code =
-        operation.apply(originalVariant.getGeneratedSourceCode(), location);
-    final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
+    final Variant modifiedVariant = new Variant(
+        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
     final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
         .get(0);
@@ -89,9 +87,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = TestUtil.createVariant(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
-        .getAsts()
+    final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
         .get(0);
 
     // 削除位置の Location 作成
@@ -106,10 +103,9 @@ public class PatchGeneratorTest {
         new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement);
 
     final DeleteOperation operation = new DeleteOperation();
-    final GeneratedSourceCode code =
-        operation.apply(originalVariant.getGeneratedSourceCode(), location);
-    final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
+    final Variant modifiedVariant = new Variant(
+        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
     final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
         .get(0);
@@ -139,9 +135,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = TestUtil.createVariant(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
-        .getAsts()
+    final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
         .get(0);
 
     // 挿入位置のLocation生成
@@ -163,10 +158,9 @@ public class PatchGeneratorTest {
     final Statement insertStatement = jdtAST.newExpressionStatement(invocation);
 
     final InsertOperation operation = new InsertOperation(insertStatement);
-    final GeneratedSourceCode code =
-        operation.apply(originalVariant.getGeneratedSourceCode(), location);
-    final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
+    final Variant modifiedVariant = new Variant(
+        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
     final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
         .get(0);
@@ -193,9 +187,8 @@ public class PatchGeneratorTest {
         .toString();
 
     final TargetProject project = TargetProjectFactory.create(basePath);
-    final Variant originalVariant = TestUtil.createVariant(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalVariant.getGeneratedSourceCode()
-        .getAsts()
+    final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
+    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
         .get(0);
 
     // 挿入位置のLocation生成
@@ -220,10 +213,9 @@ public class PatchGeneratorTest {
         .add(statement);
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
-    final GeneratedSourceCode code =
-        operation.apply(originalVariant.getGeneratedSourceCode(), location);
-    final Variant modifiedVariant =
-        new Variant(new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
+    final Variant modifiedVariant = new Variant(
+        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
     final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
         .get(0);
