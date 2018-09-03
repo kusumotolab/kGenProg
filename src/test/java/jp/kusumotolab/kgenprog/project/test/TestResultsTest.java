@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -24,6 +23,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestResultsTest {
 
@@ -40,8 +40,7 @@ public class TestResultsTest {
     // actual確保のためにテストの実行
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = new ProjectBuilder(targetProject).build(generatedSourceCode);
 
     final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
@@ -103,8 +102,7 @@ public class TestResultsTest {
   public void testToString() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     new ProjectBuilder(targetProject).build(generatedSourceCode);
 
     final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);

@@ -12,7 +12,6 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class OchiaiTest {
@@ -29,12 +28,11 @@ public class OchiaiTest {
   public void testForExample01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = targetProject.getInitialVariant();
-    final TestExecutor testExecutor = new TestExecutor(targetProject);
+    final Variant initialVariant = TestUtil.createVariant(targetProject);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses =
-        fl.exec(targetProject, initialVariant, testExecutor);
+        fl.exec(initialVariant.getGeneratedSourceCode(), initialVariant.getTestResults());
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
@@ -50,12 +48,11 @@ public class OchiaiTest {
   public void testForExample02() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = targetProject.getInitialVariant();
-    final TestExecutor testExecutor = new TestExecutor(targetProject);
+    final Variant initialVariant = TestUtil.createVariant(targetProject);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses =
-        fl.exec(targetProject, initialVariant, testExecutor);
+        fl.exec(initialVariant.getGeneratedSourceCode(), initialVariant.getTestResults());
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
@@ -71,14 +68,12 @@ public class OchiaiTest {
   public void testForFailedProject() throws IOException {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = targetProject.getInitialVariant();
-    final TestExecutor testExecutor = new TestExecutor(targetProject);
+    final Variant initialVariant = TestUtil.createVariant(targetProject);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses =
-        fl.exec(targetProject, initialVariant, testExecutor);
+        fl.exec(initialVariant.getGeneratedSourceCode(), initialVariant.getTestResults());
 
     assertThat(suspiciousnesses).isEmpty();
   }
-
 }
