@@ -53,9 +53,4 @@ public class Variant {
     log.debug("enter getSuspiciousnesses");
     return suspiciousnesses;
   }
-  
-  public Object getStatus() {
-    // TODO impl.
-    return null;
-  }
 }
