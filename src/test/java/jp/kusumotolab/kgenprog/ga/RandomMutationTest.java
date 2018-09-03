@@ -124,7 +124,7 @@ public class RandomMutationTest {
     final List<Base> bases = variant.getGene()
         .getBases();
 
-    if (bases.size() == 0) {
+    if (bases.isEmpty()) {
       return null;
     }
     return bases.get(bases.size() - 1);
