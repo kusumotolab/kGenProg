@@ -30,8 +30,11 @@ public class TestExecutor {
 
   // これを活かす
   public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
+    if(!generatedSourceCode.isGenerationSuccess()) {
+      return EmptyTestResults.instance;
+    }
+    
     final TestThread testThread = new TestThread(generatedSourceCode, targetProject);
-
     final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
