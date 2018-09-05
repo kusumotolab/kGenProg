@@ -31,6 +31,7 @@ public class Configuration {
   public static final Duration DEFAULT_TIME_LIMIT = Duration.ofSeconds(60);
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_WORKING_DIR;
+  public static final long DEFAULT_RANDOM_SEED = 0;
 
   static {
     try {
@@ -49,6 +50,7 @@ public class Configuration {
   private final Duration timeLimit;
   private final int requiredSolutionsCount;
   private final Level logLevel;
+  private final long randomSeed;
   // endregion
 
   // region Constructor
@@ -62,6 +64,7 @@ public class Configuration {
     timeLimit = builder.timeLimit;
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
+    randomSeed = builder.randomSeed;
   }
 
   // endregion
@@ -102,6 +105,10 @@ public class Configuration {
     return logLevel;
   }
 
+  public long getRandomSeed() {
+    return randomSeed;
+  }
+
   public static class Builder {
 
     // region Fields
@@ -118,6 +125,7 @@ public class Configuration {
     private Duration timeLimit = DEFAULT_TIME_LIMIT;
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
     private Level logLevel = DEFAULT_LOG_LEVEL;
+    private long randomSeed = DEFAULT_RANDOM_SEED;
     // endregion
 
     // region Constructors
@@ -221,6 +229,11 @@ public class Configuration {
       return this;
     }
 
+    public Builder setRandomSeed(long randomSeed) {
+      this.randomSeed = randomSeed;
+      return this;
+    }
+
     // endregion
 
     // region Methods for CmdLineParser
@@ -307,6 +320,12 @@ public class Configuration {
       logLevel = Level.ERROR;
     }
 
+    @Option(name = "-a", aliases = "--random-seed",
+        usage = "The seed of a random seed generator used across this program")
+    private void setRandomSeedFromCmdLineParser(long randomSeed) {
+      log.debug("enter setRandomSeedFromCmdLineParser(long)");
+      this.randomSeed = randomSeed;
+    }
     // endregion
   }
 }
