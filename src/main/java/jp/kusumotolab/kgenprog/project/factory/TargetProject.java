@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import jp.kusumotolab.kgenprog.ga.Fitness;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.SimpleGene;
@@ -59,4 +60,23 @@ public class TargetProject {
     this.testSourcePaths = testSourcePaths;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TargetProject project = (TargetProject) o;
+    return Objects.equals(rootPath, project.rootPath) &&
+        Objects.equals(getProductSourcePaths(), project.getProductSourcePaths()) &&
+        Objects.equals(getTestSourcePaths(), project.getTestSourcePaths()) &&
+        Objects.equals(getClassPaths(), project.getClassPaths());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(rootPath, getProductSourcePaths(), getTestSourcePaths(), getClassPaths());
+  }
 }
