@@ -25,6 +25,7 @@ public class Configuration {
 
   // region Fields
   public static final int DEFAULT_MAX_GENERATION = 10;
+  public static final int DEFAULT_SIBLINGS_COUNT = 10;
   public static final int DEFAULT_HEADCOUNT = 100;
   public static final int DEFAULT_REQUIRED_SOLUTIONS_COUNT = 1;
   public static final Duration DEFAULT_TIME_LIMIT = Duration.ofSeconds(60);
@@ -42,6 +43,7 @@ public class Configuration {
 
   private final TargetProject targetProject;
   private final Path workingDir;
+  private final int siblingsCount;
   private final int headcount;
   private final int maxGeneration;
   private final Duration timeLimit;
@@ -54,6 +56,7 @@ public class Configuration {
   private Configuration(Builder builder) {
     targetProject = builder.targetProject;
     workingDir = builder.workingDir;
+    siblingsCount = builder.siblingsCount;
     headcount = builder.headcount;
     maxGeneration = builder.maxGeneration;
     timeLimit = builder.timeLimit;
@@ -63,14 +66,16 @@ public class Configuration {
 
   // endregion
 
-  // region Methods
-
   public TargetProject getTargetProject() {
     return targetProject;
   }
 
   public Path getWorkingDir() {
     return workingDir;
+  }
+
+  public int getSiblingsCount() {
+    return siblingsCount;
   }
 
   public int getHeadcount() {
@@ -97,8 +102,6 @@ public class Configuration {
     return logLevel;
   }
 
-  // endregion
-
   public static class Builder {
 
     // region Fields
@@ -109,6 +112,7 @@ public class Configuration {
     private List<Path> classPaths = new ArrayList<>();
     private TargetProject targetProject;
     private Path workingDir = DEFAULT_WORKING_DIR;
+    private int siblingsCount = DEFAULT_SIBLINGS_COUNT;
     private int headcount = DEFAULT_HEADCOUNT;
     private int maxGeneration = DEFAULT_MAX_GENERATION;
     private Duration timeLimit = DEFAULT_TIME_LIMIT;
@@ -175,6 +179,11 @@ public class Configuration {
 
     public Builder setWorkingDir(Path workingDir) {
       this.workingDir = workingDir;
+      return this;
+    }
+
+    public Builder setSiblingsCount(int siblingsCount) {
+      this.siblingsCount = siblingsCount;
       return this;
     }
 
@@ -250,6 +259,13 @@ public class Configuration {
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
       log.debug("enter setWorkingDir(String)");
       this.workingDir = Paths.get(workingDir);
+    }
+
+    @Option(name = "-i", aliases = "--siblings-count",
+        usage = "The number of how many child variants are generated from a parent")
+    private void setSiblingsCountFromCmdLineParser(int siblingsCount) {
+      log.debug("enter setSiblingsCountFromCmdLineParser(int)");
+      this.siblingsCount = siblingsCount;
     }
 
     @Option(name = "-h", aliases = "--headcount",
