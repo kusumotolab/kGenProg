@@ -62,8 +62,8 @@ public class CUILauncher {
 
   // region Private Method
 
-  private void setLogLevel(Level logLevel) {
-    ch.qos.logback.classic.Logger rootLogger =
+  private void setLogLevel(final Level logLevel) {
+    final ch.qos.logback.classic.Logger rootLogger =
         (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     rootLogger.setLevel(logLevel);
   }
