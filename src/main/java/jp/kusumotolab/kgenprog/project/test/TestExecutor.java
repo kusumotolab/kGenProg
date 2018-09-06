@@ -8,38 +8,24 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class TestExecutor {
 
-  private final TargetProject targetProject;
-  private final long timeoutSeconds;
+  private final Configuration config;
 
   public TestExecutor(final Configuration config) {
-    this(config.getTargetProject(), config.getTimeLimitSeconds());
+    this.config = config;
   }
-
-  @Deprecated
-  public TestExecutor(final TargetProject targetProject) {
-    this(targetProject, Configuration.DEFAULT_TIME_LIMIT.getSeconds());
-  }
-
-  @Deprecated
-  public TestExecutor(final TargetProject targetProject, final long timeoutSeconds) {
-    this.targetProject = targetProject;
-    this.timeoutSeconds = timeoutSeconds;
-  }
-
 
   // これを活かす
   public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
-    final TestThread testThread = new TestThread(generatedSourceCode, targetProject);
+    final TestThread testThread = new TestThread(generatedSourceCode, config.getTargetProject());
 
     final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
     try {
-      future.get(timeoutSeconds, TimeUnit.SECONDS);
+      future.get(config.getTimeLimitSeconds(), TimeUnit.SECONDS);
     } catch (final ExecutionException e) {
       // TODO Should handle safely
       // Executor側での例外をそのまま通す．

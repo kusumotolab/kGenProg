@@ -1,11 +1,9 @@
 package jp.kusumotolab.kgenprog;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.Configuration.Builder;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Base;
@@ -20,7 +18,6 @@ import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMain {
@@ -44,44 +41,6 @@ public class KGenProgMain {
       final PatchGenerator patchGenerator) {
 
     this.config = config;
-    this.faultLocalization = faultLocalization;
-    this.mutation = mutation;
-    this.crossover = crossover;
-    this.sourceCodeGeneration = sourceCodeGeneration;
-    this.sourceCodeValidation = sourceCodeValidation;
-    this.variantSelection = variantSelection;
-    this.testExecutor = new TestExecutor(config);
-    this.patchGenerator = patchGenerator;
-  }
-
-  @Deprecated
-  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
-      final Mutation mutation, final Crossover crossover,
-      final SourceCodeGeneration sourceCodeGeneration,
-      final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final PatchGenerator patchGenerator, final Path workingPath) {
-
-    this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, workingPath,
-        Configuration.DEFAULT_TIME_LIMIT.getSeconds(), Configuration.DEFAULT_MAX_GENERATION,
-        Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
-  }
-
-  @Deprecated
-  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
-      final Mutation mutation, final Crossover crossover,
-      final SourceCodeGeneration sourceCodeGeneration,
-      final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final PatchGenerator patchGenerator, final Path workingPath, final long timeout,
-      final int maxGeneration, final int requiredSolutions) {
-
-    Configuration.Builder builder = new Builder(targetProject)
-        .setWorkingDir(workingPath)
-        .setTimeLimitSeconds(timeout)
-        .setMaxGeneration(maxGeneration)
-        .setRequiredSolutionsCount(requiredSolutions);
-
-    this.config = builder.build();
     this.faultLocalization = faultLocalization;
     this.mutation = mutation;
     this.crossover = crossover;
