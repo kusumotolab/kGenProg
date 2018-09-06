@@ -415,7 +415,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildWithFromCmdLineArgsMaxGeneration() {
+  public void testBuildFromCmdLineArgsWithMaxGeneration() {
     final int maxGeneration = 50;
     final String[] args = {
         "-r", rootDir.toString(),
@@ -444,7 +444,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildWithFromCmdLineArgsTimeLimit() {
+  public void testBuildFromCmdLineArgsWithTimeLimit() {
     final Duration timeLimit = Duration.ofSeconds(1800);
     final String[] args = {
         "-r", rootDir.toString(),
@@ -472,7 +472,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildWithFromCmdLineArgsRequiredSolutionsCount() {
+  public void testBuildFromCmdLineArgsWithRequiredSolutionsCount() {
     final int requiredSolutionsCount = 10;
     final String[] args = {
         "-r", rootDir.toString(),
@@ -500,7 +500,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromCmdLineArgsLogLevelWithVerbose() {
+  public void testBuildFromCmdLineArgsWithVerbose() {
     final String[] args = {
         "-r", rootDir.toString(),
         "-s", productPath.toString(),
@@ -556,7 +556,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildWithFromCmdLineArgsClassPath() {
+  public void testBuildFromCmdLineArgsWithClassPath() {
     final Path classPath = rootDir.resolve("lib");
     final String[] args = {
         "-r", rootDir.toString(),
