@@ -152,6 +152,8 @@ public class Configuration {
     // region Methods
 
     public static Configuration buildFromCmdLineArgs(final String[] args) {
+      log.debug("enter buildFromCmdLineArgs(String[])");
+
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
 
@@ -167,6 +169,8 @@ public class Configuration {
     }
 
     public Configuration build() {
+      log.debug("enter build()");
+
       if (targetProject == null) {
         targetProject = TargetProjectFactory.create(rootDir, productPaths,
             testPaths, classPaths, JUnitVersion.JUNIT4);
@@ -176,60 +180,84 @@ public class Configuration {
     }
 
     public Builder addClasPaths(final Collection<Path> classPaths) {
+      log.debug("enter addClassPaths(Collection)");
+
       this.classPaths.addAll(classPaths);
       return this;
     }
 
     public Builder addClasPath(final Path classPath) {
+      log.debug("enter addClassPath(Path)");
+
       this.classPaths.add(classPath);
       return this;
     }
 
     public Builder setWorkingDir(final Path workingDir) {
+      log.debug("enter setWorkingDir(Path)");
+
       this.workingDir = workingDir;
       return this;
     }
 
     public Builder setSiblingsCount(final int siblingsCount) {
+      log.debug("enter setSiblingsCount(int)");
+
       this.siblingsCount = siblingsCount;
       return this;
     }
 
     public Builder setHeadcount(final int headcount) {
+      log.debug("enter setHeadcount(int)");
+
       this.headcount = headcount;
       return this;
     }
 
     public Builder setMaxGeneration(final int maxGeneration) {
+      log.debug("enter setMaxGeneration(int)");
+
       this.maxGeneration = maxGeneration;
       return this;
     }
 
     public Builder setTimeLimitSeconds(final long timeLimitSeconds) {
+      log.debug("enter setTimeLimitSeconds(long)");
+
       this.timeLimit = Duration.ofSeconds(timeLimitSeconds);
       return this;
     }
 
     public Builder setTimeLimit(final Duration timeLimit) {
+      log.debug("enter setTimeLimit(Duration)");
+
       this.timeLimit = timeLimit;
       return this;
     }
 
     public Builder setRequiredSolutionsCount(final int requiredSolutionsCount) {
+      log.debug("enter setRequiredSolutionsCount(int)");
+
       this.requiredSolutionsCount = requiredSolutionsCount;
       return this;
     }
 
     public Builder setLogLevel(final String logLevel) {
+      log.debug("enter setLogLevel(String)");
+
       return setLogLevel(Level.toLevel(logLevel.toUpperCase(Locale.ROOT)));
     }
 
     public Builder setLogLevel(final Level logLevel) {
+      log.debug("enter setLogLevel(Level)");
+
       this.logLevel = logLevel;
       return this;
     }
 
     public Builder setRandomSeed(final long randomSeed) {
+      log.debug("enter setRandomSeed(long)");
+
       this.randomSeed = randomSeed;
       return this;
     }
@@ -241,36 +269,36 @@ public class Configuration {
     @Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>",
         usage = "Path of a root directory of a target project")
     private void setRootDirFromCmdLineParser(final String rootDir) {
-      log.debug("enter setRootDir(String)");
+      log.debug("enter setRootDirFromCmdLineParser(String)");
       this.rootDir = Paths.get(rootDir);
     }
 
     @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
         metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
-      log.debug("enter addSourcePath(String)");
     private void addProductPathFromCmdLineParser(final String sourcePath) {
+      log.debug("enter addProductPathFromCmdLineParser(String)");
       this.productPaths.add(Paths.get(sourcePath));
     }
 
     @Option(name = "-t", aliases = "--test", required = true,
         handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
         usage = "Paths of the root directories holding test codes")
-      log.debug("enter addTestPath(String)");
     private void addTestPathFromCmdLineParser(final String testPath) {
+      log.debug("enter addTestPathFromCmdLineParser(String)");
       this.testPaths.add(Paths.get(testPath));
     }
 
     @Option(name = "-c", aliases = "--cp", handler = StringArrayOptionHandler.class,
         metaVar = "<class path> ...", usage = "Class paths required to build the target project")
     private void addClassPathFromCmdLineParser(final String classPath) {
-      log.debug("enter addClassPath(String)");
+      log.debug("enter addClassPathFromCmdLineParser(String)");
       this.classPaths.add(Paths.get(classPath));
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
         usage = "Path of a working directory")
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
-      log.debug("enter setWorkingDir(String)");
+      log.debug("enter setWorkingDirFromCmdLineParser(String)");
       this.workingDir = Paths.get(workingDir);
     }
 
@@ -284,38 +312,38 @@ public class Configuration {
     @Option(name = "-h", aliases = "--headcount",
         usage = "The number of how many variants are generated maximally in a generation")
     private void setHeadcountFromCmdLineParser(final int headcount) {
-      log.debug("enter setHeadcount(int)");
+      log.debug("enter setHeadcountFromCmdLineParser(int)");
       this.headcount = headcount;
     }
 
     @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation")
     private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
-      log.debug("enter setMaxGeneration(int)");
+      log.debug("enter setMaxGenerationFromCmdLineParser(int)");
       this.maxGeneration = maxGeneration;
     }
 
     @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
-      log.debug("enter setTimeLimit(long)");
+      log.debug("enter setTimeLimitFromCmdLineParser(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
     @Option(name = "-e", aliases = "--required-solutions", usage = "The number of solutions needed to be searched")
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
-      log.debug("enter setTimeLimit(long)");
+      log.debug("enter setTimeLimitFromCmdLineParser(int)");
       this.requiredSolutionsCount = requiredSolutionsCount;
     }
 
     @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.")
     private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
-      log.debug("enter setLogLevelDebug(boolean)");
+      log.debug("enter setLogLevelDebugFromCmdLineParser(boolean)");
       log.info("log level has been set DEBUG");
       logLevel = Level.DEBUG;
     }
 
     @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.")
     private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
-      log.debug("enter setLogLevelError(boolean)");
+      log.debug("enter setLogLevelErrorFromCmdLineParser(boolean)");
       log.info("log level has been set ERROR");
       logLevel = Level.ERROR;
     }
