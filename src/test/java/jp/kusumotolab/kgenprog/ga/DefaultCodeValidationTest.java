@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -28,7 +29,8 @@ public class DefaultCodeValidationTest {
   public void testExec() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final TestExecutor testExecutor = new TestExecutor(targetProject);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor testExecutor = new TestExecutor(config);
     final Variant initialVariant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 
@@ -44,7 +46,8 @@ public class DefaultCodeValidationTest {
   public void testExecForBuildFailure() {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final TestExecutor testExecutor = new TestExecutor(targetProject);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor testExecutor = new TestExecutor(config);
     final Variant initialVariant = targetProject.getInitialVariant();
     final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 

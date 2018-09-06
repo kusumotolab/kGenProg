@@ -41,12 +41,11 @@ public class CUILauncher {
     setLogLevel(config.getLogLevel());
 
     final FaultLocalization faultLocalization = new Ochiai();
-    final Random random = new Random();
-    random.setSeed(0);
+    final Random random = new Random(config.getRandomSeed());
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);
     final Mutation mutation =
-        new RandomMutation(10, random, rouletteStatementSelection);
+        new RandomMutation(config.getSiblingsCount(), random, rouletteStatementSelection);
     final Crossover crossover = new SinglePointCrossover(random);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();

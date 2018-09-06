@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.BuildResults;
@@ -44,7 +45,10 @@ public class TestResultsTest {
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final BuildResults buildResults = new ProjectBuilder(targetProject).build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final Configuration config = new Configuration.Builder(targetProject)
+        .setTimeLimitSeconds(timeoutSeconds)
+        .build();
+    final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // TODO
@@ -107,7 +111,10 @@ public class TestResultsTest {
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     new ProjectBuilder(targetProject).build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final Configuration config = new Configuration.Builder(targetProject)
+        .setTimeLimitSeconds(timeoutSeconds)
+        .build();
+    final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     final String expected = new StringBuilder().append("")
