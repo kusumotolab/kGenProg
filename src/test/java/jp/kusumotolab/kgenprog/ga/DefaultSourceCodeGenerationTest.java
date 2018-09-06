@@ -8,11 +8,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class DefaultSourceCodeGenerationTest {
 
@@ -20,36 +22,36 @@ public class DefaultSourceCodeGenerationTest {
   public void testExec() {
     final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
-
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
+    final VariantStore variantStore = getVariantStore(initialVariant);
     final Base base = new Base(null, new NoneOperation());
     final SimpleGene gene = new SimpleGene(Collections.singletonList(base));
     final DefaultSourceCodeGeneration defaultSourceCodeGeneration = new DefaultSourceCodeGeneration();
 
     // 1回目の生成は正しく生成される
-    final GeneratedSourceCode firstGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
-        targetProject);
+    final GeneratedSourceCode firstGeneratedSourceCode = defaultSourceCodeGeneration.exec(variantStore, gene);
     assertThat(firstGeneratedSourceCode).isNotEqualTo(GenerationFailedSourceCode.instance);
 
     // 2回目の生成は失敗する
-    final GeneratedSourceCode secondGeneratedSourceCode = defaultSourceCodeGeneration.exec(gene,
-        targetProject);
+    final GeneratedSourceCode secondGeneratedSourceCode = defaultSourceCodeGeneration.exec(variantStore, gene);
     assertThat(secondGeneratedSourceCode).isEqualTo(GenerationFailedSourceCode.instance);
   }
 
   @Test
   public void noneOperationTest() {
     final TargetProject targetProject = TargetProjectFactory.create(Paths.get("example/BuildSuccess01"));
-    final Variant initialVariant = targetProject.getInitialVariant();
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
+    final VariantStore variantStore = getVariantStore(initialVariant);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
-
     final Gene simpleGene = new SimpleGene(new ArrayList<>());
     final Base noneBase = new Base(null, new NoneOperation());
     final List<Gene> genes = simpleGene.generateNextGenerationGenes(Arrays.asList(noneBase));
 
     // noneBaseを適用した単一のGeneを取り出す
     final Gene gene = genes.get(0);
-
-    final GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(gene, targetProject);
+    final GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(variantStore, gene);
     final GeneratedSourceCode initialSourceCode = initialVariant.getGeneratedSourceCode();
 
     assertThat(generatedSourceCode.getAsts()).hasSameSizeAs(initialSourceCode.getAsts());
@@ -69,4 +71,9 @@ public class DefaultSourceCodeGenerationTest {
   }
 
   // TODO: None以外のOperationでテストする必要有り
+  
+  @SuppressWarnings("deprecation")
+  private VariantStore getVariantStore(final Variant initialVariant) {
+    return new VariantStore(initialVariant);
+  }
 }

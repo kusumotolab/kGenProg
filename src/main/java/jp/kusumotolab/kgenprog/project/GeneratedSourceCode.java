@@ -66,6 +66,10 @@ public class GeneratedSourceCode {
     return messageDigest;
   }
 
+  public boolean isGenerationSuccess() {
+    return true;
+  }
+
   private String createMessageDigest() {
     try {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
