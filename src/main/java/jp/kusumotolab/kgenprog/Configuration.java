@@ -247,16 +247,16 @@ public class Configuration {
 
     @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
         metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
-    private void addProductSourcePathFromCmdLineParser(final String sourcePath) {
       log.debug("enter addSourcePath(String)");
+    private void addProductPathFromCmdLineParser(final String sourcePath) {
       this.productPaths.add(Paths.get(sourcePath));
     }
 
     @Option(name = "-t", aliases = "--test", required = true,
         handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
         usage = "Paths of the root directories holding test codes")
-    private void addTestSourcePathFromCmdLineParser(final String testPath) {
       log.debug("enter addTestPath(String)");
+    private void addTestPathFromCmdLineParser(final String testPath) {
       this.testPaths.add(Paths.get(testPath));
     }
 
