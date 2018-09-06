@@ -36,7 +36,7 @@ public class Configuration {
   static {
     try {
       DEFAULT_WORKING_DIR = Files.createTempDirectory("kgenprog-work");
-    } catch (IOException e) {
+    } catch (final IOException e) {
       e.printStackTrace();
       throw new RuntimeException("Creating a temporary directory has failed.");
     }
@@ -55,7 +55,7 @@ public class Configuration {
 
   // region Constructor
 
-  private Configuration(Builder builder) {
+  private Configuration(final Builder builder) {
     targetProject = builder.targetProject;
     workingDir = builder.workingDir;
     siblingsCount = builder.siblingsCount;
@@ -130,17 +130,17 @@ public class Configuration {
 
     // region Constructors
 
-    public Builder(Path rootDir, Path productPath, Path testPath) {
+    public Builder(final Path rootDir, final Path productPath, final Path testPath) {
       this(rootDir, ImmutableList.of(productPath), ImmutableList.of(testPath));
     }
 
-    public Builder(Path rootDir, List<Path> productPaths, List<Path> testPaths) {
+    public Builder(final Path rootDir, final List<Path> productPaths, final List<Path> testPaths) {
       this.rootDir = rootDir;
       this.productPaths = productPaths;
       this.testPaths = testPaths;
     }
 
-    public Builder(TargetProject targetProject) {
+    public Builder(final TargetProject targetProject) {
       this.targetProject = targetProject;
     }
 
@@ -151,7 +151,7 @@ public class Configuration {
 
     // region Methods
 
-    public static Configuration buildFromCmdLineArgs(String[] args) {
+    public static Configuration buildFromCmdLineArgs(final String[] args) {
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
 
@@ -175,61 +175,61 @@ public class Configuration {
       return new Configuration(this);
     }
 
-    public Builder addClasPaths(Collection<Path> classPaths) {
+    public Builder addClasPaths(final Collection<Path> classPaths) {
       this.classPaths.addAll(classPaths);
       return this;
     }
 
-    public Builder addClasPath(Path classPath) {
+    public Builder addClasPath(final Path classPath) {
       this.classPaths.add(classPath);
       return this;
     }
 
-    public Builder setWorkingDir(Path workingDir) {
+    public Builder setWorkingDir(final Path workingDir) {
       this.workingDir = workingDir;
       return this;
     }
 
-    public Builder setSiblingsCount(int siblingsCount) {
+    public Builder setSiblingsCount(final int siblingsCount) {
       this.siblingsCount = siblingsCount;
       return this;
     }
 
-    public Builder setHeadcount(int headcount) {
+    public Builder setHeadcount(final int headcount) {
       this.headcount = headcount;
       return this;
     }
 
-    public Builder setMaxGeneration(int maxGeneration) {
+    public Builder setMaxGeneration(final int maxGeneration) {
       this.maxGeneration = maxGeneration;
       return this;
     }
 
-    public Builder setTimeLimitSeconds(long timeLimitSeconds) {
+    public Builder setTimeLimitSeconds(final long timeLimitSeconds) {
       this.timeLimit = Duration.ofSeconds(timeLimitSeconds);
       return this;
     }
 
-    public Builder setTimeLimit(Duration timeLimit) {
+    public Builder setTimeLimit(final Duration timeLimit) {
       this.timeLimit = timeLimit;
       return this;
     }
 
-    public Builder setRequiredSolutionsCount(int requiredSolutionsCount) {
+    public Builder setRequiredSolutionsCount(final int requiredSolutionsCount) {
       this.requiredSolutionsCount = requiredSolutionsCount;
       return this;
     }
 
-    public Builder setLogLevel(String logLevel) {
+    public Builder setLogLevel(final String logLevel) {
       return setLogLevel(Level.toLevel(logLevel.toUpperCase(Locale.ROOT)));
     }
 
-    public Builder setLogLevel(Level logLevel) {
+    public Builder setLogLevel(final Level logLevel) {
       this.logLevel = logLevel;
       return this;
     }
 
-    public Builder setRandomSeed(long randomSeed) {
+    public Builder setRandomSeed(final long randomSeed) {
       this.randomSeed = randomSeed;
       return this;
     }
@@ -276,45 +276,45 @@ public class Configuration {
 
     @Option(name = "-i", aliases = "--siblings-count",
         usage = "The number of how many child variants are generated from a parent")
-    private void setSiblingsCountFromCmdLineParser(int siblingsCount) {
+    private void setSiblingsCountFromCmdLineParser(final int siblingsCount) {
       log.debug("enter setSiblingsCountFromCmdLineParser(int)");
       this.siblingsCount = siblingsCount;
     }
 
     @Option(name = "-h", aliases = "--headcount",
         usage = "The number of how many variants are generated maximally in a generation")
-    private void setHeadcountFromCmdLineParser(int headcount) {
+    private void setHeadcountFromCmdLineParser(final int headcount) {
       log.debug("enter setHeadcount(int)");
       this.headcount = headcount;
     }
 
     @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation")
-    private void setMaxGenerationFromCmdLineParser(int maxGeneration) {
+    private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
       log.debug("enter setMaxGeneration(int)");
       this.maxGeneration = maxGeneration;
     }
 
     @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
-    private void setTimeLimitFromCmdLineParser(long timeLimit) {
+    private void setTimeLimitFromCmdLineParser(final long timeLimit) {
       log.debug("enter setTimeLimit(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
     @Option(name = "-e", aliases = "--required-solutions", usage = "The number of solutions needed to be searched")
-    private void setRequiredSolutionsCountFromCmdLineParser(int requiredSolutionsCount) {
+    private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       log.debug("enter setTimeLimit(long)");
       this.requiredSolutionsCount = requiredSolutionsCount;
     }
 
     @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.")
-    private void setLogLevelDebugFromCmdLineParser(boolean isVerbose) {
+    private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
       log.debug("enter setLogLevelDebug(boolean)");
       log.info("log level has been set DEBUG");
       logLevel = Level.DEBUG;
     }
 
     @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.")
-    private void setLogLevelErrorFromCmdLineParser(boolean isQuiet) {
+    private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
       log.debug("enter setLogLevelError(boolean)");
       log.info("log level has been set ERROR");
       logLevel = Level.ERROR;
@@ -322,7 +322,7 @@ public class Configuration {
 
     @Option(name = "-a", aliases = "--random-seed",
         usage = "The seed of a random seed generator used across this program")
-    private void setRandomSeedFromCmdLineParser(long randomSeed) {
+    private void setRandomSeedFromCmdLineParser(final long randomSeed) {
       log.debug("enter setRandomSeedFromCmdLineParser(long)");
       this.randomSeed = randomSeed;
     }
