@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import ch.qos.logback.classic.Level;
 
@@ -136,6 +137,23 @@ public class CUILauncherTest {
     assertThat(launcher.getTimeLimit()).isEqualTo(3600);
   }
 
+  /**
+   * CUILauncharからkGenProgMainを起動し，バグ修正が完了するかを確認するためのテスト
+   */
+  @Ignore
+  @Test
+  public void testCloseToZero01() {
+    launcher.setRootDir("example/CloseToZero01");
+    launcher.addProductSourcePath("src/example/CloseToZero.java");
+    launcher.addTestSourcePath("src/example/CloseToZeroTest.java");
+    launcher.setLogLevelDebug(true);
+    launcher.launch();
+  }
+
+  /**
+   * CUILauncharからkGenProgMainを起動し，バグ修正が完了するかを確認するためのテスト
+   */
+  @Ignore
   @Test
   public void testCloseToZero03() {
     launcher.setRootDir("example/CloseToZero03");
