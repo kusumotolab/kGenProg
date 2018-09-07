@@ -74,8 +74,8 @@ public class KGenProgMainTest {
   @Test
   public void testCloseToZero01() {
     final Path rootPath = Paths.get("example/CloseToZero01");
-    final Path productPath = Paths.get(ProductName);
-    final Path testPath = Paths.get(TestName);
+    final Path productPath = rootPath.resolve(ProductName);
+    final Path testPath = rootPath.resolve(TestName);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();

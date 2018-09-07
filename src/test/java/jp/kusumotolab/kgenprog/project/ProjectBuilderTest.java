@@ -127,8 +127,8 @@ public class ProjectBuilderTest {
   @Test
   public void testBuildStringForBuildSuccess07() {
     final Path rootPath = Paths.get("example/BuildSuccess07");
-    final List<Path> srcPaths = Arrays.asList(Paths.get("src"));
-    final List<Path> testPaths = Arrays.asList(Paths.get("test"));
+    final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
     final TargetProject targetProject = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
         Collections.emptyList(), JUnitVersion.JUNIT4);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);

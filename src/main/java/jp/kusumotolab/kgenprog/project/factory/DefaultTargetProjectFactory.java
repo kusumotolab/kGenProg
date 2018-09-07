@@ -31,13 +31,13 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
         "enter DefaultTargetProjectFatory(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
 
     this.rootPath = rootPath;
-    this.productSourcePaths = getFilePaths(rootPath, pathsForProductSource, ".java").stream()
+    this.productSourcePaths = getFilePaths(pathsForProductSource, ".java").stream()
         .map(ProductSourcePath::new)
         .collect(Collectors.toList());
-    this.testSourcePaths = getFilePaths(rootPath, pathsForTestSource, ".java").stream()
+    this.testSourcePaths = getFilePaths(pathsForTestSource, ".java").stream()
         .map(TestSourcePath::new)
         .collect(Collectors.toList());
-    this.classPaths = getFilePaths(rootPath, pathsForClass, ".class", ".jar").stream()
+    this.classPaths = getFilePaths(pathsForClass, ".class", ".jar").stream()
         .map(ClassPath::new)
         .collect(Collectors.toList());
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
@@ -64,12 +64,9 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
    * @param paths
    * @return
    */
-  private static List<Path> getFilePaths(final Path projectRootPath, final List<Path> paths,
-      String... suffixes) {
+  private static List<Path> getFilePaths(final List<Path> paths, String... suffixes) {
     final List<Path> javaFilePaths = new ArrayList<>();
-    for (final Path pathInProject : paths) {
-
-      final Path path = projectRootPath.resolve(pathInProject);
+    for (final Path path : paths) {
 
       if (Files.isRegularFile(path) && endsWith(path, suffixes)) {
         javaFilePaths.add(path);
