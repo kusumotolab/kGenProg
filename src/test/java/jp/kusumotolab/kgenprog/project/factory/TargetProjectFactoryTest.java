@@ -80,8 +80,8 @@ public class TargetProjectFactoryTest {
   public void testCreateByCompletelySpecified01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
 
-    final List<Path> fooPath = Arrays.asList(Foo);
-    final List<Path> fooTestPath = Arrays.asList(FooTest);
+    final List<Path> fooPath = Arrays.asList(rootPath.resolve(Foo));
+    final List<Path> fooTestPath = Arrays.asList(rootPath.resolve(FooTest));
 
     // 全パラメータを指定して生成
     final TargetProject project = TargetProjectFactory.create(rootPath, fooPath, fooTestPath,
@@ -144,8 +144,8 @@ public class TargetProjectFactoryTest {
   @Test
   public void testCreateBySpecifingPathsForProductAndTest() {
     final Path rootPath = Paths.get("example/BuildSuccess07");
-    final List<Path> srcPaths = Arrays.asList(Paths.get("src"));
-    final List<Path> testPaths = Arrays.asList(Paths.get("test"));
+    final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
     final TargetProject project = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
         Collections.emptyList(), JUnitVersion.JUNIT4);
 
