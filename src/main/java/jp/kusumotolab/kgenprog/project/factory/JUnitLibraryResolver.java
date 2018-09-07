@@ -17,11 +17,12 @@ public class JUnitLibraryResolver {
     JUNIT3, JUNIT4
   }
 
-  private static final String JUnit3Dir = "junit3/";
-  private static final String JUnit4Dir = "junit4/";
-  private static final String JUnit3J = "junit-3.8.2.jar";
-  private static final String JUnit4J = "junit-4.12.jar";
-  private static final String JUnit4H = "hamcrest-core-1.3.jar";
+  private static final String JUNIT3_DIR = "junit3/";
+  private static final String JUNIT4_DIR = "junit4/";
+  private static final String JUNIT3_JUNIT = "junit-3.8.2.jar";
+  private static final String JUNIT4_JUNIT = "junit-4.12.jar";
+  private static final String JUNIT4_HAMCREST = "hamcrest-core-1.3.jar";
+  private static final String SYSTEM_TEMP_DIR = System.getProperty("java.io.tmpdir");
 
   public final static EnumMap<JUnitVersion, List<ClassPath>> libraries =
       new EnumMap<>(JUnitVersion.class);
@@ -30,13 +31,17 @@ public class JUnitLibraryResolver {
 
     try {
       final ClassLoader classLoader = CUILauncher.class.getClassLoader();
-      final InputStream junit3JInputStream = classLoader.getResourceAsStream(JUnit3Dir + JUnit3J);
-      final InputStream junit4JInputStream = classLoader.getResourceAsStream(JUnit4Dir + JUnit4J);
-      final InputStream junit4HInputStream = classLoader.getResourceAsStream(JUnit4Dir + JUnit4H);
+      final InputStream junit3JInputStream =
+          classLoader.getResourceAsStream(JUNIT3_DIR + JUNIT3_JUNIT);
+      final InputStream junit4JInputStream =
+          classLoader.getResourceAsStream(JUNIT4_DIR + JUNIT4_JUNIT);
+      final InputStream junit4HInputStream =
+          classLoader.getResourceAsStream(JUNIT4_DIR + JUNIT4_HAMCREST);
 
-      final Path junit3JPath = Paths.get(JUnit3J);
-      final Path junit4JPath = Paths.get(JUnit4J);
-      final Path junit4HPath = Paths.get(JUnit4H);
+      final Path systemTempPath = Paths.get(SYSTEM_TEMP_DIR);
+      final Path junit3JPath = systemTempPath.resolve(JUNIT3_JUNIT);
+      final Path junit4JPath = systemTempPath.resolve(JUNIT4_JUNIT);
+      final Path junit4HPath = systemTempPath.resolve(JUNIT4_HAMCREST);
 
       Files.copy(junit3JInputStream, junit3JPath, StandardCopyOption.REPLACE_EXISTING);
       Files.copy(junit4JInputStream, junit4JPath, StandardCopyOption.REPLACE_EXISTING);
