@@ -257,7 +257,7 @@ public class ConfigurationBuilderTest {
   public void testBuildWithClassPath() {
     final List<Path> classPaths = ImmutableList.of(rootDir.resolve("lib"));
     final Builder builder = new Builder(rootDir, productPaths, testPaths)
-        .addClasPaths(classPaths);
+        .addClassPaths(classPaths);
     final Configuration config = builder.build();
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);

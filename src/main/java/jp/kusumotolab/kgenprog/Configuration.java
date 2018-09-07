@@ -179,14 +179,14 @@ public class Configuration {
       return new Configuration(this);
     }
 
-    public Builder addClasPaths(final Collection<Path> classPaths) {
+    public Builder addClassPaths(final Collection<Path> classPaths) {
       log.debug("enter addClassPaths(Collection)");
 
       this.classPaths.addAll(classPaths);
       return this;
     }
 
-    public Builder addClasPath(final Path classPath) {
+    public Builder addClassPath(final Path classPath) {
       log.debug("enter addClassPath(Path)");
 
       this.classPaths.add(classPath);
