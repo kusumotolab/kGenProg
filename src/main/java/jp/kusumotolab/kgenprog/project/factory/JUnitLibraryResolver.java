@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -37,9 +38,9 @@ public class JUnitLibraryResolver {
       final Path junit4JPath = Paths.get(JUnit4J);
       final Path junit4HPath = Paths.get(JUnit4H);
 
-      Files.copy(junit3JInputStream, junit3JPath);
-      Files.copy(junit4JInputStream, junit4JPath);
-      Files.copy(junit4HInputStream, junit4HPath);
+      Files.copy(junit3JInputStream, junit3JPath, StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(junit4JInputStream, junit4JPath, StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(junit4HInputStream, junit4HPath, StandardCopyOption.REPLACE_EXISTING);
 
       junit3JPath.toFile()
           .deleteOnExit();
