@@ -31,6 +31,7 @@ public class Configuration {
   public static final Duration DEFAULT_TIME_LIMIT = Duration.ofSeconds(60);
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_WORKING_DIR;
+  public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
 
   static {
@@ -44,6 +45,7 @@ public class Configuration {
 
   private final TargetProject targetProject;
   private final Path workingDir;
+  private final Path outDir;
   private final int siblingsCount;
   private final int headcount;
   private final int maxGeneration;
@@ -58,6 +60,7 @@ public class Configuration {
   private Configuration(final Builder builder) {
     targetProject = builder.targetProject;
     workingDir = builder.workingDir;
+    outDir = builder.outDir;
     siblingsCount = builder.siblingsCount;
     headcount = builder.headcount;
     maxGeneration = builder.maxGeneration;
@@ -75,6 +78,10 @@ public class Configuration {
 
   public Path getWorkingDir() {
     return workingDir;
+  }
+
+  public Path getOutDir() {
+    return outDir;
   }
 
   public int getSiblingsCount() {
@@ -119,6 +126,7 @@ public class Configuration {
     private List<Path> classPaths = new ArrayList<>();
     private TargetProject targetProject;
     private Path workingDir = DEFAULT_WORKING_DIR;
+    private Path outDir = DEFAULT_OUT_DIR;
     private int siblingsCount = DEFAULT_SIBLINGS_COUNT;
     private int headcount = DEFAULT_HEADCOUNT;
     private int maxGeneration = DEFAULT_MAX_GENERATION;
@@ -197,6 +205,13 @@ public class Configuration {
       log.debug("enter setWorkingDir(Path)");
 
       this.workingDir = workingDir;
+      return this;
+    }
+
+    public Builder setOutDir(final Path outDir) {
+      log.debug("enter setOutDir(Path)");
+
+      this.outDir = outDir;
       return this;
     }
 
@@ -300,6 +315,13 @@ public class Configuration {
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
       log.debug("enter setWorkingDirFromCmdLineParser(String)");
       this.workingDir = Paths.get(workingDir);
+    }
+
+    @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
+        usage = "Path of a output directory")
+    private void setOutDirFromCmdLineParser(final String outDir) {
+      log.debug("enter setOutDirFromCmdLineParser(String)");
+      this.outDir = Paths.get(outDir);
     }
 
     @Option(name = "-i", aliases = "--siblings-count",
