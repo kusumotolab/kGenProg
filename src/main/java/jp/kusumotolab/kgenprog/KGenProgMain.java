@@ -60,7 +60,7 @@ public class KGenProgMain {
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final StopWatch stopwatch = new StopWatch(this.config.getTimeLimitSeconds());
+    final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
 
     GA: while (true) {
@@ -114,12 +114,12 @@ public class KGenProgMain {
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
     log.debug("enter reachedMaxGeneration(OrdinalNumber)");
-    return this.config.getMaxGeneration() <= generation.get();
+    return config.getMaxGeneration() <= generation.get();
   }
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     log.debug("enter areEnoughCompletedVariants(List<Variant>)");
-    return this.config.getRequiredSolutionsCount() <= completedVariants.size();
+    return config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
   private void logPatch(final VariantStore variantStore) {
