@@ -18,33 +18,34 @@ public class RandomMutation extends Mutation {
 
   private static final Logger log = LoggerFactory.getLogger(RandomMutation.class);
 
-  public RandomMutation(final int numberOfBase,
-      final Random random,
+  public RandomMutation(final int numberOfBase, final Random random,
       final CandidateSelection candidateSelection) {
     super(numberOfBase, random, candidateSelection);
   }
 
-  public List<Base> exec(final List<Suspiciousness> suspiciousnesses) {
-    log.debug("enter exec(List<>)");
+  public List<Variant> exec(final VariantStore variantStore) {
+    log.debug("enter exec(VariantStore)");
 
-    final List<Base> bases = new ArrayList<>();
-    if (suspiciousnesses.isEmpty()) {
-      return bases;
+    final List<Variant> generatedVariants = new ArrayList<>();
+
+    for (final Variant variant : variantStore.getCurrentVariants()) {
+      final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
+      final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
+
+      final Roulette<Suspiciousness> roulette =
+          new Roulette<>(suspiciousnesses, weightFunction, random);
+
+      for (int i = 0; i < numberOfBase; i++) {
+        final Suspiciousness suspiciousness = roulette.exec();
+        final Base base = makeBase(suspiciousness);
+        final Gene gene = makeGene(variant.getGene(), base);
+        generatedVariants.add(variantStore.createVariant(gene));
+      }
+
     }
 
-    final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
-
-    final Roulette<Suspiciousness> roulette =
-        new Roulette<>(suspiciousnesses, weightFunction, random);
-
-    for (int i = 0; i < numberOfBase; i++) {
-      final Suspiciousness suspiciousness = roulette.exec();
-      final Base base = makeBase(suspiciousness);
-      bases.add(base);
-    }
-
-    log.debug("exit exec(List<>)");
-    return bases;
+    log.debug("exit exec(VariantStore)");
+    return generatedVariants;
   }
 
   private Base makeBase(final Suspiciousness suspiciousness) {
@@ -69,5 +70,11 @@ public class RandomMutation extends Mutation {
   private ASTNode chooseNodeAtRandom() {
     log.debug("enter chooseNodeAtRandom()");
     return candidateSelection.exec();
+  }
+
+  private Gene makeGene(final Gene parent, final Base base) {
+    final List<Base> bases = new ArrayList<>(parent.getBases());
+    bases.add(base);
+    return new SimpleGene(bases);
   }
 }
