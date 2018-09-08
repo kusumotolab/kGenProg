@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -28,7 +29,8 @@ public class OchiaiTest {
   public void testForExample01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = TestUtil.createVariant(targetProject);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses =
@@ -48,7 +50,8 @@ public class OchiaiTest {
   public void testForExample02() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = TestUtil.createVariant(targetProject);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses =
@@ -68,7 +71,8 @@ public class OchiaiTest {
   public void testForFailedProject() throws IOException {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = TestUtil.createVariant(targetProject);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
 
     final FaultLocalization fl = new Ochiai();
     final List<Suspiciousness> suspiciousnesses =

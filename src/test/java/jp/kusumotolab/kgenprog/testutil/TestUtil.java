@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
@@ -33,10 +34,10 @@ public class TestUtil {
     }
   }
   
-  public static Variant createVariant(final TargetProject project) {
+  public static Variant createVariant(final Configuration config) {
     final Gene gene = new SimpleGene(Collections.emptyList());
-    final GeneratedSourceCode sourceCode = createGeneratedSourceCode(project);
-    final TestResults testResults = new TestExecutor(project).exec(sourceCode);
+    final GeneratedSourceCode sourceCode = createGeneratedSourceCode(config.getTargetProject());
+    final TestResults testResults = new TestExecutor(config).exec(sourceCode);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
     final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
     return new Variant(gene, sourceCode, testResults, fitness, suspiciousnesses);
