@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface Crossover {
 
-  public List<Variant> exec(VariantStore variantStore);
+  public List<Gene> exec(List<Variant> variants);
 }

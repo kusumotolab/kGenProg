@@ -10,9 +10,4 @@ public class GenerationFailedSourceCode extends GeneratedSourceCode {
     super(Collections.emptyList());
   }
 
-  @Override
-  public boolean isGenerationSuccess() {
-    return false;
-  }
-
 }

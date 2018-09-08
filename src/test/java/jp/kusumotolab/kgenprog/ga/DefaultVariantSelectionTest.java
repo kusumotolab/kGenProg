@@ -21,9 +21,9 @@ public class DefaultVariantSelectionTest {
       final double divider = (i % 2 == 0) ? 10 : 20;
       final double value = (double) i / divider;
       final SimpleFitness fitness = new SimpleFitness(value);
-      variants.add(createVariant(fitness));
+      variants.add(new Variant(null, fitness, null));
     }
-    final List<Variant> selectedVariants = variantSelection.exec(Collections.emptyList(), variants);
+    final List<Variant> selectedVariants = variantSelection.exec(variants);
 
     assertThat(variants).hasSize(10)
         .extracting(Variant::getFitness)
@@ -41,9 +41,8 @@ public class DefaultVariantSelectionTest {
   @Test
   public void testExecForEmptyVariants() {
     final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
-    final List<Variant> variants1 = Collections.emptyList();
-    final List<Variant> variants2 = Collections.emptyList();
-    final List<Variant> resultVariants = variantSelection.exec(variants1, variants2);
+    final List<Variant> variants = Collections.emptyList();
+    final List<Variant> resultVariants = variantSelection.exec(variants);
     assertThat(resultVariants).hasSize(0);
   }
 
@@ -54,18 +53,18 @@ public class DefaultVariantSelectionTest {
 
     final List<Variant> nanVariants = IntStream.range(0, 10)
         .mapToObj(e -> new SimpleFitness(Double.NaN))
-        .map(this::createVariant)
+        .map(e -> new Variant(null, e, null))
         .collect(Collectors.toList());
 
     variants.addAll(nanVariants);
 
-    final List<Variant> result1 = variantSelection.exec(Collections.emptyList(), variants);
+    final List<Variant> result1 = variantSelection.exec(variants);
 
     assertThat(result1).hasSize(10);
 
-    final Variant normalVariant = createVariant(new SimpleFitness(0.5d));
+    final Variant normalVariant = new Variant(null, new SimpleFitness(0.5d), null);
     variants.add(normalVariant);
-    final List<Variant> result2 = variantSelection.exec(Collections.emptyList(), variants);
+    final List<Variant> result2 = variantSelection.exec(variants);
     assertThat(result2).hasSize(10);
     assertThat(result2.get(0)).isEqualTo(normalVariant);
   }
@@ -81,19 +80,14 @@ public class DefaultVariantSelectionTest {
           }
           return new SimpleFitness(Double.NaN);
         })
-        .map(this::createVariant)
+        .map(e -> new Variant(null, e, null))
         .collect(Collectors.toList());
 
     try {
-      final List<Variant> result = variantSelection.exec(Collections.emptyList(), nanVariants);
+      final List<Variant> result = variantSelection.exec(nanVariants);
       assertThat(result).hasSize(10);
     } catch (Exception e) {
       fail(e.getMessage());
     }
-  }
-
-  private Variant createVariant(final Fitness fitness) {
-    final Variant variant = new Variant(null, null, null, fitness, null);
-    return variant;
   }
 }

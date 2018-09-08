@@ -8,13 +8,13 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class JDTLocationTest {
 
@@ -22,7 +22,8 @@ public class JDTLocationTest {
   public void testInferLineNumbers() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
 
     final Path path = rootPath.resolve("src/example/Foo.java");
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);

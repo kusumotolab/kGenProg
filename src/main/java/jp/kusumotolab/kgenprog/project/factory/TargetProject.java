@@ -1,10 +1,19 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import jp.kusumotolab.kgenprog.ga.Fitness;
+import jp.kusumotolab.kgenprog.ga.Gene;
+import jp.kusumotolab.kgenprog.ga.SimpleGene;
+import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
+import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class TargetProject {
 
@@ -15,7 +24,7 @@ public class TargetProject {
 
   // Must be package-private. Should be created only from TargetProjectFactory#create
   TargetProject(final Path rootPath, final List<ProductSourcePath> productSourcePaths,
-      final List<TestSourcePath> testSourcePaths, final List<ClassPath> classPaths) {
+      final List<TestSourcePath> testSourcePaths, List<ClassPath> classPaths) {
     this.rootPath = rootPath;
     this.productSourcePaths = productSourcePaths;
     this.testSourcePaths = testSourcePaths;
@@ -34,7 +43,40 @@ public class TargetProject {
     return classPaths;
   }
 
+  public Variant getInitialVariant() {
+    Gene gene = new SimpleGene(Collections.emptyList());
+    Fitness fitness = null;
+    GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(constructAST());
+
+    return new Variant(gene, fitness, generatedSourceCode);
+  }
+
+  // hitori
+  private List<GeneratedAST> constructAST() {
+    // TODO: ここにDIする方法を検討
+    return new JDTASTConstruction().constructAST(this);
+  }
   public void setTestSourcePaths(final List<TestSourcePath> testSourcePaths) {
     this.testSourcePaths = testSourcePaths;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TargetProject project = (TargetProject) o;
+    return Objects.equals(rootPath, project.rootPath) &&
+        Objects.equals(getProductSourcePaths(), project.getProductSourcePaths()) &&
+        Objects.equals(getTestSourcePaths(), project.getTestSourcePaths()) &&
+        Objects.equals(getClassPaths(), project.getClassPaths());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(rootPath, getProductSourcePaths(), getTestSourcePaths(), getClassPaths());
   }
 }

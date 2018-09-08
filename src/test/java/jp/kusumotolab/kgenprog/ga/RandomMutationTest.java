@@ -6,8 +6,6 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -19,7 +17,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -27,11 +24,9 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
-import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class RandomMutationTest {
 
-  @SuppressWarnings("serial")
   private class MockRandom extends Random {
 
     @Override
@@ -54,14 +49,18 @@ public class RandomMutationTest {
   public void testExec() throws NoSuchFieldException, IllegalAccessException {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
-    final GeneratedSourceCode sourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant initialVariant = targetProject.getInitialVariant();
     final Random random = new MockRandom();
     random.setSeed(0);
-    final CandidateSelection statementSelection = new RouletteStatementSelection(random);
-    final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection);
-    randomMutation.setCandidates(sourceCode.getAsts());
+    final CandidateSelection statementSelection =
+        new RouletteStatementSelection(random);
+    final RandomMutation randomMutation =
+        new RandomMutation(15, random, statementSelection);
+    randomMutation.setCandidates(initialVariant.getGeneratedSourceCode()
+        .getAsts());
 
-    final GeneratedAST generatedAST = new ArrayList<>(sourceCode.getAsts()).get(0);
+    final GeneratedAST generatedAST = new ArrayList<>(initialVariant.getGeneratedSourceCode()
+        .getAsts()).get(0);
     final ProductSourcePath sourcePath = generatedAST.getProductSourcePath();
     final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
         .getRoot()
@@ -82,17 +81,12 @@ public class RandomMutationTest {
         })
         .collect(Collectors.toList());
 
-    final Gene initialGene = new SimpleGene(Collections.emptyList());
-    final Variant variant = new Variant(initialGene, null, null, null, suspiciousnesses);
-    final VariantStore variantStore = new MockVariantStore(Arrays.asList(variant));
-
-    // 正しく15個のVariantが生成されるかのテスト
-    final List<Variant> variantList = randomMutation.exec(variantStore);
-    assertThat(variantList).hasSize(15);
+    // 正しく15個のBaseが生成されるかのテスト
+    final List<Base> baseList = randomMutation.exec(suspiciousnesses);
+    assertThat(baseList).hasSize(15);
 
     // Suspiciousnessが高い場所ほど多くの操作が生成されているかのテスト
-    final Map<String, List<Base>> map = variantList.stream()
-        .map(this::getLastBase)
+    final Map<String, List<Base>> map = baseList.stream()
         .collect(
             Collectors.groupingBy(e -> ((JDTASTLocation) e.getTargetLocation()).node.toString()));
     final String weakSuspiciousness = ((JDTASTLocation) suspiciousnesses.get(0)
@@ -105,7 +99,7 @@ public class RandomMutationTest {
             .size());
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
-    final Base base = getLastBase(variantList.get(0));
+    final Base base = baseList.get(0);
     final JDTASTLocation targetLocation = (JDTASTLocation) base.getTargetLocation();
     assertThat(targetLocation.node).isSameSourceCodeAs("return n;");
 
@@ -118,15 +112,5 @@ public class RandomMutationTest {
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
     assertThat(node).isSameSourceCodeAs("n--;");
-  }
-
-  private Base getLastBase(final Variant variant) {
-    final List<Base> bases = variant.getGene()
-        .getBases();
-
-    if (bases.isEmpty()) {
-      return null;
-    }
-    return bases.get(bases.size() - 1);
   }
 }

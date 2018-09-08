@@ -12,7 +12,6 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
 public class SinglePointCrossoverTest {
 
-  @SuppressWarnings("serial")
   private class MockRandom extends Random {
 
     private int counter = 0;
@@ -39,21 +38,16 @@ public class SinglePointCrossoverTest {
     final List<Base> insertBases = Arrays.asList(insertOperationBase, insertOperationBase,
         insertOperationBase, insertOperationBase, insertOperationBase);
 
-    final Variant noneOperationVariant =
-        new Variant(new SimpleGene(noneBases), null, null, null, null);
-    final Variant insertOperationVariant =
-        new Variant(new SimpleGene(insertBases), null, null, null, null);
+    final Variant noneOperationVariant = new Variant(new SimpleGene(noneBases), null, null);
+    final Variant insertOperationVariant = new Variant(new SimpleGene(insertBases), null, null);
 
     final Random random = new MockRandom();
     random.setSeed(0);
-    final SinglePointCrossover singlePointCrossover = new SinglePointCrossover(random);
-    final VariantStore variantStore =
-        new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
+    final SinglePointCrossover singlePointCrossover =
+        new SinglePointCrossover(random);
 
-    final List<Gene> genes = singlePointCrossover.exec(variantStore)
-        .stream()
-        .map(Variant::getGene)
-        .collect(Collectors.toList());
+    final List<Gene> genes =
+        singlePointCrossover.exec(Arrays.asList(noneOperationVariant, insertOperationVariant));
 
     assertThat(genes).anyMatch(this::containNoneOperationAndInsertOperation);
   }

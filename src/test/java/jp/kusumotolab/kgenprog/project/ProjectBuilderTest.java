@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
@@ -43,7 +44,8 @@ public class ProjectBuilderTest {
   public void testBuildStringForBuildFailure01() {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
@@ -55,7 +57,8 @@ public class ProjectBuilderTest {
   public void testBuildStringForExample01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
@@ -77,7 +80,8 @@ public class ProjectBuilderTest {
   public void testBuildStringForExample02() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
@@ -100,7 +104,8 @@ public class ProjectBuilderTest {
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
@@ -127,7 +132,8 @@ public class ProjectBuilderTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
         Collections.emptyList(), JUnitVersion.JUNIT4);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
@@ -153,7 +159,8 @@ public class ProjectBuilderTest {
     final Path rootPath03 = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject03 = TargetProjectFactory.create(rootPath03);
     final ProjectBuilder projectBuilder03 = new ProjectBuilder(targetProject03);
-    final GeneratedSourceCode generatedSourceCode03 = TestUtil.createGeneratedSourceCode(targetProject03);
+    final Variant variant03 = targetProject03.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode03 = variant03.getGeneratedSourceCode();
     final BuildResults buildResults03 = projectBuilder03.build(generatedSourceCode03);
 
     assertThat(buildResults03.isBuildFailed).isFalse();
@@ -163,7 +170,8 @@ public class ProjectBuilderTest {
     final Path rootPath02 = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject02 = TargetProjectFactory.create(rootPath02);
     final ProjectBuilder projectBuilder02 = new ProjectBuilder(targetProject02);
-    final GeneratedSourceCode generatedSourceCode02 = TestUtil.createGeneratedSourceCode(targetProject02);
+    final Variant variant02 = targetProject02.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode02 = variant02.getGeneratedSourceCode();
     final BuildResults buildResults02 = projectBuilder02.build(generatedSourceCode02);
 
     assertThat(buildResults02.isBuildFailed).isFalse();
@@ -179,7 +187,8 @@ public class ProjectBuilderTest {
   public void testBuildForInMemoryByteCode01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final Variant variant = targetProject.getInitialVariant();
+    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 

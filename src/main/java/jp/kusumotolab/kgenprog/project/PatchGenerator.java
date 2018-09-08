@@ -20,9 +20,10 @@ public class PatchGenerator {
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
   public List<Patch> exec(final Variant modifiedVariant) {
-    log.debug("enter exec(Variant)");
+    log.debug("enter exec(TargetProject, Variant)");
 
     final List<Patch> patches = new ArrayList<>();
+
     final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
     final List<GeneratedAST> modifiedAsts = modifiedSourceCode.getAsts();
 
@@ -39,7 +40,7 @@ public class PatchGenerator {
         return Collections.emptyList();
       }
     }
-    log.debug("exit exec(Variant)");
+    log.debug("exit exec(TargetProject, Variant)");
     return patches;
   }
 

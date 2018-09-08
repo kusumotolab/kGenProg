@@ -1,32 +1,30 @@
 package jp.kusumotolab.kgenprog;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
+import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Crossover;
+import jp.kusumotolab.kgenprog.ga.Fitness;
+import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.ga.VariantStore;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMain {
 
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
-  private final TargetProject targetProject;
+  private final Configuration config;
   private final FaultLocalization faultLocalization;
   private final Mutation mutation;
   private final Crossover crossover;
@@ -35,95 +33,78 @@ public class KGenProgMain {
   private final VariantSelection variantSelection;
   private final TestExecutor testExecutor;
   private final PatchGenerator patchGenerator;
-  private final JDTASTConstruction astConstruction;
 
-  // 以下，一時的なフィールド #146 で解決すべき
-  private final long timeoutSeconds;
-  private final int maxGeneration;
-  private final int requiredSolutions;
-
-  // TODO #146
-  // workingdirのパスを一時的にMainに記述
-  // 別クラスが管理すべき情報？
-  public final Path workingPath;
-
-  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
+  public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final PatchGenerator patchGenerator, final Path workingPath) {
+      final PatchGenerator patchGenerator) {
 
-    this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, workingPath, 60, 10, 1);
-  }
-
-  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
-      final Mutation mutation, final Crossover crossover,
-      final SourceCodeGeneration sourceCodeGeneration,
-      final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final PatchGenerator patchGenerator, final Path workingPath, final long timeout,
-      final int maxGeneration, final int requiredSolutions) {
-
-    this.workingPath = workingPath;
-    try {
-      if (Files.exists(this.workingPath)) {
-        FileUtils.deleteDirectory(this.workingPath.toFile());
-      }
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-
-    this.targetProject = targetProject;
+    this.config = config;
     this.faultLocalization = faultLocalization;
     this.mutation = mutation;
     this.crossover = crossover;
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-
-    // TODO Should be retrieved from config
-    this.testExecutor = new TestExecutor(targetProject, 600);
-    this.astConstruction = new JDTASTConstruction();
-
+    this.testExecutor = new TestExecutor(config);
     this.patchGenerator = patchGenerator;
-
-    this.timeoutSeconds = timeout;
-    this.maxGeneration = maxGeneration;
-    this.requiredSolutions = requiredSolutions;
   }
 
   public List<Variant> run() {
     log.debug("enter run()");
-    final Strategies strategies = new Strategies(faultLocalization, astConstruction,
-        sourceCodeGeneration, sourceCodeValidation, testExecutor);
-    final VariantStore variantStore = new VariantStore(targetProject, strategies);
-    final Variant initialVariant = variantStore.getInitialVariant();
+
+    final List<Variant> completedVariants = new ArrayList<>();
+
+    List<Variant> selectedVariants = new ArrayList<>();
+    final Variant initialVariant = config.getTargetProject()
+        .getInitialVariant();
+    selectedVariants.add(initialVariant);
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final StopWatch stopwatch = new StopWatch(timeoutSeconds);
+    final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
-
+    final OrdinalNumber generation = new OrdinalNumber(1);
+    final OrdinalNumber foundSolutions = new OrdinalNumber(0);
     GA: while (true) {
 
-      log.info("in the era of the " + variantStore.getGenerationNumber()
-          .toString() + " generation (" + stopwatch.toString() + ")");
+      log.info("in the era of the " + generation.toString() + " generation (" + stopwatch.toString()
+          + ")");
 
-      // 変異プログラムを生成
-      final List<Variant> nextGenerationVariants = new ArrayList<>();
-      nextGenerationVariants.addAll(mutation.exec(variantStore));
-      nextGenerationVariants.addAll(crossover.exec(variantStore));
+      // 遺伝子を生成
+      final List<Gene> genes = new ArrayList<>();
+      for (final Variant variant : selectedVariants) {
+        final List<Suspiciousness> suspiciousnesses =
+            faultLocalization.exec(config.getTargetProject(), variant, testExecutor);
+        final List<Base> bases = mutation.exec(suspiciousnesses);
+        genes.addAll(variant.getGene()
+            .generateNextGenerationGenes(bases));
+      }
+      genes.addAll(crossover.exec(selectedVariants));
 
-      for (final Variant variant : nextGenerationVariants) {
+      // 遺伝子をもとに変異プログラムを生成
+      final List<Variant> currentGenerationVariants = new ArrayList<>();
+      for (final Gene gene : genes) {
+        final GeneratedSourceCode generatedSourceCode =
+            sourceCodeGeneration.exec(gene, config.getTargetProject());
+        final Fitness fitness =
+            sourceCodeValidation.exec(generatedSourceCode, config.getTargetProject(), testExecutor);
+        final Variant variant = new Variant(gene, fitness, generatedSourceCode);
+        currentGenerationVariants.add(variant);
+
         // 生成した変異プログラムが，すべてのテストケースをパスした場合
         if (variant.isCompleted()) {
-          variantStore.addFoundSolution(variant);
-          log.info(variantStore.getFoundSolutionsNumber()
-              .toString() + " solution has been found (" + stopwatch.toString() + ")");
+          foundSolutions.incrementAndGet();
+
+          log.info(foundSolutions.toString() + " solution has been found (" + stopwatch.toString()
+              + ")");
+
+          completedVariants.add(variant);
 
           // しきい値以上の completedVariants が生成された場合は，GA を抜ける
-          if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
+          if (areEnoughCompletedVariants(completedVariants)) {
             log.info("reached the required solutions");
             break GA;
           }
@@ -137,36 +118,35 @@ public class KGenProgMain {
       }
 
       // 最大世代数に到達した場合には GA を抜ける
-      if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
+      if (reachedMaxGeneration(generation)) {
         log.info("reached the maximum generation");
         break;
       }
 
       // 次世代に向けての準備
-      variantStore.setNextGenerationVariants(
-          variantSelection.exec(variantStore.getCurrentVariants(), nextGenerationVariants));
+      selectedVariants = variantSelection.exec(currentGenerationVariants);
+      generation.getAndIncrement();
     }
 
     // 生成されたバリアントのパッチ出力
-    logPatch(variantStore);
+    logPatch(completedVariants);
 
     log.debug("exit run()");
-    return variantStore.getFoundSolutions();
+    return completedVariants;
   }
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
     log.debug("enter reachedMaxGeneration(OrdinalNumber)");
-    return this.maxGeneration <= generation.get();
+    return config.getMaxGeneration() <= generation.get();
   }
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     log.debug("enter areEnoughCompletedVariants(List<Variant>)");
-    return this.requiredSolutions <= completedVariants.size();
+    return config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
-  private void logPatch(final VariantStore variantStore) {
-    List<Variant> completedVariants = variantStore.getFoundSolutions();
-    log.debug("enter outputPatch(VariantStore)");
+  private void logPatch(final List<Variant> completedVariants) {
+    log.debug("enter outputPatch(List<Variant>)");
     for (final Variant completedVariant : completedVariants) {
       final List<Patch> patches = patchGenerator.exec(completedVariant);
       log.info(makeVariantId(completedVariants, completedVariant));
