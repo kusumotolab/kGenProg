@@ -2,7 +2,7 @@ package jp.kusumotolab.kgenprog.project;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,10 +50,7 @@ public class ProjectBuilder {
         compiler.getStandardFileManager(null, null, null);
     final InMemoryClassManager inMemoryFileManager = new InMemoryClassManager(standardFileManager);
 
-    // コンパイル対象の JavaFileObject を生成
-    final Iterable<? extends JavaFileObject> javaFileObjects =
-        generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
-
+    // コンパイルの引数を生成
     final List<String> compilationOptions = new ArrayList<>();
     compilationOptions.add("-encoding");
     compilationOptions.add("UTF-8");
@@ -63,23 +60,18 @@ public class ProjectBuilder {
         .map(cp -> cp.path.toString())
         .collect(Collectors.toList())));
     compilationOptions.add("-verbose");
-
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-    final List<String> verboseLines = new ArrayList<>();
-    final CompilationTask task = compiler.getTask(new Writer() {
 
-      @Override
-      public void write(char[] cbuf, int off, int len) throws IOException {
-        final String text = new String(cbuf);
-        verboseLines.add(text.substring(off, off + len));
-      }
+    // コンパイル対象の JavaFileObject を生成
+    final Iterable<? extends JavaFileObject> javaFileObjects =
+        generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
 
-      @Override
-      public void flush() throws IOException {}
+    // コンパイルの進捗状況を得るためのWriterを生成
+    final StringWriter buildProgressWriter = new StringWriter();
 
-      @Override
-      public void close() throws IOException {}
-    }, inMemoryFileManager, diagnostics, compilationOptions, null, javaFileObjects);
+    // コンパイルのタスクを生成
+    final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
+        diagnostics, compilationOptions, null, javaFileObjects);
 
     try {
       inMemoryFileManager.close();
@@ -87,16 +79,18 @@ public class ProjectBuilder {
       e.printStackTrace();
     }
 
+    // コンパイルを実行
     final boolean isBuildFailed = !task.call();
     if (isBuildFailed) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
       return EmptyBuildResults.instance;
     }
 
+    final String buildProgressText = buildProgressWriter.toString();
     final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
     final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
     final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, compilationPackage, diagnostics);
+        new BuildResults(generatedSourceCode, compilationPackage, diagnostics, buildProgressText);
 
     // TODO: https://github.com/kusumotolab/kGenProg/pull/154
     // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);

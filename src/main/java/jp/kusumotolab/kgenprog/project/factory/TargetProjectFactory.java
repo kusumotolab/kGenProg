@@ -47,8 +47,8 @@ public class TargetProjectFactory {
    */
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
-    log.info("enter create(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
-    return new DefaultTargetProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
+    log.debug("enter create(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
+    return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
         pathsForClass, junitVersion).create();
   }
 

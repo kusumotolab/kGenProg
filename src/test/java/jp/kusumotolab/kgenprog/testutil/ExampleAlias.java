@@ -84,8 +84,9 @@ public class ExampleAlias {
   // ライブラリへのエイリアス
   public final static class Lib {
 
-    public final static Path Junit = Paths.get("lib/junit4/junit-4.12.jar");
-    public final static Path Hamcrest = Paths.get("lib/junit4/hamcrest-core-1.3.jar");
+    private final static Path TempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+    public final static Path Junit = TempDir.resolve("junit-4.12.jar");
+    public final static Path Hamcrest = TempDir.resolve("hamcrest-core-1.3.jar");
   }
 
   private static Path appendFileSuffix(final Path path, final String suffix) {

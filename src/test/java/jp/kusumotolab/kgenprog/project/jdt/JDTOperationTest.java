@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
-import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class JDTOperationTest {

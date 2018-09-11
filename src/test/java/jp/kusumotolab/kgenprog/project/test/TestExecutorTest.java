@@ -22,11 +22,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
-import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestExecutorTest {
 
@@ -42,8 +42,7 @@ public class TestExecutorTest {
   public void testTestExecutorForBuildSuccess01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
@@ -82,8 +81,7 @@ public class TestExecutorTest {
   public void testTestExecutorForBuildSuccess02() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
@@ -134,8 +132,7 @@ public class TestExecutorTest {
 
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
@@ -156,8 +153,7 @@ public class TestExecutorTest {
     // 無限ループする題材
     final Path rootPath = Paths.get("example/BuildSuccess04");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant variant = targetProject.getInitialVariant();
-    final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
+    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
