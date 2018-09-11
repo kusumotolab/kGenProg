@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.io.FileUtils;
@@ -28,9 +27,6 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class KGenProgMainTest {
 
@@ -55,8 +51,12 @@ public class KGenProgMainTest {
     final List<Path> productPaths = Arrays.asList(productPath);
     final List<Path> testPaths = Arrays.asList(testPath);
 
-    final TargetProject project = TargetProjectFactory.create(rootPath, productPaths, testPaths,
-        Collections.emptyList(), JUnitVersion.JUNIT4);
+    final Configuration config = new Configuration.Builder(rootPath, productPaths, testPaths)
+        .setWorkingDir(WorkPath)
+        .setTimeLimitSeconds(600)
+        .setMaxGeneration(100)
+        .setRequiredSolutionsCount(1)
+        .build();
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random();
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
@@ -67,8 +67,8 @@ public class KGenProgMainTest {
     final VariantSelection variantSelection = new GenerationalVariantSelection();
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    return new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, WorkPath, 600, 100, 1);
+    return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
+        sourceCodeValidation, variantSelection, patchGenerator);
   }
 
   @Test

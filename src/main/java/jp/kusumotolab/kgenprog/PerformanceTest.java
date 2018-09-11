@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
@@ -22,9 +21,6 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class PerformanceTest {
 
@@ -51,8 +47,12 @@ public class PerformanceTest {
     final List<Path> productPaths = Arrays.asList(productPath);
     final List<Path> testPaths = Arrays.asList(testPath);
 
-    final TargetProject project = TargetProjectFactory.create(rootPath, productPaths, testPaths,
-        Collections.emptyList(), JUnitVersion.JUNIT4);
+    final Configuration config = new Configuration.Builder(rootPath, productPaths, testPaths)
+        .setTimeLimitSeconds(timeout)
+        .setMaxGeneration(maxGeneration)
+        .setRequiredSolutionsCount(requiredSolutions)
+        .setWorkingDir(WorkPath)
+        .build();
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random();
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
@@ -63,8 +63,7 @@ public class PerformanceTest {
     final VariantSelection variantSelection = new GenerationalVariantSelection();
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    return new KGenProgMain(project, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, WorkPath, timeout, maxGeneration,
-        requiredSolutions);
+    return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
+        sourceCodeValidation, variantSelection, patchGenerator);
   }
 }

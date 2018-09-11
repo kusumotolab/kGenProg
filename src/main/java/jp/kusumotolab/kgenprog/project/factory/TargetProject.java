@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project.factory;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -36,5 +37,25 @@ public class TargetProject {
 
   public void setTestSourcePaths(final List<TestSourcePath> testSourcePaths) {
     this.testSourcePaths = testSourcePaths;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TargetProject project = (TargetProject) o;
+    return Objects.equals(rootPath, project.rootPath) &&
+        Objects.equals(getProductSourcePaths(), project.getProductSourcePaths()) &&
+        Objects.equals(getTestSourcePaths(), project.getTestSourcePaths()) &&
+        Objects.equals(getClassPaths(), project.getClassPaths());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(rootPath, getProductSourcePaths(), getTestSourcePaths(), getClassPaths());
   }
 }

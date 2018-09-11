@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -45,7 +46,10 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final Configuration config = new Configuration.Builder(targetProject)
+        .setTimeLimitSeconds(timeoutSeconds)
+        .build();
+    final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // 実行されたテストは4個のはず
@@ -81,7 +85,10 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final Configuration config = new Configuration.Builder(targetProject)
+        .setTimeLimitSeconds(timeoutSeconds)
+        .build();
+    final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // 実行されたテストは10個のはず
@@ -129,7 +136,10 @@ public class TestExecutorTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
-    final TestExecutor executor = new TestExecutor(targetProject, timeoutSeconds);
+    final Configuration config = new Configuration.Builder(targetProject)
+        .setTimeLimitSeconds(timeoutSeconds)
+        .build();
+    final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // TODO
@@ -149,7 +159,10 @@ public class TestExecutorTest {
 
     // タイムアウト時間を短めに設定（CI高速化のため）
     final long timeout = 1;
-    final TestExecutor executor = new TestExecutor(targetProject, timeout);
+    final Configuration config = new Configuration.Builder(targetProject)
+        .setTimeLimitSeconds(timeout)
+        .build();
+    final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず

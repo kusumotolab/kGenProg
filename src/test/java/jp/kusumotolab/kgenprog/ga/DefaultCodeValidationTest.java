@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
@@ -26,7 +27,8 @@ public class DefaultCodeValidationTest {
   public void testExec() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = TestUtil.createVariant(targetProject);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
 
     final DefaultCodeValidation defaultCodeValidation = new DefaultCodeValidation();
     final Fitness fitness = defaultCodeValidation.exec(null, initialVariant.getTestResults());
@@ -39,7 +41,8 @@ public class DefaultCodeValidationTest {
   public void testExecForBuildFailure() {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final Variant initialVariant = TestUtil.createVariant(targetProject);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
 
     final DefaultCodeValidation defaultCodeValidation = new DefaultCodeValidation();
     final Fitness fitness = defaultCodeValidation.exec(null, initialVariant.getTestResults());
