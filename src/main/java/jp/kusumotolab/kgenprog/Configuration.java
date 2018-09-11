@@ -152,8 +152,7 @@ public class Configuration {
       this.targetProject = targetProject;
     }
 
-    private Builder() {
-    }
+    private Builder() {}
 
     // endregion
 
@@ -167,7 +166,8 @@ public class Configuration {
 
       try {
         parser.parseArgument(args);
-      } catch (final CmdLineException e) {
+        validateArgument(builder);
+      } catch (final CmdLineException | IllegalArgumentException e) {
         log.error(e.getMessage());
         parser.printUsage(System.err);
         System.exit(1);
@@ -176,12 +176,30 @@ public class Configuration {
       return builder.build();
     }
 
+    private static void validateArgument(final Builder builder) throws IllegalArgumentException {
+      final Path currentDir = Paths.get(".");
+      final Path projectRootDir = builder.rootDir;
+
+      try {
+        if (!Files.isSameFile(currentDir, projectRootDir)) {
+          log.warn(
+              "The directory where kGenProg is running is different from the root directory of the given target project.");
+          log.warn(
+              "If the target project include test cases with file I/O, such test cases won't run correctly.");
+          log.warn(
+              "We recommend that you run kGenProg with the root directory of the target project as the current directory.");
+        }
+      } catch (final IOException e) {
+        throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible");
+      }
+    }
+
     public Configuration build() {
       log.debug("enter build()");
 
       if (targetProject == null) {
-        targetProject = TargetProjectFactory.create(rootDir, productPaths,
-            testPaths, classPaths, JUnitVersion.JUNIT4);
+        targetProject = TargetProjectFactory.create(rootDir, productPaths, testPaths, classPaths,
+            JUnitVersion.JUNIT4);
       }
 
       return new Configuration(this);
@@ -288,8 +306,9 @@ public class Configuration {
       this.rootDir = Paths.get(rootDir);
     }
 
-    @Option(name = "-s", aliases = "--src", required = true, handler = StringArrayOptionHandler.class,
-        metaVar = "<path> ...", usage = "Paths of the root directories holding src codes")
+    @Option(name = "-s", aliases = "--src", required = true,
+        handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
+        usage = "Paths of the root directories holding src codes")
     private void addProductPathFromCmdLineParser(final String sourcePath) {
       log.debug("enter addProductPathFromCmdLineParser(String)");
       this.productPaths.add(Paths.get(sourcePath));
@@ -350,7 +369,8 @@ public class Configuration {
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
-    @Option(name = "-e", aliases = "--required-solutions", usage = "The number of solutions needed to be searched")
+    @Option(name = "-e", aliases = "--required-solutions",
+        usage = "The number of solutions needed to be searched")
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       log.debug("enter setTimeLimitFromCmdLineParser(int)");
       this.requiredSolutionsCount = requiredSolutionsCount;

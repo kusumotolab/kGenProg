@@ -15,17 +15,20 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
-public class DefaultTargetProjectFactory implements ProjectFactory {
+public class DefaultProjectFactory implements ProjectFactory {
 
-  private static final Logger log = LoggerFactory.getLogger(DefaultTargetProjectFactory.class);
+  private static final Logger log = LoggerFactory.getLogger(DefaultProjectFactory.class);
 
   private final Path rootPath;
   private final List<ProductSourcePath> productSourcePaths;
   private final List<TestSourcePath> testSourcePaths;
   private final List<ClassPath> classPaths;
 
-  public DefaultTargetProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
+  public DefaultProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
+
+    log.debug(
+        "enter DefaultTargetProjectFatory(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
 
     this.rootPath = rootPath;
     this.productSourcePaths = getFilePaths(pathsForProductSource, ".java").stream()
@@ -38,15 +41,20 @@ public class DefaultTargetProjectFactory implements ProjectFactory {
         .map(ClassPath::new)
         .collect(Collectors.toList());
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
+
+    log.debug(
+        "exit DefaultTargetProjectFatory(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
   }
 
   @Override
   public TargetProject create() {
+    log.debug("enter create()");
     return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPaths);
   }
 
   @Override
   public boolean isApplicable() {
+    log.debug("enter isApplicable()");
     return true;
   }
 
