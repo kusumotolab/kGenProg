@@ -229,7 +229,7 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator5() throws IOException {
-    final Path basePath = Paths.get("example/BuildSuccess01");
+    final Path basePath = Paths.get("example/BuildSuccess09");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     final String delimiter = System.lineSeparator();
