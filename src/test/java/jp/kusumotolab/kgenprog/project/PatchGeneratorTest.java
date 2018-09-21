@@ -31,7 +31,8 @@ public class PatchGeneratorTest {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    final String expected = new StringBuilder().append("package example;\n")
+    final String expected = new StringBuilder().append("")
+        .append("package example;\n")
         .append("public class Foo {\n")
         .append("  public int foo(  int n){\n")
         .append("    return n;\n" + "  }\n")
@@ -119,7 +120,8 @@ public class PatchGeneratorTest {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    final String expected = new StringBuilder().append("package example;\n")
+    final String expected = new StringBuilder().append("")
+        .append("package example;\n")
         .append("public class Foo {\n")
         .append("  public int foo(  int n){\n")
         .append("    if (n > 0) {\n")
@@ -175,7 +177,8 @@ public class PatchGeneratorTest {
     final Path basePath = Paths.get("example/BuildSuccess01/");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    final String expected = new StringBuilder().append("package example;\n")
+    final String expected = new StringBuilder().append("")
+        .append("package example;\n")
         .append("public class Foo {\n")
         .append("  public int foo(  int n){\n")
         .append("    {\n")
