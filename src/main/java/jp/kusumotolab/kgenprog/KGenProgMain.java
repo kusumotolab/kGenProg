@@ -1,11 +1,7 @@
 package jp.kusumotolab.kgenprog;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
@@ -18,7 +14,6 @@ import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -26,7 +21,7 @@ public class KGenProgMain {
 
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
-  private final TargetProject targetProject;
+  private final Configuration config;
   private final FaultLocalization faultLocalization;
   private final Mutation mutation;
   private final Crossover crossover;
@@ -37,72 +32,35 @@ public class KGenProgMain {
   private final PatchGenerator patchGenerator;
   private final JDTASTConstruction astConstruction;
 
-  // 以下，一時的なフィールド #146 で解決すべき
-  private final long timeoutSeconds;
-  private final int maxGeneration;
-  private final int requiredSolutions;
-
-  // TODO #146
-  // workingdirのパスを一時的にMainに記述
-  // 別クラスが管理すべき情報？
-  public final Path workingPath;
-
-  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
+  public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final PatchGenerator patchGenerator, final Path workingPath) {
+      final PatchGenerator patchGenerator) {
 
-    this(targetProject, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator, workingPath, 60, 10, 1);
-  }
-
-  public KGenProgMain(final TargetProject targetProject, final FaultLocalization faultLocalization,
-      final Mutation mutation, final Crossover crossover,
-      final SourceCodeGeneration sourceCodeGeneration,
-      final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final PatchGenerator patchGenerator, final Path workingPath, final long timeout,
-      final int maxGeneration, final int requiredSolutions) {
-
-    this.workingPath = workingPath;
-    try {
-      if (Files.exists(this.workingPath)) {
-        FileUtils.deleteDirectory(this.workingPath.toFile());
-      }
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-
-    this.targetProject = targetProject;
+    this.config = config;
     this.faultLocalization = faultLocalization;
     this.mutation = mutation;
     this.crossover = crossover;
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-
-    // TODO Should be retrieved from config
-    this.testExecutor = new TestExecutor(targetProject, 600);
+    this.testExecutor = new TestExecutor(config);
     this.astConstruction = new JDTASTConstruction();
-
     this.patchGenerator = patchGenerator;
-
-    this.timeoutSeconds = timeout;
-    this.maxGeneration = maxGeneration;
-    this.requiredSolutions = requiredSolutions;
   }
 
   public List<Variant> run() {
     log.debug("enter run()");
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
         sourceCodeGeneration, sourceCodeValidation, testExecutor);
-    final VariantStore variantStore = new VariantStore(targetProject, strategies);
+    final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
 
-    final StopWatch stopwatch = new StopWatch(timeoutSeconds);
+    final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
 
     GA: while (true) {
@@ -156,12 +114,12 @@ public class KGenProgMain {
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
     log.debug("enter reachedMaxGeneration(OrdinalNumber)");
-    return this.maxGeneration <= generation.get();
+    return config.getMaxGeneration() <= generation.get();
   }
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     log.debug("enter areEnoughCompletedVariants(List<Variant>)");
-    return this.requiredSolutions <= completedVariants.size();
+    return config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
   private void logPatch(final VariantStore variantStore) {
