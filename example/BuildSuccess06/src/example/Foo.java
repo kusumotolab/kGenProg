@@ -1,10 +1,11 @@
 package example;
+
 public class Foo {
-  public int foo(  int n){
+
+  public int foo(int n) {
     if (n > 0) {
       n--;
-    }
- else {
+    } else {
       n++;
     }
     return n;

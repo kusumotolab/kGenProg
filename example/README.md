@@ -30,7 +30,19 @@ Bazのみまともなフォーマットを適用．
 
 ### BuildSuccess05
 1実装クラスと1テストクラス．  
-Maven（pom.xml）プロジェクト．  
+Maven（pom.xml）プロジェクト．
+TargetProjectFactoryのテスト用．  
+
+### BuildSuccess06
+1実装クラスと1テストクラス．  
+Eclipse（.classpath）プロジェクト．
+TargetProjectFactoryのテスト用．  
+
+### BuildSuccess07
+1実装クラスと1テストクラス．  
+BuildSuccess02の派生．
+srcとtestを別フォルダに設置．
+srcとtestを個別にビルド（差分ビルド等）する場合の確認用．
 
 ### BuildSuccess08
 1実装クラスと1テストクラス．  
