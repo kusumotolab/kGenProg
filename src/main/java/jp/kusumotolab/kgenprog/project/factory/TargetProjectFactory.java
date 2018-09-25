@@ -3,12 +3,13 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.TestSourcePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class TargetProjectFactory {
+
+  private static final Logger log = LoggerFactory.getLogger(TargetProjectFactory.class);
 
   /**
    * TargetProjectを生成するファクトリメソッド． 各種ビルドツールの設定ファイルが存在すればそこから，
@@ -39,16 +40,16 @@ public class TargetProjectFactory {
    * TargetProjectを生成するファクトリメソッド． 全パラメータを指定する必要あり．
    * 
    * @param rootPath 対象のルートパス
-   * @param productSourcePaths
-   * @param testSourcePaths
+   * @param pathsForProductSource
+   * @param pathsForTestSource
    * @param classPaths
    * @return TargetProject
    */
-  public static TargetProject create(final Path rootPath,
-      final List<ProductSourcePath> productSourcePaths, final List<TestSourcePath> testSourcePaths,
-      List<ClassPath> classPaths, JUnitVersion junitVersion) {
-    return new DefaultProjectFactory(rootPath, productSourcePaths, testSourcePaths, classPaths,
-        junitVersion).create();
+  public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
+      final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
+    log.info("enter create(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
+    return new DefaultTargetProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
+        pathsForClass, junitVersion).create();
   }
 
   /**
