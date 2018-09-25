@@ -62,8 +62,9 @@ public class PatchGenerator {
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));
     final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
+    final List<String> noBlankLineOriginalSourceCodeLines = removeEndDelimiter(originalSourceCodeLines);
     final List<String> diffLines =
-        makeDiff(fileName, originalSourceCodeLines, modifiedSourceCodeLines);
+        makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
 
     return new Patch(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
   }
@@ -82,5 +83,16 @@ public class PatchGenerator {
         DiffUtils.diff(originalSourceCodeLines, modifiedSourceCodeLines);
     return UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, originalSourceCodeLines, diff,
         3);
+  }
+
+  private List<String> removeEndDelimiter(final List<String> sourceCodeLines) {
+    for (int index = sourceCodeLines.size() - 1; index >= 0; index--) {
+      final String sourceCodeLine = sourceCodeLines.get(index);
+      if (!sourceCodeLine.equals("")) {
+        return sourceCodeLines.subList(0, index + 1);
+      }
+    }
+
+    return Collections.emptyList();
   }
 }
