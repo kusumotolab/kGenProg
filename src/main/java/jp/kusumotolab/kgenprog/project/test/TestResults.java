@@ -139,14 +139,29 @@ public class TestResults implements Serializable {
   private List<FullyQualifiedName> getTestFQNs(final FullyQualifiedName targetFQN,
       final int lineNumber, final Coverage.Status status, final boolean failed) {
     final List<FullyQualifiedName> result = new ArrayList<>();
+
+    // 全てのテストケースを探索
     for (final TestResult testResult : this.value.values()) {
       final Coverage coverage = testResult.getCoverages(targetFQN);
-      if (null != coverage) {
+
+      // 基本起きないはず
+      if (null == coverage) {
+        throw new RuntimeException("Something occured in TestResults#getTestFQNs");
+      }
+
+      // テスト結果を取り出してみる
+      try {
         final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
         if (status == _status && failed == testResult.failed) {
           result.add(testResult.executedTestFQN);
         }
+      } catch (final IndexOutOfBoundsException e) {
+        // 計測対象（targetFQN）の行の外を参照した場合
+        // （＝内部クラス等の理由でその行の実行結果が別のテストcoverageに記述されている場合）
+        // 何もしなくて良い．
+        // その行の結果は別のcoverageインスタンスに保存されているため．
       }
+
     }
     return result;
   }
