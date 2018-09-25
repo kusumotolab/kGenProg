@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
+import static org.assertj.core.api.Assertions.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -27,7 +26,7 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class PatchGeneratorTest {
 
   @Test
-  public void testPatchGenerator1() throws IOException {
+  public void testPatchGenerator1() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
@@ -60,7 +59,7 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(
         new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
+    final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
@@ -68,7 +67,7 @@ public class PatchGeneratorTest {
   }
 
   @Test
-  public void testPatchGenerator2() throws IOException {
+  public void testPatchGenerator2() {
     final Path basePath = Paths.get("example/BuildSuccess03");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
@@ -108,7 +107,7 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(
         new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
+    final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
@@ -116,7 +115,7 @@ public class PatchGeneratorTest {
   }
 
   @Test
-  public void testPatchGenerator3() throws IOException {
+  public void testPatchGenerator3() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
@@ -164,7 +163,7 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(
         new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
+    final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
@@ -173,7 +172,7 @@ public class PatchGeneratorTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testPatchGenerator4() throws IOException {
+  public void testPatchGenerator4() {
     final Path basePath = Paths.get("example/BuildSuccess01/");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
@@ -220,7 +219,7 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(
         new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
+    final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
     final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
 
@@ -228,7 +227,7 @@ public class PatchGeneratorTest {
   }
 
   @Test
-  public void testPatchGenerator5() throws IOException {
+  public void testPatchGenerator5() {
     final Path basePath = Paths.get("example/BuildSuccess09");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
@@ -272,7 +271,7 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(
         new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
 
-    final Patch patch = (Patch) patchGenerator.exec(modifiedVariant)
+    final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
 
     assertThat(patch.getDiff()).isEqualToNormalizingNewlines(expected);
