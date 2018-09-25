@@ -62,9 +62,9 @@ public class PatchGenerator {
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));
     final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
-    final List<String> moldedOriginalSourceCodeLines = removeEndDelimiter(originalSourceCodeLines);
+    final List<String> noBlankLineOriginalSourceCodeLines = removeEndDelimiter(originalSourceCodeLines);
     final List<String> diffLines =
-        makeDiff(fileName, moldedOriginalSourceCodeLines, modifiedSourceCodeLines);
+        makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
 
     return new Patch(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
   }
