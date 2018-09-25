@@ -86,14 +86,9 @@ public class PatchGenerator {
   }
 
   private List<String> removeEndDelimiter(final List<String> sourceCodeLines) {
-    if (sourceCodeLines.isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    for (int i = 1; i < sourceCodeLines.size(); i++) {
-      final int index = sourceCodeLines.size() - i;
-      if (!sourceCodeLines.get(index)
-          .equals("")) {
+    for (int index = sourceCodeLines.size() - 1; index >= 0; index--) {
+      final String sourceCodeLine = sourceCodeLines.get(index);
+      if (!sourceCodeLine.equals("")) {
         return sourceCodeLines.subList(0, index + 1);
       }
     }
