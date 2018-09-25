@@ -3,17 +3,17 @@ package jp.kusumotolab.kgenprog.project.test;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Bar;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest01;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest02;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest03;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest04;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest05;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest01;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest02;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest03;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST02;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST04;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST05;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST01;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST02;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST04;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestExecutorTest {
 
-  private final static long timeoutSeconds = 60;
+  private final static long TIMEOUT_SEC = 60;
 
   @Before
   public void before() throws IOException {}
@@ -47,33 +47,33 @@ public class TestExecutorTest {
     projectBuilder.build(generatedSourceCode);
 
     final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(timeoutSeconds)
+        .setTimeLimitSeconds(TIMEOUT_SEC)
         .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
-        FooTest01, FooTest02, FooTest03, FooTest04);
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
 
     // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FooTest01).failed).isFalse();
-    assertThat(result.getTestResult(FooTest02).failed).isFalse();
-    assertThat(result.getTestResult(FooTest03).failed).isTrue();
-    assertThat(result.getTestResult(FooTest04).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
 
     // よってテストの成功率はこうなる
     assertThat(result.getSuccessRate()).isEqualTo(1.0 * 3 / 4);
 
-    final TestResult fooTest01result = result.getTestResult(FooTest01);
-    final TestResult fooTest04result = result.getTestResult(FooTest04);
+    final TestResult fooTest01result = result.getTestResult(FOO_TEST01);
+    final TestResult fooTest04result = result.getTestResult(FOO_TEST04);
 
     // FooTest.test01 実行によるFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(Foo).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    assertThat(fooTest01result.getCoverages(FOO).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // FooTest.test04 実行によるFooのバレッジはこうなるはず
-    assertThat(fooTest04result.getCoverages(Foo).statuses).containsExactly(EMPTY, COVERED, EMPTY,
+    assertThat(fooTest04result.getCoverages(FOO).statuses).containsExactly(EMPTY, COVERED, EMPTY,
         COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 
@@ -86,42 +86,42 @@ public class TestExecutorTest {
     projectBuilder.build(generatedSourceCode);
 
     final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(timeoutSeconds)
+        .setTimeLimitSeconds(TIMEOUT_SEC)
         .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // 実行されたテストは10個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
-        FooTest01, FooTest02, FooTest03, FooTest04, //
-        BarTest01, BarTest02, BarTest03, BarTest04, BarTest05);
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04, //
+        BAR_TEST01, BAR_TEST02, BAR_TEST03, BAR_TEST04, BAR_TEST05);
 
     // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FooTest01).failed).isFalse();
-    assertThat(result.getTestResult(FooTest02).failed).isFalse();
-    assertThat(result.getTestResult(FooTest03).failed).isTrue();
-    assertThat(result.getTestResult(FooTest04).failed).isFalse();
-    assertThat(result.getTestResult(BarTest01).failed).isFalse();
-    assertThat(result.getTestResult(BarTest02).failed).isFalse();
-    assertThat(result.getTestResult(BarTest03).failed).isFalse();
-    assertThat(result.getTestResult(BarTest04).failed).isFalse();
-    assertThat(result.getTestResult(BarTest05).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
+    assertThat(result.getTestResult(BAR_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(BAR_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(BAR_TEST03).failed).isFalse();
+    assertThat(result.getTestResult(BAR_TEST04).failed).isFalse();
+    assertThat(result.getTestResult(BAR_TEST05).failed).isFalse();
 
-    final TestResult fooTest01result = result.getTestResult(FooTest01);
+    final TestResult fooTest01result = result.getTestResult(FOO_TEST01);
 
     // FooTest.test01()ではFooとBarが実行されたはず
-    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(Foo, Bar);
+    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(Foo).statuses).containsExactlyInAnyOrder(EMPTY, COVERED,
+    assertThat(fooTest01result.getCoverages(FOO).statuses).containsExactlyInAnyOrder(EMPTY, COVERED,
         EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // BarTest.test01()ではFooとBarが実行されたはず
-    final TestResult barTest01r = result.getTestResult(BarTest01);
-    assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(Foo, Bar);
+    final TestResult barTest01r = result.getTestResult(BAR_TEST01);
+    assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
 
     // BarTest.test01()で実行されたBarのカバレッジはこうなるはず
-    assertThat(barTest01r.getCoverages(Bar).statuses).containsExactlyInAnyOrder(EMPTY, NOT_COVERED,
+    assertThat(barTest01r.getCoverages(BAR).statuses).containsExactlyInAnyOrder(EMPTY, NOT_COVERED,
         EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED);
 
     // TODO 最後のNOT_COVERDだけ理解できない．謎．
@@ -137,7 +137,7 @@ public class TestExecutorTest {
     projectBuilder.build(generatedSourceCode);
 
     final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(timeoutSeconds)
+        .setTimeLimitSeconds(TIMEOUT_SEC)
         .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);

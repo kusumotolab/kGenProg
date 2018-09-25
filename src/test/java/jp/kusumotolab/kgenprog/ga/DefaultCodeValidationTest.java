@@ -15,11 +15,11 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class DefaultCodeValidationTest {
 
-  private final static Path WorkPath = Paths.get("tmp/work");
+  private final static Path WORK_PATH = Paths.get("tmp/work");
 
   @Before
   public void before() throws IOException {
-    TestUtil.deleteWorkDirectory(WorkPath);
+    TestUtil.deleteWorkDirectory(WORK_PATH);
     Files.deleteIfExists(TestResults.getSerFilePath());
   }
 

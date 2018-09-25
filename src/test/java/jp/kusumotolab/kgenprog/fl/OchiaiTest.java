@@ -17,12 +17,12 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class OchiaiTest {
 
-  private final static Path WorkPath = Paths.get("tmp/work");
+  private final static Path WORK_PATH = Paths.get("tmp/work");
 
   @Before
   public void before() throws IOException {
     System.gc();
-    TestUtil.deleteWorkDirectory(WorkPath);
+    TestUtil.deleteWorkDirectory(WORK_PATH);
   }
 
   @Test

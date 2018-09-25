@@ -24,16 +24,15 @@ import jp.kusumotolab.kgenprog.project.PatchGenerator;
 
 public class PerformanceTest {
 
-  private final static String ProductName = "src/example/CloseToZero.java";
-  private final static String TestName = "src/example/CloseToZeroTest.java";
+  private final static String PRODUCT_NAME = "src/example/CloseToZero.java";
+  private final static String TEST_NAME = "src/example/CloseToZeroTest.java";
 
-  private final static Path WorkPath = Paths.get("tmp/work");
-  // private final static Path OutPath = Paths.get("tmp/out");
+  private final static Path WORK_PATH = Paths.get("tmp/work");
 
   public static void main(String[] args) {
     final Path rootPath = Paths.get("example/CloseToZero01");
-    final Path productPath = rootPath.resolve(ProductName);
-    final Path testPath = rootPath.resolve(TestName);
+    final Path productPath = rootPath.resolve(PRODUCT_NAME);
+    final Path testPath = rootPath.resolve(TEST_NAME);
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, 600, 1000, 100);
     final List<Variant> variants = kGenProgMain.run();
@@ -47,12 +46,12 @@ public class PerformanceTest {
     final List<Path> productPaths = Arrays.asList(productPath);
     final List<Path> testPaths = Arrays.asList(testPath);
 
-    final Configuration config = new Configuration.Builder(rootPath, productPaths, testPaths)
-        .setTimeLimitSeconds(timeout)
-        .setMaxGeneration(maxGeneration)
-        .setRequiredSolutionsCount(requiredSolutions)
-        .setWorkingDir(WorkPath)
-        .build();
+    final Configuration config =
+        new Configuration.Builder(rootPath, productPaths, testPaths).setTimeLimitSeconds(timeout)
+            .setMaxGeneration(maxGeneration)
+            .setRequiredSolutionsCount(requiredSolutions)
+            .setWorkingDir(WORK_PATH)
+            .build();
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random();
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);

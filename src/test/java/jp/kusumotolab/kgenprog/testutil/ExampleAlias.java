@@ -19,74 +19,71 @@ public class ExampleAlias {
   // Srcパスへのエイリアス
   public static class Src {
 
-    public final static Path Dir = Paths.get("src");
-    public final static Path DirTest = Paths.get("test");
+    public final static Path FOO = Paths.get("src/example/Foo.java");
+    public final static Path BAR = Paths.get("src/example/Bar.java");
+    public final static Path BAZ = Paths.get("src/example/Baz.java");
+    public final static Path QUX = Paths.get("src/example/Qux.java");
 
-    public final static Path Foo = Paths.get("src/example/Foo.java");
-    public final static Path Bar = Paths.get("src/example/Bar.java");
-    public final static Path Baz = Paths.get("src/example/Baz.java");
-    public final static Path Qux = Paths.get("src/example/Qux.java");
-
-    public final static Path FooTest = appendFileSuffix(Foo, "Test");
-    public final static Path BarTest = appendFileSuffix(Bar, "Test");
-    public final static Path BazTest = appendFileSuffix(Baz, "Test");
-    public final static Path QuxTest = appendFileSuffix(Qux, "Test");
+    public final static Path FOO_TEST = appendFileSuffix(FOO, "Test");
+    public final static Path BAR_TEST = appendFileSuffix(BAR, "Test");
+    public final static Path BAZ_TEST = appendFileSuffix(BAZ, "Test");
+    public final static Path QUX_TEST = appendFileSuffix(QUX, "Test");
   }
 
   // Binパスへのエイリアス
   public static class Bin {
 
-    public final static Path Foo = sourceToBin(Src.Foo);
-    public final static Path Bar = sourceToBin(Src.Bar);
-    public final static Path Baz = sourceToBin(Src.Baz);
-    public final static Path Qux = sourceToBin(Src.Qux);
+    public final static Path FOO = sourceToBin(Src.FOO);
+    public final static Path BAR = sourceToBin(Src.BAR);
+    public final static Path BAZ = sourceToBin(Src.BAZ);
+    public final static Path QUX = sourceToBin(Src.QUX);
 
-    public final static Path FooTest = sourceToBin(Src.FooTest);
-    public final static Path BarTest = sourceToBin(Src.BarTest);
-    public final static Path BazTest = sourceToBin(Src.BazTest);
+    public final static Path FOO_TEST = sourceToBin(Src.FOO_TEST);
+    public final static Path BAR_TEST = sourceToBin(Src.BAR_TEST);
+    public final static Path BAZ_TEST = sourceToBin(Src.BAZ_TEST);
 
-    public final static Path BazInner = appendFileSuffix(Baz, "$InnerClass");
-    public final static Path BazStaticInner = appendFileSuffix(Baz, "$StaticInnerClass");
-    public final static Path BazAnonymous = appendFileSuffix(Baz, "$1");
-    public final static Path BazOuter = Paths.get("example/OuterClass.class");
+    public final static Path BAZ_INNER = appendFileSuffix(BAZ, "$InnerClass");
+    public final static Path BAZ_STATIC_INNER = appendFileSuffix(BAZ, "$StaticInnerClass");
+    public final static Path BAZ_ANONYMOUS = appendFileSuffix(BAZ, "$1");
+    public final static Path BAZ_OUTER = Paths.get("example/OuterClass.class");
   }
 
   // Fqnへのエイリアス
   public static class Fqn {
 
-    public final static FullyQualifiedName Foo = pathToFqn(Src.Foo);
-    public final static FullyQualifiedName Bar = pathToFqn(Src.Bar);
-    public final static FullyQualifiedName Baz = pathToFqn(Src.Baz);
-    public final static FullyQualifiedName Qux = pathToFqn(Src.Qux);
+    public final static FullyQualifiedName FOO = pathToFqn(Src.FOO);
+    public final static FullyQualifiedName BAR = pathToFqn(Src.BAR);
+    public final static FullyQualifiedName BAZ = pathToFqn(Src.BAZ);
+    public final static FullyQualifiedName QUX = pathToFqn(Src.QUX);
 
-    public final static FullyQualifiedName FooTest = pathToFqn(Src.FooTest);
-    public final static FullyQualifiedName BarTest = pathToFqn(Src.BarTest);
-    public final static FullyQualifiedName BazTest = pathToFqn(Src.BazTest);
-    public final static FullyQualifiedName QuxTest = pathToFqn(Src.QuxTest);
+    public final static FullyQualifiedName FOO_TEST = pathToFqn(Src.FOO_TEST);
+    public final static FullyQualifiedName BAR_TEST = pathToFqn(Src.BAR_TEST);
+    public final static FullyQualifiedName BAZ_TEST = pathToFqn(Src.BAZ_TEST);
+    public final static FullyQualifiedName QUX_TEST = pathToFqn(Src.QUX_TEST);
 
-    public final static FullyQualifiedName FooTest01 = appendFqn(FooTest, ".test01");
-    public final static FullyQualifiedName FooTest02 = appendFqn(FooTest, ".test02");
-    public final static FullyQualifiedName FooTest03 = appendFqn(FooTest, ".test03");
-    public final static FullyQualifiedName FooTest04 = appendFqn(FooTest, ".test04");
+    public final static FullyQualifiedName FOO_TEST01 = appendFqn(FOO_TEST, ".test01");
+    public final static FullyQualifiedName FOO_TEST02 = appendFqn(FOO_TEST, ".test02");
+    public final static FullyQualifiedName FOO_TEST03 = appendFqn(FOO_TEST, ".test03");
+    public final static FullyQualifiedName FOO_TEST04 = appendFqn(FOO_TEST, ".test04");
 
-    public final static FullyQualifiedName BarTest01 = appendFqn(BarTest, ".test01");
-    public final static FullyQualifiedName BarTest02 = appendFqn(BarTest, ".test02");
-    public final static FullyQualifiedName BarTest03 = appendFqn(BarTest, ".test03");
-    public final static FullyQualifiedName BarTest04 = appendFqn(BarTest, ".test04");
-    public final static FullyQualifiedName BarTest05 = appendFqn(BarTest, ".test05");
+    public final static FullyQualifiedName BAR_TEST01 = appendFqn(BAR_TEST, ".test01");
+    public final static FullyQualifiedName BAR_TEST02 = appendFqn(BAR_TEST, ".test02");
+    public final static FullyQualifiedName BAR_TEST03 = appendFqn(BAR_TEST, ".test03");
+    public final static FullyQualifiedName BAR_TEST04 = appendFqn(BAR_TEST, ".test04");
+    public final static FullyQualifiedName BAR_TEST05 = appendFqn(BAR_TEST, ".test05");
 
-    public final static FullyQualifiedName BazInner = appendFqn(Baz, "$InnerClass");
-    public final static FullyQualifiedName BazStaticInner = appendFqn(Baz, "$StaticInnerClass");
-    public final static FullyQualifiedName BazAnonymous = appendFqn(Baz, "$1");
-    public final static FullyQualifiedName BazOuter = pathToFqn(Bin.BazOuter);
+    public final static FullyQualifiedName BAZ_INNER = appendFqn(BAZ, "$InnerClass");
+    public final static FullyQualifiedName BAZ_STATIC_INNER = appendFqn(BAZ, "$StaticInnerClass");
+    public final static FullyQualifiedName BAZ_ANONYMOUS = appendFqn(BAZ, "$1");
+    public final static FullyQualifiedName BAZ_OUTER = pathToFqn(Bin.BAZ_OUTER);
   }
 
   // ライブラリへのエイリアス
   public final static class Lib {
 
-    private final static Path TempDir = Paths.get(System.getProperty("java.io.tmpdir"));
-    public final static Path Junit = TempDir.resolve("junit-4.12.jar");
-    public final static Path Hamcrest = TempDir.resolve("hamcrest-core-1.3.jar");
+    private final static Path TEMP = Paths.get(System.getProperty("java.io.tmpdir"));
+    public final static Path JUNIT = TEMP.resolve("junit-4.12.jar");
+    public final static Path HAMCREST = TEMP.resolve("hamcrest-core-1.3.jar");
   }
 
   private static Path appendFileSuffix(final Path path, final String suffix) {
