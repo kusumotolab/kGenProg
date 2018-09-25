@@ -2,20 +2,20 @@ package example;
 
 import org.junit.Test;
 
-public class QuxTest {
+public class FooTest {
 
   @Test(timeout = 100)
   public void test01() {
-    Qux.qux(false);
+    Foo.foo(false);
   }
 
   @Test(timeout = 100)
   public void test02() {
-    Qux.qux(true); // infinite loop occured with timeout.
+    Foo.foo(true); // infinite loop occured with timeout.
   }
 
   @Test
   public void test03() {
-    Qux.qux(true); // infinite loop occured without timeout.
+    Foo.foo(true); // infinite loop occured without timeout.
   }
 }

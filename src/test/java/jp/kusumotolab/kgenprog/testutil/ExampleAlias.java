@@ -25,12 +25,10 @@ public class ExampleAlias {
     public final static Path Foo = Paths.get("src/example/Foo.java");
     public final static Path Bar = Paths.get("src/example/Bar.java");
     public final static Path Baz = Paths.get("src/example/Baz.java");
-    public final static Path Qux = Paths.get("src/example/Qux.java");
 
     public final static Path FooTest = appendFileSuffix(Foo, "Test");
     public final static Path BarTest = appendFileSuffix(Bar, "Test");
     public final static Path BazTest = appendFileSuffix(Baz, "Test");
-    public final static Path QuxTest = appendFileSuffix(Qux, "Test");
   }
 
   // Binパスへのエイリアス
@@ -39,7 +37,6 @@ public class ExampleAlias {
     public final static Path Foo = sourceToBin(Src.Foo);
     public final static Path Bar = sourceToBin(Src.Bar);
     public final static Path Baz = sourceToBin(Src.Baz);
-    public final static Path Qux = sourceToBin(Src.Qux);
 
     public final static Path FooTest = sourceToBin(Src.FooTest);
     public final static Path BarTest = sourceToBin(Src.BarTest);
@@ -57,12 +54,10 @@ public class ExampleAlias {
     public final static FullyQualifiedName Foo = pathToFqn(Src.Foo);
     public final static FullyQualifiedName Bar = pathToFqn(Src.Bar);
     public final static FullyQualifiedName Baz = pathToFqn(Src.Baz);
-    public final static FullyQualifiedName Qux = pathToFqn(Src.Qux);
 
     public final static FullyQualifiedName FooTest = pathToFqn(Src.FooTest);
     public final static FullyQualifiedName BarTest = pathToFqn(Src.BarTest);
     public final static FullyQualifiedName BazTest = pathToFqn(Src.BazTest);
-    public final static FullyQualifiedName QuxTest = pathToFqn(Src.QuxTest);
 
     public final static FullyQualifiedName FooTest01 = appendFqn(FooTest, ".test01");
     public final static FullyQualifiedName FooTest02 = appendFqn(FooTest, ".test02");
