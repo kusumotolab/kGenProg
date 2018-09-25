@@ -85,16 +85,16 @@ public class PatchGenerator {
         3);
   }
 
-  private List<String> removeEndDelimiter(final List<String> SourceCodeLine) {
-    if (SourceCodeLine.isEmpty()) {
+  private List<String> removeEndDelimiter(final List<String> sourceCodeLines) {
+    if (sourceCodeLines.isEmpty()) {
       return Collections.emptyList();
     }
 
-    for (int i = 1; i < SourceCodeLine.size(); i++) {
-      final int index = SourceCodeLine.size() - i;
-      if (!SourceCodeLine.get(index)
+    for (int i = 1; i < sourceCodeLines.size(); i++) {
+      final int index = sourceCodeLines.size() - i;
+      if (!sourceCodeLines.get(index)
           .equals("")) {
-        return SourceCodeLine.subList(0, index + 1);
+        return sourceCodeLines.subList(0, index + 1);
       }
     }
 
