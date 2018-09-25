@@ -642,6 +642,16 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTargetProject()).isEqualTo(expectedProject);
   }
 
+  @Test
+  public void testBuildFromCmdLineArgsWithExecTests() {
+    final String executedTests = "example.FooTest";
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), "-x", executedTests};
+    final Configuration config = Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getExecutedTests()).isEqualTo(executedTests);
+  }
 
   @Test
   public void testBuildFromCmdLineArgsWithDifferentRootDir() {

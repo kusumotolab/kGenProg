@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +34,8 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
  */
 class TestThread extends Thread {
 
+  private final static String FQN_SEPARATOR = ";";
+
   private MemoryClassLoader memoryClassLoader;
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
@@ -42,17 +45,20 @@ class TestThread extends Thread {
 
   private final GeneratedSourceCode generatedSourceCode;
   private final TargetProject targetProject;
+  private final String executedFqnStrings;
 
   public TestThread(final GeneratedSourceCode generatedSourceCode,
-      final TargetProject targetProject) {
+      final TargetProject targetProject, final String executedFqnStrings) {
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
 
     this.generatedSourceCode = generatedSourceCode;
     this.targetProject = targetProject;
+    this.executedFqnStrings = executedFqnStrings;
   }
 
+  // Result extraction point for multi thread
   public TestResults getTestResults() {
     return this.testResults;
   }
@@ -65,6 +71,7 @@ class TestThread extends Thread {
     buildResults = buildProject();
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
+
     final List<FullyQualifiedName> targetFQNs = getTargetFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
 
@@ -104,11 +111,22 @@ class TestThread extends Thread {
     return projectBuilder.build(generatedSourceCode);
   }
 
+  private List<FullyQualifiedName> convertStringToFqn() {
+    return Arrays.stream(executedFqnStrings.split(FQN_SEPARATOR))
+        .filter(fqn -> !fqn.isEmpty())
+        .map(TestFullyQualifiedName::new)
+        .collect(Collectors.toList());
+  }
+
   private List<FullyQualifiedName> getTargetFQNs() {
     return getFQNs(targetProject.getProductSourcePaths());
   }
 
   private List<FullyQualifiedName> getTestFQNs() {
+    final List<FullyQualifiedName> fqns = convertStringToFqn();
+    if (!fqns.isEmpty()) {
+      return fqns;
+    }
     return getFQNs(targetProject.getTestSourcePaths());
   }
 

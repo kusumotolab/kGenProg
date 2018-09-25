@@ -33,6 +33,7 @@ public class Configuration {
   public static final Path DEFAULT_WORKING_DIR;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
+  public static final String DEFAULT_EXECUTED_TESTS = "";
 
   static {
     try {
@@ -53,6 +54,7 @@ public class Configuration {
   private final int requiredSolutionsCount;
   private final Level logLevel;
   private final long randomSeed;
+  private final String executedTests;
   // endregion
 
   // region Constructor
@@ -68,6 +70,7 @@ public class Configuration {
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
     randomSeed = builder.randomSeed;
+    executedTests = builder.executedTests;
   }
 
   // endregion
@@ -116,6 +119,10 @@ public class Configuration {
     return randomSeed;
   }
 
+  public String getExecutedTests() {
+    return executedTests;
+  }
+
   public static class Builder {
 
     // region Fields
@@ -134,6 +141,7 @@ public class Configuration {
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
     private Level logLevel = DEFAULT_LOG_LEVEL;
     private long randomSeed = DEFAULT_RANDOM_SEED;
+    private String executedTests = DEFAULT_EXECUTED_TESTS;
     // endregion
 
     // region Constructors
@@ -295,6 +303,13 @@ public class Configuration {
       return this;
     }
 
+    public Builder setExecutedTest(final String executedTests) {
+      log.debug("enter setExecutedTest(String)");
+
+      this.executedTests = executedTests;
+      return this;
+    }
+
     // endregion
 
     // region Methods for CmdLineParser
@@ -395,6 +410,12 @@ public class Configuration {
     private void setRandomSeedFromCmdLineParser(final long randomSeed) {
       log.debug("enter setRandomSeedFromCmdLineParser(long)");
       this.randomSeed = randomSeed;
+    }
+
+    @Option(name = "-x", aliases = "--exec-test", usage = "Executed test cases.")
+    private void setExecutedTestCases(final String executedTests) {
+      log.debug("enter setExecutedTestCases(String)");
+      this.executedTests = executedTests;
     }
     // endregion
   }
