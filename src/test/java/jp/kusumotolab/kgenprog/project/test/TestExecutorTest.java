@@ -216,4 +216,31 @@ public class TestExecutorTest {
 
   }
 
+  @Test
+  public void testTestExecutorForBuildSuccess11() throws Exception {
+    // 継承ベースの古いJUnitテストを試す題材．
+
+    final Path rootPath = Paths.get("example/BuildSuccess11");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode);
+
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(generatedSourceCode);
+
+    // 実行されたテストは4個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
+
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
+  }
 }
