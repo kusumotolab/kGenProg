@@ -329,7 +329,7 @@ public class Configuration {
     }
 
     @Option(name = "-t", aliases = "--test", required = true,
-        handler = StringArrayOptionHandler.class, metaVar = "<fqn> ...",
+        handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
         usage = "Paths of the root directories holding test codes")
     private void addTestPathFromCmdLineParser(final String testPath) {
       log.debug("enter addTestPathFromCmdLineParser(String)");
@@ -344,7 +344,7 @@ public class Configuration {
     }
 
     @Option(name = "-x", aliases = "--exec-test", handler = StringArrayOptionHandler.class,
-        metaVar = "<path> ...", usage = "Execution test cases.")
+        metaVar = "<fqn> ...", usage = "Execution test cases.")
     private void addExecutionTestFromCmdLineParser(final String executionTest) {
       log.debug("enter addExecutionTestFromCmdLineParser(String)");
       this.executionTests.add(executionTest);
