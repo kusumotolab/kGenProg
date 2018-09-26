@@ -329,7 +329,7 @@ public class Configuration {
     }
 
     @Option(name = "-t", aliases = "--test", required = true,
-        handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
+        handler = StringArrayOptionHandler.class, metaVar = "<fqn> ...",
         usage = "Paths of the root directories holding test codes")
     private void addTestPathFromCmdLineParser(final String testPath) {
       log.debug("enter addTestPathFromCmdLineParser(String)");
