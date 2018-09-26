@@ -68,7 +68,7 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerator2() {
-    final Path basePath = Paths.get("example/BuildSuccess03");
+    final Path basePath = Paths.get("example/BuildSuccess02");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     final String expected = new StringBuilder().append("")
