@@ -1,12 +1,12 @@
 ﻿# BuildFailure
 ビルドに失敗する題材．  
 内部処理（ビルドやFL）の振る舞いを確かめる目的であり，APR用の題材ではないことに注意．  
-処理の中身には意味がない．
+処理の中身には意味がない．  
 
 # BuildSuccess
 ビルドに成功する題材．  
 内部処理（ビルドやFL）の振る舞いを確かめる目的であり，APR用の題材ではないことに注意．  
-処理の中身には意味がない．
+処理の中身には意味がない．  
 
 ### BuildSuccess01
 1実装クラスと1テストクラス．  
@@ -20,8 +20,8 @@ JDT-ASTによる狂ったコードフォーマットを適用済み．
 
 ### BuildSuccess03
 3実装クラスと3テストクラス．  
-FooTestが持つ4テストのうち，1テストでfailする．
-BarTestが持つ5テストのうち，0テストでfailする．
+FooTestが持つ4テストのうち，1テストでfailする．  
+BarTestが持つ5テストのうち，0テストでfailする．  
 BazTestが持つ2テストのうち，0テストでfailする．  
 内部クラスや匿名クラスに対するビルドの振る舞いを試す題材．  
 
@@ -31,7 +31,7 @@ BazTestが持つ2テストのうち，0テストでfailする．
 
 ### BuildSuccess05
 1実装クラスと1テストクラス．  
-Maven（pom.xml）プロジェクト．
+Maven（pom.xml）プロジェクト．  
 TargetProjectFactoryのテスト用．  
 
 ### BuildSuccess06
@@ -41,9 +41,9 @@ TargetProjectFactoryのテスト用．
 
 ### BuildSuccess07
 1実装クラスと1テストクラス．  
-BuildSuccess02の派生．
-srcとtestを別フォルダに設置．
-srcとtestを個別にビルド（差分ビルド等）する場合の確認用．
+BuildSuccess02の派生．  
+srcとtestを別フォルダに設置．  
+srcとtestを個別にビルド（差分ビルド等）する場合の確認用．  
 
 ### BuildSuccess08
 1実装クラスと1テストクラス．  
@@ -51,7 +51,7 @@ JUnit以外の外部ライブラリを用いる題材．
 
 ### BuildSuccess09
 1実装クラスと1テストクラス．  
-末尾にブランク改行を含むファイルに対するDiffの振る舞いを試す題材．
+末尾にブランク改行を含むファイルに対するDiffの振る舞いを試す題材．  
 
 # CloseToZero
 APR用の題材．  
