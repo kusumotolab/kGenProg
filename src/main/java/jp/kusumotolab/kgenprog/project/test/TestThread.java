@@ -42,17 +42,20 @@ class TestThread extends Thread {
 
   private final GeneratedSourceCode generatedSourceCode;
   private final TargetProject targetProject;
+  private final List<String> executionTestNames;
 
   public TestThread(final GeneratedSourceCode generatedSourceCode,
-      final TargetProject targetProject) {
+      final TargetProject targetProject, final List<String> executionTestNames) {
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
 
     this.generatedSourceCode = generatedSourceCode;
     this.targetProject = targetProject;
+    this.executionTestNames = executionTestNames;
   }
 
+  // Result extraction point for multi thread
   public TestResults getTestResults() {
     return this.testResults;
   }
@@ -65,6 +68,7 @@ class TestThread extends Thread {
     buildResults = buildProject();
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
+
     final List<FullyQualifiedName> targetFQNs = getTargetFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
 
@@ -104,11 +108,21 @@ class TestThread extends Thread {
     return projectBuilder.build(generatedSourceCode);
   }
 
+  private List<FullyQualifiedName> convertExecutionTestNameToFqn() {
+    return executionTestNames.stream()
+        .map(TestFullyQualifiedName::new)
+        .collect(Collectors.toList());
+  }
+
   private List<FullyQualifiedName> getTargetFQNs() {
     return getFQNs(targetProject.getProductSourcePaths());
   }
 
   private List<FullyQualifiedName> getTestFQNs() {
+    final List<FullyQualifiedName> fqns = convertExecutionTestNameToFqn();
+    if (!fqns.isEmpty()) {
+      return fqns;
+    }
     return getFQNs(targetProject.getTestSourcePaths());
   }
 

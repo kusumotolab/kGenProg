@@ -44,6 +44,7 @@ public class Configuration {
   }
 
   private final TargetProject targetProject;
+  private final List<String> executionTests;
   private final Path workingDir;
   private final Path outDir;
   private final int siblingsCount;
@@ -59,6 +60,7 @@ public class Configuration {
 
   private Configuration(final Builder builder) {
     targetProject = builder.targetProject;
+    executionTests = builder.executionTests;
     workingDir = builder.workingDir;
     outDir = builder.outDir;
     siblingsCount = builder.siblingsCount;
@@ -74,6 +76,10 @@ public class Configuration {
 
   public TargetProject getTargetProject() {
     return targetProject;
+  }
+
+  public List<String> getExecutedTests() {
+    return executionTests;
   }
 
   public Path getWorkingDir() {
@@ -124,6 +130,7 @@ public class Configuration {
     private List<Path> productPaths = new ArrayList<>();
     private List<Path> testPaths = new ArrayList<>();
     private List<Path> classPaths = new ArrayList<>();
+    private List<String> executionTests = new ArrayList<>();
     private TargetProject targetProject;
     private Path workingDir = DEFAULT_WORKING_DIR;
     private Path outDir = DEFAULT_OUT_DIR;
@@ -295,6 +302,13 @@ public class Configuration {
       return this;
     }
 
+    public Builder addExecutionTest(final String executionTest) {
+      log.debug("enter addExecutionTest(String)");
+
+      this.executionTests.add(executionTest);
+      return this;
+    }
+
     // endregion
 
     // region Methods for CmdLineParser
@@ -329,6 +343,12 @@ public class Configuration {
       this.classPaths.add(Paths.get(classPath));
     }
 
+    @Option(name = "-x", aliases = "--exec-test", usage = "Execution test cases.")
+    private void addExecutionTestFromCmdLineParser(final String executionTest) {
+      log.debug("enter addExecutionTestFromCmdLineParser(String)");
+      this.executionTests.add(executionTest);
+    }
+    
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
         usage = "Path of a working directory")
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
@@ -396,6 +416,7 @@ public class Configuration {
       log.debug("enter setRandomSeedFromCmdLineParser(long)");
       this.randomSeed = randomSeed;
     }
+
     // endregion
   }
 }
