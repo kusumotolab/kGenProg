@@ -650,7 +650,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
-    assertThat(config.getExecutedTests()).contains(executionTest);
+    assertThat(config.getExecutedTests()).containsExactlyInAnyOrder(executionTest);
   }
 
   @Test
