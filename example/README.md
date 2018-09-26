@@ -78,7 +78,7 @@ APR用の題材．
 APR用の題材．  
 無限ループを含む題材．  
 
-# Math
+# kGenProg-example
 実アプリの題材．
 Apache Commons Mathの開発過程で生じたバグ．
 [Defects4J](https://github.com/rjust/defects4j)から取得．
@@ -100,7 +100,7 @@ index 81e180c..2769127 100644
  
      /**
 ```
-https://github.com/Spirals-Team/defects4j-repair/tree/master/results/2015-august#math-2
+http://program-repair.org/defects4j-dissection/#!/bug/Math/2
 
 ### Math05
 Developer's patch:
@@ -119,7 +119,7 @@ index ac8185b..22b23f2 100644
  
          if (isInfinite) {
 ```
-https://github.com/Spirals-Team/defects4j-repair/tree/master/results/2015-august#math-5
+http://program-repair.org/defects4j-dissection/#!/bug/Math/5
 
 ### Math70
 Developer's patch:
@@ -138,7 +138,7 @@ index 180caef..3f66927 100644
  
      /** {@inheritDoc} */
 ```
-https://github.com/Spirals-Team/defects4j-repair/tree/master/results/2015-august#math-70
+http://program-repair.org/defects4j-dissection/#!/bug/Math/70
 
 ### Math73
 Developer's patch:
@@ -183,7 +183,7 @@ index e0cb427..4e95ed5 100644
          } else if (sign < 0){
              // solve using only the first endpoint as initial guess
 ```
-https://github.com/Spirals-Team/defects4j-repair/tree/master/results/2015-august#math-73
+http://program-repair.org/defects4j-dissection/#!/bug/Math/73
 
 ### Math85
 Developer's patch:
@@ -202,4 +202,4 @@ index e6398f6..5b76415 100644
                        "number of iterations={0}, maximum iterations={1}, " +
                        "initial={2}, lower bound={3}, upper bound={4}, final a value={5}, " +
 ```
-https://github.com/Spirals-Team/defects4j-repair/tree/master/results/2015-august#math-85
+http://program-repair.org/defects4j-dissection/#!/bug/Math/85
