@@ -144,24 +144,17 @@ public class TestResults implements Serializable {
     for (final TestResult testResult : this.value.values()) {
       final Coverage coverage = testResult.getCoverages(targetFQN);
 
-      // 基本起きないはず
-      if (null == coverage) {
-        throw new RuntimeException("Something occured in TestResults#getTestFQNs");
-      }
-
-      // テスト結果を取り出してみる
-      try {
-        final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
-        if (status == _status && failed == testResult.failed) {
-          result.add(testResult.executedTestFQN);
-        }
-      } catch (final IndexOutOfBoundsException e) {
-        // 計測対象（targetFQN）の行の外を参照した場合
-        // （＝内部クラス等の理由でその行の実行結果が別のテストcoverageに記述されている場合）
+      if (lineNumber > coverage.statuses.size()) {
+        // 計測対象（targetFQN）の行の外を参照した場合．
+        // （＝内部クラス等の理由で，その行の実行結果が別テストのcoverageに記述されている場合）
         // 何もしなくて良い．
         // その行の結果は別のcoverageインスタンスに保存されているため．
+        continue;
       }
-
+      final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
+      if (status == _status && failed == testResult.failed) {
+        result.add(testResult.executedTestFQN);
+      }
     }
     return result;
   }
