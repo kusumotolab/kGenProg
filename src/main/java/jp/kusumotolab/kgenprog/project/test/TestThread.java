@@ -253,7 +253,6 @@ class TestThread extends Thread {
 
     @Override
     public void testFailure(Failure failure) {
-      System.out.println(failure);
       noteTestExecutionFail(failure);
     }
 
