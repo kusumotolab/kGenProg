@@ -11,7 +11,7 @@ C 言語向けの自動プログラム修正ツール GenProg の Java 向け実
 
 
 ## インストール
-kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/download/v0.2/kGenProg.jar)から jar ファイルをダウンロードしてください．
+kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/download/v0.2/kGenProg.jar)から jar ファイルをダウンロードしてください．
 
 [kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example) リポジトリに kGenProg の動作確認用のバグをまとめてあります．
 [ここ](https://github.com/kusumotolab/kGenProg-example/archive/master.zip)からすべてのバグをまとめた zip ファイルをダウンロードできます．
@@ -32,9 +32,9 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 ### オプション
 | オプション | 説明 |
 |---|---|
-| `-r, --root-dir` | 修正対象プロジェクトのルートディレクトリへのパス．テスト実行の都合上，カレントディレクトリ以外のパスが指定された場合は警告が出力されます．（必須オプション） |
-| `-s, --src` | プロダクトコード（単体テスト用のコードを除く実装系のソースコード）へのパス，もしくはプロダクトコードを含むディレクトリへのパス．スペース区切りで複数指定可能．（必須オプション） |
-| `-t, --test` | テストコード（単体テスト用のソースコード）へのパス，もしくはテストコードを含むディレクトリへのパス．スペース区切りで複数指定可能．（必須オプション） |
+| `-r, --root-dir` | 修正対象プロジェクトのルートディレクトリへのパス．テスト実行の都合上，カレントディレクトリ以外のパスが指定された場合は警告が出力されます．（必須オプション） |
+| `-s, --src` | プロダクトコード（単体テスト用のコードを除く実装系のソースコード）へのパス，もしくはプロダクトコードを含むディレクトリへのパス．スペース区切りで複数指定可能．（必須オプション） |
+| `-t, --test` | テストコード（単体テスト用のソースコード）へのパス，もしくはテストコードを含むディレクトリへのパス．スペース区切りで複数指定可能．（必須オプション） |
 | `-c, --cp` | 修正対象プロジェクトのビルドに必要なクラスパス．スペース区切りで複数指定可能． |
 | `-w, --working-dir` | kGenProg が作業を行うディレクトリへのパス |
 | `-o, --out-dir` | kGenProg が結果の出力を行うディレクトリへのパス |
