@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,8 +33,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
  */
 class TestThread extends Thread {
 
-  private final static String FQN_SEPARATOR = ";";
-
   private MemoryClassLoader memoryClassLoader;
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
@@ -45,17 +42,17 @@ class TestThread extends Thread {
 
   private final GeneratedSourceCode generatedSourceCode;
   private final TargetProject targetProject;
-  private final String executedFqnStrings;
+  private final List<String> executionTestNames;
 
   public TestThread(final GeneratedSourceCode generatedSourceCode,
-      final TargetProject targetProject, final String executedFqnStrings) {
+      final TargetProject targetProject, final List<String> executionTestNames) {
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
 
     this.generatedSourceCode = generatedSourceCode;
     this.targetProject = targetProject;
-    this.executedFqnStrings = executedFqnStrings;
+    this.executionTestNames = executionTestNames;
   }
 
   // Result extraction point for multi thread
@@ -111,9 +108,8 @@ class TestThread extends Thread {
     return projectBuilder.build(generatedSourceCode);
   }
 
-  private List<FullyQualifiedName> convertStringToFqn() {
-    return Arrays.stream(executedFqnStrings.split(FQN_SEPARATOR))
-        .filter(fqn -> !fqn.isEmpty())
+  private List<FullyQualifiedName> convertExecutionTestNameToFqn() {
+    return executionTestNames.stream()
         .map(TestFullyQualifiedName::new)
         .collect(Collectors.toList());
   }
@@ -123,7 +119,7 @@ class TestThread extends Thread {
   }
 
   private List<FullyQualifiedName> getTestFQNs() {
-    final List<FullyQualifiedName> fqns = convertStringToFqn();
+    final List<FullyQualifiedName> fqns = convertExecutionTestNameToFqn();
     if (!fqns.isEmpty()) {
       return fqns;
     }

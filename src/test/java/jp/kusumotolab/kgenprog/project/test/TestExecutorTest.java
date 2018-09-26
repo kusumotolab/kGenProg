@@ -184,7 +184,7 @@ public class TestExecutorTest {
 
     // 実行するべきテストをFooTestのみに変更 （BarTestを実行しない）
     final Configuration config =
-        new Configuration.Builder(targetProject).setExecutedTest("example.FooTest")
+        new Configuration.Builder(targetProject).addExecutionTest("example.FooTest")
             .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);

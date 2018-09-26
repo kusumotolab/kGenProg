@@ -643,14 +643,26 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromCmdLineArgsWithExecTests() {
-    final String executedTests = "example.FooTest";
+  public void testBuildFromCmdLineArgsWithExecTest() {
+    final String executionTest = "example.FooTest";
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-x", executedTests};
+        testPath.toString(), "-x", executionTest};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
-    assertThat(config.getExecutedTests()).isEqualTo(executedTests);
+    assertThat(config.getExecutedTests()).contains(executionTest);
+  }
+
+  @Test
+  public void testBuildFromCmdLineArgsWithExecTests() {
+    final String executionTest1 = "example.FooTest";
+    final String executionTest2 = "example.BarTest";
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), "-x", executionTest1, "-x", executionTest2};
+    final Configuration config = Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getExecutedTests()).containsExactlyInAnyOrder(executionTest1, executionTest2);
   }
 
   @Test
