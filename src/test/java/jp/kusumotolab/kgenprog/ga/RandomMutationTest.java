@@ -2,6 +2,9 @@ package jp.kusumotolab.kgenprog.ga;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -84,7 +87,11 @@ public class RandomMutationTest {
 
     final Gene initialGene = new SimpleGene(Collections.emptyList());
     final Variant variant = new Variant(initialGene, null, null, null, suspiciousnesses);
-    final VariantStore variantStore = new MockVariantStore(Arrays.asList(variant));
+    final VariantStore variantStore = mock(VariantStore.class);
+    when(variantStore.getCurrentVariants()).thenReturn(Arrays.asList(variant));
+    when(variantStore.createVariant(any())).then(ans -> {
+      return new Variant(ans.getArgument(0), null, null, null, null);
+    });
 
     // 正しく15個のVariantが生成されるかのテスト
     final List<Variant> variantList = randomMutation.exec(variantStore);
