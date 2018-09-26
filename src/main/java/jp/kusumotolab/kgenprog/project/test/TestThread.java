@@ -92,7 +92,7 @@ class TestThread extends Thread {
         junitCore.addListener(listener);
         junitCore.run(junitClass);
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       // TODO
       // Should handle safely
       // ひとまず本クラスをThreadで包むためにRuntimeExceptionでエラーを吐く．
