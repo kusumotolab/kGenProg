@@ -1,7 +1,7 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.Foo;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.FOO;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,8 +21,8 @@ public class EclipseProjectFactoryTest {
     final EclipseProjectFactory eclipseProjectFactory = new EclipseProjectFactory(rootPath);
     final TargetProject project = eclipseProjectFactory.create();
 
-    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(Foo));
-    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(FooTest));
+    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(FOO));
+    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(FOO_TEST));
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo);

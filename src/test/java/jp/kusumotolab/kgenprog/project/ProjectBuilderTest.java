@@ -1,15 +1,15 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Bar;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BarTest;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Baz;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazAnonymous;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazInner;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazOuter;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazStaticInner;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BazTest;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.Foo;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FooTest;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAZ;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAZ_ANONYMOUS;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAZ_INNER;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAZ_OUTER;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAZ_STATIC_INNER;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAZ_TEST;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,18 +32,19 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class ProjectBuilderTest {
 
-  private final static Path WorkPath = Paths.get("tmp/work");
+  private final static Path WORK_PATH = Paths.get("tmp/work");
 
   @Before
   public void before() throws IOException {
-    TestUtil.deleteWorkDirectory(WorkPath);
+    TestUtil.deleteWorkDirectory(WORK_PATH);
   }
 
   @Test
   public void testBuildStringForBuildFailure01() {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
@@ -55,7 +56,8 @@ public class ProjectBuilderTest {
   public void testBuildStringForExample01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
@@ -64,7 +66,7 @@ public class ProjectBuilderTest {
 
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
-        .containsExactlyInAnyOrder(Foo.value, FooTest.value);
+        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
@@ -77,7 +79,8 @@ public class ProjectBuilderTest {
   public void testBuildStringForExample02() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
@@ -86,7 +89,7 @@ public class ProjectBuilderTest {
 
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
-        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value);
+        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
@@ -100,7 +103,8 @@ public class ProjectBuilderTest {
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
@@ -108,9 +112,9 @@ public class ProjectBuilderTest {
 
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
-        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value, Baz.value,
-            BazTest.value, BazInner.value, BazStaticInner.value, BazAnonymous.value,
-            BazOuter.value);
+        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value, BAZ.value,
+            BAZ_TEST.value, BAZ_INNER.value, BAZ_STATIC_INNER.value, BAZ_ANONYMOUS.value,
+            BAZ_OUTER.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
@@ -127,7 +131,8 @@ public class ProjectBuilderTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
         Collections.emptyList(), JUnitVersion.JUNIT4);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
@@ -136,7 +141,7 @@ public class ProjectBuilderTest {
 
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
-        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value);
+        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
       final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
@@ -153,7 +158,8 @@ public class ProjectBuilderTest {
     final Path rootPath03 = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject03 = TargetProjectFactory.create(rootPath03);
     final ProjectBuilder projectBuilder03 = new ProjectBuilder(targetProject03);
-    final GeneratedSourceCode generatedSourceCode03 = TestUtil.createGeneratedSourceCode(targetProject03);
+    final GeneratedSourceCode generatedSourceCode03 =
+        TestUtil.createGeneratedSourceCode(targetProject03);
     final BuildResults buildResults03 = projectBuilder03.build(generatedSourceCode03);
 
     assertThat(buildResults03.isBuildFailed).isFalse();
@@ -163,7 +169,8 @@ public class ProjectBuilderTest {
     final Path rootPath02 = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject02 = TargetProjectFactory.create(rootPath02);
     final ProjectBuilder projectBuilder02 = new ProjectBuilder(targetProject02);
-    final GeneratedSourceCode generatedSourceCode02 = TestUtil.createGeneratedSourceCode(targetProject02);
+    final GeneratedSourceCode generatedSourceCode02 =
+        TestUtil.createGeneratedSourceCode(targetProject02);
     final BuildResults buildResults02 = projectBuilder02.build(generatedSourceCode02);
 
     assertThat(buildResults02.isBuildFailed).isFalse();
@@ -171,7 +178,7 @@ public class ProjectBuilderTest {
 
     final CompilationPackage compilationPackage = buildResults02.getCompilationPackage();
     assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
-        .containsExactlyInAnyOrder(Foo.value, FooTest.value, Bar.value, BarTest.value);
+        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
 
 
@@ -179,7 +186,8 @@ public class ProjectBuilderTest {
   public void testBuildForInMemoryByteCode01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 

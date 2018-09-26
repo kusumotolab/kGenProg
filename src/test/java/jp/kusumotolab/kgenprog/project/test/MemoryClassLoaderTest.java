@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -23,7 +25,6 @@ import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 /**
@@ -33,18 +34,15 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
  */
 public class MemoryClassLoaderTest {
 
-  final static Path RootPath = Paths.get("example/BuildSuccess01");
+  final static Path ROOT_PATH = Paths.get("example/BuildSuccess01");
   static BuildResults buildResults;
-
-  final static FullyQualifiedName sourceFqn = ExampleAlias.Fqn.Foo;
-  final static FullyQualifiedName testFqn = ExampleAlias.Fqn.FooTest;
 
   static MemoryClassLoader Loader;
 
   @BeforeClass
   public static void beforeClass() {
     // 一度だけビルドしておく
-    final TargetProject targetProject = TargetProjectFactory.create(RootPath);
+    final TargetProject targetProject = TargetProjectFactory.create(ROOT_PATH);
     final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     buildResults = projectBuilder.build(generatedSourceCode);
@@ -73,53 +71,53 @@ public class MemoryClassLoaderTest {
   @Test
   public void testDynamicClassLoading01() throws Exception {
     // 動的ロード
-    final Class<?> clazz = Loader.loadClass(sourceFqn);
+    final Class<?> clazz = Loader.loadClass(FOO);
     final Object instance = clazz.newInstance();
 
     // きちんと存在するか？その名前は正しいか？
     assertThat(instance).isNotNull();
-    assertThat(instance.toString()).startsWith(sourceFqn.toString());
-    assertThat(clazz.getName()).isEqualTo(sourceFqn.toString());
+    assertThat(instance.toString()).startsWith(FOO.toString());
+    assertThat(clazz.getName()).isEqualTo(FOO.toString());
   }
 
   @Test
   public void testDynamicClassLoading02() throws Exception {
     // 動的ロード（Override側のメソッドで試す）
-    final Class<?> clazz = Loader.loadClass(sourceFqn.toString(), false);
+    final Class<?> clazz = Loader.loadClass(FOO.toString(), false);
     final Object instance = clazz.newInstance();
 
     // きちんと存在するか？その名前は正しいか？
     assertThat(instance).isNotNull();
-    assertThat(instance.toString()).startsWith(sourceFqn.toString());
-    assertThat(clazz.getName()).isEqualTo(sourceFqn.toString());
+    assertThat(instance.toString()).startsWith(FOO.toString());
+    assertThat(clazz.getName()).isEqualTo(FOO.toString());
   }
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading03() throws Exception {
     // SystemLoaderで動的ロード，失敗するはず (Exceptionを期待)
     ClassLoader.getSystemClassLoader()
-        .loadClass(sourceFqn.toString());
+        .loadClass(FOO.toString());
   }
 
   @Test(expected = ClassNotFoundException.class)
   public void testDynamicClassLoading04() throws Exception {
     // リフレクションで動的ロード，失敗するはず (Exceptionを期待)
     // 処理自体は02と等価なはず
-    Class.forName(sourceFqn.toString());
+    Class.forName(FOO.toString());
   }
 
   @Test
   public void testDynamicClassLoading05() throws Exception {
     // リフレクション + MemoryLoaderで動的ロード，これは成功するはず
-    final Class<?> clazz = Class.forName(sourceFqn.toString(), true, Loader);
+    final Class<?> clazz = Class.forName(FOO.toString(), true, Loader);
 
-    assertThat(clazz.getName()).isEqualTo(sourceFqn.toString());
+    assertThat(clazz.getName()).isEqualTo(FOO.toString());
   }
 
   @Test
   public void testClassUnloadingByGC01() throws Exception {
     // まず動的ロード
-    Class<?> clazz = Loader.loadClass(sourceFqn);
+    Class<?> clazz = Loader.loadClass(FOO);
 
     // 弱参照（アンロードの監視）の準備
     final WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -142,7 +140,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testClassUnloadingByGC02() throws Exception {
     // まず動的ロード
-    final Class<?> clazz = Loader.loadClass(sourceFqn);
+    final Class<?> clazz = Loader.loadClass(FOO);
 
     // 弱参照（アンロードの監視）の準備
     final WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -165,7 +163,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testClassUnloadingByGC03() throws Exception {
     // まず動的ロード
-    Class<?> clazz = Loader.loadClass(sourceFqn);
+    Class<?> clazz = Loader.loadClass(FOO);
 
     // 弱参照（アンロードの監視）の準備
     WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -187,7 +185,7 @@ public class MemoryClassLoaderTest {
     // もう一度ロードすると
     setupMemoryClassLoader();
 
-    clazz = Loader.loadClass(sourceFqn);
+    clazz = Loader.loadClass(FOO);
     targetClassWR = new WeakReference<>(clazz);
 
     // ロードされているはず
@@ -197,7 +195,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testJUnitWithMemoryLoader01() throws Exception {
     // CloseToZeroTestをロードしておく
-    final Class<?> clazz = Loader.loadClass(testFqn);
+    final Class<?> clazz = Loader.loadClass(FOO_TEST);
 
     // テストを実行
     // * ここでBCTestのClassLoaderには上記MemoryClassLoaderが紐づく（自身をロードしたローダーが指定される）
@@ -216,10 +214,10 @@ public class MemoryClassLoaderTest {
     assertThat(listLoadedClasses(Loader)).isEmpty();
 
     // テストだけをロード
-    final Class<?> clazz = Loader.loadClass(testFqn);
+    final Class<?> clazz = Loader.loadClass(FOO_TEST);
 
     // BCTestがロードされているはず
-    assertThat(listLoadedClasses(Loader)).contains(testFqn.toString());
+    assertThat(listLoadedClasses(Loader)).contains(FOO_TEST.toString());
 
     // テストを実行
     // * ここでBCTestのClassLoaderには上記MemoryClassLoaderが紐づく（自身をロードしたローダーが指定される）
@@ -228,7 +226,7 @@ public class MemoryClassLoaderTest {
     junitCore.run(clazz);
 
     // 上記テストの実行により，BCTestに加えBCもロードされているはず
-    assertThat(listLoadedClasses(Loader)).contains(testFqn.toString(), sourceFqn.toString());
+    assertThat(listLoadedClasses(Loader)).contains(FOO_TEST.toString(), FOO.toString());
   }
 
   @Test(expected = ClassFormatError.class)
@@ -237,10 +235,10 @@ public class MemoryClassLoaderTest {
     final byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};
 
     // addDefinitionで定義追加
-    Loader.addDefinition(sourceFqn, invalidByteCode);
+    Loader.addDefinition(FOO, invalidByteCode);
 
     // クラスロード（バグるはず）
-    Loader.loadClass(sourceFqn);
+    Loader.loadClass(FOO);
   }
 
   /**
