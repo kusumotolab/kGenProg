@@ -343,12 +343,13 @@ public class Configuration {
       this.classPaths.add(Paths.get(classPath));
     }
 
-    @Option(name = "-x", aliases = "--exec-test", usage = "Execution test cases.")
+    @Option(name = "-x", aliases = "--exec-test", handler = StringArrayOptionHandler.class,
+        metaVar = "<path> ...", usage = "Execution test cases.")
     private void addExecutionTestFromCmdLineParser(final String executionTest) {
       log.debug("enter addExecutionTestFromCmdLineParser(String)");
       this.executionTests.add(executionTest);
     }
-    
+
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
         usage = "Path of a working directory")
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
