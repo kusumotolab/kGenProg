@@ -42,13 +42,14 @@ public class TestExecutorTest {
   public void testTestExecutorForBuildSuccess01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
-    final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(TIMEOUT_SEC)
-        .build();
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
@@ -81,13 +82,14 @@ public class TestExecutorTest {
   public void testTestExecutorForBuildSuccess02() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
-    final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(TIMEOUT_SEC)
-        .build();
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
@@ -132,13 +134,14 @@ public class TestExecutorTest {
 
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
-    final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(TIMEOUT_SEC)
-        .build();
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
@@ -153,19 +156,64 @@ public class TestExecutorTest {
     // 無限ループする題材
     final Path rootPath = Paths.get("example/BuildSuccess04");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     projectBuilder.build(generatedSourceCode);
 
     // タイムアウト時間を短めに設定（CI高速化のため）
     final long timeout = 1;
-    final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(timeout)
-        .build();
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(timeout)
+            .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
     assertThat(result).isInstanceOf(EmptyTestResults.class);
   }
+
+  @Test
+  public void testTestExecutorForBuildSuccess02WithSpecifyingExecutedTest() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess02");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode);
+
+    // 実行するべきテストをFooTestのみに変更 （BarTestを実行しない）
+    final Configuration config =
+        new Configuration.Builder(targetProject).addExecutionTest("example.FooTest")
+            .build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(generatedSourceCode);
+
+    // 実行されたテストは10個から4個に減ったはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
+    // BarTest01, BarTest02, BarTest03, BarTest04, BarTest05);
+
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
+    // assertThat(result.getTestResult(BarTest01).failed).isFalse();
+    // assertThat(result.getTestResult(BarTest02).failed).isFalse();
+    // assertThat(result.getTestResult(BarTest03).failed).isFalse();
+    // assertThat(result.getTestResult(BarTest04).failed).isFalse();
+    // assertThat(result.getTestResult(BarTest05).failed).isFalse();
+
+    final TestResult fooTest01result = result.getTestResult(FOO_TEST01);
+
+    // FooTest.test01()ではFooとBarが実行されたはず
+    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
+
+    // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
+    assertThat(fooTest01result.getCoverages(FOO).statuses).containsExactlyInAnyOrder(EMPTY, COVERED,
+        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
+
+  }
+
 }
