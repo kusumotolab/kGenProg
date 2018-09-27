@@ -318,9 +318,8 @@ public class TestExecutorTest {
     final Path rootPath = Paths.get("example/BuildSuccess12");
     final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
     final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
-    final TargetProject targetProject =
-        TargetProjectFactory.create(rootPath, srcPaths, testPaths,
-            Collections.emptyList(), JUnitVersion.JUNIT4);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
     final GeneratedSourceCode generatedSourceCode =
         TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);

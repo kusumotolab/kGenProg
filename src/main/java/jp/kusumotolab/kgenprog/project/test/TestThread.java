@@ -21,7 +21,6 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.EmptyBuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourcePath;
@@ -165,20 +164,6 @@ class TestThread extends Thread {
     }
     // TODO
     return null;
-  }
-
-  /**
-   * 指定fqnsの全てを定義追加・ロードを行い，クラスオブジェクトの集合を返す．
-   * 
-   * @param fqns
-   * @return
-   * @throws ClassNotFoundException
-   * @throws IOException
-   */
-  private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
-      throws ClassNotFoundException, IOException {
-    addAllDefinitions(fqns);
-    return loadAllClasses(fqns);
   }
 
   /**
