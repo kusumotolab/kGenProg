@@ -29,7 +29,7 @@ import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
-  private static Logger log = LoggerFactory.getLogger(ProcessBuilder.class);
+  private static Logger log = LoggerFactory.getLogger(ProjectBuilder.class);
 
   private final TargetProject targetProject;
 
