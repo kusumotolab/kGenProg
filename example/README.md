@@ -78,7 +78,7 @@ APR用の題材．
 APR用の題材．  
 無限ループを含む題材．  
 
-# kGenProg-example
+# real-bugs
 実アプリの題材．
 Apache Commons Mathの開発過程で生じたバグ．
 [Defects4J](https://github.com/rjust/defects4j)から取得．
