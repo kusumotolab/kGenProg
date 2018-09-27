@@ -21,6 +21,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.EmptyBuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourcePath;
@@ -71,6 +72,7 @@ class TestThread extends Thread {
 
     final List<FullyQualifiedName> targetFQNs = getTargetFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
+    final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
 
     final TestResults testResults = new TestResults();
 
@@ -78,8 +80,10 @@ class TestThread extends Thread {
     memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      loadInstrumentedClasses(targetFQNs); // こちらの返り値はいらない
-      final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
+      addAllDefinitions(targetFQNs);
+      addAllDefinitions(testFQNs);
+      final List<Class<?>> junitClasses = loadAllClasses(executionTestFQNs);
+
       jacocoRuntime.startup(jacocoRuntimeData);
 
       // TODO
@@ -120,11 +124,15 @@ class TestThread extends Thread {
   }
 
   private List<FullyQualifiedName> getTestFQNs() {
-    final List<FullyQualifiedName> fqns = convertExecutionTestNameToFqn();
-    if (!fqns.isEmpty()) {
-      return fqns;
-    }
     return getFQNs(targetProject.getTestSourcePaths());
+  }
+
+  private List<FullyQualifiedName> getExecutionTestFQNs() {
+    final List<FullyQualifiedName> execTests = convertExecutionTestNameToFqn();
+    if (execTests.isEmpty()) {
+      return getTestFQNs();
+    }
+    return execTests;
   }
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
