@@ -21,6 +21,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.EmptyBuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourcePath;
@@ -66,6 +67,10 @@ class TestThread extends Thread {
    */
   public void run() {
     buildResults = buildProject();
+    if (buildResults instanceof EmptyBuildResults) {
+      testResults = EmptyTestResults.instance;
+      return;
+    }
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
 
