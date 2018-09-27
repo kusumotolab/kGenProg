@@ -1,3 +1,3 @@
 [submodule "example/kGenProg-example"]
-	path = example/kGenProg-example
+	path = example/real-bugs
 	url = git@github.com:kusumotolab/kGenProg-example.git
