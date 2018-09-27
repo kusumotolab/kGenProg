@@ -228,10 +228,9 @@ class TestThread extends Thread {
    */
   class CoverageMeasurementListener extends RunListener {
 
-    private final Description FAILED = Description.createTestDescription("failed", "failed");
-
     final private List<FullyQualifiedName> measuredClasses;
     final public TestResults testResults;
+    private boolean wasFailed;
 
     /**
      * constructor
@@ -249,11 +248,12 @@ class TestThread extends Thread {
     @Override
     public void testStarted(Description description) {
       resetJacocoRuntimeData();
+      wasFailed = false;
     }
 
     @Override
     public void testFailure(Failure failure) {
-      noteTestExecutionFail(failure);
+      wasFailed = true;
     }
 
     @Override
@@ -266,27 +266,6 @@ class TestThread extends Thread {
      */
     private void resetJacocoRuntimeData() {
       jacocoRuntimeData.reset();
-    }
-
-    /**
-     * Failureオブジェクトの持つDescriptionに，当該テストがfailしたことをメモする．
-     *
-     * @param failure
-     */
-    private void noteTestExecutionFail(Failure failure) {
-      failure.getDescription()
-          .addChild(FAILED);
-    }
-
-    /**
-     * Descriptionから当該テストがfailしたかどうかを返す．
-     *
-     * @param description
-     * @return テストがfailしたかどうか
-     */
-    private boolean isFailed(Description description) {
-      return description.getChildren()
-          .contains(FAILED);
     }
 
     /**
@@ -343,14 +322,13 @@ class TestThread extends Thread {
     private void addJacocoCoverageToTestResults(final CoverageBuilder coverageBuilder,
         final Description description) {
       final FullyQualifiedName testMethodFQN = getTestMethodName(description);
-      final boolean isFailed = isFailed(description);
 
       final Map<FullyQualifiedName, Coverage> coverages = coverageBuilder.getClasses()
           .stream()
           .map(Coverage::new)
           .collect(Collectors.toMap(c -> c.executedTargetFQN, c -> c));
 
-      final TestResult testResult = new TestResult(testMethodFQN, isFailed, coverages);
+      final TestResult testResult = new TestResult(testMethodFQN, wasFailed, coverages);
       testResults.add(testResult);
     }
   }
