@@ -241,6 +241,12 @@ public class MemoryClassLoaderTest {
     Loader.loadClass(FOO);
   }
 
+  @Test
+  public void testDuplicatedClassLoading() throws Exception {
+    // 二重ロードしてみても落ちないはず
+    Loader.loadClass(FOO_TEST);
+    Loader.loadClass(FOO_TEST);
+  }
   /**
    * 指定クラスローダによってロードされたクラス名一覧の取得
    * 
