@@ -135,6 +135,7 @@ public class TestExecutorTest {
 
   @Test
   public void testRetrievingFLParametersWithInnerClass() throws Exception {
+    // 内部クラスを持つ題材に対するFLメトリクスのテスト
 
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
@@ -148,8 +149,6 @@ public class TestExecutorTest {
             .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
-
-    System.out.println(result);
 
     // 内部クラスを持つBazのASTと，Baz#OuterClassのL66のASTLocationを取り出す
     final ProductSourcePath baz = new ProductSourcePath(rootPath.resolve(Src.BAZ));
