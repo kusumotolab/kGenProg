@@ -80,6 +80,7 @@ class TestThread extends Thread {
     try {
       loadInstrumentedClasses(targetFQNs); // こちらの返り値はいらない
       final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
+      jacocoRuntime.startup(jacocoRuntimeData);
 
       // TODO
       // junitCore.run(Classes<?>...)による一括実行を使えないか？
@@ -241,7 +242,6 @@ class TestThread extends Thread {
      */
     public CoverageMeasurementListener(List<FullyQualifiedName> measuredFQNs,
         TestResults storedTestResults) throws Exception {
-      jacocoRuntime.startup(jacocoRuntimeData);
       testResults = storedTestResults;
       measuredClasses = measuredFQNs;
     }
@@ -322,7 +322,7 @@ class TestThread extends Thread {
       final ExecutionDataStore executionData = new ExecutionDataStore();
       final SessionInfoStore sessionInfo = new SessionInfoStore();
       jacocoRuntimeData.collect(executionData, sessionInfo, false);
-      jacocoRuntime.shutdown();
+      // jacocoRuntime.shutdown(); // Don't shutdown (This statement is a cause for bug #290)
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
