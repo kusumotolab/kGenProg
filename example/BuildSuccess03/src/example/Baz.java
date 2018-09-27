@@ -5,57 +5,65 @@ import java.io.PrintStream;
 import java.util.Arrays;
 
 public class Baz {
-	public int baz(int n) {
-		if (n > 0) {
-			n = Bar.bar1(n);
-		} else {
-			n = Bar.bar2(n);
-		}
-		// 内部クラスの生成と実行
-		InnerClass innerClass = new InnerClass();
-		innerClass.exec();
 
-		// 静的内部クラスの実行
-		StaticInnerClass.exec();
+  public int baz(int n) {
+    if (n > 0) {
+      n = Bar.bar1(n);
+    } else {
+      n = Bar.bar2(n);
+    }
+    // 内部クラスの生成と実行
+    InnerClass innerClass = new InnerClass();
+    innerClass.exec();
 
-		// 外部クラスの生成と実行
-		OuterClass outerClass = new OuterClass();
-		outerClass.exec();
+    // 静的内部クラスの実行
+    StaticInnerClass.exec();
 
-		// 無名クラスの生成と利用
-		PrintStream printStream = new PrintStream(new PrintStream(new OutputStream() {
-			@Override
-			public void write(int b) {
-				b++; // do nothing but be measured by jacoco 
-			}
-		}));
-		printStream.write(3); // call anonymous class
-		printStream.close();
+    // 外部クラスの生成と実行
+    OuterClass outerClass = new OuterClass();
+    outerClass.exec();
 
-		// ラムダの利用
-		Arrays.asList("xxx").stream().map(s -> s.toString());
+    // 無名クラスの生成と利用
+    PrintStream printStream = new PrintStream(new PrintStream(new OutputStream() {
 
-		return n;
-	}
+      @Override
+      public void write(int b) {
+        b++; // do nothing but be measured by jacoco
+      }
+    }));
+    printStream.write(3); // call anonymous class
+    printStream.close();
 
-	// a simple inner class                            
-	class InnerClass {
-		void exec() {
-			new String(); // do nothing but be measured by jacoco
-		}
-	}
+    // ラムダの利用
+    Arrays.asList("xxx")
+        .stream()
+        .map(s -> s.toString());
 
-	// a static inner class                            
-	static class StaticInnerClass {
-		static void exec() {
-			new String(); // do nothing but be measured by jacoco
-		}
-	}
+    return n;
+  }
+
+  // a simple inner class
+  class InnerClass {
+
+    void exec() {
+      new String(); // do nothing but be measured by jacoco
+    }
+  }
+
+  // a static inner class
+  static class StaticInnerClass {
+
+    static void exec() {
+      new String(); // do nothing but be measured by jacoco
+    }
+  }
 }
 
+
 class OuterClass {
-	void exec() {
-		new String(); // do nothing but be measured by jacoco
-	}
+
+  void exec() {
+    new String(); // do nothing but be measured by jacoco
+  }
 
 }

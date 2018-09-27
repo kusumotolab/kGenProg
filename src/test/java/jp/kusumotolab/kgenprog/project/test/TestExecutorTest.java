@@ -22,10 +22,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.LineNumberRange;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestExecutorTest {
@@ -39,7 +43,7 @@ public class TestExecutorTest {
   public void after() throws IOException {}
 
   @Test
-  public void testTestExecutorForBuildSuccess01() throws Exception {
+  public void testExecForBuildSuccess01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode generatedSourceCode =
@@ -79,7 +83,7 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void testTestExecutorForBuildSuccess02() throws Exception {
+  public void testExecForBuildSuccess02() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode generatedSourceCode =
@@ -129,7 +133,8 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void testTestExecutorForBuildSuccess03() throws Exception {
+  public void testRetrievingFLParametersWithInnerClass() throws Exception {
+    // 内部クラスを持つ題材に対するFLメトリクスのテスト
 
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
@@ -144,13 +149,45 @@ public class TestExecutorTest {
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
-    // TODO
-    // Should confirm BuildSuccess03
-    result.toString(); // to avoid unused warnings
+    // 内部クラスを持つBazのASTと，Baz#OuterClassのL66のASTLocationを取り出す
+    final ProductSourcePath baz = new ProductSourcePath(rootPath.resolve(Src.BAZ));
+    final ASTLocation loc1 = generatedSourceCode.getAst(baz)
+        .getAllLocations()
+        .get(23); // L66 in OuterClass. "new String()" statement;
+
+    // 一応確認．66行目のはず
+    assertThat(loc1.inferLineNumbers()).isEqualTo(new LineNumberRange(66, 66));
+
+    long ep1 = result.getNumberOfPassedTestsExecutingTheStatement(baz, loc1);
+    long np1 = result.getNumberOfPassedTestsNotExecutingTheStatement(baz, loc1);
+    long ef1 = result.getNumberOfFailedTestsExecutingTheStatement(baz, loc1);
+    long nf1 = result.getNumberOfFailedTestsNotExecutingTheStatement(baz, loc1);
+    assertThat(ep1).isEqualTo(2); // BazTest#test01 & BazTest#test02
+    assertThat(np1).isEqualTo(8); // FooTest#testXX(3個) & BarTest#testXX(5個)
+    assertThat(ef1).isEqualTo(0);
+    assertThat(nf1).isEqualTo(1); // FooTest#test03
+
+
+    // Baz#InnerClassのL66のASTLocationを取り出す
+    final ASTLocation loc2 = generatedSourceCode.getAst(baz)
+        .getAllLocations()
+        .get(19); // L49 in OuterClass. "new String()" statement;
+
+    // 一応確認．49行目のはず
+    assertThat(loc2.inferLineNumbers()).isEqualTo(new LineNumberRange(49, 49));
+
+    long ep2 = result.getNumberOfPassedTestsExecutingTheStatement(baz, loc2);
+    long np2 = result.getNumberOfPassedTestsNotExecutingTheStatement(baz, loc2);
+    long ef2 = result.getNumberOfFailedTestsExecutingTheStatement(baz, loc2);
+    long nf2 = result.getNumberOfFailedTestsNotExecutingTheStatement(baz, loc2);
+    assertThat(ep2).isEqualTo(1); // BazTest#test01
+    assertThat(np2).isEqualTo(9); // BazTest#test02 & FooTest#testXX(3個) & BarTest#testXX(5個)
+    assertThat(ef2).isEqualTo(0);
+    assertThat(nf2).isEqualTo(1); // FooTest#test03
   }
 
   @Test
-  public void testTestExecutorForBuildSuccess04() throws Exception {
+  public void testExecForInfiniteLoop() throws Exception {
 
     // 無限ループする題材
     final Path rootPath = Paths.get("example/BuildSuccess04");
@@ -173,7 +210,7 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void testTestExecutorForBuildSuccess02WithSpecifyingExecutedTest() throws Exception {
+  public void testExecWithSpecifyingExecutedTest() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode generatedSourceCode =
