@@ -159,7 +159,10 @@ public class Configuration {
       this.targetProject = targetProject;
     }
 
-    private Builder() {}
+    private Builder() {
+      // do nothing
+      // do not call me except from buildFromCmdLineArgs
+    }
 
     // endregion
 
