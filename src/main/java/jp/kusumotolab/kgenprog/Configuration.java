@@ -303,7 +303,7 @@ public class Configuration {
       final Path projectRootDir = builder.rootDir;
 
       try {
-        if (!Files.isSameFile(currentDir, projectRootDir)) {
+        if (!isQuiet(builder) && !Files.isSameFile(currentDir, projectRootDir)) {
           log.warn(
               "The directory where kGenProg is running is different from the root directory of the given target project.");
           log.warn(
@@ -314,6 +314,10 @@ public class Configuration {
       } catch (final IOException e) {
         throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible");
       }
+    }
+
+    private static boolean isQuiet(final Builder builder) {
+      return builder.logLevel.equals(Level.ERROR);
     }
 
     // endregion
