@@ -287,6 +287,20 @@ public class Configuration {
       return this;
     }
 
+    public Builder setTestTimeLimitSeconds(final long testTimeLimitSeconds) {
+      log.debug("enter setTestTimeLimitSeconds(long)");
+
+      this.timeLimit = Duration.ofSeconds(testTimeLimitSeconds);
+      return this;
+    }
+
+    public Builder setTestTimeLimit(final Duration testTimeLimit) {
+      log.debug("enter setTestTimeLimit(Duration)");
+
+      this.testTimeLimit = testTimeLimit;
+      return this;
+    }
+
     public Builder setRequiredSolutionsCount(final int requiredSolutionsCount) {
       log.debug("enter setRequiredSolutionsCount(int)");
 
