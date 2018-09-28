@@ -186,24 +186,6 @@ public class Configuration {
       return builder.build();
     }
 
-    private static void validateArgument(final Builder builder) throws IllegalArgumentException {
-      final Path currentDir = Paths.get(".");
-      final Path projectRootDir = builder.rootDir;
-
-      try {
-        if (!Files.isSameFile(currentDir, projectRootDir)) {
-          log.warn(
-              "The directory where kGenProg is running is different from the root directory of the given target project.");
-          log.warn(
-              "If the target project include test cases with file I/O, such test cases won't run correctly.");
-          log.warn(
-              "We recommend that you run kGenProg with the root directory of the target project as the current directory.");
-        }
-      } catch (final IOException e) {
-        throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible");
-      }
-    }
-
     public Configuration build() {
       log.debug("enter build()");
 
@@ -310,6 +292,28 @@ public class Configuration {
 
       this.executionTests.add(executionTest);
       return this;
+    }
+
+    // endregion
+
+    // region Private methods
+
+    private static void validateArgument(final Builder builder) throws IllegalArgumentException {
+      final Path currentDir = Paths.get(".");
+      final Path projectRootDir = builder.rootDir;
+
+      try {
+        if (!Files.isSameFile(currentDir, projectRootDir)) {
+          log.warn(
+              "The directory where kGenProg is running is different from the root directory of the given target project.");
+          log.warn(
+              "If the target project include test cases with file I/O, such test cases won't run correctly.");
+          log.warn(
+              "We recommend that you run kGenProg with the root directory of the target project as the current directory.");
+        }
+      } catch (final IOException e) {
+        throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible");
+      }
     }
 
     // endregion
