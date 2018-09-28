@@ -403,14 +403,14 @@ public class Configuration {
     @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.")
     private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
       log.debug("enter setLogLevelDebugFromCmdLineParser(boolean)");
-      log.info("log level has been set DEBUG");
+      log.debug("log level has been set DEBUG");
       logLevel = Level.DEBUG;
     }
 
     @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.")
     private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
       log.debug("enter setLogLevelErrorFromCmdLineParser(boolean)");
-      log.info("log level has been set ERROR");
+      log.debug("log level has been set ERROR");
       logLevel = Level.ERROR;
     }
 
