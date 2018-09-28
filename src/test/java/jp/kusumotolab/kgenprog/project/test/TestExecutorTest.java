@@ -18,6 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +30,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
@@ -297,6 +301,38 @@ public class TestExecutorTest {
     final TestResults result = executor.exec(generatedSourceCode);
 
     // 実行されたテストは4個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
+
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
+  }
+
+  @Test
+  public void testTestExecutorForBuildSuccess12() throws Exception {
+    // テスト内で別テスト系クラス（ユーティリティ等）に依存する題材の確認
+
+    final Path rootPath = Paths.get("example/BuildSuccess12");
+    final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    projectBuilder.build(generatedSourceCode);
+
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .addExecutionTest("example.FooTest") // FooTestのみ実行する（非依存テストは実行しない）
+            .build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(generatedSourceCode);
+
+    // 実行されたテストは4個のはず（BarTest#test01は実行されない扱い）
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
         FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
 

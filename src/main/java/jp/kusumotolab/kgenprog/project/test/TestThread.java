@@ -21,6 +21,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
+import jp.kusumotolab.kgenprog.project.EmptyBuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourcePath;
@@ -66,11 +67,16 @@ class TestThread extends Thread {
    */
   public void run() {
     buildResults = buildProject();
+    if (buildResults instanceof EmptyBuildResults) {
+      testResults = EmptyTestResults.instance;
+      return;
+    }
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
 
-    final List<FullyQualifiedName> targetFQNs = getTargetFQNs();
+    final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
+    final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
 
     final TestResults testResults = new TestResults();
 
@@ -78,8 +84,10 @@ class TestThread extends Thread {
     memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      loadInstrumentedClasses(targetFQNs); // こちらの返り値はいらない
-      final List<Class<?>> junitClasses = loadInstrumentedClasses(testFQNs);
+      addAllDefinitions(productFQNs);
+      addAllDefinitions(testFQNs);
+      final List<Class<?>> junitClasses = loadAllClasses(executionTestFQNs);
+
       jacocoRuntime.startup(jacocoRuntimeData);
 
       // TODO
@@ -88,7 +96,7 @@ class TestThread extends Thread {
       for (final Class<?> junitClass : junitClasses) {
         final JUnitCore junitCore = new JUnitCore();
         final CoverageMeasurementListener listener =
-            new CoverageMeasurementListener(targetFQNs, testResults);
+            new CoverageMeasurementListener(productFQNs, testResults);
         junitCore.addListener(listener);
         junitCore.run(junitClass);
       }
@@ -115,16 +123,20 @@ class TestThread extends Thread {
         .collect(Collectors.toList());
   }
 
-  private List<FullyQualifiedName> getTargetFQNs() {
+  private List<FullyQualifiedName> getProductFQNs() {
     return getFQNs(targetProject.getProductSourcePaths());
   }
 
   private List<FullyQualifiedName> getTestFQNs() {
-    final List<FullyQualifiedName> fqns = convertExecutionTestNameToFqn();
-    if (!fqns.isEmpty()) {
-      return fqns;
-    }
     return getFQNs(targetProject.getTestSourcePaths());
+  }
+
+  private List<FullyQualifiedName> getExecutionTestFQNs() {
+    final List<FullyQualifiedName> execTests = convertExecutionTestNameToFqn();
+    if (execTests.isEmpty()) {
+      return getTestFQNs();
+    }
+    return execTests;
   }
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
@@ -157,20 +169,6 @@ class TestThread extends Thread {
     }
     // TODO
     return null;
-  }
-
-  /**
-   * 指定fqnsの全てを定義追加・ロードを行い，クラスオブジェクトの集合を返す．
-   * 
-   * @param fqns
-   * @return
-   * @throws ClassNotFoundException
-   * @throws IOException
-   */
-  private List<Class<?>> loadInstrumentedClasses(final List<FullyQualifiedName> fqns)
-      throws ClassNotFoundException, IOException {
-    addAllDefinitions(fqns);
-    return loadAllClasses(fqns);
   }
 
   /**
