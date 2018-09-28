@@ -342,4 +342,41 @@ public class TestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
     assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
   }
+
+  @Test
+  public void testExecForBuildFailure01() throws Exception {
+    final Path rootPath = Paths.get("example/BuildFailure01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(generatedSourceCode);
+
+    // 実行されたテストはないはず
+    assertThat(result).isInstanceOf(EmptyTestResults.class);
+    assertThat(result.getExecutedTestFQNs()).isEmpty();
+  }
+
+  @Test
+  public void testExecForBuildSuccess01WithSpecifyingMissingExecutionTest() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .addExecutionTest("example.FooTestXXXXXXXX") // no such method
+            .build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(generatedSourceCode);
+
+    // 実行されたテストはないはず
+    assertThat(result).isInstanceOf(EmptyTestResults.class);
+    assertThat(result.getExecutedTestFQNs()).isEmpty();
+  }
 }
