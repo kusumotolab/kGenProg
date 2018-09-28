@@ -290,7 +290,7 @@ public class Configuration {
     public Builder setTestTimeLimitSeconds(final long testTimeLimitSeconds) {
       log.debug("enter setTestTimeLimitSeconds(long)");
 
-      this.timeLimit = Duration.ofSeconds(testTimeLimitSeconds);
+      this.testTimeLimit = Duration.ofSeconds(testTimeLimitSeconds);
       return this;
     }
 
