@@ -28,7 +28,7 @@ public class TestExecutor {
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
     try {
-      future.get(config.getTimeLimitSeconds(), TimeUnit.SECONDS);
+      future.get(config.getTestTimeLimitSeconds(), TimeUnit.SECONDS);
     } catch (final ExecutionException e) {
       // TODO Should handle safely
       // Executor側での例外をそのまま通す．

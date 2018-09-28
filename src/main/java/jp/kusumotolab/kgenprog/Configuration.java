@@ -29,6 +29,7 @@ public class Configuration {
   public static final int DEFAULT_HEADCOUNT = 100;
   public static final int DEFAULT_REQUIRED_SOLUTIONS_COUNT = 1;
   public static final Duration DEFAULT_TIME_LIMIT = Duration.ofSeconds(60);
+  public static final Duration DEFAULT_TEST_TIME_LIMIT = Duration.ofSeconds(10);
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_WORKING_DIR;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
@@ -51,6 +52,7 @@ public class Configuration {
   private final int headcount;
   private final int maxGeneration;
   private final Duration timeLimit;
+  private final Duration testTimeLimit;
   private final int requiredSolutionsCount;
   private final Level logLevel;
   private final long randomSeed;
@@ -67,6 +69,7 @@ public class Configuration {
     headcount = builder.headcount;
     maxGeneration = builder.maxGeneration;
     timeLimit = builder.timeLimit;
+    testTimeLimit = builder.testTimeLimit;
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
     randomSeed = builder.randomSeed;
@@ -110,6 +113,14 @@ public class Configuration {
     return timeLimit;
   }
 
+  public long getTestTimeLimitSeconds() {
+    return getTestTimeLimit().getSeconds();
+  }
+
+  public Duration getTestTimeLimit() {
+    return testTimeLimit;
+  }
+
   public int getRequiredSolutionsCount() {
     return requiredSolutionsCount;
   }
@@ -138,6 +149,7 @@ public class Configuration {
     private int headcount = DEFAULT_HEADCOUNT;
     private int maxGeneration = DEFAULT_MAX_GENERATION;
     private Duration timeLimit = DEFAULT_TIME_LIMIT;
+    private Duration testTimeLimit = DEFAULT_TEST_TIME_LIMIT;
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
     private Level logLevel = DEFAULT_LOG_LEVEL;
     private long randomSeed = DEFAULT_RANDOM_SEED;
@@ -388,6 +400,13 @@ public class Configuration {
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
       log.debug("enter setTimeLimitFromCmdLineParser(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
+    }
+
+    @Option(name = "--test-time-limit",
+        usage = "Time limit to build and test for each variant in second")
+    private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
+      log.debug("enter setTestTimeLimitFromCmdLineParser(long)");
+      this.testTimeLimit = Duration.ofSeconds(testTimeLimit);
     }
 
     @Option(name = "-e", aliases = "--required-solutions",
