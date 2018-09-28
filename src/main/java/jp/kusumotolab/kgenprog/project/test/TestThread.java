@@ -74,7 +74,7 @@ class TestThread extends Thread {
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
 
-    final List<FullyQualifiedName> targetFQNs = getTargetFQNs();
+    final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
 
@@ -84,7 +84,7 @@ class TestThread extends Thread {
     memoryClassLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      addAllDefinitions(targetFQNs);
+      addAllDefinitions(productFQNs);
       addAllDefinitions(testFQNs);
       final List<Class<?>> junitClasses = loadAllClasses(executionTestFQNs);
 
@@ -96,7 +96,7 @@ class TestThread extends Thread {
       for (final Class<?> junitClass : junitClasses) {
         final JUnitCore junitCore = new JUnitCore();
         final CoverageMeasurementListener listener =
-            new CoverageMeasurementListener(targetFQNs, testResults);
+            new CoverageMeasurementListener(productFQNs, testResults);
         junitCore.addListener(listener);
         junitCore.run(junitClass);
       }
@@ -123,7 +123,7 @@ class TestThread extends Thread {
         .collect(Collectors.toList());
   }
 
-  private List<FullyQualifiedName> getTargetFQNs() {
+  private List<FullyQualifiedName> getProductFQNs() {
     return getFQNs(targetProject.getProductSourcePaths());
   }
 
