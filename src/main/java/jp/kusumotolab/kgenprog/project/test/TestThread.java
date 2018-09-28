@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +22,6 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.EmptyBuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourcePath;
@@ -67,7 +67,7 @@ class TestThread extends Thread {
    */
   public void run() {
     buildResults = buildProject();
-    if (buildResults instanceof EmptyBuildResults) {
+    if (buildResults.isBuildFailed) {
       testResults = EmptyTestResults.instance;
       return;
     }
@@ -100,6 +100,10 @@ class TestThread extends Thread {
         junitCore.addListener(listener);
         junitCore.run(junitClass);
       }
+    } catch (final ClassNotFoundException e) {
+      // クラスロードに失敗．FQNの指定ミスの可能性が大
+      this.testResults = EmptyTestResults.instance;
+      return;
     } catch (Exception e) {
       // TODO
       // Should handle safely
@@ -180,9 +184,11 @@ class TestThread extends Thread {
    */
   private List<Class<?>> loadAllClasses(final List<FullyQualifiedName> fqns)
       throws ClassNotFoundException {
-    return fqns.stream()
-        .map(fqn -> loadClass(fqn))
-        .collect(Collectors.toList());
+    final List<Class<?>> classes = new ArrayList<>();
+    for (final FullyQualifiedName fqn : fqns) {
+      classes.add(memoryClassLoader.loadClass(fqn)); // 例外が出るので非stream処理
+    }
+    return classes;
   }
 
   /***
@@ -199,22 +205,6 @@ class TestThread extends Thread {
       final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
       memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
     }
-  }
-
-  /**
-   * 単一クラスをロードしてクラスオブジェクトを返す． Lambdaの中での例外回避のため．
-   * 
-   * @param fqn
-   * @return
-   */
-  private Class<?> loadClass(final FullyQualifiedName fqn) {
-    try {
-      return memoryClassLoader.loadClass(fqn);
-    } catch (ClassNotFoundException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    }
-    return null;
   }
 
   /**
