@@ -21,23 +21,13 @@ import jp.kusumotolab.kgenprog.project.PatchGenerator;
 
 public class CUILauncher {
 
-  // region Fields
-  private static final Logger log = LoggerFactory.getLogger(CUILauncher.class);
-  // endregion
-
   public static void main(final String[] args) {
-    log.info("start kGenProg");
-
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
     final CUILauncher launcher = new CUILauncher();
     launcher.launch(config);
-
-    log.info("end kGenProg");
   }
 
   public void launch(final Configuration config) {
-    log.debug("enter launch()");
-
     setLogLevel(config.getLogLevel());
 
     final FaultLocalization faultLocalization = new Ochiai();
@@ -56,8 +46,6 @@ public class CUILauncher {
         crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, patchGenerator);
 
     kGenProgMain.run();
-
-    log.debug("exit launch()");
   }
 
   // region Private Method
