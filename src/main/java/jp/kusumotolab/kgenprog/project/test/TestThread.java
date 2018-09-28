@@ -66,7 +66,7 @@ class TestThread extends Thread {
    * JaCoCo + JUnitの実行． sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．
    */
   public void run() {
-    // 初期処理（ビルドと返り値の生成）
+    // 初期処理（プロジェクトのビルドと返り値の生成）
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     buildResults = projectBuilder.build(generatedSourceCode);
     testResults = new TestResults();
