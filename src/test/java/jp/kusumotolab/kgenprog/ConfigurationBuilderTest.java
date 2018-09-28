@@ -37,6 +37,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -61,6 +64,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -85,6 +91,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -110,6 +119,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -134,6 +146,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -159,6 +174,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -182,6 +200,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(timeLimit);
     assertThat(config.getTimeLimitSeconds()).isEqualTo(timeLimit.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -206,6 +227,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Duration.ofSeconds(timeLimitSeconds));
     assertThat(config.getTimeLimitSeconds()).isEqualTo(timeLimitSeconds);
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -231,6 +255,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount()).isEqualTo(requiredSolutionsCount);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
@@ -254,6 +281,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(logLevel);
@@ -277,6 +307,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Level.DEBUG);
@@ -301,6 +334,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -325,6 +361,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -349,6 +388,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -375,6 +417,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -401,6 +446,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -427,6 +475,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -453,6 +504,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -479,6 +533,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -504,8 +561,12 @@ public class ConfigurationBuilderTest {
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(timeLimit);
     assertThat(config.getTimeLimitSeconds()).isEqualTo(timeLimit.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
 
@@ -530,6 +591,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount()).isEqualTo(requiredSolutionsCount);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
@@ -554,6 +618,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Level.DEBUG);
@@ -579,6 +646,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Level.ERROR);
@@ -605,6 +675,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -631,6 +704,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
     assertThat(config.getTimeLimitSeconds())
         .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
     assertThat(config.getRequiredSolutionsCount())
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
@@ -663,6 +739,18 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getExecutedTests()).containsExactlyInAnyOrder(executionTest1, executionTest2);
+  }
+
+  @Test
+  public void testBuildFromCmdLineArgsWithTestTimeLimit() {
+    final Duration testTimeLimit = Duration.ofSeconds(99);
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), "--test-time-limit", String.valueOf(testTimeLimit.getSeconds())};
+    final Configuration config = Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getTestTimeLimit()).isEqualTo(testTimeLimit);
+    assertThat(config.getTestTimeLimitSeconds()).isEqualTo(testTimeLimit.getSeconds());
   }
 
   @Test
