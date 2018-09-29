@@ -11,12 +11,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 
 public class RouletteTest {
 
   @Test
   public void exec() {
-    final Random random = new Random();
+    final Random random = new Random(Configuration.DEFAULT_RANDOM_SEED);
     random.setSeed(0);
     final List<Integer> indexList = IntStream.range(0, 10)
         .boxed()
