@@ -17,6 +17,9 @@ public class Roulette<T> {
 
   public Roulette(final List<T> valueList, final Function<T, Double> weightFunction,
       final Random random) {
+    if (valueList.isEmpty()) {
+      throw new IllegalArgumentException("valueList must have at least one element.");
+    }
     final List<Double> weightList = valueList.stream()
         .map(weightFunction)
         .collect(Collectors.toList());

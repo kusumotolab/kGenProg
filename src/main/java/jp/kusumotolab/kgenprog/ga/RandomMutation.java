@@ -32,16 +32,17 @@ public class RandomMutation extends Mutation {
       final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
       final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
 
-      final Roulette<Suspiciousness> roulette =
-          new Roulette<>(suspiciousnesses, weightFunction, random);
+      try {
+        final Roulette<Suspiciousness> roulette =
+            new Roulette<>(suspiciousnesses, weightFunction, random);
 
-      for (int i = 0; i < numberOfBase; i++) {
-        final Suspiciousness suspiciousness = roulette.exec();
-        final Base base = makeBase(suspiciousness);
-        final Gene gene = makeGene(variant.getGene(), base);
-        generatedVariants.add(variantStore.createVariant(gene));
-      }
-
+        for (int i = 0; i < numberOfBase; i++) {
+          final Suspiciousness suspiciousness = roulette.exec();
+          final Base base = makeBase(suspiciousness);
+          final Gene gene = makeGene(variant.getGene(), base);
+          generatedVariants.add(variantStore.createVariant(gene));
+        }
+      } catch (final IllegalArgumentException ignored) { }
     }
 
     log.debug("exit exec(VariantStore)");
