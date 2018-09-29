@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import jp.kusumotolab.kgenprog.Configuration;
 public class RouletteTest {
 
   @Test
-  public void exec() {
+  public void testExec() {
     final Random random = new Random(Configuration.DEFAULT_RANDOM_SEED);
     random.setSeed(0);
     final List<Integer> indexList = IntStream.range(0, 10)
@@ -41,5 +42,12 @@ public class RouletteTest {
         .sorted(Comparator.comparingInt(Entry::getKey))
         .collect(Collectors.toList());
     assertThat(sortedEntrySet).isSortedAccordingTo(Comparator.comparingInt(Entry::getValue));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testException() {
+    final Random random = new Random(Configuration.DEFAULT_RANDOM_SEED);
+    new Roulette<>(new ArrayList<>(),
+        Integer::doubleValue, random);
   }
 }
