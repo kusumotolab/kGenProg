@@ -19,13 +19,11 @@ public class RouletteTest {
   @Test
   public void testExec() {
     final Random random = new Random(Configuration.DEFAULT_RANDOM_SEED);
-    random.setSeed(0);
     final List<Integer> indexList = IntStream.range(0, 10)
         .boxed()
         .collect(Collectors.toList());
     final Function<Integer, Double> weightFunction = Integer::doubleValue;
-    final Roulette<Integer> roulette = new Roulette<>(indexList, weightFunction,
-        random);
+    final Roulette<Integer> roulette = new Roulette<>(indexList, weightFunction, random);
 
     final Map<Integer, Integer> map = new HashMap<>();
     for (int i = 0; i < 1000; i++) {
@@ -47,7 +45,6 @@ public class RouletteTest {
   @Test(expected = IllegalArgumentException.class)
   public void testException() {
     final Random random = new Random(Configuration.DEFAULT_RANDOM_SEED);
-    new Roulette<>(new ArrayList<>(),
-        Integer::doubleValue, random);
+    new Roulette<>(new ArrayList<>(), Integer::doubleValue, random);
   }
 }
