@@ -81,7 +81,7 @@ public class VariantStore {
     return foundSolutions;
   }
 
-  public List<Variant> getFoundSolutions(int maxNumber) {
+  public List<Variant> getFoundSolutions(final int maxNumber) {
     final int length = Math.min(maxNumber, foundSolutions.size());
     return foundSolutions.subList(0, length);
   }
@@ -93,7 +93,7 @@ public class VariantStore {
    * 
    * @param variants 追加対象
    */
-  public void addGeneratedVariants(Variant... variants) {
+  public void addGeneratedVariants(final Variant... variants) {
     addGeneratedVariants(Arrays.asList(variants));
   }
 
@@ -104,7 +104,7 @@ public class VariantStore {
    * 
    * @param variants 追加対象
    */
-  public void addGeneratedVariants(Collection<? extends Variant> variants) {
+  public void addGeneratedVariants(final Collection<? extends Variant> variants) {
     variants.forEach(this::addGeneratedVariant);
   }
 
@@ -114,7 +114,7 @@ public class VariantStore {
    * 
    * @param variant
    */
-  public void addGeneratedVariant(Variant variant) {
+  public void addGeneratedVariant(final Variant variant) {
     log.debug("enter addNextGenerationVariant(Variant)");
 
     if (variant.isCompleted()) {

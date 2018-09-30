@@ -111,7 +111,7 @@ public class KGenProgMain {
   }
 
   private void logPatch(final VariantStore variantStore) {
-    List<Variant> completedVariants =
+    final List<Variant> completedVariants =
         variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
     log.debug("enter outputPatch(VariantStore)");
     for (final Variant completedVariant : completedVariants) {
