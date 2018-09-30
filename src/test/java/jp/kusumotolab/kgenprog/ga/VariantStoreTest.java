@@ -131,7 +131,7 @@ public class VariantStoreTest {
     assertThat(variantStore.getFoundSolutions(5)).containsExactly(success1, success2, success3);
   }
 
-  private Variant createMockVariant(boolean isCompleted) {
+  private Variant createMockVariant(final boolean isCompleted) {
     final Variant variant = mock(Variant.class);
     when(variant.isCompleted()).thenReturn(isCompleted);
     return variant;
