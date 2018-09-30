@@ -81,6 +81,11 @@ public class VariantStore {
     return foundSolutions;
   }
 
+  public List<Variant> getFoundSolutions(int maxNumber) {
+    final int length = Math.min(maxNumber, foundSolutions.size());
+    return foundSolutions.subList(0, length);
+  }
+
   /**
    * 引数の要素すべてを次世代のVariantとして追加する
    * 

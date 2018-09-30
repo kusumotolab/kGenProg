@@ -108,6 +108,29 @@ public class VariantStoreTest {
     assertThat(variantStore.getCurrentVariants()).containsExactly(fail1, fail2, fail3);
   }
 
+  @Test
+  public void testGetFoundSolutions() {
+    final Path basePath = Paths.get("example/BuildSuccess01");
+    final TargetProject project = TargetProjectFactory.create(basePath);
+    final Strategies strategies = mock(Strategies.class);
+    final VariantStore variantStore = new VariantStore(project, strategies);
+
+    final Variant success1 = createMockVariant(true);
+    final Variant success2 = createMockVariant(true);
+    final Variant success3 = createMockVariant(true);
+
+    variantStore.addGeneratedVariants(success1, success2, success3);
+
+    // 数の指定なしの場合，すべて取得
+    assertThat(variantStore.getFoundSolutions()).containsExactly(success1, success2, success3);
+
+    // 数の指定した場合，その数だけ取得
+    assertThat(variantStore.getFoundSolutions(2)).containsExactly(success1, success2);
+
+    // 指定された数が見つかった数よりも多い場合，すべて取得
+    assertThat(variantStore.getFoundSolutions(5)).containsExactly(success1, success2, success3);
+  }
+
   private Variant createMockVariant(boolean isCompleted) {
     final Variant variant = mock(Variant.class);
     when(variant.isCompleted()).thenReturn(isCompleted);

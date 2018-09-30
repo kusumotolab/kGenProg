@@ -97,7 +97,7 @@ public class KGenProgMain {
     logPatch(variantStore);
 
     log.debug("exit run()");
-    return variantStore.getFoundSolutions().subList(0, config.getRequiredSolutionsCount());
+    return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
@@ -111,7 +111,8 @@ public class KGenProgMain {
   }
 
   private void logPatch(final VariantStore variantStore) {
-    List<Variant> completedVariants = variantStore.getFoundSolutions();
+    List<Variant> completedVariants =
+        variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
     log.debug("enter outputPatch(VariantStore)");
     for (final Variant completedVariant : completedVariants) {
       final List<Patch> patches = patchGenerator.exec(completedVariant);
