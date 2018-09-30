@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ public class KGenProgMain {
   public List<Variant> run() {
     log.debug("enter run()");
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
-        sourceCodeGeneration, sourceCodeValidation, testExecutor);
+        sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
@@ -63,29 +62,19 @@ public class KGenProgMain {
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
 
-    GA: while (true) {
+    while (true) {
 
       log.info("in the era of the " + variantStore.getGenerationNumber()
           .toString() + " generation (" + stopwatch.toString() + ")");
 
       // 変異プログラムを生成
-      final List<Variant> nextGenerationVariants = new ArrayList<>();
-      nextGenerationVariants.addAll(mutation.exec(variantStore));
-      nextGenerationVariants.addAll(crossover.exec(variantStore));
+      variantStore.addGeneratedVariants(mutation.exec(variantStore));
+      variantStore.addGeneratedVariants(crossover.exec(variantStore));
 
-      for (final Variant variant : nextGenerationVariants) {
-        // 生成した変異プログラムが，すべてのテストケースをパスした場合
-        if (variant.isCompleted()) {
-          variantStore.addFoundSolution(variant);
-          log.info(variantStore.getFoundSolutionsNumber()
-              .toString() + " solution has been found (" + stopwatch.toString() + ")");
-
-          // しきい値以上の completedVariants が生成された場合は，GA を抜ける
-          if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
-            log.info("reached the required solutions");
-            break GA;
-          }
-        }
+      // しきい値以上の completedVariants が生成された場合は，GA を抜ける
+      if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
+        log.info("reached the required solutions");
+        break;
       }
 
       // 制限時間に達した場合には GA を抜ける
@@ -101,15 +90,14 @@ public class KGenProgMain {
       }
 
       // 次世代に向けての準備
-      variantStore.setNextGenerationVariants(
-          variantSelection.exec(variantStore.getCurrentVariants(), nextGenerationVariants));
+      variantStore.changeGeneration();
     }
 
     // 生成されたバリアントのパッチ出力
     logPatch(variantStore);
 
     log.debug("exit run()");
-    return variantStore.getFoundSolutions();
+    return variantStore.getFoundSolutions().subList(0, config.getRequiredSolutionsCount());
   }
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
