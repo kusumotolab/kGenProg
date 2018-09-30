@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.build;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,16 +21,25 @@ import com.google.common.base.Objects;
  * JavaFileObject. This class extends this functionality by reading/writing bytecode into memory
  * instead of files.
  */
-public class JavaMemoryObject implements JavaFileObject {
+public class JavaMemoryObject2 implements JavaFileObject {
 
   private ByteArrayOutputStream bos;
+  private ByteArrayInputStream bis;
   private URI uri;
   private Kind kind;
 
-  public JavaMemoryObject(String fileName, Kind fileKind) {
+  public JavaMemoryObject2(String fileName, Kind fileKind) {
     this.uri = URI.create("string:///" + fileName.replace('.', '/') + fileKind.extension);
     this.kind = fileKind;
     bos = new ByteArrayOutputStream();
+
+  }
+
+  public JavaMemoryObject2(String fileName, Kind fileKind, byte[] bytes) {
+    this.uri = URI.create("file:///" + fileName.replace('.', '/') + fileKind.extension);
+    this.kind = fileKind;
+    bis = new ByteArrayInputStream(bytes);
+    System.out.println("JMO2> " + fileName + " " + uri);
   }
 
   public byte[] getClassBytes() {
@@ -48,7 +58,7 @@ public class JavaMemoryObject implements JavaFileObject {
 
   @Override
   public final InputStream openInputStream() throws IOException {
-    throw new UnsupportedOperationException();
+    return bis;
   }
 
   @Override
@@ -83,7 +93,9 @@ public class JavaMemoryObject implements JavaFileObject {
 
   @Override
   public final Kind getKind() {
+    System.out.println("!! kind");
     return kind;
+
   }
 
   @Override
@@ -95,16 +107,19 @@ public class JavaMemoryObject implements JavaFileObject {
 
   @Override
   public final NestingKind getNestingKind() {
+    System.out.println("!! nestedkind");
     return null;
   }
 
   @Override
   public final Modifier getAccessLevel() {
+    System.out.println("!! acclvl");
     return null;
   }
 
   @Override
   public final String toString() {
+    System.out.println("!! toString");
     return getClass().getName() + "[" + toUri() + "]";
   }
 
@@ -116,7 +131,7 @@ public class JavaMemoryObject implements JavaFileObject {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JavaMemoryObject that = (JavaMemoryObject) o;
+    JavaMemoryObject2 that = (JavaMemoryObject2) o;
     return Objects.equal(uri, that.uri) && Objects.equal(kind, that.kind);
   }
 
