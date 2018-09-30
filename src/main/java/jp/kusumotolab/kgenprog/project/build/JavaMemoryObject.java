@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.build;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,11 +26,28 @@ public class JavaMemoryObject implements JavaFileObject {
   private ByteArrayOutputStream bos;
   private URI uri;
   private Kind kind;
+  private String binaryName;
 
-  public JavaMemoryObject(String fileName, Kind fileKind) {
-    this.uri = URI.create("string:///" + fileName.replace('.', '/') + fileKind.extension);
+  /**
+   * 書き込み用FileObjectの生成コンストラクタ．ビルド結果の書き込みに用いられる．
+   * 
+   * @param fileName
+   * @param fileKind
+   */
+  public JavaMemoryObject(final String fileName, final Kind fileKind) {
+    this.binaryName = fileName;
+    this.uri = URI.create("jmo:///" + fileName.replace('.', '/') + fileKind.extension);
     this.kind = fileKind;
     bos = new ByteArrayOutputStream();
+  }
+
+  /**
+   * InMemoryClassManager#inferBinaryNameで呼ばれるメソッド． inferする必要がないので直接binaryNameを返す．
+   * 
+   * @return
+   */
+  public String getBinaryName() {
+    return binaryName;
   }
 
   public byte[] getClassBytes() {
@@ -48,7 +66,7 @@ public class JavaMemoryObject implements JavaFileObject {
 
   @Override
   public final InputStream openInputStream() throws IOException {
-    throw new UnsupportedOperationException();
+    return new ByteArrayInputStream(bos.toByteArray());
   }
 
   @Override

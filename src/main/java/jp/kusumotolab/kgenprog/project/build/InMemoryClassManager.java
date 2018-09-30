@@ -4,11 +4,14 @@ package jp.kusumotolab.kgenprog.project.build;
 import static com.google.common.collect.Lists.newArrayList;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
+import com.google.common.collect.Iterables;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 /**
  * The standard JavaFileManager uses a simple implementation of type JavaFileObject to read/write
@@ -20,6 +23,7 @@ import javax.tools.JavaFileObject.Kind;
 public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   private List<CompilationUnit> memory = newArrayList();
+  private BinaryStore binaryStore = BinaryStore.instance;
 
   public InMemoryClassManager(JavaFileManager fileManager) {
     super(fileManager);
@@ -43,6 +47,7 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     JavaMemoryObject co = new JavaMemoryObject(name, kind);
     CompilationUnit cf = new CompilationUnit(name, co);
     memory.add(cf);
+    binaryStore.put(new TargetFullyQualifiedName(name), co); // TODO Targetとは限らない
     return co;
   }
 
@@ -60,5 +65,43 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
    */
   public List<CompilationUnit> getAllClasses() {
     return memory;
+  }
+
+  /**
+   * ビルド中に呼ばれるメソッド．依存クラス等の解決に利用される．
+   * 
+   * @see javax.tools.ForwardingJavaFileManager#list(javax.tools.JavaFileManager.Location,
+   *      java.lang.String, java.util.Set, boolean)
+   */
+  @Override
+  public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds,
+      boolean recurse) throws IOException {
+    // まずは普通のFMからバイナリを取り出す
+    Iterable<JavaFileObject> objs = fileManager.list(location, packageName, kinds, recurse);
+
+    // BinaryStoreからもバイナリを取り出す
+    Iterable<JavaFileObject> cache = binaryStore.list(packageName);
+
+    // TODO location考えなくて良い？
+
+    // 両方を結合して返す
+    return Iterables.concat(objs, cache);
+  }
+
+  /**
+   * inferBinaryNameの拡張．JavaMemoryObjectの場合のみ特殊処理．
+   * 
+   * @see javax.tools.ForwardingJavaFileManager#inferBinaryName(javax.tools.JavaFileManager.Location,
+   *      javax.tools.JavaFileObject)
+   * @throws IllegalStateException {@inheritDoc}
+   */
+  @Override
+  public String inferBinaryName(Location location, JavaFileObject file) {
+    // JMOの場合はバイナリ名の解決を簡略化 ．
+    // 標準FMにinferするとIllegalArgumentExceptionが発生するため（理由は不明）．
+    if (file instanceof JavaMemoryObject) {
+      return ((JavaMemoryObject) file).getBinaryName();
+    }
+    return fileManager.inferBinaryName(location, file);
   }
 }
