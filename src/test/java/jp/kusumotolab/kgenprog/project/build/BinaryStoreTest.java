@@ -51,7 +51,7 @@ public class BinaryStoreTest {
   }
 
   @Test
-  // 基本操作の確認．putしてgetできるか by path
+  // 基本操作の確認．putしてgetできるか
   public void testStoreAndGetByPath() {
     binStore.put(fqn1, object1);
     binStore.put(fqn2, object2);
@@ -62,7 +62,7 @@ public class BinaryStoreTest {
   }
 
   @Test
-  // 上書きできるか
+  // キャッシュを上書きできるか
   public void testOverrideByPath() {
     binStore.put(fqn1, object1);
     binStore.put(fqn1, object2); // force override
@@ -79,7 +79,7 @@ public class BinaryStoreTest {
   }
 
   @Test
-  // listの確認．
+  // listの確認．パッケージ名を指定して期待のバイナリが返ってくるか
   public void testList() {
     binStore.put(fqn1, object1);
     binStore.put(fqn2, object2);
