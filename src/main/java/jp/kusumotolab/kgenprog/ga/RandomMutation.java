@@ -36,13 +36,8 @@ public class RandomMutation extends Mutation {
         log.debug("suspiciousnesses is empty.");
         continue;
       }
-      final Roulette<Suspiciousness> roulette;
-
-      try {
-        roulette = new Roulette<>(suspiciousnesses, weightFunction, random);
-      } catch (final IllegalArgumentException ignored) {
-        continue;
-      }
+      final Roulette<Suspiciousness> roulette = new Roulette<>(suspiciousnesses, weightFunction,
+          random);
 
       for (int i = 0; i < numberOfBase; i++) {
         final Suspiciousness suspiciousness = roulette.exec();
