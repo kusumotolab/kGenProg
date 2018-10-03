@@ -87,11 +87,11 @@ public class RandomMutationTest {
 
     final Gene initialGene = new Gene(Collections.emptyList());
     final Variant initialVariant =
-        new Variant(initialGene, null, null, null, suspiciousnesses, null);
+        new Variant(0, initialGene, null, null, null, suspiciousnesses, null);
     final VariantStore variantStore = mock(VariantStore.class);
     when(variantStore.getCurrentVariants()).thenReturn(Arrays.asList(initialVariant));
     when(variantStore.createVariant(any(), any())).then(ans -> {
-      return new Variant(ans.getArgument(0), null, null, null, null, ans.getArgument(1));
+      return new Variant(0, ans.getArgument(0), null, null, null, null, ans.getArgument(1));
     });
 
     // 正しく15個のVariantが生成されるかのテスト

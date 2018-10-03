@@ -30,11 +30,12 @@ public class VariantStore {
     this.targetProject = targetProject;
     this.strategies = strategies;
 
+    generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
-    generation = new OrdinalNumber(1);
+    generation.incrementAndGet();
   }
 
   /**
@@ -156,7 +157,8 @@ public class VariantStore {
     final Fitness fitness = strategies.execSourceCodeValidation(this, testResults);
     final List<Suspiciousness> suspiciousnesses =
         strategies.execFaultLocalization(sourceCode, testResults);
-    return new Variant(gene, sourceCode, testResults, fitness, suspiciousnesses, element);
+    return new Variant(generation.get(), gene, sourceCode, testResults, fitness, suspiciousnesses,
+        element);
   }
 
 }
