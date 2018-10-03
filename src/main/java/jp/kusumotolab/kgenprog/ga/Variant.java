@@ -8,6 +8,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class Variant {
+
   private static Logger log = LoggerFactory.getLogger(Variant.class);
 
   private final Gene gene;
@@ -15,14 +16,17 @@ public class Variant {
   private final TestResults testResults;
   private final Fitness fitness;
   private final List<Suspiciousness> suspiciousnesses;
+  private final HistoricalElement historicalElement;
 
-  public Variant(final Gene gene, final GeneratedSourceCode generatedSourceCode, final TestResults testResults,
-      final Fitness fitness, List<Suspiciousness> suspiciousnesses) {
+  public Variant(final Gene gene, final GeneratedSourceCode generatedSourceCode,
+      final TestResults testResults, final Fitness fitness,
+      final List<Suspiciousness> suspiciousnesses, final HistoricalElement historicalElement) {
     this.gene = gene;
     this.generatedSourceCode = generatedSourceCode;
     this.testResults = testResults;
     this.fitness = fitness;
     this.suspiciousnesses = suspiciousnesses;
+    this.historicalElement = historicalElement;
   }
 
   public boolean isCompleted() {
@@ -48,9 +52,14 @@ public class Variant {
     log.debug("enter getFitness()");
     return fitness;
   }
-  
-  public List<Suspiciousness> getSuspiciousnesses(){
+
+  public List<Suspiciousness> getSuspiciousnesses() {
     log.debug("enter getSuspiciousnesses");
     return suspiciousnesses;
+  }
+
+  public HistoricalElement getHistoricalElement() {
+    log.debug("enter getHistoricalElement");
+    return historicalElement;
   }
 }

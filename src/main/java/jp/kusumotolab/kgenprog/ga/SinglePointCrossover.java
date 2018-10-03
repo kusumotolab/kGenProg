@@ -43,13 +43,12 @@ public class SinglePointCrossover implements Crossover {
     }
 
     return IntStream.range(0, numberOfPair)
-        .mapToObj(e -> makeGenes(filteredVariants))
+        .mapToObj(e -> makeVariants(filteredVariants, variantStore))
         .flatMap(Collection::stream)
-        .map(variantStore::createVariant)
         .collect(Collectors.toList());
   }
 
-  private List<Gene> makeGenes(final List<Variant> variants) {
+  private List<Variant> makeVariants(final List<Variant> variants, final VariantStore store) {
     final Variant variantA = variants.get(random.nextInt(variants.size()));
     final Variant variantB = variants.get(random.nextInt(variants.size()));
     final Gene geneA = variantA.getGene();
@@ -57,13 +56,17 @@ public class SinglePointCrossover implements Crossover {
     final List<Base> basesA = geneA.getBases();
     final List<Base> basesB = geneB.getBases();
     final int index = random.nextInt(Math.min(basesA.size(), basesB.size()));
-    return Arrays.asList(makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size())),
-        makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size())));
+    final Gene newGeneA = makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size()));
+    final Gene newGeneB = makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size()));
+    final HistoricalElement elementA = new CrossoverHistoricalElement(variantA, variantB, index);
+    final HistoricalElement elementB = new CrossoverHistoricalElement(variantB, variantA, index);
+    return Arrays.asList(store.createVariant(newGeneA, elementA),
+        store.createVariant(newGeneB, elementB));
   }
 
   private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {
     final ArrayList<Base> bases = new ArrayList<>(basesA);
     bases.addAll(basesB);
-    return new SimpleGene(bases);
+    return new Gene(bases);
   }
 }

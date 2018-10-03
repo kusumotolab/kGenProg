@@ -41,13 +41,15 @@ public class VariantStoreTest {
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
 
     final VariantStore variantStore = new VariantStore(project, strategies);
-    final Gene gene = new SimpleGene(Collections.emptyList());
+    final Gene gene = new Gene(Collections.emptyList());
+    final HistoricalElement element = mock(HistoricalElement.class);
+    final Variant variant = variantStore.createVariant(gene, element);
 
-    final Variant variant = variantStore.createVariant(gene);
     assertThat(variant.getGene()).isSameAs(gene);
     assertThat(variant.getGeneratedSourceCode()).isSameAs(sourceCodeGenerationResult);
     assertThat(variant.getTestResults()).isSameAs(testExecutorResult);
     assertThat(variant.getFitness()).isSameAs(sourceCodeValidationResult);
+    assertThat(variant.getHistoricalElement()).isSameAs(element);
   }
 
   @Test

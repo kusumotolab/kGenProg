@@ -43,7 +43,7 @@ public class RandomMutationTest {
     }
 
     @Override
-    public int nextInt(int divisor) {
+    public int nextInt(final int divisor) {
       return 1;
     }
 
@@ -85,12 +85,13 @@ public class RandomMutationTest {
         })
         .collect(Collectors.toList());
 
-    final Gene initialGene = new SimpleGene(Collections.emptyList());
-    final Variant variant = new Variant(initialGene, null, null, null, suspiciousnesses);
+    final Gene initialGene = new Gene(Collections.emptyList());
+    final Variant initialVariant =
+        new Variant(initialGene, null, null, null, suspiciousnesses, null);
     final VariantStore variantStore = mock(VariantStore.class);
-    when(variantStore.getCurrentVariants()).thenReturn(Arrays.asList(variant));
-    when(variantStore.createVariant(any())).then(ans -> {
-      return new Variant(ans.getArgument(0), null, null, null, null);
+    when(variantStore.getCurrentVariants()).thenReturn(Arrays.asList(initialVariant));
+    when(variantStore.createVariant(any(), any())).then(ans -> {
+      return new Variant(ans.getArgument(0), null, null, null, null, ans.getArgument(1));
     });
 
     // 正しく15個のVariantが生成されるかのテスト
@@ -112,7 +113,8 @@ public class RandomMutationTest {
             .size());
 
     // TestNumberGenerationにしたがってOperationが生成されているかのテスト
-    final Base base = getLastBase(variantList.get(0));
+    final Variant variant = variantList.get(0);
+    final Base base = getLastBase(variant);
     final JDTASTLocation targetLocation = (JDTASTLocation) base.getTargetLocation();
     assertThat(targetLocation.node).isSameSourceCodeAs("return n;");
 
@@ -125,6 +127,14 @@ public class RandomMutationTest {
     field.setAccessible(true);
     final ASTNode node = (ASTNode) field.get(insertOperation);
     assertThat(node).isSameSourceCodeAs("n--;");
+
+    // HistoricalELementのテスト
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element).isInstanceOf(MutationHistoricalElement.class);
+    final MutationHistoricalElement mElement = (MutationHistoricalElement) element;
+    assertThat(element.getParents()).hasSize(1)
+        .containsExactly(initialVariant);
+    assertThat(mElement.getAppendedBase()).isEqualTo(base);
   }
 
   private Base getLastBase(final Variant variant) {
