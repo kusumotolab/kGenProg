@@ -6,15 +6,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Converter;
+import com.electronwill.nightconfig.core.conversion.InvalidValueException;
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
+import com.electronwill.nightconfig.core.conversion.SpecNotNull;
+import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
@@ -136,23 +145,68 @@ public class Configuration {
   public static class Builder {
 
     // region Fields
-    private static final Logger log = LoggerFactory.getLogger(Builder.class);
+
+    private static transient final Logger log = LoggerFactory.getLogger(Builder.class);
+
+    private Path configPath = Paths.get("kgenprog.toml");
+
+    @SpecNotNull
+    @Conversion(PathToString.class)
     private Path rootDir;
-    private List<Path> productPaths = new ArrayList<>();
-    private List<Path> testPaths = new ArrayList<>();
+
+    @SpecNotNull
+    @Conversion(PathsToStrings.class)
+    private List<Path> productPaths;
+
+    @SpecNotNull
+    @Conversion(PathsToStrings.class)
+    private List<Path> testPaths;
+
+    @PreserveNotNull
+    @Conversion(PathsToStrings.class)
     private List<Path> classPaths = new ArrayList<>();
+
+    @PreserveNotNull
+    @Conversion(PathsToStrings.class)
     private List<String> executionTests = new ArrayList<>();
-    private TargetProject targetProject;
+
+    private transient TargetProject targetProject;
+
+    @PreserveNotNull
+    @Conversion(PathToString.class)
     private Path workingDir = DEFAULT_WORKING_DIR;
+
+    @PreserveNotNull
+    @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
+
+    @PreserveNotNull
     private int siblingsCount = DEFAULT_SIBLINGS_COUNT;
+
+    @PreserveNotNull
     private int headcount = DEFAULT_HEADCOUNT;
+
+    @PreserveNotNull
     private int maxGeneration = DEFAULT_MAX_GENERATION;
+
+    @PreserveNotNull
+    @Conversion(DurationToInteger.class)
     private Duration timeLimit = DEFAULT_TIME_LIMIT;
+
+    @PreserveNotNull
+    @Conversion(DurationToInteger.class)
     private Duration testTimeLimit = DEFAULT_TEST_TIME_LIMIT;
+
+    @PreserveNotNull
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
+
+    @PreserveNotNull
+    @Conversion(LevelToString.class)
     private Level logLevel = DEFAULT_LOG_LEVEL;
+
+    @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
+
     // endregion
 
     // region Constructors
@@ -171,9 +225,12 @@ public class Configuration {
       this.targetProject = targetProject;
     }
 
+    /**
+     * Do not call me except from buildFromCmdLineArgs
+     */
     private Builder() {
-      // do nothing
-      // do not call me except from buildFromCmdLineArgs
+      productPaths = new ArrayList<>();
+      testPaths = new ArrayList<>();
     }
 
     // endregion
@@ -188,8 +245,15 @@ public class Configuration {
 
       try {
         parser.parseArgument(args);
+
+        if (needsParseConfigFile(args)) {
+          builder.parseConfigFile();
+        }
+
         validateArgument(builder);
-      } catch (final CmdLineException | IllegalArgumentException e) {
+      } catch (final CmdLineException | IllegalArgumentException | InvalidValueException
+          | IOException e) {
+        // todo: make error message of InvalidValueException more user-friendly
         log.error(e.getMessage());
         parser.printUsage(System.err);
         System.exit(1);
@@ -346,109 +410,147 @@ public class Configuration {
       return builder.logLevel.equals(Level.ERROR);
     }
 
+    private static boolean needsParseConfigFile(String[] args) {
+      return args.length == 0 || Arrays.asList(args)
+          .contains("--config");
+    }
+
+    private void parseConfigFile() throws InvalidValueException, IOException {
+      if (Files.notExists(configPath)) {
+        throw new IOException("config file \"" + configPath.toString() + "\" is not found");
+      }
+
+      try (final FileConfig config = FileConfig.of(configPath)) {
+        config.load();
+
+        log.debug("config = {}", config);
+
+        ObjectConverter converter = new ObjectConverter();
+        converter.toObject(config, this);
+      }
+    }
+
     // endregion
 
     // region Methods for CmdLineParser
 
-    @Option(name = "-r", aliases = "--root-dir", required = true, metaVar = "<path>",
-        usage = "Path of a root directory of a target project")
+    @Option(name = "--config", metaVar = "<path>", usage = "Path of a configuration file",
+        forbids = {"-r", "-s", "-t"})
+    private void setConfigPathFromCmdLineParser(final String configPath) {
+      log.debug("enter setConfigPathFromCmdLineParser(String)");
+      this.configPath = Paths.get(configPath);
+    }
+
+    @Option(name = "-r", aliases = "--root-dir", metaVar = "<path>",
+        usage = "Path of a root directory of a target project",
+        depends = {"-s", "-t"}, forbids = {"--config"})
     private void setRootDirFromCmdLineParser(final String rootDir) {
       log.debug("enter setRootDirFromCmdLineParser(String)");
       this.rootDir = Paths.get(rootDir);
     }
 
-    @Option(name = "-s", aliases = "--src", required = true,
-        handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
-        usage = "Paths of the root directories holding src codes")
+    @Option(name = "-s", aliases = "--src", handler = StringArrayOptionHandler.class,
+        metaVar = "<path> ...", usage = "Paths of the root directories holding src codes",
+        depends = {"-r", "-t"}, forbids = {"--config"})
     private void addProductPathFromCmdLineParser(final String sourcePath) {
       log.debug("enter addProductPathFromCmdLineParser(String)");
       this.productPaths.add(Paths.get(sourcePath));
     }
 
-    @Option(name = "-t", aliases = "--test", required = true,
-        handler = StringArrayOptionHandler.class, metaVar = "<path> ...",
-        usage = "Paths of the root directories holding test codes")
+    @Option(name = "-t", aliases = "--test", handler = StringArrayOptionHandler.class,
+        metaVar = "<path> ...", usage = "Paths of the root directories holding test codes",
+        depends = {"-r", "-s"}, forbids = {"--config"})
     private void addTestPathFromCmdLineParser(final String testPath) {
       log.debug("enter addTestPathFromCmdLineParser(String)");
       this.testPaths.add(Paths.get(testPath));
     }
 
     @Option(name = "-c", aliases = "--cp", handler = StringArrayOptionHandler.class,
-        metaVar = "<class path> ...", usage = "Class paths required to build the target project")
+        metaVar = "<class path> ...", usage = "Class paths required to build the target project",
+        depends = {"-r", "-s", "-t"})
     private void addClassPathFromCmdLineParser(final String classPath) {
       log.debug("enter addClassPathFromCmdLineParser(String)");
       this.classPaths.add(Paths.get(classPath));
     }
 
     @Option(name = "-x", aliases = "--exec-test", handler = StringArrayOptionHandler.class,
-        metaVar = "<fqn> ...", usage = "Execution test cases.")
+        metaVar = "<fqn> ...", usage = "Execution test cases.",
+        depends = {"-r", "-s", "-t"})
     private void addExecutionTestFromCmdLineParser(final String executionTest) {
       log.debug("enter addExecutionTestFromCmdLineParser(String)");
       this.executionTests.add(executionTest);
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
-        usage = "Path of a working directory")
+        usage = "Path of a working directory",
+        depends = {"-r", "-s", "-t"})
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
       log.debug("enter setWorkingDirFromCmdLineParser(String)");
       this.workingDir = Paths.get(workingDir);
     }
 
     @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
-        usage = "Path of a output directory")
+        usage = "Path of a output directory", depends = {"-r", "-s", "-t"})
     private void setOutDirFromCmdLineParser(final String outDir) {
       log.debug("enter setOutDirFromCmdLineParser(String)");
       this.outDir = Paths.get(outDir);
     }
 
     @Option(name = "-i", aliases = "--siblings-count",
-        usage = "The number of how many child variants are generated from a parent")
+        usage = "The number of how many child variants are generated from a parent",
+        depends = {"-r", "-s", "-t"})
     private void setSiblingsCountFromCmdLineParser(final int siblingsCount) {
       log.debug("enter setSiblingsCountFromCmdLineParser(int)");
       this.siblingsCount = siblingsCount;
     }
 
     @Option(name = "-h", aliases = "--headcount",
-        usage = "The number of how many variants are generated maximally in a generation")
+        usage = "The number of how many variants are generated maximally in a generation",
+        depends = {"-r", "-s", "-t"})
     private void setHeadcountFromCmdLineParser(final int headcount) {
       log.debug("enter setHeadcountFromCmdLineParser(int)");
       this.headcount = headcount;
     }
 
-    @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation")
+    @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation",
+        depends = {"-r", "-s", "-t"})
     private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
       log.debug("enter setMaxGenerationFromCmdLineParser(int)");
       this.maxGeneration = maxGeneration;
     }
 
-    @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second")
+    @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second",
+        depends = {"-r", "-s", "-t"})
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
       log.debug("enter setTimeLimitFromCmdLineParser(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
     @Option(name = "--test-time-limit",
-        usage = "Time limit to build and test for each variant in second")
+        usage = "Time limit to build and test for each variant in second",
+        depends = {"-r", "-s", "-t"})
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
       log.debug("enter setTestTimeLimitFromCmdLineParser(long)");
       this.testTimeLimit = Duration.ofSeconds(testTimeLimit);
     }
 
     @Option(name = "-e", aliases = "--required-solutions",
-        usage = "The number of solutions needed to be searched")
+        usage = "The number of solutions needed to be searched", depends = {"-r", "-s", "-t"})
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       log.debug("enter setTimeLimitFromCmdLineParser(int)");
       this.requiredSolutionsCount = requiredSolutionsCount;
     }
 
-    @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.")
+    @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.",
+        depends = {"-r", "-s", "-t"})
     private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
       log.debug("enter setLogLevelDebugFromCmdLineParser(boolean)");
       log.debug("log level has been set DEBUG");
       logLevel = Level.DEBUG;
     }
 
-    @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.")
+    @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.",
+        depends = {"-r", "-s", "-t"})
     private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
       log.debug("enter setLogLevelErrorFromCmdLineParser(boolean)");
       log.debug("log level has been set ERROR");
@@ -456,13 +558,103 @@ public class Configuration {
     }
 
     @Option(name = "-a", aliases = "--random-seed",
-        usage = "The seed of a random seed generator used across this program")
+        usage = "The seed of a random seed generator used across this program",
+        depends = {"-r", "-s", "-t"})
     private void setRandomSeedFromCmdLineParser(final long randomSeed) {
       log.debug("enter setRandomSeedFromCmdLineParser(long)");
       this.randomSeed = randomSeed;
     }
 
     // endregion
+
+    private static class PathToString implements Converter<Path, String> {
+
+      @Override
+      public Path convertToField(String value) {
+        if (value == null) {
+          return null;
+        }
+
+        return Paths.get(value);
+      }
+
+      @Override
+      public String convertFromField(Path value) {
+        if (value == null) {
+          return null;
+        }
+
+        return value.toString();
+      }
+    }
+
+    private static class PathsToStrings implements Converter<List<Path>, List<String>> {
+
+      @Override
+      public List<Path> convertToField(List<String> value) {
+        if (value == null) {
+          return null;
+        }
+
+        return value.stream()
+            .map(Paths::get)
+            .collect(Collectors.toList());
+      }
+
+      @Override
+      public List<String> convertFromField(List<Path> value) {
+        if (value == null) {
+          return null;
+        }
+
+        return value.stream()
+            .map(Path::toString)
+            .collect(Collectors.toList());
+      }
+    }
+
+    private static class LevelToString implements Converter<Level, String> {
+
+      @Override
+      public Level convertToField(String value) {
+        if (value == null) {
+          return null;
+        }
+
+        return Level.toLevel(value);
+      }
+
+      @Override
+      public String convertFromField(Level value) {
+        if (value == null) {
+          return null;
+        }
+
+        return value.levelStr;
+      }
+    }
+
+    private static class DurationToInteger implements Converter<Duration, Integer> {
+
+      // todo: make it possible to take minutes and hours etc.
+      @Override
+      public Duration convertToField(Integer value) {
+        if (value == null) {
+          return null;
+        }
+
+        return Duration.ofSeconds(value);
+      }
+
+      @Override
+      public Integer convertFromField(Duration value) {
+        if (value == null) {
+          return null;
+        }
+
+        return (int) value.getSeconds();
+      }
+    }
   }
 }
 
