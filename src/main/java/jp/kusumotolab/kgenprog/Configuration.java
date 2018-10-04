@@ -150,60 +150,74 @@ public class Configuration {
 
     private Path configPath = Paths.get("kgenprog.toml");
 
+    @com.electronwill.nightconfig.core.conversion.Path("root-dir")
     @SpecNotNull
     @Conversion(PathToString.class)
     private Path rootDir;
 
+    @com.electronwill.nightconfig.core.conversion.Path("src")
     @SpecNotNull
     @Conversion(PathsToStrings.class)
     private List<Path> productPaths;
 
+    @com.electronwill.nightconfig.core.conversion.Path("test")
     @SpecNotNull
     @Conversion(PathsToStrings.class)
     private List<Path> testPaths;
 
+    @com.electronwill.nightconfig.core.conversion.Path("cp")
     @PreserveNotNull
     @Conversion(PathsToStrings.class)
     private List<Path> classPaths = new ArrayList<>();
 
+    @com.electronwill.nightconfig.core.conversion.Path("exec-test")
     @PreserveNotNull
     @Conversion(PathsToStrings.class)
     private List<String> executionTests = new ArrayList<>();
 
     private transient TargetProject targetProject;
 
+    @com.electronwill.nightconfig.core.conversion.Path("working-dir")
     @PreserveNotNull
     @Conversion(PathToString.class)
     private Path workingDir = DEFAULT_WORKING_DIR;
 
+    @com.electronwill.nightconfig.core.conversion.Path("out-dir")
     @PreserveNotNull
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
 
+    @com.electronwill.nightconfig.core.conversion.Path("siblings-count")
     @PreserveNotNull
     private int siblingsCount = DEFAULT_SIBLINGS_COUNT;
 
     @PreserveNotNull
     private int headcount = DEFAULT_HEADCOUNT;
 
+    @com.electronwill.nightconfig.core.conversion.Path("max-generation")
     @PreserveNotNull
     private int maxGeneration = DEFAULT_MAX_GENERATION;
 
+    @com.electronwill.nightconfig.core.conversion.Path("time-limit")
     @PreserveNotNull
     @Conversion(DurationToInteger.class)
     private Duration timeLimit = DEFAULT_TIME_LIMIT;
 
+    @com.electronwill.nightconfig.core.conversion.Path("test-time-limit")
     @PreserveNotNull
     @Conversion(DurationToInteger.class)
     private Duration testTimeLimit = DEFAULT_TEST_TIME_LIMIT;
 
+    @com.electronwill.nightconfig.core.conversion.Path("required-solutions")
     @PreserveNotNull
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
 
+    @com.electronwill.nightconfig.core.conversion.Path("log-level")
     @PreserveNotNull
     @Conversion(LevelToString.class)
     private Level logLevel = DEFAULT_LOG_LEVEL;
 
+    @com.electronwill.nightconfig.core.conversion.Path("random-seed")
     @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
 
