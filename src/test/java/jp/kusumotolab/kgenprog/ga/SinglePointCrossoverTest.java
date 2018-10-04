@@ -40,9 +40,9 @@ public class SinglePointCrossoverTest {
         insertOperationBase, insertOperationBase, insertOperationBase);
 
     final Variant noneOperationVariant =
-        new Variant(new SimpleGene(noneBases), null, null, null, null);
+        new Variant(0, new Gene(noneBases), null, null, null, null, null);
     final Variant insertOperationVariant =
-        new Variant(new SimpleGene(insertBases), null, null, null, null);
+        new Variant(0, new Gene(insertBases), null, null, null, null, null);
 
     final Random random = new MockRandom();
     random.setSeed(0);
@@ -50,8 +50,15 @@ public class SinglePointCrossoverTest {
     final VariantStore variantStore =
         new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
 
-    final List<Gene> genes = singlePointCrossover.exec(variantStore)
-        .stream()
+    final List<Variant> variants = singlePointCrossover.exec(variantStore);
+    final Variant variant = variants.get(0);
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element).isInstanceOf(CrossoverHistoricalElement.class);
+    final CrossoverHistoricalElement cElement = (CrossoverHistoricalElement) element;
+    assertThat(cElement.getParents()).containsExactly(insertOperationVariant, noneOperationVariant);
+    assertThat(cElement.getCrossoverPoint()).isEqualTo(3);
+
+    final List<Gene> genes = variants.stream()
         .map(Variant::getGene)
         .collect(Collectors.toList());
 

@@ -30,11 +30,12 @@ public class VariantStore {
     this.targetProject = targetProject;
     this.strategies = strategies;
 
+    generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
-    generation = new OrdinalNumber(1);
+    generation.incrementAndGet();
   }
 
   /**
@@ -52,9 +53,9 @@ public class VariantStore {
     generation = new OrdinalNumber(1);
   }
 
-  public Variant createVariant(final Gene gene) {
+  public Variant createVariant(final Gene gene, final HistoricalElement element) {
     final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
-    return createVariant(gene, sourceCode);
+    return createVariant(gene, sourceCode, element);
   }
 
   public Variant getInitialVariant() {
@@ -88,9 +89,9 @@ public class VariantStore {
 
   /**
    * 引数の要素すべてを次世代のVariantとして追加する
-   * 
+   *
    * @see addNextGenerationVariant(Variant)
-   * 
+   *
    * @param variants 追加対象
    */
   public void addGeneratedVariants(final Variant... variants) {
@@ -99,9 +100,9 @@ public class VariantStore {
 
   /**
    * リストの要素すべてを次世代のVariantとして追加する
-   * 
+   *
    * @see addNextGenerationVariant(Variant)
-   * 
+   *
    * @param variants 追加対象
    */
   public void addGeneratedVariants(final Collection<? extends Variant> variants) {
@@ -111,7 +112,7 @@ public class VariantStore {
   /**
    * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
    * の場合，foundSolutionとして追加され次世代のVariantには追加されない
-   * 
+   *
    * @param variant
    */
   public void addGeneratedVariant(final Variant variant) {
@@ -127,7 +128,7 @@ public class VariantStore {
 
   /**
    * VariantSelectionを実行し世代交代を行う
-   * 
+   *
    * currentVariantsおよびgeneratedVariantsから次世代のVariantsを選択し，それらを次のcurrentVariantsとする
    * また，generatedVariantsをclearする
    */
@@ -146,15 +147,18 @@ public class VariantStore {
 
   private Variant createInitialVariant() {
     final GeneratedSourceCode sourceCode = strategies.execASTConstruction(targetProject);
-    return createVariant(new SimpleGene(Collections.emptyList()), sourceCode);
+    return createVariant(new Gene(Collections.emptyList()), sourceCode,
+        new OriginalHistoricalElement());
   }
 
-  private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode) {
+  private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
+      final HistoricalElement element) {
     final TestResults testResults = strategies.execTestExecutor(sourceCode);
     final Fitness fitness = strategies.execSourceCodeValidation(this, testResults);
     final List<Suspiciousness> suspiciousnesses =
         strategies.execFaultLocalization(sourceCode, testResults);
-    return new Variant(gene, sourceCode, testResults, fitness, suspiciousnesses);
+    return new Variant(generation.get(), gene, sourceCode, testResults, fitness, suspiciousnesses,
+        element);
   }
 
 }

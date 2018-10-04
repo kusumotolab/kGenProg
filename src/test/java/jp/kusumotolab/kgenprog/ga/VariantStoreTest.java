@@ -39,16 +39,33 @@ public class VariantStoreTest {
     when(strategies.execTestExecutor(any())).thenReturn(testExecutorResult);
     when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
+    when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
 
     final VariantStore variantStore = new VariantStore(project, strategies);
-    final Gene gene = new SimpleGene(Collections.emptyList());
+    final Variant initialVariant = variantStore.getInitialVariant();
+    assertThat(initialVariant.getGenerationNumber()).hasValue(0);
 
-    final Variant variant = variantStore.createVariant(gene);
+    final Gene gene = new Gene(Collections.emptyList());
+    final HistoricalElement element = mock(HistoricalElement.class);
+    final Variant variant = variantStore.createVariant(gene, element);
+
+    assertThat(variant.getGenerationNumber()).hasValue(1);
     assertThat(variant.getGene()).isSameAs(gene);
     assertThat(variant.getGeneratedSourceCode()).isSameAs(sourceCodeGenerationResult);
     assertThat(variant.getTestResults()).isSameAs(testExecutorResult);
     assertThat(variant.getFitness()).isSameAs(sourceCodeValidationResult);
+    assertThat(variant.getHistoricalElement()).isSameAs(element);
+
+    // 世代が進んだときのVariant.getGenerationNumberを確認
+    variantStore.changeGeneration();
+    final Variant variant2g = variantStore.createVariant(gene, element);
+    assertThat(variant2g.getGenerationNumber()).hasValue(2);
+
+    variantStore.changeGeneration();
+    final Variant variant3g = variantStore.createVariant(gene, element);
+    assertThat(variant3g.getGenerationNumber()).hasValue(3);
   }
+
 
   @Test
   public void testGetGenerationNumber() {
