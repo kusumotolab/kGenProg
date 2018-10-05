@@ -172,7 +172,6 @@ public class Configuration {
 
     @com.electronwill.nightconfig.core.conversion.Path("exec-test")
     @PreserveNotNull
-    @Conversion(PathsToStrings.class)
     private List<String> executionTests = new ArrayList<>();
 
     private transient TargetProject targetProject;
