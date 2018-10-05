@@ -1,0 +1,4 @@
+root-dir = "./"
+src = ["src/example/CloseToZero.java"]
+test = ["src/example/CloseToZeroTest.java"]
+
