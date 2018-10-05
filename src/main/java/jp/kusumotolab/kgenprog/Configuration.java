@@ -448,7 +448,7 @@ public class Configuration {
     }
 
     private void resolvePaths() {
-      final Path configDir = configPath.getParent();
+      final Path configDir = getParent(configPath, Paths.get("."));
 
       rootDir = configDir.resolve(rootDir)
           .normalize();
@@ -471,6 +471,10 @@ public class Configuration {
         outDir = configDir.resolve(outDir)
             .normalize();
       }
+    }
+
+    private Path getParent(final Path path, final Path defaultPath) {
+      return path.getParent() != null ? path.getParent() : defaultPath;
     }
 
     // endregion
