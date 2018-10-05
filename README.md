@@ -18,6 +18,14 @@ kGenProg は単一の jar ファイルにまとめてあります．[ここ](htt
 
 
 ## 使用方法
+```sh
+$ java -jar path/to/kGenProg.jar 
+$ java -jar path/to/kGenProg.jar --config <path>
+$ java -jar path/to/kGenProg.jar -r <path> -s <path>... -t <path>... [-x <fqn>...] [-c <path>...]
+    [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>] [--headcount <num>]
+    [--max-generation <num>] [--time-limit <sec>] [--required-solutions <num>] [--random-seed <num>]
+    
+```
 
 ### 使用例
 [kGenProg/example](example) には kGenProg のテストに用いているバグが置いてあります．
@@ -28,13 +36,24 @@ $ cd kGenProg/example/CloseToZero01
 $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/example/CloseToZeroTest.java
 ```
 
+`.toml` ファイルにパラメータをまとめておいて，実行時に指定することもできます．
+```sh
+$ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
+```
+
+実行時にオプションを省略した場合は，カレントディレクトリの `kgenprog.toml` を読み込みます．
+```sh
+$ cd kGenProg/example/CloseToZero01
+$ java -jar path/to/kGenProg.jar
+```
+
 
 ### オプション
 | オプション | 説明 | デフォルト値/デフォルト動作 |
 |---|---|---|
-| `-r`, `--root-dir` | 修正対象プロジェクトのルートディレクトリへのパス．テスト実行の都合上，対象プロジェクトのルートに移動した上でカレントディレクトリを指定することを推奨します．（必須オプション） | なし |
-| `-s`, `--src` | プロダクトコード（単体テスト用のコードを除く実装系のソースコード）へのパス，もしくはプロダクトコードを含むディレクトリへのパス．スペース区切りで複数指定可能．（必須オプション） | なし |
-| `-t`, `--test` | テストコード（単体テスト用のソースコード）へのパス，もしくはテストコードを含むディレクトリへのパス．スペース区切りで複数指定可能．（必須オプション） | なし |
+| `-r`, `--root-dir` | 修正対象プロジェクトのルートディレクトリへのパス．テスト実行の都合上，対象プロジェクトのルートに移動した上でカレントディレクトリを指定することを推奨します． | なし |
+| `-s`, `--src` | プロダクトコード（単体テスト用のコードを除く実装系のソースコード）へのパス，もしくはプロダクトコードを含むディレクトリへのパス．スペース区切りで複数指定可能． | なし |
+| `-t`, `--test` | テストコード（単体テスト用のソースコード）へのパス，もしくはテストコードを含むディレクトリへのパス．スペース区切りで複数指定可能． | なし |
 | `-x`, `--exec-test` | 遺伝的アルゴリズム中に実行されるテストクラスの完全限定名．バグを発現させるテストクラスを指定してください．スペース区切りで複数指定可能． | すべてのテストクラス |
 | `-c`, `--cp` | 修正対象プロジェクトのビルドに必要なクラスパス．スペース区切りで複数指定可能． | なし |
 | `-w`, `--working-dir` | kGenProg が作業を行うディレクトリへのパス | システムの一時ファイルディレクトリ（Windows: `%tmp%`; *nix: `$TMPDIR`）以下に `kgenprog-work` で始まるディレクトリが実行ごとに新規に作成される |
@@ -47,3 +66,4 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 | `--time-limit` | 遺伝的アルゴリズムを打ち切る時間（秒） | 60 |
 | `--required-solutions` | 出力する解（修正パッチ）の数 | 1 |
 | `--random-seed` | kGenProg 全体で用いる乱数のシード値 | 0 |
+
