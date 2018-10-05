@@ -149,6 +149,7 @@ public class Configuration {
 
     private static transient final Logger log = LoggerFactory.getLogger(Builder.class);
 
+    @PreserveNotNull
     private Path configPath = Paths.get("kgenprog.toml");
 
     @com.electronwill.nightconfig.core.conversion.Path("root-dir")
@@ -442,6 +443,33 @@ public class Configuration {
 
         ObjectConverter converter = new ObjectConverter();
         converter.toObject(config, this);
+        resolvePaths();
+      }
+    }
+
+    private void resolvePaths() {
+      final Path configDir = configPath.getParent();
+
+      rootDir = configDir.resolve(rootDir)
+          .normalize();
+      productPaths = productPaths.stream()
+          .map(p -> configDir.resolve(p)
+              .normalize())
+          .collect(Collectors.toList());
+      testPaths = testPaths.stream()
+          .map(p -> configDir.resolve(p)
+              .normalize())
+          .collect(Collectors.toList());
+      classPaths = classPaths.stream()
+          .map(p -> configDir.resolve(p)
+              .normalize())
+          .collect(Collectors.toList());
+      workingDir = configDir.resolve(workingDir)
+          .normalize();
+
+      if (!outDir.equals(DEFAULT_OUT_DIR)) {
+        outDir = configDir.resolve(outDir)
+            .normalize();
       }
     }
 
