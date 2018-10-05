@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -265,7 +266,7 @@ public class Configuration {
 
         validateArgument(builder);
       } catch (final CmdLineException | IllegalArgumentException | InvalidValueException
-          | IOException e) {
+          | NoSuchFileException e) {
         // todo: make error message of InvalidValueException more user-friendly
         log.error(e.getMessage());
         parser.printUsage(System.err);
@@ -428,9 +429,10 @@ public class Configuration {
           .contains("--config");
     }
 
-    private void parseConfigFile() throws InvalidValueException, IOException {
+    private void parseConfigFile() throws InvalidValueException, NoSuchFileException {
       if (Files.notExists(configPath)) {
-        throw new IOException("config file \"" + configPath.toString() + "\" is not found");
+        throw new NoSuchFileException("config file \"" + configPath.toAbsolutePath()
+            .toString() + "\" is not found.");
       }
 
       try (final FileConfig config = FileConfig.of(configPath)) {
