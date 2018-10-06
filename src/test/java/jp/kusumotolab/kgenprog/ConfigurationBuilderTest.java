@@ -464,7 +464,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithSiblingsCount() {
     final int siblingsCount = 50;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-i", Integer.toString(siblingsCount)};
+        testPath.toString(), "--siblings-count", Integer.toString(siblingsCount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -493,7 +493,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithHeadcount() {
     final int headcount = 50;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-h", Integer.toString(headcount)};
+        testPath.toString(), "--headcount", Integer.toString(headcount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -522,7 +522,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithMaxGeneration() {
     final int maxGeneration = 50;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-g", Integer.toString(maxGeneration)};
+        testPath.toString(), "--max-generation", Integer.toString(maxGeneration)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -551,7 +551,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithTimeLimit() {
     final Duration timeLimit = Duration.ofSeconds(1800);
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-l", Long.toString(timeLimit.getSeconds())};
+        testPath.toString(), "--time-limit", Long.toString(timeLimit.getSeconds())};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -580,7 +580,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithRequiredSolutionsCount() {
     final int requiredSolutionsCount = 10;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-e", Integer.toString(requiredSolutionsCount)};
+        testPath.toString(), "--required-solutions", Integer.toString(requiredSolutionsCount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -693,7 +693,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithRandomSeed() {
     final long randomSeed = 10;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-a", Long.toString(randomSeed)};
+        testPath.toString(), "--random-seed", Long.toString(randomSeed)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);

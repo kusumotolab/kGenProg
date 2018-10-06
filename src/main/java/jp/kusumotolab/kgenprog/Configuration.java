@@ -543,7 +543,7 @@ public class Configuration {
       this.outDir = Paths.get(outDir);
     }
 
-    @Option(name = "-i", aliases = "--siblings-count",
+    @Option(name = "--siblings-count", metaVar = "<num>",
         usage = "The number of how many child variants are generated from a parent",
         depends = {"-r", "-s", "-t"})
     private void setSiblingsCountFromCmdLineParser(final int siblingsCount) {
@@ -551,7 +551,7 @@ public class Configuration {
       this.siblingsCount = siblingsCount;
     }
 
-    @Option(name = "-h", aliases = "--headcount",
+    @Option(name = "--headcount", metaVar = "<num>",
         usage = "The number of how many variants are generated maximally in a generation",
         depends = {"-r", "-s", "-t"})
     private void setHeadcountFromCmdLineParser(final int headcount) {
@@ -559,21 +559,21 @@ public class Configuration {
       this.headcount = headcount;
     }
 
-    @Option(name = "-g", aliases = "--max-generation", usage = "Maximum generation",
+    @Option(name = "--max-generation", metaVar = "<num>", usage = "Maximum generation",
         depends = {"-r", "-s", "-t"})
     private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
       log.debug("enter setMaxGenerationFromCmdLineParser(int)");
       this.maxGeneration = maxGeneration;
     }
 
-    @Option(name = "-l", aliases = "--time-limit", usage = "Time limit for repairing in second",
+    @Option(name = "--time-limit", metaVar = "<sec>", usage = "Time limit for repairing in second",
         depends = {"-r", "-s", "-t"})
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
       log.debug("enter setTimeLimitFromCmdLineParser(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
-    @Option(name = "--test-time-limit",
+    @Option(name = "--test-time-limit", metaVar = "<sec>",
         usage = "Time limit to build and test for each variant in second",
         depends = {"-r", "-s", "-t"})
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
@@ -581,7 +581,7 @@ public class Configuration {
       this.testTimeLimit = Duration.ofSeconds(testTimeLimit);
     }
 
-    @Option(name = "-e", aliases = "--required-solutions",
+    @Option(name = "--required-solutions", metaVar = "<num>",
         usage = "The number of solutions needed to be searched", depends = {"-r", "-s", "-t"})
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       log.debug("enter setTimeLimitFromCmdLineParser(int)");
@@ -604,7 +604,7 @@ public class Configuration {
       logLevel = Level.ERROR;
     }
 
-    @Option(name = "-a", aliases = "--random-seed",
+    @Option(name = "--random-seed", metaVar = "<num>",
         usage = "The seed of a random seed generator used across this program",
         depends = {"-r", "-s", "-t"})
     private void setRandomSeedFromCmdLineParser(final long randomSeed) {
