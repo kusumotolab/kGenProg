@@ -18,7 +18,7 @@ kGenProg は単一の jar ファイルにまとめてあります．[ここ](htt
 
 
 ## 使用方法
-```sh
+```
 $ java -jar path/to/kGenProg.jar 
 $ java -jar path/to/kGenProg.jar --config <path>
 $ java -jar path/to/kGenProg.jar -r <path> -s <path>... -t <path>... [-x <fqn>...] [-c <path>...]
@@ -37,6 +37,7 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 ```
 
 `.toml` ファイルにパラメータをまとめておいて，実行時に指定することもできます．
+[example/CloseToZero01/kgenprog.toml](example/CloseToZero01/kgenprog.toml) に設定ファイルのサンプルがあります．
 ```sh
 $ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
 ```
