@@ -21,6 +21,11 @@ public class CrossoverHistoricalElement implements HistoricalElement {
     return Arrays.asList(parentA, parentB);
   }
 
+  @Override
+  public String getOperationName() {
+    return "crossover";
+  }
+
   public int getCrossoverPoint() {
     return crossoverPoint;
   }
