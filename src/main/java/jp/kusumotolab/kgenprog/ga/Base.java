@@ -27,5 +27,19 @@ public class Base {
     return operation;
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+
+    int result = 1;
+    result = result * prime + targetLocation.hashCode();
+    // strategyは，とりあえずクラス名のhashを計算する
+    result = result * prime + operation.getClass()
+        .toString()
+        .hashCode();
+
+    return result;
+  }
+
 
 }

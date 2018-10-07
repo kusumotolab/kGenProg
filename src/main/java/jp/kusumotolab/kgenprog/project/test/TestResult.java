@@ -16,7 +16,7 @@ public class TestResult implements Serializable {
 
   /**
    * constructor
-   * 
+   *
    * @param executedTestFQN 実行したテストメソッドの名前
    * @param failed テストの結果
    * @param coverages テスト対象それぞれの行ごとのCoverage計測結果
@@ -58,5 +58,17 @@ public class TestResult implements Serializable {
     sb.append(indent + "  ]\n");
     sb.append(indent + "}");
     return sb.toString();
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+
+    int result = 1;
+    result = result * prime + executedTestFQN.hashCode();
+    result = result * prime + ((failed) ? 1 : 0);
+    result = result * prime + coverages.hashCode();
+
+    return result;
   }
 }

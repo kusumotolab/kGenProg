@@ -103,4 +103,10 @@ final public class JDTASTLocation implements ASTLocation {
 
     return new LineNumberRange(start, end);
   }
+
+  @Override
+  public int hashCode(){
+    // ASTNodeは乱数を返すだけだから，hashの計算に使わない
+    return productSourcePath.hashCode();
+  }
 }

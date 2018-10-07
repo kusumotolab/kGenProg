@@ -87,4 +87,15 @@ public class GeneratedSourceCode {
       throw new RuntimeException(e);
     }
   }
+
+  @Override
+  public int hashCode(){
+    final int prime = 31;
+
+    int result = 1;
+    result = result * prime + messageDigest.hashCode();
+    result = result * prime + asts.hashCode();
+
+    return result;
+  }
 }

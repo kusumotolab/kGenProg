@@ -24,4 +24,9 @@ public class Gene {
     }
     return genes;
   }
+
+  @Override
+  public int hashCode(){
+    return 31 + bases.hashCode();
+  }
 }

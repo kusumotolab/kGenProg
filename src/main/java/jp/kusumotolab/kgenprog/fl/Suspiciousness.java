@@ -26,4 +26,15 @@ public class Suspiciousness {
     log.debug("enter getValue()");
     return value;
   }
+
+  @Override
+  public int hashCode(){
+    final int prime = 31;
+
+    int result = 1;
+    result = result * prime + Double.hashCode(value);
+    result = result * prime + location.hashCode();
+
+    return result;
+  }
 }

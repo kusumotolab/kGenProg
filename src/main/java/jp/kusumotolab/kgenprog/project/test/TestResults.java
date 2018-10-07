@@ -32,7 +32,7 @@ public class TestResults implements Serializable {
 
   /**
    * 新規TestResultの追加
-   * 
+   *
    * @param testResult
    */
   public void add(final TestResult testResult) {
@@ -41,7 +41,7 @@ public class TestResults implements Serializable {
 
   /**
    * 失敗したテストのFQN一覧を取得．
-   * 
+   *
    * @return 失敗したテスト結果s
    */
   public List<TestResult> getFailedTestResults() {
@@ -53,7 +53,7 @@ public class TestResults implements Serializable {
 
   /**
    * 成功したテストのFQN一覧を取得．
-   * 
+   *
    * @return 成功したテスト結果s
    */
   public List<TestResult> getSuccessedTestResults() {
@@ -65,7 +65,7 @@ public class TestResults implements Serializable {
 
   /**
    * 実行されたテストメソッドのFQN一覧を返す．
-   * 
+   *
    * @return
    */
   public Set<FullyQualifiedName> getExecutedTestFQNs() {
@@ -74,7 +74,7 @@ public class TestResults implements Serializable {
 
   /**
    * 実行された単一テストメソッドの結果を返す．
-   * 
+   *
    * @param testFQN 対象のテストメソッドFQN
    * @return
    */
@@ -85,7 +85,7 @@ public class TestResults implements Serializable {
 
   /**
    * テスト成功率を取得（全成功テストメソッド / 全実行テストメソッド）
-   * 
+   *
    * @return テスト成功率
    */
   public double getSuccessRate() {
@@ -97,7 +97,7 @@ public class TestResults implements Serializable {
 
   /**
    * FLで用いる4メトリクスのprivateなParameterized-Method
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @param status
@@ -129,7 +129,7 @@ public class TestResults implements Serializable {
 
   /**
    * FLで用いる4メトリクスのprivateなParameterized-Method
-   * 
+   *
    * @param targetFQN 計算対象クラスのFQN
    * @param lineNumber 計算対象クラスの行番号
    * @param status 実行されたか否か
@@ -161,7 +161,7 @@ public class TestResults implements Serializable {
 
   /**
    * a_ep
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -173,7 +173,7 @@ public class TestResults implements Serializable {
 
   /**
    * a_ef
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -185,7 +185,7 @@ public class TestResults implements Serializable {
 
   /**
    * a_np
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -197,7 +197,7 @@ public class TestResults implements Serializable {
 
   /**
    * a_nf
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -209,7 +209,7 @@ public class TestResults implements Serializable {
 
   /**
    * serialize()とdeserialize()で用いる.serファイルパス． 注意：固定名で処理しているので，並列処理は不可能．
-   * 
+   *
    * @return
    */
   public static Path getSerFilePath() {
@@ -218,7 +218,7 @@ public class TestResults implements Serializable {
 
   /**
    * ファイルシステム上の.serへのserializer． 注意：固定名で処理しているので，並列処理は不可能．
-   * 
+   *
    * @param testResults serialize対象のオブジェクト
    */
   public static void serialize(TestResults testResults) {
@@ -240,7 +240,7 @@ public class TestResults implements Serializable {
 
   /**
    * ファイルシステム上の.serからのdeserializer() 注意：固定名で処理しているので，並列処理は不可能．
-   * 
+   *
    * @return deserialize後のオブジェクト
    */
   public static TestResults deserialize() throws IOException, ClassNotFoundException {
@@ -263,6 +263,11 @@ public class TestResults implements Serializable {
     return sb.toString();
   }
 
+  @Override
+  public int hashCode() {
+    return 31 + value.hashCode();
+  }
+  
   /*
    * 以降，翻訳のための一時的な処理
    */

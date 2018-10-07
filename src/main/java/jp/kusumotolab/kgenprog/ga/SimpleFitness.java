@@ -25,4 +25,9 @@ public class SimpleFitness implements Fitness {
     log.debug("enter isMaximum()");
     return 0 == Double.compare(value, MAXIMUM_VALUE);
   }
+
+  @Override
+  public int hashCode() {
+    return 31 + Double.hashCode(value);
+  }
 }
