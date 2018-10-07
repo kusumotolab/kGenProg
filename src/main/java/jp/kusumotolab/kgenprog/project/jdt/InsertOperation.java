@@ -22,4 +22,9 @@ public class InsertOperation implements JDTOperation {
     final ASTNode copiedNode = ASTNode.copySubtree(astRewrite.getAST(), this.astNode);
     listRewrite.insertAfter(copiedNode, target, null);
   }
+
+  @Override
+  public String getName(){
+    return "insert";
+  }
 }

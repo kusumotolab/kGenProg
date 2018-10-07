@@ -10,4 +10,9 @@ public class DeleteOperation implements JDTOperation {
     astRewrite.remove(location.locate(ast.getRoot()), null);
   }
 
+  @Override
+  public String getName(){
+    return "delete";
+  }
+
 }
