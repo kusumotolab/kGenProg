@@ -33,7 +33,6 @@ public class Base {
 
     int result = 1;
     result = result * prime + targetLocation.hashCode();
-    // strategyは，とりあえずクラス名のhashを計算する
     result = result * prime + operation.getName()
         .hashCode();
 
