@@ -481,7 +481,7 @@ public class Configuration {
 
     // region Methods for CmdLineParser
 
-    @Option(name = "--config", metaVar = "<path>", usage = "Path of a configuration file",
+    @Option(name = "--config", metaVar = "<path>", usage = "Specifies the path to the config file.",
         forbids = {"-r", "-s", "-t"})
     private void setConfigPathFromCmdLineParser(final String configPath) {
       log.debug("enter setConfigPathFromCmdLineParser(String)");
@@ -489,47 +489,49 @@ public class Configuration {
     }
 
     @Option(name = "-r", aliases = "--root-dir", metaVar = "<path>",
-        usage = "Path of a root directory of a target project",
+        usage = "Specifies the path to the root directory of the target project.",
         depends = {"-s", "-t"}, forbids = {"--config"})
     private void setRootDirFromCmdLineParser(final String rootDir) {
       log.debug("enter setRootDirFromCmdLineParser(String)");
       this.rootDir = Paths.get(rootDir);
     }
 
-    @Option(name = "-s", aliases = "--src", handler = StringArrayOptionHandler.class,
-        metaVar = "<path> ...", usage = "Paths of the root directories holding src codes",
-        depends = {"-r", "-t"}, forbids = {"--config"})
+    @Option(name = "-s", aliases = "--src", metaVar = "<path> ...",
+        usage = " Specifies paths to \"product\" source code (i.e. main, non-test code),"
+            + " or to directories containing them.",
+        depends = {"-r", "-t"}, forbids = {"--config"}, handler = StringArrayOptionHandler.class)
     private void addProductPathFromCmdLineParser(final String sourcePath) {
       log.debug("enter addProductPathFromCmdLineParser(String)");
       this.productPaths.add(Paths.get(sourcePath));
     }
 
-    @Option(name = "-t", aliases = "--test", handler = StringArrayOptionHandler.class,
-        metaVar = "<path> ...", usage = "Paths of the root directories holding test codes",
-        depends = {"-r", "-s"}, forbids = {"--config"})
+    @Option(name = "-t", aliases = "--test", metaVar = "<path> ...",
+        usage = "Specifies paths to test source code, or to directories containing them.",
+        depends = {"-r", "-s"}, forbids = {"--config"}, handler = StringArrayOptionHandler.class)
     private void addTestPathFromCmdLineParser(final String testPath) {
       log.debug("enter addTestPathFromCmdLineParser(String)");
       this.testPaths.add(Paths.get(testPath));
     }
 
-    @Option(name = "-c", aliases = "--cp", handler = StringArrayOptionHandler.class,
-        metaVar = "<class path> ...", usage = "Class paths required to build the target project",
-        depends = {"-r", "-s", "-t"})
+    @Option(name = "-c", aliases = "--cp", metaVar = "<class path> ...",
+        usage = "Specifies class paths needed to build the target project.",
+        depends = {"-r", "-s", "-t"}, handler = StringArrayOptionHandler.class)
     private void addClassPathFromCmdLineParser(final String classPath) {
       log.debug("enter addClassPathFromCmdLineParser(String)");
       this.classPaths.add(Paths.get(classPath));
     }
 
-    @Option(name = "-x", aliases = "--exec-test", handler = StringArrayOptionHandler.class,
-        metaVar = "<fqn> ...", usage = "Execution test cases.",
-        depends = {"-r", "-s", "-t"})
+    @Option(name = "-x", aliases = "--exec-test", metaVar = "<fqn> ...",
+        usage = "Specifies fully qualified names of test classes executed"
+            + " during evaluation of variants (i.e. fix-candidates).",
+        depends = {"-r", "-s", "-t"}, handler = StringArrayOptionHandler.class)
     private void addExecutionTestFromCmdLineParser(final String executionTest) {
       log.debug("enter addExecutionTestFromCmdLineParser(String)");
       this.executionTests.add(executionTest);
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
-        usage = "Path of a working directory",
+        usage = "Specifies the path to working directory.",
         depends = {"-r", "-s", "-t"})
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
       log.debug("enter setWorkingDirFromCmdLineParser(String)");
@@ -537,14 +539,15 @@ public class Configuration {
     }
 
     @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
-        usage = "Path of a output directory", depends = {"-r", "-s", "-t"})
+        usage = "Writes patches kGenProg generated to the specified directory.",
+        depends = {"-r", "-s", "-t"})
     private void setOutDirFromCmdLineParser(final String outDir) {
       log.debug("enter setOutDirFromCmdLineParser(String)");
       this.outDir = Paths.get(outDir);
     }
 
     @Option(name = "--siblings-count", metaVar = "<num>",
-        usage = "The number of how many child variants are generated from a parent",
+        usage = "Specifies how many variants are generated from a parent in a generation.",
         depends = {"-r", "-s", "-t"})
     private void setSiblingsCountFromCmdLineParser(final int siblingsCount) {
       log.debug("enter setSiblingsCountFromCmdLineParser(int)");
@@ -552,29 +555,32 @@ public class Configuration {
     }
 
     @Option(name = "--headcount", metaVar = "<num>",
-        usage = "The number of how many variants are generated maximally in a generation",
+        usage = "Specifies how many variants survive in a generation.",
         depends = {"-r", "-s", "-t"})
     private void setHeadcountFromCmdLineParser(final int headcount) {
       log.debug("enter setHeadcountFromCmdLineParser(int)");
       this.headcount = headcount;
     }
 
-    @Option(name = "--max-generation", metaVar = "<num>", usage = "Maximum generation",
+    @Option(name = "--max-generation", metaVar = "<num>",
+        usage = "Terminates searching solutions when the specified number of generations reached.",
         depends = {"-r", "-s", "-t"})
     private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
       log.debug("enter setMaxGenerationFromCmdLineParser(int)");
       this.maxGeneration = maxGeneration;
     }
 
-    @Option(name = "--time-limit", metaVar = "<sec>", usage = "Time limit for repairing in second",
+    @Option(name = "--time-limit", metaVar = "<sec>",
+        usage = "Terminates searching solutions when the specified time has passed.",
         depends = {"-r", "-s", "-t"})
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
       log.debug("enter setTimeLimitFromCmdLineParser(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
+    // todo update usage
     @Option(name = "--test-time-limit", metaVar = "<sec>",
-        usage = "Time limit to build and test for each variant in second",
+        usage = "Specifies time limit to build and test for each variant in second",
         depends = {"-r", "-s", "-t"})
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
       log.debug("enter setTestTimeLimitFromCmdLineParser(long)");
@@ -582,21 +588,22 @@ public class Configuration {
     }
 
     @Option(name = "--required-solutions", metaVar = "<num>",
-        usage = "The number of solutions needed to be searched", depends = {"-r", "-s", "-t"})
+        usage = "Terminates searching solutions when the specified number of solutions are found.",
+        depends = {"-r", "-s", "-t"})
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       log.debug("enter setTimeLimitFromCmdLineParser(int)");
       this.requiredSolutionsCount = requiredSolutionsCount;
     }
 
-    @Option(name = "-v", aliases = "--verbose", usage = "Verbose mode. Print DEBUG level logs.",
-        depends = {"-r", "-s", "-t"})
+    @Option(name = "-v", aliases = "--verbose",
+        usage = "Be more verbose, printing DEBUG level logs.", depends = {"-r", "-s", "-t"})
     private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
       log.debug("enter setLogLevelDebugFromCmdLineParser(boolean)");
       log.debug("log level has been set DEBUG");
       logLevel = Level.DEBUG;
     }
 
-    @Option(name = "-q", aliases = "--quiet", usage = "Quiet mode. Print ERROR level logs.",
+    @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.",
         depends = {"-r", "-s", "-t"})
     private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
       log.debug("enter setLogLevelErrorFromCmdLineParser(boolean)");
@@ -605,7 +612,7 @@ public class Configuration {
     }
 
     @Option(name = "--random-seed", metaVar = "<num>",
-        usage = "The seed of a random seed generator used across this program",
+        usage = "Specifies random seed used by random number generator.",
         depends = {"-r", "-s", "-t"})
     private void setRandomSeedFromCmdLineParser(final long randomSeed) {
       log.debug("enter setRandomSeedFromCmdLineParser(long)");
