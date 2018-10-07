@@ -92,8 +92,7 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   private String searchPrimaryClassName(final CompilationUnit root) {
-    @SuppressWarnings("unchecked")
-    final List<AbstractTypeDeclaration> types = root.types();
+    @SuppressWarnings("unchecked") final List<AbstractTypeDeclaration> types = root.types();
     final Optional<AbstractTypeDeclaration> findAny = types.stream()
         .filter(type -> (type.getModifiers() & Modifier.PUBLIC) == Modifier.PUBLIC)
         .findAny();
@@ -138,5 +137,20 @@ public class GeneratedJDTAST implements GeneratedAST {
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+
+    int result = 1;
+    // JDT関連のクラスのhashは計算しない
+    result = result * prime + productSourcePath.hashCode();
+    result = result * prime + allLocations.hashCode();
+    result = result * prime + primaryClassName.hashCode();
+    result = result * prime + sourceCode.hashCode();
+    result = result * prime + messageDigest.hashCode();
+
+    return result;
   }
 }
