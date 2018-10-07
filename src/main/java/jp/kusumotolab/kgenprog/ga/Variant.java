@@ -29,13 +29,14 @@ public class Variant {
   private final Fitness fitness;
   private final List<Suspiciousness> suspiciousnesses;
   private final HistoricalElement historicalElement;
-  
+
   @Override
   public int hashCode() {
     final int prime = 31;
 
     int result = 1;
     result = result * prime + generationNumber;
+    result = result * prime + gene.hashCode();
     result = result * prime + generatedSourceCode.hashCode();
     result = result * prime + testResults.hashCode();
     result = result * prime + fitness.hashCode();
