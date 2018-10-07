@@ -40,6 +40,9 @@ test = ["src/example/CloseToZeroTest.java"]
 # Terminates searching solutions when the specified time has passed.
 #time-limit = <sec>
 
+# Specifies time limit to build and test for each variant in second
+#test-time-limit = <sec>
+
 # Terminates searching solutions when the specified number of solutions are found.
 #required-solutions = <num>
 
