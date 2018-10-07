@@ -31,7 +31,7 @@ test = ["src/example/CloseToZeroTest.java"]
 # Specifies how many variants are generated from a parent in a generation.
 #siblings-count = <num>
 
-# Specifies how many variants are survive in a generation.
+# Specifies how many variants survive in a generation.
 #headcount = <num>
 
 # Terminates searching solutions when the specified number of generations reached.
@@ -46,6 +46,6 @@ test = ["src/example/CloseToZeroTest.java"]
 # Terminates searching solutions when the specified number of solutions are found.
 #required-solutions = <num>
 
-# Specifies random seed used random number generator.
+# Specifies random seed used by random number generator.
 #random-seed = <num>
 
