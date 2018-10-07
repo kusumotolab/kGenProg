@@ -92,4 +92,15 @@ public class Coverage implements Serializable {
     sb.append("]}");
     return sb.toString();
   }
+
+  @Override
+  public int hashCode(){
+    final int prime = 31;
+
+    int result = 1;
+    result = result * prime + executedTargetFQN.hashCode();
+    result = result * prime + statuses.hashCode();
+
+    return result;
+  }
 }
