@@ -39,7 +39,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     serializedVariant.addProperty("generation_number", generationNumber);
     serializedVariant.addProperty("fitness", fitness);
     serializedVariant.addProperty("build_success", buildSuccess);
-    serializedVariant.add("diffs", serializedDiff);
+    serializedVariant.add("diff", serializedDiff);
     serializedVariant.add("parents", serializeParents(variant, variant.getHistoricalElement()));
 
     return serializedVariant;
