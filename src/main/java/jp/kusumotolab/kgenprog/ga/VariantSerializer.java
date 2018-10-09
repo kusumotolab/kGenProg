@@ -33,15 +33,6 @@ public class VariantSerializer implements JsonSerializer<Variant> {
         .map(Patch::getDiff)
         .forEach(serializedDiff::add);
 
-    if (patchGenerator.exec(variant)
-        .size() == 0) {
-      variant.getGeneratedSourceCode()
-          .getAsts()
-          .stream()
-          .map(GeneratedAST::getSourceCode)
-          .forEach(System.out::println);
-    }
-
     final JsonObject serializedVariant = new JsonObject();
 
     serializedVariant.addProperty("id", id);
