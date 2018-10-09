@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
 
@@ -26,12 +25,9 @@ public class VariantSerializer implements JsonSerializer<Variant> {
         .getValue();
     final boolean buildSuccess = !Double.isNaN(rawFitness);
     final double fitness = !Double.isNaN(rawFitness) ? rawFitness : -1.0d;
-    // Diffの集合を取得する
-    final JsonArray serializedDiff = new JsonArray();
-    patchGenerator.exec(variant)
-        .stream()
-        .map(Patch::getDiff)
-        .forEach(serializedDiff::add);
+    // Pathをシリアライズする
+    final List<Patch> patches = patchGenerator.exec(variant);
+    final JsonArray serializedPatches = serializePatches(patches);
 
     final JsonObject serializedVariant = new JsonObject();
 
@@ -39,7 +35,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     serializedVariant.addProperty("generation_number", generationNumber);
     serializedVariant.addProperty("fitness", fitness);
     serializedVariant.addProperty("build_success", buildSuccess);
-    serializedVariant.add("diff", serializedDiff);
+    serializedVariant.add("patches", serializedPatches);
     serializedVariant.add("parents", serializeParents(variant, variant.getHistoricalElement()));
 
     return serializedVariant;
@@ -52,20 +48,36 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     final List<Variant> parents = historicalElement.getParents();
     final String operationName = historicalElement.getOperationName();
     for (final Variant parent : parents) {
-      final JsonArray serializedDiff = new JsonArray();
-      patchGenerator.exec(parent, variant)
-          .stream()
-          .map(Patch::getDiff)
-          .forEach(serializedDiff::add);
       final long id = Integer.toUnsignedLong(parent.hashCode());
+      // Pathをシリアライズする
+      final List<Patch> patches = patchGenerator.exec(variant);
+      final JsonArray serializedPatches = serializePatches(patches);
 
       final JsonObject serializedParent = new JsonObject();
+
       serializedParent.addProperty("id", id);
-      serializedParent.add("diff", serializedDiff);
+      serializedParent.add("patches", serializedPatches);
       serializedParent.addProperty("operation_name", operationName);
 
       serializeParents.add(serializedParent);
     }
     return serializeParents;
+  }
+
+  private JsonArray serializePatches(final List<Patch> patches) {
+    final JsonArray serializedPatches = new JsonArray();
+
+    for (final Patch patch : patches) {
+      final String fileName = patch.fileName;
+      final String diff = patch.getDiff();
+
+      final JsonObject serializedPatch = new JsonObject();
+      serializedPatch.addProperty("file_name", fileName);
+      serializedPatch.addProperty("diff", diff);
+
+      serializedPatches.add(serializedPatch);
+    }
+
+    return serializedPatches;
   }
 }
