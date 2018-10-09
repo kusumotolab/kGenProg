@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
@@ -12,10 +13,9 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 /**
  * JDT AST の単一ノードを示すオブジェクト Operation のターゲットに利用する
- * 
- * @see jp.kusumotolab.kgenprog.JDTOperaion
- * @author r-arima
  *
+ * @author r-arima
+ * @see jp.kusumotolab.kgenprog.JDTOperaion
  */
 final public class JDTASTLocation implements ASTLocation {
 
@@ -105,7 +105,23 @@ final public class JDTASTLocation implements ASTLocation {
   }
 
   @Override
-  public int hashCode(){
+  public boolean equals(final Object o) {
+
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    final JDTASTLocation jdtAstLocation = (JDTASTLocation) o;
+    return node == jdtAstLocation.node &&
+        Objects.equals(productSourcePath, jdtAstLocation.productSourcePath);
+  }
+
+  @Override
+  public int hashCode() {
     // ASTNodeは乱数を返すだけだから，hashの計算に使わない
     return productSourcePath.hashCode();
   }

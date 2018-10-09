@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -261,6 +262,21 @@ public class TestResults implements Serializable {
     sb.append("\n");
     sb.append("]\n");
     return sb.toString();
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    final TestResults testResults = (TestResults) o;
+    return Objects.equals(value, testResults.value);
   }
 
   @Override

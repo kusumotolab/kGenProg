@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.test;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.jacoco.core.analysis.IClassCoverage;
@@ -26,8 +27,7 @@ public class Coverage implements Serializable {
      */
     COVERED,
     /**
-     * 実行可能で一部だけ実行された行(value is 0x03). TODO 現在このステータスは一切利用していない．
-     * jacocoはif分岐等にこの値をセットするが，本Statusではif分岐はCOVEREDに持ち上げ．
+     * 実行可能で一部だけ実行された行(value is 0x03). TODO 現在このステータスは一切利用していない． jacocoはif分岐等にこの値をセットするが，本Statusではif分岐はCOVEREDに持ち上げ．
      */
     PARTLY_COVERED
   }
@@ -37,7 +37,7 @@ public class Coverage implements Serializable {
 
   /**
    * constructor． jacocoで生成したIClassCoverageから生成．
-   * 
+   *
    * @param className Coverage計測対象のクラス名
    * @param statuses Coverage計測の結果
    */
@@ -49,7 +49,7 @@ public class Coverage implements Serializable {
 
   /**
    * ClassCoverageに格納されたCoverageをList<Status>に変換する． 実質enumの型変換やってるだけ．
-   * 
+   *
    * @param classCoverage
    * @return
    */
@@ -94,7 +94,23 @@ public class Coverage implements Serializable {
   }
 
   @Override
-  public int hashCode(){
+  public boolean equals(final Object o) {
+
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    final Coverage coverage = (Coverage) o;
+    return Objects.equals(statuses, coverage.statuses) &&
+        Objects.equals(executedTargetFQN, coverage.executedTargetFQN);
+  }
+
+  @Override
+  public int hashCode() {
     final int prime = 31;
 
     int result = 1;

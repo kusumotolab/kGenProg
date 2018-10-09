@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
@@ -88,8 +89,25 @@ public class GeneratedSourceCode {
     }
   }
 
+
   @Override
-  public int hashCode(){
+  public boolean equals(final Object o) {
+
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    final GeneratedSourceCode generatedSourceCode = (GeneratedSourceCode) o;
+    return Objects.equals(messageDigest, generatedSourceCode.messageDigest) &&
+        Objects.equals(asts, generatedSourceCode.asts);
+  }
+
+  @Override
+  public int hashCode() {
     final int prime = 31;
 
     int result = 1;

@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.test;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,6 +59,23 @@ public class TestResult implements Serializable {
     sb.append(indent + "  ]\n");
     sb.append(indent + "}");
     return sb.toString();
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    final TestResult testResult = (TestResult) o;
+    return Objects.equals(executedTestFQN, testResult.executedTestFQN) &&
+        failed == testResult.failed &&
+        Objects.equals(coverages, testResult.coverages);
   }
 
   @Override

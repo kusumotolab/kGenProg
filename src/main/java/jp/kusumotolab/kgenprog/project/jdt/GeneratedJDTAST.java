@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Hex;
@@ -137,6 +138,26 @@ public class GeneratedJDTAST implements GeneratedAST {
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    final GeneratedJDTAST generatedJDTAST = (GeneratedJDTAST) o;
+    return root == generatedJDTAST.root &&
+        Objects.equals(productSourcePath, generatedJDTAST.productSourcePath) &&
+        Objects.equals(allLocations, generatedJDTAST.allLocations) &&
+        Objects.equals(primaryClassName, generatedJDTAST.primaryClassName) &&
+        Objects.equals(sourceCode, generatedJDTAST.sourceCode) &&
+        Objects.equals(messageDigest, generatedJDTAST.messageDigest);
   }
 
   @Override
