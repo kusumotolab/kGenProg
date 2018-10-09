@@ -178,13 +178,6 @@ public class KGenProgMain {
       final PrintStream out = new PrintStream(Files.newOutputStream(jsonPath));
       final String json = gson.toJson(filteredGeneratedVariants);
       out.println(json);
-//      // リストが大きすぎて書ききれないため，1つずつ書く
-//      out.print('[');
-//      for (final Variant filteredGeneratedVariant : filteredGeneratedVariants) {
-//        final String json = gson.toJson(filteredGeneratedVariant);
-//        out.println(json);
-//      }
-//      out.write(']');
     } catch (final IOException e) {
       log.error(e.getMessage());
     }
