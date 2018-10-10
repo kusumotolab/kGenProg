@@ -120,7 +120,7 @@ class TestThread extends Thread {
   }
 
   private List<FullyQualifiedName> getExecutionTestFQNs() {
-    final List<FullyQualifiedName> executionTests = convertExecutionTestNameToFqn();
+    final List<FullyQualifiedName> executionTests = convertExecutionTestNameToFQN();
     // 実行テストの指定がない場合は全テストを実行する
     if (executionTests.isEmpty()) {
       return getTestFQNs();
@@ -128,7 +128,7 @@ class TestThread extends Thread {
     return executionTests;
   }
 
-  private List<FullyQualifiedName> convertExecutionTestNameToFqn() {
+  private List<FullyQualifiedName> convertExecutionTestNameToFQN() {
     return executionTestNames.stream()
         .map(TestFullyQualifiedName::new)
         .collect(Collectors.toList());
