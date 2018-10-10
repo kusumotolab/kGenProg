@@ -55,13 +55,24 @@ public class SinglePointCrossover implements Crossover {
     final Gene geneB = variantB.getGene();
     final List<Base> basesA = geneA.getBases();
     final List<Base> basesB = geneB.getBases();
-    final int index = random.nextInt(Math.min(basesA.size(), basesB.size()));
+    final int index = getPointAtRandom(basesA.size(), basesB.size());
     final Gene newGeneA = makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size()));
     final Gene newGeneB = makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size()));
     final HistoricalElement elementA = new CrossoverHistoricalElement(variantA, variantB, index);
     final HistoricalElement elementB = new CrossoverHistoricalElement(variantB, variantA, index);
     return Arrays.asList(store.createVariant(newGeneA, elementA),
         store.createVariant(newGeneB, elementB));
+  }
+
+  private int getPointAtRandom(int a, int b) {
+    final int min = Math.min(a, b);
+    if (min <= 2) {
+      return random.nextInt(min);
+    }
+
+    // random.nextInt(a) は 0 ~ a の間の値をランダムで出力するので、
+    // 0 を避けるために 1 足している
+    return random.nextInt(min - 2) + 1;
   }
 
   private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {
