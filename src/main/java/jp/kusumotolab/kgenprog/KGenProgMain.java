@@ -1,5 +1,8 @@
 package jp.kusumotolab.kgenprog;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,10 +119,31 @@ public class KGenProgMain {
     log.debug("enter outputPatch(VariantStore)");
     for (final Variant completedVariant : completedVariants) {
       final List<Patch> patches = patchGenerator.exec(completedVariant);
-      log.info(makeVariantId(completedVariants, completedVariant));
+      final String variantId = makeVariantId(completedVariants, completedVariant);
+      log.info(variantId);
       for (final Patch patch : patches) {
         log.info(System.lineSeparator() + patch.getDiff());
+        writePatch(patch, variantId);
       }
+    }
+  }
+
+  //Todo outDir が空でない場合(連続して KGP を動かしたとき) の挙動を考える
+  private void writePatch(final Patch patch, final String variantId) {
+    final Path outDir = config.getOutDir();
+    try {
+      if(Files.isSameFile(outDir, Configuration.DEFAULT_OUT_DIR)) {
+        return;
+      }
+
+      final Path variantDir = outDir.resolve(variantId);
+      if(Files.notExists(variantDir)) {
+        Files.createDirectories(variantDir);
+      }
+
+      patch.write(variantDir);
+    } catch (final IOException e) {
+      log.error(e.getMessage());
     }
   }
 
