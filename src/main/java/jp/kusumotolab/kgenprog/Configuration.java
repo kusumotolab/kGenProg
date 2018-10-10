@@ -174,7 +174,7 @@ public class Configuration {
 
     @com.electronwill.nightconfig.core.conversion.Path("exec-test")
     @PreserveNotNull
-    private List<String> executionTests = new ArrayList<>();
+    private final List<String> executionTests = new ArrayList<>();
 
     private transient TargetProject targetProject;
 
@@ -425,7 +425,7 @@ public class Configuration {
       return builder.logLevel.equals(Level.ERROR);
     }
 
-    private static boolean needsParseConfigFile(String[] args) {
+    private static boolean needsParseConfigFile(final String[] args) {
       return args.length == 0 || Arrays.asList(args)
           .contains("--config");
     }
@@ -441,7 +441,7 @@ public class Configuration {
 
         log.debug("config = {}", config);
 
-        ObjectConverter converter = new ObjectConverter();
+        final ObjectConverter converter = new ObjectConverter();
         converter.toObject(config, this);
         resolvePaths();
       }
@@ -624,7 +624,7 @@ public class Configuration {
     private static class PathToString implements Converter<Path, String> {
 
       @Override
-      public Path convertToField(String value) {
+      public Path convertToField(final String value) {
         if (value == null) {
           return null;
         }
@@ -633,7 +633,7 @@ public class Configuration {
       }
 
       @Override
-      public String convertFromField(Path value) {
+      public String convertFromField(final Path value) {
         if (value == null) {
           return null;
         }
@@ -645,7 +645,7 @@ public class Configuration {
     private static class PathsToStrings implements Converter<List<Path>, List<String>> {
 
       @Override
-      public List<Path> convertToField(List<String> value) {
+      public List<Path> convertToField(final List<String> value) {
         if (value == null) {
           return null;
         }
@@ -656,7 +656,7 @@ public class Configuration {
       }
 
       @Override
-      public List<String> convertFromField(List<Path> value) {
+      public List<String> convertFromField(final List<Path> value) {
         if (value == null) {
           return null;
         }
@@ -670,7 +670,7 @@ public class Configuration {
     private static class LevelToString implements Converter<Level, String> {
 
       @Override
-      public Level convertToField(String value) {
+      public Level convertToField(final String value) {
         if (value == null) {
           return null;
         }
@@ -679,7 +679,7 @@ public class Configuration {
       }
 
       @Override
-      public String convertFromField(Level value) {
+      public String convertFromField(final Level value) {
         if (value == null) {
           return null;
         }
@@ -692,7 +692,7 @@ public class Configuration {
 
       // todo: make it possible to take minutes and hours etc.
       @Override
-      public Duration convertToField(Integer value) {
+      public Duration convertToField(final Integer value) {
         if (value == null) {
           return null;
         }
@@ -701,7 +701,7 @@ public class Configuration {
       }
 
       @Override
-      public Integer convertFromField(Duration value) {
+      public Integer convertFromField(final Duration value) {
         if (value == null) {
           return null;
         }
