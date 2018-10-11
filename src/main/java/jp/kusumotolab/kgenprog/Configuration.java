@@ -66,6 +66,7 @@ public class Configuration {
   private final int requiredSolutionsCount;
   private final Level logLevel;
   private final long randomSeed;
+  private final boolean isDiscardOutput;
   // endregion
 
   // region Constructor
@@ -83,6 +84,7 @@ public class Configuration {
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
     randomSeed = builder.randomSeed;
+    isDiscardOutput = builder.isDiscardOutput;
   }
 
   // endregion
@@ -141,6 +143,10 @@ public class Configuration {
 
   public long getRandomSeed() {
     return randomSeed;
+  }
+
+  public boolean getIsDiscardOutput() {
+    return isDiscardOutput;
   }
 
   public static class Builder {
@@ -221,6 +227,10 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("random-seed")
     @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
+
+    @Option(name = "-discardOutput", hidden = true)
+    @PreserveNotNull
+    private boolean isDiscardOutput = false;
 
     // endregion
 
@@ -396,6 +406,13 @@ public class Configuration {
       log.debug("enter addExecutionTest(String)");
 
       this.executionTests.add(executionTest);
+      return this;
+    }
+
+    public Builder setIsDiscardOutput(final boolean isDiscardOutput) {
+      log.debug("enter setIsDiscardOutput(boolean)");
+
+      this.isDiscardOutput = isDiscardOutput;
       return this;
     }
 
