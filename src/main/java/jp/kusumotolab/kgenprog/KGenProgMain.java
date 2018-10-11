@@ -132,7 +132,7 @@ public class KGenProgMain {
   private void writePatch(final Patch patch, final String variantId) {
     final Path outDir = config.getOutDir();
     try {
-      if(Files.isSameFile(outDir, Configuration.DEFAULT_OUT_DIR)) {
+      if(config.getIsDiscardOutput()) {
         return;
       }
 
