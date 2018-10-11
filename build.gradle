@@ -80,4 +80,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
+
+    compile 'com.electronwill.night-config:toml:3.4.0'
 }
