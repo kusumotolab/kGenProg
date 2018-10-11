@@ -144,7 +144,7 @@ public class TestResults implements Serializable {
     for (final TestResult testResult : this.value.values()) {
       final Coverage coverage = testResult.getCoverages(targetFQN);
 
-      if (lineNumber > coverage.statuses.size()) {
+      if (coverage == null || lineNumber > coverage.statuses.size()) {
         // 計測対象（targetFQN）の行の外を参照した場合．
         // （＝内部クラス等の理由で，その行の実行結果が別テストのcoverageに記述されている場合）
         // 何もしなくて良い．
