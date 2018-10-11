@@ -20,6 +20,7 @@ import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+import com.google.common.base.Functions;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -34,7 +35,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
  */
 class TestThread extends Thread {
 
-  private MemoryClassLoader memoryClassLoader;
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
   private final RuntimeData jacocoRuntimeData;
@@ -47,6 +47,7 @@ class TestThread extends Thread {
 
   public TestThread(final GeneratedSourceCode generatedSourceCode,
       final TargetProject targetProject, final List<String> executionTestNames) {
+
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
@@ -63,43 +64,39 @@ class TestThread extends Thread {
 
   /**
    * JaCoCo + JUnitの実行． sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．
-   * 実行対象のclasspathは通ってることが前提．
    */
   public void run() {
-    buildResults = buildProject();
+    // 初期処理（プロジェクトのビルドと返り値の生成）
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    buildResults = projectBuilder.build(generatedSourceCode);
+    testResults = new TestResults();
+    testResults.setBuildResults(buildResults); // FLメトリクス算出のためにtestResultsにbuildResultsを登録しておく．
+
+    // ビルド失敗時は即座に諦める
     if (buildResults.isBuildFailed) {
       testResults = EmptyTestResults.instance;
       return;
     }
 
-    final List<ClassPath> classPaths = targetProject.getClassPaths();
-
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> testFQNs = getTestFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
 
-    final TestResults testResults = new TestResults();
-
+    final List<ClassPath> classPaths = targetProject.getClassPaths();
     final URL[] classpathUrls = convertClasspathsToURLs(classPaths);
-    memoryClassLoader = new MemoryClassLoader(classpathUrls);
+    final MemoryClassLoader classLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      addAllDefinitions(productFQNs);
-      addAllDefinitions(testFQNs);
-      final List<Class<?>> junitClasses = loadAllClasses(executionTestFQNs);
+      addAllDefinitions(classLoader, productFQNs, true);
+      addAllDefinitions(classLoader, testFQNs, false);
+      final List<Class<?>> junitClasses = loadAllClasses(classLoader, executionTestFQNs);
 
-      jacocoRuntime.startup(jacocoRuntimeData);
+      final JUnitCore junitCore = new JUnitCore();
+      final CoverageMeasurementListener listener =
+          new CoverageMeasurementListener(productFQNs, testResults);
+      junitCore.addListener(listener);
+      junitCore.run(junitClasses.toArray(new Class<?>[junitClasses.size()]));
 
-      // TODO
-      // junitCore.run(Classes<?>...)による一括実行を使えないか？
-      // 速度改善するかも．jacocoとの連携が難しい．listenerを再利用すると結果がバグる
-      for (final Class<?> junitClass : junitClasses) {
-        final JUnitCore junitCore = new JUnitCore();
-        final CoverageMeasurementListener listener =
-            new CoverageMeasurementListener(productFQNs, testResults);
-        junitCore.addListener(listener);
-        junitCore.run(junitClass);
-      }
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
       this.testResults = EmptyTestResults.instance;
@@ -111,21 +108,8 @@ class TestThread extends Thread {
       throw new RuntimeException(e);
     }
 
-    // TODO 翻訳のための一時的な処理
-    testResults.setBuildResults(buildResults);
-    this.testResults = testResults;
   }
 
-  private BuildResults buildProject() {
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    return projectBuilder.build(generatedSourceCode);
-  }
-
-  private List<FullyQualifiedName> convertExecutionTestNameToFqn() {
-    return executionTestNames.stream()
-        .map(TestFullyQualifiedName::new)
-        .collect(Collectors.toList());
-  }
 
   private List<FullyQualifiedName> getProductFQNs() {
     return getFQNs(targetProject.getProductSourcePaths());
@@ -136,11 +120,18 @@ class TestThread extends Thread {
   }
 
   private List<FullyQualifiedName> getExecutionTestFQNs() {
-    final List<FullyQualifiedName> execTests = convertExecutionTestNameToFqn();
-    if (execTests.isEmpty()) {
+    final List<FullyQualifiedName> executionTests = convertExecutionTestNameToFQN();
+    // 実行テストの指定がない場合は全テストを実行する
+    if (executionTests.isEmpty()) {
       return getTestFQNs();
     }
-    return execTests;
+    return executionTests;
+  }
+
+  private List<FullyQualifiedName> convertExecutionTestNameToFQN() {
+    return executionTestNames.stream()
+        .map(TestFullyQualifiedName::new)
+        .collect(Collectors.toList());
   }
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
@@ -178,12 +169,13 @@ class TestThread extends Thread {
   /**
    * 全クラスを定義内からロードしてクラスオブジェクトの集合を返す．
    * 
+   * @param memoryClassLoader
    * @param fqns
    * @return
    * @throws ClassNotFoundException
    */
-  private List<Class<?>> loadAllClasses(final List<FullyQualifiedName> fqns)
-      throws ClassNotFoundException {
+  private List<Class<?>> loadAllClasses(final MemoryClassLoader memoryClassLoader,
+      final List<FullyQualifiedName> fqns) throws ClassNotFoundException {
     final List<Class<?>> classes = new ArrayList<>();
     for (final FullyQualifiedName fqn : fqns) {
       classes.add(memoryClassLoader.loadClass(fqn)); // 例外が出るので非stream処理
@@ -194,16 +186,23 @@ class TestThread extends Thread {
   /***
    * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．
    * 
+   * @param memoryClassLoader
    * @param fqns
+   * @param isInstrument jacoco-instrumentを適用するか？計測対象か？
    * @throws IOException
    */
-  private void addAllDefinitions(final List<FullyQualifiedName> fqns) throws IOException {
+  private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
+      final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     for (final FullyQualifiedName fqn : fqns) {
       final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
       final byte[] bytecode = compilatinoUnit.getBytecode();
-      final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
-      memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
+      if (isInstrument) {
+        final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
+        memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
+      } else {
+        memoryClassLoader.addDefinition(fqn, bytecode);
+      }
     }
   }
 
@@ -216,8 +215,8 @@ class TestThread extends Thread {
    */
   class CoverageMeasurementListener extends RunListener {
 
+    final private TestResults testResults;
     final private List<FullyQualifiedName> measuredClasses;
-    final public TestResults testResults;
     private boolean wasFailed;
 
     /**
@@ -228,14 +227,15 @@ class TestThread extends Thread {
      * @throws Exception
      */
     public CoverageMeasurementListener(List<FullyQualifiedName> measuredFQNs,
-        TestResults storedTestResults) throws Exception {
+        final TestResults storedTestResults) throws Exception {
+      jacocoRuntime.startup(jacocoRuntimeData);
       testResults = storedTestResults;
       measuredClasses = measuredFQNs;
     }
 
     @Override
     public void testStarted(Description description) {
-      resetJacocoRuntimeData();
+      jacocoRuntimeData.reset();
       wasFailed = false;
     }
 
@@ -247,13 +247,6 @@ class TestThread extends Thread {
     @Override
     public void testFinished(Description description) throws IOException {
       collectRuntimeData(description);
-    }
-
-    /**
-     * JaCoCoが回収した実行結果をリセットする．
-     */
-    private void resetJacocoRuntimeData() {
-      jacocoRuntimeData.reset();
     }
 
     /**
@@ -314,7 +307,7 @@ class TestThread extends Thread {
       final Map<FullyQualifiedName, Coverage> coverages = coverageBuilder.getClasses()
           .stream()
           .map(Coverage::new)
-          .collect(Collectors.toMap(c -> c.executedTargetFQN, c -> c));
+          .collect(Collectors.toMap(c -> c.executedTargetFQN, Functions.identity()));
 
       final TestResult testResult = new TestResult(testMethodFQN, wasFailed, coverages);
       testResults.add(testResult);

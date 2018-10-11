@@ -56,7 +56,7 @@ public class SinglePointCrossoverTest {
     assertThat(element).isInstanceOf(CrossoverHistoricalElement.class);
     final CrossoverHistoricalElement cElement = (CrossoverHistoricalElement) element;
     assertThat(cElement.getParents()).containsExactly(insertOperationVariant, noneOperationVariant);
-    assertThat(cElement.getCrossoverPoint()).isEqualTo(3);
+    assertThat(cElement.getCrossoverPoint()).isEqualTo(1);
 
     final List<Gene> genes = variants.stream()
         .map(Variant::getGene)
