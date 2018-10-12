@@ -3,11 +3,11 @@ package jp.kusumotolab.kgenprog.project;
 import java.util.Collections;
 
 public class GenerationFailedSourceCode extends GeneratedSourceCode {
+  private final String generationMessage;
 
-  public static GenerationFailedSourceCode instance = new GenerationFailedSourceCode();
-
-  public GenerationFailedSourceCode() {
+  public GenerationFailedSourceCode(final String generationMessage) {
     super(Collections.emptyList());
+    this.generationMessage = generationMessage;
   }
 
   @Override
@@ -15,4 +15,8 @@ public class GenerationFailedSourceCode extends GeneratedSourceCode {
     return false;
   }
 
+  @Override
+  public String getGenerationMessage() {
+    return generationMessage;
+  }
 }

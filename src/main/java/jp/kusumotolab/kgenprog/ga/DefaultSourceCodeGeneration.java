@@ -26,7 +26,7 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
     }
 
     if (sourceCodeSet.contains(generatedSourceCode.getMessageDigest())) {
-      generatedSourceCode = GenerationFailedSourceCode.instance;
+      generatedSourceCode = new GenerationFailedSourceCode("duplicate sourcecode");
     } else {
       sourceCodeSet.add(generatedSourceCode.getMessageDigest());
     }

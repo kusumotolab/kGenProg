@@ -26,15 +26,17 @@ public class JDTOperationTest {
     final GeneratedSourceCode applied =
         operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null));
 
-    assertThat(applied).isEqualTo(GenerationFailedSourceCode.instance);
+    assertThat(applied).isInstanceOf(GenerationFailedSourceCode.class);
+    assertThat(applied.isGenerationSuccess()).isFalse();
+    assertThat(applied.getGenerationMessage()).isEqualTo("generation failed");
   }
 
-  static class ExceptionOperation implements JDTOperation {
+  static class ExceptionOperation extends JDTOperation {
+
     @Override
     public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
         final ASTRewrite astRewrite) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("generation failed");
     }
-
   }
 }

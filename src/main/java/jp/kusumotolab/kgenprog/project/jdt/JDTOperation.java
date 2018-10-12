@@ -6,16 +6,20 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 
-public interface JDTOperation extends Operation {
+public abstract class JDTOperation implements Operation {
+
+  public static final Logger log = LoggerFactory.getLogger(JDTOperation.class);
 
   @Override
-  default public GeneratedSourceCode apply(final GeneratedSourceCode generatedSourceCode,
+  public GeneratedSourceCode apply(final GeneratedSourceCode generatedSourceCode,
       final ASTLocation location) {
 
     try {
@@ -25,12 +29,13 @@ public interface JDTOperation extends Operation {
           .collect(Collectors.toList());
       return new GeneratedSourceCode(newASTs);
     } catch (Exception e) {
-      // e.printStackTrace();
-      return GenerationFailedSourceCode.instance;
+      log.debug("Opperation failed: {}", e.getMessage());
+      log.trace("Trace:", e);
+      return createGenerationFailedSourceCode(e);
     }
   }
 
-  default public GeneratedAST applyEachAST(final GeneratedAST ast, final ASTLocation location) {
+  private GeneratedAST applyEachAST(final GeneratedAST ast, final ASTLocation location) {
     if (!ast.getProductSourcePath()
         .equals(location.getProductSourcePath())) {
       return ast;
@@ -54,6 +59,17 @@ public interface JDTOperation extends Operation {
         .constructAST(ast.getProductSourcePath(), document.get());
   }
 
-  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
-      final ASTRewrite astRewrite);
+  protected abstract void applyToASTRewrite(final GeneratedJDTAST ast,
+      final JDTASTLocation location, final ASTRewrite astRewrite);
+  
+  private GeneratedSourceCode createGenerationFailedSourceCode(final Exception exception) {
+    final Throwable cause;
+    if(exception.getCause() != null) {
+      cause = exception.getCause();
+    }else {
+      cause = exception;
+    }
+    
+    return new GenerationFailedSourceCode(cause.getMessage());
+  }
 }

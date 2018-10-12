@@ -69,6 +69,10 @@ public class GeneratedSourceCode {
   public boolean isGenerationSuccess() {
     return true;
   }
+  
+  public String getGenerationMessage() {
+    return "";
+  }
 
   private String createMessageDigest() {
     try {
