@@ -228,7 +228,7 @@ public class Configuration {
     @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
 
-    @Option(name = "-discardOutput", hidden = true)
+    @Option(name = "--discardOutput", hidden = true)
     @PreserveNotNull
     private boolean isDiscardOutput = false;
 
