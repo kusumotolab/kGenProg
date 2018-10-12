@@ -120,9 +120,11 @@ public class KGenProgMain {
     final Path outDir = config.getOutDir();
     final String timeStamp = getTimeStamp();
     final Path outDirInthisExecution = outDir.resolve(timeStamp);
+
     for (final Variant completedVariant : completedVariants) {
       final Patches patches = new Patches(config.getIsDiscardOutput());
       patches.addAllPatch(patchGenerator.exec(completedVariant));
+
       final String variantId = makeVariantId(completedVariants, completedVariant);
       final Path variantDir = outDirInthisExecution.resolve(variantId);
       patches.write(variantDir);

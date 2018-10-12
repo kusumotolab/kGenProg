@@ -24,6 +24,8 @@ public class Patches {
   }
 
   public void write(final Path outDir) {
+    log.debug("enter write(Path)");
+
     if (isDiscardOutput) {
       writeWithoutFile();
     } else {
@@ -32,7 +34,6 @@ public class Patches {
   }
 
   private void writeWithFile(final Path outDir) {
-    log.debug("enter outputPatch(VariantStore)");
     try {
       if (Files.notExists(outDir)) {
         Files.createDirectories(outDir);
@@ -48,7 +49,6 @@ public class Patches {
   }
 
   private void writeWithoutFile() {
-    log.debug("enter outputPatch(VariantStore)");
     for (final Patch patch : patches) {
       log.info(System.lineSeparator() + patch.getDiff());
     }
