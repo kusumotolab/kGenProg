@@ -28,7 +28,7 @@ public abstract class JDTOperation implements Operation {
           .map(ast -> applyEachAST(ast, location))
           .collect(Collectors.toList());
       return new GeneratedSourceCode(newASTs);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       log.debug("Opperation failed: {}", e.getMessage());
       log.trace("Trace:", e);
       return createGenerationFailedSourceCode(e);
@@ -61,15 +61,15 @@ public abstract class JDTOperation implements Operation {
 
   protected abstract void applyToASTRewrite(final GeneratedJDTAST ast,
       final JDTASTLocation location, final ASTRewrite astRewrite);
-  
+
   private GeneratedSourceCode createGenerationFailedSourceCode(final Exception exception) {
     final Throwable cause;
-    if(exception.getCause() != null) {
+    if (exception.getCause() != null) {
       cause = exception.getCause();
-    }else {
+    } else {
       cause = exception;
     }
-    
+
     return new GenerationFailedSourceCode(cause.getMessage());
   }
 }
