@@ -1223,7 +1223,7 @@ public class ConfigurationBuilderTest {
   @Test
   public void testBuildWithDiscardOutput() {
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-discardOutput"};
+        testPath.toString(), "--discard-output"};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
