@@ -1,8 +1,8 @@
 package jp.kusumotolab.kgenprog;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +14,8 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
-import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
+import jp.kusumotolab.kgenprog.project.Patches;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -117,37 +117,25 @@ public class KGenProgMain {
     final List<Variant> completedVariants =
         variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
     log.debug("enter outputPatch(VariantStore)");
-    for (final Variant completedVariant : completedVariants) {
-      final List<Patch> patches = patchGenerator.exec(completedVariant);
-      final String variantId = makeVariantId(completedVariants, completedVariant);
-      log.info(variantId);
-      for (final Patch patch : patches) {
-        log.info(System.lineSeparator() + patch.getDiff());
-        writePatch(patch, variantId);
-      }
-    }
-  }
-
-  //Todo outDir が空でない場合(連続して KGP を動かしたとき) の挙動を考える
-  private void writePatch(final Patch patch, final String variantId) {
     final Path outDir = config.getOutDir();
-    try {
-      if(config.getIsDiscardOutput()) {
-        return;
-      }
-
-      final Path variantDir = outDir.resolve(variantId);
-      if(Files.notExists(variantDir)) {
-        Files.createDirectories(variantDir);
-      }
-
-      patch.write(variantDir);
-    } catch (final IOException e) {
-      log.error(e.getMessage());
+    final String timeStamp = getTimeStamp();
+    final Path outDirInthisExecution = outDir.resolve(timeStamp);
+    for (final Variant completedVariant : completedVariants) {
+      final Patches patches = new Patches(config.getIsDiscardOutput());
+      patches.addAllPatch(patchGenerator.exec(completedVariant));
+      final String variantId = makeVariantId(completedVariants, completedVariant);
+      final Path variantDir = outDirInthisExecution.resolve(variantId);
+      patches.write(variantDir);
     }
   }
 
   private String makeVariantId(final List<Variant> variants, final Variant variant) {
     return "variant" + (variants.indexOf(variant) + 1);
+  }
+
+  private String getTimeStamp() {
+    final Date date = new Date();
+    final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    return sdf.format(date);
   }
 }
