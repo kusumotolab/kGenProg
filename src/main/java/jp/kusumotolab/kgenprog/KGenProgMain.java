@@ -127,6 +127,7 @@ public class KGenProgMain {
 
       final String variantId = makeVariantId(completedVariants, completedVariant);
       final Path variantDir = outDirInthisExecution.resolve(variantId);
+      log.info(variantId);
       patches.write(variantDir);
     }
   }
