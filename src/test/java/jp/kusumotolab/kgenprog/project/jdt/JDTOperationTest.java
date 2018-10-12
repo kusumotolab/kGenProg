@@ -20,8 +20,8 @@ public class JDTOperationTest {
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(
-        constructor.constructAST(Collections.singletonList(productSourcePath)));
+    final GeneratedSourceCode generatedSourceCode =
+        constructor.constructAST(Collections.singletonList(productSourcePath));
 
     final GeneratedSourceCode applied =
         operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null));
