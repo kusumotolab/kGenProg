@@ -13,10 +13,10 @@ public class Patches {
   private static Logger log = LoggerFactory.getLogger(Patches.class);
 
   private final List<Patch> patches = new ArrayList<>();
-  private final boolean isDiscardOutput;
+  private final boolean noOutput;
 
-  public Patches(final boolean isDiscardOutput) {
-    this.isDiscardOutput = isDiscardOutput;
+  public Patches(final boolean noOutput) {
+    this.noOutput = noOutput;
   }
 
   public void addAllPatch(final List<Patch> patches) {
@@ -26,7 +26,7 @@ public class Patches {
   public void write(final Path outDir) {
     log.debug("enter write(Path)");
 
-    if (isDiscardOutput) {
+    if (noOutput) {
       writeWithoutFile();
     } else {
       writeWithFile(outDir);

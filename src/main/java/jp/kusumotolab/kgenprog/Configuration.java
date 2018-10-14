@@ -66,7 +66,7 @@ public class Configuration {
   private final int requiredSolutionsCount;
   private final Level logLevel;
   private final long randomSeed;
-  private final boolean isDiscardOutput;
+  private final boolean noOutput;
   // endregion
 
   // region Constructor
@@ -84,7 +84,7 @@ public class Configuration {
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
     randomSeed = builder.randomSeed;
-    isDiscardOutput = builder.isDiscardOutput;
+    noOutput = builder.noOutput;
   }
 
   // endregion
@@ -145,8 +145,8 @@ public class Configuration {
     return randomSeed;
   }
 
-  public boolean getIsDiscardOutput() {
-    return isDiscardOutput;
+  public boolean getNoOutput() {
+    return noOutput;
   }
 
   public static class Builder {
@@ -228,9 +228,9 @@ public class Configuration {
     @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
 
-    @Option(name = "--discard-output", hidden = true)
+    @Option(name = "--no-output", hidden = true)
     @PreserveNotNull
-    private boolean isDiscardOutput = false;
+    private boolean noOutput = false;
 
     // endregion
 
@@ -409,10 +409,10 @@ public class Configuration {
       return this;
     }
 
-    public Builder setIsDiscardOutput(final boolean isDiscardOutput) {
-      log.debug("enter setIsDiscardOutput(boolean)");
+    public Builder setNoOutput(final boolean noOutput) {
+      log.debug("enter setNoOutput(boolean)");
 
-      this.isDiscardOutput = isDiscardOutput;
+      this.noOutput = noOutput;
       return this;
     }
 
