@@ -58,7 +58,7 @@ public class Strategies {
   }
 
   public GeneratedSourceCode execASTConstruction(final TargetProject targetProject) {
-    return new GeneratedSourceCode(astConstruction.constructAST(targetProject));
+    return astConstruction.constructAST(targetProject);
   }
 
   public List<Variant> execVariantSelection(final List<Variant> current,

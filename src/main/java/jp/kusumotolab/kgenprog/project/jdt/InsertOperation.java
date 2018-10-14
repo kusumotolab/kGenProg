@@ -5,7 +5,7 @@ import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-public class InsertOperation implements JDTOperation {
+public class InsertOperation extends JDTOperation {
 
   private final ASTNode astNode;
 

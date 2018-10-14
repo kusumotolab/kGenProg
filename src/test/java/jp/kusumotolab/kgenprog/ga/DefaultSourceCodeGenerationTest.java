@@ -33,12 +33,13 @@ public class DefaultSourceCodeGenerationTest {
     // 1回目の生成は正しく生成される
     final GeneratedSourceCode firstGeneratedSourceCode =
         defaultSourceCodeGeneration.exec(variantStore, gene);
-    assertThat(firstGeneratedSourceCode).isNotEqualTo(GenerationFailedSourceCode.instance);
+    assertThat(firstGeneratedSourceCode).isNotInstanceOf(GenerationFailedSourceCode.class);
 
     // 2回目の生成は失敗する
     final GeneratedSourceCode secondGeneratedSourceCode =
         defaultSourceCodeGeneration.exec(variantStore, gene);
-    assertThat(secondGeneratedSourceCode).isEqualTo(GenerationFailedSourceCode.instance);
+    assertThat(secondGeneratedSourceCode).isInstanceOf(GenerationFailedSourceCode.class);
+    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo("duplicate sourcecode");
   }
 
   @Test

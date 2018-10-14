@@ -24,7 +24,7 @@ public class GeneratedSourceCode {
   private final Map<SourcePath, GeneratedAST> pathToAst;
   private final String messageDigest;
 
-  public GeneratedSourceCode(List<GeneratedAST> asts) {
+  public GeneratedSourceCode(final List<GeneratedAST> asts) {
     this.asts = asts;
     pathToAst = asts.stream()
         .collect(Collectors.toMap(GeneratedAST::getProductSourcePath, v -> v));
@@ -36,14 +36,14 @@ public class GeneratedSourceCode {
     return asts;
   }
 
-  public GeneratedAST getAst(SourcePath path) {
+  public GeneratedAST getAst(final SourcePath path) {
     log.debug("enter getAst()");
     return pathToAst.get(path);
   }
 
-  public List<ASTLocation> inferLocations(SourcePath path, int lineNumber) {
+  public List<ASTLocation> inferLocations(final SourcePath path, final int lineNumber) {
     log.debug("enter inferLocations(SourcePath, int)");
-    GeneratedAST ast = getAst(path);
+    final GeneratedAST ast = getAst(path);
     if (ast == null) {
       return Collections.emptyList();
     }
@@ -57,7 +57,7 @@ public class GeneratedSourceCode {
         .collect(Collectors.toList());
   }
 
-  public LineNumberRange inferLineNumbers(ASTLocation location) {
+  public LineNumberRange inferLineNumbers(final ASTLocation location) {
     log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();
   }
@@ -68,6 +68,10 @@ public class GeneratedSourceCode {
 
   public boolean isGenerationSuccess() {
     return true;
+  }
+
+  public String getGenerationMessage() {
+    return "";
   }
 
   private String createMessageDigest() {
@@ -83,7 +87,7 @@ public class GeneratedSourceCode {
 
       return Hex.encodeHexString(digest.digest());
 
-    } catch (NoSuchAlgorithmException e) {
+    } catch (final NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
   }

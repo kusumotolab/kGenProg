@@ -20,13 +20,14 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
     final Variant initialVariant = variantStore.getInitialVariant();
     GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 
-    for (Base base : gene.getBases()) {
+    for (final Base base : gene.getBases()) {
       generatedSourceCode = base.getOperation()
           .apply(generatedSourceCode, base.getTargetLocation());
     }
 
     if (sourceCodeSet.contains(generatedSourceCode.getMessageDigest())) {
-      generatedSourceCode = GenerationFailedSourceCode.instance;
+      log.debug("generate duplicate sourcecode from gene " + gene.toString());
+      generatedSourceCode = new GenerationFailedSourceCode("duplicate sourcecode");
     } else {
       sourceCodeSet.add(generatedSourceCode.getMessageDigest());
     }
