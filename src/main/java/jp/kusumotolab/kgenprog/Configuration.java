@@ -229,6 +229,7 @@ public class Configuration {
     private long randomSeed = DEFAULT_RANDOM_SEED;
 
     @Option(name = "--no-output", hidden = true)
+    @com.electronwill.nightconfig.core.conversion.Path("no-output")
     @PreserveNotNull
     private boolean noOutput = false;
 
