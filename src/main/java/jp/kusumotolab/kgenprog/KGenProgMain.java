@@ -1,8 +1,5 @@
 package jp.kusumotolab.kgenprog;
 
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +12,7 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.Patches;
+import jp.kusumotolab.kgenprog.project.PatchesStore;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -114,31 +111,21 @@ public class KGenProgMain {
   }
 
   private void logPatch(final VariantStore variantStore) {
+    log.debug("enter logPatch(VariantStore)");
+
+    final PatchesStore patchesStore = new PatchesStore();
     final List<Variant> completedVariants =
         variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
-    log.debug("enter outputPatch(VariantStore)");
-    final Path outDir = config.getOutDir();
-    final String timeStamp = getTimeStamp();
-    final Path outDirInthisExecution = outDir.resolve(timeStamp);
 
     for (final Variant completedVariant : completedVariants) {
-      final Patches patches = new Patches(config.getNoOutput());
-      patches.addAllPatch(patchGenerator.exec(completedVariant));
+      patchesStore.add(patchGenerator.exec(completedVariant));
+    }
 
-      final String variantId = makeVariantId(completedVariants, completedVariant);
-      final Path variantDir = outDirInthisExecution.resolve(variantId);
-      log.info(variantId);
-      patches.write(variantDir);
+    if (config.getNoOutput()) {
+      patchesStore.writeWithoutFile();
+    } else {
+      patchesStore.writeWithFile(config.getOutDir());
     }
   }
 
-  private String makeVariantId(final List<Variant> variants, final Variant variant) {
-    return "variant" + (variants.indexOf(variant) + 1);
-  }
-
-  private String getTimeStamp() {
-    final Date date = new Date();
-    final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-    return sdf.format(date);
-  }
 }

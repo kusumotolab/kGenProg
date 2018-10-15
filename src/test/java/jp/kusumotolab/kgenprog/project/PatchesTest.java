@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,14 +21,12 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final List<Patch> patchList =
-        Arrays.asList(new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines));
-    final Patches patches = new Patches(false);
-    patches.addAllPatch(patchList);
+    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);    final Patches patches = new Patches();
+    patches.add(patch);
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
-    patches.write(folderPath);
+    patches.writeWithFile(folderPath);
 
     final List<String> actual = Files.readAllLines(folderPath.resolve("test.java"));
 
@@ -40,14 +38,13 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final List<Patch> patchList =
-        Arrays.asList(new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines));
-    final Patches patches = new Patches(false);
-    patches.addAllPatch(patchList);
+    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final Patches patches = new Patches();
+    patches.add(patch);
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
-    patches.write(folderPath);
+    patches.writeWithFile(folderPath);
 
     final List<String> actual = Files.readAllLines(folderPath.resolve("test.patch"));
 
@@ -59,14 +56,12 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final List<Patch> patchList =
-        Arrays.asList(new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines));
-    final Patches patches = new Patches(true);
-    patches.addAllPatch(patchList);
+    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final Patches patches = new Patches();
+    patches.add(patch);
 
     final File folder = tempFolder.getRoot();
-    final Path folderPath = folder.toPath();
-    patches.write(folderPath);
+    patches.writeWithoutFile();
 
     final File[] files = folder.listFiles();
     assertThat(files.length).isEqualTo(0);
