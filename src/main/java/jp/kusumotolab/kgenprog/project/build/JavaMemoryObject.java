@@ -26,17 +26,17 @@ public class JavaMemoryObject implements JavaFileObject {
   private ByteArrayOutputStream bos;
   private URI uri;
   private Kind kind;
-  private String binaryName;
+  private String fqn;
 
   /**
    * 書き込み用FileObjectの生成コンストラクタ．ビルド結果の書き込みに用いられる．
    * 
-   * @param fileName
+   * @param fqn
    * @param fileKind
    */
-  public JavaMemoryObject(final String fileName, final Kind fileKind) {
-    this.binaryName = fileName;
-    this.uri = URI.create("jmo:///" + fileName.replace('.', '/') + fileKind.extension);
+  public JavaMemoryObject(final String fqn, final Kind fileKind) {
+    this.fqn = fqn;
+    this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + fileKind.extension);
     this.kind = fileKind;
     bos = new ByteArrayOutputStream();
   }
@@ -47,7 +47,7 @@ public class JavaMemoryObject implements JavaFileObject {
    * @return
    */
   public String getBinaryName() {
-    return binaryName;
+    return fqn;
   }
 
   public byte[] getClassBytes() {

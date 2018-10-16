@@ -14,12 +14,18 @@ public class JavaSourceFromString extends SimpleJavaFileObject {
 
   private final String code;
   private final String className;
+  private String digest;
 
-  public JavaSourceFromString(String className, String javaSourceCode) {
+  public JavaSourceFromString(String className, String javaSourceCode, final String digest) {
     super(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension),
         Kind.SOURCE);
     this.className = className;
     this.code = javaSourceCode;
+    this.digest = digest;
+  }
+
+  public String getMessageDigest() {
+    return digest;
   }
 
   @Override

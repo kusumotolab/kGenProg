@@ -19,6 +19,8 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jp.kusumotolab.kgenprog.project.build.BinaryStore;
+import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
@@ -150,8 +152,22 @@ public class ProjectBuilder {
   private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
       final List<GeneratedAST> asts) {
     return asts.stream()
-        .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode()))
+        .map(ast -> {
+          BinaryStoreKey key =
+              new BinaryStoreKey(ast.getPrimaryClassName(), ast.getMessageDigest());
+          JavaFileObject jfo = BinaryStore.instance.get(key);
+          if (null != jfo) {
+            return jfo;
+          }
+          return new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode(),
+              ast.getMessageDigest());
+        })
         .collect(Collectors.toSet());
+
+    // return asts.stream()
+    // .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode(),
+    // ast.getMessageDigest()))
+    // .collect(Collectors.toSet());
   }
 
   /**

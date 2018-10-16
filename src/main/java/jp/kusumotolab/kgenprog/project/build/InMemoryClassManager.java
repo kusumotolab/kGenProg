@@ -11,7 +11,6 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import com.google.common.collect.Iterables;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 /**
  * The standard JavaFileManager uses a simple implementation of type JavaFileObject to read/write
@@ -44,10 +43,14 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
   @Override
   public JavaFileObject getJavaFileForOutput(Location location, String name, Kind kind,
       FileObject sibling) throws IOException {
+    String hash = "";
+    if (sibling instanceof JavaSourceFromString) {
+      hash = ((JavaSourceFromString)sibling).getMessageDigest();
+    }
     JavaMemoryObject co = new JavaMemoryObject(name, kind);
     CompilationUnit cf = new CompilationUnit(name, co);
     memory.add(cf);
-    binaryStore.put(new BinaryStoreKey(name), co); // TODO temporaly
+    binaryStore.put(new BinaryStoreKey(name, hash), co); // TODO temporaly
     return co;
   }
 
