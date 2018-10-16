@@ -3,7 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
-public class ReplaceOperation implements JDTOperation {
+public class ReplaceOperation extends JDTOperation {
 
   private final ASTNode astNode;
 

@@ -53,7 +53,7 @@ public class PerformanceTest {
             .setWorkingDir(WORK_PATH)
             .build();
     final FaultLocalization faultLocalization = new Ochiai();
-    final Random random = new Random();
+    final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(10, random, statementSelection);
     final Crossover crossover = new SinglePointCrossover(random);

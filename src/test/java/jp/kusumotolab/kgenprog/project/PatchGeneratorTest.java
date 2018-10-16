@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Base;
-import jp.kusumotolab.kgenprog.ga.SimpleGene;
+import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -56,8 +56,8 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(
-        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final Variant modifiedVariant = new Variant(0,
+        new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
@@ -104,8 +104,8 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(
-        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final Variant modifiedVariant = new Variant(0,
+        new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
@@ -160,8 +160,8 @@ public class PatchGeneratorTest {
 
     final InsertOperation operation = new InsertOperation(insertStatement);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(
-        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final Variant modifiedVariant = new Variant(0,
+        new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
@@ -216,8 +216,8 @@ public class PatchGeneratorTest {
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(
-        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final Variant modifiedVariant = new Variant(0,
+        new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);
@@ -267,8 +267,8 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(
-        new SimpleGene(Arrays.asList(new Base(location, operation))), code, null, null, null);
+    final Variant modifiedVariant = new Variant(0,
+        new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final Patch patch = patchGenerator.exec(modifiedVariant)
         .get(0);

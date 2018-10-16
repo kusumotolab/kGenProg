@@ -23,6 +23,7 @@ public class RandomMutation extends Mutation {
     super(numberOfBase, random, candidateSelection);
   }
 
+  @Override
   public List<Variant> exec(final VariantStore variantStore) {
     log.debug("enter exec(VariantStore)");
 
@@ -32,6 +33,10 @@ public class RandomMutation extends Mutation {
       final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
       final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
 
+      if (suspiciousnesses.isEmpty()) {
+        log.debug("suspiciousnesses is empty.");
+        continue;
+      }
       final Roulette<Suspiciousness> roulette =
           new Roulette<>(suspiciousnesses, weightFunction, random);
 
@@ -39,9 +44,9 @@ public class RandomMutation extends Mutation {
         final Suspiciousness suspiciousness = roulette.exec();
         final Base base = makeBase(suspiciousness);
         final Gene gene = makeGene(variant.getGene(), base);
-        generatedVariants.add(variantStore.createVariant(gene));
+        final HistoricalElement element = new MutationHistoricalElement(variant, base);
+        generatedVariants.add(variantStore.createVariant(gene, element));
       }
-
     }
 
     log.debug("exit exec(VariantStore)");
@@ -75,6 +80,6 @@ public class RandomMutation extends Mutation {
   private Gene makeGene(final Gene parent, final Base base) {
     final List<Base> bases = new ArrayList<>(parent.getBases());
     bases.add(base);
-    return new SimpleGene(bases);
+    return new Gene(bases);
   }
 }

@@ -15,21 +15,17 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST04;
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -38,28 +34,16 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestExecutorTest {
 
-  private final static long TIMEOUT_SEC = 60;
-
-  @Before
-  public void before() throws IOException {}
-
-  @After
-  public void after() throws IOException {}
-
   @Test
+  // 正常系題材の確認
   public void testExecForBuildSuccess01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -87,19 +71,15 @@ public class TestExecutorTest {
   }
 
   @Test
+  // 正常系題材の確認
   public void testExecForBuildSuccess02() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
     // 実行されたテストは10個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -137,25 +117,35 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void testRetrievingFLParametersWithInnerClass() throws Exception {
-    // 内部クラスを持つ題材に対するFLメトリクスのテスト
+  // そもそもビルドできない題材の確認
+  public void testExecForBuildFailure01() throws Exception {
+    final Path rootPath = Paths.get("example/BuildFailure01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(source);
+
+    // 実行されたテストはないはず
+    assertThat(result).isInstanceOf(EmptyTestResults.class);
+    assertThat(result.getExecutedTestFQNs()).isEmpty();
+  }
+
+  @Test
+  // 内部クラスを持つ題材に対するFLメトリクスの確認
+  public void testExecWithRetrievingFLParametersWithInnerClass() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
     // 内部クラスを持つBazのASTと，Baz#OuterClassのL66のASTLocationを取り出す
     final ProductSourcePath baz = new ProductSourcePath(rootPath.resolve(Src.BAZ));
-    final ASTLocation loc1 = generatedSourceCode.getAst(baz)
+    final ASTLocation loc1 = source.getAst(baz)
         .getAllLocations()
         .get(23); // L66 in OuterClass. "new String()" statement;
 
@@ -171,9 +161,8 @@ public class TestExecutorTest {
     assertThat(ef1).isEqualTo(0);
     assertThat(nf1).isEqualTo(1); // FooTest#test03
 
-
     // Baz#InnerClassのL66のASTLocationを取り出す
-    final ASTLocation loc2 = generatedSourceCode.getAst(baz)
+    final ASTLocation loc2 = source.getAst(baz)
         .getAllLocations()
         .get(19); // L49 in OuterClass. "new String()" statement;
 
@@ -191,47 +180,40 @@ public class TestExecutorTest {
   }
 
   @Test
+  // 無限ループする題材の確認
   public void testExecForInfiniteLoop() throws Exception {
-
-    // 無限ループする題材
     final Path rootPath = Paths.get("example/BuildSuccess04");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    // タイムアウト時間を短めに設定（CI高速化のため）
-    final long timeout = 1;
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(timeout)
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
+        .build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
     // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
     assertThat(result).isInstanceOf(EmptyTestResults.class);
   }
 
   @Test
-  public void testExecWithSpecifyingExecutedTest() throws Exception {
+  // 実行テスト指定の確認
+  public void testExecWithSpecifyingExecutionTest() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     // 実行するべきテストをFooTestのみに変更 （BarTestを実行しない）
-    final Configuration config =
-        new Configuration.Builder(targetProject).addExecutionTest("example.FooTest")
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .addExecutionTest("example.FooTest")
+        .build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
     // 実行されたテストは10個から4個に減ったはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
         FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
+    // こっちは実行されない
     // BarTest01, BarTest02, BarTest03, BarTest04, BarTest05);
 
     // 全テストの成否はこうなるはず
@@ -239,11 +221,6 @@ public class TestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
     assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
-    // assertThat(result.getTestResult(BarTest01).failed).isFalse();
-    // assertThat(result.getTestResult(BarTest02).failed).isFalse();
-    // assertThat(result.getTestResult(BarTest03).failed).isFalse();
-    // assertThat(result.getTestResult(BarTest04).failed).isFalse();
-    // assertThat(result.getTestResult(BarTest05).failed).isFalse();
 
     final TestResult fooTest01result = result.getTestResult(FOO_TEST01);
 
@@ -256,21 +233,33 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void testTestExecutorForBuildSuccess10() throws Exception {
+  // 実行テスト名の指定ミスの確認
+  public void testExecWithSpecifyingMissingExecutionTest() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    // テストの途中でクラスロードを要する題材
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .addExecutionTest("example.FooTestXXXXXXXX") // no such method
+        .build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(source);
+
+    // 実行されたテストはないはず
+    assertThat(result).isInstanceOf(EmptyTestResults.class);
+    assertThat(result.getExecutedTestFQNs()).isEmpty();
+  }
+
+  @Test
+  // テストの途中でクラスロードを要する題材の確認
+  public void testExecForClassLoadingDuringTestExecution() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess10");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -284,21 +273,15 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void testTestExecutorForBuildSuccess11() throws Exception {
-    // 継承ベースの古いJUnitテストを試す題材．
-
+  // 継承ベースの古いJUnitテストを試す題材の確認
+  public void testExecForExtendBasedTestCase() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess11");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -312,27 +295,22 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void testTestExecutorForBuildSuccess12() throws Exception {
-    // テスト内で別テスト系クラス（ユーティリティ等）に依存する題材の確認
-
+  // テスト内で別テスト系クラス（ユーティリティ等）に依存する題材の確認
+  public void testExecWithUtilityDependentTestCase() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess12");
-    final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> productPaths = Arrays.asList(rootPath.resolve("src"));
     final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath, srcPaths, testPaths,
-        Collections.emptyList(), JUnitVersion.JUNIT4);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    projectBuilder.build(generatedSourceCode);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, productPaths,
+        testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .addExecutionTest("example.FooTest") // FooTestのみ実行する（非依存テストは実行しない）
-            .build();
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .addExecutionTest("example.FooTest") // FooTestのみ実行する（非依存テストは実行しない）
+        .build();
     final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final TestResults result = executor.exec(source);
 
-    // 実行されたテストは4個のはず（BarTest#test01は実行されない扱い）
+    // 実行されたテストは4個のはず（BarTest#test01は実行されない）
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
         FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
 
@@ -343,40 +321,4 @@ public class TestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
   }
 
-  @Test
-  public void testExecForBuildFailure01() throws Exception {
-    final Path rootPath = Paths.get("example/BuildFailure01");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .build();
-    final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
-
-    // 実行されたテストはないはず
-    assertThat(result).isInstanceOf(EmptyTestResults.class);
-    assertThat(result.getExecutedTestFQNs()).isEmpty();
-  }
-
-  @Test
-  public void testExecForBuildSuccess01WithSpecifyingMissingExecutionTest() throws Exception {
-    final Path rootPath = Paths.get("example/BuildSuccess01");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode =
-        TestUtil.createGeneratedSourceCode(targetProject);
-
-    final Configuration config =
-        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
-            .addExecutionTest("example.FooTestXXXXXXXX") // no such method
-            .build();
-    final TestExecutor executor = new TestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
-
-    // 実行されたテストはないはず
-    assertThat(result).isInstanceOf(EmptyTestResults.class);
-    assertThat(result.getExecutedTestFQNs()).isEmpty();
-  }
 }

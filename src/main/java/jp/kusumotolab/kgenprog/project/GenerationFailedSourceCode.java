@@ -4,10 +4,11 @@ import java.util.Collections;
 
 public class GenerationFailedSourceCode extends GeneratedSourceCode {
 
-  public static GenerationFailedSourceCode instance = new GenerationFailedSourceCode();
+  private final String generationMessage;
 
-  public GenerationFailedSourceCode() {
+  public GenerationFailedSourceCode(final String generationMessage) {
     super(Collections.emptyList());
+    this.generationMessage = generationMessage;
   }
 
   @Override
@@ -15,4 +16,8 @@ public class GenerationFailedSourceCode extends GeneratedSourceCode {
     return false;
   }
 
+  @Override
+  public String getGenerationMessage() {
+    return generationMessage;
+  }
 }

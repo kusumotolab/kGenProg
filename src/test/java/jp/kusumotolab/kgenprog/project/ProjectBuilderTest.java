@@ -188,7 +188,6 @@ public class ProjectBuilderTest {
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
 
-
   @Test
   public void testBuildForInMemoryByteCode01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
@@ -211,15 +210,15 @@ public class ProjectBuilderTest {
 
     // バイトコードが正しいのでうまくロードできるはず
     loader.loadClass(fqn);
-
     loader.close();
   }
 
   @Test
+
   // インメモリビルドの確認．直接BinaryStoreを操作してバイナリ追加
   public void testBuildWithBinaryStoreByDirectBinaryAddition01() throws Exception {
     // Bar.javaが存在しないのでビルドできない題材
-    final Path rootPath = Paths.get("example/BuildFailure02");
+    final Path rootPath = Paths.get("example/BuildFailure03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
@@ -251,7 +250,7 @@ public class ProjectBuilderTest {
   public void testBuildWithBinaryStoreByDirectBinaryAddition02() throws Exception {
 
     // Bar.javaが存在しないのでビルドできない題材
-    final Path rootPath = Paths.get("example/BuildFailure02");
+    final Path rootPath = Paths.get("example/BuildFailure03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
@@ -296,7 +295,7 @@ public class ProjectBuilderTest {
 
     // Bar.javaが存在しないのでビルドできない題材をビルド
     // 直前にexample02をビルドしているので，BinaryStoreにBar.classが残っており成功するはず
-    final Path rootPath2 = Paths.get("example/BuildFailure02");
+    final Path rootPath2 = Paths.get("example/BuildFailure03");
     final TargetProject targetProject2 = TargetProjectFactory.create(rootPath2);
     final GeneratedSourceCode source2 = TestUtil.createGeneratedSourceCode(targetProject2);
     final ProjectBuilder projectBuilder2 = new ProjectBuilder(targetProject2);
@@ -306,5 +305,26 @@ public class ProjectBuilderTest {
 
     // 成功するはず
     assertThat(buildResults2.isBuildFailed).isFalse();
+  }
+
+  public void testBuildWithExternalBinaryFile() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess13");
+    final List<Path> sources = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> tests = Collections.emptyList();
+    final List<Path> cps = Arrays.asList(rootPath.resolve("lib"));
+    
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, sources, tests, cps, JUnitVersion.JUNIT4);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
+
+    assertThat(buildResults.isBuildFailed).isFalse();
+    assertThat(buildResults.isMappingAvailable()).isTrue();
+
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+        .containsExactlyInAnyOrder(FOO.value);
+
   }
 }

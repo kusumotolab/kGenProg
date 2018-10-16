@@ -1,0 +1,5 @@
+root-dir = "./"
+src = ["src/"]
+test = ["test/"]
+required-solutions = 50
+

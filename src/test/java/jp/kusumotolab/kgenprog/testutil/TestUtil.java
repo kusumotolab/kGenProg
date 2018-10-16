@@ -13,9 +13,9 @@ import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Fitness;
 import jp.kusumotolab.kgenprog.ga.Gene;
-import jp.kusumotolab.kgenprog.ga.SimpleGene;
+import jp.kusumotolab.kgenprog.ga.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.OriginalHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
@@ -33,19 +33,19 @@ public class TestUtil {
       }
     }
   }
-  
+
   public static Variant createVariant(final Configuration config) {
-    final Gene gene = new SimpleGene(Collections.emptyList());
+    final Gene gene = new Gene(Collections.emptyList());
     final GeneratedSourceCode sourceCode = createGeneratedSourceCode(config.getTargetProject());
     final TestResults testResults = new TestExecutor(config).exec(sourceCode);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
     final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
-    return new Variant(gene, sourceCode, testResults, fitness, suspiciousnesses);
+    final HistoricalElement element = new OriginalHistoricalElement();
+    return new Variant(0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
   }
-  
+
   public static GeneratedSourceCode createGeneratedSourceCode(final TargetProject project) {
-    final List<GeneratedAST> constructAST = new JDTASTConstruction().constructAST(project);
-    final GeneratedSourceCode sourceCode = new GeneratedSourceCode(constructAST);
+    final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(project);
     return sourceCode;
   }
 

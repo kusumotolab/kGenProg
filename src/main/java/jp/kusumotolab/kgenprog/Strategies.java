@@ -7,6 +7,8 @@ import jp.kusumotolab.kgenprog.ga.Fitness;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -21,16 +23,19 @@ public class Strategies {
   private final JDTASTConstruction astConstruction;
   private final SourceCodeValidation sourceCodeValidation;
   private final TestExecutor testExecutor;
+  private final VariantSelection variantSelection;
 
   public Strategies(final FaultLocalization faultLocalization,
       final JDTASTConstruction astConstruction, final SourceCodeGeneration sourceCodeGeneration,
-      final SourceCodeValidation sourceCodeValidation, final TestExecutor testExecutor) {
+      final SourceCodeValidation sourceCodeValidation, final TestExecutor testExecutor,
+      final VariantSelection variantSelection) {
 
     this.faultLocalization = faultLocalization;
     this.astConstruction = astConstruction;
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.testExecutor = testExecutor;
+    this.variantSelection = variantSelection;
   }
 
   public List<Suspiciousness> execFaultLocalization(final GeneratedSourceCode generatedSourceCode,
@@ -53,6 +58,11 @@ public class Strategies {
   }
 
   public GeneratedSourceCode execASTConstruction(final TargetProject targetProject) {
-    return new GeneratedSourceCode(astConstruction.constructAST(targetProject));
+    return astConstruction.constructAST(targetProject);
+  }
+
+  public List<Variant> execVariantSelection(final List<Variant> current,
+      final List<Variant> generated) {
+    return variantSelection.exec(current, generated);
   }
 }
