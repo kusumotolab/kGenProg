@@ -47,7 +47,7 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     JavaMemoryObject co = new JavaMemoryObject(name, kind);
     CompilationUnit cf = new CompilationUnit(name, co);
     memory.add(cf);
-    binaryStore.put(new TargetFullyQualifiedName(name), co); // TODO Targetとは限らない
+    binaryStore.put(new BinaryStoreKey(name), co); // TODO temporaly
     return co;
   }
 

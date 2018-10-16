@@ -21,19 +21,19 @@ public class BinaryStore {
   // TODO ひとまずシングルトン化．真面目に考えてないので要検討
   public static BinaryStore instance = new BinaryStore();
 
-  private Map<FullyQualifiedName, JavaFileObject> cache;
+  private Map<BinaryStoreKey, JavaFileObject> cache;
 
   private BinaryStore() {
     cache = new HashMap<>();
   }
 
-  public void put(final FullyQualifiedName fqn, JavaFileObject object) {
-    cache.put(fqn, object);
+  public void put(final BinaryStoreKey key, JavaFileObject object) {
+    cache.put(key, object);
   }
 
-  public JavaFileObject get(final FullyQualifiedName fqn) {
-    if (cache.containsKey(fqn)) {
-      return cache.get(fqn);
+  public JavaFileObject get(final BinaryStoreKey key) {
+    if (cache.containsKey(key)) {
+      return cache.get(key);
     }
     return null;
   }
@@ -41,7 +41,7 @@ public class BinaryStore {
   public Iterable<JavaFileObject> list(final String packageName) {
     return cache.values()
         .stream()
-        .filter(fo -> fo.getName()
+        .filter(jfo -> jfo.getName()
             .startsWith("/" + packageName)) // TODO: スラッシュ開始で決め打ち．uriからの変換なので間違いないとは思う
         .collect(Collectors.toList());
   }

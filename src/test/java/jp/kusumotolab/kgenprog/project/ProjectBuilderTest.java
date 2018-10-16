@@ -23,6 +23,7 @@ import javax.tools.JavaFileObject.Kind;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
+import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
@@ -235,7 +236,7 @@ public class ProjectBuilderTest {
         .write(bytes);
 
     // BinaryStoreにJMOバイナリを直接保存しておく
-    BinaryStore.instance.put(Fqn.BAR, object);
+    BinaryStore.instance.put(new BinaryStoreKey(Fqn.BAR.value), object);
 
     // ビルド．成功するはず
     final BuildResults buildResults2 = projectBuilder.build(source);
@@ -261,7 +262,7 @@ public class ProjectBuilderTest {
     final JavaMemoryObject object1 = new JavaMemoryObject(Fqn.BAR.toString(), Kind.CLASS);
     object1.openOutputStream()
         .write(bytes1);
-    BinaryStore.instance.put(Fqn.BAR, object1);
+    BinaryStore.instance.put(new BinaryStoreKey(Fqn.BAR.value), object1);
 
     // Foo.classをファイルから読み込み
     final Path bin2 = rootPath.resolve("bin/example/Foo.class");
@@ -269,7 +270,7 @@ public class ProjectBuilderTest {
     final JavaMemoryObject object2 = new JavaMemoryObject(Fqn.FOO.toString(), Kind.CLASS);
     object1.openOutputStream()
         .write(bytes2);
-    BinaryStore.instance.put(Fqn.FOO, object2);
+    BinaryStore.instance.put(new BinaryStoreKey(Fqn.FOO.value), object2);
 
     // ビルド
     final BuildResults buildResults = projectBuilder.build(source);
