@@ -26,7 +26,7 @@ public class PatchesTest {
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
-    patches.writeWithFile(folderPath);
+    patches.writeToFile(folderPath);
 
     final List<String> actual = Files.readAllLines(folderPath.resolve("test.java"));
 
@@ -44,7 +44,7 @@ public class PatchesTest {
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
-    patches.writeWithFile(folderPath);
+    patches.writeToFile(folderPath);
 
     final List<String> actual = Files.readAllLines(folderPath.resolve("test.patch"));
 
@@ -61,7 +61,7 @@ public class PatchesTest {
     patches.add(patch);
 
     final File folder = tempFolder.getRoot();
-    patches.writeWithoutFile();
+    patches.writeToLogger();
 
     final File[] files = folder.listFiles();
     assertThat(files.length).isEqualTo(0);

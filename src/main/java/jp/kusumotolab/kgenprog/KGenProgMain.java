@@ -121,11 +121,10 @@ public class KGenProgMain {
       patchesStore.add(patchGenerator.exec(completedVariant));
     }
 
-    if (config.getNoOutput()) {
-      patchesStore.writeWithoutFile();
-    } else {
-      patchesStore.writeWithFile(config.getOutDir());
+    patchesStore.writeToLogger();
+
+    if (!config.getNoOutput()) {
+      patchesStore.writeToFile(config.getOutDir());
     }
   }
-
 }

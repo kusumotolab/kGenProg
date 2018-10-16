@@ -22,7 +22,7 @@ public class Patches {
     return patches.get(index);
   }
 
-  public void writeWithFile(final Path outDir) {
+  public void writeToFile(final Path outDir) {
     try {
       if (Files.notExists(outDir)) {
         Files.createDirectories(outDir);
@@ -32,12 +32,11 @@ public class Patches {
     }
 
     for (final Patch patch : patches) {
-      log.info(System.lineSeparator() + patch.getDiff());
       patch.write(outDir);
     }
   }
 
-  public void writeWithoutFile() {
+  public void writeToLogger() {
     for (final Patch patch : patches) {
       log.info(System.lineSeparator() + patch.getDiff());
     }

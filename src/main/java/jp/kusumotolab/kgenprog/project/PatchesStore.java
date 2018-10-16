@@ -18,7 +18,7 @@ public class PatchesStore {
     patchesList.add(patch);
   }
 
-  public void writeWithFile(final Path outDir) {
+  public void writeToFile(final Path outDir) {
     log.debug("enter writeWithFile(String)");
     final String timeStamp = getTimeStamp();
     final Path outDirInthisExecution = outDir.resolve(timeStamp);
@@ -26,15 +26,15 @@ public class PatchesStore {
     for(final Patches patches : patchesList) {
       final String variantId = makeVariantId(patches);
       final Path variantDir = outDirInthisExecution.resolve(variantId);
-      patches.writeWithFile(variantDir);
+      patches.writeToFile(variantDir);
     }
   }
 
-  public void writeWithoutFile() {
+  public void writeToLogger() {
     log.debug("enter writeWithoutFile(String)");
 
     for(final Patches patches : patchesList) {
-      patches.writeWithoutFile();
+      patches.writeToLogger();
     }
   }
 
