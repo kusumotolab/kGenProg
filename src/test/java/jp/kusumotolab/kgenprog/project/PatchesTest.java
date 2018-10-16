@@ -21,7 +21,8 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);    final Patches patches = new Patches();
+    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final Patches patches = new Patches();
     patches.add(patch);
 
     final File folder = tempFolder.getRoot();

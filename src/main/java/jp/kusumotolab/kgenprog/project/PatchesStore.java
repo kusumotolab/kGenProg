@@ -23,7 +23,7 @@ public class PatchesStore {
     final String timeStamp = getTimeStamp();
     final Path outDirInthisExecution = outDir.resolve(timeStamp);
 
-    for(final Patches patches : patchesList) {
+    for (final Patches patches : patchesList) {
       final String variantId = makeVariantId(patches);
       final Path variantDir = outDirInthisExecution.resolve(variantId);
       patches.writeToFile(variantDir);
@@ -33,7 +33,7 @@ public class PatchesStore {
   public void writeToLogger() {
     log.debug("enter writeWithoutFile(String)");
 
-    for(final Patches patches : patchesList) {
+    for (final Patches patches : patchesList) {
       patches.writeToLogger();
     }
   }
