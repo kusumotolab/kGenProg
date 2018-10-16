@@ -56,7 +56,7 @@ public class KGenProgMainTest {
             .setTimeLimitSeconds(600)
             .setMaxGeneration(100)
             .setRequiredSolutionsCount(1)
-            .setNoOutput(true)
+            .setNeedNotOutput(true)
             .build();
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random(config.getRandomSeed());

@@ -123,7 +123,7 @@ public class KGenProgMain {
 
     patchesStore.writeToLogger();
 
-    if (!config.getNoOutput()) {
+    if (!config.needNotOutput()) {
       patchesStore.writeToFile(config.getOutDir());
     }
   }

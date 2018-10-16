@@ -44,6 +44,7 @@ public class Configuration {
   public static final Path DEFAULT_WORKING_DIR;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
+  public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
 
   static {
     try {
@@ -66,7 +67,7 @@ public class Configuration {
   private final int requiredSolutionsCount;
   private final Level logLevel;
   private final long randomSeed;
-  private final boolean noOutput;
+  private final boolean needNotOutput;
   // endregion
 
   // region Constructor
@@ -84,7 +85,7 @@ public class Configuration {
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
     randomSeed = builder.randomSeed;
-    noOutput = builder.noOutput;
+    needNotOutput = builder.needNotOutput;
   }
 
   // endregion
@@ -145,8 +146,8 @@ public class Configuration {
     return randomSeed;
   }
 
-  public boolean getNoOutput() {
-    return noOutput;
+  public boolean needNotOutput() {
+    return needNotOutput;
   }
 
   public static class Builder {
@@ -231,7 +232,7 @@ public class Configuration {
     @Option(name = "--no-output", hidden = true)
     @com.electronwill.nightconfig.core.conversion.Path("no-output")
     @PreserveNotNull
-    private boolean noOutput = false;
+    private boolean needNotOutput = DEFAULT_NEED_NOT_OUTPUT;
 
     // endregion
 
@@ -410,10 +411,10 @@ public class Configuration {
       return this;
     }
 
-    public Builder setNoOutput(final boolean noOutput) {
-      log.debug("enter setNoOutput(boolean)");
+    public Builder setNeedNotOutput(final boolean needNotOutput) {
+      log.debug("enter setNeedNotOutput(boolean)");
 
-      this.noOutput = noOutput;
+      this.needNotOutput = needNotOutput;
       return this;
     }
 
@@ -549,8 +550,7 @@ public class Configuration {
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
-        usage = "Specifies the path to working directory.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Specifies the path to working directory.", depends = {"-r", "-s", "-t"})
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
       log.debug("enter setWorkingDirFromCmdLineParser(String)");
       this.workingDir = Paths.get(workingDir);
