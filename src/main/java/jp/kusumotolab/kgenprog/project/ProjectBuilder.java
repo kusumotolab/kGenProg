@@ -24,6 +24,7 @@ import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
+import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
 import jp.kusumotolab.kgenprog.project.build.JavaSourceFromString;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
@@ -84,7 +85,30 @@ public class ProjectBuilder {
 
     final String buildProgressText = buildProgressWriter.toString();
     final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
-    final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
+    // final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
+
+    System.out.println(BinaryStore.instance.getAll());
+    final List<CompilationUnit> units = generatedSourceCode.getAsts()
+        .stream()
+        .map(ast -> {
+          BinaryStoreKey key = new BinaryStoreKey(ast);
+          JavaFileObject jfo = BinaryStore.instance.get(key);
+          return new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo);
+        })
+        .collect(Collectors.toList());
+    final List<CompilationUnit> unitsx = targetProject.getTestSourcePaths()
+        .stream()
+        .map(sp -> {
+          BinaryStoreKey key = new BinaryStoreKey(sp);
+          System.out.println(key + " " + BinaryStore.instance.get(key));
+          JavaFileObject jfo = BinaryStore.instance.get(key);
+          return new CompilationUnit(jfo.getName(), (JavaMemoryObject) jfo);
+        })
+        .collect(Collectors.toList());
+
+    units.addAll(unitsx);
+    final CompilationPackage compilationPackage = new CompilationPackage(units);
+
     final BuildResults buildResults =
         new BuildResults(generatedSourceCode, compilationPackage, diagnostics, buildProgressText);
 
