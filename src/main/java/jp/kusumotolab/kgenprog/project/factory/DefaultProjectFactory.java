@@ -37,7 +37,7 @@ public class DefaultProjectFactory implements ProjectFactory {
     this.testSourcePaths = getFilePaths(pathsForTestSource, ".java").stream()
         .map(TestSourcePath::new)
         .collect(Collectors.toList());
-    this.classPaths = getFilePaths(pathsForClass, ".class", ".jar").stream()
+    this.classPaths = pathsForClass.stream()
         .map(ClassPath::new)
         .collect(Collectors.toList());
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
