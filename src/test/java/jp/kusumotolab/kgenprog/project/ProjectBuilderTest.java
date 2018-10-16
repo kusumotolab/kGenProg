@@ -181,7 +181,6 @@ public class ProjectBuilderTest {
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
 
-
   @Test
   public void testBuildForInMemoryByteCode01() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
@@ -204,8 +203,27 @@ public class ProjectBuilderTest {
 
     // バイトコードが正しいのでうまくロードできるはず
     loader.loadClass(fqn);
-
     loader.close();
+  }
 
+  @Test
+  public void testBuildWithExternalBinaryFile() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess13");
+    final List<Path> sources = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> tests = Collections.emptyList();
+    final List<Path> cps = Arrays.asList(rootPath.resolve("lib"));
+    
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, sources, tests, cps, JUnitVersion.JUNIT4);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
+
+    assertThat(buildResults.isBuildFailed).isFalse();
+    assertThat(buildResults.isMappingAvailable()).isTrue();
+
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+        .containsExactlyInAnyOrder(FOO.value);
   }
 }
