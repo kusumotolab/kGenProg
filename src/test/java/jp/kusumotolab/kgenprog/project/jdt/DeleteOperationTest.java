@@ -1,14 +1,17 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Paths;
 import java.util.Collections;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
+import org.mockito.Mockito;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class DeleteOperationTest {
 
@@ -26,8 +29,10 @@ public class DeleteOperationTest {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
+    @SuppressWarnings("unchecked")
+    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(GeneratedJDTAST.class);
     final GeneratedSourceCode generatedSourceCode =
-        new GeneratedSourceCode(Collections.singletonList(ast), Collections.emptyList());
+        new GeneratedSourceCode(Collections.singletonList(ast), Collections.singletonList(mockAst));
 
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
@@ -54,5 +59,10 @@ public class DeleteOperationTest {
         .toString();
 
     assertThat(newAST.getRoot()).isSameSourceCodeAs(expected);
+
+    // TestASTがそのまま受け継がれているか確認
+    assertThat(code.getTestAsts()).hasSize(1);
+    assertThat(code.getTestAsts()
+        .get(0)).isSameAs(mockAst);
   }
 }

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
@@ -36,7 +37,7 @@ public class JDTASTConstruction {
 
   public GeneratedSourceCode constructAST(final List<ProductSourcePath> productSourcePaths,
       final List<TestSourcePath> testSourcePaths) {
-    final String[] paths = productSourcePaths.stream()
+    final String[] paths = Stream.concat(productSourcePaths.stream(), testSourcePaths.stream())
         .map(path -> path.path.toString())
         .toArray(String[]::new);
 
