@@ -133,8 +133,8 @@ public class ProjectBuilder {
     return buildResults;
   }
 
-  private Iterable<? extends JavaFileObject> generateAllJavaFileObjects(
-      final List<GeneratedAST> list, final StandardJavaFileManager fileManager) {
+  private <T extends SourcePath> Iterable<? extends JavaFileObject> generateAllJavaFileObjects(
+      final List<GeneratedAST<T>> list, final StandardJavaFileManager fileManager) {
 
     final Iterable<? extends JavaFileObject> targetIterator =
         generateJavaFileObjectsFromGeneratedAst(list);
@@ -153,8 +153,8 @@ public class ProjectBuilder {
    * @param asts
    * @return
    */
-  private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
-      final List<GeneratedAST> asts) {
+  private <T extends SourcePath> Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
+      final List<GeneratedAST<T>> asts) {
     return asts.stream()
         .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode()))
         .collect(Collectors.toSet());

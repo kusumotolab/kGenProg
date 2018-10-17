@@ -64,11 +64,13 @@ public class RandomMutationTest {
     final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection);
     randomMutation.setCandidates(sourceCode.getAsts());
 
-    final GeneratedAST generatedAST = new ArrayList<>(sourceCode.getAsts()).get(0);
-    final ProductSourcePath sourcePath = generatedAST.getProductSourcePath();
-    final CompilationUnit root = (CompilationUnit) ((GeneratedJDTAST) generatedAST).getRoot()
-        .getRoot()
-        .getRoot();
+    final GeneratedAST<ProductSourcePath> generatedAST =
+        new ArrayList<>(sourceCode.getAsts()).get(0);
+    final ProductSourcePath sourcePath = generatedAST.getSourcePath();
+    final CompilationUnit root =
+        (CompilationUnit) ((GeneratedJDTAST<ProductSourcePath>) generatedAST).getRoot()
+            .getRoot()
+            .getRoot();
     final TypeDeclaration typeRoot = (TypeDeclaration) root.types()
         .get(0);
 

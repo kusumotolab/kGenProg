@@ -25,9 +25,9 @@ public class DeleteOperationTest {
   public void testDeleteStatement() {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
     final GeneratedSourceCode generatedSourceCode =
-        new GeneratedSourceCode(Collections.singletonList(ast));
+        new GeneratedSourceCode(Collections.singletonList(ast), Collections.emptyList());
 
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
@@ -40,8 +40,9 @@ public class DeleteOperationTest {
     final DeleteOperation operation = new DeleteOperation();
 
     final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    final GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> newAST =
+        (GeneratedJDTAST<ProductSourcePath>) code.getAsts()
+            .get(0);
 
     final String expected = new StringBuilder().append("")
         .append("class A {")

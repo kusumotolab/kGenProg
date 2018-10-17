@@ -8,11 +8,11 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
  * JDT AST の単一ノードを示すオブジェクト Operation のターゲットに利用する
- * 
+ *
  * @see jp.kusumotolab.kgenprog.JDTOperaion
  * @author r-arima
  *
@@ -21,28 +21,28 @@ final public class JDTASTLocation implements ASTLocation {
 
   final public ASTNode node;
 
-  private ProductSourcePath productSourcePath;
+  private final SourcePath sourcePath;
 
-  public JDTASTLocation(ProductSourcePath productSourcePath, ASTNode node) {
+  public JDTASTLocation(final SourcePath sourcePath, final ASTNode node) {
     this.node = node;
-    this.productSourcePath = productSourcePath;
+    this.sourcePath = sourcePath;
   }
 
-  public ASTNode locate(ASTNode otherASTRoot) {
-    List<TreePathElement> treePaths = new ArrayList<TreePathElement>();
+  public ASTNode locate(final ASTNode otherASTRoot) {
+    final List<TreePathElement> treePaths = new ArrayList<TreePathElement>();
     ASTNode currentNode = node;
     while (true) {
-      StructuralPropertyDescriptor locationInParent = currentNode.getLocationInParent();
+      final StructuralPropertyDescriptor locationInParent = currentNode.getLocationInParent();
       if (locationInParent == null) {
         break;
       }
 
-      ASTNode parent = currentNode.getParent();
+      final ASTNode parent = currentNode.getParent();
       int idx = TreePathElement.NOT_LIST;
 
       if (locationInParent.isChildListProperty()) {
         // Listの場合、indexも覚えておく
-        List<?> children = (List<?>) parent.getStructuralProperty(locationInParent);
+        final List<?> children = (List<?>) parent.getStructuralProperty(locationInParent);
         idx = children.indexOf(currentNode);
       }
 
@@ -54,7 +54,7 @@ final public class JDTASTLocation implements ASTLocation {
     Collections.reverse(treePaths);
 
     currentNode = otherASTRoot;
-    for (TreePathElement path : treePaths) {
+    for (final TreePathElement path : treePaths) {
       currentNode = path.moveToChild(currentNode);
     }
 
@@ -68,13 +68,13 @@ final public class JDTASTLocation implements ASTLocation {
     StructuralPropertyDescriptor descriptor;
     int idx;
 
-    public TreePathElement(StructuralPropertyDescriptor descriptor, int idx) {
+    public TreePathElement(final StructuralPropertyDescriptor descriptor, final int idx) {
       this.descriptor = descriptor;
       this.idx = idx;
     }
 
-    public ASTNode moveToChild(ASTNode current) {
-      Object child = current.getStructuralProperty(descriptor);
+    public ASTNode moveToChild(final ASTNode current) {
+      final Object child = current.getStructuralProperty(descriptor);
       if (idx == NOT_LIST) {
         return (ASTNode) child;
       } else {
@@ -84,22 +84,23 @@ final public class JDTASTLocation implements ASTLocation {
   }
 
   @Override
-  public ProductSourcePath getProductSourcePath() {
-    return productSourcePath;
+  public SourcePath getSourcePath() {
+    return sourcePath;
   }
 
   @Override
   public LineNumberRange inferLineNumbers() {
-    ASTNode root = this.node.getRoot();
+    final ASTNode root = this.node.getRoot();
 
     if (!(root instanceof CompilationUnit)) {
       return ASTLocation.NONE;
     }
 
-    CompilationUnit compilationUnit = (CompilationUnit) root;
+    final CompilationUnit compilationUnit = (CompilationUnit) root;
 
-    int start = compilationUnit.getLineNumber(this.node.getStartPosition());
-    int end = compilationUnit.getLineNumber(this.node.getStartPosition() + this.node.getLength());
+    final int start = compilationUnit.getLineNumber(this.node.getStartPosition());
+    final int end =
+        compilationUnit.getLineNumber(this.node.getStartPosition() + this.node.getLength());
 
     return new LineNumberRange(start, end);
   }

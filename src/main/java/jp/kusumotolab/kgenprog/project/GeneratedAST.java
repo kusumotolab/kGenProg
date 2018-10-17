@@ -3,13 +3,13 @@ package jp.kusumotolab.kgenprog.project;
 import java.util.List;
 
 // TODO: クラス名を再検討
-public interface GeneratedAST {
+public interface GeneratedAST<T extends SourcePath> {
 
   public String getSourceCode();
 
   public String getPrimaryClassName();
 
-  public ProductSourcePath getProductSourcePath();
+  public T getSourcePath();
 
   /**
    * 指定された行にあるASTのノードを推定する。候補が複数ある場合、ノードが表すソースコードが広い順にListに格納したものを返す。

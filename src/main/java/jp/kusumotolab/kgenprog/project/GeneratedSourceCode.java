@@ -20,30 +20,37 @@ public class GeneratedSourceCode {
   private static final String DIGEST_ALGORITHM = "MD5";
 
   // TODO listは順序が保証されず重複を許容してしまう．Mapで名前から引ける方が外から使いやすい．
-  private final List<GeneratedAST> asts;
-  private final Map<SourcePath, GeneratedAST> pathToAst;
+  private final List<GeneratedAST<ProductSourcePath>> asts;
+  private final List<GeneratedAST<TestSourcePath>> testAsts;
+  private final Map<SourcePath, GeneratedAST<ProductSourcePath>> pathToAst;
   private final String messageDigest;
 
-  public GeneratedSourceCode(final List<GeneratedAST> asts) {
+  public GeneratedSourceCode(final List<GeneratedAST<ProductSourcePath>> asts,
+      final List<GeneratedAST<TestSourcePath>> testAsts) {
     this.asts = asts;
+    this.testAsts = testAsts;
     pathToAst = asts.stream()
-        .collect(Collectors.toMap(GeneratedAST::getProductSourcePath, v -> v));
+        .collect(Collectors.toMap(GeneratedAST::getSourcePath, v -> v));
     this.messageDigest = createMessageDigest();
   }
 
-  public List<GeneratedAST> getAsts() {
+  public List<GeneratedAST<ProductSourcePath>> getAsts() {
     log.debug("enter getAsts()");
     return asts;
   }
 
-  public GeneratedAST getAst(final SourcePath path) {
+  public List<GeneratedAST<TestSourcePath>> getTestAsts() {
+    return testAsts;
+  }
+
+  public GeneratedAST<ProductSourcePath> getAst(final SourcePath path) {
     log.debug("enter getAst()");
     return pathToAst.get(path);
   }
 
   public List<ASTLocation> inferLocations(final SourcePath path, final int lineNumber) {
     log.debug("enter inferLocations(SourcePath, int)");
-    final GeneratedAST ast = getAst(path);
+    final GeneratedAST<ProductSourcePath> ast = getAst(path);
     if (ast == null) {
       return Collections.emptyList();
     }
@@ -79,7 +86,7 @@ public class GeneratedSourceCode {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
       asts.stream()
-          .sorted(Comparator.comparing(v -> v.getProductSourcePath()
+          .sorted(Comparator.comparing(v -> v.getSourcePath()
               .toString()))
           .map(GeneratedAST::getMessageDigest)
           .map(String::getBytes)

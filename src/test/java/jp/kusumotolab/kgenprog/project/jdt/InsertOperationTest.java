@@ -26,9 +26,9 @@ public class InsertOperationTest {
     final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
     final GeneratedSourceCode generatedSourceCode =
-        new GeneratedSourceCode(Collections.singletonList(ast));
+        new GeneratedSourceCode(Collections.singletonList(ast), Collections.emptyList());
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -45,8 +45,9 @@ public class InsertOperationTest {
     final InsertOperation operation = new InsertOperation(insertStatement);
 
     final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    final GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> newAST =
+        (GeneratedJDTAST<ProductSourcePath>) code.getAsts()
+            .get(0);
 
     final String expected = new StringBuilder().append("")
         .append("class A {")
@@ -73,7 +74,7 @@ public class InsertOperationTest {
     final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("B.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
 
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
