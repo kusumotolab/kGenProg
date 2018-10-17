@@ -35,7 +35,7 @@ public class PatchGenerator {
         patches.add(patch);
       } catch (final IOException | DiffException e) {
         log.error(e.getMessage());
-        return (Patches) Collections.emptyList();
+        return new Patches();
       }
     }
     log.debug("exit exec(Variant)");
