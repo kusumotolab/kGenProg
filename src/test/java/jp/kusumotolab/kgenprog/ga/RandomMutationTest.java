@@ -62,10 +62,10 @@ public class RandomMutationTest {
     random.setSeed(0);
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection);
-    randomMutation.setCandidates(sourceCode.getAsts());
+    randomMutation.setCandidates(sourceCode.getProductAsts());
 
     final GeneratedAST<ProductSourcePath> generatedAST =
-        new ArrayList<>(sourceCode.getAsts()).get(0);
+        new ArrayList<>(sourceCode.getProductAsts()).get(0);
     final ProductSourcePath sourcePath = generatedAST.getSourcePath();
     final CompilationUnit root =
         (CompilationUnit) ((GeneratedJDTAST<ProductSourcePath>) generatedAST).getRoot()

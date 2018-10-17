@@ -64,7 +64,7 @@ public class ProjectBuilder {
 
     // コンパイル対象の JavaFileObject を生成
     final Iterable<? extends JavaFileObject> javaFileObjects =
-        generateAllJavaFileObjects(generatedSourceCode.getAsts(), standardFileManager);
+        generateAllJavaFileObjects(generatedSourceCode.getProductAsts(), standardFileManager);
 
     // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();

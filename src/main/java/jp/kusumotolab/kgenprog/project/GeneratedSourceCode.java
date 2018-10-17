@@ -19,38 +19,37 @@ public class GeneratedSourceCode {
   private static Logger log = LoggerFactory.getLogger(GeneratedSourceCode.class);
   private static final String DIGEST_ALGORITHM = "MD5";
 
-  // TODO listは順序が保証されず重複を許容してしまう．Mapで名前から引ける方が外から使いやすい．
-  private final List<GeneratedAST<ProductSourcePath>> asts;
+  private final List<GeneratedAST<ProductSourcePath>> productAsts;
   private final List<GeneratedAST<TestSourcePath>> testAsts;
   private final Map<SourcePath, GeneratedAST<ProductSourcePath>> pathToAst;
   private final String messageDigest;
 
-  public GeneratedSourceCode(final List<GeneratedAST<ProductSourcePath>> asts,
+  public GeneratedSourceCode(final List<GeneratedAST<ProductSourcePath>> productAsts,
       final List<GeneratedAST<TestSourcePath>> testAsts) {
-    this.asts = asts;
+    this.productAsts = productAsts;
     this.testAsts = testAsts;
-    pathToAst = asts.stream()
+    pathToAst = productAsts.stream()
         .collect(Collectors.toMap(GeneratedAST::getSourcePath, v -> v));
     this.messageDigest = createMessageDigest();
   }
 
-  public List<GeneratedAST<ProductSourcePath>> getAsts() {
-    log.debug("enter getAsts()");
-    return asts;
+  public List<GeneratedAST<ProductSourcePath>> getProductAsts() {
+    log.debug("enter getProductAsts()");
+    return productAsts;
   }
 
   public List<GeneratedAST<TestSourcePath>> getTestAsts() {
     return testAsts;
   }
 
-  public GeneratedAST<ProductSourcePath> getAst(final SourcePath path) {
-    log.debug("enter getAst()");
+  public GeneratedAST<ProductSourcePath> getProductAst(final ProductSourcePath path) {
+    log.debug("enter getProductAst()");
     return pathToAst.get(path);
   }
 
-  public List<ASTLocation> inferLocations(final SourcePath path, final int lineNumber) {
+  public List<ASTLocation> inferLocations(final ProductSourcePath path, final int lineNumber) {
     log.debug("enter inferLocations(SourcePath, int)");
-    final GeneratedAST<ProductSourcePath> ast = getAst(path);
+    final GeneratedAST<ProductSourcePath> ast = getProductAst(path);
     if (ast == null) {
       return Collections.emptyList();
     }
@@ -58,7 +57,7 @@ public class GeneratedSourceCode {
   }
 
   public List<ASTLocation> getAllLocations() {
-    return asts.stream()
+    return productAsts.stream()
         .flatMap(v -> v.getAllLocations()
             .stream())
         .collect(Collectors.toList());
@@ -85,7 +84,7 @@ public class GeneratedSourceCode {
     try {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
-      asts.stream()
+      productAsts.stream()
           .sorted(Comparator.comparing(v -> v.getSourcePath()
               .toString()))
           .map(GeneratedAST::getMessageDigest)

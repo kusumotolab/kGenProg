@@ -22,7 +22,7 @@ public class JDTASTConstructionTest {
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final JDTASTConstruction construction = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode = construction.constructAST(targetProject);
-    final List<GeneratedAST<ProductSourcePath>> productAsts = generatedSourceCode.getAsts();
+    final List<GeneratedAST<ProductSourcePath>> productAsts = generatedSourceCode.getProductAsts();
 
     assertThat(productAsts).hasSize(2)
         .extracting(GeneratedAST::getSourcePath)

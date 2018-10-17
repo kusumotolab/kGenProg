@@ -25,7 +25,7 @@ public abstract class JDTOperation implements Operation {
       final ASTLocation location) {
 
     try {
-      final List<GeneratedAST<ProductSourcePath>> newASTs = generatedSourceCode.getAsts()
+      final List<GeneratedAST<ProductSourcePath>> newASTs = generatedSourceCode.getProductAsts()
           .stream()
           .map(ast -> applyEachAST(ast, location))
           .collect(Collectors.toList());

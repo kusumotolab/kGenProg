@@ -205,7 +205,7 @@ public class GeneratedJDTASTTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
         constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
-    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getAsts();
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
     final GeneratedJDTAST<ProductSourcePath> jdtAst =
         (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 
@@ -234,7 +234,7 @@ public class GeneratedJDTASTTest {
 
     final GeneratedJDTAST<ProductSourcePath> newJdtAst =
         (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
-            .getAsts()
+            .getProductAsts()
             .get(0);
 
     assertThat(newJdtAst.inferLocations(10)).hasSize(2)
@@ -257,7 +257,7 @@ public class GeneratedJDTASTTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
         constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
-    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getAsts();
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
     final GeneratedJDTAST<ProductSourcePath> jdtAst =
         (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 
@@ -279,7 +279,7 @@ public class GeneratedJDTASTTest {
 
     final GeneratedJDTAST<ProductSourcePath> newJdtAst =
         (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
-            .getAsts()
+            .getProductAsts()
             .get(0);
 
     assertThat(newJdtAst.inferLocations(4)).hasSize(2)
@@ -296,7 +296,7 @@ public class GeneratedJDTASTTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
         constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
-    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getAsts();
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
     final GeneratedJDTAST<ProductSourcePath> jdtAst =
         (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 
@@ -335,7 +335,7 @@ public class GeneratedJDTASTTest {
 
     final GeneratedJDTAST<ProductSourcePath> newJdtAst =
         (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
-            .getAsts()
+            .getProductAsts()
             .get(0);
 
     assertThat(newJdtAst.inferLocations(8)).hasSize(2)
@@ -352,7 +352,7 @@ public class GeneratedJDTASTTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
         constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
-    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getAsts();
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
     final GeneratedJDTAST<ProductSourcePath> jdtAst =
         (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 

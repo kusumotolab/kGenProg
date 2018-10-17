@@ -24,7 +24,7 @@ public class PatchGenerator {
 
     final List<Patch> patches = new ArrayList<>();
     final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
-    final List<GeneratedAST<ProductSourcePath>> modifiedAsts = modifiedSourceCode.getAsts();
+    final List<GeneratedAST<ProductSourcePath>> modifiedAsts = modifiedSourceCode.getProductAsts();
 
     for (final GeneratedAST<ProductSourcePath> ast : modifiedAsts) {
       try {

@@ -51,7 +51,7 @@ public class InsertOperationTest {
 
     final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
     final GeneratedJDTAST<ProductSourcePath> newAST =
-        (GeneratedJDTAST<ProductSourcePath>) code.getAsts()
+        (GeneratedJDTAST<ProductSourcePath>) code.getProductAsts()
             .get(0);
 
     final String expected = new StringBuilder().append("")

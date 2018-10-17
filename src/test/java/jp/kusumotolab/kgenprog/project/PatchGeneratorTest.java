@@ -41,7 +41,7 @@ public class PatchGeneratorTest {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
     final GeneratedJDTAST<ProductSourcePath> ast =
-        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getAsts()
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
             .get(0);
 
     // 削除位置の Location 作成
@@ -90,7 +90,7 @@ public class PatchGeneratorTest {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
     final GeneratedJDTAST<ProductSourcePath> ast =
-        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getAsts()
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
             .get(0);
 
     // 削除位置の Location 作成
@@ -140,7 +140,7 @@ public class PatchGeneratorTest {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
     final GeneratedJDTAST<ProductSourcePath> ast =
-        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getAsts()
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
             .get(0);
 
     // 挿入位置のLocation生成
@@ -194,7 +194,7 @@ public class PatchGeneratorTest {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
     final GeneratedJDTAST<ProductSourcePath> ast =
-        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getAsts()
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
             .get(0);
 
     // 挿入位置のLocation生成
@@ -256,7 +256,7 @@ public class PatchGeneratorTest {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
     final GeneratedJDTAST<ProductSourcePath> ast =
-        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getAsts()
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
             .get(0);
 
     // 削除位置の Location 作成

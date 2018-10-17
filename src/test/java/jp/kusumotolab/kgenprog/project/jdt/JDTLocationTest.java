@@ -28,7 +28,7 @@ public class JDTLocationTest {
     final Path path = rootPath.resolve("src/example/Foo.java");
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);
     final GeneratedJDTAST<ProductSourcePath> ast =
-        (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getAst(productSourcePath);
+        (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getProductAst(productSourcePath);
 
     final CompilationUnit root = ast.getRoot();
     final TypeDeclaration type = (TypeDeclaration) root.types()

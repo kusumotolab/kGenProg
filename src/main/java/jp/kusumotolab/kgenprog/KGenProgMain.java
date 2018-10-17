@@ -57,7 +57,7 @@ public class KGenProgMain {
     final Variant initialVariant = variantStore.getInitialVariant();
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getAsts());
+        .getProductAsts());
 
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();

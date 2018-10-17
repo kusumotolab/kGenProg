@@ -59,7 +59,7 @@ public class TestResultsTest {
     // まずast生成
     final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(ExampleAlias.Src.FOO));
     final GeneratedJDTAST<ProductSourcePath> fooAst =
-        (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getAst(fooPath);
+        (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getProductAst(fooPath);
 
     // astから5行目 (n--;) のlocationを取り出す
     final List<ASTLocation> locations1 = fooAst.inferLocations(5);
