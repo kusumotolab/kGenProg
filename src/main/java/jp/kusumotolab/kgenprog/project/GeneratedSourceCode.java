@@ -24,6 +24,10 @@ public class GeneratedSourceCode {
   private final Map<SourcePath, GeneratedAST<ProductSourcePath>> pathToAst;
   private final String messageDigest;
 
+  /**
+   * @param productAsts ProductソースコードのAST
+   * @param testAsts TestソースコードのList
+   */
   public GeneratedSourceCode(final List<GeneratedAST<ProductSourcePath>> productAsts,
       final List<GeneratedAST<TestSourcePath>> testAsts) {
     this.productAsts = productAsts;
@@ -42,11 +46,19 @@ public class GeneratedSourceCode {
     return testAsts;
   }
 
+  /**
+   * 引数のソースコードに対応するASTを取得する
+   */
   public GeneratedAST<ProductSourcePath> getProductAst(final ProductSourcePath path) {
     log.debug("enter getProductAst()");
     return pathToAst.get(path);
   }
 
+  /**
+   * 指定された行にあるASTのノードを推定する。候補が複数ある場合、ノードが表すソースコードが広い順にListに格納したものを返す。
+   * 
+   * @see GeneratedAST#inferLocations(int)
+   */
   public List<ASTLocation> inferLocations(final ProductSourcePath path, final int lineNumber) {
     log.debug("enter inferLocations(SourcePath, int)");
     final GeneratedAST<ProductSourcePath> ast = getProductAst(path);
@@ -56,6 +68,9 @@ public class GeneratedSourceCode {
     return ast.inferLocations(lineNumber);
   }
 
+  /**
+   * ProductASTにあるすべてのASTLocationを取得する
+   */
   public List<ASTLocation> getAllLocations() {
     return productAsts.stream()
         .flatMap(v -> v.getAllLocations()
@@ -63,6 +78,9 @@ public class GeneratedSourceCode {
         .collect(Collectors.toList());
   }
 
+  /**
+   * ASTLocationが対応する行番号を推定する
+   */
   public LineNumberRange inferLineNumbers(final ASTLocation location) {
     log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();
