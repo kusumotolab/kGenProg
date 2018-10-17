@@ -19,13 +19,13 @@ kGenProg は単一の jar ファイルにまとめてあります．[ここ](htt
 
 ## 使用方法
 ```
-$ java -jar path/to/kGenProg.jar 
+$ java -jar path/to/kGenProg.jar
 $ java -jar path/to/kGenProg.jar --config <path>
 $ java -jar path/to/kGenProg.jar -r <path> -s <path>... -t <path>... [-x <fqn>...] [-c <path>...]
     [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>] [--headcount <num>]
     [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>]
-    
+
 ```
 
 ### 使用例
@@ -59,7 +59,7 @@ $ java -jar path/to/kGenProg.jar
 | `-x`, `--exec-test` | 遺伝的アルゴリズム中に実行されるテストクラスの完全限定名．バグを発現させるテストクラスを指定してください．スペース区切りで複数指定可能． | すべてのテストクラス |
 | `-c`, `--cp` | 修正対象プロジェクトのビルドに必要なクラスパス．スペース区切りで複数指定可能． | なし |
 | `-w`, `--working-dir` | kGenProg が作業を行うディレクトリへのパス | システムの一時ファイルディレクトリ（Windows: `%tmp%`; *nix: `$TMPDIR`）以下に `kgenprog-work` で始まるディレクトリが実行ごとに新規に作成される |
-| `-o`, `--out-dir` | kGenProg が結果の出力を行うディレクトリへのパス | カレントディレクトリ直下に `kgenprog-out` というディレクトリが作成される |
+| `-o`, `--out-dir` | kGenProg が結果の出力を行うディレクトリへのパス．指定ディレクトリ直下に実行時のタイムスタンプを名前とするディレクトリが生成され，そのディレクトリに結果が出力されます． | カレントディレクトリ直下に `kgenprog-out` というディレクトリが作成される |
 | `-v`, `--verbose` | 詳細なログを出力する | `false` |
 | `-q`, `--quiet` | エラー出力のみを行う | `false` |
 | `--siblings-count` | 遺伝的アルゴリズムの変異操作によって1つの個体から1世代に生成する個体の数 | 10 |
