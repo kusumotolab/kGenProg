@@ -19,7 +19,7 @@ public class PatchesStore {
   }
 
   public void writeToFile(final Path outDir) {
-    log.debug("enter writeWithFile(String)");
+    log.debug("enter writeToFile(String)");
     final String timeStamp = getTimeStamp();
     final Path outDirInthisExecution = outDir.resolve(timeStamp);
 
@@ -31,7 +31,7 @@ public class PatchesStore {
   }
 
   public void writeToLogger() {
-    log.debug("enter writeWithoutFile(String)");
+    log.debug("enter writeToLogger()");
 
     for (final Patches patches : patchesList) {
       patches.writeToLogger();
