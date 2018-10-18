@@ -82,4 +82,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
 
     compile 'com.electronwill.night-config:toml:3.4.0'
+
+    // https://mvnrepository.com/artifact/fr.inria.gforge.spoon/spoon-core
+    compile group: 'fr.inria.gforge.spoon', name: 'spoon-core', version: '7.0.0'
 }
