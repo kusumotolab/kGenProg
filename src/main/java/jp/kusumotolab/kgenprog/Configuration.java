@@ -44,6 +44,7 @@ public class Configuration {
   public static final Path DEFAULT_WORKING_DIR;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
+  public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
 
   static {
     try {
@@ -66,6 +67,7 @@ public class Configuration {
   private final int requiredSolutionsCount;
   private final Level logLevel;
   private final long randomSeed;
+  private final boolean needNotOutput;
   // endregion
 
   // region Constructor
@@ -83,6 +85,7 @@ public class Configuration {
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
     randomSeed = builder.randomSeed;
+    needNotOutput = builder.needNotOutput;
   }
 
   // endregion
@@ -141,6 +144,10 @@ public class Configuration {
 
   public long getRandomSeed() {
     return randomSeed;
+  }
+
+  public boolean needNotOutput() {
+    return needNotOutput;
   }
 
   public static class Builder {
@@ -221,6 +228,11 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("random-seed")
     @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
+
+    @Option(name = "--no-output", hidden = true)
+    @com.electronwill.nightconfig.core.conversion.Path("no-output")
+    @PreserveNotNull
+    private boolean needNotOutput = DEFAULT_NEED_NOT_OUTPUT;
 
     // endregion
 
@@ -399,6 +411,13 @@ public class Configuration {
       return this;
     }
 
+    public Builder setNeedNotOutput(final boolean needNotOutput) {
+      log.debug("enter setNeedNotOutput(boolean)");
+
+      this.needNotOutput = needNotOutput;
+      return this;
+    }
+
     // endregion
 
     // region Private methods
@@ -531,8 +550,7 @@ public class Configuration {
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
-        usage = "Specifies the path to working directory.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Specifies the path to working directory.", depends = {"-r", "-s", "-t"})
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
       log.debug("enter setWorkingDirFromCmdLineParser(String)");
       this.workingDir = Paths.get(workingDir);

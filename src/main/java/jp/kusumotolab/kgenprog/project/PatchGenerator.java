@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,10 +18,10 @@ public class PatchGenerator {
 
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
-  public List<Patch> exec(final Variant modifiedVariant) {
+  public Patches exec(final Variant modifiedVariant) {
     log.debug("enter exec(Variant)");
 
-    final List<Patch> patches = new ArrayList<>();
+    final Patches patches = new Patches();
     final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
     final List<GeneratedAST> modifiedAsts = modifiedSourceCode.getAsts();
 
@@ -36,7 +35,7 @@ public class PatchGenerator {
         patches.add(patch);
       } catch (final IOException | DiffException e) {
         log.error(e.getMessage());
-        return Collections.emptyList();
+        return new Patches();
       }
     }
     log.debug("exit exec(Variant)");
