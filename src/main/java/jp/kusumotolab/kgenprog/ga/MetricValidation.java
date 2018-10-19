@@ -17,6 +17,10 @@ public class MetricValidation implements SourceCodeValidation {
 
   @Override
   public Fitness exec(GeneratedSourceCode sourceCode, TestResults testResults) {
+    if (!sourceCode.isGenerationSuccess()) {
+      return new SimpleFitness(testResults.getSuccessRate());
+    }
+
     // todo: retrieve appropriate class
     final GeneratedAST ast = sourceCode.getAsts()
         .get(0);
@@ -24,9 +28,8 @@ public class MetricValidation implements SourceCodeValidation {
     final ComplexityScanner scanner = new ComplexityScanner();
 
     clazz.accept(scanner);
-    final double fitness = 1.0 / scanner.getComplexity();
 
-    return new SimpleFitness(fitness);
+    return new MetricFitness(scanner.getComplexity());
   }
 
   private static class ComplexityScanner extends CtScanner {
