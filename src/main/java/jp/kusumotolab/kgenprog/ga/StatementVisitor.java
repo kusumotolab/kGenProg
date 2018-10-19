@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 public class StatementVisitor extends ASTVisitor {
@@ -31,9 +32,9 @@ public class StatementVisitor extends ASTVisitor {
     statement.accept(this);
   }
 
-  public StatementVisitor(final List<GeneratedAST> generatedASTS) {
-    for (GeneratedAST generatedAST : generatedASTS) {
-      final CompilationUnit unit = ((GeneratedJDTAST) generatedAST).getRoot();
+  public StatementVisitor(final List<GeneratedAST<ProductSourcePath>> generatedASTS) {
+    for (GeneratedAST<ProductSourcePath> generatedAST : generatedASTS) {
+      final CompilationUnit unit = ((GeneratedJDTAST<ProductSourcePath>) generatedAST).getRoot();
       unit.accept(this);
     }
   }

@@ -90,9 +90,8 @@ public class VariantStore {
   /**
    * 引数の要素すべてを次世代のVariantとして追加する
    *
-   * @see addNextGenerationVariant(Variant)
-   *
    * @param variants 追加対象
+   * @see addNextGenerationVariant(Variant)
    */
   public void addGeneratedVariants(final Variant... variants) {
     addGeneratedVariants(Arrays.asList(variants));
@@ -101,9 +100,8 @@ public class VariantStore {
   /**
    * リストの要素すべてを次世代のVariantとして追加する
    *
-   * @see addNextGenerationVariant(Variant)
-   *
    * @param variants 追加対象
+   * @see addNextGenerationVariant(Variant)
    */
   public void addGeneratedVariants(final Collection<? extends Variant> variants) {
     variants.forEach(this::addGeneratedVariant);
@@ -154,7 +152,7 @@ public class VariantStore {
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
     final TestResults testResults = strategies.execTestExecutor(sourceCode);
-    final Fitness fitness = strategies.execSourceCodeValidation(this, testResults);
+    final Fitness fitness = strategies.execSourceCodeValidation(sourceCode, testResults);
     final List<Suspiciousness> suspiciousnesses =
         strategies.execFaultLocalization(sourceCode, testResults);
     return new Variant(generation.get(), gene, sourceCode, testResults, fitness, suspiciousnesses,

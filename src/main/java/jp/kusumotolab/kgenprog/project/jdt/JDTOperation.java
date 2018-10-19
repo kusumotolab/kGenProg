@@ -13,6 +13,8 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public abstract class JDTOperation implements Operation {
 
@@ -23,11 +25,11 @@ public abstract class JDTOperation implements Operation {
       final ASTLocation location) {
 
     try {
-      final List<GeneratedAST> newASTs = generatedSourceCode.getAsts()
+      final List<GeneratedAST<ProductSourcePath>> newASTs = generatedSourceCode.getProductAsts()
           .stream()
           .map(ast -> applyEachAST(ast, location))
           .collect(Collectors.toList());
-      return new GeneratedSourceCode(newASTs);
+      return new GeneratedSourceCode(newASTs, generatedSourceCode.getTestAsts());
     } catch (final Exception e) {
       log.debug("Opperation failed: {}", e.getMessage());
       log.trace("Trace:", e);
@@ -35,17 +37,18 @@ public abstract class JDTOperation implements Operation {
     }
   }
 
-  private GeneratedAST applyEachAST(final GeneratedAST ast, final ASTLocation location) {
-    if (!ast.getProductSourcePath()
-        .equals(location.getProductSourcePath())) {
+  private <T extends SourcePath> GeneratedAST<T> applyEachAST(final GeneratedAST<T> ast,
+      final ASTLocation location) {
+    if (!ast.getSourcePath()
+        .equals(location.getSourcePath())) {
       return ast;
     }
 
-    final GeneratedJDTAST jdtast = (GeneratedJDTAST) ast;
+    final GeneratedJDTAST<T> jdtast = (GeneratedJDTAST<T>) ast;
     final ASTRewrite astRewrite = ASTRewrite.create(jdtast.getRoot()
         .getAST());
 
-    applyToASTRewrite((GeneratedJDTAST) ast, (JDTASTLocation) location, astRewrite);
+    applyToASTRewrite((GeneratedJDTAST<T>) ast, (JDTASTLocation) location, astRewrite);
 
     final Document document = new Document(jdtast.getSourceCode());
     try {
@@ -56,10 +59,10 @@ public abstract class JDTOperation implements Operation {
     }
 
     return jdtast.getConstruction()
-        .constructAST(ast.getProductSourcePath(), document.get());
+        .constructAST(ast.getSourcePath(), document.get());
   }
 
-  protected abstract void applyToASTRewrite(final GeneratedJDTAST ast,
+  protected abstract <T extends SourcePath> void applyToASTRewrite(final GeneratedJDTAST<T> ast,
       final JDTASTLocation location, final ASTRewrite astRewrite);
 
   private GeneratedSourceCode createGenerationFailedSourceCode(final Exception exception) {

@@ -7,7 +7,7 @@ public class GenerationFailedSourceCode extends GeneratedSourceCode {
   private final String generationMessage;
 
   public GenerationFailedSourceCode(final String generationMessage) {
-    super(Collections.emptyList());
+    super(Collections.emptyList(), Collections.emptyList());
     this.generationMessage = generationMessage;
   }
 

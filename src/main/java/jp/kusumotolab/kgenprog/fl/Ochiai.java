@@ -20,9 +20,9 @@ public class Ochiai implements FaultLocalization {
 
     final List<Suspiciousness> suspiciousnesses = new ArrayList<>();
 
-    for (final GeneratedAST ast : generatedSourceCode.getAsts()) {
+    for (final GeneratedAST<ProductSourcePath> ast : generatedSourceCode.getProductAsts()) {
       final String code = ast.getSourceCode();
-      final ProductSourcePath path = ast.getProductSourcePath();
+      final ProductSourcePath path = ast.getSourcePath();
       final int lastLineNumber = countLines(code);
 
       for (int line = 1; line <= lastLineNumber; line++) {

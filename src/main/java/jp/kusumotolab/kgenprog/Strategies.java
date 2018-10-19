@@ -52,9 +52,9 @@ public class Strategies {
     return testExecutor.exec(generatedSourceCode);
   }
 
-  public Fitness execSourceCodeValidation(final VariantStore variantStore,
+  public Fitness execSourceCodeValidation(final GeneratedSourceCode sourceCode,
       final TestResults testResults) {
-    return sourceCodeValidation.exec(variantStore, testResults);
+    return sourceCodeValidation.exec(sourceCode, testResults);
   }
 
   public GeneratedSourceCode execASTConstruction(final TargetProject targetProject) {

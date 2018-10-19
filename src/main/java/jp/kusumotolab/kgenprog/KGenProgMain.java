@@ -11,8 +11,8 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
-import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
+import jp.kusumotolab.kgenprog.project.PatchesStore;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -57,7 +57,7 @@ public class KGenProgMain {
     final Variant initialVariant = variantStore.getInitialVariant();
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getAsts());
+        .getProductAsts());
 
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
@@ -111,19 +111,20 @@ public class KGenProgMain {
   }
 
   private void logPatch(final VariantStore variantStore) {
+    log.debug("enter logPatch(VariantStore)");
+
+    final PatchesStore patchesStore = new PatchesStore();
     final List<Variant> completedVariants =
         variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
-    log.debug("enter outputPatch(VariantStore)");
-    for (final Variant completedVariant : completedVariants) {
-      final List<Patch> patches = patchGenerator.exec(completedVariant);
-      log.info(makeVariantId(completedVariants, completedVariant));
-      for (final Patch patch : patches) {
-        log.info(System.lineSeparator() + patch.getDiff());
-      }
-    }
-  }
 
-  private String makeVariantId(final List<Variant> variants, final Variant variant) {
-    return "variant" + (variants.indexOf(variant) + 1);
+    for (final Variant completedVariant : completedVariants) {
+      patchesStore.add(patchGenerator.exec(completedVariant));
+    }
+
+    patchesStore.writeToLogger();
+
+    if (!config.needNotOutput()) {
+      patchesStore.writeToFile(config.getOutDir());
+    }
   }
 }

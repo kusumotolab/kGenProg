@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +36,10 @@ public class Patch {
     return String.join(System.lineSeparator(), diff);
   }
 
-  public void write(final String path) {
-    final Path outputPath = Paths.get(path);
+  public void write(final Path outDir) {
     try {
-      Files.write(outputPath.resolve(fileName + ".java"), modifiedSourceCodeLines);
-      Files.write(outputPath.resolve(fileName + ".patch"), diff);
+      Files.write(outDir.resolve(fileName + ".java"), modifiedSourceCodeLines);
+      Files.write(outDir.resolve(fileName + ".patch"), diff);
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
     }

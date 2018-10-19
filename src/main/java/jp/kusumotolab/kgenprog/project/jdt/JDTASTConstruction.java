@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
@@ -22,6 +23,8 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class JDTASTConstruction {
@@ -29,31 +32,42 @@ public class JDTASTConstruction {
   private static final Logger log = LoggerFactory.getLogger(JDTASTConstruction.class);
 
   public GeneratedSourceCode constructAST(final TargetProject project) {
-    return constructAST(project.getProductSourcePaths());
+    return constructAST(project.getProductSourcePaths(), project.getTestSourcePaths());
   }
 
-  public GeneratedSourceCode constructAST(final List<ProductSourcePath> productSourcePaths) {
-    final String[] paths = productSourcePaths.stream()
+  public GeneratedSourceCode constructAST(final List<ProductSourcePath> productSourcePaths,
+      final List<TestSourcePath> testSourcePaths) {
+    final String[] paths = Stream.concat(productSourcePaths.stream(), testSourcePaths.stream())
         .map(path -> path.path.toString())
         .toArray(String[]::new);
 
     final ASTParser parser = createNewParser();
 
-    final Map<Path, ProductSourcePath> pathToSourcePath = productSourcePaths.stream()
+    final Map<Path, ProductSourcePath> pathToProductSourcePath = productSourcePaths.stream()
+        .collect(Collectors.toMap(path -> path.path, path -> path));
+    final Map<Path, TestSourcePath> pathToTestSourcePath = testSourcePaths.stream()
         .collect(Collectors.toMap(path -> path.path, path -> path));
 
-    final List<GeneratedAST> asts = new ArrayList<>();
+    final List<GeneratedAST<ProductSourcePath>> productAsts = new ArrayList<>();
+    final List<GeneratedAST<TestSourcePath>> testAsts = new ArrayList<>();
     final List<IProblem> problems = new ArrayList<>();
 
     final FileASTRequestor requestor = new FileASTRequestor() {
 
       @Override
       public void acceptAST(final String sourcePath, final CompilationUnit ast) {
-        final ProductSourcePath path = pathToSourcePath.get(Paths.get(sourcePath));
-        if (path != null) {
-          asts.add(
-              new GeneratedJDTAST(JDTASTConstruction.this, path, ast, loadAsString(sourcePath)));
+        final ProductSourcePath productPath = pathToProductSourcePath.get(Paths.get(sourcePath));
+        if (productPath != null) {
+          productAsts.add(new GeneratedJDTAST<>(JDTASTConstruction.this, productPath, ast,
+              loadAsString(sourcePath)));
         }
+
+        final TestSourcePath testPath = pathToTestSourcePath.get(Paths.get(sourcePath));
+        if (testPath != null) {
+          testAsts.add(new GeneratedJDTAST<>(JDTASTConstruction.this, testPath, ast,
+              loadAsString(sourcePath)));
+        }
+
         problems.addAll(Arrays.asList(ast.getProblems()));
       }
     };
@@ -61,7 +75,7 @@ public class JDTASTConstruction {
     parser.createASTs(paths, null, new String[] {}, requestor, null);
 
     if (isConstructionSuccess(problems)) {
-      return new GeneratedSourceCode(asts);
+      return new GeneratedSourceCode(productAsts, testAsts);
     } else {
       final String messages = concatProblemMessages(problems);
       log.debug("AST construction failed: " + messages);
@@ -69,13 +83,12 @@ public class JDTASTConstruction {
     }
   }
 
-  public GeneratedJDTAST constructAST(final ProductSourcePath productSourcePath,
+  public <T extends SourcePath> GeneratedJDTAST<T> constructAST(final T sourcePath,
       final String data) {
     final ASTParser parser = createNewParser();
     parser.setSource(data.toCharArray());
 
-    return new GeneratedJDTAST(this, productSourcePath, (CompilationUnit) parser.createAST(null),
-        data);
+    return new GeneratedJDTAST<>(this, sourcePath, (CompilationUnit) parser.createAST(null), data);
   }
 
   private ASTParser createNewParser() {
