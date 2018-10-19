@@ -23,9 +23,9 @@ public class PatchGenerator {
 
     final Patches patches = new Patches();
     final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
-    final List<GeneratedAST> modifiedAsts = modifiedSourceCode.getAsts();
+    final List<GeneratedAST<ProductSourcePath>> modifiedAsts = modifiedSourceCode.getProductAsts();
 
-    for (final GeneratedAST ast : modifiedAsts) {
+    for (final GeneratedAST<ProductSourcePath> ast : modifiedAsts) {
       try {
         final Patch patch = makePatch(ast);
         final String diff = patch.getDiff();
@@ -50,8 +50,8 @@ public class PatchGenerator {
    * @throws IOException
    * @throws DiffException
    */
-  private Patch makePatch(final GeneratedAST ast) throws IOException, DiffException {
-    final Path originPath = ast.getProductSourcePath().path;
+  private Patch makePatch(final GeneratedAST<?> ast) throws IOException, DiffException {
+    final Path originPath = ast.getSourcePath().path;
 
     final String modifiedSourceCodeText = ast.getSourceCode();
     final Document document = new Document(modifiedSourceCodeText);

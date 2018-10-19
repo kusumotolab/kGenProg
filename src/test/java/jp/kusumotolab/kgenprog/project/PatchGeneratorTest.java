@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -40,8 +40,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 削除位置の Location 作成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -88,8 +89,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 削除位置の Location 作成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -137,8 +139,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -190,8 +193,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -251,8 +255,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 削除位置の Location 作成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()

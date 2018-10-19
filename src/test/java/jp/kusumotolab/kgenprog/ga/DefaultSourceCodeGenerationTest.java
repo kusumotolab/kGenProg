@@ -59,16 +59,17 @@ public class DefaultSourceCodeGenerationTest {
     final GeneratedSourceCode generatedSourceCode = sourceCodeGeneration.exec(variantStore, gene);
     final GeneratedSourceCode initialSourceCode = initialVariant.getGeneratedSourceCode();
 
-    assertThat(generatedSourceCode.getAsts()).hasSameSizeAs(initialSourceCode.getAsts());
+    assertThat(generatedSourceCode.getProductAsts())
+        .hasSameSizeAs(initialSourceCode.getProductAsts());
 
     // NoneOperationにより全てのソースコードが初期ソースコードと等価であるはず
     for (int i = 0; i < targetProject.getProductSourcePaths()
         .size(); i++) {
       // TODO list内部要素の順序が変更されたらバグる
-      final String expected = initialSourceCode.getAsts()
+      final String expected = initialSourceCode.getProductAsts()
           .get(i)
           .getSourceCode();
-      final String actual = generatedSourceCode.getAsts()
+      final String actual = generatedSourceCode.getProductAsts()
           .get(i)
           .getSourceCode();
       assertThat(actual).isEqualTo(expected);

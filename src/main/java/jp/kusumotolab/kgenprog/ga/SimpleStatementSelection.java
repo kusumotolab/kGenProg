@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 // 使っていないが比較用で置いておく
 public class SimpleStatementSelection implements CandidateSelection {
@@ -16,7 +17,7 @@ public class SimpleStatementSelection implements CandidateSelection {
   }
 
   @Override
-  public void setCandidates(List<GeneratedAST> candidates) {
+  public void setCandidates(List<GeneratedAST<ProductSourcePath>> candidates) {
     visitor = new StatementVisitor(candidates);
   }
 

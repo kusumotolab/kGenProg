@@ -40,7 +40,7 @@ public class GeneratedJDTASTTest {
       .append("}\n")
       .toString();
 
-  private GeneratedJDTAST ast;
+  private GeneratedJDTAST<ProductSourcePath> ast;
 
   @Before
   public void setup() {
@@ -112,7 +112,7 @@ public class GeneratedJDTASTTest {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("a/b/c/T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.T2");
   }
@@ -123,7 +123,7 @@ public class GeneratedJDTASTTest {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("T2");
   }
@@ -134,7 +134,7 @@ public class GeneratedJDTASTTest {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("a/b/c/T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.T1");
   }
@@ -145,7 +145,7 @@ public class GeneratedJDTASTTest {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("a/b/c/package-info.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.package-info");
   }
@@ -156,7 +156,7 @@ public class GeneratedJDTASTTest {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("StaticImport.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
 
     @SuppressWarnings("unchecked")
     final List<ImportDeclaration> imports = ast.getRoot()
@@ -204,9 +204,10 @@ public class GeneratedJDTASTTest {
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
-        constructor.constructAST(Collections.singletonList(path));
-    final List<GeneratedAST> asts = generatedSourceCode.getAsts();
-    final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
+        constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
+    final GeneratedJDTAST<ProductSourcePath> jdtAst =
+        (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 
     assertThat(jdtAst.inferLocations(10)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
@@ -231,9 +232,9 @@ public class GeneratedJDTASTTest {
     final Statement insertStatement = ast.newExpressionStatement(methodInvocation);
     final InsertOperation operation = new InsertOperation(insertStatement);
 
-    final GeneratedJDTAST newJdtAst =
-        (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
-            .getAsts()
+    final GeneratedJDTAST<ProductSourcePath> newJdtAst =
+        (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
+            .getProductAsts()
             .get(0);
 
     assertThat(newJdtAst.inferLocations(10)).hasSize(2)
@@ -255,9 +256,10 @@ public class GeneratedJDTASTTest {
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
-        constructor.constructAST(Collections.singletonList(path));
-    final List<GeneratedAST> asts = generatedSourceCode.getAsts();
-    final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
+        constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
+    final GeneratedJDTAST<ProductSourcePath> jdtAst =
+        (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 
     assertThat(jdtAst.inferLocations(10)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
@@ -275,9 +277,9 @@ public class GeneratedJDTASTTest {
     final JDTASTLocation location = new JDTASTLocation(path, statement);
     final DeleteOperation operation = new DeleteOperation();
 
-    final GeneratedJDTAST newJdtAst =
-        (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
-            .getAsts()
+    final GeneratedJDTAST<ProductSourcePath> newJdtAst =
+        (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
+            .getProductAsts()
             .get(0);
 
     assertThat(newJdtAst.inferLocations(4)).hasSize(2)
@@ -293,9 +295,10 @@ public class GeneratedJDTASTTest {
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
-        constructor.constructAST(Collections.singletonList(path));
-    final List<GeneratedAST> asts = generatedSourceCode.getAsts();
-    final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
+        constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
+    final GeneratedJDTAST<ProductSourcePath> jdtAst =
+        (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 
     assertThat(jdtAst.inferLocations(10)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
@@ -330,9 +333,9 @@ public class GeneratedJDTASTTest {
 
     final ReplaceOperation operation = new ReplaceOperation(block);
 
-    final GeneratedJDTAST newJdtAst =
-        (GeneratedJDTAST) operation.apply(generatedSourceCode, location)
-            .getAsts()
+    final GeneratedJDTAST<ProductSourcePath> newJdtAst =
+        (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
+            .getProductAsts()
             .get(0);
 
     assertThat(newJdtAst.inferLocations(8)).hasSize(2)
@@ -348,9 +351,10 @@ public class GeneratedJDTASTTest {
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
-        constructor.constructAST(Collections.singletonList(path));
-    final List<GeneratedAST> asts = generatedSourceCode.getAsts();
-    final GeneratedJDTAST jdtAst = (GeneratedJDTAST) asts.get(0);
+        constructor.constructAST(Collections.singletonList(path), Collections.emptyList());
+    final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
+    final GeneratedJDTAST<ProductSourcePath> jdtAst =
+        (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
 
     assertThat(jdtAst.getMessageDigest()).isEqualTo("203afcb54181c234b8450eb5e02efdf8");
   }
@@ -361,8 +365,8 @@ public class GeneratedJDTASTTest {
     final String source2 = "class A { public void a() { b(1); } public void b(int v){}}\n\n";
     final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast1 = constructor.constructAST(path, source1);
-    final GeneratedJDTAST ast2 = constructor.constructAST(path, source2);
+    final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1);
+    final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2);
 
     assertThat(ast1.getMessageDigest()).isEqualTo(ast2.getMessageDigest());
   }
@@ -373,8 +377,8 @@ public class GeneratedJDTASTTest {
     final String source2 = "class A { public void a() { b(2); } public void b(int v){}}";
     final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast1 = constructor.constructAST(path, source1);
-    final GeneratedJDTAST ast2 = constructor.constructAST(path, source2);
+    final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1);
+    final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2);
 
     assertThat(ast1.getMessageDigest()).isNotEqualTo(ast2.getMessageDigest());
   }

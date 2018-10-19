@@ -19,44 +19,68 @@ public class GeneratedSourceCode {
   private static Logger log = LoggerFactory.getLogger(GeneratedSourceCode.class);
   private static final String DIGEST_ALGORITHM = "MD5";
 
-  // TODO listは順序が保証されず重複を許容してしまう．Mapで名前から引ける方が外から使いやすい．
-  private final List<GeneratedAST> asts;
-  private final Map<SourcePath, GeneratedAST> pathToAst;
+  private final List<GeneratedAST<ProductSourcePath>> productAsts;
+  private final List<GeneratedAST<TestSourcePath>> testAsts;
+  private final Map<SourcePath, GeneratedAST<ProductSourcePath>> pathToAst;
   private final String messageDigest;
 
-  public GeneratedSourceCode(final List<GeneratedAST> asts) {
-    this.asts = asts;
-    pathToAst = asts.stream()
-        .collect(Collectors.toMap(GeneratedAST::getProductSourcePath, v -> v));
+  /**
+   * @param productAsts ProductソースコードのAST
+   * @param testAsts TestソースコードのList
+   */
+  public GeneratedSourceCode(final List<GeneratedAST<ProductSourcePath>> productAsts,
+      final List<GeneratedAST<TestSourcePath>> testAsts) {
+    this.productAsts = productAsts;
+    this.testAsts = testAsts;
+    pathToAst = productAsts.stream()
+        .collect(Collectors.toMap(GeneratedAST::getSourcePath, v -> v));
     this.messageDigest = createMessageDigest();
   }
 
-  public List<GeneratedAST> getAsts() {
-    log.debug("enter getAsts()");
-    return asts;
+  public List<GeneratedAST<ProductSourcePath>> getProductAsts() {
+    log.debug("enter getProductAsts()");
+    return productAsts;
   }
 
-  public GeneratedAST getAst(final SourcePath path) {
-    log.debug("enter getAst()");
+  public List<GeneratedAST<TestSourcePath>> getTestAsts() {
+    return testAsts;
+  }
+
+  /**
+   * 引数のソースコードに対応するASTを取得する
+   */
+  public GeneratedAST<ProductSourcePath> getProductAst(final ProductSourcePath path) {
+    log.debug("enter getProductAst()");
     return pathToAst.get(path);
   }
 
-  public List<ASTLocation> inferLocations(final SourcePath path, final int lineNumber) {
+  /**
+   * 指定された行にあるASTのノードを推定する。候補が複数ある場合、ノードが表すソースコードが広い順にListに格納したものを返す。
+   * 
+   * @see GeneratedAST#inferLocations(int)
+   */
+  public List<ASTLocation> inferLocations(final ProductSourcePath path, final int lineNumber) {
     log.debug("enter inferLocations(SourcePath, int)");
-    final GeneratedAST ast = getAst(path);
+    final GeneratedAST<ProductSourcePath> ast = getProductAst(path);
     if (ast == null) {
       return Collections.emptyList();
     }
     return ast.inferLocations(lineNumber);
   }
 
+  /**
+   * ProductASTにあるすべてのASTLocationを取得する
+   */
   public List<ASTLocation> getAllLocations() {
-    return asts.stream()
+    return productAsts.stream()
         .flatMap(v -> v.getAllLocations()
             .stream())
         .collect(Collectors.toList());
   }
 
+  /**
+   * ASTLocationが対応する行番号を推定する
+   */
   public LineNumberRange inferLineNumbers(final ASTLocation location) {
     log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();
@@ -78,8 +102,8 @@ public class GeneratedSourceCode {
     try {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
-      asts.stream()
-          .sorted(Comparator.comparing(v -> v.getProductSourcePath()
+      productAsts.stream()
+          .sorted(Comparator.comparing(v -> v.getSourcePath()
               .toString()))
           .map(GeneratedAST::getMessageDigest)
           .map(String::getBytes)

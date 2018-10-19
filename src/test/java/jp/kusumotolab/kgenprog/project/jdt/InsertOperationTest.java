@@ -1,14 +1,17 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Paths;
 import java.util.Collections;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
+import org.mockito.Mockito;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class InsertOperationTest {
 
@@ -26,9 +29,11 @@ public class InsertOperationTest {
     final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
+    @SuppressWarnings("unchecked")
+    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(GeneratedJDTAST.class);
     final GeneratedSourceCode generatedSourceCode =
-        new GeneratedSourceCode(Collections.singletonList(ast));
+        new GeneratedSourceCode(Collections.singletonList(ast), Collections.singletonList(mockAst));
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -45,8 +50,9 @@ public class InsertOperationTest {
     final InsertOperation operation = new InsertOperation(insertStatement);
 
     final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
-    final GeneratedJDTAST newAST = (GeneratedJDTAST) code.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> newAST =
+        (GeneratedJDTAST<ProductSourcePath>) code.getProductAsts()
+            .get(0);
 
     final String expected = new StringBuilder().append("")
         .append("class A {")
@@ -59,6 +65,11 @@ public class InsertOperationTest {
         .toString();
 
     assertThat(newAST.getRoot()).isSameSourceCodeAs(expected);
+
+    // TestASTがそのまま受け継がれているか確認
+    assertThat(code.getTestAsts()).hasSize(1);
+    assertThat(code.getTestAsts()
+        .get(0)).isSameAs(mockAst);
   }
 
   private Statement createInsertionTarget() {
@@ -73,7 +84,7 @@ public class InsertOperationTest {
     final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("B.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST ast = constructor.constructAST(sourcePath, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
 
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()

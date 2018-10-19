@@ -22,11 +22,13 @@ public class JDTLocationTest {
   public void testInferLineNumbers() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
 
     final Path path = rootPath.resolve("src/example/Foo.java");
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) generatedSourceCode.getAst(productSourcePath);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getProductAst(productSourcePath);
 
     final CompilationUnit root = ast.getRoot();
     final TypeDeclaration type = (TypeDeclaration) root.types()

@@ -5,6 +5,7 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public abstract class Mutation {
 
@@ -21,7 +22,7 @@ public abstract class Mutation {
     this.candidateSelection = candidateSelection;
   }
 
-  public void setCandidates(final List<GeneratedAST> candidates) {
+  public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
     log.debug("enter setCandidates(List<>)");
 
     candidateSelection.setCandidates(candidates);

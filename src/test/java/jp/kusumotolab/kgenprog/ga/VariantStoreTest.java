@@ -28,11 +28,11 @@ public class VariantStoreTest {
 
     final List<Suspiciousness> faultLocalizationResult = new ArrayList<>();
     final GeneratedSourceCode sourceCodeGenerationResult =
-        new GeneratedSourceCode(Collections.emptyList());
+        new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList());
     final TestResults testExecutorResult = mock(TestResults.class);
     final Fitness sourceCodeValidationResult = new SimpleFitness(Double.NaN);
     final GeneratedSourceCode astConstructionResult =
-        new GeneratedSourceCode(Collections.emptyList());
+        new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList());
     final Strategies strategies = mock(Strategies.class);
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);

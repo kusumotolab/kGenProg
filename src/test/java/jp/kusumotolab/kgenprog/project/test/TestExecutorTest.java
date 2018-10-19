@@ -145,7 +145,7 @@ public class TestExecutorTest {
 
     // 内部クラスを持つBazのASTと，Baz#OuterClassのL66のASTLocationを取り出す
     final ProductSourcePath baz = new ProductSourcePath(rootPath.resolve(Src.BAZ));
-    final ASTLocation loc1 = source.getAst(baz)
+    final ASTLocation loc1 = source.getProductAst(baz)
         .getAllLocations()
         .get(23); // L66 in OuterClass. "new String()" statement;
 
@@ -162,7 +162,7 @@ public class TestExecutorTest {
     assertThat(nf1).isEqualTo(1); // FooTest#test03
 
     // Baz#InnerClassのL66のASTLocationを取り出す
-    final ASTLocation loc2 = source.getAst(baz)
+    final ASTLocation loc2 = source.getProductAst(baz)
         .getAllLocations()
         .get(19); // L49 in OuterClass. "new String()" statement;
 

@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.function.Function;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class RouletteStatementSelection implements CandidateSelection {
 
@@ -16,7 +17,7 @@ public class RouletteStatementSelection implements CandidateSelection {
   }
 
   @Override
-  public void setCandidates(final List<GeneratedAST> candidates) {
+  public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
     final StatementVisitor visitor = new StatementVisitor(candidates);
 
     final Function<Statement, Double> weightFunction = statement -> {
