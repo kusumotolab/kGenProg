@@ -15,6 +15,7 @@ public class BinaryStoreKey {
     this(ast.getPrimaryClassName(), ast.getMessageDigest());
   }
 
+  @Deprecated
   public BinaryStoreKey(final TestSourcePath testPath) {
     this(testPath.path.toString(), "----");
   }

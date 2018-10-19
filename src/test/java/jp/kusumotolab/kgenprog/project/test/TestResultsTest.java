@@ -37,7 +37,7 @@ public class TestResultsTest {
    * FLで用いる4メトリクスのテスト
    */
   @Test
-  public void checkFLMetricsInTestResultsForExample02() throws Exception {
+  public void testFLMetricsInTestResultsForExample02() throws Exception {
     // actual確保のためにテストの実行
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);

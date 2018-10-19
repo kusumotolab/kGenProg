@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.tools.JavaFileObject;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 /**
  * 差分ビルド + インメモリビルドのためのバイナリ格納庫．<br>
@@ -23,7 +22,7 @@ public class BinaryStore {
 
   private Map<BinaryStoreKey, JavaFileObject> cache;
 
-  private BinaryStore() {
+  public BinaryStore() {
     cache = new HashMap<>();
   }
 

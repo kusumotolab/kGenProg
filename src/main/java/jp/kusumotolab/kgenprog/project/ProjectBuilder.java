@@ -87,7 +87,6 @@ public class ProjectBuilder {
     final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
     // final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
 
-    System.out.println(BinaryStore.instance.getAll());
     final List<CompilationUnit> units = generatedSourceCode.getAsts()
         .stream()
         .map(ast -> {
