@@ -48,7 +48,6 @@ public class Variant {
     int result = 1;
     result = result * prime + generationNumber;
     result = result * prime + gene.hashCode();
-    result = result * prime + generatedSourceCode.hashCode();
     result = result * prime + testResults.hashCode();
     result = result * prime + fitness.hashCode();
     result = result * prime + suspiciousnesses.hashCode();

@@ -122,7 +122,12 @@ final public class JDTASTLocation implements ASTLocation {
 
   @Override
   public int hashCode() {
-    // ASTNodeは乱数を返すだけだから，hashの計算に使わない
-    return productSourcePath.hashCode();
+    final int prime = 31;
+
+    int result = 1;
+    result = prime * result + node.hashCode();
+    result = prime * result + productSourcePath.hashCode();
+
+    return result;
   }
 }
