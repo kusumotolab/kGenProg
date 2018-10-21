@@ -73,7 +73,7 @@ public class KGenProgMain {
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
-    final List<Variant> generatedVariants = new LinkedList<>();
+    final Set<Variant> generatedVariants = new HashSet<>();
     // 初期Variantを追加する
     generatedVariants.add(initialVariant);
 
@@ -153,15 +153,7 @@ public class KGenProgMain {
     return "variant" + (variants.indexOf(variant) + 1);
   }
 
-  // TODO 移した方がいいかもしれない
-  private void writeJson(final List<Variant> generatedVariants) {
-    // コードが生成されない(diffがない)Variantを除く
-    final List<Variant> filteredGeneratedVariants = generatedVariants
-        .stream()
-        .filter(e -> e.getGeneratedSourceCode()
-            .getAsts()
-            .size() != 0)
-        .collect(Collectors.toList());
+  private void writeJson(final Set<Variant> generatedVariants) {
 
     final GsonBuilder gsonBuilder = new GsonBuilder();
     final Gson gson = gsonBuilder.registerTypeAdapter(Variant.class, new VariantSerializer())
@@ -178,7 +170,7 @@ public class KGenProgMain {
       final Path jsonPath = config.getOutDir()
           .resolve("output.json");
       final PrintStream out = new PrintStream(Files.newOutputStream(jsonPath));
-      final String json = gson.toJson(filteredGeneratedVariants);
+      final String json = gson.toJson(generatedVariants);
       out.println(json);
     } catch (final IOException e) {
       log.error(e.getMessage());
