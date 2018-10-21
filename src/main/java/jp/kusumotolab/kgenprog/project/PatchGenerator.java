@@ -47,20 +47,21 @@ public class PatchGenerator {
    * originalVariantとmodifiedVariantの差分を計算する
    *
    * @param baseVariant 基準になるVariant
-   * @param modifiedVariant 比較対象のVariant
+   * @param comparisonVariant 比較対象のVariant
    * @return 差分
    */
-  public List<Patch> exec(final Variant baseVariant, final Variant modifiedVariant) {
+  public List<Patch> exec(final Variant baseVariant, final Variant comparisonVariant) {
 
     final GeneratedSourceCode baseSourceCode = baseVariant.getGeneratedSourceCode();
-    final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
+    final GeneratedSourceCode comparisonSourceCode = comparisonVariant.getGeneratedSourceCode();
 
     final List<Patch> patches = new ArrayList<>();
-    final List<GeneratedAST> modifiedAsts = modifiedSourceCode.getAsts();
-    for (final GeneratedAST modifiedAst : modifiedAsts) {
+    final List<GeneratedAST> comparisonAsts = comparisonSourceCode.getAsts();
+
+    for (final GeneratedAST comparisonAst : comparisonAsts) {
       try {
-        final GeneratedAST baseAst = baseSourceCode.getAst(modifiedAst.getProductSourcePath());
-        final Patch patch = makePatch(baseAst.getSourceCode(), modifiedAst);
+        final GeneratedAST baseAst = baseSourceCode.getAst(comparisonAst.getProductSourcePath());
+        final Patch patch = makePatch(baseAst, comparisonAst);
         final String diff = patch.getDiff();
         if (diff.isEmpty()) {
           continue;
@@ -77,24 +78,24 @@ public class PatchGenerator {
   /***
    * patch オブジェクトの生成を行う
    *
-   * @param baseSourceCodeText
-   * @param modifiedAst
+   * @param baseAst
+   * @param comparisonAst
    * @return
-   * @throws IOException
    * @throws DiffException
    */
-  private Patch makePatch(final String baseSourceCodeText, final GeneratedAST modifiedAst) throws DiffException {
-    final String modifiedSourceCodeText = modifiedAst.getSourceCode();
+  private Patch makePatch(final GeneratedAST baseAst, final GeneratedAST comparisonAst)
+      throws DiffException {
+    final String modifiedSourceCodeText = comparisonAst.getSourceCode();
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split("\r\n|[\n\r\u2028\u2029\u0085]"));
 
-    final List<String> baseSourceCodeLines = Arrays.asList(baseSourceCodeText.split("\r\n|[\n\r\u2028\u2029\u0085]"));
-    final List<String> noBlankLineBaseSourceCodeLines = removeEndDelimiter(
-        baseSourceCodeLines);
+    final String baseSourceCodeText = baseAst.getSourceCode();
+    final List<String> baseSourceCodeLines =
+        Arrays.asList(baseSourceCodeText.split("\r\n|[\n\r\u2028\u2029\u0085]"));
 
-    final String fileName = modifiedAst.getPrimaryClassName();
+    final String fileName = comparisonAst.getPrimaryClassName();
     final List<String> diffLines =
-        makeDiff(fileName, noBlankLineBaseSourceCodeLines, modifiedSourceCodeLines);
+        makeDiff(fileName, baseSourceCodeLines, modifiedSourceCodeLines);
 
     return new Patch(diffLines, fileName, baseSourceCodeLines, modifiedSourceCodeLines);
   }
@@ -118,7 +119,8 @@ public class PatchGenerator {
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));
     final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
-    final List<String> noBlankLineOriginalSourceCodeLines = removeEndDelimiter(originalSourceCodeLines);
+    final List<String> noBlankLineOriginalSourceCodeLines = removeEndDelimiter(
+        originalSourceCodeLines);
     final List<String> diffLines =
         makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
 
