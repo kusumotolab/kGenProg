@@ -74,10 +74,9 @@ public class ProjectBuilder {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
       final Set<JavaMemoryObject> jfos = binaryStore.get(key);
       if (!jfos.isEmpty()) {
-        // bins.addAll(jfos);
+        bins.addAll(jfos);
       }
     }
-
     inMemoryFileManager.setClassPathBinaries(bins);
 
     // コンパイルの進捗状況を得るためのWriterを生成

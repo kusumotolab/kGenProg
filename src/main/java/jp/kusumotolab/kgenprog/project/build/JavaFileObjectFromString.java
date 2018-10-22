@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project.build;
 
 import java.net.URI;
-import java.nio.file.Path;
 import javax.tools.SimpleJavaFileObject;
 import com.google.common.base.Objects;
 import jp.kusumotolab.kgenprog.project.SourcePath;
