@@ -149,12 +149,12 @@ public class JavaMemoryObject implements JavaFileObject {
       return false;
     }
     final JavaMemoryObject that = (JavaMemoryObject) o;
-    return Objects.equal(uri, that.uri) && Objects.equal(kind, that.kind);
+    return Objects.equal(fqn, that.fqn) && Objects.equal(digest, that.digest);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(uri, kind);
+    return Objects.hashCode(fqn, digest);
   }
   
 }

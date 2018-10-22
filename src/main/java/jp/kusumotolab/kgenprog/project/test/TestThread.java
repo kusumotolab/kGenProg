@@ -23,11 +23,7 @@ import org.junit.runner.notification.RunListener;
 import com.google.common.base.Functions;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
-import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
@@ -42,18 +38,18 @@ class TestThread extends Thread {
   private TestResults testResults; // used for return value in multi thread
   private BuildResults buildResults;
 
-  private final GeneratedSourceCode generatedSourceCode;
+  //private final GeneratedSourceCode generatedSourceCode;
   private final TargetProject targetProject;
   private final List<String> executionTestNames;
 
-  public TestThread(final GeneratedSourceCode generatedSourceCode,
+  public TestThread(final BuildResults buildResults,
       final TargetProject targetProject, final List<String> executionTestNames) {
 
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
 
-    this.generatedSourceCode = generatedSourceCode;
+    this.buildResults = buildResults;
     this.targetProject = targetProject;
     this.executionTestNames = executionTestNames;
   }
@@ -68,8 +64,10 @@ class TestThread extends Thread {
    */
   public void run() {
     // 初期処理（プロジェクトのビルドと返り値の生成）
-    final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    buildResults = projectBuilder.build(generatedSourceCode);
+    
+    // XXXXXXXXXXXXXXXXXXX TODO
+    //final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    //buildResults = projectBuilder.build(generatedSourceCode);
     testResults = new TestResults();
     testResults.setBuildResults(buildResults); // FLメトリクス算出のためにtestResultsにbuildResultsを登録しておく．
 
@@ -154,8 +152,11 @@ class TestThread extends Thread {
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
     return sourcesPaths.stream()
+        .peek(System.out::println)
         .map(source -> buildResults.getPathToFQNs(source.path))
+        .peek(System.out::println)
         .filter(fqn -> null != fqn)
+        .peek(System.out::println)
         .flatMap(c -> c.stream())
         .collect(Collectors.toList());
   }

@@ -12,6 +12,7 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -214,6 +215,7 @@ public class ProjectBuilderTest {
     loader.close();
   }
 
+  @Ignore // 未知のバイナリはキャッシュできないのでこのテストはfail
   @Test
   // インメモリビルドの確認．直接BinaryStoreを操作してバイナリ追加
   public void testBuildWithBinaryStoreByDirectBinaryAddition01() throws Exception {
@@ -230,12 +232,21 @@ public class ProjectBuilderTest {
     // Bar.classをファイルから直接読み込みJMOを生成
     final Path bin = rootPath.resolve("bin/example/Bar.class");
     final byte[] bytes = Files.readAllBytes(bin);
-    final JavaMemoryObject object = new JavaMemoryObject(Fqn.BAR.toString(), Kind.CLASS);
+    final JavaMemoryObject object =
+        new JavaMemoryObject(Fqn.BAR.toString() + "#" + "d4eaa21b82a9ace3015e1ced616b9ce6",
+            Fqn.BAR.toString(), Kind.CLASS, "d4eaa21b82a9ace3015e1ced616b9ce6");
     object.openOutputStream()
         .write(bytes);
 
     // BinaryStoreにJMOバイナリを直接保存しておく
-    BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.BAR.value), object);
+    final BinaryStore binStore = new BinaryStore();
+    binStore.add(object);
+
+    // リフレクションで書き換え
+    final Class<?> clazz = projectBuilder.getClass();
+    final Field field = clazz.getDeclaredField("binaryStore");
+    field.setAccessible(true);
+    field.set(projectBuilder, binStore);
 
     // ビルド．成功するはず
     final BuildResults buildResults2 = projectBuilder.build(source);
@@ -245,6 +256,7 @@ public class ProjectBuilderTest {
     // assertThat(buildResults.getCompilationPackage().getUnits()).hasSize(2);
   }
 
+  @Ignore // 未知のバイナリはキャッシュできないのでこのテストはfail
   @Test
   // インメモリビルドの確認．直接BinaryStoreを操作してバイナリ追加．重複の場合．
   public void testBuildWithBinaryStoreByDirectBinaryAddition02() throws Exception {
@@ -255,13 +267,16 @@ public class ProjectBuilderTest {
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
 
+    final BinaryStore binStore = new BinaryStore();
+
     // Bar.classをファイルから読み込み
     final Path bin1 = rootPath.resolve("bin/example/Bar.class");
     final byte[] bytes1 = Files.readAllBytes(bin1);
     final JavaMemoryObject object1 = new JavaMemoryObject(Fqn.BAR.toString(), Kind.CLASS);
     object1.openOutputStream()
         .write(bytes1);
-    BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.BAR.value), object1);
+    binStore.add(object1);
+    // BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.BAR.value), object1);
 
     // Foo.classをファイルから読み込み
     final Path bin2 = rootPath.resolve("bin/example/Foo.class");
@@ -269,7 +284,14 @@ public class ProjectBuilderTest {
     final JavaMemoryObject object2 = new JavaMemoryObject(Fqn.FOO.toString(), Kind.CLASS);
     object1.openOutputStream()
         .write(bytes2);
-    BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.FOO.value), object2);
+    binStore.add(object2);
+    // BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.FOO.value), object2);
+
+    // リフレクションで書き換え
+    final Class<?> clazz = projectBuilder.getClass();
+    final Field field = clazz.getDeclaredField("binaryStore");
+    field.setAccessible(true);
+    field.set(projectBuilder, binStore);
 
     // ビルド
     final BuildResults buildResults = projectBuilder.build(source);

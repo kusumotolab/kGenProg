@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,11 +23,11 @@ import com.google.common.collect.Iterables;
 public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   private List<CompilationUnit> memory = new ArrayList<>();
-  private BinaryStorexxx binaryStorexxx = BinaryStorexxx.instance;
   private BinaryStore binaryStore;
 
-  public InMemoryClassManager(JavaFileManager fileManager) {
+  public InMemoryClassManager(final JavaFileManager fileManager, final BinaryStore binaryStore) {
     super(fileManager);
+    this.binaryStore = binaryStore;
   }
 
   @Override
@@ -94,7 +93,7 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
 
     // BinaryStoreからもバイナリを取り出す
     // Iterable<JavaFileObject> cache = binaryStore.list(packageName);
-    Iterable<JavaFileObject> cache = bins.stream()
+    Iterable<JavaFileObject> cache = classPathBinaries.stream()
         .filter(bin -> bin.getName()
             .startsWith(packageName))
         .collect(Collectors.toList());
@@ -122,13 +121,9 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     return fileManager.inferBinaryName(location, file);
   }
 
-  private Set<JavaMemoryObject> bins;
+  private Set<JavaMemoryObject> classPathBinaries;
 
-  public void setClasses(Set<JavaMemoryObject> bins) {
-    this.bins = bins;
-  }
-
-  public void setBinaryStore(BinaryStore binaryStore) {
-    this.binaryStore = binaryStore;
+  public void setClassPathBinaries(Set<JavaMemoryObject> classPathBinaries) {
+    this.classPathBinaries = classPathBinaries;
   }
 }

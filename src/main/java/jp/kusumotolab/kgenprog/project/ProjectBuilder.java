@@ -51,7 +51,8 @@ public class ProjectBuilder {
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager standardFileManager =
         compiler.getStandardFileManager(null, null, null);
-    final InMemoryClassManager inMemoryFileManager = new InMemoryClassManager(standardFileManager);
+    final InMemoryClassManager inMemoryFileManager =
+        new InMemoryClassManager(standardFileManager, binaryStore);
 
     // コンパイルの引数を生成
     final List<String> compilationOptions = new ArrayList<>();
@@ -79,12 +80,11 @@ public class ProjectBuilder {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
       final Set<JavaMemoryObject> jfos = binaryStore.get(key);
       if (!jfos.isEmpty()) {
-        bins.addAll(jfos);
+        //bins.addAll(jfos);
       }
     }
-    
-    inMemoryFileManager.setClasses(bins);
-    inMemoryFileManager.setBinaryStore(binaryStore);
+
+    inMemoryFileManager.setClassPathBinaries(bins);
 
     // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();
@@ -93,11 +93,10 @@ public class ProjectBuilder {
     final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
         diagnostics, compilationOptions, null, javaFileObjects);
 
-    BinaryStorexxx bin = BinaryStorexxx.instance; // xxxxxxxxxxxxxxxxxxx
     System.out.println("-----------------------------------------");
     System.out.println("build:        " + javaFileObjects);
     System.out.println("   reused:    " + bins); // xxxxxxxxxxxxxxxxx
-    System.out.println("   all-cache: " + bin.getAll()); // xxxxxxxxxxxxxxxxx
+    System.out.println("   all-cache: " + binaryStore.getAll()); // xxxxxxxxxxxxxxxxx
     String code = generatedSourceCode.getProductAsts()
         .get(0)
         .getSourceCode();
@@ -116,15 +115,15 @@ public class ProjectBuilder {
     // final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
 
     // final List<CompilationUnit> units = null;
-//    final List<CompilationUnit> units = new ArrayList<>();
-//    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
-//      final BinaryStoreKey key = new BinaryStoreKey(ast);
-//      final Set<JavaFileObject> jfos = binaryStore.get(key);
-//      for (JavaFileObject jfo : jfos) {
-//        units.add(new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo));
-//      }
-//    }
-    final CompilationPackage compilationPackage = null;//new CompilationPackage(units);
+    // final List<CompilationUnit> units = new ArrayList<>();
+    // for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
+    // final BinaryStoreKey key = new BinaryStoreKey(ast);
+    // final Set<JavaFileObject> jfos = binaryStore.get(key);
+    // for (JavaFileObject jfo : jfos) {
+    // units.add(new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo));
+    // }
+    // }
+    final CompilationPackage compilationPackage = null;// new CompilationPackage(units);
 
     final BinaryStore binStore = new BinaryStore();
     for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
@@ -187,7 +186,7 @@ public class ProjectBuilder {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
       if (!binaryStore.get(key)
           .isEmpty()) {
-        // result.addAll(jfos);
+        //result.addAll(binaryStore.get(key)); // necessary???????????? TODO
         continue;
       }
       final JavaFileObjectFromString m = new JavaFileObjectFromString(ast.getPrimaryClassName(),
@@ -196,16 +195,6 @@ public class ProjectBuilder {
     }
 
     return result;
-    // return asts.stream()
-    // .map(ast -> {
-    // final BinaryStoreKey key = new BinaryStoreKey(ast);
-    // final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
-    // if (null != jfos) {
-    // return jfos.stream();
-    // }
-    // return Stream.of();
-    // })
-    // .collect(Collectors.toSet());
   }
 
   private ClassParser parse(final CompilationUnit compilationUnit) {
