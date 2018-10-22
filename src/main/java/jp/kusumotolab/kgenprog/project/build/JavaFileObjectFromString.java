@@ -54,4 +54,10 @@ public class JavaFileObjectFromString extends SimpleJavaFileObject {
   public int hashCode() {
     return Objects.hashCode(code, className);
   }
+
+  @Override
+  public final String toString() {
+    return className + "#" + digest.substring(0, 4);
+  }
+
 }

@@ -63,8 +63,23 @@ public class ProjectBuilder {
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
     // コンパイル対象の JavaFileObject を生成
-    final Iterable<JavaFileObject> javaFileObjects =
+    final Set<JavaFileObject> javaFileObjects =
         generateAllJavaFileObjects(generatedSourceCode.getAllAsts());
+
+    final Set<JavaFileObject> bins = new HashSet<>();
+    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
+      final BinaryStoreKey key = new BinaryStoreKey(ast);
+      final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
+      if (null != jfos) {
+        bins.addAll(jfos);
+      }
+    }
+    inMemoryFileManager.setClasses(bins);
+
+    if (javaFileObjects.isEmpty()) { // xxxxxxxxxxxx
+      log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
+      return EmptyBuildResults.instance;
+    }
 
     // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();
@@ -73,8 +88,16 @@ public class ProjectBuilder {
     final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
         diagnostics, compilationOptions, null, javaFileObjects);
 
+    BinaryStore bin = BinaryStore.instance; // xxxxxxxxxxxxxxxxxxx
+    System.out.println("-----------------------------------------");
+    System.out.println("build:        " + javaFileObjects);
+    System.out.println("   reused:    " + bins); // xxxxxxxxxxxxxxxxx
+    System.out.println("   all-cache: " + bin.getAll()); // xxxxxxxxxxxxxxxxx
+    String code = generatedSourceCode.getProductAsts().get(0).getSourceCode();
+
     // コンパイルを実行
     final boolean isBuildFailed = !task.call();
+
 
     if (isBuildFailed) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
@@ -140,7 +163,7 @@ public class ProjectBuilder {
     return buildResults;
   }
 
-  private Iterable<JavaFileObject> generateAllJavaFileObjects(
+  private Set<JavaFileObject> generateAllJavaFileObjects(
       final List<GeneratedAST<? extends SourcePath>> asts) {
 
     final Set<JavaFileObject> result = new HashSet<>();
@@ -148,7 +171,8 @@ public class ProjectBuilder {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
       final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
       if (null != jfos) {
-        result.addAll(jfos);
+        // result.addAll(jfos);
+        continue;
       }
       final JavaFileObjectFromString m = new JavaFileObjectFromString(ast.getPrimaryClassName(),
           ast.getSourceCode(), ast.getMessageDigest());

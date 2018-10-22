@@ -14,31 +14,30 @@ import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
 import com.google.common.base.Objects;
 
-/**
- * Wraps bytecode into memory.
- * 
- * The JavaCompiler uses the StandardFileManager to perform read/write bytecode on files of type
- * JavaFileObject. This class extends this functionality by reading/writing bytecode into memory
- * instead of files.
- */
 public class JavaMemoryObject implements JavaFileObject {
 
-  private ByteArrayOutputStream bos;
-  private URI uri;
-  private Kind kind;
-  private String fqn;
+  private final String fqn;
+  private final Kind kind;
+  private final String digest;
+  private final URI uri;
+  private final ByteArrayOutputStream bos;
 
+  @Deprecated
+  public JavaMemoryObject(final String fqn, final Kind kind) {
+     this(fqn, kind, "xxxx");
+  }
   /**
    * 書き込み用FileObjectの生成コンストラクタ．ビルド結果の書き込みに用いられる．
    * 
    * @param fqn
-   * @param fileKind
+   * @param kind
    */
-  public JavaMemoryObject(final String fqn, final Kind fileKind) {
+  public JavaMemoryObject(final String fqn, final Kind kind, final String digest) {
     this.fqn = fqn;
-    this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + fileKind.extension);
-    this.kind = fileKind;
-    bos = new ByteArrayOutputStream();
+    this.kind = kind;
+    this.digest = digest;
+    this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + kind.extension);
+    this.bos = new ByteArrayOutputStream();
   }
 
   /**
@@ -105,8 +104,8 @@ public class JavaMemoryObject implements JavaFileObject {
   }
 
   @Override
-  public final boolean isNameCompatible(String simpleName, Kind fileKind) {
-    String baseName = simpleName + kind.extension;
+  public final boolean isNameCompatible(final String simpleName, final Kind fileKind) {
+    final String baseName = simpleName + kind.extension;
     return fileKind.equals(getKind()) && (baseName.equals(toUri().getPath()) || toUri().getPath()
         .endsWith("/" + baseName));
   }
@@ -123,7 +122,7 @@ public class JavaMemoryObject implements JavaFileObject {
 
   @Override
   public final String toString() {
-    return getClass().getName() + "[" + toUri() + "]";
+    return fqn + "#" + digest.substring(0, 4);
   }
 
   @Override
@@ -134,7 +133,7 @@ public class JavaMemoryObject implements JavaFileObject {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JavaMemoryObject that = (JavaMemoryObject) o;
+    final JavaMemoryObject that = (JavaMemoryObject) o;
     return Objects.equal(uri, that.uri) && Objects.equal(kind, that.kind);
   }
 

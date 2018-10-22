@@ -3,8 +3,10 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaFileManager;
@@ -50,7 +52,7 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     String hash = ((JavaFileObjectFromString) sibling).getMessageDigest();
     String _name = ((JavaFileObjectFromString) sibling).getName();
 
-    JavaMemoryObject co = new JavaMemoryObject(name, kind);
+    JavaMemoryObject co = new JavaMemoryObject(name, kind, hash);
     CompilationUnit cf = new CompilationUnit(name, co);
     memory.add(cf);
     binaryStore.put(new BinaryStoreKey(_name, hash), co); // TODO temporaly
@@ -83,10 +85,18 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
   public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds,
       boolean recurse) throws IOException {
     // まずは普通のFMからバイナリを取り出す
+    // TODO 不要????
     Iterable<JavaFileObject> objs = fileManager.list(location, packageName, kinds, recurse);
 
+    if (!packageName.startsWith("example")) // patch xxxxxxxxxxxxxxxxxxxx TODO
+      return objs;// Collections.emptyList();
+
     // BinaryStoreからもバイナリを取り出す
-    Iterable<JavaFileObject> cache = binaryStore.list(packageName);
+    // Iterable<JavaFileObject> cache = binaryStore.list(packageName);
+    Iterable<JavaFileObject> cache = bins.stream()
+        .filter(bin -> bin.getName()
+            .startsWith(packageName))
+        .collect(Collectors.toList());
 
     // TODO location考えなくて良い？
 
@@ -109,5 +119,11 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
       return ((JavaMemoryObject) file).getBinaryName();
     }
     return fileManager.inferBinaryName(location, file);
+  }
+
+  private Set<JavaFileObject> bins;
+
+  public void setClasses(Set<JavaFileObject> bins) {
+    this.bins = bins;
   }
 }

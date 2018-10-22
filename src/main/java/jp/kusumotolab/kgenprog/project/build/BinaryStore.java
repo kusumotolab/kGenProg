@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.build;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +33,8 @@ public class BinaryStore {
     if (null == cache.get(key)) {
       cache.put(key, new HashSet<>());
     }
-    cache.get(key).add(object);
+    cache.get(key)
+        .add(object);
   }
 
   public Set<JavaFileObject> get(final BinaryStoreKey key) {
@@ -40,6 +42,13 @@ public class BinaryStore {
       return cache.get(key);
     }
     return null; // TODO Is emptyList better?
+  }
+
+  public List<JavaFileObject> getAll() {
+    return cache.values()
+        .stream()
+        .flatMap(Set::stream)
+        .collect(Collectors.toList());
   }
 
   public Iterable<JavaFileObject> list(final String packageName) {
