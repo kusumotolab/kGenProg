@@ -19,7 +19,7 @@ public class CompilationUnit {
    * @param memoryObject Memory object
    */
   public CompilationUnit(String unitName, JavaMemoryObject memoryObject) {
-    this.name = unitName;
+    this.name = memoryObject.getBinaryName();
     this.memoryObject = memoryObject;
   }
 
@@ -58,5 +58,10 @@ public class CompilationUnit {
   @Override
   public int hashCode() {
     return Objects.hashCode(name, memoryObject);
+  }
+  
+  @Override
+  public String toString() {
+    return name;
   }
 }

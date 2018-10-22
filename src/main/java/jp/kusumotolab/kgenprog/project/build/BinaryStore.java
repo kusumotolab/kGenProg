@@ -2,7 +2,9 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.tools.JavaFileObject;
 
@@ -20,33 +22,33 @@ public class BinaryStore {
   // TODO ひとまずシングルトン化．真面目に考えてないので要検討
   public static BinaryStore instance = new BinaryStore();
 
-  private Map<BinaryStoreKey, JavaFileObject> cache;
+  private Map<BinaryStoreKey, Set<JavaFileObject>> cache;
 
   public BinaryStore() {
     cache = new HashMap<>();
   }
 
   public void put(final BinaryStoreKey key, JavaFileObject object) {
-    cache.put(key, object);
+    if (null == cache.get(key)) {
+      cache.put(key, new HashSet<>());
+    }
+    cache.get(key).add(object);
   }
 
-  public JavaFileObject get(final BinaryStoreKey key) {
+  public Set<JavaFileObject> get(final BinaryStoreKey key) {
     if (cache.containsKey(key)) {
       return cache.get(key);
     }
-    return null;
+    return null; // TODO Is emptyList better?
   }
 
   public Iterable<JavaFileObject> list(final String packageName) {
     return cache.values()
         .stream()
+        .flatMap(Collection::stream)
         .filter(jfo -> jfo.getName()
             .startsWith("/" + packageName)) // TODO: スラッシュ開始で決め打ち．uriからの変換なので間違いないとは思う
         .collect(Collectors.toList());
-  }
-
-  public Collection<JavaFileObject> getAll() {
-    return cache.values();
   }
 
   public void removeAll() {

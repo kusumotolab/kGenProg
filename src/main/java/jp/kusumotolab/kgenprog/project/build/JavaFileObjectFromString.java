@@ -10,13 +10,13 @@ import com.google.common.base.Objects;
  * This class is responsible for creating a Java File Object from a string containing the Java
  * source code.
  */
-public class JavaSourceFromString extends SimpleJavaFileObject {
+public class JavaFileObjectFromString extends SimpleJavaFileObject {
 
   private final String code;
   private final String className;
   private String digest;
 
-  public JavaSourceFromString(String className, String javaSourceCode, final String digest) {
+  public JavaFileObjectFromString(String className, String javaSourceCode, final String digest) {
     super(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension),
         Kind.SOURCE);
     this.className = className;
@@ -46,7 +46,7 @@ public class JavaSourceFromString extends SimpleJavaFileObject {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JavaSourceFromString that = (JavaSourceFromString) o;
+    JavaFileObjectFromString that = (JavaFileObjectFromString) o;
     return Objects.equal(code, that.code) && Objects.equal(className, that.className);
   }
 

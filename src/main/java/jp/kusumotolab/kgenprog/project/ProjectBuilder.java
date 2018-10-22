@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -24,8 +22,8 @@ import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
+import jp.kusumotolab.kgenprog.project.build.JavaFileObjectFromString;
 import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
-import jp.kusumotolab.kgenprog.project.build.JavaSourceFromString;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
@@ -65,8 +63,8 @@ public class ProjectBuilder {
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
     // コンパイル対象の JavaFileObject を生成
-    final Iterable<? extends JavaFileObject> javaFileObjects =
-        generateAllJavaFileObjects(generatedSourceCode.getProductAsts(), standardFileManager);
+    final Iterable<JavaFileObject> javaFileObjects =
+        generateAllJavaFileObjects(generatedSourceCode.getAllAsts());
 
     // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();
@@ -87,25 +85,15 @@ public class ProjectBuilder {
     final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
     // final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
 
-    final List<CompilationUnit> units = generatedSourceCode.getAsts()
-        .stream()
-        .map(ast -> {
-          BinaryStoreKey key = new BinaryStoreKey(ast);
-          JavaFileObject jfo = BinaryStore.instance.get(key);
-          return new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo);
-        })
-        .collect(Collectors.toList());
-    final List<CompilationUnit> unitsx = targetProject.getTestSourcePaths()
-        .stream()
-        .map(sp -> {
-          BinaryStoreKey key = new BinaryStoreKey(sp);
-          System.out.println(key + " " + BinaryStore.instance.get(key));
-          JavaFileObject jfo = BinaryStore.instance.get(key);
-          return new CompilationUnit(jfo.getName(), (JavaMemoryObject) jfo);
-        })
-        .collect(Collectors.toList());
-
-    units.addAll(unitsx);
+    // final List<CompilationUnit> units = null;
+    final List<CompilationUnit> units = new ArrayList<>();
+    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
+      final BinaryStoreKey key = new BinaryStoreKey(ast);
+      final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
+      for (JavaFileObject jfo : jfos) {
+        units.add(new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo));
+      }
+    }
     final CompilationPackage compilationPackage = new CompilationPackage(units);
 
     final BuildResults buildResults =
@@ -152,60 +140,32 @@ public class ProjectBuilder {
     return buildResults;
   }
 
-  private <T extends SourcePath> Iterable<? extends JavaFileObject> generateAllJavaFileObjects(
-      final List<GeneratedAST<T>> list, final StandardJavaFileManager fileManager) {
+  private Iterable<JavaFileObject> generateAllJavaFileObjects(
+      final List<GeneratedAST<? extends SourcePath>> asts) {
 
-    final Iterable<? extends JavaFileObject> targetIterator =
-        generateJavaFileObjectsFromGeneratedAst(list);
-    final Iterable<? extends JavaFileObject> testIterator =
-        generateJavaFileObjectsFromSourceFile(this.targetProject.getTestSourcePaths(), fileManager);
+    final Set<JavaFileObject> result = new HashSet<>();
+    for (final GeneratedAST<? extends SourcePath> ast : asts) {
+      final BinaryStoreKey key = new BinaryStoreKey(ast);
+      final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
+      if (null != jfos) {
+        result.addAll(jfos);
+      }
+      final JavaFileObjectFromString m = new JavaFileObjectFromString(ast.getPrimaryClassName(),
+          ast.getSourceCode(), ast.getMessageDigest());
+      result.add(m);
+    }
 
-    return Stream.concat( //
-        StreamSupport.stream(targetIterator.spliterator(), false), //
-        StreamSupport.stream(testIterator.spliterator(), false))
-        .collect(Collectors.toSet());
-  }
-
-  /**
-   * GeneratedAST の List からJavaFileObject を生成するメソッド
-   * 
-   * @param asts
-   * @return
-   */
-  private <T extends SourcePath> Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
-      final List<GeneratedAST<T>> asts) {
-    return asts.stream()
-        .map(ast -> {
-          BinaryStoreKey key =
-              new BinaryStoreKey(ast.getPrimaryClassName(), ast.getMessageDigest());
-          JavaFileObject jfo = BinaryStore.instance.get(key);
-          if (null != jfo) {
-            return jfo;
-          }
-          return new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode(),
-              ast.getMessageDigest());
-        })
-        .collect(Collectors.toSet());
-
+    return result;
     // return asts.stream()
-    // .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode(),
-    // ast.getMessageDigest()))
+    // .map(ast -> {
+    // final BinaryStoreKey key = new BinaryStoreKey(ast);
+    // final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
+    // if (null != jfos) {
+    // return jfos.stream();
+    // }
+    // return Stream.of();
+    // })
     // .collect(Collectors.toSet());
-  }
-
-  /**
-   * ソースファイルから JavaFileObject を生成するメソッド
-   * 
-   * @param paths
-   * @param fileManager
-   * @return
-   */
-  private Iterable<? extends JavaFileObject> generateJavaFileObjectsFromSourceFile(
-      final List<? extends SourcePath> paths, final StandardJavaFileManager fileManager) {
-    final Set<String> sourceFileNames = paths.stream()
-        .map(f -> f.path.toString())
-        .collect(Collectors.toSet());
-    return fileManager.getJavaFileObjectsFromStrings(sourceFileNames);
   }
 
   private ClassParser parse(final CompilationUnit compilationUnit) {

@@ -1,8 +1,8 @@
 package jp.kusumotolab.kgenprog.project.build;
 
 
-import static com.google.common.collect.Lists.newArrayList;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.tools.FileObject;
@@ -21,7 +21,7 @@ import com.google.common.collect.Iterables;
  */
 public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileManager> {
 
-  private List<CompilationUnit> memory = newArrayList();
+  private List<CompilationUnit> memory = new ArrayList<>();
   private BinaryStore binaryStore = BinaryStore.instance;
 
   public InMemoryClassManager(JavaFileManager fileManager) {
@@ -43,14 +43,17 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
   @Override
   public JavaFileObject getJavaFileForOutput(Location location, String name, Kind kind,
       FileObject sibling) throws IOException {
-    String hash = "";
-    if (sibling instanceof JavaSourceFromString) {
-      hash = ((JavaSourceFromString)sibling).getMessageDigest();
+
+    if (!(sibling instanceof JavaFileObjectFromString)) {
+      throw new UnsupportedOperationException(); // TODO
     }
+    String hash = ((JavaFileObjectFromString) sibling).getMessageDigest();
+    String _name = ((JavaFileObjectFromString) sibling).getName();
+
     JavaMemoryObject co = new JavaMemoryObject(name, kind);
     CompilationUnit cf = new CompilationUnit(name, co);
     memory.add(cf);
-    binaryStore.put(new BinaryStoreKey(name, hash), co); // TODO temporaly
+    binaryStore.put(new BinaryStoreKey(_name, hash), co); // TODO temporaly
     return co;
   }
 

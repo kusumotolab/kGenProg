@@ -38,11 +38,8 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class ProjectBuilderTest {
 
-  private final static Path WORK_PATH = Paths.get("tmp/work");
-
   @Before
   public void before() throws IOException {
-    TestUtil.deleteWorkDirectory(WORK_PATH);
     BinaryStore.instance.removeAll(); // ビルドキャッシュは消しておく
   }
 
@@ -214,7 +211,6 @@ public class ProjectBuilderTest {
   }
 
   @Test
-
   // インメモリビルドの確認．直接BinaryStoreを操作してバイナリ追加
   public void testBuildWithBinaryStoreByDirectBinaryAddition01() throws Exception {
     // Bar.javaが存在しないのでビルドできない題材
@@ -312,8 +308,9 @@ public class ProjectBuilderTest {
     final List<Path> sources = Arrays.asList(rootPath.resolve("src"));
     final List<Path> tests = Collections.emptyList();
     final List<Path> cps = Arrays.asList(rootPath.resolve("lib"));
-    
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath, sources, tests, cps, JUnitVersion.JUNIT4);
+
+    final TargetProject targetProject =
+        TargetProjectFactory.create(rootPath, sources, tests, cps, JUnitVersion.JUNIT4);
     final GeneratedSourceCode generatedSourceCode =
         TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);

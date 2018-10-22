@@ -87,15 +87,15 @@ class TestThread extends Thread {
     final MemoryClassLoader classLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      addAllDefinitions(classLoader, productFQNs, true);
-      addAllDefinitions(classLoader, testFQNs, false);
-      final List<Class<?>> junitClasses = loadAllClasses(classLoader, executionTestFQNs);
+      addAllDefinitions2(classLoader, productFQNs, true);
+      //addAllDefinitions(classLoader, testFQNs, false);
+      final List<Class<?>> testClasses = loadAllClasses(classLoader, executionTestFQNs);
 
       final JUnitCore junitCore = new JUnitCore();
       final CoverageMeasurementListener listener =
           new CoverageMeasurementListener(productFQNs, testResults);
       junitCore.addListener(listener);
-      junitCore.run(junitClasses.toArray(new Class<?>[junitClasses.size()]));
+      junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
@@ -107,9 +107,18 @@ class TestThread extends Thread {
       // ひとまず本クラスをThreadで包むためにRuntimeExceptionでエラーを吐く．
       throw new RuntimeException(e);
     }
-
   }
 
+  private void addAllDefinitions2(final MemoryClassLoader memoryClassLoader,
+      final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
+    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    for (CompilationUnit unit : compilationPackage.getUnits()) {
+      final byte[] bytecode = unit.getBytecode();
+      final String fqn = unit.getName();
+      final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
+      memoryClassLoader.addDefinition(new TargetFullyQualifiedName(fqn), instrumentedBytecode);
+    }
+  }
 
   private List<FullyQualifiedName> getProductFQNs() {
     return getFQNs(targetProject.getProductSourcePaths());
@@ -195,7 +204,7 @@ class TestThread extends Thread {
       final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
     final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     for (final FullyQualifiedName fqn : fqns) {
-      final CompilationUnit compilatinoUnit = compilationPackage.getCompilationUnit(fqn.value);
+      final CompilationUnit compilatinoUnit = null;//compilationPackage.getCompilationUnit(fqn.value);
       final byte[] bytecode = compilatinoUnit.getBytecode();
       if (isInstrument) {
         final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");

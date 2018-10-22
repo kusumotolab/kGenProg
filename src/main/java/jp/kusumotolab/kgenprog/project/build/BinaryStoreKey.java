@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.build;
 
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class BinaryStoreKey {
@@ -11,7 +12,7 @@ public class BinaryStoreKey {
     key = name + "#" + hash;
   }
 
-  public BinaryStoreKey(final GeneratedAST ast) {
+  public BinaryStoreKey(final GeneratedAST<? extends SourcePath> ast) {
     this(ast.getPrimaryClassName(), ast.getMessageDigest());
   }
 
@@ -26,8 +27,13 @@ public class BinaryStoreKey {
   }
 
   @Override
+  public int hashCode() {
+    return key.hashCode();
+  }
+
+  @Override
   public boolean equals(Object o) {
-    return key.equals((String) o);
+    return key.equals(o.toString());
   }
 
   @Override
