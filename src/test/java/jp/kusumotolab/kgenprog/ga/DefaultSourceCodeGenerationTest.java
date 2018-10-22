@@ -43,6 +43,28 @@ public class DefaultSourceCodeGenerationTest {
   }
 
   @Test
+  public void testExecDupicateInitialVariant() {
+    final Path rootDir = Paths.get("example/BuildSuccess01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootDir);
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final Variant initialVariant = TestUtil.createVariant(config);
+    final VariantStore variantStore = getVariantStore(initialVariant);
+    final Base base = new Base(null, new NoneOperation());
+    final Gene gene = new Gene(Collections.singletonList(base));
+    final DefaultSourceCodeGeneration defaultSourceCodeGeneration =
+        new DefaultSourceCodeGeneration();
+
+    // 初期化（initialVariantをSetに追加）
+    defaultSourceCodeGeneration.initialize(initialVariant);
+
+    // NoneOperationではソースコードは変わらないので失敗するはず
+    final GeneratedSourceCode secondGeneratedSourceCode =
+        defaultSourceCodeGeneration.exec(variantStore, gene);
+    assertThat(secondGeneratedSourceCode).isInstanceOf(GenerationFailedSourceCode.class);
+    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo("duplicate sourcecode");
+  }
+
+  @Test
   public void noneOperationTest() {
     final TargetProject targetProject =
         TargetProjectFactory.create(Paths.get("example/BuildSuccess01"));
