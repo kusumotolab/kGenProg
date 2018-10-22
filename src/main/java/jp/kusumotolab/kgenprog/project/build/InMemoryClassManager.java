@@ -18,7 +18,7 @@ import com.google.common.collect.Iterables;
  * bytecode into class files. This class extends the standard JavaFileManager to read/write bytecode
  * into memory using a custom implementation of the JavaFileObject.
  * 
- * @see JavaMemoryObject
+ * @see JavaBinaryObject
  */
 public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileManager> {
 
@@ -45,14 +45,14 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
   public JavaFileObject getJavaFileForOutput(Location location, String name, Kind kind,
       FileObject sibling) throws IOException {
 
-    if (!(sibling instanceof JavaFileObjectFromString)) {
+    if (!(sibling instanceof JavaSourceObject)) {
       throw new UnsupportedOperationException(); // TODO
     }
-    JavaFileObjectFromString jfo = (JavaFileObjectFromString) sibling;
+    JavaSourceObject jfo = (JavaSourceObject) sibling;
     String hash = jfo.getMessageDigest();
     String _name = jfo.getName();
 
-    JavaMemoryObject co = new JavaMemoryObject(_name + "#" + hash, name, kind, hash, jfo.getPath());
+    JavaBinaryObject co = new JavaBinaryObject(_name + "#" + hash, name, kind, hash, jfo.getSourcePath());
     binaryStore.add(co); // TODO temporaly
     return co;
   }
@@ -102,15 +102,15 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
   public String inferBinaryName(Location location, JavaFileObject file) {
     // JMOの場合はバイナリ名の解決を簡略化 ．
     // 標準FMにinferするとIllegalArgumentExceptionが発生するため（理由は不明）．
-    if (file instanceof JavaMemoryObject) {
-      return ((JavaMemoryObject) file).getBinaryName();
+    if (file instanceof JavaBinaryObject) {
+      return ((JavaBinaryObject) file).getBinaryName();
     }
     return fileManager.inferBinaryName(location, file);
   }
 
-  private Set<JavaMemoryObject> classPathBinaries;
+  private Set<JavaBinaryObject> classPathBinaries;
 
-  public void setClassPathBinaries(Set<JavaMemoryObject> classPathBinaries) {
+  public void setClassPathBinaries(Set<JavaBinaryObject> classPathBinaries) {
     this.classPathBinaries = classPathBinaries;
   }
 }

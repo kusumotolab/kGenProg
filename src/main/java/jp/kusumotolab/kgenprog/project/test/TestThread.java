@@ -26,7 +26,7 @@ import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
-import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
+import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
@@ -121,7 +121,7 @@ class TestThread extends Thread {
       final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
     //final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
     
-    for (JavaMemoryObject jmo : buildResults.getBinaryStore().getAll()) {
+    for (JavaBinaryObject jmo : buildResults.getBinaryStore().getAll()) {
       final byte[] bytecode = jmo.getByteCode();
       final String fqn = jmo.getBinaryName();
       final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");

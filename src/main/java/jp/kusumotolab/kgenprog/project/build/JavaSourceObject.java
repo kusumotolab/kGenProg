@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.build;
 import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 import com.google.common.base.Objects;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
@@ -11,26 +12,32 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
  * This class is responsible for creating a Java File Object from a string containing the Java
  * source code.
  */
-public class JavaFileObjectFromString extends SimpleJavaFileObject {
+public class JavaSourceObject extends SimpleJavaFileObject {
 
   private final String code;
   private final String className;
-  private final SourcePath path;
+  private final SourcePath sourcePath;
   private String digest;
 
-  public JavaFileObjectFromString(String className, String javaSourceCode, final String digest, final SourcePath path) {
+  public JavaSourceObject(final GeneratedAST<? extends SourcePath> ast) {
+    this(ast.getPrimaryClassName(), ast.getSourceCode(), ast.getMessageDigest(),
+        ast.getSourcePath());
+  }
+
+  private JavaSourceObject(final String className, final String javaSourceCode, final String digest,
+      final SourcePath sourcePath) {
     super(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension),
         Kind.SOURCE);
     this.className = className;
     this.code = javaSourceCode;
     this.digest = digest;
-    this.path = path;
+    this.sourcePath = sourcePath;
   }
 
-  public SourcePath getPath() {
-    return path;
+  public SourcePath getSourcePath() {
+    return sourcePath;
   }
-  
+
   public String getMessageDigest() {
     return digest;
   }
@@ -53,7 +60,7 @@ public class JavaFileObjectFromString extends SimpleJavaFileObject {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JavaFileObjectFromString that = (JavaFileObjectFromString) o;
+    JavaSourceObject that = (JavaSourceObject) o;
     return Objects.equal(code, that.code) && Objects.equal(className, that.className);
   }
 

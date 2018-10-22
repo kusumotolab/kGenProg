@@ -9,14 +9,13 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URI;
-import java.nio.file.Path;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
 import com.google.common.base.Objects;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
-public class JavaMemoryObject implements JavaFileObject {
+public class JavaBinaryObject implements JavaFileObject {
 
   private final String primaryKey;
   private final String fqn;
@@ -26,28 +25,7 @@ public class JavaMemoryObject implements JavaFileObject {
   private final URI uri;
   private final ByteArrayOutputStream bos;
 
-  @Deprecated
-  public JavaMemoryObject(final String fqn, final Kind kind) {
-     this(fqn, kind, "xxxx");
-  }
-  /**
-   * 書き込み用FileObjectの生成コンストラクタ．ビルド結果の書き込みに用いられる．
-   * 
-   * @param fqn
-   * @param kind
-   */
-  @Deprecated
-  public JavaMemoryObject(final String fqn, final Kind kind, final String digest) {
-    this.primaryKey = fqn + "#" + digest;
-    this.fqn = fqn;
-    this.kind = kind;
-    this.digest = digest;
-    this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + kind.extension);
-    this.path = null;
-    this.bos = new ByteArrayOutputStream();
-  }
-
-  public JavaMemoryObject(final String primaryKey, final String fqn, final Kind kind, final String digest, final SourcePath path) {
+  public JavaBinaryObject(final String primaryKey, final String fqn, final Kind kind, final String digest, final SourcePath path) {
     this.primaryKey = primaryKey;
     this.fqn = fqn;
     this.kind = kind;
@@ -157,7 +135,7 @@ public class JavaMemoryObject implements JavaFileObject {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    final JavaMemoryObject that = (JavaMemoryObject) o;
+    final JavaBinaryObject that = (JavaBinaryObject) o;
     return Objects.equal(fqn, that.fqn) && Objects.equal(digest, that.digest);
   }
 

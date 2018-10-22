@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class BinaryStoreKey {
 
@@ -14,16 +13,6 @@ public class BinaryStoreKey {
 
   public BinaryStoreKey(final GeneratedAST<? extends SourcePath> ast) {
     this(ast.getPrimaryClassName(), ast.getMessageDigest());
-  }
-
-  @Deprecated
-  public BinaryStoreKey(final TestSourcePath testPath) {
-    this(testPath.path.toString(), "----");
-  }
-
-  @Deprecated
-  public BinaryStoreKey(final String name) {
-    this(name, "----");
   }
 
   @Override

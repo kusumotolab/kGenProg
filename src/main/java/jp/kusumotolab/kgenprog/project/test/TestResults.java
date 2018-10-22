@@ -18,7 +18,7 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
+import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
 public class TestResults implements Serializable {
 
@@ -112,7 +112,7 @@ public class TestResults implements Serializable {
     final Set<FullyQualifiedName> correspondingFqns = buildResults.getBinaryStore()
         .get(productSourcePath)
         .stream()
-        .map(JavaMemoryObject::getBinaryName)
+        .map(JavaBinaryObject::getBinaryName)
         .map(TargetFullyQualifiedName::new)
         .collect(Collectors.toSet());
 

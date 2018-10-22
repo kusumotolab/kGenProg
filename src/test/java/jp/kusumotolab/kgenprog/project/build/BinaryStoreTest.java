@@ -6,41 +6,54 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.nio.file.Paths;
 import javax.tools.JavaFileObject.Kind;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class BinaryStoreTest {
 
   static BinaryStore binStore = new BinaryStore();
+  static String digest1;
+  static String digest2;
+  static String digest3;
   static BinaryStoreKey key1;
   static BinaryStoreKey key2;
   static BinaryStoreKey key3;
-  static JavaMemoryObject object1;
-  static JavaMemoryObject object2;
-  static JavaMemoryObject object3;
-  static GeneratedAST ast1;
-  static GeneratedAST ast2;
-  static GeneratedAST ast3;
+  static JavaBinaryObject object1;
+  static JavaBinaryObject object2;
+  static JavaBinaryObject object3;
+  static GeneratedAST<ProductSourcePath> ast1;
+  static GeneratedAST<ProductSourcePath> ast2;
+  static GeneratedAST<ProductSourcePath> ast3;
 
   @BeforeClass()
+  @SuppressWarnings("unchecked")
   public static void beforeAll() {
-    key1 = new BinaryStoreKey(FOO.value);
-    key2 = new BinaryStoreKey(BAR.value);
-    key3 = new BinaryStoreKey(BAZ.value);
+    digest1 = "1111";
+    digest2 = "2222";
+    digest3 = "3333";
 
-    object1 = new JavaMemoryObject(key1.toString(), Kind.CLASS);
-    object2 = new JavaMemoryObject(key2.toString(), Kind.CLASS);
-    object3 = new JavaMemoryObject(key3.toString(), Kind.CLASS);
+    key1 = new BinaryStoreKey(FOO.value, digest1);
+    key2 = new BinaryStoreKey(BAR.value, digest2);
+    key3 = new BinaryStoreKey(BAZ.value, digest3);
+
+    object1 = new JavaBinaryObject(key1.toString(), FOO.value, Kind.CLASS, digest1,
+        new ProductSourcePath(Paths.get("")));
+    object2 = new JavaBinaryObject(key2.toString(), BAR.value, Kind.CLASS, digest2,
+        new ProductSourcePath(Paths.get("")));
+    object3 = new JavaBinaryObject(key3.toString(), BAZ.value, Kind.CLASS, digest3,
+        new ProductSourcePath(Paths.get("")));
 
     ast1 = mock(GeneratedAST.class);
     ast2 = mock(GeneratedAST.class);
     ast3 = mock(GeneratedAST.class);
-    when(ast1.getMessageDigest()).thenReturn("aaa");
-    when(ast2.getMessageDigest()).thenReturn("bbb");
-    when(ast3.getMessageDigest()).thenReturn("ccc");
+    when(ast1.getMessageDigest()).thenReturn(digest1);
+    when(ast2.getMessageDigest()).thenReturn(digest2);
+    when(ast3.getMessageDigest()).thenReturn(digest3);
   }
 
   @Before
@@ -51,21 +64,12 @@ public class BinaryStoreTest {
   @Test
   // 基本操作の確認．putしてgetできるか
   public void testStoreAndGetByPath() {
-    binStore.add(key1, object1);
-    binStore.add(key2, object2);
+    binStore.add(object1);
+    binStore.add(object2);
 
-    assertThat(binStore.get(key1)).isSameAs(object1);
-    assertThat(binStore.get(key2)).isSameAs(object2);
+    assertThat(binStore.get(key1)).containsExactly(object1);
+    assertThat(binStore.get(key2)).containsExactly(object2);
     assertThat(binStore.get(key3)).isEmpty();
-  }
-
-  @Test
-  // キャッシュを上書きできるか
-  public void testOverrideByPath() {
-    binStore.add(key1, object1);
-    binStore.add(key1, object2); // force override
-
-    assertThat(binStore.get(key1)).isSameAs(object2);
   }
 
   @Test
@@ -79,13 +83,14 @@ public class BinaryStoreTest {
   @Test
   // listの確認．パッケージ名を指定して期待のバイナリが返ってくるか
   public void testList() {
-    binStore.add(key1, object1);
-    binStore.add(key2, object2);
+    binStore.add(object1);
+    binStore.add(object2);
 
     // "example" とは異なる名前のJMOバイナリを追加
     final String dummyPackName = "xxx.BarTest";
-    final JavaMemoryObject dummy = new JavaMemoryObject(dummyPackName, Kind.CLASS);
-    binStore.add(key3, dummy);
+    final JavaBinaryObject dummy =
+        new JavaBinaryObject(dummyPackName, dummyPackName, Kind.CLASS, "4444", null);
+    binStore.add(dummy);
 
     // o1とo2だけのはず（dummyは含まれない）
     assertThat(binStore.list("example")).containsExactlyInAnyOrder(object1, object2);

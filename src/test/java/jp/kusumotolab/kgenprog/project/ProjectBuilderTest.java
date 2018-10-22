@@ -22,7 +22,7 @@ import javax.tools.JavaFileObject.Kind;
 import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
-import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
+import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -157,7 +157,7 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     assertThat(binaryStore.getAll()).hasSize(2);
 
-    final JavaMemoryObject jmo = buildResults.getBinaryStore()
+    final JavaBinaryObject jmo = buildResults.getBinaryStore()
         .getAll()
         .stream()
         .findFirst()
@@ -188,7 +188,7 @@ public class ProjectBuilderTest {
     // Bar.classをファイルから直接読み込みJMOを生成
     final Path bin = rootPath.resolve("bin/example/Bar.class");
     final byte[] bytes = Files.readAllBytes(bin);
-    final JavaMemoryObject object = null;
+    final JavaBinaryObject object = null;
     // new JavaMemoryObject(Fqn.BAR.toString() + "#" + "d4eaa21b82a9ace3015e1ced616b9ce6",
     // Fqn.BAR.toString(), Kind.CLASS, "d4eaa21b82a9ace3015e1ced616b9ce6");
     object.openOutputStream()
@@ -228,7 +228,7 @@ public class ProjectBuilderTest {
     // Bar.classをファイルから読み込み
     final Path bin1 = rootPath.resolve("bin/example/Bar.class");
     final byte[] bytes1 = Files.readAllBytes(bin1);
-    final JavaMemoryObject object1 = new JavaMemoryObject(Fqn.BAR.toString(), Kind.CLASS);
+    final JavaBinaryObject object1 = new JavaBinaryObject(Fqn.BAR.toString(), Fqn.BAR.toString(), Kind.CLASS, "", null);
     object1.openOutputStream()
         .write(bytes1);
     binStore.add(object1);
@@ -237,7 +237,7 @@ public class ProjectBuilderTest {
     // Foo.classをファイルから読み込み
     final Path bin2 = rootPath.resolve("bin/example/Foo.class");
     final byte[] bytes2 = Files.readAllBytes(bin2);
-    final JavaMemoryObject object2 = new JavaMemoryObject(Fqn.FOO.toString(), Kind.CLASS);
+    final JavaBinaryObject object2 = new JavaBinaryObject(Fqn.FOO.toString(), Fqn.FOO.toString(), Kind.CLASS, "", null);
     object1.openOutputStream()
         .write(bytes2);
     binStore.add(object2);

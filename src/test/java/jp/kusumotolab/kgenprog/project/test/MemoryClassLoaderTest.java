@@ -23,7 +23,7 @@ import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
-import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
+import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
@@ -60,8 +60,8 @@ public class MemoryClassLoaderTest {
     
     // クラスローダに全バイナリを設置しておく
     final BinaryStore binaryStore = buildResults.getBinaryStore();
-    final Set<JavaMemoryObject> jmos = binaryStore.getAll();
-    for (final JavaMemoryObject jmo : jmos) {
+    final Set<JavaBinaryObject> jmos = binaryStore.getAll();
+    for (final JavaBinaryObject jmo : jmos) {
       loader.addDefinition(new TargetFullyQualifiedName(jmo.getBinaryName()), jmo.getByteCode());
     }
   }

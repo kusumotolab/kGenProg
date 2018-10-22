@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.build;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.tools.JavaFileObject;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
@@ -16,44 +17,44 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
  */
 public class BinaryStore {
 
-  private Set<JavaMemoryObject> cache;
+  private Set<JavaBinaryObject> cache;
 
   public BinaryStore() {
     cache = new HashSet<>();
   }
 
-  @Deprecated
-  public void add(BinaryStoreKey key, final JavaMemoryObject object) {
+  public void add(final JavaBinaryObject object) {
     cache.add(object);
   }
 
-  public void add(final JavaMemoryObject object) {
-    cache.add(object);
+  public boolean exists(final BinaryStoreKey key) {
+    return cache.stream()
+        .anyMatch(jmo -> jmo.getPrimaryKey().equals(key.toString()));
   }
-
-  public Set<JavaMemoryObject> get(final BinaryStoreKey key) {
+  
+  public Set<JavaBinaryObject> get(final BinaryStoreKey key) {
     return cache.stream()
         .filter(jmo -> jmo.getPrimaryKey().equals(key.toString()))
         .collect(Collectors.toSet());
   }
   
-  public JavaMemoryObject get(final String fqn) {
+  public JavaBinaryObject get(final String fqn) {
     return cache.stream()
         .filter(jmo -> jmo.getBinaryName().equals(fqn))
         .findFirst().orElseThrow(RuntimeException::new);
   }
 
-  public Set<JavaMemoryObject> get(final SourcePath path) {
+  public Set<JavaBinaryObject> get(final SourcePath path) {
     return cache.stream()
         .filter(jmo -> jmo.getPath().equals(path))
         .collect(Collectors.toSet());
   }
   
-  public Set<JavaMemoryObject> getAll() {
+  public Set<JavaBinaryObject> getAll() {
     return cache;
   }
 
-  public Iterable<JavaMemoryObject> list(final String packageName) {
+  public Iterable<JavaBinaryObject> list(final String packageName) {
     return cache.stream()
         .filter(jmo -> jmo.getName()
             .startsWith("/" + packageName)) // TODO: スラッシュ開始で決め打ち．uriからの変換なので間違いないとは思う
@@ -62,6 +63,10 @@ public class BinaryStore {
 
   public void removeAll() {
     cache.clear();
+  }
+
+  public void addAll(Set<JavaBinaryObject> binaries) {
+    cache.addAll(binaries);
   }
 
 }

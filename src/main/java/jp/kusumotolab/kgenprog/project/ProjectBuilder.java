@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,10 +17,14 @@ import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
 import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
-import jp.kusumotolab.kgenprog.project.build.JavaFileObjectFromString;
-import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
+import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
+import jp.kusumotolab.kgenprog.project.build.JavaSourceObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
+/**
+ * @author shin
+ *
+ */
 public class ProjectBuilder {
 
   private static Logger log = LoggerFactory.getLogger(ProjectBuilder.class);
@@ -35,9 +38,8 @@ public class ProjectBuilder {
   }
 
   /**
-   * @param generatedSourceCode null でなければ与えられた generatedSourceCode からビルド．null の場合は，初期ソースコードからビルド
-   * @param workPath バイトコード出力ディレクトリ
-   * @return ビルドに関するさまざまな情報
+   * @param generatedSourceCode
+   * @return
    */
   public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
     log.debug("enter build(GeneratedSourceCode)");
@@ -48,55 +50,35 @@ public class ProjectBuilder {
     final InMemoryClassManager inMemoryFileManager =
         new InMemoryClassManager(standardFileManager, binaryStore);
 
-    // コンパイルの引数を生成
-    final List<String> compilationOptions = new ArrayList<>();
-    compilationOptions.add("-encoding");
-    compilationOptions.add("UTF-8");
-    compilationOptions.add("-classpath");
-    compilationOptions.add(String.join(File.pathSeparator, this.targetProject.getClassPaths()
-        .stream()
-        .map(cp -> cp.path.toString())
-        .collect(Collectors.toList())));
-    compilationOptions.add("-verbose");
+    final List<String> compilationOptions = createDefaultCompilationOptions();
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
     // コンパイル対象の JavaFileObject を生成
-    final Set<JavaFileObject> javaFileObjects =
-        generateAllJavaFileObjects(generatedSourceCode.getAllAsts());
+    final Set<JavaFileObject> javaSourceObjects =
+        generateAllJavaSourceObjects(generatedSourceCode.getAllAsts());
 
-    if (javaFileObjects.isEmpty()) { // xxxxxxxxxxxx
+    if (javaSourceObjects.isEmpty()) { // xxxxxxxxxxxx
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
       return EmptyBuildResults.instance;
     }
 
-    final Set<JavaMemoryObject> bins = new HashSet<>();
-    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
-      final BinaryStoreKey key = new BinaryStoreKey(ast);
-      final Set<JavaMemoryObject> jfos = binaryStore.get(key);
-      if (!jfos.isEmpty()) {
-        bins.addAll(jfos);
-      }
-    }
-    inMemoryFileManager.setClassPathBinaries(bins);
+    final Set<JavaBinaryObject> resusedBinaries = extractBinaries(generatedSourceCode.getAllAsts());
+    inMemoryFileManager.setClassPathBinaries(resusedBinaries);
 
     // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();
 
     // コンパイルのタスクを生成
     final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
-        diagnostics, compilationOptions, null, javaFileObjects);
+        diagnostics, compilationOptions, null, javaSourceObjects);
 
     System.out.println("-----------------------------------------");
-    System.out.println("build:        " + javaFileObjects);
-    System.out.println("   reused:    " + bins); // xxxxxxxxxxxxxxxxx
+    System.out.println("build:        " + javaSourceObjects);
+    System.out.println("   reused:    " + resusedBinaries); // xxxxxxxxxxxxxxxxx
     System.out.println("   all-cache: " + binaryStore.getAll()); // xxxxxxxxxxxxxxxxx
-    String code = generatedSourceCode.getProductAsts()
-        .get(0)
-        .getSourceCode();
 
     // コンパイルを実行
     final boolean isBuildFailed = !task.call();
-
 
     if (isBuildFailed) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
@@ -105,39 +87,63 @@ public class ProjectBuilder {
 
     final String buildProgressText = buildProgressWriter.toString();
 
-    final BinaryStore binStore = new BinaryStore();
-    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
-      final BinaryStoreKey key = new BinaryStoreKey(ast);
-      final Set<JavaMemoryObject> jfos = binaryStore.get(key);
-      for (JavaMemoryObject jfo : jfos) {
-        binStore.add(jfo);
-      }
-    }
+    final Set<JavaBinaryObject> compiledBinaries =
+        extractBinaries(generatedSourceCode.getAllAsts());
+    final BinaryStore generatedBinaryStore = new BinaryStore();
+    generatedBinaryStore.addAll(compiledBinaries);
 
-    final BuildResults buildResults = new BuildResults(generatedSourceCode, false,
-        diagnostics, buildProgressText, binStore);
+    final BuildResults buildResults = new BuildResults(generatedSourceCode, false, diagnostics,
+        buildProgressText, generatedBinaryStore);
 
     log.debug("exit build(GeneratedSourceCode, Path) -- build succeeded.");
     return buildResults;
   }
 
-  private Set<JavaFileObject> generateAllJavaFileObjects(
-      final List<GeneratedAST<? extends SourcePath>> asts) {
 
-    final Set<JavaFileObject> result = new HashSet<>();
-    for (final GeneratedAST<? extends SourcePath> ast : asts) {
-      final BinaryStoreKey key = new BinaryStoreKey(ast);
-      if (!binaryStore.get(key)
-          .isEmpty()) {
-        // result.addAll(binaryStore.get(key)); // necessary???????????? TODO
-        continue;
-      }
-      final JavaFileObjectFromString m = new JavaFileObjectFromString(ast.getPrimaryClassName(),
-          ast.getSourceCode(), ast.getMessageDigest(), ast.getSourcePath());
-      result.add(m);
-    }
+  /**
+   * 指定astに対応する全JavaBinaryObjectをbinaryStoreから取得する．
+   * 
+   * @param asts
+   * @return
+   */
+  private Set<JavaBinaryObject> extractBinaries(List<GeneratedAST<? extends SourcePath>> asts) {
+    return asts.stream()
+        .map(BinaryStoreKey::new)
+        .map(key -> binaryStore.get(key))
+        .flatMap(Set::stream)
+        .collect(Collectors.toSet());
+  }
 
-    return result;
+  /**
+   * 指定astからコンパイル用のJavaSourceObjectを生成する．
+   * 
+   * @param asts
+   * @return
+   */
+  private Set<JavaFileObject> generateAllJavaSourceObjects(
+      List<GeneratedAST<? extends SourcePath>> asts) {
+    return asts.stream()
+        .filter(ast -> !binaryStore.exists(new BinaryStoreKey(ast)))
+        .map(JavaSourceObject::new)
+        .collect(Collectors.toSet());
+  }
+
+  /**
+   * デフォルトのコンパイルオプションを生成する．
+   * 
+   * @return
+   */
+  private List<String> createDefaultCompilationOptions() {
+    final List<String> options = new ArrayList<>();
+    options.add("-encoding");
+    options.add("UTF-8");
+    options.add("-classpath");
+    options.add(String.join(File.pathSeparator, this.targetProject.getClassPaths()
+        .stream()
+        .map(cp -> cp.path.toString())
+        .collect(Collectors.toList())));
+    options.add("-verbose");
+    return options;
   }
 
 }

@@ -85,7 +85,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // Be ignored but should not be ignored
+  //@Ignore // Be ignored but should not be ignored
   @Test
   public void testCloseToZero02() {
     final Path rootPath = Paths.get("example/CloseToZero02");

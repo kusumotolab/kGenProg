@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project;
 
-import java.util.HashMap;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
