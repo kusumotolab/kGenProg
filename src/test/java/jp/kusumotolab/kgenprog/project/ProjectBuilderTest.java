@@ -231,7 +231,7 @@ public class ProjectBuilderTest {
     // Bar.classをファイルから読み込み
     final Path bin1 = rootPath.resolve("bin/example/Bar.class");
     final byte[] bytes1 = Files.readAllBytes(bin1);
-    final JavaBinaryObject object1 = new JavaBinaryObject(Fqn.BAR.toString(), Fqn.BAR.toString(), Kind.CLASS, "", null);
+    final JavaBinaryObject object1 = new JavaBinaryObject(Fqn.BAR.toString(), Fqn.BAR.toString(), Kind.CLASS, "", null, false);
     object1.openOutputStream()
         .write(bytes1);
     binStore.add(object1);
@@ -240,7 +240,7 @@ public class ProjectBuilderTest {
     // Foo.classをファイルから読み込み
     final Path bin2 = rootPath.resolve("bin/example/Foo.class");
     final byte[] bytes2 = Files.readAllBytes(bin2);
-    final JavaBinaryObject object2 = new JavaBinaryObject(Fqn.FOO.toString(), Fqn.FOO.toString(), Kind.CLASS, "", null);
+    final JavaBinaryObject object2 = new JavaBinaryObject(Fqn.FOO.toString(), Fqn.FOO.toString(), Kind.CLASS, "", null, false);
     object1.openOutputStream()
         .write(bytes2);
     binStore.add(object2);

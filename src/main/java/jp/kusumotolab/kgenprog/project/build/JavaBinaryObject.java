@@ -23,15 +23,17 @@ public class JavaBinaryObject implements JavaFileObject {
   private final String digest;
   private final SourcePath path;
   private final URI uri;
+  private final boolean isTest;
   private final ByteArrayOutputStream bos;
 
-  public JavaBinaryObject(final String primaryKey, final String fqn, final Kind kind, final String digest, final SourcePath path) {
+  public JavaBinaryObject(final String primaryKey, final String fqn, final Kind kind, final String digest, final SourcePath path, final boolean isTest) {
     this.primaryKey = primaryKey;
     this.fqn = fqn;
     this.kind = kind;
     this.digest = digest;
     this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + kind.extension);
     this.path = path;
+    this.isTest = isTest;
     this.bos = new ByteArrayOutputStream();
   }
   
@@ -53,6 +55,10 @@ public class JavaBinaryObject implements JavaFileObject {
   
   public byte[] getByteCode() {
     return bos.toByteArray();
+  }
+  
+  public boolean isTest() {
+    return isTest;
   }
 
   @Override

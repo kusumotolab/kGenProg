@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.build;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class ProjectBuilder {
     final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     final StandardJavaFileManager standardFileManager =
         compiler.getStandardFileManager(null, null, null);
-    final InMemoryClassManager inMemoryFileManager =
+    final InMemoryClassManager inMemoryClassManager =
         new InMemoryClassManager(standardFileManager, binaryStore);
 
     final List<String> compilationOptions = createDefaultCompilationOptions();
@@ -57,17 +58,23 @@ public class ProjectBuilder {
 
     if (javaSourceObjects.isEmpty()) { // xxxxxxxxxxxx
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
+      try {
+        inMemoryClassManager.close();
+      } catch (IOException e) {
+        // TODO 自動生成された catch ブロック
+        e.printStackTrace();
+      }
       return EmptyBuildResults.instance;
     }
 
     final Set<JavaBinaryObject> resusedBinaries = extractBinaries(generatedSourceCode.getAllAsts());
-    inMemoryFileManager.setClassPathBinaries(resusedBinaries);
+    inMemoryClassManager.setClassPathBinaries(resusedBinaries);
 
     // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();
 
     // コンパイルのタスクを生成
-    final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
+    final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryClassManager,
         diagnostics, compilationOptions, null, javaSourceObjects);
 
     System.out.println("-----------------------------------------");

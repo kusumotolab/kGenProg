@@ -42,11 +42,11 @@ public class BinaryStoreTest {
     key3 = new BinaryStoreKey(BAZ.value, digest3);
 
     object1 = new JavaBinaryObject(key1.toString(), FOO.value, Kind.CLASS, digest1,
-        new ProductSourcePath(Paths.get("")));
+        new ProductSourcePath(Paths.get("")), false);
     object2 = new JavaBinaryObject(key2.toString(), BAR.value, Kind.CLASS, digest2,
-        new ProductSourcePath(Paths.get("")));
+        new ProductSourcePath(Paths.get("")), false);
     object3 = new JavaBinaryObject(key3.toString(), BAZ.value, Kind.CLASS, digest3,
-        new ProductSourcePath(Paths.get("")));
+        new ProductSourcePath(Paths.get("")), false);
 
     ast1 = mock(GeneratedAST.class);
     ast2 = mock(GeneratedAST.class);
@@ -89,7 +89,7 @@ public class BinaryStoreTest {
     // "example" とは異なる名前のJMOバイナリを追加
     final String dummyPackName = "xxx.BarTest";
     final JavaBinaryObject dummy =
-        new JavaBinaryObject(dummyPackName, dummyPackName, Kind.CLASS, "4444", null);
+        new JavaBinaryObject(dummyPackName, dummyPackName, Kind.CLASS, "4444", null, false);
     binStore.add(dummy);
 
     // o1とo2だけのはず（dummyは含まれない）

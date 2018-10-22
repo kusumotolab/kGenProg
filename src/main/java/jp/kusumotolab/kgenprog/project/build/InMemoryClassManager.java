@@ -46,11 +46,13 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     if (!(sibling instanceof JavaSourceObject)) {
       throw new UnsupportedOperationException(); // TODO
     }
-    JavaSourceObject jfo = (JavaSourceObject) sibling;
-    String hash = jfo.getMessageDigest();
-    String _name = jfo.getName();
+    final JavaSourceObject jfo = (JavaSourceObject) sibling;
+    final String hash = jfo.getMessageDigest();
+    final String _name = jfo.getName();
+    final boolean isTest = jfo.isTest();
 
-    JavaBinaryObject co = new JavaBinaryObject(_name + "#" + hash, name, kind, hash, jfo.getSourcePath());
+    final JavaBinaryObject co =
+        new JavaBinaryObject(_name + "#" + hash, name, kind, hash, jfo.getSourcePath(), isTest);
     binaryStore.add(co); // TODO temporaly
     return co;
   }

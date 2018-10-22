@@ -80,7 +80,6 @@ class TestThread extends Thread {
     }
 
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
-    final List<FullyQualifiedName> testFQNs = getTestFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
@@ -88,8 +87,7 @@ class TestThread extends Thread {
     final MemoryClassLoader classLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      addAllDefinitions(classLoader, productFQNs, true);
-      // addAllDefinitions(classLoader, testFQNs, false);
+      addAllDefinitions(classLoader, productFQNs);
       final List<Class<?>> testClasses = loadAllClasses(classLoader, executionTestFQNs);
 
       final JUnitCore junitCore = new JUnitCore();
@@ -110,25 +108,28 @@ class TestThread extends Thread {
     }
   }
 
-  /***
-   * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．
+  /**
+   * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．<br>
+   * プロダクト系ソースコードのみJaCoCoインストルメントを適用する．
    * 
    * @param memoryClassLoader
    * @param fqns
-   * @param isInstrument jacoco-instrumentを適用するか？計測対象か？
+   * @param isInstrument
    * @throws IOException
    */
   private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
-      final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
-    // final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-
-    for (JavaBinaryObject jmo : buildResults.getBinaryStore()
-        .getAll()) {
-      final byte[] bytecode = jmo.getByteCode();
+      final List<FullyQualifiedName> fqns) throws IOException {
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    for (final JavaBinaryObject jmo : binaryStore.getAll()) {
       final String fqn = jmo.getBinaryName();
-      final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
-      memoryClassLoader.addDefinition(new TargetFullyQualifiedName(fqn), instrumentedBytecode);
+      final byte[] rawBytecode = jmo.getByteCode();
+      final byte[] bytecode = jmo.isTest() ? rawBytecode : instrumentBytecode(rawBytecode);
+      memoryClassLoader.addDefinition(new TargetFullyQualifiedName(fqn), bytecode);
     }
+  }
+
+  private byte[] instrumentBytecode(final byte[] bytecode) throws IOException {
+    return jacocoInstrumenter.instrument(bytecode, "");
   }
 
   private List<FullyQualifiedName> getProductFQNs() {
