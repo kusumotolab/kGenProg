@@ -13,8 +13,6 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
@@ -23,7 +21,6 @@ import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
 import jp.kusumotolab.kgenprog.project.build.JavaFileObjectFromString;
 import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
