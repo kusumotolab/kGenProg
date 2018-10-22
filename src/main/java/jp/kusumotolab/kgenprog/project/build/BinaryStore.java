@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.build;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.tools.JavaFileObject;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**

@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.project.build;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

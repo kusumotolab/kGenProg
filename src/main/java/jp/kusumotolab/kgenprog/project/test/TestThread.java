@@ -22,10 +22,10 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import com.google.common.base.Functions;
-import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
+import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
@@ -40,12 +40,12 @@ class TestThread extends Thread {
   private TestResults testResults; // used for return value in multi thread
   private BuildResults buildResults;
 
-  //private final GeneratedSourceCode generatedSourceCode;
+  // private final GeneratedSourceCode generatedSourceCode;
   private final TargetProject targetProject;
   private final List<String> executionTestNames;
 
-  public TestThread(final BuildResults buildResults,
-      final TargetProject targetProject, final List<String> executionTestNames) {
+  public TestThread(final BuildResults buildResults, final TargetProject targetProject,
+      final List<String> executionTestNames) {
 
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
@@ -66,10 +66,10 @@ class TestThread extends Thread {
    */
   public void run() {
     // 初期処理（プロジェクトのビルドと返り値の生成）
-    
+
     // XXXXXXXXXXXXXXXXXXX TODO
-    //final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    //buildResults = projectBuilder.build(generatedSourceCode);
+    // final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
+    // buildResults = projectBuilder.build(generatedSourceCode);
     testResults = new TestResults();
     testResults.setBuildResults(buildResults); // FLメトリクス算出のためにtestResultsにbuildResultsを登録しておく．
 
@@ -89,7 +89,7 @@ class TestThread extends Thread {
 
     try {
       addAllDefinitions(classLoader, productFQNs, true);
-      //addAllDefinitions(classLoader, testFQNs, false);
+      // addAllDefinitions(classLoader, testFQNs, false);
       final List<Class<?>> testClasses = loadAllClasses(classLoader, executionTestFQNs);
 
       final JUnitCore junitCore = new JUnitCore();
@@ -109,6 +109,7 @@ class TestThread extends Thread {
       throw new RuntimeException(e);
     }
   }
+
   /***
    * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．
    * 
@@ -119,9 +120,10 @@ class TestThread extends Thread {
    */
   private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
       final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
-    //final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    
-    for (JavaBinaryObject jmo : buildResults.getBinaryStore().getAll()) {
+    // final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+
+    for (JavaBinaryObject jmo : buildResults.getBinaryStore()
+        .getAll()) {
       final byte[] bytecode = jmo.getByteCode();
       final String fqn = jmo.getBinaryName();
       final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
@@ -285,11 +287,13 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-//        final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-//        final CompilationUnit compilatinoUnit =
-//            compilationPackage.getCompilationUnit(measuredClass.value);
-        //final byte[] bytecode = compilatinoUnit.getBytecode();
-        final byte[] bytecode =buildResults.getBinaryStore().get(measuredClass.value).getByteCode();
+        // final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+        // final CompilationUnit compilatinoUnit =
+        // compilationPackage.getCompilationUnit(measuredClass.value);
+        // final byte[] bytecode = compilatinoUnit.getBytecode();
+        final byte[] bytecode = buildResults.getBinaryStore()
+            .get(measuredClass.value)
+            .getByteCode();
         analyzer.analyzeClass(bytecode, measuredClass.value);
       }
     }

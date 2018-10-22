@@ -1,8 +1,8 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.project.build;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
-import jp.kusumotolab.kgenprog.project.build.BinaryStore;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
 public class BuildResults {
 

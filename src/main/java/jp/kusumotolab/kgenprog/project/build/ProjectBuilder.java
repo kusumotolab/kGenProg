@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.project.build;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -14,11 +14,9 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.project.build.BinaryStore;
-import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
-import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
-import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
-import jp.kusumotolab.kgenprog.project.build.JavaSourceObject;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
@@ -55,7 +53,7 @@ public class ProjectBuilder {
 
     // コンパイル対象の JavaFileObject を生成
     final Set<JavaFileObject> javaSourceObjects =
-        generateAllJavaSourceObjects(generatedSourceCode.getAllAsts());
+        generateJavaSourceObjects(generatedSourceCode.getAllAsts());
 
     if (javaSourceObjects.isEmpty()) { // xxxxxxxxxxxx
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
@@ -101,7 +99,7 @@ public class ProjectBuilder {
 
 
   /**
-   * 指定astに対応する全JavaBinaryObjectをbinaryStoreから取得する．
+   * 指定astに対応するJavaBinaryObjectをbinaryStoreから取得する．
    * 
    * @param asts
    * @return
@@ -115,12 +113,13 @@ public class ProjectBuilder {
   }
 
   /**
-   * 指定astからコンパイル用のJavaSourceObjectを生成する．
+   * 指定astからコンパイル元となるJavaSourceObjectを生成する．<br>
+   * ただしbinaryStoreに保持されているキャッシュがある場合はスキップ．
    * 
    * @param asts
    * @return
    */
-  private Set<JavaFileObject> generateAllJavaSourceObjects(
+  private Set<JavaFileObject> generateJavaSourceObjects(
       List<GeneratedAST<? extends SourcePath>> asts) {
     return asts.stream()
         .filter(ast -> !binaryStore.exists(new BinaryStoreKey(ast)))
@@ -134,14 +133,16 @@ public class ProjectBuilder {
    * @return
    */
   private List<String> createDefaultCompilationOptions() {
+    final String classpaths = String.join(File.pathSeparator, this.targetProject.getClassPaths()
+        .stream()
+        .map(cp -> cp.path.toString())
+        .collect(Collectors.toList()));
+
     final List<String> options = new ArrayList<>();
     options.add("-encoding");
     options.add("UTF-8");
     options.add("-classpath");
-    options.add(String.join(File.pathSeparator, this.targetProject.getClassPaths()
-        .stream()
-        .map(cp -> cp.path.toString())
-        .collect(Collectors.toList())));
+    options.add(classpaths);
     options.add("-verbose");
     return options;
   }
