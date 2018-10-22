@@ -30,10 +30,20 @@ public class ProjectBuilder {
 
   private final TargetProject targetProject;
   private final BinaryStore binaryStore;
+  private final JavaCompiler compiler;
+  private final StandardJavaFileManager standardFileManager;
+  private final InMemoryFileManager inMemoryFileManager;
+  private final List<String> compilationOptions;
 
   public ProjectBuilder(final TargetProject targetProject) {
     this.targetProject = targetProject;
-    this.binaryStore = new BinaryStore();
+
+    // 再利用可能なオブジェクト
+    binaryStore = new BinaryStore();
+    compiler = ToolProvider.getSystemJavaCompiler();
+    standardFileManager = compiler.getStandardFileManager(null, null, null);
+    inMemoryFileManager = new InMemoryFileManager(standardFileManager, binaryStore);
+    compilationOptions = createDefaultCompilationOptions();
   }
 
   /**
@@ -43,44 +53,28 @@ public class ProjectBuilder {
   public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
     log.debug("enter build(GeneratedSourceCode)");
 
-    final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-    final StandardJavaFileManager standardFileManager =
-        compiler.getStandardFileManager(null, null, null);
-    final InMemoryClassManager inMemoryClassManager =
-        new InMemoryClassManager(standardFileManager, binaryStore);
+    final List<GeneratedAST<?>> allAsts = generatedSourceCode.getAllAsts();
+    final Set<JavaSourceObject> javaSourceObjects = generateJavaSourceObjects(allAsts);
 
-    final List<String> compilationOptions = createDefaultCompilationOptions();
-    final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-
-    // コンパイル対象の JavaFileObject を生成
-    final Set<JavaFileObject> javaSourceObjects =
-        generateJavaSourceObjects(generatedSourceCode.getAllAsts());
-
-    if (javaSourceObjects.isEmpty()) { // xxxxxxxxxxxx
+    if (javaSourceObjects.isEmpty()) { // TODO xxxxxxxxxxxx
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
-      try {
-        inMemoryClassManager.close();
-      } catch (IOException e) {
-        // TODO 自動生成された catch ブロック
-        e.printStackTrace();
-      }
       return EmptyBuildResults.instance;
     }
 
-    final Set<JavaBinaryObject> resusedBinaries = extractBinaries(generatedSourceCode.getAllAsts());
-    inMemoryClassManager.setClassPathBinaries(resusedBinaries);
+    final Set<JavaBinaryObject> resusedBinaryObject = extractBinaryObjects(allAsts);
+    inMemoryFileManager.setClassPathBinaries(resusedBinaryObject);
 
-    // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();
+    final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
     // コンパイルのタスクを生成
-    final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryClassManager,
+    final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
         diagnostics, compilationOptions, null, javaSourceObjects);
 
-    System.out.println("-----------------------------------------");
-    System.out.println("build:        " + javaSourceObjects);
-    System.out.println("   reused:    " + resusedBinaries); // xxxxxxxxxxxxxxxxx
-    System.out.println("   all-cache: " + binaryStore.getAll()); // xxxxxxxxxxxxxxxxx
+    log.trace("-----------------------------------------");
+    log.trace("build:        " + javaSourceObjects);
+    log.trace("   reused:    " + resusedBinaryObject);
+    log.trace("   all-cache: " + binaryStore.getAll());
 
     // コンパイルを実行
     final boolean isBuildFailed = !task.call();
@@ -90,15 +84,12 @@ public class ProjectBuilder {
       return EmptyBuildResults.instance;
     }
 
-    final String buildProgressText = buildProgressWriter.toString();
-
-    final Set<JavaBinaryObject> compiledBinaries =
-        extractBinaries(generatedSourceCode.getAllAsts());
     final BinaryStore generatedBinaryStore = new BinaryStore();
+    final Set<JavaBinaryObject> compiledBinaries = extractBinaryObjects(allAsts);
     generatedBinaryStore.addAll(compiledBinaries);
 
     final BuildResults buildResults = new BuildResults(generatedSourceCode, false, diagnostics,
-        buildProgressText, generatedBinaryStore);
+        buildProgressWriter.toString(), generatedBinaryStore);
 
     log.debug("exit build(GeneratedSourceCode, Path) -- build succeeded.");
     return buildResults;
@@ -111,7 +102,8 @@ public class ProjectBuilder {
    * @param asts
    * @return
    */
-  private Set<JavaBinaryObject> extractBinaries(List<GeneratedAST<? extends SourcePath>> asts) {
+  private Set<JavaBinaryObject> extractBinaryObjects(
+      List<GeneratedAST<? extends SourcePath>> asts) {
     return asts.stream()
         .map(BinaryStoreKey::new)
         .map(key -> binaryStore.get(key))
@@ -126,7 +118,7 @@ public class ProjectBuilder {
    * @param asts
    * @return
    */
-  private Set<JavaFileObject> generateJavaSourceObjects(
+  private Set<JavaSourceObject> generateJavaSourceObjects(
       List<GeneratedAST<? extends SourcePath>> asts) {
     return asts.stream()
         .filter(ast -> !binaryStore.exists(new BinaryStoreKey(ast)))

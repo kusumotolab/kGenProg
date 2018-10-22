@@ -18,11 +18,11 @@ import com.google.common.collect.Iterables;
  * 
  * @see JavaBinaryObject
  */
-public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileManager> {
+public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   private BinaryStore binaryStore;
 
-  public InMemoryClassManager(final JavaFileManager fileManager, final BinaryStore binaryStore) {
+  public InMemoryFileManager(final JavaFileManager fileManager, final BinaryStore binaryStore) {
     super(fileManager);
     this.binaryStore = binaryStore;
   }
