@@ -6,7 +6,6 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,7 +14,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
 public class BinaryStoreTest {
 
-  static BinaryStorexxx binStore = BinaryStorexxx.instance;
+  static BinaryStore binStore = new BinaryStore();
   static BinaryStoreKey key1;
   static BinaryStoreKey key2;
   static BinaryStoreKey key3;
@@ -52,19 +51,19 @@ public class BinaryStoreTest {
   @Test
   // 基本操作の確認．putしてgetできるか
   public void testStoreAndGetByPath() {
-    binStore.put(key1, object1);
-    binStore.put(key2, object2);
+    binStore.add(key1, object1);
+    binStore.add(key2, object2);
 
     assertThat(binStore.get(key1)).isSameAs(object1);
     assertThat(binStore.get(key2)).isSameAs(object2);
-    assertThat(binStore.get(key3)).isNull();
+    assertThat(binStore.get(key3)).isEmpty();
   }
 
   @Test
   // キャッシュを上書きできるか
   public void testOverrideByPath() {
-    binStore.put(key1, object1);
-    binStore.put(key1, object2); // force override
+    binStore.add(key1, object1);
+    binStore.add(key1, object2); // force override
 
     assertThat(binStore.get(key1)).isSameAs(object2);
   }
@@ -72,21 +71,21 @@ public class BinaryStoreTest {
   @Test
   // 空の状態からnullが返ってくるか
   public void testJustGet() {
-    assertThat(binStore.get(key1)).isNull();
-    assertThat(binStore.get(key2)).isNull();
-    assertThat(binStore.get(key3)).isNull();
+    assertThat(binStore.get(key1)).isEmpty();
+    assertThat(binStore.get(key2)).isEmpty();
+    assertThat(binStore.get(key3)).isEmpty();
   }
 
   @Test
   // listの確認．パッケージ名を指定して期待のバイナリが返ってくるか
   public void testList() {
-    binStore.put(key1, object1);
-    binStore.put(key2, object2);
+    binStore.add(key1, object1);
+    binStore.add(key2, object2);
 
     // "example" とは異なる名前のJMOバイナリを追加
     final String dummyPackName = "xxx.BarTest";
-    final JavaFileObject dummy = new JavaMemoryObject(dummyPackName, Kind.CLASS);
-    binStore.put(key3, dummy);
+    final JavaMemoryObject dummy = new JavaMemoryObject(dummyPackName, Kind.CLASS);
+    binStore.add(key3, dummy);
 
     // o1とo2だけのはず（dummyは含まれない）
     assertThat(binStore.list("example")).containsExactlyInAnyOrder(object1, object2);

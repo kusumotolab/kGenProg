@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.build;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
  * 差分ビルド + インメモリビルドのためのバイナリ格納庫．<br>
@@ -21,6 +22,11 @@ public class BinaryStore {
     cache = new HashSet<>();
   }
 
+  @Deprecated
+  public void add(BinaryStoreKey key, final JavaMemoryObject object) {
+    cache.add(object);
+  }
+
   public void add(final JavaMemoryObject object) {
     cache.add(object);
   }
@@ -31,13 +37,18 @@ public class BinaryStore {
         .collect(Collectors.toSet());
   }
   
-
   public JavaMemoryObject get(final String fqn) {
     return cache.stream()
         .filter(jmo -> jmo.getBinaryName().equals(fqn))
         .findFirst().orElseThrow(RuntimeException::new);
   }
 
+  public Set<JavaMemoryObject> get(final SourcePath path) {
+    return cache.stream()
+        .filter(jmo -> jmo.getPath().equals(path))
+        .collect(Collectors.toSet());
+  }
+  
   public Set<JavaMemoryObject> getAll() {
     return cache;
   }

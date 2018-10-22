@@ -49,10 +49,11 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     if (!(sibling instanceof JavaFileObjectFromString)) {
       throw new UnsupportedOperationException(); // TODO
     }
-    String hash = ((JavaFileObjectFromString) sibling).getMessageDigest();
-    String _name = ((JavaFileObjectFromString) sibling).getName();
+    JavaFileObjectFromString jfo = (JavaFileObjectFromString) sibling;
+    String hash = jfo.getMessageDigest();
+    String _name = jfo.getName();
 
-    JavaMemoryObject co = new JavaMemoryObject(_name + "#" + hash, name, kind, hash);
+    JavaMemoryObject co = new JavaMemoryObject(_name + "#" + hash, name, kind, hash, jfo.getPath());
     CompilationUnit cf = new CompilationUnit(name, co);
     memory.add(cf);
     binaryStore.add(co); // TODO temporaly

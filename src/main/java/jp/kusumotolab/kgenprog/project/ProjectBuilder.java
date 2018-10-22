@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
-import jp.kusumotolab.kgenprog.project.build.BinaryStorexxx;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
@@ -80,7 +79,7 @@ public class ProjectBuilder {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
       final Set<JavaMemoryObject> jfos = binaryStore.get(key);
       if (!jfos.isEmpty()) {
-        //bins.addAll(jfos);
+        // bins.addAll(jfos);
       }
     }
 
@@ -111,19 +110,6 @@ public class ProjectBuilder {
     }
 
     final String buildProgressText = buildProgressWriter.toString();
-    final List<CompilationUnit> compilationUnits = inMemoryFileManager.getAllClasses();
-    // final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
-
-    // final List<CompilationUnit> units = null;
-    // final List<CompilationUnit> units = new ArrayList<>();
-    // for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
-    // final BinaryStoreKey key = new BinaryStoreKey(ast);
-    // final Set<JavaFileObject> jfos = binaryStore.get(key);
-    // for (JavaFileObject jfo : jfos) {
-    // units.add(new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo));
-    // }
-    // }
-    final CompilationPackage compilationPackage = null;// new CompilationPackage(units);
 
     final BinaryStore binStore = new BinaryStore();
     for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
@@ -135,45 +121,8 @@ public class ProjectBuilder {
     }
 
     final BuildResults buildResults = new BuildResults(generatedSourceCode, false,
-        compilationPackage, diagnostics, buildProgressText, binStore);
+        diagnostics, buildProgressText, binStore);
 
-    // TODO: https://github.com/kusumotolab/kGenProg/pull/154
-    // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
-
-    final List<SourcePath> allSourcePaths = new ArrayList<>();
-    allSourcePaths.addAll(this.targetProject.getProductSourcePaths());
-    allSourcePaths.addAll(this.targetProject.getTestSourcePaths());
-
-    for (final CompilationUnit compilationUnit : compilationUnits) {
-
-      // TODO: https://github.com/kusumotolab/kGenProg/pull/154
-      // 更新されたファイルの中に classFile が含まれていない場合は削除．この機能はとりあえず無しで問題ない
-      // if (!updatedFiles.isEmpty() && !updatedFiles.contains(classFile.getAbsolutePath())) {
-      // if (!classFile.delete()) {
-      // throw new RuntimeException();
-      // }
-      // continue;
-      // }
-
-      // クラスファイルのパース
-      final ClassParser parser = this.parse(compilationUnit);
-
-      // 対応関係の構築
-      final String partialPath = parser.getPartialPath();
-      final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(parser.getFQN());
-      SourcePath correspondingSourceFile = null;
-      for (final SourcePath sourcePath : allSourcePaths) {
-        if (sourcePath.path.endsWith(partialPath)) {
-          correspondingSourceFile = sourcePath;
-          break;
-        }
-      }
-      if (null != correspondingSourceFile) {
-        buildResults.addMapping(correspondingSourceFile.path, fqn);
-      } else {
-        buildResults.setMappingAvailable(false);
-      }
-    }
     log.debug("exit build(GeneratedSourceCode, Path) -- build succeeded.");
     return buildResults;
   }
@@ -186,51 +135,15 @@ public class ProjectBuilder {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
       if (!binaryStore.get(key)
           .isEmpty()) {
-        //result.addAll(binaryStore.get(key)); // necessary???????????? TODO
+        // result.addAll(binaryStore.get(key)); // necessary???????????? TODO
         continue;
       }
       final JavaFileObjectFromString m = new JavaFileObjectFromString(ast.getPrimaryClassName(),
-          ast.getSourceCode(), ast.getMessageDigest());
+          ast.getSourceCode(), ast.getMessageDigest(), ast.getSourcePath());
       result.add(m);
     }
 
     return result;
   }
 
-  private ClassParser parse(final CompilationUnit compilationUnit) {
-    log.debug("enter parse(CompilationUnit)");
-    final ClassReader reader = new ClassReader(compilationUnit.getBytecode());
-    final ClassParser parser = new ClassParser(Opcodes.ASM6);
-    reader.accept(parser, ClassReader.SKIP_CODE);
-    log.debug("exit parse(File)");
-    return parser;
-  }
-
-  // TODO: https://github.com/kusumotolab/kGenProg/pull/154
-  @SuppressWarnings("unused")
-  private Set<String> getUpdatedFiles(final List<String> lines) {
-    final String prefixWindowsOracle = "[RegularFileObject[";
-    final String prefixMacOracle = "[DirectoryFileObject[";
-    final Set<String> updatedFiles = new HashSet<>();
-    for (final String line : lines) {
-
-      // for OracleJDK in Mac environment
-      if (line.startsWith(prefixMacOracle)) {
-        final int startIndex = prefixMacOracle.length();
-        final int endIndex = line.indexOf(']');
-        final String updatedFile = line.substring(startIndex, endIndex)
-            .replace(":", File.separator);
-        updatedFiles.add(updatedFile);
-      }
-
-      // for OracleJDK in Windows environment
-      else if (line.startsWith(prefixWindowsOracle)) {
-        final int startIndex = prefixWindowsOracle.length();
-        final int endIndex = line.indexOf(']');
-        final String updatedFile = line.substring(startIndex, endIndex);
-        updatedFiles.add(updatedFile);
-      }
-    }
-    return updatedFiles;
-  }
 }

@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -24,6 +25,7 @@ import com.google.common.base.Functions;
 import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
@@ -151,13 +153,12 @@ class TestThread extends Thread {
   }
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
+    final BinaryStore binStore = buildResults.getBinaryStore();
     return sourcesPaths.stream()
-        .peek(System.out::println)
-        .map(source -> buildResults.getPathToFQNs(source.path))
-        .peek(System.out::println)
-        .filter(fqn -> null != fqn)
-        .peek(System.out::println)
-        .flatMap(c -> c.stream())
+        .map(source -> binStore.get(source))
+        .flatMap(Set::stream)
+        .map(jmo -> jmo.getBinaryName())
+        .map(TargetFullyQualifiedName::new)
         .collect(Collectors.toList());
   }
 

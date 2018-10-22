@@ -1,8 +1,10 @@
 package jp.kusumotolab.kgenprog.project.build;
 
 import java.net.URI;
+import java.nio.file.Path;
 import javax.tools.SimpleJavaFileObject;
 import com.google.common.base.Objects;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
  * Stores Java source code from a String into a JavaFileObject.
@@ -14,16 +16,22 @@ public class JavaFileObjectFromString extends SimpleJavaFileObject {
 
   private final String code;
   private final String className;
+  private final SourcePath path;
   private String digest;
 
-  public JavaFileObjectFromString(String className, String javaSourceCode, final String digest) {
+  public JavaFileObjectFromString(String className, String javaSourceCode, final String digest, final SourcePath path) {
     super(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension),
         Kind.SOURCE);
     this.className = className;
     this.code = javaSourceCode;
     this.digest = digest;
+    this.path = path;
   }
 
+  public SourcePath getPath() {
+    return path;
+  }
+  
   public String getMessageDigest() {
     return digest;
   }

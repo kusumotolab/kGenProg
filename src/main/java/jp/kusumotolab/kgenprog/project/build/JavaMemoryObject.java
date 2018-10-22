@@ -9,10 +9,12 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.file.Path;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
 import com.google.common.base.Objects;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class JavaMemoryObject implements JavaFileObject {
 
@@ -20,6 +22,7 @@ public class JavaMemoryObject implements JavaFileObject {
   private final String fqn;
   private final Kind kind;
   private final String digest;
+  private final SourcePath path;
   private final URI uri;
   private final ByteArrayOutputStream bos;
 
@@ -40,15 +43,17 @@ public class JavaMemoryObject implements JavaFileObject {
     this.kind = kind;
     this.digest = digest;
     this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + kind.extension);
+    this.path = null;
     this.bos = new ByteArrayOutputStream();
   }
 
-  public JavaMemoryObject(final String primaryKey, final String fqn, final Kind kind, final String digest) {
+  public JavaMemoryObject(final String primaryKey, final String fqn, final Kind kind, final String digest, final SourcePath path) {
     this.primaryKey = primaryKey;
     this.fqn = fqn;
     this.kind = kind;
     this.digest = digest;
     this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + kind.extension);
+    this.path = path;
     this.bos = new ByteArrayOutputStream();
   }
   
@@ -64,6 +69,10 @@ public class JavaMemoryObject implements JavaFileObject {
     return fqn;
   }
 
+  public SourcePath getPath() {
+    return path;
+  }
+  
   public byte[] getByteCode() {
     return bos.toByteArray();
   }

@@ -11,7 +11,6 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAZ_TEST;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,32 +18,20 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import javax.tools.JavaFileObject.Kind;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
-import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
-import jp.kusumotolab.kgenprog.project.build.BinaryStorexxx;
-import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
-import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.MemoryClassLoader;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class ProjectBuilderTest {
-
-  @Before
-  public void before() throws IOException {
-    BinaryStorexxx.instance.removeAll(); // ビルドキャッシュは消しておく
-  }
 
   @Test
   public void testBuildStringForBuildFailure01() {
@@ -68,18 +55,11 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
-    assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(buildResults.isMappingAvailable()).isTrue();
-
     final BinaryStore binaryStore = buildResults.getBinaryStore();
+
+    assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value);
-
-    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
-      assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(productSourcePath.path);
-    }
   }
 
   @Test
@@ -91,18 +71,10 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
-    assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(buildResults.isMappingAvailable()).isTrue();
-
     final BinaryStore binaryStore = buildResults.getBinaryStore();
+    assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
-
-    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
-      assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(productSourcePath.path);
-    }
   }
 
   @Test
@@ -114,20 +86,13 @@ public class ProjectBuilderTest {
         TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
-    assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(buildResults.isMappingAvailable()).isTrue();
-
     final BinaryStore binaryStore = buildResults.getBinaryStore();
+
+    assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value, BAZ.value,
             BAZ_TEST.value, BAZ_INNER.value, BAZ_STATIC_INNER.value, BAZ_ANONYMOUS.value,
             BAZ_OUTER.value);
-
-    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
-      assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(productSourcePath.path);
-    }
   }
 
   @Test
@@ -142,19 +107,12 @@ public class ProjectBuilderTest {
         TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
-    assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(buildResults.isMappingAvailable()).isTrue();
-
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
+
+    assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
-
-    for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
-      final Set<FullyQualifiedName> fqns = buildResults.getPathToFQNs(productSourcePath.path);
-      assertThat(fqns).extracting(f -> buildResults.getPathToSource(f))
-          .containsOnly(productSourcePath.path);
-    }
   }
 
   // TODO: https://github.com/kusumotolab/kGenProg/pull/154
@@ -170,7 +128,6 @@ public class ProjectBuilderTest {
     final BuildResults buildResults03 = projectBuilder03.build(generatedSourceCode03);
 
     assertThat(buildResults03.isBuildFailed).isFalse();
-    assertThat(buildResults03.isMappingAvailable()).isTrue();
 
     // example02のビルドが成功するかテスト
     final Path rootPath02 = Paths.get("example/BuildSuccess02");
@@ -180,10 +137,9 @@ public class ProjectBuilderTest {
         TestUtil.createGeneratedSourceCode(targetProject02);
     final BuildResults buildResults02 = projectBuilder02.build(generatedSourceCode02);
 
-    assertThat(buildResults02.isBuildFailed).isFalse();
-    assertThat(buildResults02.isMappingAvailable()).isTrue();
-
     final BinaryStore binaryStore = buildResults02.getBinaryStore();
+
+    assertThat(buildResults02.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
@@ -232,9 +188,9 @@ public class ProjectBuilderTest {
     // Bar.classをファイルから直接読み込みJMOを生成
     final Path bin = rootPath.resolve("bin/example/Bar.class");
     final byte[] bytes = Files.readAllBytes(bin);
-    final JavaMemoryObject object =
-        new JavaMemoryObject(Fqn.BAR.toString() + "#" + "d4eaa21b82a9ace3015e1ced616b9ce6",
-            Fqn.BAR.toString(), Kind.CLASS, "d4eaa21b82a9ace3015e1ced616b9ce6");
+    final JavaMemoryObject object = null;
+    // new JavaMemoryObject(Fqn.BAR.toString() + "#" + "d4eaa21b82a9ace3015e1ced616b9ce6",
+    // Fqn.BAR.toString(), Kind.CLASS, "d4eaa21b82a9ace3015e1ced616b9ce6");
     object.openOutputStream()
         .write(bytes);
 
@@ -345,7 +301,6 @@ public class ProjectBuilderTest {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(buildResults.isMappingAvailable()).isTrue();
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
