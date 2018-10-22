@@ -22,7 +22,6 @@ import com.google.common.collect.Iterables;
  */
 public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileManager> {
 
-  private List<CompilationUnit> memory = new ArrayList<>();
   private BinaryStore binaryStore;
 
   public InMemoryClassManager(final JavaFileManager fileManager, final BinaryStore binaryStore) {
@@ -54,8 +53,6 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     String _name = jfo.getName();
 
     JavaMemoryObject co = new JavaMemoryObject(_name + "#" + hash, name, kind, hash, jfo.getPath());
-    CompilationUnit cf = new CompilationUnit(name, co);
-    memory.add(cf);
     binaryStore.add(co); // TODO temporaly
     return co;
   }
@@ -63,17 +60,6 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
   @Override
   public boolean isSameFile(FileObject a, FileObject b) {
     return false;
-  }
-
-  /**
-   * Gets the bytecode as a list of compiled classes. If the source code generates inner classes,
-   * these classes will be placed in front of the returned list and the class associated to the
-   * source file will be the last element in the list.
-   * 
-   * @return List of compiled classes
-   */
-  public List<CompilationUnit> getAllClasses() {
-    return memory;
   }
 
   /**
