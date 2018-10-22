@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
@@ -36,19 +37,6 @@ public class BuildResults {
   private CompilationPackage compilationPackage;
 
   /**
-   * 
-   * @param sourceCode ビルド元となったソースコード
-   * @param compilationPackage バイトコード
-   * @param diagnostics ビルド時の詳細情報
-   * @param buildProgressText ビルド実行時のテキスト出力
-   */
-  public BuildResults(final GeneratedSourceCode sourceCode,
-      final CompilationPackage compilationPackage,
-      final DiagnosticCollector<JavaFileObject> diagnostics, final String buildProgressText) {
-    this(sourceCode, false, compilationPackage, diagnostics, buildProgressText);
-  }
-
-  /**
    * コンストラクタ（後で書き換え TODO）
    * 
    * @param sourceCode ビルド元となったソースコード
@@ -58,7 +46,8 @@ public class BuildResults {
    */
   protected BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
       final CompilationPackage compilationPackage,
-      final DiagnosticCollector<JavaFileObject> diagnostics, final String buildProgressText) {
+      final DiagnosticCollector<JavaFileObject> diagnostics, final String buildProgressText,
+      final BinaryStore binaryStore) {
     this.sourceCode = sourceCode;
     this.isBuildFailed = isBuildFailed;
     this.compilationPackage = compilationPackage;
@@ -68,10 +57,13 @@ public class BuildResults {
     this.fqnToSourceMap = new HashMap<>();
     this.sourceToFQNMap = new HashMap<>();
     this.isMappingAvaiable = true;
+    this.binaryStore = binaryStore;
   }
 
-  public CompilationPackage getCompilationPackage() {
-    return compilationPackage;
+  final BinaryStore binaryStore;
+
+  public BinaryStore getBinaryStore() {
+    return binaryStore;
   }
 
   /**

@@ -28,7 +28,7 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.build.BinaryStore;
+import jp.kusumotolab.kgenprog.project.build.BinaryStorexxx;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -39,7 +39,7 @@ public class TestExecutorTest {
 
   @Before
   public void before() throws IOException {
-    BinaryStore.instance.removeAll(); // ビルドキャッシュは消しておく
+    BinaryStorexxx.instance.removeAll(); // ビルドキャッシュは消しておく
   }
 
   @Test

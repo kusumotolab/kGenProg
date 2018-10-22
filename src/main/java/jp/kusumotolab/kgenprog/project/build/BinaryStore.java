@@ -1,13 +1,8 @@
 package jp.kusumotolab.kgenprog.project.build;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.tools.JavaFileObject;
 
 /**
  * 差分ビルド + インメモリビルドのためのバイナリ格納庫．<br>
@@ -20,42 +15,36 @@ import javax.tools.JavaFileObject;
  */
 public class BinaryStore {
 
-  // TODO ひとまずシングルトン化．真面目に考えてないので要検討
-  public static BinaryStore instance = new BinaryStore();
-
-  private Map<BinaryStoreKey, Set<JavaFileObject>> cache;
+  private Set<JavaMemoryObject> cache;
 
   public BinaryStore() {
-    cache = new HashMap<>();
+    cache = new HashSet<>();
   }
 
-  public void put(final BinaryStoreKey key, JavaFileObject object) {
-    if (null == cache.get(key)) {
-      cache.put(key, new HashSet<>());
-    }
-    cache.get(key)
-        .add(object);
+  public void add(final JavaMemoryObject object) {
+    cache.add(object);
   }
 
-  public Set<JavaFileObject> get(final BinaryStoreKey key) {
-    if (cache.containsKey(key)) {
-      return cache.get(key);
-    }
-    return null; // TODO Is emptyList better?
+  public Set<JavaMemoryObject> get(final BinaryStoreKey key) {
+    return cache.stream()
+        .filter(jmo -> jmo.getPrimaryKey().equals(key.toString()))
+        .collect(Collectors.toSet());
+  }
+  
+
+  public JavaMemoryObject get(final String fqn) {
+    return cache.stream()
+        .filter(jmo -> jmo.getBinaryName().equals(fqn))
+        .findFirst().orElseThrow(RuntimeException::new);
   }
 
-  public List<JavaFileObject> getAll() {
-    return cache.values()
-        .stream()
-        .flatMap(Set::stream)
-        .collect(Collectors.toList());
+  public Set<JavaMemoryObject> getAll() {
+    return cache;
   }
 
-  public Iterable<JavaFileObject> list(final String packageName) {
-    return cache.values()
-        .stream()
-        .flatMap(Collection::stream)
-        .filter(jfo -> jfo.getName()
+  public Iterable<JavaMemoryObject> list(final String packageName) {
+    return cache.stream()
+        .filter(jmo -> jmo.getName()
             .startsWith("/" + packageName)) // TODO: スラッシュ開始で決め打ち．uriからの変換なので間違いないとは思う
         .collect(Collectors.toList());
   }

@@ -15,7 +15,7 @@ public class EmptyBuildResults extends BuildResults {
   public static final EmptyBuildResults instance = new EmptyBuildResults();
 
   private EmptyBuildResults() {
-    super(null, true, null, null, null);
+    super(null, true, null, null, null, null);
   }
 
   @Override

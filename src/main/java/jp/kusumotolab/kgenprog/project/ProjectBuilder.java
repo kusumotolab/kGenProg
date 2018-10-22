@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
+import jp.kusumotolab.kgenprog.project.build.BinaryStorexxx;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
@@ -32,9 +33,11 @@ public class ProjectBuilder {
   private static Logger log = LoggerFactory.getLogger(ProjectBuilder.class);
 
   private final TargetProject targetProject;
+  private final BinaryStore binaryStore;
 
   public ProjectBuilder(final TargetProject targetProject) {
     this.targetProject = targetProject;
+    this.binaryStore = new BinaryStore();
   }
 
   /**
@@ -66,20 +69,22 @@ public class ProjectBuilder {
     final Set<JavaFileObject> javaFileObjects =
         generateAllJavaFileObjects(generatedSourceCode.getAllAsts());
 
-    final Set<JavaFileObject> bins = new HashSet<>();
-    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
-      final BinaryStoreKey key = new BinaryStoreKey(ast);
-      final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
-      if (null != jfos) {
-        bins.addAll(jfos);
-      }
-    }
-    inMemoryFileManager.setClasses(bins);
-
     if (javaFileObjects.isEmpty()) { // xxxxxxxxxxxx
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
       return EmptyBuildResults.instance;
     }
+
+    final Set<JavaMemoryObject> bins = new HashSet<>();
+    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
+      final BinaryStoreKey key = new BinaryStoreKey(ast);
+      final Set<JavaMemoryObject> jfos = binaryStore.get(key);
+      if (!jfos.isEmpty()) {
+        bins.addAll(jfos);
+      }
+    }
+    
+    inMemoryFileManager.setClasses(bins);
+    inMemoryFileManager.setBinaryStore(binaryStore);
 
     // コンパイルの進捗状況を得るためのWriterを生成
     final StringWriter buildProgressWriter = new StringWriter();
@@ -88,12 +93,14 @@ public class ProjectBuilder {
     final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
         diagnostics, compilationOptions, null, javaFileObjects);
 
-    BinaryStore bin = BinaryStore.instance; // xxxxxxxxxxxxxxxxxxx
+    BinaryStorexxx bin = BinaryStorexxx.instance; // xxxxxxxxxxxxxxxxxxx
     System.out.println("-----------------------------------------");
     System.out.println("build:        " + javaFileObjects);
     System.out.println("   reused:    " + bins); // xxxxxxxxxxxxxxxxx
     System.out.println("   all-cache: " + bin.getAll()); // xxxxxxxxxxxxxxxxx
-    String code = generatedSourceCode.getProductAsts().get(0).getSourceCode();
+    String code = generatedSourceCode.getProductAsts()
+        .get(0)
+        .getSourceCode();
 
     // コンパイルを実行
     final boolean isBuildFailed = !task.call();
@@ -109,18 +116,27 @@ public class ProjectBuilder {
     // final CompilationPackage compilationPackage = new CompilationPackage(compilationUnits);
 
     // final List<CompilationUnit> units = null;
-    final List<CompilationUnit> units = new ArrayList<>();
+//    final List<CompilationUnit> units = new ArrayList<>();
+//    for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
+//      final BinaryStoreKey key = new BinaryStoreKey(ast);
+//      final Set<JavaFileObject> jfos = binaryStore.get(key);
+//      for (JavaFileObject jfo : jfos) {
+//        units.add(new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo));
+//      }
+//    }
+    final CompilationPackage compilationPackage = null;//new CompilationPackage(units);
+
+    final BinaryStore binStore = new BinaryStore();
     for (final GeneratedAST<? extends SourcePath> ast : generatedSourceCode.getAllAsts()) {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
-      final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
-      for (JavaFileObject jfo : jfos) {
-        units.add(new CompilationUnit(ast.getPrimaryClassName(), (JavaMemoryObject) jfo));
+      final Set<JavaMemoryObject> jfos = binaryStore.get(key);
+      for (JavaMemoryObject jfo : jfos) {
+        binStore.add(jfo);
       }
     }
-    final CompilationPackage compilationPackage = new CompilationPackage(units);
 
-    final BuildResults buildResults =
-        new BuildResults(generatedSourceCode, compilationPackage, diagnostics, buildProgressText);
+    final BuildResults buildResults = new BuildResults(generatedSourceCode, false,
+        compilationPackage, diagnostics, buildProgressText, binStore);
 
     // TODO: https://github.com/kusumotolab/kGenProg/pull/154
     // final Set<String> updatedFiles = getUpdatedFiles(verboseLines);
@@ -169,8 +185,8 @@ public class ProjectBuilder {
     final Set<JavaFileObject> result = new HashSet<>();
     for (final GeneratedAST<? extends SourcePath> ast : asts) {
       final BinaryStoreKey key = new BinaryStoreKey(ast);
-      final Set<JavaFileObject> jfos = BinaryStore.instance.get(key);
-      if (null != jfos) {
+      if (!binaryStore.get(key)
+          .isEmpty()) {
         // result.addAll(jfos);
         continue;
       }

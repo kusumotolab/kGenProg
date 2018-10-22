@@ -137,7 +137,7 @@ public class KGenProgMainTestForRealBugs {
         .allMatch(Variant::isCompleted);
   }
 
-  // @Ignore
+  @Ignore
   @Test
   public void testMath85() {
     final Path rootPath = Paths.get("example/real-bugs/Math85");

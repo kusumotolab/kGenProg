@@ -24,7 +24,8 @@ import com.google.common.collect.Iterables;
 public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   private List<CompilationUnit> memory = new ArrayList<>();
-  private BinaryStore binaryStore = BinaryStore.instance;
+  private BinaryStorexxx binaryStorexxx = BinaryStorexxx.instance;
+  private BinaryStore binaryStore;
 
   public InMemoryClassManager(JavaFileManager fileManager) {
     super(fileManager);
@@ -52,10 +53,10 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     String hash = ((JavaFileObjectFromString) sibling).getMessageDigest();
     String _name = ((JavaFileObjectFromString) sibling).getName();
 
-    JavaMemoryObject co = new JavaMemoryObject(name, kind, hash);
+    JavaMemoryObject co = new JavaMemoryObject(_name + "#" + hash, name, kind, hash);
     CompilationUnit cf = new CompilationUnit(name, co);
     memory.add(cf);
-    binaryStore.put(new BinaryStoreKey(_name, hash), co); // TODO temporaly
+    binaryStore.add(co); // TODO temporaly
     return co;
   }
 
@@ -121,9 +122,13 @@ public class InMemoryClassManager extends ForwardingJavaFileManager<JavaFileMana
     return fileManager.inferBinaryName(location, file);
   }
 
-  private Set<JavaFileObject> bins;
+  private Set<JavaMemoryObject> bins;
 
-  public void setClasses(Set<JavaFileObject> bins) {
+  public void setClasses(Set<JavaMemoryObject> bins) {
     this.bins = bins;
+  }
+
+  public void setBinaryStore(BinaryStore binaryStore) {
+    this.binaryStore = binaryStore;
   }
 }

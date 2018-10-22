@@ -25,6 +25,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BinaryStoreKey;
+import jp.kusumotolab.kgenprog.project.build.BinaryStorexxx;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
@@ -41,7 +42,7 @@ public class ProjectBuilderTest {
 
   @Before
   public void before() throws IOException {
-    BinaryStore.instance.removeAll(); // ビルドキャッシュは消しておく
+    BinaryStorexxx.instance.removeAll(); // ビルドキャッシュは消しておく
   }
 
   @Test
@@ -69,8 +70,8 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
@@ -92,8 +93,8 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
@@ -115,8 +116,8 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value, BAZ.value,
             BAZ_TEST.value, BAZ_INNER.value, BAZ_STATIC_INNER.value, BAZ_ANONYMOUS.value,
             BAZ_OUTER.value);
@@ -144,8 +145,8 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
 
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
 
     for (final ProductSourcePath productSourcePath : targetProject.getProductSourcePaths()) {
@@ -181,8 +182,8 @@ public class ProjectBuilderTest {
     assertThat(buildResults02.isBuildFailed).isFalse();
     assertThat(buildResults02.isMappingAvailable()).isTrue();
 
-    final CompilationPackage compilationPackage = buildResults02.getCompilationPackage();
-    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+    final BinaryStore binaryStore = buildResults02.getBinaryStore();
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
 
@@ -196,15 +197,17 @@ public class ProjectBuilderTest {
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
     // buildResultsからバイトコードを取り出す
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    final List<CompilationUnit> units = compilationPackage.getUnits();
-    assertThat(units).hasSize(2);
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    assertThat(binaryStore.getAll()).hasSize(2);
 
-    final CompilationUnit unit = compilationPackage.getUnits()
-        .get(0);
+    final JavaMemoryObject jmo = buildResults.getBinaryStore()
+        .getAll()
+        .stream()
+        .findFirst()
+        .orElse(null);
     final MemoryClassLoader loader = new MemoryClassLoader();
-    final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(unit.getName());
-    loader.addDefinition(fqn, unit.getBytecode());
+    final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(jmo.getBinaryName());
+    loader.addDefinition(fqn, jmo.getByteCode());
 
     // バイトコードが正しいのでうまくロードできるはず
     loader.loadClass(fqn);
@@ -232,7 +235,7 @@ public class ProjectBuilderTest {
         .write(bytes);
 
     // BinaryStoreにJMOバイナリを直接保存しておく
-    BinaryStore.instance.put(new BinaryStoreKey(Fqn.BAR.value), object);
+    BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.BAR.value), object);
 
     // ビルド．成功するはず
     final BuildResults buildResults2 = projectBuilder.build(source);
@@ -258,7 +261,7 @@ public class ProjectBuilderTest {
     final JavaMemoryObject object1 = new JavaMemoryObject(Fqn.BAR.toString(), Kind.CLASS);
     object1.openOutputStream()
         .write(bytes1);
-    BinaryStore.instance.put(new BinaryStoreKey(Fqn.BAR.value), object1);
+    BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.BAR.value), object1);
 
     // Foo.classをファイルから読み込み
     final Path bin2 = rootPath.resolve("bin/example/Foo.class");
@@ -266,7 +269,7 @@ public class ProjectBuilderTest {
     final JavaMemoryObject object2 = new JavaMemoryObject(Fqn.FOO.toString(), Kind.CLASS);
     object1.openOutputStream()
         .write(bytes2);
-    BinaryStore.instance.put(new BinaryStoreKey(Fqn.FOO.value), object2);
+    BinaryStorexxx.instance.put(new BinaryStoreKey(Fqn.FOO.value), object2);
 
     // ビルド
     final BuildResults buildResults = projectBuilder.build(source);
@@ -322,8 +325,8 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(buildResults.isMappingAvailable()).isTrue();
 
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    assertThat(compilationPackage.getUnits()).extracting(unit -> unit.getName())
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
         .containsExactlyInAnyOrder(FOO.value);
 
   }

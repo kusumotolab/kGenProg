@@ -15,7 +15,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
 public class BinaryStoreTest {
 
-  static BinaryStore binStore = BinaryStore.instance;
+  static BinaryStorexxx binStore = BinaryStorexxx.instance;
   static BinaryStoreKey key1;
   static BinaryStoreKey key2;
   static BinaryStoreKey key3;

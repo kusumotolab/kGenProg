@@ -28,6 +28,7 @@ import jp.kusumotolab.kgenprog.project.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
 import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
+import jp.kusumotolab.kgenprog.project.build.JavaMemoryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
@@ -87,7 +88,7 @@ class TestThread extends Thread {
     final MemoryClassLoader classLoader = new MemoryClassLoader(classpathUrls);
 
     try {
-      addAllDefinitions2(classLoader, productFQNs, true);
+      addAllDefinitions(classLoader, productFQNs, true);
       //addAllDefinitions(classLoader, testFQNs, false);
       final List<Class<?>> testClasses = loadAllClasses(classLoader, executionTestFQNs);
 
@@ -108,13 +109,21 @@ class TestThread extends Thread {
       throw new RuntimeException(e);
     }
   }
-
-  private void addAllDefinitions2(final MemoryClassLoader memoryClassLoader,
+  /***
+   * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．
+   * 
+   * @param memoryClassLoader
+   * @param fqns
+   * @param isInstrument jacoco-instrumentを適用するか？計測対象か？
+   * @throws IOException
+   */
+  private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
       final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    for (CompilationUnit unit : compilationPackage.getUnits()) {
-      final byte[] bytecode = unit.getBytecode();
-      final String fqn = unit.getName();
+    //final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+    
+    for (JavaMemoryObject jmo : buildResults.getBinaryStore().getAll()) {
+      final byte[] bytecode = jmo.getByteCode();
+      final String fqn = jmo.getBinaryName();
       final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
       memoryClassLoader.addDefinition(new TargetFullyQualifiedName(fqn), instrumentedBytecode);
     }
@@ -192,28 +201,7 @@ class TestThread extends Thread {
     return classes;
   }
 
-  /***
-   * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．
-   * 
-   * @param memoryClassLoader
-   * @param fqns
-   * @param isInstrument jacoco-instrumentを適用するか？計測対象か？
-   * @throws IOException
-   */
-  private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
-      final List<FullyQualifiedName> fqns, final boolean isInstrument) throws IOException {
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    for (final FullyQualifiedName fqn : fqns) {
-      final CompilationUnit compilatinoUnit = null;//compilationPackage.getCompilationUnit(fqn.value);
-      final byte[] bytecode = compilatinoUnit.getBytecode();
-      if (isInstrument) {
-        final byte[] instrumentedBytecode = jacocoInstrumenter.instrument(bytecode, "");
-        memoryClassLoader.addDefinition(fqn, instrumentedBytecode);
-      } else {
-        memoryClassLoader.addDefinition(fqn, bytecode);
-      }
-    }
-  }
+
 
   /**
    * JUnit実行のイベントリスナー．内部クラス． JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
@@ -295,10 +283,11 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-        final CompilationUnit compilatinoUnit =
-            compilationPackage.getCompilationUnit(measuredClass.value);
-        final byte[] bytecode = compilatinoUnit.getBytecode();
+//        final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
+//        final CompilationUnit compilatinoUnit =
+//            compilationPackage.getCompilationUnit(measuredClass.value);
+        //final byte[] bytecode = compilatinoUnit.getBytecode();
+        final byte[] bytecode =buildResults.getBinaryStore().get(measuredClass.value).getByteCode();
         analyzer.analyzeClass(bytecode, measuredClass.value);
       }
     }

@@ -38,7 +38,7 @@ public class CompilationUnit {
    * @return Bytecode
    */
   public byte[] getBytecode() {
-    return memoryObject != null ? memoryObject.getClassBytes() : null;
+    return memoryObject != null ? memoryObject.getByteCode() : null;
   }
 
   @Override

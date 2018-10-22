@@ -16,6 +16,7 @@ import com.google.common.base.Objects;
 
 public class JavaMemoryObject implements JavaFileObject {
 
+  private final String primaryKey;
   private final String fqn;
   private final Kind kind;
   private final String digest;
@@ -32,7 +33,9 @@ public class JavaMemoryObject implements JavaFileObject {
    * @param fqn
    * @param kind
    */
+  @Deprecated
   public JavaMemoryObject(final String fqn, final Kind kind, final String digest) {
+    this.primaryKey = fqn + "#" + digest;
     this.fqn = fqn;
     this.kind = kind;
     this.digest = digest;
@@ -40,6 +43,18 @@ public class JavaMemoryObject implements JavaFileObject {
     this.bos = new ByteArrayOutputStream();
   }
 
+  public JavaMemoryObject(final String primaryKey, final String fqn, final Kind kind, final String digest) {
+    this.primaryKey = primaryKey;
+    this.fqn = fqn;
+    this.kind = kind;
+    this.digest = digest;
+    this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + kind.extension);
+    this.bos = new ByteArrayOutputStream();
+  }
+  
+  public String getPrimaryKey() {
+    return primaryKey;
+  }
   /**
    * InMemoryClassManager#inferBinaryNameで呼ばれるメソッド． inferする必要がないので直接binaryNameを返す．
    * 
@@ -49,7 +64,7 @@ public class JavaMemoryObject implements JavaFileObject {
     return fqn;
   }
 
-  public byte[] getClassBytes() {
+  public byte[] getByteCode() {
     return bos.toByteArray();
   }
 
@@ -141,4 +156,5 @@ public class JavaMemoryObject implements JavaFileObject {
   public int hashCode() {
     return Objects.hashCode(uri, kind);
   }
+  
 }

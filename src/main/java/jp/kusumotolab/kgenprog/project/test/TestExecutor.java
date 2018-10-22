@@ -42,6 +42,4 @@ public class TestExecutor {
 
     return testThread.getTestResults();
   }
-
-
 }
