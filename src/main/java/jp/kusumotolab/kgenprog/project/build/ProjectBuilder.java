@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project.build;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
@@ -51,23 +49,27 @@ public class ProjectBuilder {
    * @return
    */
   public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
-    log.debug("enter build(GeneratedSourceCode)");
-
     final List<GeneratedAST<?>> allAsts = generatedSourceCode.getAllAsts();
     final Set<JavaSourceObject> javaSourceObjects = generateJavaSourceObjects(allAsts);
 
-    if (javaSourceObjects.isEmpty()) { // TODO xxxxxxxxxxxx
+    // コンパイル対象が存在しない場合 ≒ 全てのコンパイル対象がキャッシュ済みの場合
+    // AST構築では，個々のASTのDigestではなくAST全体のDigestを確認しているため，この状況が発生する．
+    // TODO
+    // きちんとハンドルしないといけない．少なくともEmptyBuildResultsはまずい．
+    if (javaSourceObjects.isEmpty()) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
       return EmptyBuildResults.instance;
     }
 
+    // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
     final Set<JavaBinaryObject> resusedBinaryObject = extractBinaryObjects(allAsts);
     inMemoryFileManager.setClassPathBinaries(resusedBinaryObject);
 
+    // コンパイル状況や診断情報等の保持オブジェクトを用意
     final StringWriter buildProgressWriter = new StringWriter();
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
-    // コンパイルのタスクを生成
+    // コンパイルタスクを生成
     final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
         diagnostics, compilationOptions, null, javaSourceObjects);
 
@@ -84,14 +86,13 @@ public class ProjectBuilder {
       return EmptyBuildResults.instance;
     }
 
+    // コンパイル済みバイナリを取り出してセットしておく．
     final BinaryStore generatedBinaryStore = new BinaryStore();
     final Set<JavaBinaryObject> compiledBinaries = extractBinaryObjects(allAsts);
     generatedBinaryStore.addAll(compiledBinaries);
 
     final BuildResults buildResults = new BuildResults(generatedSourceCode, false, diagnostics,
         buildProgressWriter.toString(), generatedBinaryStore);
-
-    log.debug("exit build(GeneratedSourceCode, Path) -- build succeeded.");
     return buildResults;
   }
 
@@ -102,8 +103,7 @@ public class ProjectBuilder {
    * @param asts
    * @return
    */
-  private Set<JavaBinaryObject> extractBinaryObjects(
-      List<GeneratedAST<? extends SourcePath>> asts) {
+  private Set<JavaBinaryObject> extractBinaryObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
         .map(BinaryStoreKey::new)
         .map(key -> binaryStore.get(key))
@@ -118,8 +118,7 @@ public class ProjectBuilder {
    * @param asts
    * @return
    */
-  private Set<JavaSourceObject> generateJavaSourceObjects(
-      List<GeneratedAST<? extends SourcePath>> asts) {
+  private Set<JavaSourceObject> generateJavaSourceObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
         .filter(ast -> !binaryStore.exists(new BinaryStoreKey(ast)))
         .map(JavaSourceObject::new)
@@ -132,16 +131,17 @@ public class ProjectBuilder {
    * @return
    */
   private List<String> createDefaultCompilationOptions() {
-    final String classpaths = String.join(File.pathSeparator, this.targetProject.getClassPaths()
+    final List<String> classpathList = targetProject.getClassPaths()
         .stream()
         .map(cp -> cp.path.toString())
-        .collect(Collectors.toList()));
+        .collect(Collectors.toList());
+    final String classPaths = String.join(File.pathSeparator, classpathList);
 
     final List<String> options = new ArrayList<>();
     options.add("-encoding");
     options.add("UTF-8");
     options.add("-classpath");
-    options.add(classpaths);
+    options.add(classPaths);
     options.add("-verbose");
     return options;
   }
