@@ -87,9 +87,10 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
 
     // classPathBinariesからもバイナリを取り出す
     final Iterable<JavaFileObject> cache = classPathBinaries.stream()
-        .filter(jbo -> jbo.getName()
-            .startsWith(packageName)) // TODO ここバグってる
+        .filter(jbo -> jbo.getFqn()
+            .startsWith(packageName))
         .collect(Collectors.toList());
+    
     // TODO location考えなくて良い？
 
     // 両方を結合して返す
@@ -108,8 +109,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     // JMOの場合はバイナリ名の解決を簡略化 ．
     // 標準FMにinferするとIllegalArgumentExceptionが発生するため（理由は不明）．
     if (file instanceof JavaBinaryObject) {
-      // TODO 要確認 これスキップしても動く．
-      // return ((JavaBinaryObject) file).getBinaryName();
+      return ((JavaBinaryObject) file).getFqn();
     }
     return fileManager.inferBinaryName(location, file);
   }

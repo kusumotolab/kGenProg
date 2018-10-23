@@ -83,6 +83,7 @@ public class ProjectBuilder {
 
     if (isBuildFailed) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
+      diagnostics.getDiagnostics().stream().forEach(System.err::println); //xxxxxxxxxxxx
       return EmptyBuildResults.instance;
     }
 
