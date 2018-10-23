@@ -10,9 +10,12 @@ import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
+import spoon.Launcher;
+import spoon.reflect.declaration.CtClass;
 
 public class VariantStore {
 
@@ -145,6 +148,14 @@ public class VariantStore {
 
   private Variant createInitialVariant() {
     final GeneratedSourceCode sourceCode = strategies.execASTConstruction(targetProject);
+
+    final GeneratedAST ast = sourceCode.getAsts()
+        .get(0);
+    final CtClass clazz = Launcher.parseClass(ast.getSourceCode());
+    final ComplexityScanner scanner = new ComplexityScanner();
+    clazz.accept(scanner);
+    MetricFitness.init(scanner.getComplexity());
+
     return createVariant(new Gene(Collections.emptyList()), sourceCode,
         new OriginalHistoricalElement());
   }
