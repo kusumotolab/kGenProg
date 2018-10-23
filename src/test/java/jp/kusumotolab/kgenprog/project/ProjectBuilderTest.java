@@ -61,7 +61,7 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore = buildResults.getBinaryStore();
 
     assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value);
   }
 
@@ -76,7 +76,7 @@ public class ProjectBuilderTest {
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
 
@@ -92,7 +92,7 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore = buildResults.getBinaryStore();
 
     assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value, BAZ.value,
             BAZ_TEST.value, BAZ_INNER.value, BAZ_STATIC_INNER.value, BAZ_ANONYMOUS.value,
             BAZ_OUTER.value);
@@ -114,7 +114,7 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore = buildResults.getBinaryStore();
 
     assertThat(buildResults.isBuildFailed).isFalse();
-    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
 
@@ -143,7 +143,7 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore = buildResults02.getBinaryStore();
 
     assertThat(buildResults02.isBuildFailed).isFalse();
-    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
   }
 
@@ -166,7 +166,7 @@ public class ProjectBuilderTest {
         .findFirst()
         .orElse(null);
     final MemoryClassLoader loader = new MemoryClassLoader();
-    final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(jmo.getBinaryName());
+    final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(jmo.getFqn());
     loader.addDefinition(fqn, jmo.getByteCode());
 
     // バイトコードが正しいのでうまくロードできるはず
@@ -306,7 +306,7 @@ public class ProjectBuilderTest {
     assertThat(buildResults.isBuildFailed).isFalse();
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
-    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getBinaryName())
+    assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO.value);
 
   }

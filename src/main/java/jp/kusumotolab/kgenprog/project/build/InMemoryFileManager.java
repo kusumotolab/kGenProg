@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project.build;
 
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.tools.FileObject;
@@ -20,28 +21,37 @@ import com.google.common.collect.Iterables;
  */
 public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
-  private BinaryStore binaryStore;
+  // ビルド結果を格納するStore
+  private final BinaryStore binaryStore;
+
+  // クラスパスの解決に用いられるJBOの集合．ビルドごとに書き換えられる．
+  private Set<JavaBinaryObject> classPathBinaries;
 
   public InMemoryFileManager(final JavaFileManager fileManager, final BinaryStore binaryStore) {
     super(fileManager);
     this.binaryStore = binaryStore;
+    this.classPathBinaries = Collections.emptySet();
+  }
+
+  public void setClassPathBinaries(final Set<JavaBinaryObject> classPathBinaries) {
+    this.classPathBinaries = classPathBinaries;
   }
 
   @Override
-  public FileObject getFileForInput(JavaFileManager.Location location, String packageName,
-      String relativeName) throws IOException {
+  public FileObject getFileForInput(final Location location, final String packageName,
+      final String relativeName) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public JavaFileObject getJavaFileForInput(Location location, String className,
-      JavaFileObject.Kind kind) throws IOException {
+  public JavaFileObject getJavaFileForInput(final Location location, final String className,
+      final Kind kind) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public JavaFileObject getJavaFileForOutput(Location location, String name, Kind kind,
-      FileObject sibling) throws IOException {
+  public JavaFileObject getJavaFileForOutput(final Location location, final String name,
+      final Kind kind, final FileObject sibling) throws IOException {
 
     if (!(sibling instanceof JavaSourceObject)) {
       throw new UnsupportedOperationException(); // TODO
@@ -58,7 +68,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   }
 
   @Override
-  public boolean isSameFile(FileObject a, FileObject b) {
+  public boolean isSameFile(final FileObject a, final FileObject b) {
     return false;
   }
 
@@ -69,22 +79,17 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
    *      java.lang.String, java.util.Set, boolean)
    */
   @Override
-  public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds,
-      boolean recurse) throws IOException {
-    // まずは普通のFMからバイナリを取り出す
-    // TODO 不要????
-    Iterable<JavaFileObject> objs = fileManager.list(location, packageName, kinds, recurse);
+  public Iterable<JavaFileObject> list(final Location location, final String packageName,
+      final Set<Kind> kinds, final boolean recurse) throws IOException {
+    
+    // まずは普通のFMからバイナリを取り出す．標準libの解決等．
+    final Iterable<JavaFileObject> objs = fileManager.list(location, packageName, kinds, recurse);
 
-    if (!packageName.startsWith("example")) // patch xxxxxxxxxxxxxxxxxxxx TODO
-      return objs;// Collections.emptyList();
-
-    // BinaryStoreからもバイナリを取り出す
-    // Iterable<JavaFileObject> cache = binaryStore.list(packageName);
-    Iterable<JavaFileObject> cache = classPathBinaries.stream()
-        .filter(bin -> bin.getName()
-            .startsWith(packageName))
+    // classPathBinariesからもバイナリを取り出す
+    final Iterable<JavaFileObject> cache = classPathBinaries.stream()
+        .filter(jbo -> jbo.getName()
+            .startsWith(packageName)) // TODO ここバグってる
         .collect(Collectors.toList());
-
     // TODO location考えなくて良い？
 
     // 両方を結合して返す
@@ -99,18 +104,14 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
    * @throws IllegalStateException {@inheritDoc}
    */
   @Override
-  public String inferBinaryName(Location location, JavaFileObject file) {
+  public String inferBinaryName(final Location location, final JavaFileObject file) {
     // JMOの場合はバイナリ名の解決を簡略化 ．
     // 標準FMにinferするとIllegalArgumentExceptionが発生するため（理由は不明）．
     if (file instanceof JavaBinaryObject) {
-      return ((JavaBinaryObject) file).getBinaryName();
+      // TODO 要確認 これスキップしても動く．
+      // return ((JavaBinaryObject) file).getBinaryName();
     }
     return fileManager.inferBinaryName(location, file);
   }
 
-  private Set<JavaBinaryObject> classPathBinaries;
-
-  public void setClassPathBinaries(Set<JavaBinaryObject> classPathBinaries) {
-    this.classPathBinaries = classPathBinaries;
-  }
 }

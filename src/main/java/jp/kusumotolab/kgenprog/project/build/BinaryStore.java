@@ -39,7 +39,7 @@ public class BinaryStore {
   
   public JavaBinaryObject get(final String fqn) {
     return cache.stream()
-        .filter(jmo -> jmo.getBinaryName().equals(fqn))
+        .filter(jmo -> jmo.getFqn().equals(fqn))
         .findFirst().orElseThrow(RuntimeException::new);
   }
 

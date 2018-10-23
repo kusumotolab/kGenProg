@@ -26,7 +26,8 @@ public class JavaBinaryObject implements JavaFileObject {
   private final boolean isTest;
   private final ByteArrayOutputStream bos;
 
-  public JavaBinaryObject(final String primaryKey, final String fqn, final Kind kind, final String digest, final SourcePath path, final boolean isTest) {
+  public JavaBinaryObject(final String primaryKey, final String fqn, final Kind kind,
+      final String digest, final SourcePath path, final boolean isTest) {
     this.primaryKey = primaryKey;
     this.fqn = fqn;
     this.kind = kind;
@@ -36,27 +37,28 @@ public class JavaBinaryObject implements JavaFileObject {
     this.isTest = isTest;
     this.bos = new ByteArrayOutputStream();
   }
-  
+
   public String getPrimaryKey() {
     return primaryKey;
   }
+
   /**
    * InMemoryClassManager#inferBinaryNameで呼ばれるメソッド． inferする必要がないので直接binaryNameを返す．
    * 
    * @return
    */
-  public String getBinaryName() {
+  public String getFqn() {
     return fqn;
   }
 
   public SourcePath getPath() {
     return path;
   }
-  
+
   public byte[] getByteCode() {
     return bos.toByteArray();
   }
-  
+
   public boolean isTest() {
     return isTest;
   }
@@ -149,5 +151,5 @@ public class JavaBinaryObject implements JavaFileObject {
   public int hashCode() {
     return Objects.hashCode(fqn, digest);
   }
-  
+
 }

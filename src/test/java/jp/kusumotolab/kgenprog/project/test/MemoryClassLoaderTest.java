@@ -62,7 +62,7 @@ public class MemoryClassLoaderTest {
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     final Set<JavaBinaryObject> jmos = binaryStore.getAll();
     for (final JavaBinaryObject jmo : jmos) {
-      loader.addDefinition(new TargetFullyQualifiedName(jmo.getBinaryName()), jmo.getByteCode());
+      loader.addDefinition(new TargetFullyQualifiedName(jmo.getFqn()), jmo.getByteCode());
     }
   }
 

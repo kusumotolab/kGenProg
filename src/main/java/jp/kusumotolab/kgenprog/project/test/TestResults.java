@@ -112,7 +112,7 @@ public class TestResults implements Serializable {
     final Set<FullyQualifiedName> correspondingFqns = buildResults.getBinaryStore()
         .get(productSourcePath)
         .stream()
-        .map(JavaBinaryObject::getBinaryName)
+        .map(JavaBinaryObject::getFqn)
         .map(TargetFullyQualifiedName::new)
         .collect(Collectors.toSet());
 
