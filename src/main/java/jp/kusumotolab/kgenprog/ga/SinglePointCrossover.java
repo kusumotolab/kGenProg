@@ -50,7 +50,9 @@ public class SinglePointCrossover implements Crossover {
     }
     if (crossoverGeneratingCount % 2 != 0 && !variants.isEmpty()) {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
-      variants.add(newVariants.get(0));
+      if (!newVariants.isEmpty()) {
+        variants.add(newVariants.get(0));
+      }
     }
     return variants;
   }
