@@ -1,3 +1,5 @@
+:us: [:jp:](./doc/ja/README.md)
+
 [![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master)
 
 # kGenProg
