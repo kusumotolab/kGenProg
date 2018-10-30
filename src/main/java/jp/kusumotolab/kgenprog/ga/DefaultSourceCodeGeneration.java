@@ -14,6 +14,12 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
   private final Set<String> sourceCodeSet = new HashSet<>();
 
   @Override
+  public void initialize(final Variant initialVariant) {
+    final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
+    sourceCodeSet.add(generatedSourceCode.getMessageDigest());
+  }
+
+  @Override
   public GeneratedSourceCode exec(final VariantStore variantStore, final Gene gene) {
     log.debug("enter exec(Variant, TargetProject)");
 
@@ -35,4 +41,5 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
     log.debug("exit exec(Gene, TargetProject)");
     return generatedSourceCode;
   }
+
 }

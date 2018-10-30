@@ -56,6 +56,7 @@ public class KGenProgMain {
     final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
+    sourceCodeGeneration.initialize(initialVariant);
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getProductAsts());
 
