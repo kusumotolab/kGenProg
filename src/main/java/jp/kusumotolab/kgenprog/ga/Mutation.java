@@ -12,13 +12,13 @@ public abstract class Mutation {
   private static Logger log = LoggerFactory.getLogger(Mutation.class);
 
   protected final Random random;
-  protected final int numberOfBase;
+  protected final int mutationGeneratingCount;
   protected final CandidateSelection candidateSelection;
 
-  public Mutation(final int numberOfBase, final Random random,
+  public Mutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection) {
     this.random = random;
-    this.numberOfBase = numberOfBase;
+    this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
   }
 

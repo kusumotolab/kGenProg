@@ -31,7 +31,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -59,7 +62,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(workingDir);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -87,7 +93,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(outDir);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -108,15 +117,48 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildWithSiblingsCount() {
-    final int siblingsCount = 50;
+  public void testBuildWithMutationGeneratingCount() {
+    final int mutationGeneratingCount = 50;
     final Builder builder =
-        new Builder(rootDir, productPaths, testPaths).setSiblingsCount(siblingsCount);
+        new Builder(rootDir, productPaths, testPaths).setMutationGeneratingCount(mutationGeneratingCount);
     final Configuration config = builder.build();
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(siblingsCount);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
+        testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildWithCrossoverGeneratingCount() {
+    final int crossoverGeneratingCount = 50;
+    final Builder builder = new Builder(rootDir, productPaths, testPaths)
+        .setCrossoverGeneratingCount(crossoverGeneratingCount);
+    final Configuration config = builder.build();
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(crossoverGeneratingCount);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -144,7 +186,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(headcount);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -173,7 +218,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(maxGeneration);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -201,7 +249,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(timeLimit);
@@ -229,7 +280,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Duration.ofSeconds(timeLimitSeconds));
@@ -257,7 +311,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -284,7 +341,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -311,7 +371,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -339,7 +402,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -367,7 +433,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -394,7 +463,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -422,7 +494,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -452,7 +527,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(workingDir);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -482,7 +560,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(outDir);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -504,15 +585,50 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromCmdLineArgsWithSiblingsCount() {
-    final int siblingsCount = 50;
+  public void testBuildFromCmdLineArgsWithMutationGeneratingCount() {
+    final int mutationGeneratingCount = 50;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "--siblings-count", Integer.toString(siblingsCount)};
+        testPath.toString(), "--mutation-generating-count", Integer.toString(mutationGeneratingCount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(siblingsCount);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final TargetProject expectedProject =
+        TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
+            ImmutableList.of(testPath), Collections.emptyList(), JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildFromCmdLineArgsWithCrossoverGeneratingCount() {
+    final int crossoverGeneratingCount = 50;
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), "--crossover-generating-count",
+        Integer.toString(crossoverGeneratingCount)};
+    final Configuration config = Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(crossoverGeneratingCount);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -542,7 +658,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(headcount);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -572,7 +691,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(maxGeneration);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -602,7 +724,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(timeLimit);
@@ -632,7 +757,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -660,7 +788,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -689,7 +820,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -719,7 +853,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -749,7 +886,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -848,7 +988,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -876,7 +1019,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -906,7 +1052,10 @@ public class ConfigurationBuilderTest {
     final Path workingDir = rootDir.resolve("work");
     assertThat(config.getWorkingDir()).isEqualTo(workingDir);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -938,7 +1087,10 @@ public class ConfigurationBuilderTest {
     final Path outDir = rootDir.resolve("out");
     assertThat(config.getOutDir()).isEqualTo(outDir);
 
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -960,16 +1112,51 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromConfigFileWithSiblingsCount() {
-    final Path configPath = rootDir.resolve("withSiblingsCount.toml");
+  public void testBuildFromConfigFileWithMutationGeneratingCount() {
+    final Path configPath = rootDir.resolve("withMutationGeneratingCount.toml");
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
 
-    final int siblingsCount = 50;
-    assertThat(config.getSiblingsCount()).isEqualTo(siblingsCount);
+    final int mutationGeneratingCount = 50;
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
+
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final TargetProject expectedProject =
+        TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
+            JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildFromConfigFileWithCrossoverGeneratingCount() {
+    final Path configPath = rootDir.resolve("withCrossoverGeneratingCount.toml");
+    final String[] args = {"--config", configPath.toString()};
+    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+
+    final int crossoverGeneratingCount = 50;
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(crossoverGeneratingCount);
 
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
@@ -999,7 +1186,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
 
     final int headCount = 50;
     assertThat(config.getHeadcount()).isEqualTo(headCount);
@@ -1031,7 +1221,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
 
     final int maxGeneration = 50;
@@ -1063,7 +1256,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
 
@@ -1094,7 +1290,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -1125,7 +1324,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -1156,7 +1358,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -1188,7 +1393,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -1218,7 +1426,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -1250,7 +1461,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
@@ -1283,7 +1497,10 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getSiblingsCount()).isEqualTo(Configuration.DEFAULT_SIBLINGS_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
     assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
     assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
     assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
