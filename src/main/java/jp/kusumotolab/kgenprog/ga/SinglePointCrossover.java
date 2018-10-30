@@ -16,11 +16,11 @@ public class SinglePointCrossover implements Crossover {
   private static Logger log = LoggerFactory.getLogger(SinglePointCrossover.class);
 
   private final Random random;
-  private final int numberOfPair;
+  private final int crossoverGeneratingCount;
 
-  public SinglePointCrossover(final Random random, final int numberOfPair) {
+  public SinglePointCrossover(final Random random, final int crossoverGeneratingCount) {
     this.random = random;
-    this.numberOfPair = numberOfPair;
+    this.crossoverGeneratingCount = crossoverGeneratingCount;
   }
 
   public SinglePointCrossover(final Random random) {
@@ -42,10 +42,17 @@ public class SinglePointCrossover implements Crossover {
       return Collections.emptyList();
     }
 
-    return IntStream.range(0, numberOfPair)
-        .mapToObj(e -> makeVariants(filteredVariants, variantStore))
-        .flatMap(Collection::stream)
-        .collect(Collectors.toList());
+    final List<Variant> variants = new ArrayList<>();
+
+    for (int i = 0; i < crossoverGeneratingCount/2; i++) {
+      final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+      variants.addAll(newVariants);
+    }
+    if (crossoverGeneratingCount % 2 != 0 && !variants.isEmpty()) {
+      final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+      variants.add(newVariants.get(0));
+    }
+    return variants;
   }
 
   private List<Variant> makeVariants(final List<Variant> variants, final VariantStore store) {
