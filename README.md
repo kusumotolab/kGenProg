@@ -15,7 +15,7 @@ This is a reimplementation of GenProg, which automatically repairs bugs using ge
 Just [download](https://github.com/kusumotolab/kGenProg/releases/download/v0.2/kGenProg.jar) a jar file.
 
 There are sample bugs in [kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example).
-You can download all bugs from [here](https://github.com/kusumotolab/kGenProg-example/archive/master.zip).
+You can download all the bugs from [here](https://github.com/kusumotolab/kGenProg-example/archive/master.zip).
 
 
 ## Usage
@@ -30,8 +30,8 @@ $ java -jar path/to/kGenProg.jar -r <path> -s <path>... -t <path>... [-x <fqn>..
 ```
 
 ### Example
-There are some bugs for test of kGenProg in [kGenProg/example](example).
-Run the following commands to execute kGenProg for [kGenProg/example/CloseToZero01](example/CloseToZero01).
+There are some artificial bugs for testing kGenProg in [kGenProg/example](example).
+Run kGenProg with the following command for [kGenProg/example/CloseToZero01](example/CloseToZero01).
 
 ```sh
 $ cd kGenProg/example/CloseToZero01
