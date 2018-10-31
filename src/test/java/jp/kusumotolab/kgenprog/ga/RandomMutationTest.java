@@ -185,8 +185,8 @@ public class RandomMutationTest {
   }
 
   @SuppressWarnings("unchecked")
-  private List<Statement> createStatement(final GeneratedAST generatedAST) {
-    final CompilationUnit root = ((GeneratedJDTAST) generatedAST).getRoot();
+  private List<Statement> createStatement(final GeneratedAST<ProductSourcePath> generatedAST) {
+    final CompilationUnit root = ((GeneratedJDTAST<ProductSourcePath>) generatedAST).getRoot();
     final List<TypeDeclaration> types = root.types();
     final TypeDeclaration typeRoot = types.get(0);
 
