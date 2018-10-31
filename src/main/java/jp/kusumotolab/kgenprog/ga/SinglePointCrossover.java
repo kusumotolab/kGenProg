@@ -21,10 +21,6 @@ public class SinglePointCrossover implements Crossover {
     this.crossoverGeneratingCount = crossoverGeneratingCount;
   }
 
-  public SinglePointCrossover(final Random random) {
-    this(random, 10);
-  }
-
   @Override
   public List<Variant> exec(final VariantStore variantStore) {
     log.debug("enter exec(List<>)");
