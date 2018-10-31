@@ -46,7 +46,7 @@ public class SinglePointCrossover implements Crossover {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
       variants.addAll(newVariants);
     }
-    if (crossoverGeneratingCount != 0) {
+    if (crossoverGeneratingCount != 0 && crossoverGeneratingCount % 2 != 0) {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
       if (!newVariants.isEmpty()) {
         variants.add(newVariants.get(0));
