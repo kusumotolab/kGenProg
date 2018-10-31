@@ -28,8 +28,11 @@ test = ["src/example/CloseToZeroTest.java"]
 # Selects the log level to be shown at least.
 #log-level = ("OFF" | "ERROR" | "WARN" | "INFO" | "DEBUG" | "TRACE" | "ALL")
 
-# Specifies how many variants are generated from a parent in a generation.
-#siblings-count = <num>
+# Specifies how many variants are generated in a generation by a mutation.
+#mutation-generating-count = <num>
+
+# Specifies how many variants are generated in a generation by a crossover.
+#crossover-generating-count = <num>
 
 # Specifies how many variants survive in a generation.
 #headcount = <num>

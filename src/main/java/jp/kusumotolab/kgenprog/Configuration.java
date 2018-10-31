@@ -583,7 +583,7 @@ public class Configuration {
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",
-        usage = "Specifies how many variants are generated from a generation by a mutation.",
+        usage = "Specifies how many variants are generated in a generation by a mutation.",
         depends = {"-r", "-s", "-t"})
     private void setMutationGeneratingCountFromCmdLineParser(final int mutationGeneratingCount) {
       log.debug("enter setMutationGeneratingCountFromCmdLineParser(int)");
@@ -591,7 +591,7 @@ public class Configuration {
     }
 
     @Option(name = "--crossover-generating-count", metaVar = "<num>",
-        usage = "Specifies how many variants are generated from a generation by a crossover.",
+        usage = "Specifies how many variants are generated in a generation by a crossover.",
         depends = {"-r", "-s", "-t"})
     private void setCrossOverGeneratingCountFromCmdLineParser(final int crossoverGeneratingCount) {
       log.debug("enter setCrossOverGeneratingCountFromCmdLineParser(int)");
