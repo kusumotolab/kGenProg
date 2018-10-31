@@ -2,12 +2,10 @@ package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +46,7 @@ public class SinglePointCrossover implements Crossover {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
       variants.addAll(newVariants);
     }
-    if (crossoverGeneratingCount % 2 != 0 && !variants.isEmpty()) {
+    if (crossoverGeneratingCount != 0) {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
       if (!newVariants.isEmpty()) {
         variants.add(newVariants.get(0));

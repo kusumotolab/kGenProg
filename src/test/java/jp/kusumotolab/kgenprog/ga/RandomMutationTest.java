@@ -171,30 +171,31 @@ public class RandomMutationTest {
     return createRandomMutation(sourceCode, random);
   }
 
-  private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode, final Random random) {
+  private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode,
+      final Random random) {
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection);
     randomMutation.setCandidates(sourceCode.getProductAsts());
     return randomMutation;
   }
 
-  private GeneratedAST createGeneratedAST(final GeneratedSourceCode sourceCode) {
+  private GeneratedAST<ProductSourcePath> createGeneratedAST(final GeneratedSourceCode sourceCode) {
     final List<GeneratedAST<ProductSourcePath>> asts = sourceCode.getProductAsts();
     return asts.get(0);
   }
 
+  @SuppressWarnings("unchecked")
   private List<Statement> createStatement(final GeneratedAST generatedAST) {
     final CompilationUnit root = ((GeneratedJDTAST) generatedAST).getRoot();
-    final List types = root.types();
-    final TypeDeclaration typeRoot = (TypeDeclaration) types.get(0);
+    final List<TypeDeclaration> types = root.types();
+    final TypeDeclaration typeRoot = types.get(0);
 
-    @SuppressWarnings("unchecked") final List<Statement> statements = typeRoot.getMethods()[0].getBody()
+    return (List<Statement>) typeRoot.getMethods()[0].getBody()
         .statements();
-    return statements;
   }
 
   private Variant createInitialVariant(final GeneratedSourceCode sourceCode) {
-    final GeneratedAST generatedAST = createGeneratedAST(sourceCode);
+    final GeneratedAST<ProductSourcePath> generatedAST = createGeneratedAST(sourceCode);
 
     final List<Statement> statements = createStatement(generatedAST);
     final SourcePath sourcePath = generatedAST.getSourcePath();
