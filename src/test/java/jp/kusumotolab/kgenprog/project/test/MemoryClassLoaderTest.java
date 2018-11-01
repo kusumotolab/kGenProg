@@ -57,12 +57,12 @@ public class MemoryClassLoaderTest {
 
   private void setupMemoryClassLoader() throws MalformedURLException {
     loader = new MemoryClassLoader();
-    
+
     // クラスローダに全バイナリを設置しておく
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     final Set<JavaBinaryObject> jmos = binaryStore.getAll();
     for (final JavaBinaryObject jmo : jmos) {
-      loader.addDefinition(new TargetFullyQualifiedName(jmo.getFqn()), jmo.getByteCode());
+      loader.addDefinition(jmo.getFqn(), jmo.getByteCode());
     }
   }
 

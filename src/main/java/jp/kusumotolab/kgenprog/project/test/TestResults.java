@@ -113,7 +113,6 @@ public class TestResults implements Serializable {
         .get(productSourcePath)
         .stream()
         .map(JavaBinaryObject::getFqn)
-        .map(TargetFullyQualifiedName::new)
         .collect(Collectors.toSet());
 
     // 翻訳2: location → 行番号

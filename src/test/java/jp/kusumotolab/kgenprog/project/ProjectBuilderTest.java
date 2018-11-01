@@ -29,6 +29,7 @@ import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.MemoryClassLoader;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn;
@@ -62,7 +63,7 @@ public class ProjectBuilderTest {
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
-        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value);
+        .containsExactlyInAnyOrder(FOO, FOO_TEST);
   }
 
   @Test
@@ -77,7 +78,7 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
-        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
+        .containsExactlyInAnyOrder(FOO, FOO_TEST, BAR, BAR_TEST);
   }
 
   @Test
@@ -91,11 +92,12 @@ public class ProjectBuilderTest {
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
 
+    System.out.println(binaryStore.getAll());
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
-        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value, BAZ.value,
-            BAZ_TEST.value, BAZ_INNER.value, BAZ_STATIC_INNER.value, BAZ_ANONYMOUS.value,
-            BAZ_OUTER.value);
+        .containsExactlyInAnyOrder(FOO, FOO_TEST, BAR, BAR_TEST, BAZ,
+            BAZ_TEST, BAZ_INNER, BAZ_STATIC_INNER, BAZ_ANONYMOUS,
+            BAZ_OUTER);
   }
 
   @Test
@@ -115,7 +117,7 @@ public class ProjectBuilderTest {
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
-        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
+        .containsExactlyInAnyOrder(FOO, FOO_TEST, BAR, BAR_TEST);
   }
 
   // TODO: https://github.com/kusumotolab/kGenProg/pull/154
@@ -144,7 +146,7 @@ public class ProjectBuilderTest {
 
     assertThat(buildResults02.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
-        .containsExactlyInAnyOrder(FOO.value, FOO_TEST.value, BAR.value, BAR_TEST.value);
+        .containsExactlyInAnyOrder(FOO, FOO_TEST, BAR, BAR_TEST);
   }
 
   @Test
@@ -166,7 +168,8 @@ public class ProjectBuilderTest {
         .findFirst()
         .orElse(null);
     final MemoryClassLoader loader = new MemoryClassLoader();
-    final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(jmo.getFqn());
+    final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(jmo.getFqn()
+        .toString());
     loader.addDefinition(fqn, jmo.getByteCode());
 
     // バイトコードが正しいのでうまくロードできるはず
@@ -231,7 +234,7 @@ public class ProjectBuilderTest {
     // Bar.classをファイルから読み込み
     final Path bin1 = rootPath.resolve("bin/example/Bar.class");
     final byte[] bytes1 = Files.readAllBytes(bin1);
-    final JavaBinaryObject object1 = new JavaBinaryObject(Fqn.BAR.toString(), Fqn.BAR.toString(), Kind.CLASS, "", null, false);
+    final JavaBinaryObject object1 = new JavaBinaryObject(BAR, BAR, "", null, false);
     object1.openOutputStream()
         .write(bytes1);
     binStore.add(object1);
@@ -240,7 +243,7 @@ public class ProjectBuilderTest {
     // Foo.classをファイルから読み込み
     final Path bin2 = rootPath.resolve("bin/example/Foo.class");
     final byte[] bytes2 = Files.readAllBytes(bin2);
-    final JavaBinaryObject object2 = new JavaBinaryObject(Fqn.FOO.toString(), Fqn.FOO.toString(), Kind.CLASS, "", null, false);
+    final JavaBinaryObject object2 = new JavaBinaryObject(FOO, FOO, "", null, false);
     object1.openOutputStream()
         .write(bytes2);
     binStore.add(object2);
@@ -307,7 +310,7 @@ public class ProjectBuilderTest {
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
-        .containsExactlyInAnyOrder(FOO.value);
+        .containsExactlyInAnyOrder(FOO);
 
   }
 }

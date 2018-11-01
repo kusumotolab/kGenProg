@@ -18,10 +18,6 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
-/**
- * @author shin
- *
- */
 public class ProjectBuilder {
 
   private static Logger log = LoggerFactory.getLogger(ProjectBuilder.class);
@@ -36,7 +32,7 @@ public class ProjectBuilder {
   public ProjectBuilder(final TargetProject targetProject) {
     this.targetProject = targetProject;
 
-    // 再利用可能なオブジェクト
+    // build()メソッドで再利用可能なオブジェクト
     binaryStore = new BinaryStore();
     compiler = ToolProvider.getSystemJavaCompiler();
     standardFileManager = compiler.getStandardFileManager(null, null, null);
@@ -62,7 +58,7 @@ public class ProjectBuilder {
     }
 
     // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
-    final Set<JavaBinaryObject> resusedBinaryObject = extractBinaryObjects(allAsts);
+    final Set<JavaBinaryObject> resusedBinaryObject = extractJavaBinaryObjects(allAsts);
     inMemoryFileManager.setClassPathBinaries(resusedBinaryObject);
 
     // コンパイル状況や診断情報等の保持オブジェクトを用意
@@ -83,13 +79,13 @@ public class ProjectBuilder {
 
     if (isBuildFailed) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
-      diagnostics.getDiagnostics().stream().forEach(System.err::println); //xxxxxxxxxxxx
+      //diagnostics.getDiagnostics().stream().forEach(System.err::println); //xxxxxxxxxxxx
       return EmptyBuildResults.instance;
     }
 
     // コンパイル済みバイナリを取り出してセットしておく．
     final BinaryStore generatedBinaryStore = new BinaryStore();
-    final Set<JavaBinaryObject> compiledBinaries = extractBinaryObjects(allAsts);
+    final Set<JavaBinaryObject> compiledBinaries = extractJavaBinaryObjects(allAsts);
     generatedBinaryStore.addAll(compiledBinaries);
 
     final BuildResults buildResults = new BuildResults(generatedSourceCode, false, diagnostics,
@@ -104,7 +100,7 @@ public class ProjectBuilder {
    * @param asts
    * @return
    */
-  private Set<JavaBinaryObject> extractBinaryObjects(final List<GeneratedAST<?>> asts) {
+  private Set<JavaBinaryObject> extractJavaBinaryObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
         .map(BinaryStoreKey::new)
         .map(key -> binaryStore.get(key))

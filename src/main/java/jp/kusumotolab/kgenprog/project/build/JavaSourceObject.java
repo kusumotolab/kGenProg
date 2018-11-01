@@ -6,6 +6,9 @@ import com.google.common.base.Objects;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.TestFullyQualifiedName;
 
 /**
  * コンパイル元となるJavaのソースコードを表すオブジェクト．<br>
@@ -13,8 +16,8 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
  */
 public class JavaSourceObject extends SimpleJavaFileObject {
 
+  private final FullyQualifiedName fqn;
   private final String sourceCode;
-  private final String fqn;
   private final SourcePath sourcePath;
   private final String digest;
   private final boolean isTest;
@@ -27,11 +30,12 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   private JavaSourceObject(final String fqn, final String sourceCode, final String digest,
       final SourcePath sourcePath) {
     super(URI.create("jso:///" + fqn.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
-    this.fqn = fqn;
+    this.isTest = sourcePath instanceof TestSourcePath ? true : false;
+
+    this.fqn = isTest ? new TestFullyQualifiedName(fqn) : new TargetFullyQualifiedName(fqn);
     this.sourceCode = sourceCode;
     this.digest = digest;
     this.sourcePath = sourcePath;
-    this.isTest = sourcePath instanceof TestSourcePath ? true : false;
   }
 
   public String getMessageDigest() {
@@ -53,6 +57,10 @@ public class JavaSourceObject extends SimpleJavaFileObject {
 
   @Override
   public final String getName() {
+    return fqn.value;
+  }
+
+  public final FullyQualifiedName getFqn() {
     return fqn;
   }
 

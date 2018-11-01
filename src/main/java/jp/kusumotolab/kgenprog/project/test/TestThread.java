@@ -121,10 +121,10 @@ class TestThread extends Thread {
       final List<FullyQualifiedName> fqns) throws IOException {
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     for (final JavaBinaryObject jmo : binaryStore.getAll()) {
-      final String fqn = jmo.getFqn();
+      final FullyQualifiedName fqn = jmo.getFqn();
       final byte[] rawBytecode = jmo.getByteCode();
       final byte[] bytecode = jmo.isTest() ? rawBytecode : instrumentBytecode(rawBytecode);
-      memoryClassLoader.addDefinition(new TargetFullyQualifiedName(fqn), bytecode);
+      memoryClassLoader.addDefinition(fqn, bytecode);
     }
   }
 
@@ -161,7 +161,6 @@ class TestThread extends Thread {
         .map(source -> binStore.get(source))
         .flatMap(Set::stream)
         .map(jmo -> jmo.getFqn())
-        .map(TargetFullyQualifiedName::new)
         .collect(Collectors.toList());
   }
 

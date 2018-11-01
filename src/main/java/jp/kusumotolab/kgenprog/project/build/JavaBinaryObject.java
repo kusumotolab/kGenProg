@@ -12,47 +12,62 @@ import java.net.URI;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
-import com.google.common.base.Objects;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
+/**
+ * コンパイル後のJavaバイナリオブジェクトクラス．<br>
+ * バイナリ自体のFQNやバイナリ生成元となったファイルのPath等，翻訳に必要な情報全てを内包する．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class JavaBinaryObject implements JavaFileObject {
 
-  private final String primaryKey;
-  private final String fqn;
+  private final FullyQualifiedName originFqn;
+  private final FullyQualifiedName fqn;
   private final Kind kind;
-  private final String digest;
-  private final SourcePath path;
+  private final String originDigest;
+  private final SourcePath originPath;
   private final URI uri;
   private final boolean isTest;
   private final ByteArrayOutputStream bos;
 
-  public JavaBinaryObject(final String primaryKey, final String fqn, final Kind kind,
-      final String digest, final SourcePath path, final boolean isTest) {
-    this.primaryKey = primaryKey;
+  /**
+   * @param fqn バイナリ自体のFQN
+   * @param originFqn バイナリ生成元のFQN（基本はfqn=originFqnだが内部クラスの場合特殊）
+   * @param originDigest バイナリ生成元のダイジェスト
+   * @param originPath バイナリ生成元のファイルパス
+   * @param isTest テストか否か
+   */
+  public JavaBinaryObject(final FullyQualifiedName fqn, final FullyQualifiedName originFqn,
+      final String originDigest, final SourcePath originPath, final boolean isTest) {
     this.fqn = fqn;
-    this.kind = kind;
-    this.digest = digest;
-    this.uri = URI.create("jmo:///" + fqn.replace('.', '/') + kind.extension);
-    this.path = path;
+    this.originFqn = originFqn;
+    this.originDigest = originDigest;
+    this.originPath = originPath;
     this.isTest = isTest;
-    this.bos = new ByteArrayOutputStream();
+
+    this.kind = Kind.CLASS; // それ以外ありえないので決め打ち
+    this.uri = URI.create("jmo:///" + fqn.value.replace('.', '/') + kind.extension);
+
+    this.bos = new ByteArrayOutputStream(); // バイナリ情報の格納先
+  }
+
+  public String getOriginKey() {
+    return originFqn + "#" + originDigest;
   }
 
   public String getPrimaryKey() {
-    return primaryKey;
+    return fqn + "#" + originDigest;
   }
 
-  /**
-   * InMemoryClassManager#inferBinaryNameで呼ばれるメソッド． inferする必要がないので直接binaryNameを返す．
-   * 
-   * @return
-   */
-  public String getFqn() {
+  public FullyQualifiedName getFqn() {
     return fqn;
   }
 
-  public SourcePath getPath() {
-    return path;
+  public SourcePath getOriginPath() {
+    return originPath;
   }
 
   public byte[] getByteCode() {
@@ -132,11 +147,11 @@ public class JavaBinaryObject implements JavaFileObject {
 
   @Override
   public final String toString() {
-    return fqn + "#" + digest.substring(0, 4);
+    return fqn + "#" + originDigest.substring(0, 4);
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     if (this == o) {
       return true;
     }
@@ -144,12 +159,12 @@ public class JavaBinaryObject implements JavaFileObject {
       return false;
     }
     final JavaBinaryObject that = (JavaBinaryObject) o;
-    return Objects.equal(fqn, that.fqn) && Objects.equal(digest, that.digest);
+    return getPrimaryKey().equals(that.getPrimaryKey());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(fqn, digest);
+    return getPrimaryKey().hashCode();
   }
 
 }

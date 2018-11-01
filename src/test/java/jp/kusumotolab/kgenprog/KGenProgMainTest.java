@@ -53,7 +53,7 @@ public class KGenProgMainTest {
 
     final Configuration config =
         new Configuration.Builder(rootPath, productPaths, testPaths).setWorkingDir(WORK_PATH)
-            .setTimeLimitSeconds(600)
+            .setTimeLimitSeconds(60000)
             .setTestTimeLimitSeconds(1)
             .setMaxGeneration(100)
             .setRequiredSolutionsCount(1)
@@ -128,7 +128,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore
+  //@Ignore
   @Test
   public void testGCD01() {
     final Path rootPath = Paths.get("example/GCD01");

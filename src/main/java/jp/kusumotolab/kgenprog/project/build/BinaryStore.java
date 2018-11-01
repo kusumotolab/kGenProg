@@ -7,15 +7,15 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
  * 差分ビルド + インメモリビルドのためのバイナリ格納庫．<br>
- * FQNをキーとしてビルド結果であるJavaMemoryObjectバイナリをメモリ上にキャッシュする． <br>
+ * FQNとダイジェストをキーとして，ビルド結果となるJavaMemoryObjectバイナリをメモリ上にキャッシュする． <br>
  * 
- * ref jsr107 https://static.javadoc.io/javax.cache/cache-api/1.0.0/javax/cache/package-summary.html
- * 
- * @author shin
+ * @author shinsuke
  *
  */
 public class BinaryStore {
 
+  // 内部データ構造はただのSet．
+  // TODO 現在，各クエリの実行がfilter&collectによるベタ処理なので，高速化のためには様々なキャッシュ用Mapを作る必要あり．
   private Set<JavaBinaryObject> cache;
 
   public BinaryStore() {
@@ -28,34 +28,39 @@ public class BinaryStore {
 
   public boolean exists(final BinaryStoreKey key) {
     return cache.stream()
-        .anyMatch(jmo -> jmo.getPrimaryKey().equals(key.toString()));
+        .anyMatch(jbo -> jbo.getOriginKey()
+            .equals(key.toString()));
   }
-  
+
   public Set<JavaBinaryObject> get(final BinaryStoreKey key) {
     return cache.stream()
-        .filter(jmo -> jmo.getPrimaryKey().equals(key.toString()))
+        .filter(jbo -> jbo.getOriginKey()
+            .equals(key.toString()))
         .collect(Collectors.toSet());
   }
-  
+
   public JavaBinaryObject get(final String fqn) {
     return cache.stream()
-        .filter(jmo -> jmo.getFqn().equals(fqn))
-        .findFirst().orElseThrow(RuntimeException::new);
+        .filter(jbo -> jbo.getFqn()
+            .equals(fqn))
+        .findFirst()
+        .orElseThrow(RuntimeException::new);
   }
 
   public Set<JavaBinaryObject> get(final SourcePath path) {
     return cache.stream()
-        .filter(jmo -> jmo.getPath().equals(path))
+        .filter(jbo -> jbo.getOriginPath()
+            .equals(path))
         .collect(Collectors.toSet());
   }
-  
+
   public Set<JavaBinaryObject> getAll() {
     return cache;
   }
 
   public Iterable<JavaBinaryObject> list(final String packageName) {
     return cache.stream()
-        .filter(jmo -> jmo.getName()
+        .filter(jbo -> jbo.getName()
             .startsWith("/" + packageName)) // TODO: スラッシュ開始で決め打ち．uriからの変換なので間違いないとは思う
         .collect(Collectors.toList());
   }
