@@ -13,7 +13,7 @@ C 言語向けの自動プログラム修正ツール GenProg の Java 向け実
 
 
 ## インストール
-kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/download/v0.2/kGenProg.jar)から jar ファイルをダウンロードしてください．
+kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/latest)から jar ファイルをダウンロードしてください．
 
 [kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example) リポジトリに kGenProg の動作確認用のバグをまとめてあります．
 [ここ](https://github.com/kusumotolab/kGenProg-example/archive/master.zip)からすべてのバグをまとめた zip ファイルをダウンロードできます．
