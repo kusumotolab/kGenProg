@@ -63,7 +63,8 @@ $ java -jar path/to/kGenProg.jar
 | `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
-| `--siblings-count` | Specifies how many variants are generated from a parent in a generation. | 10 |
+| `--mutation-generating-count` | Specifies how many variants are generated in a generation by a mutation. | 10 |
+| `--crossover-generating-count` | Specifies how many variants are generated in a generation by a crossover. | 10 |
 | `--headcount` | Specifies how many variants survive in a generation. | 100 |
 | `--max-generation` | Terminates searching solutions when the specified number of generations reached. | 10 |
 | `--time-limit` | Terminates searching solutions when the specified time in seconds has passed. | 60 |
