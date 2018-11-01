@@ -35,7 +35,8 @@ public class Configuration {
 
   // region Fields
   public static final int DEFAULT_MAX_GENERATION = 10;
-  public static final int DEFAULT_SIBLINGS_COUNT = 10;
+  public static final int DEFAULT_MUTATION_GENERATING_COUNT = 10;
+  public static final int DEFAULT_CROSSOVER_GENERATING_COUNT = 10;
   public static final int DEFAULT_HEADCOUNT = 100;
   public static final int DEFAULT_REQUIRED_SOLUTIONS_COUNT = 1;
   public static final Duration DEFAULT_TIME_LIMIT = Duration.ofSeconds(60);
@@ -59,7 +60,8 @@ public class Configuration {
   private final List<String> executionTests;
   private final Path workingDir;
   private final Path outDir;
-  private final int siblingsCount;
+  private final int mutationGeneratingCount;
+  private final int crossoverGeneratingCount;
   private final int headcount;
   private final int maxGeneration;
   private final Duration timeLimit;
@@ -77,7 +79,8 @@ public class Configuration {
     executionTests = builder.executionTests;
     workingDir = builder.workingDir;
     outDir = builder.outDir;
-    siblingsCount = builder.siblingsCount;
+    mutationGeneratingCount = builder.mutationGeneratingCount;
+    crossoverGeneratingCount = builder.crossoverGeneratingCount;
     headcount = builder.headcount;
     maxGeneration = builder.maxGeneration;
     timeLimit = builder.timeLimit;
@@ -106,8 +109,12 @@ public class Configuration {
     return outDir;
   }
 
-  public int getSiblingsCount() {
-    return siblingsCount;
+  public int getMutationGeneratingCount() {
+    return mutationGeneratingCount;
+  }
+
+  public int getCrossoverGeneratingCount() {
+    return crossoverGeneratingCount;
   }
 
   public int getHeadcount() {
@@ -195,9 +202,13 @@ public class Configuration {
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
 
-    @com.electronwill.nightconfig.core.conversion.Path("siblings-count")
+    @com.electronwill.nightconfig.core.conversion.Path("mutation-generating-count")
     @PreserveNotNull
-    private int siblingsCount = DEFAULT_SIBLINGS_COUNT;
+    private int mutationGeneratingCount = DEFAULT_MUTATION_GENERATING_COUNT;
+
+    @com.electronwill.nightconfig.core.conversion.Path("crossover-generating-count")
+    @PreserveNotNull
+    private int crossoverGeneratingCount = DEFAULT_CROSSOVER_GENERATING_COUNT;
 
     @PreserveNotNull
     private int headcount = DEFAULT_HEADCOUNT;
@@ -328,10 +339,17 @@ public class Configuration {
       return this;
     }
 
-    public Builder setSiblingsCount(final int siblingsCount) {
-      log.debug("enter setSiblingsCount(int)");
+    public Builder setMutationGeneratingCount(final int mutationGeneratingCount) {
+      log.debug("enter setMutationGeneratingCount(int)");
 
-      this.siblingsCount = siblingsCount;
+      this.mutationGeneratingCount = mutationGeneratingCount;
+      return this;
+    }
+
+    public Builder setCrossoverGeneratingCount(final int crossoverGeneratingCount) {
+      log.debug("enter setCrossoverGeneratingCount(int)");
+
+      this.crossoverGeneratingCount = crossoverGeneratingCount;
       return this;
     }
 
@@ -564,12 +582,20 @@ public class Configuration {
       this.outDir = Paths.get(outDir);
     }
 
-    @Option(name = "--siblings-count", metaVar = "<num>",
-        usage = "Specifies how many variants are generated from a parent in a generation.",
+    @Option(name = "--mutation-generating-count", metaVar = "<num>",
+        usage = "Specifies how many variants are generated in a generation by a mutation.",
         depends = {"-r", "-s", "-t"})
-    private void setSiblingsCountFromCmdLineParser(final int siblingsCount) {
-      log.debug("enter setSiblingsCountFromCmdLineParser(int)");
-      this.siblingsCount = siblingsCount;
+    private void setMutationGeneratingCountFromCmdLineParser(final int mutationGeneratingCount) {
+      log.debug("enter setMutationGeneratingCountFromCmdLineParser(int)");
+      this.mutationGeneratingCount = mutationGeneratingCount;
+    }
+
+    @Option(name = "--crossover-generating-count", metaVar = "<num>",
+        usage = "Specifies how many variants are generated in a generation by a crossover.",
+        depends = {"-r", "-s", "-t"})
+    private void setCrossOverGeneratingCountFromCmdLineParser(final int crossoverGeneratingCount) {
+      log.debug("enter setCrossOverGeneratingCountFromCmdLineParser(int)");
+      this.crossoverGeneratingCount = crossoverGeneratingCount;
     }
 
     @Option(name = "--headcount", metaVar = "<num>",

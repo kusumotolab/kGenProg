@@ -1,5 +1,4 @@
 root-dir = "./"
 src = ["src/"]
 test = ["test/"]
-siblings-count = 50
-
+crossover-generating-count = 50

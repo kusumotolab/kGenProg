@@ -18,9 +18,9 @@ public class RandomMutation extends Mutation {
 
   private static final Logger log = LoggerFactory.getLogger(RandomMutation.class);
 
-  public RandomMutation(final int numberOfBase, final Random random,
+  public RandomMutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection) {
-    super(numberOfBase, random, candidateSelection);
+    super(mutationGeneratingCount, random, candidateSelection);
   }
 
   @Override
@@ -29,7 +29,16 @@ public class RandomMutation extends Mutation {
 
     final List<Variant> generatedVariants = new ArrayList<>();
 
-    for (final Variant variant : variantStore.getCurrentVariants()) {
+    final List<Variant> currentVariants = variantStore.getCurrentVariants();
+
+    final Roulette<Variant> variantRoulette = new Roulette<>(currentVariants, e -> {
+      final Fitness fitness = e.getFitness();
+      final double value = fitness.getValue();
+      return Double.isNaN(value) ? 0 : value + 1;
+    }, random);
+
+    for (int i = 0; i < mutationGeneratingCount; i++) {
+      final Variant variant = variantRoulette.exec();
       final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
       final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
 
@@ -40,13 +49,11 @@ public class RandomMutation extends Mutation {
       final Roulette<Suspiciousness> roulette =
           new Roulette<>(suspiciousnesses, weightFunction, random);
 
-      for (int i = 0; i < numberOfBase; i++) {
-        final Suspiciousness suspiciousness = roulette.exec();
-        final Base base = makeBase(suspiciousness);
-        final Gene gene = makeGene(variant.getGene(), base);
-        final HistoricalElement element = new MutationHistoricalElement(variant, base);
-        generatedVariants.add(variantStore.createVariant(gene, element));
-      }
+      final Suspiciousness suspiciousness = roulette.exec();
+      final Base base = makeBase(suspiciousness);
+      final Gene gene = makeGene(variant.getGene(), base);
+      final HistoricalElement element = new MutationHistoricalElement(variant, base);
+      generatedVariants.add(variantStore.createVariant(gene, element));
     }
 
     log.debug("exit exec(VariantStore)");
