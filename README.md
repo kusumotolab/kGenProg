@@ -12,7 +12,7 @@ This is a reimplementation of GenProg, which automatically repairs bugs using ge
 
 
 ## Installation
-Just [download](https://github.com/kusumotolab/kGenProg/releases/download/v0.2/kGenProg.jar) a jar file.
+Just [download](https://github.com/kusumotolab/kGenProg/releases/latest) a jar file.
 
 There are sample bugs in [kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example).
 You can download all the bugs from [here](https://github.com/kusumotolab/kGenProg-example/archive/master.zip).
