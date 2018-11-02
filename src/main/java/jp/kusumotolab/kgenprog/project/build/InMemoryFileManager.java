@@ -94,7 +94,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   public String inferBinaryName(final Location location, final JavaFileObject file) {
     // JMOの場合はバイナリ名の解決を簡略化 ．
     // 標準FMにinferするとIllegalArgumentExceptionが発生するため（理由は不明）．
-    if (file instanceof JavaBinaryObject) { // TODO ここ重い
+    if (file.getClass() == JavaBinaryObject.class) {
       return ((JavaBinaryObject) file).getFqn().value;
     }
     return fileManager.inferBinaryName(location, file);
