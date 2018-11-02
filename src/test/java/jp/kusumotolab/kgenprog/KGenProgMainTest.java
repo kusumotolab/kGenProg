@@ -53,7 +53,7 @@ public class KGenProgMainTest {
 
     final Configuration config =
         new Configuration.Builder(rootPath, productPaths, testPaths).setWorkingDir(WORK_PATH)
-            .setTimeLimitSeconds(60000)
+            .setTimeLimitSeconds(600)
             .setTestTimeLimitSeconds(1)
             .setMaxGeneration(100)
             .setRequiredSolutionsCount(1)
@@ -86,7 +86,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  //@Ignore // Be ignored but should not be ignored
+  @Ignore // Be ignored but should not be ignored
   @Test
   public void testCloseToZero02() {
     final Path rootPath = Paths.get("example/CloseToZero02");
@@ -114,7 +114,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  //@Ignore // Be ignored but should not be ignored
+  @Ignore // Be ignored but should not be ignored
   @Test
   public void testCloseToZero04() {
     final Path rootPath = Paths.get("example/CloseToZero04");
@@ -128,7 +128,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  //@Ignore
+  @Ignore
   @Test
   public void testGCD01() {
     final Path rootPath = Paths.get("example/GCD01");
