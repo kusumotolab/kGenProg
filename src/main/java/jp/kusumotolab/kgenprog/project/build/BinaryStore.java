@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.build;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.tools.JavaFileObject;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
@@ -63,7 +64,7 @@ public class BinaryStore {
     return cache;
   }
 
-  public Set<JavaBinaryObject> get(final String packageName) {
+  public Set<JavaFileObject> get(final String packageName) {
     return cache.stream()
         .filter(jbo -> jbo.getFqn().value.startsWith(packageName))
         .collect(Collectors.toSet());
@@ -75,6 +76,10 @@ public class BinaryStore {
 
   public void addAll(final Set<JavaBinaryObject> binaries) {
     cache.addAll(binaries);
+  }
+
+  public void addAll(final BinaryStore binaries) {
+    cache.addAll(binaries.getAll());
   }
 
 

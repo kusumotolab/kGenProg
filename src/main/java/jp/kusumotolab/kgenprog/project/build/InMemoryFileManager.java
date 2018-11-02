@@ -2,9 +2,7 @@ package jp.kusumotolab.kgenprog.project.build;
 
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaFileManager;
@@ -22,15 +20,15 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   private final BinaryStore binaryStore;
 
   // クラスパスの解決に用いられるJBOの集合．ビルドごとに書き換えられる．
-  private Set<JavaBinaryObject> classPathBinaries;
+  private BinaryStore classPathBinaries;
 
   public InMemoryFileManager(final JavaFileManager fileManager, final BinaryStore binaryStore) {
     super(fileManager);
     this.binaryStore = binaryStore;
-    this.classPathBinaries = Collections.emptySet();
+    this.classPathBinaries = new BinaryStore();
   }
 
-  public void setClassPathBinaries(final Set<JavaBinaryObject> classPathBinaries) {
+  public void setClassPathBinaries(final BinaryStore classPathBinaries) {
     this.classPathBinaries = classPathBinaries;
   }
 
@@ -38,7 +36,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   public JavaFileObject getJavaFileForOutput(final Location location, final String name,
       final Kind kind, final FileObject sibling) throws IOException {
 
-    if (null == sibling || !(sibling instanceof JavaSourceObject) || !kind.equals(Kind.CLASS)) {
+    if (null == sibling || sibling.getClass() != JavaSourceObject.class || !kind.equals(Kind.CLASS)) {
       // TODO 再現状況と対処方法は不明．一応
       throw new UnsupportedOperationException();
     }
@@ -77,9 +75,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     final Iterable<JavaFileObject> objs = fileManager.list(location, packageName, kinds, recurse);
 
     // classPathBinariesからもバイナリを取り出す
-    final Iterable<JavaFileObject> cache = classPathBinaries.stream()
-        .filter(jbo -> jbo.getFqn().value.startsWith(packageName))
-        .collect(Collectors.toList());
+    final Set<JavaFileObject> cache = classPathBinaries.get(packageName);
 
     // TODO location考えなくて良い？
 

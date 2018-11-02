@@ -54,16 +54,14 @@ public class ProjectBuilder {
     if (javaSourceObjects.isEmpty()) {
       // TODO
       // とりあえず適当な処置．適切なバイナリを取り出してBuildResultsに格納して終了
-      final BinaryStore compiledBinaryStore = new BinaryStore();
-      final Set<JavaBinaryObject> compiledBinaries = extractJavaBinaryObjects(allAsts);
-      compiledBinaryStore.addAll(compiledBinaries);
+      final BinaryStore compiledBinaryStore = extractJavaBinaryObjects(allAsts);
 
       final BuildResults buildResults = new BuildResults(compiledBinaryStore, null, "", false);
       return buildResults;
     }
 
     // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
-    final Set<JavaBinaryObject> resusableBinaryObject = extractJavaBinaryObjects(allAsts);
+    final BinaryStore resusableBinaryObject = extractJavaBinaryObjects(allAsts);
     inMemoryFileManager.setClassPathBinaries(resusableBinaryObject);
 
     // コンパイル状況や診断情報等の保持オブジェクトを用意
@@ -84,9 +82,7 @@ public class ProjectBuilder {
     }
 
     // コンパイル済みバイナリを取り出してセットしておく．
-    final BinaryStore compiledBinaryStore = new BinaryStore();
-    final Set<JavaBinaryObject> compiledBinaries = extractJavaBinaryObjects(allAsts);
-    compiledBinaryStore.addAll(compiledBinaries);
+    final BinaryStore compiledBinaryStore = extractJavaBinaryObjects(allAsts);
 
     final BuildResults buildResults =
         new BuildResults(compiledBinaryStore, diagnostics, buildProgressWriter.toString(), false);
@@ -99,12 +95,15 @@ public class ProjectBuilder {
    * @param asts
    * @return
    */
-  private Set<JavaBinaryObject> extractJavaBinaryObjects(final List<GeneratedAST<?>> asts) {
-    return asts.stream()
+  private BinaryStore extractJavaBinaryObjects(final List<GeneratedAST<?>> asts) {
+    final BinaryStore binStore = new BinaryStore();
+    final Set<JavaBinaryObject> jbos = asts.stream()
         .map(ast -> binaryStore.get(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
             ast.getMessageDigest())) // TODO 型決め打ち
         .flatMap(Set::stream)
         .collect(Collectors.toSet());
+    binStore.addAll(jbos);
+    return binStore;
   }
 
   /**
