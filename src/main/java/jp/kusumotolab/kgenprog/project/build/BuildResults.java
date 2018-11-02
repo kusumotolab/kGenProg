@@ -36,7 +36,7 @@ public class BuildResults {
     this.binaryStore = binaryStore;
   }
 
-  final BinaryStore binaryStore;
+  private final BinaryStore binaryStore;
 
   public BinaryStore getBinaryStore() {
     return binaryStore;

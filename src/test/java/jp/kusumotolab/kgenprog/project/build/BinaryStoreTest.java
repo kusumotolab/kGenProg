@@ -22,9 +22,6 @@ public class BinaryStoreTest {
   static String digest1;
   static String digest2;
   static String digest3;
-  static BinaryStoreKey key1;
-  static BinaryStoreKey key2;
-  static BinaryStoreKey key3;
   static JavaBinaryObject object1;
   static JavaBinaryObject object2;
   static JavaBinaryObject object3;
@@ -42,10 +39,6 @@ public class BinaryStoreTest {
     digest1 = "1111";
     digest2 = "2222";
     digest3 = "3333";
-
-    key1 = new BinaryStoreKey(FOO.value, digest1);
-    key2 = new BinaryStoreKey(BAR.value, digest2);
-    key3 = new BinaryStoreKey(BAZ.value, digest3);
 
     object1 = new JavaBinaryObject(FOO, FOO, digest1, path1, false);
     object2 = new JavaBinaryObject(BAR, BAR, digest2, path2, false);
@@ -70,17 +63,17 @@ public class BinaryStoreTest {
     binStore.add(object1);
     binStore.add(object2);
 
-    assertThat(binStore.get(key1)).containsExactly(object1);
-    assertThat(binStore.get(key2)).containsExactly(object2);
-    assertThat(binStore.get(key3)).isEmpty();
+    assertThat(binStore.get(FOO, digest1)).containsExactly(object1);
+    assertThat(binStore.get(BAR, digest2)).containsExactly(object2);
+    assertThat(binStore.get(BAZ, digest3)).isEmpty();
   }
 
   @Test
   // 空の状態からnullが返ってくるか
   public void testJustGet() {
-    assertThat(binStore.get(key1)).isEmpty();
-    assertThat(binStore.get(key2)).isEmpty();
-    assertThat(binStore.get(key3)).isEmpty();
+    assertThat(binStore.get(FOO, digest1)).isEmpty();
+    assertThat(binStore.get(BAR, digest2)).isEmpty();
+    assertThat(binStore.get(BAZ, digest3)).isEmpty();
   }
 
   @Test
@@ -97,7 +90,5 @@ public class BinaryStoreTest {
     // o1とo2だけのはず（dummyは含まれない）
     assertThat(binStore.list("example")).containsExactlyInAnyOrder(object1, object2);
   }
-
-
 
 }

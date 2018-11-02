@@ -287,12 +287,8 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        // final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-        // final CompilationUnit compilatinoUnit =
-        // compilationPackage.getCompilationUnit(measuredClass.value);
-        // final byte[] bytecode = compilatinoUnit.getBytecode();
         final byte[] bytecode = buildResults.getBinaryStore()
-            .get(measuredClass.value)
+            .get(measuredClass)
             .getByteCode();
         analyzer.analyzeClass(bytecode, measuredClass.value);
       }

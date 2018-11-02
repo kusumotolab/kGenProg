@@ -31,7 +31,6 @@ public class JavaSourceObject extends SimpleJavaFileObject {
       final SourcePath sourcePath) {
     super(URI.create("jso:///" + fqn.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
     this.isTest = sourcePath instanceof TestSourcePath ? true : false;
-
     this.fqn = isTest ? new TestFullyQualifiedName(fqn) : new TargetFullyQualifiedName(fqn);
     this.sourceCode = sourceCode;
     this.digest = digest;

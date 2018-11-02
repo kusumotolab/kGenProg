@@ -24,13 +24,13 @@ import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
  */
 public class JavaBinaryObject implements JavaFileObject {
 
-  private final FullyQualifiedName originFqn;
   private final FullyQualifiedName fqn;
-  private final Kind kind;
+  private final FullyQualifiedName originFqn;
   private final String originDigest;
   private final SourcePath originPath;
-  private final URI uri;
   private final boolean isTest;
+  private final Kind kind;
+  private final URI uri;
   private final ByteArrayOutputStream bos;
 
   /**
@@ -54,12 +54,12 @@ public class JavaBinaryObject implements JavaFileObject {
     this.bos = new ByteArrayOutputStream(); // バイナリ情報の格納先
   }
 
-  public String getOriginKey() {
-    return originFqn + "#" + originDigest;
+  public FullyQualifiedName getOriginFqn() {
+    return originFqn;
   }
 
-  public String getPrimaryKey() {
-    return fqn + "#" + originDigest;
+  public String getOriginDigest() {
+    return originDigest;
   }
 
   public FullyQualifiedName getFqn() {
@@ -159,12 +159,17 @@ public class JavaBinaryObject implements JavaFileObject {
       return false;
     }
     final JavaBinaryObject that = (JavaBinaryObject) o;
-    return getPrimaryKey().equals(that.getPrimaryKey());
+    return getKey().equals(that.getKey());
   }
 
   @Override
   public int hashCode() {
-    return getPrimaryKey().hashCode();
+    return getKey().hashCode();
+  }
+
+  // equals()とhashCode()に用いるオブジェクト自体のユニークなキー
+  private String getKey() {
+    return fqn + "#" + originDigest;
   }
 
 }

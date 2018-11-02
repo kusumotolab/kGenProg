@@ -4,10 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 /**
  * 差分ビルド + インメモリビルドのためのバイナリ格納庫．<br>
- * FQNとダイジェストをキーとして，ビルド結果となるJavaMemoryObjectバイナリをメモリ上にキャッシュする． <br>
+ * ビルド結果となるJavaMemoryObjectバイナリを保持する． <br>
  * 
  * @author shinsuke
  *
@@ -26,25 +27,29 @@ public class BinaryStore {
     cache.add(object);
   }
 
-  public boolean exists(final BinaryStoreKey key) {
+  public boolean exists(final FullyQualifiedName fqn, final String digest) {
     return cache.stream()
-        .anyMatch(jbo -> jbo.getOriginKey()
-            .equals(key.toString()));
+        .anyMatch(jbo -> jbo.getOriginFqn()
+            .equals(fqn)
+            && jbo.getOriginDigest()
+                .equals(digest));
   }
 
-  public Set<JavaBinaryObject> get(final BinaryStoreKey key) {
+  public Set<JavaBinaryObject> get(final FullyQualifiedName fqn, final String digest) {
     return cache.stream()
-        .filter(jbo -> jbo.getOriginKey()
-            .equals(key.toString()))
+        .filter(jbo -> jbo.getOriginFqn()
+            .equals(fqn)
+            && jbo.getOriginDigest()
+                .equals(digest))
         .collect(Collectors.toSet());
   }
 
-  public JavaBinaryObject get(final String fqn) {
+  public JavaBinaryObject get(final FullyQualifiedName fqn) {
     return cache.stream()
         .filter(jbo -> jbo.getFqn()
             .equals(fqn))
         .findFirst()
-        .orElseThrow(RuntimeException::new);
+        .orElseThrow(RuntimeException::new); // TODO should be handled
   }
 
   public Set<JavaBinaryObject> get(final SourcePath path) {
@@ -69,8 +74,9 @@ public class BinaryStore {
     cache.clear();
   }
 
-  public void addAll(Set<JavaBinaryObject> binaries) {
+  public void addAll(final Set<JavaBinaryObject> binaries) {
     cache.addAll(binaries);
   }
+
 
 }

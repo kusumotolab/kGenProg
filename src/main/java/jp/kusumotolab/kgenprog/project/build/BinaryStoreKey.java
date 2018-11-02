@@ -2,17 +2,23 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
+@Deprecated // TODO 一旦Depreしておく．改善の予定
 public class BinaryStoreKey {
 
   final private String key;
 
-  public BinaryStoreKey(final String name, final String hash) {
-    key = name + "#" + hash;
+  private BinaryStoreKey(final String name, final String digest) {
+    key = name + "#" + digest;
   }
 
   public BinaryStoreKey(final GeneratedAST<? extends SourcePath> ast) {
     this(ast.getPrimaryClassName(), ast.getMessageDigest());
+  }
+
+  public BinaryStoreKey(final FullyQualifiedName originFqn, final String digest) {
+    this(originFqn.value, digest);
   }
 
   @Override
@@ -21,7 +27,7 @@ public class BinaryStoreKey {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     return key.equals(o.toString());
   }
 

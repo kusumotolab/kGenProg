@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
@@ -58,8 +59,8 @@ public class ProjectBuilder {
     }
 
     // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
-    final Set<JavaBinaryObject> resusedBinaryObject = extractJavaBinaryObjects(allAsts);
-    inMemoryFileManager.setClassPathBinaries(resusedBinaryObject);
+    final Set<JavaBinaryObject> resusableBinaryObject = extractJavaBinaryObjects(allAsts);
+    inMemoryFileManager.setClassPathBinaries(resusableBinaryObject);
 
     // コンパイル状況や診断情報等の保持オブジェクトを用意
     final StringWriter buildProgressWriter = new StringWriter();
@@ -71,7 +72,7 @@ public class ProjectBuilder {
 
     log.trace("-----------------------------------------");
     log.trace("build:        " + javaSourceObjects);
-    log.trace("   reused:    " + resusedBinaryObject);
+    log.trace("   reused:    " + resusableBinaryObject);
     log.trace("   all-cache: " + binaryStore.getAll());
 
     // コンパイルを実行
@@ -79,20 +80,19 @@ public class ProjectBuilder {
 
     if (isBuildFailed) {
       log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
-      //diagnostics.getDiagnostics().stream().forEach(System.err::println); //xxxxxxxxxxxx
+      // diagnostics.getDiagnostics().stream().forEach(System.err::println); //xxxxxxxxxxxx
       return EmptyBuildResults.instance;
     }
 
     // コンパイル済みバイナリを取り出してセットしておく．
-    final BinaryStore generatedBinaryStore = new BinaryStore();
+    final BinaryStore compiledBinaryStore = new BinaryStore();
     final Set<JavaBinaryObject> compiledBinaries = extractJavaBinaryObjects(allAsts);
-    generatedBinaryStore.addAll(compiledBinaries);
+    compiledBinaryStore.addAll(compiledBinaries);
 
     final BuildResults buildResults = new BuildResults(generatedSourceCode, false, diagnostics,
-        buildProgressWriter.toString(), generatedBinaryStore);
+        buildProgressWriter.toString(), compiledBinaryStore);
     return buildResults;
   }
-
 
   /**
    * 指定astに対応するJavaBinaryObjectをbinaryStoreから取得する．
@@ -102,8 +102,8 @@ public class ProjectBuilder {
    */
   private Set<JavaBinaryObject> extractJavaBinaryObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
-        .map(BinaryStoreKey::new)
-        .map(key -> binaryStore.get(key))
+        .map(ast -> binaryStore.get(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
+            ast.getMessageDigest())) // TODO
         .flatMap(Set::stream)
         .collect(Collectors.toSet());
   }
@@ -117,7 +117,8 @@ public class ProjectBuilder {
    */
   private Set<JavaSourceObject> generateJavaSourceObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
-        .filter(ast -> !binaryStore.exists(new BinaryStoreKey(ast)))
+        .filter(ast -> !binaryStore.exists(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
+            ast.getMessageDigest()))
         .map(JavaSourceObject::new)
         .collect(Collectors.toSet());
   }
