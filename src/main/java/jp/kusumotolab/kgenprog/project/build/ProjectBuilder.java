@@ -89,8 +89,8 @@ public class ProjectBuilder {
     final Set<JavaBinaryObject> compiledBinaries = extractJavaBinaryObjects(allAsts);
     compiledBinaryStore.addAll(compiledBinaries);
 
-    final BuildResults buildResults = new BuildResults(generatedSourceCode, false, diagnostics,
-        buildProgressWriter.toString(), compiledBinaryStore);
+    final BuildResults buildResults =
+        new BuildResults(compiledBinaryStore, diagnostics, buildProgressWriter.toString(), false);
     return buildResults;
   }
 

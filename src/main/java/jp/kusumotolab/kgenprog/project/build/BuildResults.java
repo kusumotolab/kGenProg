@@ -2,9 +2,10 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
 public class BuildResults {
+
+  private final BinaryStore binaryStore;
 
   public final boolean isBuildFailed;
 
@@ -14,29 +15,21 @@ public class BuildResults {
   // ビルド実行時のテキスト出力
   public final String buildProgressText;
 
-  // ビルド元となったソースコード
-  public final GeneratedSourceCode sourceCode;
-
-
   /**
    * コンストラクタ（後で書き換え TODO）
    * 
    * @param sourceCode ビルド元となったソースコード
-   * @param isBuildFailed ビルドの成否
    * @param diagnostics ビルド時の詳細情報
    * @param buildProgressText ビルド実行時のテキスト出力
    */
-  protected BuildResults(final GeneratedSourceCode sourceCode, final boolean isBuildFailed,
+  protected BuildResults(final BinaryStore binaryStore,
       final DiagnosticCollector<JavaFileObject> diagnostics, final String buildProgressText,
-      final BinaryStore binaryStore) {
-    this.sourceCode = sourceCode;
-    this.isBuildFailed = isBuildFailed;
+      final boolean isBuildFailed) {
+    this.binaryStore = binaryStore;
     this.diagnostics = diagnostics;
     this.buildProgressText = buildProgressText;
-    this.binaryStore = binaryStore;
+    this.isBuildFailed = isBuildFailed;
   }
-
-  private final BinaryStore binaryStore;
 
   public BinaryStore getBinaryStore() {
     return binaryStore;
