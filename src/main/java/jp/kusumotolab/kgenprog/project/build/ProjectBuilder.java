@@ -74,11 +74,6 @@ public class ProjectBuilder {
     final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
         diagnostics, compilationOptions, null, javaSourceObjects);
 
-    log.trace("-----------------------------------------");
-    log.trace("build:        " + javaSourceObjects);
-    log.trace("   reused:    " + resusableBinaryObject);
-    log.trace("   all-cache: " + binaryStore.getAll());
-
     // コンパイルを実行
     final boolean isBuildFailed = !task.call();
 
@@ -107,7 +102,7 @@ public class ProjectBuilder {
   private Set<JavaBinaryObject> extractJavaBinaryObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
         .map(ast -> binaryStore.get(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
-            ast.getMessageDigest())) // TODO
+            ast.getMessageDigest())) // TODO 型決め打ち
         .flatMap(Set::stream)
         .collect(Collectors.toSet());
   }
@@ -122,7 +117,7 @@ public class ProjectBuilder {
   private Set<JavaSourceObject> generateJavaSourceObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
         .filter(ast -> !binaryStore.exists(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
-            ast.getMessageDigest()))
+            ast.getMessageDigest())) // TODO 型決め打ち
         .map(JavaSourceObject::new)
         .collect(Collectors.toSet());
   }

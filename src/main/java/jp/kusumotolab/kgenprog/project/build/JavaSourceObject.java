@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
-import com.google.common.base.Objects;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -22,7 +21,7 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   private final String digest;
   private final boolean isTest;
 
-  public JavaSourceObject(final GeneratedAST<? extends SourcePath> ast) {
+  public JavaSourceObject(final GeneratedAST<?> ast) {
     this(ast.getPrimaryClassName(), ast.getSourceCode(), ast.getMessageDigest(),
         ast.getSourcePath());
   }
@@ -30,6 +29,7 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   private JavaSourceObject(final String fqn, final String sourceCode, final String digest,
       final SourcePath sourcePath) {
     super(URI.create("jso:///" + fqn.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
+
     this.isTest = sourcePath instanceof TestSourcePath ? true : false;
     this.fqn = isTest ? new TestFullyQualifiedName(fqn) : new TargetFullyQualifiedName(fqn);
     this.sourceCode = sourceCode;
@@ -50,7 +50,7 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   }
 
   @Override
-  public final CharSequence getCharContent(boolean ignoreEncodingErrors) {
+  public final CharSequence getCharContent(final boolean ignoreEncodingErrors) {
     return sourceCode;
   }
 
@@ -89,6 +89,5 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   private String getKey() {
     return fqn + "#" + sourceCode;
   }
-
 
 }

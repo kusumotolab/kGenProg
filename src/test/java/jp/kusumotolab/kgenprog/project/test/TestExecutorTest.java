@@ -371,6 +371,6 @@ public class TestExecutorTest {
     assertThat(result2.getTestResult(FOO_TEST02).failed).isFalse();
     assertThat(result2.getTestResult(FOO_TEST03).failed).isFalse();
     assertThat(result2.getTestResult(FOO_TEST04).failed).isFalse();
-
   }
+
 }

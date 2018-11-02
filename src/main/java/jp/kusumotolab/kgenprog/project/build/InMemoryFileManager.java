@@ -16,13 +16,6 @@ import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.TestFullyQualifiedName;
 
-/**
- * The standard JavaFileManager uses a simple implementation of type JavaFileObject to read/write
- * bytecode into class files. This class extends the standard JavaFileManager to read/write bytecode
- * into memory using a custom implementation of the JavaFileObject.
- * 
- * @see JavaBinaryObject
- */
 public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   // ビルド結果を格納するStore
@@ -40,7 +33,6 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   public void setClassPathBinaries(final Set<JavaBinaryObject> classPathBinaries) {
     this.classPathBinaries = classPathBinaries;
   }
-
 
   @Override
   public JavaFileObject getJavaFileForOutput(final Location location, final String name,

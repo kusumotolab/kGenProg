@@ -16,7 +16,7 @@ import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 public class BinaryStore {
 
   // 内部データ構造はただのSet．
-  // TODO 現在，各クエリの実行がfilter&collectによるベタ処理なので，高速化のためには様々なキャッシュ用Mapを作る必要あり．
+  // TODO 現在，各クエリの実行がfilter&collectによるベタ処理なので，高速化のためにはデータ構造の改善が必要．
   private Set<JavaBinaryObject> cache;
 
   public BinaryStore() {
@@ -63,11 +63,10 @@ public class BinaryStore {
     return cache;
   }
 
-  public Iterable<JavaBinaryObject> list(final String packageName) {
+  public Set<JavaBinaryObject> get(final String packageName) {
     return cache.stream()
-        .filter(jbo -> jbo.getName()
-            .startsWith("/" + packageName)) // TODO: スラッシュ開始で決め打ち．uriからの変換なので間違いないとは思う
-        .collect(Collectors.toList());
+        .filter(jbo -> jbo.getFqn().value.startsWith(packageName))
+        .collect(Collectors.toSet());
   }
 
   public void removeAll() {
