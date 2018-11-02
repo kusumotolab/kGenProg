@@ -64,6 +64,11 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   }
 
   @Override
+  public final String toString() {
+    return fqn + "#" + digest.substring(0, 4);
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) {
       return true;
@@ -72,17 +77,18 @@ public class JavaSourceObject extends SimpleJavaFileObject {
       return false;
     }
     final JavaSourceObject that = (JavaSourceObject) o;
-    return Objects.equal(sourceCode, that.sourceCode) && Objects.equal(fqn, that.fqn);
+    return getKey().equals(that.getKey());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(sourceCode, fqn);
+    return getKey().hashCode();
   }
 
-  @Override
-  public final String toString() {
-    return fqn + "#" + digest.substring(0, 4);
+  // equals()とhashCode()に用いるオブジェクト自体のユニークなキー
+  private String getKey() {
+    return fqn + "#" + sourceCode;
   }
+
 
 }

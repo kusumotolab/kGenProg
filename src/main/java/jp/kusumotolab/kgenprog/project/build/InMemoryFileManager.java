@@ -112,6 +112,9 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     return fileManager.inferBinaryName(location, file);
   }
 
+  ////////////////////////////////////////////////////////////////////////////////
+  // unsupported operations
+
   @Override
   public FileObject getFileForInput(final Location location, final String packageName,
       final String relativeName) throws IOException {

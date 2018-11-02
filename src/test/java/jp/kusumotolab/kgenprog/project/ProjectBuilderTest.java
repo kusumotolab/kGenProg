@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.tools.JavaFileObject.Kind;
 import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
@@ -29,10 +28,8 @@ import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.MemoryClassLoader;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
-import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class ProjectBuilderTest {
