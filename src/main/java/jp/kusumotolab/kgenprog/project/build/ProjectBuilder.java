@@ -51,11 +51,15 @@ public class ProjectBuilder {
 
     // コンパイル対象が存在しない場合 ≒ 全てのコンパイル対象がキャッシュ済みの場合
     // AST構築では，個々のASTのDigestではなくAST全体のDigestを確認しているため，この状況が発生する．
-    // TODO
-    // きちんとハンドルしないといけない．少なくともEmptyBuildResultsはまずい．
     if (javaSourceObjects.isEmpty()) {
-      log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
-      return EmptyBuildResults.instance;
+      // TODO
+      // とりあえず適当な処置．適切なバイナリを取り出してBuildResultsに格納して終了
+      final BinaryStore compiledBinaryStore = new BinaryStore();
+      final Set<JavaBinaryObject> compiledBinaries = extractJavaBinaryObjects(allAsts);
+      compiledBinaryStore.addAll(compiledBinaries);
+
+      final BuildResults buildResults = new BuildResults(compiledBinaryStore, null, "", false);
+      return buildResults;
     }
 
     // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく

@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URI;
+import java.util.Date;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
@@ -32,6 +33,7 @@ public class JavaBinaryObject implements JavaFileObject {
   private final Kind kind;
   private final URI uri;
   private final ByteArrayOutputStream bos;
+  private final long lastModified;
 
   /**
    * @param fqn バイナリ自体のFQN
@@ -52,6 +54,7 @@ public class JavaBinaryObject implements JavaFileObject {
     this.uri = URI.create("jmo:///" + fqn.value.replace('.', '/') + kind.extension);
 
     this.bos = new ByteArrayOutputStream(); // バイナリ情報の格納先
+    this.lastModified = System.currentTimeMillis(); // 生成時刻
   }
 
   public FullyQualifiedName getOriginFqn() {
@@ -115,7 +118,7 @@ public class JavaBinaryObject implements JavaFileObject {
 
   @Override
   public final long getLastModified() {
-    return 0L;
+    return lastModified;
   }
 
   @Override

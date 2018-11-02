@@ -59,7 +59,7 @@ public class BinaryStoreTest {
 
   @Test
   // 基本操作の確認．putしてgetできるか
-  public void testStoreAndGetByPath() {
+  public void testStoreAndGet() {
     binStore.add(object1);
     binStore.add(object2);
 
