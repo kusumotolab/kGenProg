@@ -36,7 +36,8 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   public JavaFileObject getJavaFileForOutput(final Location location, final String name,
       final Kind kind, final FileObject sibling) throws IOException {
 
-    if (null == sibling || sibling.getClass() != JavaSourceObject.class || !kind.equals(Kind.CLASS)) {
+    if (null == sibling || sibling.getClass() != JavaSourceObject.class
+        || !kind.equals(Kind.CLASS)) {
       // TODO 再現状況と対処方法は不明．一応
       throw new UnsupportedOperationException();
     }
@@ -75,7 +76,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     final Iterable<JavaFileObject> objs = fileManager.list(location, packageName, kinds, recurse);
 
     // classPathBinariesからもバイナリを取り出す
-    final Set<JavaFileObject> cache = classPathBinaries.get(packageName);
+    final Set<JavaBinaryObject> cache = classPathBinaries.get(packageName);
 
     // TODO location考えなくて良い？
 
@@ -93,7 +94,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   @Override
   public String inferBinaryName(final Location location, final JavaFileObject file) {
     // JMOの場合はバイナリ名の解決を簡略化 ．
-    // 標準FMにinferするとIllegalArgumentExceptionが発生するため（理由は不明）．
+    // 標準FMにinferするとIllegalArgumentExceptionが発生するため（inferBinaryName()の内部処理がわからないので理由は不明）．
     if (file.getClass() == JavaBinaryObject.class) {
       return ((JavaBinaryObject) file).getFqn().value;
     }
@@ -119,6 +120,5 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   public boolean isSameFile(final FileObject a, final FileObject b) {
     return false;
   }
-
 
 }

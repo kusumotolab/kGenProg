@@ -27,7 +27,6 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -347,7 +346,7 @@ public class TestExecutorTest {
     assertThat(result1.getTestResult(FOO_TEST04).failed).isFalse();
 
     // FooのASTを取り出す
-    final GeneratedAST<? extends SourcePath> ast =
+    final GeneratedAST<?> ast =
         source.getProductAst(new ProductSourcePath(rootPath.resolve(ExampleAlias.Src.FOO)));
 
     // バグ箇所を取り出す（7行目のはず）

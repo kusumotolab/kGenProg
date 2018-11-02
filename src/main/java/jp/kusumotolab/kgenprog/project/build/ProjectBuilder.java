@@ -2,7 +2,7 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import java.io.File;
 import java.io.StringWriter;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,15 +54,15 @@ public class ProjectBuilder {
     if (javaSourceObjects.isEmpty()) {
       // TODO
       // とりあえず適当な処置．適切なバイナリを取り出してBuildResultsに格納して終了
-      final BinaryStore compiledBinaryStore = extractJavaBinaryObjects(allAsts);
+      final BinaryStore compiledBinaries = extractSubBinaryStore(allAsts);
 
-      final BuildResults buildResults = new BuildResults(compiledBinaryStore, null, "", false);
+      final BuildResults buildResults = new BuildResults(compiledBinaries, null, "", false);
       return buildResults;
     }
 
     // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
-    final BinaryStore resusableBinaryObject = extractJavaBinaryObjects(allAsts);
-    inMemoryFileManager.setClassPathBinaries(resusableBinaryObject);
+    final BinaryStore resusableBinaries = extractSubBinaryStore(allAsts);
+    inMemoryFileManager.setClassPathBinaries(resusableBinaries);
 
     // コンパイル状況や診断情報等の保持オブジェクトを用意
     final StringWriter buildProgressWriter = new StringWriter();
@@ -82,24 +82,27 @@ public class ProjectBuilder {
     }
 
     // コンパイル済みバイナリを取り出してセットしておく．
-    final BinaryStore compiledBinaryStore = extractJavaBinaryObjects(allAsts);
+    final BinaryStore compiledBinaries = extractSubBinaryStore(allAsts);
 
     final BuildResults buildResults =
-        new BuildResults(compiledBinaryStore, diagnostics, buildProgressWriter.toString(), false);
+        new BuildResults(compiledBinaries, diagnostics, buildProgressWriter.toString(), false);
     return buildResults;
   }
 
   /**
-   * 指定astに対応するJavaBinaryObjectをbinaryStoreから取得する．
+   * binaryStoreから指定astに対応するJavaBinaryObjectの部分集合を取り出す．
    * 
    * @param asts
    * @return
    */
-  private BinaryStore extractJavaBinaryObjects(final List<GeneratedAST<?>> asts) {
+  private BinaryStore extractSubBinaryStore(final List<GeneratedAST<?>> asts) {
+    // TODO
+    // この処理コスト高い．
+    // BinaryStoreからサブBinaryStoreの抜き出し方法は改善したほうが良い．
     final BinaryStore binStore = new BinaryStore();
     final Set<JavaBinaryObject> jbos = asts.stream()
         .map(ast -> binaryStore.get(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
-            ast.getMessageDigest())) // TODO 型決め打ち
+            ast.getMessageDigest())) // TODO TargetFullyQualifiedName型で決め打ち
         .flatMap(Set::stream)
         .collect(Collectors.toSet());
     binStore.addAll(jbos);
@@ -116,7 +119,7 @@ public class ProjectBuilder {
   private Set<JavaSourceObject> generateJavaSourceObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
         .filter(ast -> !binaryStore.exists(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
-            ast.getMessageDigest())) // TODO 型決め打ち
+            ast.getMessageDigest())) // TODO TargetFullyQualifiedName型で決め打ち
         .map(JavaSourceObject::new)
         .collect(Collectors.toSet());
   }
@@ -131,15 +134,9 @@ public class ProjectBuilder {
         .stream()
         .map(cp -> cp.path.toString())
         .collect(Collectors.toList());
-    final String classPaths = String.join(File.pathSeparator, classpathList);
+    final String classpaths = String.join(File.pathSeparator, classpathList);
 
-    final List<String> options = new ArrayList<>();
-    options.add("-encoding");
-    options.add("UTF-8");
-    options.add("-classpath");
-    options.add(classPaths);
-    options.add("-verbose");
-    return options;
+    return Arrays.asList("-encoding", "UTF-8", "-classpath", classpaths, "-verbose");
   }
 
 }

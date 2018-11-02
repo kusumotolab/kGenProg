@@ -12,6 +12,7 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -26,9 +27,9 @@ import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.test.MemoryClassLoader;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class ProjectBuilderTest {
@@ -217,22 +218,22 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore1 = buildResults1.getBinaryStore();
     assertThat(binaryStore1.getAll()).hasSize(3);
 
-    // Fooのastを書き換えてコンパイル可能に
-    final GeneratedAST<?> ast = source.getAllAsts()
-        .get(1);
+    // Fooのdigestを書き換えてコンパイル対象に加わるように
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Src.FOO));
+    final GeneratedAST<?> ast = source.getProductAst(fooPath);
+    final Class<?> clazz = ast.getClass();
+    final Field field = clazz.getDeclaredField("messageDigest");
+    field.setAccessible(true);
+    field.set(ast, "xxxx");
     assertThat(ast.getPrimaryClassName()).isEqualTo(FOO.value);
-    final ASTLocation location = ast.getAllLocations()
-        .get(3); // コンパイルエラーが発生しない7行目を削除
-    assertThat(location.inferLineNumbers().start).isSameAs(7);
-    final DeleteOperation dop = new DeleteOperation();
-    final GeneratedSourceCode source2 = dop.apply(source, location);
+    assertThat(ast.getMessageDigest()).isEqualTo("xxxx");
 
     // 少し停止
     final long waitMs = 10L;
     Thread.sleep(waitMs);
 
     // 再度ビルド
-    final BuildResults buildResults2 = projectBuilder.build(source2);
+    final BuildResults buildResults2 = projectBuilder.build(source);
     final BinaryStore binaryStore2 = buildResults2.getBinaryStore();
 
     // 2つのビルド結果を比較．まず差分がない場合，キャッシュが効くので同一オブジェクトになるはず
@@ -286,18 +287,18 @@ public class ProjectBuilderTest {
     // バイナリは4バイトのはず
     assertThat(jmo.getByteCode()).hasSize(4);
 
-    // Fooのastを書き換えてコンパイル可能に
-    final GeneratedAST<?> ast = source.getAllAsts()
-        .get(1);
+    // Fooのdigestを書き換えてコンパイル対象に加わるように
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Src.FOO));
+    final GeneratedAST<?> ast = source.getProductAst(fooPath);
+    final Class<?> clazz = ast.getClass();
+    final Field field = clazz.getDeclaredField("messageDigest");
+    field.setAccessible(true);
+    field.set(ast, "xxxx");
     assertThat(ast.getPrimaryClassName()).isEqualTo(FOO.value);
-    final ASTLocation location = ast.getAllLocations()
-        .get(3); // コンパイルエラーが発生しない7行目を削除
-    assertThat(location.inferLineNumbers().start).isSameAs(7);
-    final DeleteOperation dop = new DeleteOperation();
-    final GeneratedSourceCode source2 = dop.apply(source, location);
+    assertThat(ast.getMessageDigest()).isEqualTo("xxxx");
 
     // 再度ビルドするとキャッシュが働いて上記Barの不正バイナリをロードし，失敗するはず
-    final BuildResults buildResults2 = projectBuilder.build(source2);
+    final BuildResults buildResults2 = projectBuilder.build(source);
     assertThat(buildResults2.isBuildFailed).isTrue();
     assertThat(buildResults2).isInstanceOf(EmptyBuildResults.class);
   }
