@@ -402,7 +402,6 @@ local.properties
 # End of https://www.gitignore.io/api/eclipse
 
 !example/BuildSuccess06/.classpath
-!example/BuildFailure03/bin/example/Bar.class
 !example/BuildSuccess13/lib/example/Bar.class
 
 example/real-bugs/
