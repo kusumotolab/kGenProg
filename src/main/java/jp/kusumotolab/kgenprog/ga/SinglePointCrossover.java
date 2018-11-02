@@ -2,12 +2,10 @@ package jp.kusumotolab.kgenprog.ga;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,15 +14,11 @@ public class SinglePointCrossover implements Crossover {
   private static Logger log = LoggerFactory.getLogger(SinglePointCrossover.class);
 
   private final Random random;
-  private final int numberOfPair;
+  private final int crossoverGeneratingCount;
 
-  public SinglePointCrossover(final Random random, final int numberOfPair) {
+  public SinglePointCrossover(final Random random, final int crossoverGeneratingCount) {
     this.random = random;
-    this.numberOfPair = numberOfPair;
-  }
-
-  public SinglePointCrossover(final Random random) {
-    this(random, 10);
+    this.crossoverGeneratingCount = crossoverGeneratingCount;
   }
 
   @Override
@@ -42,10 +36,19 @@ public class SinglePointCrossover implements Crossover {
       return Collections.emptyList();
     }
 
-    return IntStream.range(0, numberOfPair)
-        .mapToObj(e -> makeVariants(filteredVariants, variantStore))
-        .flatMap(Collection::stream)
-        .collect(Collectors.toList());
+    final List<Variant> variants = new ArrayList<>();
+
+    for (int i = 0; i < crossoverGeneratingCount/2; i++) {
+      final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+      variants.addAll(newVariants);
+    }
+    if (crossoverGeneratingCount != 0 && crossoverGeneratingCount % 2 != 0) {
+      final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+      if (!newVariants.isEmpty()) {
+        variants.add(newVariants.get(0));
+      }
+    }
+    return variants;
   }
 
   private List<Variant> makeVariants(final List<Variant> variants, final VariantStore store) {

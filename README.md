@@ -1,23 +1,24 @@
+:us: [:jp:](./doc/ja/README.md)
+
 [![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master)
 
 # kGenProg
-kGenProg は Java プログラム向けの自動プログラム修正ツールです．
-C 言語向けの自動プログラム修正ツール GenProg の Java 向け実装です．
-遺伝的アルゴリズムを用いて修正を行います．
+kGenProg is an Automated Program Repair tool written in Java for Java.
+This is a reimplementation of GenProg, which automatically repairs bugs using genetic algorithm.
 
 
-## 動作条件
+## Requirements
 - JDK8
 
 
-## インストール
-kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/download/v0.2/kGenProg.jar)から jar ファイルをダウンロードしてください．
+## Installation
+Just [download](https://github.com/kusumotolab/kGenProg/releases/latest) a jar file.
 
-[kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example) リポジトリに kGenProg の動作確認用のバグをまとめてあります．
-[ここ](https://github.com/kusumotolab/kGenProg-example/archive/master.zip)からすべてのバグをまとめた zip ファイルをダウンロードできます．
+There are sample bugs in [kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example).
+You can download all the bugs from [here](https://github.com/kusumotolab/kGenProg-example/archive/master.zip).
 
 
-## 使用方法
+## Usage
 ```
 $ java -jar path/to/kGenProg.jar
 $ java -jar path/to/kGenProg.jar --config <path>
@@ -28,45 +29,46 @@ $ java -jar path/to/kGenProg.jar -r <path> -s <path>... -t <path>... [-x <fqn>..
 
 ```
 
-### 使用例
-[kGenProg/example](example) には kGenProg のテストに用いているバグが置いてあります．
-[kGenProg/example/CloseToZero01](example/CloseToZero01) に対して kGenProg を実行するには次のコマンドを実行してください．
+### Example
+There are some artificial bugs for testing kGenProg in [kGenProg/example](example).
+Run kGenProg with the following command for [kGenProg/example/CloseToZero01](example/CloseToZero01).
 
 ```sh
 $ cd kGenProg/example/CloseToZero01
 $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/example/CloseToZeroTest.java
 ```
 
-`.toml` ファイルにパラメータをまとめておいて，実行時に指定することもできます．
-[example/CloseToZero01/kgenprog.toml](example/CloseToZero01/kgenprog.toml) に設定ファイルのサンプルがあります．
+You can configure parameters with a `.toml` file using `--config` option.
+See [example/CloseToZero01/kgenprog.toml](example/CloseToZero01/kgenprog.toml) to learn how to write a config file.
 ```sh
 $ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
 ```
 
-実行時にオプションを省略した場合は，カレントディレクトリの `kgenprog.toml` を読み込みます．
+If you pass no options, kGenProg reads config file named `kgenprog.toml` in the current directory.
 ```sh
 $ cd kGenProg/example/CloseToZero01
 $ java -jar path/to/kGenProg.jar
 ```
 
 
-### オプション
-| オプション | 説明 | デフォルト値/デフォルト動作 |
+### Options
+| Option | Description | Default |
 |---|---|---|
-| `-r`, `--root-dir` | 修正対象プロジェクトのルートディレクトリへのパス．テスト実行の都合上，対象プロジェクトのルートに移動した上でカレントディレクトリを指定することを推奨します． | なし |
-| `-s`, `--src` | プロダクトコード（単体テスト用のコードを除く実装系のソースコード）へのパス，もしくはプロダクトコードを含むディレクトリへのパス．スペース区切りで複数指定可能． | なし |
-| `-t`, `--test` | テストコード（単体テスト用のソースコード）へのパス，もしくはテストコードを含むディレクトリへのパス．スペース区切りで複数指定可能． | なし |
-| `-x`, `--exec-test` | 遺伝的アルゴリズム中に実行されるテストクラスの完全限定名．バグを発現させるテストクラスを指定してください．スペース区切りで複数指定可能． | すべてのテストクラス |
-| `-c`, `--cp` | 修正対象プロジェクトのビルドに必要なクラスパス．スペース区切りで複数指定可能． | なし |
-| `-w`, `--working-dir` | kGenProg が作業を行うディレクトリへのパス | システムの一時ファイルディレクトリ（Windows: `%tmp%`; *nix: `$TMPDIR`）以下に `kgenprog-work` で始まるディレクトリが実行ごとに新規に作成される |
-| `-o`, `--out-dir` | kGenProg が結果の出力を行うディレクトリへのパス．指定ディレクトリ直下に実行時のタイムスタンプを名前とするディレクトリが生成され，そのディレクトリに結果が出力されます． | カレントディレクトリ直下に `kgenprog-out` というディレクトリが作成される |
-| `-v`, `--verbose` | 詳細なログを出力する | `false` |
-| `-q`, `--quiet` | エラー出力のみを行う | `false` |
-| `--siblings-count` | 遺伝的アルゴリズムの変異操作によって1つの個体から1世代に生成する個体の数 | 10 |
-| `--headcount` | 遺伝的アルゴリズムの選択操作によって1世代に残される個体の最大数 | 100 |
-| `--max-generation` | 遺伝的アルゴリズムを打ち切る世代数 | 10 |
-| `--time-limit` | 遺伝的アルゴリズムを打ち切る時間（秒） | 60 |
-| `--test-time-limit` | 各個体のビルドおよびテストを打ち切る時間（秒） | 10 |
-| `--required-solutions` | 出力する解（修正パッチ）の数 | 1 |
-| `--random-seed` | kGenProg 全体で用いる乱数のシード値 | 0 |
+| `-r`, `--root-dir` | Specifies the path to the root directory of the target project. It is recommended to specify the current directory after moving into the root directory of the target project, for implementation reason. | Nothing |
+| `-s`, `--src` | Specifies paths to "product" source code (i.e. main, non-test code), or to directories containing them. Paths are separated with spaces. | Nothing |
+| `-t`, `--test` | Specifies paths to test source code, or to directories containing them. Paths are separated with spaces. | Nothing |
+| `-x`, `--exec-test` | Specifies fully qualified names of test classes executed during evaluation of variants (i.e. fix-candidates). It is recommended to specify test classes detecting a bug. Class names are separated with spaces. | All test classes |
+| `-c`, `--cp` | Specifies class paths needed to build the target project. Paths are separated with spaces. | Nothing |
+| `-w`, `--working-dir` | Specifies a path to a working directory. | A working directory having a name that starts with `kgenprog-work` is created under the system temporary directory (i.e. `$TMPDIR` on *nix, `%TMP%` on Windows) every kGenProg execution. |
+| `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
+| `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
+| `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
+| `--mutation-generating-count` | Specifies how many variants are generated in a generation by a mutation. | 10 |
+| `--crossover-generating-count` | Specifies how many variants are generated in a generation by a crossover. | 10 |
+| `--headcount` | Specifies how many variants survive in a generation. | 100 |
+| `--max-generation` | Terminates searching solutions when the specified number of generations reached. | 10 |
+| `--time-limit` | Terminates searching solutions when the specified time in seconds has passed. | 60 |
+| `--test-time-limit` | Specifies a time limit in seconds to build and test each variant. | 10 |
+| `--required-solutions` | Terminates searching solutions when the specified number of solutions are found. | 1 |
+| `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
 
