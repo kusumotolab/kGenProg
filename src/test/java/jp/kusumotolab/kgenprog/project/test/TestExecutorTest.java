@@ -10,6 +10,7 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST04;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST05;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
@@ -31,7 +32,6 @@ import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
-import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
@@ -308,7 +308,7 @@ public class TestExecutorTest {
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject) //
-        .addExecutionTest("example.FooTest") // FooTestのみ実行する（非依存テストは実行しない）
+        .addExecutionTest(FOO_TEST.value) // FooTestのみ実行する（非依存テストは実行しない）
         .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(source);
@@ -346,8 +346,8 @@ public class TestExecutorTest {
     assertThat(result1.getTestResult(FOO_TEST04).failed).isFalse();
 
     // FooのASTを取り出す
-    final GeneratedAST<?> ast =
-        source.getProductAst(new ProductSourcePath(rootPath.resolve(ExampleAlias.Src.FOO)));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Src.FOO));
+    final GeneratedAST<?> ast = source.getProductAst(fooPath);
 
     // バグ箇所を取り出す（7行目のはず）
     final ASTLocation location = ast.getAllLocations()

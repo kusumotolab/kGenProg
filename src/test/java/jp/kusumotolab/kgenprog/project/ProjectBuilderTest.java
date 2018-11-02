@@ -275,7 +275,7 @@ public class ProjectBuilderTest {
         .orElse(null);
 
     // バイナリは378バイトのはず
-    assertThat(jmo.getFqn().value).isEqualTo(BAR.value);
+    assertThat(jmo.getFqn()).isEqualTo(BAR);
     assertThat(jmo.getByteCode()).hasSize(378);
 
     // バイナリの中身を不正な値に書き換え
