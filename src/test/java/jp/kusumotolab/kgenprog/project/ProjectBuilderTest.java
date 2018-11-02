@@ -85,7 +85,6 @@ public class ProjectBuilderTest {
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
 
-    System.out.println(binaryStore.getAll());
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO, FOO_TEST, BAR, BAR_TEST, BAZ, BAZ_TEST, BAZ_INNER,
@@ -102,7 +101,6 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = projectBuilder.build(source);
-
 
     final BinaryStore binaryStore = buildResults.getBinaryStore();
 
