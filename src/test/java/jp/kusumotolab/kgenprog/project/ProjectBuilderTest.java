@@ -12,7 +12,6 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -22,7 +21,6 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.EmptyBuildResults;
-import jp.kusumotolab.kgenprog.project.build.InMemoryFileManager;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
@@ -31,7 +29,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.test.MemoryClassLoader;
 import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
-import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class ProjectBuilderTest {
@@ -223,7 +220,7 @@ public class ProjectBuilderTest {
     // Fooのastを書き換えてコンパイル可能に
     final GeneratedAST<?> ast = source.getAllAsts()
         .get(1);
-    assertThat(ast.getPrimaryClassName()).isEqualTo("example.Foo");
+    assertThat(ast.getPrimaryClassName()).isEqualTo(FOO.value);
     final ASTLocation location = ast.getAllLocations()
         .get(3); // コンパイルエラーが発生しない7行目を削除
     assertThat(location.inferLineNumbers().start).isSameAs(7);
@@ -239,19 +236,19 @@ public class ProjectBuilderTest {
     final BinaryStore binaryStore2 = buildResults2.getBinaryStore();
 
     // 2つのビルド結果を比較．まず差分がない場合，キャッシュが効くので同一オブジェクトになるはず
-    final JavaBinaryObject bar1 = binaryStore1.get(ExampleAlias.Fqn.BAR);
-    final JavaBinaryObject bar2 = binaryStore2.get(ExampleAlias.Fqn.BAR);
+    final JavaBinaryObject bar1 = binaryStore1.get(BAR);
+    final JavaBinaryObject bar2 = binaryStore2.get(BAR);
     assertThat(bar1).isEqualTo(bar2);
     assertThat(bar1.getLastModified()).isEqualTo(bar2.getLastModified());
 
-    final JavaBinaryObject fooTest1 = binaryStore1.get(ExampleAlias.Fqn.FOO_TEST);
-    final JavaBinaryObject fooTest2 = binaryStore2.get(ExampleAlias.Fqn.FOO_TEST);
+    final JavaBinaryObject fooTest1 = binaryStore1.get(FOO_TEST);
+    final JavaBinaryObject fooTest2 = binaryStore2.get(FOO_TEST);
     assertThat(fooTest1).isEqualTo(fooTest2);
     assertThat(fooTest1.getLastModified()).isEqualTo(fooTest2.getLastModified());
 
     // 差分がある場合，キャッシュが効かないので別オブジェクトでかつ生成時刻がずれるはず
-    final JavaBinaryObject foo1 = binaryStore1.get(ExampleAlias.Fqn.FOO);
-    final JavaBinaryObject foo2 = binaryStore2.get(ExampleAlias.Fqn.FOO);
+    final JavaBinaryObject foo1 = binaryStore1.get(FOO);
+    final JavaBinaryObject foo2 = binaryStore2.get(FOO);
     assertThat(foo1).isNotEqualTo(foo2);
     assertThat(foo1.getLastModified()).isLessThanOrEqualTo(foo2.getLastModified() - waitMs);
   }
@@ -277,7 +274,7 @@ public class ProjectBuilderTest {
         .orElse(null);
 
     // バイナリは378バイトのはず
-    assertThat(jmo.getFqn().value).isEqualTo("example.Bar");
+    assertThat(jmo.getFqn().value).isEqualTo(BAR.value);
     assertThat(jmo.getByteCode()).hasSize(378);
 
     // バイナリの中身を不正な値に書き換え
@@ -292,7 +289,7 @@ public class ProjectBuilderTest {
     // Fooのastを書き換えてコンパイル可能に
     final GeneratedAST<?> ast = source.getAllAsts()
         .get(1);
-    assertThat(ast.getPrimaryClassName()).isEqualTo("example.Foo");
+    assertThat(ast.getPrimaryClassName()).isEqualTo(FOO.value);
     final ASTLocation location = ast.getAllLocations()
         .get(3); // コンパイルエラーが発生しない7行目を削除
     assertThat(location.inferLineNumbers().start).isSameAs(7);
