@@ -38,8 +38,8 @@ public class GeneratedSourceCode {
     this.messageDigest = createMessageDigest();
   }
 
-  public List<GeneratedAST<? extends SourcePath>> getAllAsts() {
-    final List<GeneratedAST<? extends SourcePath>> list = new ArrayList<>();
+  public List<GeneratedAST<?>> getAllAsts() {
+    final List<GeneratedAST<?>> list = new ArrayList<>();
     list.addAll(productAsts);
     list.addAll(testAsts);
     return list;
