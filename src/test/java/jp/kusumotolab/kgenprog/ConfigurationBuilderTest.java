@@ -957,8 +957,7 @@ public class ConfigurationBuilderTest {
     Builder.buildFromCmdLineArgs(args);
 
     // 警告でるはず
-    assertThat(out.toString()
-        .trim()).isNotEmpty();
+    assertThat(out.toString()).contains("The directory where kGenProg is running is different");
 
     System.setOut(printStream);
   }
@@ -974,8 +973,7 @@ public class ConfigurationBuilderTest {
     Builder.buildFromCmdLineArgs(args);
 
     // 警告でないはず
-    assertThat(out.toString()
-        .trim()).isEmpty();
+    assertThat(out.toString()).doesNotContain("The directory where kGenProg is running is different");
 
     System.setOut(printStream);
   }
