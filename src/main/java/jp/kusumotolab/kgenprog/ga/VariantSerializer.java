@@ -24,7 +24,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     final double rawFitness = variant.getFitness()
         .getValue();
     final boolean buildSuccess = !Double.isNaN(rawFitness);
-    final double fitness = !Double.isNaN(rawFitness) ? rawFitness : -1.0d;
+    final double fitness = buildSuccess ? rawFitness : -1.0d;
     // Pathをシリアライズする
     final List<Patch> patches = patchGenerator.exec(variant);
     final JsonArray serializedPatches = serializePatches(patches);
@@ -32,36 +32,30 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     final JsonObject serializedVariant = new JsonObject();
 
     serializedVariant.addProperty("id", id);
-    serializedVariant.addProperty("generation_number", generationNumber);
+    serializedVariant.addProperty("generationNumber", generationNumber);
     serializedVariant.addProperty("fitness", fitness);
-    serializedVariant.addProperty("build_success", buildSuccess);
+    serializedVariant.addProperty("buildSuccess", buildSuccess);
     serializedVariant.add("patches", serializedPatches);
-    serializedVariant.add("parents", serializeParents(variant, variant.getHistoricalElement()));
+    serializedVariant.add("operations",
+        serializeOperations(variant.getHistoricalElement()));
 
     return serializedVariant;
   }
 
-  private JsonArray serializeParents(final Variant variant,
-      final HistoricalElement historicalElement) {
+  private JsonArray serializeOperations(final HistoricalElement historicalElement) {
 
-    final JsonArray serializeParents = new JsonArray();
+    final JsonArray serializedOperations = new JsonArray();
     final List<Variant> parents = historicalElement.getParents();
     final String operationName = historicalElement.getOperationName();
     for (final Variant parent : parents) {
       final long id = Integer.toUnsignedLong(parent.hashCode());
-      // Pathをシリアライズする
-      final List<Patch> patches = patchGenerator.exec(variant);
-      final JsonArray serializedPatches = serializePatches(patches);
+      final JsonObject serializedOperation = new JsonObject();
 
-      final JsonObject serializedParent = new JsonObject();
-
-      serializedParent.addProperty("id", id);
-      serializedParent.add("patches", serializedPatches);
-      serializedParent.addProperty("operation_name", operationName);
-
-      serializeParents.add(serializedParent);
+      serializedOperation.addProperty("id", id);
+      serializedOperation.addProperty("operationName", operationName);
+      serializedOperations.add(serializedOperation);
     }
-    return serializeParents;
+    return serializedOperations;
   }
 
   private JsonArray serializePatches(final List<Patch> patches) {
@@ -72,7 +66,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
       final String diff = patch.getDiff();
 
       final JsonObject serializedPatch = new JsonObject();
-      serializedPatch.addProperty("file_name", fileName);
+      serializedPatch.addProperty("fileName", fileName);
       serializedPatch.addProperty("diff", diff);
 
       serializedPatches.add(serializedPatch);
