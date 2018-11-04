@@ -33,7 +33,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
 
     final JsonObject serializedVariant = new JsonObject();
 
-    serializedVariant.addProperty("id", id);
+    serializedVariant.addProperty("id", String.valueOf(id));
     serializedVariant.addProperty("generationNumber", generationNumber);
     serializedVariant.addProperty("selectionCount", variant.getSelectionCount());
     serializedVariant.addProperty("fitness", fitness);
@@ -55,7 +55,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
       final long id = Integer.toUnsignedLong(parent.hashCode());
       final JsonObject serializedOperation = new JsonObject();
 
-      serializedOperation.addProperty("id", id);
+      serializedOperation.addProperty("id", String.valueOf(id));
       serializedOperation.addProperty("operationName", operationName);
       serializedOperations.add(serializedOperation);
     }
