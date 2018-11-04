@@ -1,18 +1,30 @@
 package jp.kusumotolab.kgenprog.ga;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
+import jp.kusumotolab.kgenprog.project.test.TestResultSerializer;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
+import jp.kusumotolab.kgenprog.project.test.TestResultsSerializer;
 
 public class VariantStore {
 
@@ -22,6 +34,7 @@ public class VariantStore {
   private final Strategies strategies;
   private final Variant initialVariant;
   private List<Variant> currentVariants;
+  private List<Variant> allVariants;
   private List<Variant> generatedVariants;
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
@@ -33,6 +46,8 @@ public class VariantStore {
     generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
+    allVariants = new LinkedList<>();
+    allVariants.add(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
     generation.incrementAndGet();
@@ -48,6 +63,8 @@ public class VariantStore {
     this.initialVariant = initialVariant;
 
     currentVariants = Collections.singletonList(initialVariant);
+    allVariants = new LinkedList<>();
+    allVariants.add(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
     generation = new OrdinalNumber(1);
@@ -115,6 +132,7 @@ public class VariantStore {
   public void addGeneratedVariant(final Variant variant) {
     log.debug("enter addNextGenerationVariant(Variant)");
 
+    allVariants.add(variant);
     if (variant.isCompleted()) {
       foundSolutions.add(variant);
       log.info("{} solution has been found", getFoundSolutionsNumber());
@@ -159,4 +177,46 @@ public class VariantStore {
         element);
   }
 
+  public void writeToFile(final Path outDir) {
+
+    final Path outputPath = createOutputPath(outDir);
+    final Gson gson = createGson();
+
+    try (final BufferedWriter out = Files.newBufferedWriter(outputPath)) {
+      if (Files.notExists(outDir)) {
+        Files.createDirectories(outDir);
+      }
+
+      out.write("{\"projectName\":");
+      out.write("\"");
+      out.write(targetProject.rootPath.getFileName()
+          .toString());
+      out.write("\",");
+      out.write("\"variants\":");
+      gson.toJson(allVariants, out);
+      out.write("}");
+
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private Path createOutputPath(final Path outDir) {
+    final LocalDateTime currentTime = LocalDateTime.now();
+    final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    final String formattedCurrentTime = dateTimeFormatter.format(currentTime);
+    final String projectName = targetProject.rootPath.getFileName()
+        .toString();
+
+    final String fileName = projectName + "_" + formattedCurrentTime + ".json";
+    return outDir.resolve(fileName);
+  }
+
+  private Gson createGson() {
+    final GsonBuilder gsonBuilder = new GsonBuilder();
+    return gsonBuilder.registerTypeAdapter(Variant.class, new VariantSerializer())
+        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
+        .registerTypeAdapter(TestResult.class, new TestResultSerializer())
+        .create();
+  }
 }

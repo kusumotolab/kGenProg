@@ -1,33 +1,15 @@
 package jp.kusumotolab.kgenprog;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonWriter;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.ga.Crossover;
-import jp.kusumotolab.kgenprog.ga.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.ga.VariantSerializer;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.Patch;
 import jp.kusumotolab.kgenprog.project.PatchGenerator;
@@ -73,9 +55,6 @@ public class KGenProgMain {
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
-    final Set<Variant> generatedVariants = new HashSet<>();
-    // 初期Variantを追加する
-    generatedVariants.add(initialVariant);
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getAsts());
@@ -92,7 +71,6 @@ public class KGenProgMain {
       variantStore.addGeneratedVariants(mutation.exec(variantStore));
       variantStore.addGeneratedVariants(crossover.exec(variantStore));
 
-      generatedVariants.addAll(variantStore.getGeneratedVariants());
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
         log.info("reached the required solutions");
@@ -115,9 +93,8 @@ public class KGenProgMain {
       variantStore.changeGeneration();
     }
 
-    generatedVariants.addAll(variantStore.getFoundSolutions());
     // jsonの出力
-    writeJson(generatedVariants);
+    variantStore.writeToFile(config.getOutDir());
 
     // 生成されたバリアントのパッチ出力
     logPatch(variantStore);
@@ -151,29 +128,5 @@ public class KGenProgMain {
 
   private String makeVariantId(final List<Variant> variants, final Variant variant) {
     return "variant" + (variants.indexOf(variant) + 1);
-  }
-
-  private void writeJson(final Set<Variant> generatedVariants) {
-
-    final GsonBuilder gsonBuilder = new GsonBuilder();
-    final Gson gson = gsonBuilder.registerTypeAdapter(Variant.class, new VariantSerializer())
-        .setPrettyPrinting()
-        .create();
-
-    try {
-      final Path outDir = config.getOutDir();
-
-      if (!Files.exists(outDir)) {
-        Files.createDirectories(outDir);
-      }
-
-      final Path jsonPath = config.getOutDir()
-          .resolve("output.json");
-      final PrintStream out = new PrintStream(Files.newOutputStream(jsonPath));
-      final String json = gson.toJson(generatedVariants);
-      out.println(json);
-    } catch (final IOException e) {
-      log.error(e.getMessage());
-    }
   }
 }
