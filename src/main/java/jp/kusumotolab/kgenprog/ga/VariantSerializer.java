@@ -29,6 +29,8 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     final List<Patch> patches = patchGenerator.exec(variant);
     final JsonArray serializedPatches = serializePatches(patches);
 
+    final JsonElement serializedTestResults = context.serialize(variant.getTestResults());
+
     final JsonObject serializedVariant = new JsonObject();
 
     serializedVariant.addProperty("id", id);
@@ -38,6 +40,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     serializedVariant.add("patches", serializedPatches);
     serializedVariant.add("operations",
         serializeOperations(variant.getHistoricalElement()));
+    serializedVariant.add("testSummary", serializedTestResults);
 
     return serializedVariant;
   }
