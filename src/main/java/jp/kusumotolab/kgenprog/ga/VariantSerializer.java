@@ -35,6 +35,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
 
     serializedVariant.addProperty("id", id);
     serializedVariant.addProperty("generationNumber", generationNumber);
+    serializedVariant.addProperty("selectionCount", variant.getSelectionCount());
     serializedVariant.addProperty("fitness", fitness);
     serializedVariant.addProperty("isBuildSuccess", buildSuccess);
     serializedVariant.add("patches", serializedPatches);

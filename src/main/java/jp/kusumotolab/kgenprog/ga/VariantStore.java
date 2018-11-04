@@ -90,9 +90,8 @@ public class VariantStore {
   /**
    * 引数の要素すべてを次世代のVariantとして追加する
    *
-   * @see addNextGenerationVariant(Variant)
-   *
    * @param variants 追加対象
+   * @see addNextGenerationVariant(Variant)
    */
   public void addGeneratedVariants(final Variant... variants) {
     addGeneratedVariants(Arrays.asList(variants));
@@ -101,17 +100,15 @@ public class VariantStore {
   /**
    * リストの要素すべてを次世代のVariantとして追加する
    *
-   * @see addNextGenerationVariant(Variant)
-   *
    * @param variants 追加対象
+   * @see addNextGenerationVariant(Variant)
    */
   public void addGeneratedVariants(final Collection<? extends Variant> variants) {
     variants.forEach(this::addGeneratedVariant);
   }
 
   /**
-   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
-   * の場合，foundSolutionとして追加され次世代のVariantには追加されない
+   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true} の場合，foundSolutionとして追加され次世代のVariantには追加されない
    *
    * @param variant
    */
@@ -137,6 +134,7 @@ public class VariantStore {
 
     final List<Variant> nextVariants =
         strategies.execVariantSelection(currentVariants, generatedVariants);
+    nextVariants.forEach(Variant::incrementSelectionCount);
     generation.incrementAndGet();
     log.info("exec selection. {} variants: ({}, {}) => {}", generation, currentVariants.size(),
         generatedVariants.size(), nextVariants.size());

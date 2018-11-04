@@ -18,6 +18,7 @@ public class Variant {
   private final GeneratedSourceCode generatedSourceCode;
   private final TestResults testResults;
   private final Fitness fitness;
+  private int selectionCount = 0;
   private final List<Suspiciousness> suspiciousnesses;
   private final HistoricalElement historicalElement;
 
@@ -33,7 +34,8 @@ public class Variant {
     }
 
     Variant variant = (Variant) o;
-    return generationNumber == variant.generationNumber &&
+    return selectionCount == variant.selectionCount &&
+        generationNumber == variant.generationNumber &&
         Objects.equals(gene, variant.gene) &&
         Objects.equals(generatedSourceCode, variant.generatedSourceCode) &&
         Objects.equals(testResults, variant.testResults) &&
@@ -92,6 +94,10 @@ public class Variant {
     return testResults;
   }
 
+  int getSelectionCount() {
+    return selectionCount;
+  }
+
   public Fitness getFitness() {
     log.debug("enter getFitness()");
     return fitness;
@@ -105,5 +111,9 @@ public class Variant {
   public HistoricalElement getHistoricalElement() {
     log.debug("enter getHistoricalElement");
     return historicalElement;
+  }
+
+  void incrementSelectionCount() {
+    selectionCount++;
   }
 }
