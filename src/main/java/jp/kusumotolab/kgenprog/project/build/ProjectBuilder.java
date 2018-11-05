@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.build;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,47 +47,45 @@ public class ProjectBuilder {
    * @return
    */
   public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
+
+    // コンパイル状況や診断情報等の保持オブジェクトを用意
+    final StringWriter progress = new StringWriter();
+    final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+
+    // コンパイル済みキャッシュの有無を問い合わせ
     final List<GeneratedAST<?>> allAsts = generatedSourceCode.getAllAsts();
     final Set<JavaSourceObject> javaSourceObjects = generateJavaSourceObjects(allAsts);
 
-    // コンパイル対象が存在しない場合 ≒ 全てのコンパイル対象がキャッシュ済みの場合
-    // AST構築では，個々のASTのDigestではなくAST全体のDigestを確認しているため，この状況が発生する．
-    if (javaSourceObjects.isEmpty()) {
-      // TODO
-      // とりあえず適当な処置．適切なバイナリを取り出してBuildResultsに格納して終了
-      final BinaryStore compiledBinaries = extractSubBinaryStore(allAsts);
+    // コンパイル対象が存在する（≒全コンパイル対象がキャッシュ済みでない）場合はコンパイル
+    if (!javaSourceObjects.isEmpty()) {
+      final boolean successs = build(allAsts, javaSourceObjects, diagnostics, progress);
 
-      final BuildResults buildResults = new BuildResults(compiledBinaries, null, "", false);
-      return buildResults;
+      if (!successs) {
+        log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
+        return EmptyBuildResults.instance;
+      }
     }
 
-    // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
-    final BinaryStore resusableBinaries = extractSubBinaryStore(allAsts);
-    inMemoryFileManager.setClassPathBinaries(resusableBinaries);
-
-    // コンパイル状況や診断情報等の保持オブジェクトを用意
-    final StringWriter buildProgressWriter = new StringWriter();
-    final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-
-    // コンパイルタスクを生成
-    final CompilationTask task = compiler.getTask(buildProgressWriter, inMemoryFileManager,
-        diagnostics, compilationOptions, null, javaSourceObjects);
-
-    // コンパイルを実行
-    final boolean isBuildFailed = !task.call();
-
-    if (isBuildFailed) {
-      log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
-      // diagnostics.getDiagnostics().stream().forEach(System.err::println); //xxxxxxxxxxxx
-      return EmptyBuildResults.instance;
-    }
-
-    // コンパイル済みバイナリを取り出してセットしておく．
+    // コンパイル済みバイナリを取り出してセットしておく
     final BinaryStore compiledBinaries = extractSubBinaryStore(allAsts);
 
-    final BuildResults buildResults =
-        new BuildResults(compiledBinaries, diagnostics, buildProgressWriter.toString(), false);
-    return buildResults;
+    return new BuildResults(compiledBinaries, diagnostics, progress.toString(), false);
+  }
+
+  private boolean build(final List<GeneratedAST<?>> allAsts,
+      final Collection<JavaSourceObject> javaSourceObjects,
+      final DiagnosticCollector<JavaFileObject> diagnostics, final StringWriter progress) {
+
+    // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
+    final BinaryStore reusableBinaries = extractSubBinaryStore(allAsts);
+    inMemoryFileManager.setClassPathBinaries(reusableBinaries);
+
+    // コンパイルタスクを生成
+    final CompilationTask task = compiler.getTask(progress, inMemoryFileManager, diagnostics,
+        compilationOptions, null, javaSourceObjects);
+
+    // コンパイルを実行
+    return task.call();
   }
 
   /**

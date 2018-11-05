@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.project.build;
 
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST;
@@ -19,11 +19,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.build.BinaryStore;
-import jp.kusumotolab.kgenprog.project.build.BuildResults;
-import jp.kusumotolab.kgenprog.project.build.EmptyBuildResults;
-import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
-import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -194,11 +192,19 @@ public class ProjectBuilderTest {
 
     // 1回目，成功する
     final BuildResults buildResults1 = projectBuilder.build(source);
+    assertThat(buildResults1.isBuildFailed).isFalse();
+    assertThat(buildResults1.buildProgressText).isNotBlank(); // ビルド進捗が書かれているはず
+
+    // バイナリが入ってるはず
     final BinaryStore binaryStore1 = buildResults1.getBinaryStore();
     assertThat(binaryStore1.getAll()).hasSize(2);
 
     // 2回目，成功する
     final BuildResults buildResults2 = projectBuilder.build(source);
+    assertThat(buildResults2.isBuildFailed).isFalse();
+    assertThat(buildResults2.buildProgressText).isBlank(); // ビルド進捗が書かれていないはず
+
+    // バイナリが入ってるはず
     final BinaryStore binaryStore2 = buildResults2.getBinaryStore();
     assertThat(binaryStore2.getAll()).hasSize(2);
   }
