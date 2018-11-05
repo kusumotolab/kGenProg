@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.ga;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -16,6 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -186,16 +191,7 @@ public class VariantStore {
       if (Files.notExists(outDir)) {
         Files.createDirectories(outDir);
       }
-
-      out.write("{\"projectName\":");
-      out.write("\"");
-      out.write(targetProject.rootPath.getFileName()
-          .toString());
-      out.write("\",");
-      out.write("\"variants\":");
-      gson.toJson(allVariants, out);
-      out.write("}");
-
+      gson.toJson(this, out);
     } catch (final IOException e) {
       e.printStackTrace();
     }
@@ -217,6 +213,27 @@ public class VariantStore {
     return gsonBuilder.registerTypeAdapter(Variant.class, new VariantSerializer())
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeAdapter(TestResult.class, new TestResultSerializer())
+        .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
+        .setPrettyPrinting()
         .create();
+  }
+
+  private class VariantStoreSerializer implements JsonSerializer<VariantStore> {
+
+    @Override
+    public JsonElement serialize(final VariantStore variantStore, final Type type,
+        final JsonSerializationContext context) {
+
+      final JsonObject serializedVariantStore = new JsonObject();
+      final TargetProject targetProject = variantStore.targetProject;
+      final String projectName = (targetProject != null) ? targetProject.rootPath.getFileName()
+          .toString() : "";
+      final JsonElement serializedVariants = context.serialize(variantStore.allVariants);
+
+      serializedVariantStore.addProperty("projectName", projectName);
+      serializedVariantStore.add("variants", serializedVariants);
+
+      return serializedVariantStore;
+    }
   }
 }
