@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -51,7 +52,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferASTNode01() {
-    final List<ASTLocation> locations = ast.inferLocations(3);
+    final ASTLocations astLocations = ast.createLocations();
+    final List<ASTLocation> locations = astLocations.infer(3);
     final List<String> expects = new ArrayList<>();
     expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
     expects.add("int n = 0;");
@@ -65,7 +67,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferASTNode02() {
-    final List<ASTLocation> locations = ast.inferLocations(5);
+    final ASTLocations astLocations = ast.createLocations();
+    final List<ASTLocation> locations = astLocations.infer(5);
     final List<String> expects = new ArrayList<>();
     expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
     expects.add("if (n == 1) { System.out.println(n); }");
@@ -83,14 +86,16 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferASTNode03() {
-    final List<ASTLocation> locations = ast.inferLocations(1);
+    final ASTLocations astLocations = ast.createLocations();
+    final List<ASTLocation> locations = astLocations.infer(1);
 
     assertThat(locations).hasSize(0);
   }
 
   @Test
   public void testInferASTNode04() {
-    final List<ASTLocation> locations = ast.inferLocations(9);
+    final ASTLocations astLocations = ast.createLocations();
+    final List<ASTLocation> locations = astLocations.infer(9);
     final List<String> expects = new ArrayList<>();
     expects.add("{ if (n < 0) { return -n; } return n;}");
     expects.add("if (n < 0) { return -n;}");
@@ -169,7 +174,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testGetAllLocations() {
-    final List<ASTLocation> locations = ast.getAllLocations();
+    final ASTLocations astLocations = ast.createLocations();
+    final List<ASTLocation> locations = astLocations.getAll();
     final List<String> expects = new ArrayList<>();
     expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
     expects.add("int n = 0;");
@@ -208,8 +214,9 @@ public class GeneratedJDTASTTest {
     final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
     final GeneratedJDTAST<ProductSourcePath> jdtAst =
         (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
+    final ASTLocations astLocations = jdtAst.createLocations();
 
-    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+    assertThat(astLocations.infer(10)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> ((JDTASTLocation) loc).node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
@@ -236,13 +243,14 @@ public class GeneratedJDTASTTest {
         (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
             .getProductAsts()
             .get(0);
+    final ASTLocations newAstLocations = newJdtAst.createLocations();
 
-    assertThat(newJdtAst.inferLocations(10)).hasSize(2)
+    assertThat(newAstLocations.infer(10)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> ((JDTASTLocation) loc).node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs("a();"), atIndex(1));
 
-    assertThat(newJdtAst.inferLocations(11)).hasSize(2)
+    assertThat(newAstLocations.infer(11)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> (JDTASTLocation) loc)
         .extracting(loc -> loc.node)
@@ -260,8 +268,9 @@ public class GeneratedJDTASTTest {
     final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
     final GeneratedJDTAST<ProductSourcePath> jdtAst =
         (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
+    final ASTLocations astLocations = jdtAst.createLocations();
 
-    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+    assertThat(astLocations.infer(10)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> ((JDTASTLocation) loc).node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
@@ -281,8 +290,9 @@ public class GeneratedJDTASTTest {
         (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
             .getProductAsts()
             .get(0);
+    final ASTLocations newAstLocations = newJdtAst.createLocations();
 
-    assertThat(newJdtAst.inferLocations(4)).hasSize(2)
+    assertThat(newAstLocations.infer(4)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> ((JDTASTLocation) loc).node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
@@ -299,8 +309,9 @@ public class GeneratedJDTASTTest {
     final List<GeneratedAST<ProductSourcePath>> asts = generatedSourceCode.getProductAsts();
     final GeneratedJDTAST<ProductSourcePath> jdtAst =
         (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
+    final ASTLocations astLocations = jdtAst.createLocations();
 
-    assertThat(jdtAst.inferLocations(10)).hasSize(2)
+    assertThat(astLocations.infer(10)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> ((JDTASTLocation) loc).node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
@@ -337,8 +348,9 @@ public class GeneratedJDTASTTest {
         (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)
             .getProductAsts()
             .get(0);
+    final ASTLocations newAstLocations = newJdtAst.createLocations();
 
-    assertThat(newJdtAst.inferLocations(8)).hasSize(2)
+    assertThat(newAstLocations.infer(8)).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> ((JDTASTLocation) loc).node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs("return n;"), atIndex(1));
