@@ -43,63 +43,6 @@ public class PatchGenerator {
     return patches;
   }
 
-  /**
-   * originalVariantとmodifiedVariantの差分を計算する
-   *
-   * @param baseVariant 基準になるVariant
-   * @param comparisonVariant 比較対象のVariant
-   * @return 差分
-   */
-  public List<Patch> exec(final Variant baseVariant, final Variant comparisonVariant) {
-
-    final GeneratedSourceCode baseSourceCode = baseVariant.getGeneratedSourceCode();
-    final GeneratedSourceCode comparisonSourceCode = comparisonVariant.getGeneratedSourceCode();
-
-    final List<Patch> patches = new ArrayList<>();
-    final List<GeneratedAST> comparisonAsts = comparisonSourceCode.getAsts();
-
-    for (final GeneratedAST comparisonAst : comparisonAsts) {
-      try {
-        final GeneratedAST baseAst = baseSourceCode.getAst(comparisonAst.getProductSourcePath());
-        final Patch patch = makePatch(baseAst, comparisonAst);
-        final String diff = patch.getDiff();
-        if (diff.isEmpty()) {
-          continue;
-        }
-        patches.add(patch);
-      } catch (final DiffException e) {
-        log.error(e.getMessage());
-        return Collections.emptyList();
-      }
-    }
-    return patches;
-  }
-
-  /***
-   * patch オブジェクトの生成を行う
-   *
-   * @param baseAst
-   * @param comparisonAst
-   * @return
-   * @throws DiffException
-   */
-  private Patch makePatch(final GeneratedAST baseAst, final GeneratedAST comparisonAst)
-      throws DiffException {
-    final String modifiedSourceCodeText = comparisonAst.getSourceCode();
-    final List<String> modifiedSourceCodeLines =
-        Arrays.asList(modifiedSourceCodeText.split("\r\n|[\n\r\u2028\u2029\u0085]"));
-
-    final String baseSourceCodeText = baseAst.getSourceCode();
-    final List<String> baseSourceCodeLines =
-        Arrays.asList(baseSourceCodeText.split("\r\n|[\n\r\u2028\u2029\u0085]"));
-
-    final String fileName = comparisonAst.getPrimaryClassName();
-    final List<String> diffLines =
-        makeDiff(fileName, baseSourceCodeLines, modifiedSourceCodeLines);
-
-    return new Patch(diffLines, fileName, baseSourceCodeLines, modifiedSourceCodeLines);
-  }
-
   /***
    * patch オブジェクトの生成を行う
    *
@@ -119,8 +62,7 @@ public class PatchGenerator {
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));
     final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
-    final List<String> noBlankLineOriginalSourceCodeLines = removeEndDelimiter(
-        originalSourceCodeLines);
+    final List<String> noBlankLineOriginalSourceCodeLines = removeEndDelimiter(originalSourceCodeLines);
     final List<String> diffLines =
         makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
 
