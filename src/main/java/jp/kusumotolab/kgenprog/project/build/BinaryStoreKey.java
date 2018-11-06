@@ -2,7 +2,7 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 @Deprecated // TODO 一旦Depreしておく．改善の予定
 public class BinaryStoreKey {

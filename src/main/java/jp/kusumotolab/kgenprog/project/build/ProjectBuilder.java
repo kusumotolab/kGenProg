@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 
@@ -100,8 +99,7 @@ public class ProjectBuilder {
     // BinaryStoreからサブBinaryStoreの抜き出し方法は改善したほうが良い．
     final BinaryStore binStore = new BinaryStore();
     final Set<JavaBinaryObject> jbos = asts.stream()
-        .map(ast -> binaryStore.get(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
-            ast.getMessageDigest())) // TODO TargetFullyQualifiedName型で決め打ち
+        .map(ast -> binaryStore.get(ast.getPrimaryClassName(), ast.getMessageDigest()))
         .flatMap(Set::stream)
         .collect(Collectors.toSet());
     binStore.addAll(jbos);
@@ -117,8 +115,7 @@ public class ProjectBuilder {
    */
   private Set<JavaSourceObject> generateJavaSourceObjects(final List<GeneratedAST<?>> asts) {
     return asts.stream()
-        .filter(ast -> !binaryStore.exists(new TargetFullyQualifiedName(ast.getPrimaryClassName()),
-            ast.getMessageDigest())) // TODO TargetFullyQualifiedName型で決め打ち
+        .filter(ast -> !binaryStore.exists(ast.getPrimaryClassName(), ast.getMessageDigest()))
         .map(JavaSourceObject::new)
         .collect(Collectors.toSet());
   }

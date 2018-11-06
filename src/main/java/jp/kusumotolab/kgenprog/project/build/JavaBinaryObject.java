@@ -13,7 +13,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
  * コンパイル後のJavaバイナリオブジェクトクラス．<br>

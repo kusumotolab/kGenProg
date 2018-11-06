@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
@@ -108,6 +109,7 @@ public class TestResults implements Serializable {
   private long getNumberOfTests(final ProductSourcePath productSourcePath,
       final ASTLocation location, final Coverage.Status status, final boolean failed) {
 
+    // 翻訳1: SourcePath → [FQN]
     // 翻訳1: SourcePath → [FQN]
     final Set<FullyQualifiedName> correspondingFqns = buildResults.getBinaryStore()
         .get(productSourcePath)

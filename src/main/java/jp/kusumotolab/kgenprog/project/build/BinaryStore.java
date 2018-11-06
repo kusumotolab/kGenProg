@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
  * 差分ビルド + インメモリビルドのためのバイナリ格納庫．<br>

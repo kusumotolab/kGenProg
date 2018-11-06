@@ -2,12 +2,10 @@ package jp.kusumotolab.kgenprog.project.build;
 
 import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.test.TestFullyQualifiedName;
 
 /**
  * コンパイル元となるJavaのソースコードを表すオブジェクト．<br>
@@ -26,15 +24,15 @@ public class JavaSourceObject extends SimpleJavaFileObject {
         ast.getSourcePath());
   }
 
-  private JavaSourceObject(final String fqn, final String sourceCode, final String digest,
-      final SourcePath sourcePath) {
-    super(URI.create("jso:///" + fqn.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
+  private JavaSourceObject(final FullyQualifiedName fqn, final String sourceCode,
+      final String digest, final SourcePath sourcePath) {
+    super(URI.create("jso:///" + fqn.value.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
 
-    this.isTest = sourcePath.getClass() == TestSourcePath.class ? true : false;
-    this.fqn = isTest ? new TestFullyQualifiedName(fqn) : new TargetFullyQualifiedName(fqn);
+    this.fqn = fqn;
     this.sourceCode = sourceCode;
     this.digest = digest;
     this.sourcePath = sourcePath;
+    this.isTest = sourcePath.getClass() == TestSourcePath.class ? true : false;
   }
 
   public String getMessageDigest() {

@@ -11,7 +11,7 @@ public abstract class SourcePath {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     return this.toString()
         .equals(o.toString());
   }
@@ -25,4 +25,6 @@ public abstract class SourcePath {
   public String toString() {
     return this.path.toString();
   }
+
+  public abstract FullyQualifiedName createFullyQualifiedName(String className);
 }

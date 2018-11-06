@@ -22,11 +22,11 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.test.MemoryClassLoader;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
@@ -229,7 +229,7 @@ public class ProjectBuilderTest {
     final Field field = clazz.getDeclaredField("messageDigest");
     field.setAccessible(true);
     field.set(ast, "xxxx");
-    assertThat(ast.getPrimaryClassName()).isEqualTo(FOO.value);
+    assertThat(ast.getPrimaryClassName()).isEqualTo(FOO);
     assertThat(ast.getMessageDigest()).isEqualTo("xxxx");
 
     // 少し停止
@@ -298,7 +298,7 @@ public class ProjectBuilderTest {
     final Field field = clazz.getDeclaredField("messageDigest");
     field.setAccessible(true);
     field.set(ast, "xxxx");
-    assertThat(ast.getPrimaryClassName()).isEqualTo(FOO.value);
+    assertThat(ast.getPrimaryClassName()).isEqualTo(FOO);
     assertThat(ast.getMessageDigest()).isEqualTo("xxxx");
 
     // 再度ビルドするとキャッシュが働いて上記Barの不正バイナリをロードし，失敗するはず

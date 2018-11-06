@@ -34,7 +34,7 @@ public class GeneratedSourceCodeTest {
     }
 
     @Override
-    public String getPrimaryClassName() {
+    public FullyQualifiedName getPrimaryClassName() {
       return null;
     }
 

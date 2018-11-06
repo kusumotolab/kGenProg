@@ -10,9 +10,9 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import com.google.common.collect.Iterables;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.test.TestFullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 
 public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 

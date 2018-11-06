@@ -7,7 +7,7 @@ public interface GeneratedAST<T extends SourcePath> {
 
   public String getSourceCode();
 
-  public String getPrimaryClassName();
+  public FullyQualifiedName getPrimaryClassName();
 
   public T getSourcePath();
 
