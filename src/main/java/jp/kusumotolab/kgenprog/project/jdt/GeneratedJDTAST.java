@@ -16,7 +16,6 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
 public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
@@ -130,7 +129,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
       fqnString = packageName.getName()
           .getFullyQualifiedName() + "." + name;
     }
-    return new TargetFullyQualifiedName(fqnString);
+    return sourcePath.createFullyQualifiedName(fqnString);
   }
 
   private String createMessageDigest() {
