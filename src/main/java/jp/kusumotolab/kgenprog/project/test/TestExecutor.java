@@ -8,13 +8,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.build.BuildResults;
+import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 
 public class TestExecutor {
 
   private final Configuration config;
+  private final ProjectBuilder projectBuilder;
 
   public TestExecutor(final Configuration config) {
     this.config = config;
+    projectBuilder = new ProjectBuilder(config.getTargetProject());
   }
 
   public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
@@ -22,8 +26,10 @@ public class TestExecutor {
       return EmptyTestResults.instance;
     }
 
+    final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
+
     final TestThread testThread =
-        new TestThread(generatedSourceCode, config.getTargetProject(), config.getExecutedTests());
+        new TestThread(buildResults, config.getTargetProject(), config.getExecutedTests());
     final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
@@ -42,6 +48,4 @@ public class TestExecutor {
 
     return testThread.getTestResults();
   }
-
-
 }

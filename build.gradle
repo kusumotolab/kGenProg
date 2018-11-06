@@ -60,9 +60,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.lucene/lucene-spellchecker
     // compile group: 'org.apache.lucene', name: 'lucene-spellchecker', version: '3.6.2'
 
-    // https://mvnrepository.com/artifact/org.ow2.asm/asm
-    compile group: 'org.ow2.asm', name: 'asm', version: '6.2'
-
     // https://mvnrepository.com/artifact/com.github.wumpz/diffutils
     compile group: 'com.github.wumpz', name: 'diffutils', version: '2.2'
 
