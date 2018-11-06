@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -37,8 +38,14 @@ public class GeneratedSourceCode {
     this.messageDigest = createMessageDigest();
   }
 
+  public List<GeneratedAST<?>> getAllAsts() {
+    final List<GeneratedAST<?>> list = new ArrayList<>();
+    list.addAll(productAsts);
+    list.addAll(testAsts);
+    return list;
+  }
+
   public List<GeneratedAST<ProductSourcePath>> getProductAsts() {
-    log.debug("enter getProductAsts()");
     return productAsts;
   }
 
