@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class BuildResults {
 

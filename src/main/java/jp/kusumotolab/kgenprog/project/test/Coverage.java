@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
 public class Coverage implements Serializable {
 

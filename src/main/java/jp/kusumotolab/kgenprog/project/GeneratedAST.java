@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
 import java.util.List;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 // TODO: クラス名を再検討
 public interface GeneratedAST<T extends SourcePath> {

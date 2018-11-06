@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.BuildResults;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 

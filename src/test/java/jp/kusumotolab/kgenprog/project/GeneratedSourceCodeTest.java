@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
 
 public class GeneratedSourceCodeTest {
 

@@ -25,7 +25,6 @@ import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
 import jp.kusumotolab.kgenprog.project.build.InMemoryClassManager;
 import jp.kusumotolab.kgenprog.project.build.JavaSourceFromString;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class ProjectBuilder {
 

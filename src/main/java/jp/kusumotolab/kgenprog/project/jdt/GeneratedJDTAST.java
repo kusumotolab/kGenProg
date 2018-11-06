@@ -13,10 +13,10 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
-import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
 public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
