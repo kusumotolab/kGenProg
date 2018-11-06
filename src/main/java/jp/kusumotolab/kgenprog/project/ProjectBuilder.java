@@ -156,7 +156,7 @@ public class ProjectBuilder {
   private <T extends SourcePath> Iterable<? extends JavaFileObject> generateJavaFileObjectsFromGeneratedAst(
       final List<GeneratedAST<T>> asts) {
     return asts.stream()
-        .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName(), ast.getSourceCode()))
+        .map(ast -> new JavaSourceFromString(ast.getPrimaryClassName().value, ast.getSourceCode()))
         .collect(Collectors.toSet());
   }
 

@@ -15,6 +15,8 @@ import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.test.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.test.TargetFullyQualifiedName;
 
 public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
@@ -25,7 +27,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
   private final T sourcePath;
   private final List<List<Statement>> lineNumberToStatements;
   private final List<ASTLocation> allLocations;
-  private final String primaryClassName;
+  private final FullyQualifiedName primaryClassName;
   private final String sourceCode;
   private final String messageDigest;
 
@@ -58,7 +60,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
   }
 
   @Override
-  public String getPrimaryClassName() {
+  public FullyQualifiedName getPrimaryClassName() {
     return primaryClassName;
   }
 
@@ -91,7 +93,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
     return Collections.emptyList();
   }
 
-  private String searchPrimaryClassName(final CompilationUnit root) {
+  private FullyQualifiedName searchPrimaryClassName(final CompilationUnit root) {
     @SuppressWarnings("unchecked")
     final List<AbstractTypeDeclaration> types = root.types();
     final Optional<AbstractTypeDeclaration> findAny = types.stream()
@@ -120,13 +122,15 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
     return constructFQN(root.getPackage(), typeName);
   }
 
-  private String constructFQN(final PackageDeclaration packageName, final String name) {
+  private FullyQualifiedName constructFQN(final PackageDeclaration packageName, final String name) {
+    final String fqnString;
     if (packageName == null) {
-      return name;
+      fqnString = name;
     } else {
-      return packageName.getName()
+      fqnString = packageName.getName()
           .getFullyQualifiedName() + "." + name;
     }
+    return new TargetFullyQualifiedName(fqnString);
   }
 
   private String createMessageDigest() {
