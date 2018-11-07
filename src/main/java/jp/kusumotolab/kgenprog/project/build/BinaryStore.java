@@ -59,7 +59,7 @@ public class BinaryStore {
   }
 
   public boolean exists(final FullyQualifiedName fqn, final String digest) {
-    return get(fqn, digest).size() > 0;
+    return !get(fqn, digest).isEmpty();
   }
 
   public Collection<JavaBinaryObject> get(final String packageName) {
