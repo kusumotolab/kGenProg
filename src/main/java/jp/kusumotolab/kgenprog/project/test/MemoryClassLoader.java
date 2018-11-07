@@ -6,7 +6,6 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
 /**
  * A class loader that loads classes from in-memory data.

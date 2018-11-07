@@ -98,11 +98,10 @@ public class ProjectBuilder {
     // この処理コスト高い．
     // BinaryStoreからサブBinaryStoreの抜き出し方法は改善したほうが良い．
     final BinaryStore binStore = new BinaryStore();
-    final Set<JavaBinaryObject> jbos = asts.stream()
+    asts.stream()
         .map(ast -> binaryStore.get(ast.getPrimaryClassName(), ast.getMessageDigest()))
-        .flatMap(Set::stream)
-        .collect(Collectors.toSet());
-    binStore.addAll(jbos);
+        .flatMap(Collection::stream)
+        .forEach(binStore::add);
     return binStore;
   }
 
