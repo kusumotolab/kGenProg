@@ -9,8 +9,8 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import org.junit.After;
@@ -60,10 +60,9 @@ public class MemoryClassLoaderTest {
 
     // クラスローダに全バイナリを設置しておく
     final BinaryStore binaryStore = buildResults.getBinaryStore();
-    final Set<JavaBinaryObject> jmos = binaryStore.getAll();
-    for (final JavaBinaryObject jmo : jmos) {
-      loader.addDefinition(jmo.getFqn(), jmo.getByteCode());
-    }
+    binaryStore.getAll()
+        .stream()
+        .forEach(jmo -> loader.addDefinition(jmo.getFqn(), jmo.getByteCode()));
   }
 
   @After

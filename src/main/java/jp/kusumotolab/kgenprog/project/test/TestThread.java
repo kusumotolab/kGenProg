@@ -5,9 +5,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -161,7 +161,7 @@ class TestThread extends Thread {
     final BinaryStore binStore = buildResults.getBinaryStore();
     return sourcesPaths.stream()
         .map(source -> binStore.get(source))
-        .flatMap(Set::stream)
+        .flatMap(Collection::stream)
         .map(jmo -> jmo.getFqn())
         .collect(Collectors.toList());
   }

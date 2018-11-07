@@ -76,7 +76,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     final Iterable<JavaFileObject> objs = fileManager.list(location, packageName, kinds, recurse);
 
     // classPathBinariesからもバイナリを取り出す
-    final Set<JavaBinaryObject> cache = classPathBinaries.get(packageName);
+    final Iterable<JavaBinaryObject> cache = classPathBinaries.get(packageName);
 
     // TODO location考えなくて良い？
 
