@@ -9,7 +9,6 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -22,7 +21,6 @@ import org.junit.runner.Result;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
-import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -61,7 +59,6 @@ public class MemoryClassLoaderTest {
     // クラスローダに全バイナリを設置しておく
     final BinaryStore binaryStore = buildResults.getBinaryStore();
     binaryStore.getAll()
-        .stream()
         .forEach(jmo -> loader.addDefinition(jmo.getFqn(), jmo.getByteCode()));
   }
 

@@ -101,7 +101,7 @@ public class ProjectBuilder {
     asts.stream()
         .map(ast -> binaryStore.get(ast.getPrimaryClassName(), ast.getMessageDigest()))
         .flatMap(Collection::stream)
-        .forEach(jbo -> binStore.add(jbo));
+        .forEach(binStore::add);
     return binStore;
   }
 
