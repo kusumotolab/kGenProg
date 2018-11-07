@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project.test;
+package jp.kusumotolab.kgenprog.project;
 
 import java.io.Serializable;
 

@@ -10,6 +10,7 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST04;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.BAR_TEST05;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO;
+import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
@@ -23,12 +24,14 @@ import java.util.List;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
@@ -307,7 +310,7 @@ public class TestExecutorTest {
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject) //
-        .addExecutionTest("example.FooTest") // FooTestのみ実行する（非依存テストは実行しない）
+        .addExecutionTest(FOO_TEST.value) // FooTestのみ実行する（非依存テストは実行しない）
         .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(source);
@@ -321,6 +324,55 @@ public class TestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
     assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
+  }
+
+  @Test
+  // 正常系題材の確認
+  public void testExecForBuildSuccessWithMultipleTestExecution() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess14");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result1 = executor.exec(source);
+
+    // 実行されたテストは4個のはず
+    assertThat(result1.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
+
+    // 一つバグるはず
+    assertThat(result1.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result1.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result1.getTestResult(FOO_TEST03).failed).isTrue();
+    assertThat(result1.getTestResult(FOO_TEST04).failed).isFalse();
+
+    // FooのASTを取り出す
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Src.FOO));
+    final GeneratedAST<?> ast = source.getProductAst(fooPath);
+
+    // バグ箇所を取り出す（7行目のはず）
+    final ASTLocation location = ast.createLocations()
+        .getAll()
+        .get(3);
+    assertThat(location.inferLineNumbers().start).isSameAs(7);
+
+    // バグ箇所を削除
+    final DeleteOperation dop = new DeleteOperation();
+    final GeneratedSourceCode source2 = dop.apply(source, location);
+
+    // 再度テスト実行
+    final TestResults result2 = executor.exec(source2);
+
+    // 実行されたテストは4個のはず
+    assertThat(result2.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
+
+    // 全て成功するはず
+    assertThat(result2.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result2.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result2.getTestResult(FOO_TEST03).failed).isFalse();
+    assertThat(result2.getTestResult(FOO_TEST04).failed).isFalse();
   }
 
 }

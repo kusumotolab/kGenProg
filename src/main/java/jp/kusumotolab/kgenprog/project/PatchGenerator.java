@@ -56,7 +56,7 @@ public class PatchGenerator {
     final String modifiedSourceCodeText = ast.getSourceCode();
     final Document document = new Document(modifiedSourceCodeText);
 
-    final String fileName = ast.getPrimaryClassName();
+    final String fileName = ast.getPrimaryClassName().value;
     final String delimiter = document.getDefaultLineDelimiter();
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));

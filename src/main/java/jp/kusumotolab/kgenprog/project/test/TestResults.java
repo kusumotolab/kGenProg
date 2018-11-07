@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.BuildResults;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.build.BuildResults;
+import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
 public class TestResults implements Serializable {
 
@@ -108,8 +110,12 @@ public class TestResults implements Serializable {
       final ASTLocation location, final Coverage.Status status, final boolean failed) {
 
     // 翻訳1: SourcePath → [FQN]
-    final Set<FullyQualifiedName> correspondingFqns =
-        this.buildResults.getPathToFQNs(productSourcePath.path);
+    // 翻訳1: SourcePath → [FQN]
+    final Set<FullyQualifiedName> correspondingFqns = buildResults.getBinaryStore()
+        .get(productSourcePath)
+        .stream()
+        .map(JavaBinaryObject::getFqn)
+        .collect(Collectors.toSet());
 
     // 翻訳2: location → 行番号
     // TODO
