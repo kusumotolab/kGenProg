@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
@@ -41,12 +42,13 @@ public class TestResultsTest {
     // actual確保のためにテストの実行
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = new ProjectBuilder(targetProject).build(generatedSourceCode);
 
-    final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(TIMEOUT_SEC)
-        .build();
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
@@ -60,9 +62,10 @@ public class TestResultsTest {
     final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(ExampleAlias.Src.FOO));
     final GeneratedJDTAST<ProductSourcePath> fooAst =
         (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getProductAst(fooPath);
+    final ASTLocations fooAstLocations = fooAst.createLocations();
 
     // astから5行目 (n--;) のlocationを取り出す
-    final List<ASTLocation> locations1 = fooAst.inferLocations(5);
+    final List<ASTLocation> locations1 = fooAstLocations.infer(5);
     final ASTLocation loc1 = locations1.get(locations1.size() - 1);
     final JDTASTLocation jdtLocation1 = (JDTASTLocation) loc1;
 
@@ -81,7 +84,7 @@ public class TestResultsTest {
     assertThat(a_nf1).isSameAs(1L); // test03
 
     // astから10行目 (return n;) のlocationを取り出す
-    final List<ASTLocation> locations2 = fooAst.inferLocations(10);
+    final List<ASTLocation> locations2 = fooAstLocations.infer(10);
     final ASTLocation loc2 = locations2.get(locations2.size() - 1);
     final JDTASTLocation jdtLocation2 = (JDTASTLocation) loc2;
 
@@ -107,12 +110,13 @@ public class TestResultsTest {
   public void testToString() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     new ProjectBuilder(targetProject).build(generatedSourceCode);
 
-    final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(TIMEOUT_SEC)
-        .build();
+    final Configuration config =
+        new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
+            .build();
     final TestExecutor executor = new TestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 

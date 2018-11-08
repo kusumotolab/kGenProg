@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -59,30 +58,6 @@ public class GeneratedSourceCode {
   public GeneratedAST<ProductSourcePath> getProductAst(final ProductSourcePath path) {
     log.debug("enter getProductAst()");
     return pathToAst.get(path);
-  }
-
-  /**
-   * 指定された行にあるASTのノードを推定する。候補が複数ある場合、ノードが表すソースコードが広い順にListに格納したものを返す。
-   * 
-   * @see GeneratedAST#inferLocations(int)
-   */
-  public List<ASTLocation> inferLocations(final ProductSourcePath path, final int lineNumber) {
-    log.debug("enter inferLocations(SourcePath, int)");
-    final GeneratedAST<ProductSourcePath> ast = getProductAst(path);
-    if (ast == null) {
-      return Collections.emptyList();
-    }
-    return ast.inferLocations(lineNumber);
-  }
-
-  /**
-   * ProductASTにあるすべてのASTLocationを取得する
-   */
-  public List<ASTLocation> getAllLocations() {
-    return productAsts.stream()
-        .flatMap(v -> v.getAllLocations()
-            .stream())
-        .collect(Collectors.toList());
   }
 
   /**

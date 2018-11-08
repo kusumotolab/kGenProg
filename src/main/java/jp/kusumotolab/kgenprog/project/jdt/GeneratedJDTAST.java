@@ -2,17 +2,14 @@ package jp.kusumotolab.kgenprog.project.jdt;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Hex;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.SourcePath;
@@ -24,8 +21,6 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
   private final JDTASTConstruction construction;
   private final CompilationUnit root;
   private final T sourcePath;
-  private final List<List<Statement>> lineNumberToStatements;
-  private final List<ASTLocation> allLocations;
   private final FullyQualifiedName primaryClassName;
   private final String sourceCode;
   private final String messageDigest;
@@ -37,13 +32,6 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
     this.sourcePath = sourcePath;
     this.sourceCode = source;
 
-    final StatementListVisitor visitor = new StatementListVisitor();
-    visitor.analyzeStatement(root);
-    this.lineNumberToStatements = visitor.getLineToStatements();
-    this.allLocations = visitor.getStatements()
-        .stream()
-        .map(v -> new JDTASTLocation(sourcePath, v))
-        .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
     this.messageDigest = createMessageDigest();
   }
@@ -64,8 +52,8 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
   }
 
   @Override
-  public List<ASTLocation> getAllLocations() {
-    return allLocations;
+  public ASTLocations createLocations() {
+    return new JDTASTLocations<>(root, sourcePath);
   }
 
   @Override
@@ -79,17 +67,6 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
   public JDTASTConstruction getConstruction() {
     return construction;
-  }
-
-  @Override
-  public List<ASTLocation> inferLocations(final int lineNumber) {
-    if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
-      return lineNumberToStatements.get(lineNumber)
-          .stream()
-          .map(statement -> new JDTASTLocation(this.sourcePath, statement))
-          .collect(Collectors.toList());
-    }
-    return Collections.emptyList();
   }
 
   private FullyQualifiedName searchPrimaryClassName(final CompilationUnit root) {
