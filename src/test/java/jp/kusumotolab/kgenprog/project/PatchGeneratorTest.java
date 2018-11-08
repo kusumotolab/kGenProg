@@ -53,7 +53,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
@@ -102,7 +102,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
@@ -152,7 +152,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -206,7 +206,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -268,7 +268,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);

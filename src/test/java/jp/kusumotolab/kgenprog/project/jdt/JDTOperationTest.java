@@ -25,7 +25,7 @@ public class JDTOperationTest {
         .constructAST(Collections.singletonList(productSourcePath), Collections.emptyList());
 
     final GeneratedSourceCode applied =
-        operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null));
+        operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null, null));
 
     assertThat(applied).isInstanceOf(GenerationFailedSourceCode.class);
     assertThat(applied.isGenerationSuccess()).isFalse();

@@ -53,7 +53,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
   @Override
   public ASTLocations createLocations() {
-    return new JDTASTLocations<>(root, sourcePath);
+    return new JDTASTLocations<>(this, root, sourcePath);
   }
 
   @Override

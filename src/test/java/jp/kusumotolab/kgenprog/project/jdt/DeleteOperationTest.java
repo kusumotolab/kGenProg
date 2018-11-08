@@ -41,7 +41,7 @@ public class DeleteOperationTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
     final DeleteOperation operation = new DeleteOperation();
 
     final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);

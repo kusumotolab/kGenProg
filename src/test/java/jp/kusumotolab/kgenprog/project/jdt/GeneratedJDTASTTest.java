@@ -229,7 +229,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
 
     // 挿入対象生成
     final AST ast = jdtAst.getRoot()
@@ -283,7 +283,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
     final DeleteOperation operation = new DeleteOperation();
 
     final GeneratedJDTAST<ProductSourcePath> newJdtAst =
@@ -324,7 +324,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
 
 
     // 置換対象の生成
