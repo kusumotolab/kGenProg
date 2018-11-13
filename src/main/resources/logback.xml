@@ -3,7 +3,7 @@
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.out</target>
 		<encoder>
-			<pattern>%d{YYYY-MM-dd HH:mm:ss} [%thread] %-7([%level]) %logger - %msg%n</pattern>
+			<pattern>%d{YYYY-MM-dd HH:mm:ss} [%thread] %-7([%level]) %logger{0} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
