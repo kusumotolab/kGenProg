@@ -223,6 +223,7 @@ public class VariantStore {
         .registerTypeAdapter(TestResult.class, new TestResultSerializer())
         .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
         .setPrettyPrinting()
+        .disableHtmlEscaping()
         .create();
   }
 }
