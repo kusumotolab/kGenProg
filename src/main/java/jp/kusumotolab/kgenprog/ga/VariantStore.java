@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.ga;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -17,10 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
@@ -88,6 +83,10 @@ public class VariantStore {
     return initialVariant;
   }
 
+  public TargetProject getTargetProject() {
+    return targetProject;
+  }
+
   public OrdinalNumber getGenerationNumber() {
     return generation;
   }
@@ -102,6 +101,10 @@ public class VariantStore {
 
   public List<Variant> getGeneratedVariants() {
     return generatedVariants;
+  }
+
+  public List<Variant> getAllVariants() {
+    return allVariants;
   }
 
   public List<Variant> getFoundSolutions() {
@@ -221,24 +224,5 @@ public class VariantStore {
         .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
         .setPrettyPrinting()
         .create();
-  }
-
-  private class VariantStoreSerializer implements JsonSerializer<VariantStore> {
-
-    @Override
-    public JsonElement serialize(final VariantStore variantStore, final Type type,
-        final JsonSerializationContext context) {
-
-      final JsonObject serializedVariantStore = new JsonObject();
-      final TargetProject targetProject = variantStore.targetProject;
-      final String projectName = (targetProject != null) ? targetProject.rootPath.getFileName()
-          .toString() : "";
-      final JsonElement serializedVariants = context.serialize(variantStore.allVariants);
-
-      serializedVariantStore.addProperty("projectName", projectName);
-      serializedVariantStore.add("variants", serializedVariants);
-
-      return serializedVariantStore;
-    }
   }
 }
