@@ -42,7 +42,7 @@ public class TestUtil {
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
     final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();
-    return new Variant(0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
+    return new Variant(0,0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
   }
 
   public static GeneratedSourceCode createGeneratedSourceCode(final TargetProject project) {

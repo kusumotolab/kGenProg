@@ -21,6 +21,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -43,11 +44,13 @@ public class VariantStore {
   private List<Variant> generatedVariants;
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
+  private final Counter variantCounter;
 
   public VariantStore(final TargetProject targetProject, final Strategies strategies) {
     this.targetProject = targetProject;
     this.strategies = strategies;
 
+    variantCounter = new Counter();
     generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
@@ -73,6 +76,7 @@ public class VariantStore {
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
     generation = new OrdinalNumber(1);
+    variantCounter = new Counter(1);
   }
 
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
@@ -178,7 +182,8 @@ public class VariantStore {
     final Fitness fitness = strategies.execSourceCodeValidation(this, testResults);
     final List<Suspiciousness> suspiciousnesses =
         strategies.execFaultLocalization(sourceCode, testResults);
-    return new Variant(generation.get(), gene, sourceCode, testResults, fitness, suspiciousnesses,
+    return new Variant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
+        testResults, fitness, suspiciousnesses,
         element);
   }
 
@@ -193,7 +198,7 @@ public class VariantStore {
       }
       gson.toJson(this, out);
     } catch (final IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
     }
   }
 

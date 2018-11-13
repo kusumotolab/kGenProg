@@ -12,6 +12,7 @@ public class Variant {
 
   private static Logger log = LoggerFactory.getLogger(Variant.class);
 
+  private final long id;
   private final int generationNumber;
   private final Gene gene;
   private final GeneratedSourceCode generatedSourceCode;
@@ -21,10 +22,11 @@ public class Variant {
   private final List<Suspiciousness> suspiciousnesses;
   private final HistoricalElement historicalElement;
 
-  public Variant(final int generationNumber, final Gene gene,
+  public Variant(final long id, final int generationNumber, final Gene gene,
       final GeneratedSourceCode generatedSourceCode, final TestResults testResults,
       final Fitness fitness, final List<Suspiciousness> suspiciousnesses,
       final HistoricalElement historicalElement) {
+    this.id = id;
     this.generationNumber = generationNumber;
     this.gene = gene;
     this.generatedSourceCode = generatedSourceCode;
@@ -36,6 +38,10 @@ public class Variant {
 
   public boolean isCompleted() {
     return fitness.isMaximum();
+  }
+
+  public long getId(){
+    return id;
   }
 
   public OrdinalNumber getGenerationNumber() {

@@ -2,13 +2,17 @@ package jp.kusumotolab.kgenprog;
 
 public class Counter {
 
-  private long count = 0;
+  private long count;
 
-  public void increment() {
-    count++;
+  public Counter(final long initialValue) {
+    count = initialValue;
   }
 
-  public long getValue() {
-    return count;
+  public Counter() {
+    count = 0;
+  }
+
+  public long getAndIncrement() {
+    return count++;
   }
 }

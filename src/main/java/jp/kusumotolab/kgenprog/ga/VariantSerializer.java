@@ -18,7 +18,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
   public JsonElement serialize(final Variant variant, final Type type,
       final JsonSerializationContext context) {
 
-    final long id = Integer.toUnsignedLong(variant.hashCode());
+    final String id = String.valueOf(variant.getId());
     final int generationNumber = variant.getGenerationNumber()
         .get();
     final double rawFitness = variant.getFitness()
@@ -33,7 +33,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
 
     final JsonObject serializedVariant = new JsonObject();
 
-    serializedVariant.addProperty("id", String.valueOf(id));
+    serializedVariant.addProperty("id", id);
     serializedVariant.addProperty("generationNumber", generationNumber);
     serializedVariant.addProperty("selectionCount", variant.getSelectionCount());
     serializedVariant.addProperty("fitness", fitness);
@@ -52,10 +52,10 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     final List<Variant> parents = historicalElement.getParents();
     final String operationName = historicalElement.getOperationName();
     for (final Variant parent : parents) {
-      final long id = Integer.toUnsignedLong(parent.hashCode());
+      final String id = String.valueOf(parent.getId());
       final JsonObject serializedOperation = new JsonObject();
 
-      serializedOperation.addProperty("id", String.valueOf(id));
+      serializedOperation.addProperty("id", id);
       serializedOperation.addProperty("operationName", operationName);
       serializedOperations.add(serializedOperation);
     }
