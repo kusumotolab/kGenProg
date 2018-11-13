@@ -51,6 +51,9 @@ public class KGenProgMain {
   }
 
   public List<Variant> run() {
+
+    logConfig();
+
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
@@ -116,5 +119,16 @@ public class KGenProgMain {
     if (!config.needNotOutput()) {
       patchesStore.writeToFile(config.getOutDir());
     }
+  }
+
+  private void logConfig() {
+    final StringBuilder sb = new StringBuilder();
+    sb//
+        .append(System.lineSeparator())
+        .append("==================== kGenProg Configuration ====================")
+        .append(System.lineSeparator())
+        .append(config.toString())
+        .append("================================================================");
+    log.info(sb.toString());
   }
 }
