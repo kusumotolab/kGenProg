@@ -396,4 +396,26 @@ public class TestExecutorTest {
     // 全テストの成否はこうなるはず
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
   }
+
+  @Test
+  // テスト内でファイル書き込みがある題材の確認
+  public void testExecWithTestCaseIncludeFileOutput() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess16");
+    final List<Path> productPaths = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, productPaths,
+        testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new TestExecutor(config);
+    final TestResults result = executor.exec(source);
+
+    // 実行されたテストは1個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01);
+
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+  }
 }
