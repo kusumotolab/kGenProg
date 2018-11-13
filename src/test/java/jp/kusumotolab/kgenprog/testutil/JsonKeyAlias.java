@@ -41,4 +41,10 @@ public class JsonKeyAlias {
     public final static String FILE_NAME = "fileName";
     public final static String DIFF = "diff";
   }
+
+  public static class VariantStore {
+
+    public final static String PROJECT_NAME = "projectName";
+    public final static String VARIANTS = "variants";
+  }
 }
