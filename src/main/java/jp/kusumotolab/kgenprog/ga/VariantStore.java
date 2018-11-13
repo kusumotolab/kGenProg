@@ -9,7 +9,9 @@ import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.jdt.InsertTimeoutRuleFieldOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class VariantStore {
@@ -136,7 +138,9 @@ public class VariantStore {
 
   private Variant createInitialVariant() {
     final GeneratedSourceCode sourceCode = strategies.execASTConstruction(targetProject);
-    return createVariant(new Gene(Collections.emptyList()), sourceCode,
+    final Operation operation = new InsertTimeoutRuleFieldOperation(10);
+    final GeneratedSourceCode appliedSourceCode = operation.apply(sourceCode, null);
+    return createVariant(new Gene(Collections.emptyList()), appliedSourceCode,
         new OriginalHistoricalElement());
   }
 
