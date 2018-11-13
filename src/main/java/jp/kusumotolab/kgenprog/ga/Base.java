@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -29,33 +28,4 @@ public class Base {
   }
 
 
-  @Override
-  public boolean equals(final Object o) {
-
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    final Base base = (Base) o;
-    return
-        Objects.equals(operation.getName(), base.getOperation()
-            .getName()) &&
-            Objects.equals(targetLocation, base.targetLocation);
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-
-    int result = 1;
-    result = result * prime + targetLocation.hashCode();
-    result = result * prime + operation.getName()
-        .hashCode();
-
-    return result;
-  }
 }

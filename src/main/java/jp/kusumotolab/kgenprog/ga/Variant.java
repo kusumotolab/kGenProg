@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.List;
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
@@ -21,39 +20,6 @@ public class Variant {
   private int selectionCount = 0;
   private final List<Suspiciousness> suspiciousnesses;
   private final HistoricalElement historicalElement;
-
-  @Override
-  public boolean equals(final Object o) {
-
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Variant variant = (Variant) o;
-    return selectionCount == variant.selectionCount &&
-        generationNumber == variant.generationNumber &&
-        Objects.equals(gene, variant.gene) &&
-        Objects.equals(generatedSourceCode, variant.generatedSourceCode) &&
-        Objects.equals(testResults, variant.testResults) &&
-        Objects.equals(fitness, variant.fitness) &&
-        Objects.equals(suspiciousnesses, variant.suspiciousnesses);
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-
-    int result = 1;
-    result = result * prime + generationNumber;
-    result = result * prime + gene.hashCode();
-    result = result * prime + Double.hashCode(fitness.getValue());
-
-    return result;
-  }
 
   public Variant(final int generationNumber, final Gene gene,
       final GeneratedSourceCode generatedSourceCode, final TestResults testResults,
