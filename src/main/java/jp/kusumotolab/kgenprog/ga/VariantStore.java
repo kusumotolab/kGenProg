@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -15,8 +13,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class VariantStore {
-
-  private static Logger log = LoggerFactory.getLogger(VariantStore.class);
 
   private final TargetProject targetProject;
   private final Strategies strategies;
@@ -114,11 +110,9 @@ public class VariantStore {
    * @param variant
    */
   public void addGeneratedVariant(final Variant variant) {
-    log.debug("enter addNextGenerationVariant(Variant)");
 
     if (variant.isCompleted()) {
       foundSolutions.add(variant);
-      log.info("{} solution has been found", getFoundSolutionsNumber());
     } else {
       generatedVariants.add(variant);
     }
@@ -131,13 +125,10 @@ public class VariantStore {
    * また，generatedVariantsをclearする
    */
   public void changeGeneration() {
-    log.debug("enter changeGeneration()");
 
     final List<Variant> nextVariants =
         strategies.execVariantSelection(currentVariants, generatedVariants);
     generation.incrementAndGet();
-    log.info("exec selection. {} variants: ({}, {}) => {}", generation, currentVariants.size(),
-        generatedVariants.size(), nextVariants.size());
 
     currentVariants = nextVariants;
     generatedVariants = new ArrayList<>();

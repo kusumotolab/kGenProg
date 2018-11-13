@@ -5,12 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PatchesStore {
-
-  private static Logger log = LoggerFactory.getLogger(PatchesStore.class);
 
   private final List<Patches> patchesList = new ArrayList<>();
 
@@ -19,7 +15,6 @@ public class PatchesStore {
   }
 
   public void writeToFile(final Path outDir) {
-    log.debug("enter writeToFile(String)");
     final String timeStamp = getTimeStamp();
     final Path outDirInthisExecution = outDir.resolve(timeStamp);
 
@@ -31,8 +26,6 @@ public class PatchesStore {
   }
 
   public void writeToLogger() {
-    log.debug("enter writeToLogger()");
-
     for (final Patches patches : patchesList) {
       patches.writeToLogger();
     }

@@ -3,13 +3,9 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class TargetProjectFactory {
-
-  private static final Logger log = LoggerFactory.getLogger(TargetProjectFactory.class);
 
   /**
    * TargetProjectを生成するファクトリメソッド． 各種ビルドツールの設定ファイルが存在すればそこから，
@@ -47,7 +43,6 @@ public class TargetProjectFactory {
    */
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
-    log.debug("enter create(Path, List<Path>, List<Path>, List<Path>, JUnitVersion)");
     return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
         pathsForClass, junitVersion).create();
   }

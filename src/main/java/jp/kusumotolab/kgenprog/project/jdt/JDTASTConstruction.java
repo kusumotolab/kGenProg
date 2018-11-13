@@ -17,8 +17,6 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
@@ -28,8 +26,6 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class JDTASTConstruction {
-
-  private static final Logger log = LoggerFactory.getLogger(JDTASTConstruction.class);
 
   public GeneratedSourceCode constructAST(final TargetProject project) {
     return constructAST(project.getProductSourcePaths(), project.getTestSourcePaths());
@@ -78,7 +74,6 @@ public class JDTASTConstruction {
       return new GeneratedSourceCode(productAsts, testAsts);
     } else {
       final String messages = concatProblemMessages(problems);
-      log.debug("AST construction failed: " + messages);
       return new GenerationFailedSourceCode(messages);
     }
   }

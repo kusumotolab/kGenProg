@@ -19,7 +19,6 @@ public class PatchGenerator {
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
   public Patches exec(final Variant modifiedVariant) {
-    log.debug("enter exec(Variant)");
 
     final Patches patches = new Patches();
     final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
@@ -38,7 +37,6 @@ public class PatchGenerator {
         return new Patches();
       }
     }
-    log.debug("exit exec(Variant)");
     return patches;
   }
 

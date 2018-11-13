@@ -8,15 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * APR によって生成されたソースコード 複数ソースファイルの AST の集合を持つ
  */
 public class GeneratedSourceCode {
 
-  private static Logger log = LoggerFactory.getLogger(GeneratedSourceCode.class);
   private static final String DIGEST_ALGORITHM = "MD5";
 
   private final List<GeneratedAST<ProductSourcePath>> productAsts;
@@ -56,7 +53,6 @@ public class GeneratedSourceCode {
    * 引数のソースコードに対応するASTを取得する
    */
   public GeneratedAST<ProductSourcePath> getProductAst(final ProductSourcePath path) {
-    log.debug("enter getProductAst()");
     return pathToAst.get(path);
   }
 
@@ -64,7 +60,6 @@ public class GeneratedSourceCode {
    * ASTLocationが対応する行番号を推定する
    */
   public LineNumberRange inferLineNumbers(final ASTLocation location) {
-    log.debug("enter inferLineNumbers(Location)");
     return location.inferLineNumbers();
   }
 

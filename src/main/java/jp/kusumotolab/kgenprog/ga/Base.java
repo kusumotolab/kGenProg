@@ -1,13 +1,9 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.Operation;
 
 public class Base {
-
-  private static Logger log = LoggerFactory.getLogger(Base.class);
 
   final private ASTLocation targetLocation;
   final private Operation operation;
@@ -18,12 +14,10 @@ public class Base {
   }
 
   public ASTLocation getTargetLocation() {
-    log.debug("enter getTargetLocation()");
     return targetLocation;
   }
 
   public Operation getOperation() {
-    log.debug("enter getOperation()");
     return operation;
   }
 

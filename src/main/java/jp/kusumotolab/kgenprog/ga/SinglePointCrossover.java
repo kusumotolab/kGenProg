@@ -6,12 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SinglePointCrossover implements Crossover {
-
-  private static Logger log = LoggerFactory.getLogger(SinglePointCrossover.class);
 
   private final Random random;
   private final int crossoverGeneratingCount;
@@ -23,7 +19,6 @@ public class SinglePointCrossover implements Crossover {
 
   @Override
   public List<Variant> exec(final VariantStore variantStore) {
-    log.debug("enter exec(List<>)");
 
     final List<Variant> filteredVariants = variantStore.getCurrentVariants()
         .stream()
