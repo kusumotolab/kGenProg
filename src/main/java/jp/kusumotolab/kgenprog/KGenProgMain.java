@@ -18,6 +18,7 @@ import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMain {
 
+  @SuppressWarnings("unused")
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
   private final Configuration config;
@@ -50,7 +51,6 @@ public class KGenProgMain {
   }
 
   public List<Variant> run() {
-    log.debug("enter run()");
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
@@ -65,28 +65,22 @@ public class KGenProgMain {
 
     while (true) {
 
-      log.info("in the era of the " + variantStore.getGenerationNumber()
-          .toString() + " generation (" + stopwatch.toString() + ")");
-
       // 変異プログラムを生成
       variantStore.addGeneratedVariants(mutation.exec(variantStore));
       variantStore.addGeneratedVariants(crossover.exec(variantStore));
 
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
-        log.info("reached the required solutions");
         break;
       }
 
       // 制限時間に達した場合には GA を抜ける
       if (stopwatch.isTimeout()) {
-        log.info("reached the time limit");
         break;
       }
 
       // 最大世代数に到達した場合には GA を抜ける
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
-        log.info("reached the maximum generation");
         break;
       }
 
@@ -97,23 +91,18 @@ public class KGenProgMain {
     // 生成されたバリアントのパッチ出力
     logPatch(variantStore);
 
-    log.debug("exit run()");
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
-    log.debug("enter reachedMaxGeneration(OrdinalNumber)");
     return config.getMaxGeneration() <= generation.get();
   }
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
-    log.debug("enter areEnoughCompletedVariants(List<Variant>)");
     return config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
   private void logPatch(final VariantStore variantStore) {
-    log.debug("enter logPatch(VariantStore)");
-
     final PatchesStore patchesStore = new PatchesStore();
     final List<Variant> completedVariants =
         variantStore.getFoundSolutions(config.getRequiredSolutionsCount());

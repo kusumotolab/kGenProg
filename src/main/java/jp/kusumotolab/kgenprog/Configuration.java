@@ -276,7 +276,6 @@ public class Configuration {
     // region Methods
 
     public static Configuration buildFromCmdLineArgs(final String[] args) {
-      log.debug("enter buildFromCmdLineArgs(String[])");
 
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
@@ -292,7 +291,6 @@ public class Configuration {
       } catch (final CmdLineException | IllegalArgumentException | InvalidValueException
           | NoSuchFileException e) {
         // todo: make error message of InvalidValueException more user-friendly
-        log.error(e.getMessage());
         parser.printUsage(System.err);
         System.exit(1);
       }
@@ -301,7 +299,6 @@ public class Configuration {
     }
 
     public Configuration build() {
-      log.debug("enter build()");
 
       if (targetProject == null) {
         targetProject = TargetProjectFactory.create(rootDir, productPaths, testPaths, classPaths,
@@ -312,126 +309,90 @@ public class Configuration {
     }
 
     public Builder addClassPaths(final Collection<Path> classPaths) {
-      log.debug("enter addClassPaths(Collection)");
-
       this.classPaths.addAll(classPaths);
       return this;
     }
 
     public Builder addClassPath(final Path classPath) {
-      log.debug("enter addClassPath(Path)");
-
       this.classPaths.add(classPath);
       return this;
     }
 
     public Builder setWorkingDir(final Path workingDir) {
-      log.debug("enter setWorkingDir(Path)");
-
       this.workingDir = workingDir;
       return this;
     }
 
     public Builder setOutDir(final Path outDir) {
-      log.debug("enter setOutDir(Path)");
-
       this.outDir = outDir;
       return this;
     }
 
     public Builder setMutationGeneratingCount(final int mutationGeneratingCount) {
-      log.debug("enter setMutationGeneratingCount(int)");
-
       this.mutationGeneratingCount = mutationGeneratingCount;
       return this;
     }
 
     public Builder setCrossoverGeneratingCount(final int crossoverGeneratingCount) {
-      log.debug("enter setCrossoverGeneratingCount(int)");
-
       this.crossoverGeneratingCount = crossoverGeneratingCount;
       return this;
     }
 
     public Builder setHeadcount(final int headcount) {
-      log.debug("enter setHeadcount(int)");
-
       this.headcount = headcount;
       return this;
     }
 
     public Builder setMaxGeneration(final int maxGeneration) {
-      log.debug("enter setMaxGeneration(int)");
-
       this.maxGeneration = maxGeneration;
       return this;
     }
 
     public Builder setTimeLimitSeconds(final long timeLimitSeconds) {
-      log.debug("enter setTimeLimitSeconds(long)");
-
       this.timeLimit = Duration.ofSeconds(timeLimitSeconds);
       return this;
     }
 
     public Builder setTimeLimit(final Duration timeLimit) {
-      log.debug("enter setTimeLimit(Duration)");
-
       this.timeLimit = timeLimit;
       return this;
     }
 
     public Builder setTestTimeLimitSeconds(final long testTimeLimitSeconds) {
-      log.debug("enter setTestTimeLimitSeconds(long)");
-
       this.testTimeLimit = Duration.ofSeconds(testTimeLimitSeconds);
       return this;
     }
 
     public Builder setTestTimeLimit(final Duration testTimeLimit) {
-      log.debug("enter setTestTimeLimit(Duration)");
-
       this.testTimeLimit = testTimeLimit;
       return this;
     }
 
     public Builder setRequiredSolutionsCount(final int requiredSolutionsCount) {
-      log.debug("enter setRequiredSolutionsCount(int)");
-
       this.requiredSolutionsCount = requiredSolutionsCount;
       return this;
     }
 
     public Builder setLogLevel(final String logLevel) {
-      log.debug("enter setLogLevel(String)");
-
       return setLogLevel(Level.toLevel(logLevel.toUpperCase(Locale.ROOT)));
     }
 
     public Builder setLogLevel(final Level logLevel) {
-      log.debug("enter setLogLevel(Level)");
-
       this.logLevel = logLevel;
       return this;
     }
 
     public Builder setRandomSeed(final long randomSeed) {
-      log.debug("enter setRandomSeed(long)");
-
       this.randomSeed = randomSeed;
       return this;
     }
 
     public Builder addExecutionTest(final String executionTest) {
-      log.debug("enter addExecutionTest(String)");
-
       this.executionTests.add(executionTest);
       return this;
     }
 
     public Builder setNeedNotOutput(final boolean needNotOutput) {
-      log.debug("enter setNeedNotOutput(boolean)");
-
       this.needNotOutput = needNotOutput;
       return this;
     }
@@ -476,8 +437,6 @@ public class Configuration {
       try (final FileConfig config = FileConfig.of(configPath)) {
         config.load();
 
-        log.debug("config = {}", config);
-
         final ObjectConverter converter = new ObjectConverter();
         converter.toObject(config, this);
         resolvePaths();
@@ -521,7 +480,6 @@ public class Configuration {
     @Option(name = "--config", metaVar = "<path>", usage = "Specifies the path to the config file.",
         forbids = {"-r", "-s", "-t"})
     private void setConfigPathFromCmdLineParser(final String configPath) {
-      log.debug("enter setConfigPathFromCmdLineParser(String)");
       this.configPath = Paths.get(configPath);
     }
 
@@ -529,7 +487,6 @@ public class Configuration {
         usage = "Specifies the path to the root directory of the target project.",
         depends = {"-s", "-t"}, forbids = {"--config"})
     private void setRootDirFromCmdLineParser(final String rootDir) {
-      log.debug("enter setRootDirFromCmdLineParser(String)");
       this.rootDir = Paths.get(rootDir);
     }
 
@@ -538,7 +495,6 @@ public class Configuration {
             + " or to directories containing them.",
         depends = {"-r", "-t"}, forbids = {"--config"}, handler = StringArrayOptionHandler.class)
     private void addProductPathFromCmdLineParser(final String sourcePath) {
-      log.debug("enter addProductPathFromCmdLineParser(String)");
       this.productPaths.add(Paths.get(sourcePath));
     }
 
@@ -546,7 +502,6 @@ public class Configuration {
         usage = "Specifies paths to test source code, or to directories containing them.",
         depends = {"-r", "-s"}, forbids = {"--config"}, handler = StringArrayOptionHandler.class)
     private void addTestPathFromCmdLineParser(final String testPath) {
-      log.debug("enter addTestPathFromCmdLineParser(String)");
       this.testPaths.add(Paths.get(testPath));
     }
 
@@ -554,7 +509,6 @@ public class Configuration {
         usage = "Specifies class paths needed to build the target project.",
         depends = {"-r", "-s", "-t"}, handler = StringArrayOptionHandler.class)
     private void addClassPathFromCmdLineParser(final String classPath) {
-      log.debug("enter addClassPathFromCmdLineParser(String)");
       this.classPaths.add(Paths.get(classPath));
     }
 
@@ -563,14 +517,12 @@ public class Configuration {
             + " during evaluation of variants (i.e. fix-candidates).",
         depends = {"-r", "-s", "-t"}, handler = StringArrayOptionHandler.class)
     private void addExecutionTestFromCmdLineParser(final String executionTest) {
-      log.debug("enter addExecutionTestFromCmdLineParser(String)");
       this.executionTests.add(executionTest);
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
         usage = "Specifies the path to working directory.", depends = {"-r", "-s", "-t"})
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
-      log.debug("enter setWorkingDirFromCmdLineParser(String)");
       this.workingDir = Paths.get(workingDir);
     }
 
@@ -578,7 +530,6 @@ public class Configuration {
         usage = "Writes patches kGenProg generated to the specified directory.",
         depends = {"-r", "-s", "-t"})
     private void setOutDirFromCmdLineParser(final String outDir) {
-      log.debug("enter setOutDirFromCmdLineParser(String)");
       this.outDir = Paths.get(outDir);
     }
 
@@ -586,7 +537,6 @@ public class Configuration {
         usage = "Specifies how many variants are generated in a generation by a mutation.",
         depends = {"-r", "-s", "-t"})
     private void setMutationGeneratingCountFromCmdLineParser(final int mutationGeneratingCount) {
-      log.debug("enter setMutationGeneratingCountFromCmdLineParser(int)");
       this.mutationGeneratingCount = mutationGeneratingCount;
     }
 
@@ -594,7 +544,6 @@ public class Configuration {
         usage = "Specifies how many variants are generated in a generation by a crossover.",
         depends = {"-r", "-s", "-t"})
     private void setCrossOverGeneratingCountFromCmdLineParser(final int crossoverGeneratingCount) {
-      log.debug("enter setCrossOverGeneratingCountFromCmdLineParser(int)");
       this.crossoverGeneratingCount = crossoverGeneratingCount;
     }
 
@@ -602,7 +551,6 @@ public class Configuration {
         usage = "Specifies how many variants survive in a generation.",
         depends = {"-r", "-s", "-t"})
     private void setHeadcountFromCmdLineParser(final int headcount) {
-      log.debug("enter setHeadcountFromCmdLineParser(int)");
       this.headcount = headcount;
     }
 
@@ -610,7 +558,6 @@ public class Configuration {
         usage = "Terminates searching solutions when the specified number of generations reached.",
         depends = {"-r", "-s", "-t"})
     private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
-      log.debug("enter setMaxGenerationFromCmdLineParser(int)");
       this.maxGeneration = maxGeneration;
     }
 
@@ -618,7 +565,6 @@ public class Configuration {
         usage = "Terminates searching solutions when the specified time has passed.",
         depends = {"-r", "-s", "-t"})
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
-      log.debug("enter setTimeLimitFromCmdLineParser(long)");
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
@@ -627,7 +573,6 @@ public class Configuration {
         usage = "Specifies time limit to build and test for each variant in second",
         depends = {"-r", "-s", "-t"})
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
-      log.debug("enter setTestTimeLimitFromCmdLineParser(long)");
       this.testTimeLimit = Duration.ofSeconds(testTimeLimit);
     }
 
@@ -635,23 +580,18 @@ public class Configuration {
         usage = "Terminates searching solutions when the specified number of solutions are found.",
         depends = {"-r", "-s", "-t"})
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
-      log.debug("enter setTimeLimitFromCmdLineParser(int)");
       this.requiredSolutionsCount = requiredSolutionsCount;
     }
 
     @Option(name = "-v", aliases = "--verbose",
         usage = "Be more verbose, printing DEBUG level logs.", depends = {"-r", "-s", "-t"})
     private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
-      log.debug("enter setLogLevelDebugFromCmdLineParser(boolean)");
-      log.debug("log level has been set DEBUG");
       logLevel = Level.DEBUG;
     }
 
     @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.",
         depends = {"-r", "-s", "-t"})
     private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
-      log.debug("enter setLogLevelErrorFromCmdLineParser(boolean)");
-      log.debug("log level has been set ERROR");
       logLevel = Level.ERROR;
     }
 
@@ -659,7 +599,6 @@ public class Configuration {
         usage = "Specifies random seed used by random number generator.",
         depends = {"-r", "-s", "-t"})
     private void setRandomSeedFromCmdLineParser(final long randomSeed) {
-      log.debug("enter setRandomSeedFromCmdLineParser(long)");
       this.randomSeed = randomSeed;
     }
 

@@ -13,15 +13,11 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class ProjectBuilder {
-
-  private static Logger log = LoggerFactory.getLogger(ProjectBuilder.class);
 
   private final TargetProject targetProject;
   private final BinaryStore binaryStore;
@@ -60,7 +56,6 @@ public class ProjectBuilder {
       final boolean successs = build(allAsts, javaSourceObjects, diagnostics, progress);
 
       if (!successs) {
-        log.debug("exit build(GeneratedSourceCode, Path) -- build failed.");
         return EmptyBuildResults.instance;
       }
     }

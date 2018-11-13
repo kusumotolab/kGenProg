@@ -1,16 +1,12 @@
 package jp.kusumotolab.kgenprog.ga;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class Variant {
-
-  private static Logger log = LoggerFactory.getLogger(Variant.class);
 
   private final int generationNumber;
   private final Gene gene;
@@ -38,37 +34,30 @@ public class Variant {
   }
 
   public OrdinalNumber getGenerationNumber() {
-    log.debug("enter getGenerationNumberF()");
     return new OrdinalNumber(generationNumber);
   }
 
   public Gene getGene() {
-    log.debug("enter getGene()");
     return gene;
   }
 
   public GeneratedSourceCode getGeneratedSourceCode() {
-    log.debug("enter getGeneratedSourceCode()");
     return generatedSourceCode;
   }
 
   public TestResults getTestResults() {
-    log.debug("enter getTestResults()");
     return testResults;
   }
 
   public Fitness getFitness() {
-    log.debug("enter getFitness()");
     return fitness;
   }
 
   public List<Suspiciousness> getSuspiciousnesses() {
-    log.debug("enter getSuspiciousnesses");
     return suspiciousnesses;
   }
 
   public HistoricalElement getHistoricalElement() {
-    log.debug("enter getHistoricalElement");
     return historicalElement;
   }
 }
