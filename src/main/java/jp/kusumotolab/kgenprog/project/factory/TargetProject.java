@@ -48,14 +48,19 @@ public class TargetProject {
       return false;
     }
     TargetProject project = (TargetProject) o;
-    return Objects.equals(rootPath, project.rootPath) &&
-        Objects.equals(getProductSourcePaths(), project.getProductSourcePaths()) &&
-        Objects.equals(getTestSourcePaths(), project.getTestSourcePaths()) &&
-        Objects.equals(getClassPaths(), project.getClassPaths());
+    return Objects.equals(rootPath, project.rootPath)
+        && Objects.equals(getProductSourcePaths(), project.getProductSourcePaths())
+        && Objects.equals(getTestSourcePaths(), project.getTestSourcePaths())
+        && Objects.equals(getClassPaths(), project.getClassPaths());
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(rootPath, getProductSourcePaths(), getTestSourcePaths(), getClassPaths());
+  }
+
+  @Override
+  public String toString() {
+    return rootPath.toString();
   }
 }
