@@ -18,7 +18,6 @@ import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMain {
 
-  @SuppressWarnings("unused")
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
   private final Configuration config;
@@ -68,22 +67,27 @@ public class KGenProgMain {
 
     while (true) {
 
+      logGeneration(variantStore.getGenerationNumber());
+
       // 変異プログラムを生成
       variantStore.addGeneratedVariants(mutation.exec(variantStore));
       variantStore.addGeneratedVariants(crossover.exec(variantStore));
 
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
+        log.info("found enough solutions.");
         break;
       }
 
       // 制限時間に達した場合には GA を抜ける
       if (stopwatch.isTimeout()) {
+        log.info("reached the time limit.");
         break;
       }
 
       // 最大世代数に到達した場合には GA を抜ける
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
+        log.info("reached the maximum generation.");
         break;
       }
 
@@ -129,6 +133,15 @@ public class KGenProgMain {
         .append(System.lineSeparator())
         .append(config.toString())
         .append("================================================================");
+    log.info(sb.toString());
+  }
+
+  private void logGeneration(final OrdinalNumber generation) {
+    final StringBuilder sb = new StringBuilder();
+    sb//
+        .append("entered the era of ")
+        .append(generation.toString())
+        .append(" generation.");
     log.info(sb.toString());
   }
 }
