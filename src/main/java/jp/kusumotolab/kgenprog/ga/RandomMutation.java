@@ -12,10 +12,10 @@ import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
-public class RandomMutation extends Mutation {
+public class RandomMutation<T extends ASTNode> extends Mutation<T> {
 
   public RandomMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection) {
+      final CandidateSelection<T> candidateSelection) {
     super(mutationGeneratingCount, random, candidateSelection);
   }
 

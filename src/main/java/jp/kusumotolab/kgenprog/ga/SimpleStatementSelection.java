@@ -7,17 +7,17 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 // 使っていないが比較用で置いておく
-public class SimpleStatementSelection implements CandidateSelection {
+public class SimpleStatementSelection implements CandidateSelection<Statement> {
 
   private final Random random;
   private StatementVisitor visitor;
 
-  public SimpleStatementSelection(Random random) {
+  public SimpleStatementSelection(final Random random) {
     this.random = random;
   }
 
   @Override
-  public void setCandidates(List<GeneratedAST<ProductSourcePath>> candidates) {
+  public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
     visitor = new StatementVisitor(candidates);
   }
 

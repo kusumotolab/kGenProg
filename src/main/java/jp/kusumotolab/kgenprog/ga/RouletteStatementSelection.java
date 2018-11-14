@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
-public class RouletteStatementSelection implements CandidateSelection {
+public class RouletteStatementSelection implements CandidateSelection<Statement> {
 
   private final Random random;
   private Roulette<Statement> roulette;
@@ -31,7 +31,7 @@ public class RouletteStatementSelection implements CandidateSelection {
     roulette = new Roulette<>(statements, weightFunction, random);
   }
 
-  protected int getStatementWeight(Statement statement) {
+  protected int getStatementWeight(final Statement statement) {
     final StatementVisitor statementVisitor = new StatementVisitor(statement);
     final List<Statement> statements = statementVisitor.getStatements();
     return statements.size();

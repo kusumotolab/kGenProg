@@ -5,14 +5,14 @@ import java.util.Random;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
-public abstract class Mutation {
+public abstract class Mutation<T> {
 
   protected final Random random;
   protected final int mutationGeneratingCount;
-  protected final CandidateSelection candidateSelection;
+  protected final CandidateSelection<T> candidateSelection;
 
   public Mutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection) {
+      final CandidateSelection<T> candidateSelection) {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
