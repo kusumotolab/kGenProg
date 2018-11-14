@@ -29,9 +29,9 @@ public class InsertTimeoutRuleFieldOperation implements Operation {
   private static final Logger log = LoggerFactory.getLogger(InsertTimeoutRuleFieldOperation.class);
 
   private static final String INSERT_FIELD_NAME = "globalTimeout";
-  private final int timeoutSeconds;
+  private final long timeoutSeconds;
 
-  public InsertTimeoutRuleFieldOperation(final int timeoutSeconds) {
+  public InsertTimeoutRuleFieldOperation(final long timeoutSeconds) {
     this.timeoutSeconds = timeoutSeconds;
   }
 
