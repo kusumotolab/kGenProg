@@ -12,7 +12,7 @@ public class RouletteStatementSelection extends StatementSelection {
   }
 
   @Override
-  protected double getStatementWeight(final ReuseCandidate<Statement> reuseCandidate) {
+  public double getStatementWeight(final ReuseCandidate<Statement> reuseCandidate) {
     final Statement statement = reuseCandidate.getValue();
     final FullyQualifiedName fqn = reuseCandidate.getFqn();
     final StatementVisitor statementVisitor = new StatementVisitor(statement, fqn);

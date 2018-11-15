@@ -14,7 +14,7 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
-public class StatementSelection implements CandidateSelection {
+public abstract class StatementSelection implements CandidateSelection {
 
   private final Random random;
   private Roulette<ReuseCandidate<Statement>> allRoulette;
@@ -37,9 +37,7 @@ public class StatementSelection implements CandidateSelection {
     allRoulette = createRoulette(reuseCandidates);
   }
 
-  protected double getStatementWeight(final ReuseCandidate<Statement> reuseCandidate) {
-    return 1.0d;
-  }
+  public abstract double getStatementWeight(final ReuseCandidate<Statement> reuseCandidate);
 
   @Override
   public Statement exec(final Scope scope) {
