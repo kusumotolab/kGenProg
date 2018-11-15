@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PatchesStore {
+public class PatchStore {
 
   private final List<Patch> patchList = new ArrayList<>();
 
