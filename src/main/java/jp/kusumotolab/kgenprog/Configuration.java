@@ -165,7 +165,11 @@ public class Configuration {
     for (final Field field : clazz.getDeclaredFields()) {
       try {
         field.setAccessible(true);
-        sb.append(field.getName() + " = " + field.get(this) + System.lineSeparator());
+        final String name = field.getName();
+        if (name.startsWith("DEFAULT_")) {
+          continue;
+        }
+        sb.append(name + " = " + field.get(this) + System.lineSeparator());
       } catch (final IllegalAccessException e) {
         sb.append(field.getName() + " = " + "access denied" + System.lineSeparator());
       }
