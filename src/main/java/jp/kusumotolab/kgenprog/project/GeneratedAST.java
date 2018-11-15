@@ -12,4 +12,6 @@ public interface GeneratedAST<T extends SourcePath> {
   public ASTLocations createLocations();
 
   public String getMessageDigest();
+
+  public int getNumberOfLines();
 }

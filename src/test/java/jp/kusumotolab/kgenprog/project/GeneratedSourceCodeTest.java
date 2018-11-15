@@ -43,6 +43,10 @@ public class GeneratedSourceCodeTest {
       return null;
     }
 
+    @Override
+    public int getNumberOfLines() {
+      return 0;
+    }
   }
 
   @Test
