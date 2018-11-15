@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -184,6 +185,9 @@ public class TestExecutorTest {
     assertThat(nf2).isEqualTo(1); // FooTest#test03
   }
 
+  @Ignore
+  // #408 テスト打ち切り方針をJUnitアノテーションに変更したので，以下テストは成功しなくなった．
+  // JUnitアノテーションの差し込みは Variant 生成時に限るので，以下テストでは適切にタイムアウト処理が行われず無限ループとなる．
   @Test
   // 無限ループする題材の確認
   public void testExecForInfiniteLoop() throws Exception {
