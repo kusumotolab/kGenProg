@@ -83,6 +83,7 @@ public class KGenProgMain {
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
         break;
       }
+
       // 次世代に向けての準備
       variantStore.changeGeneration();
     }
