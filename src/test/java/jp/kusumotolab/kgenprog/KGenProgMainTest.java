@@ -145,7 +145,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  // @Ignore // このテスト単体では成功するが，このテストを実行すると続く別のテストが遅くなる．
+  @Ignore // このテスト単体では成功するが，このテストを実行すると続く別のテストが遅くなる．
   @Test
   public void testQuickSort01() {
     final Path rootPath = Paths.get("example/QuickSort01");
