@@ -58,11 +58,11 @@ public class VariantStoreTest {
     assertThat(variant.getHistoricalElement()).isSameAs(element);
 
     // 世代が進んだときのVariant.getGenerationNumberを確認
-    variantStore.changeGeneration();
+    variantStore.proceedNextGeneration();
     final Variant variant2g = variantStore.createVariant(gene, element);
     assertThat(variant2g.getGenerationNumber()).hasValue(2);
 
-    variantStore.changeGeneration();
+    variantStore.proceedNextGeneration();
     final Variant variant3g = variantStore.createVariant(gene, element);
     assertThat(variant3g.getGenerationNumber()).hasValue(3);
   }
@@ -82,11 +82,11 @@ public class VariantStoreTest {
         .get()).isEqualTo(1);
 
     // setNextGenerationVariantsするたびに1増える
-    variantStore.changeGeneration();
+    variantStore.proceedNextGeneration();
     assertThat(variantStore.getGenerationNumber()
         .get()).isEqualTo(2);
 
-    variantStore.changeGeneration();
+    variantStore.proceedNextGeneration();
     assertThat(variantStore.getGenerationNumber()
         .get()).isEqualTo(3);
 
@@ -120,7 +120,7 @@ public class VariantStoreTest {
     // テスト成功Variantが含まれていないか確認
     assertThat(variantStore.getGeneratedVariants()).containsExactly(fail1, fail2, fail3);
 
-    variantStore.changeGeneration();
+    variantStore.proceedNextGeneration();
 
     // 世代交代が行われたか確認
     assertThat(variantStore.getCurrentVariants()).containsExactly(fail1, fail2, fail3);
