@@ -18,9 +18,8 @@ public class Ochiai implements FaultLocalization {
     final List<Suspiciousness> suspiciousnesses = new ArrayList<>();
 
     for (final GeneratedAST<ProductSourcePath> ast : generatedSourceCode.getProductAsts()) {
-      final String code = ast.getSourceCode();
       final ProductSourcePath path = ast.getSourcePath();
-      final int lastLineNumber = countLines(code);
+      final int lastLineNumber = ast.getNumberOfLines();
       final ASTLocations astLocations = ast.createLocations();
 
       for (int line = 1; line <= lastLineNumber; line++) {
@@ -40,10 +39,5 @@ public class Ochiai implements FaultLocalization {
     }
 
     return suspiciousnesses;
-  }
-
-  private int countLines(final String text) {
-    final String[] lines = text.split("\r\n|\r|\n");
-    return lines.length;
   }
 }
