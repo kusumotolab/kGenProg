@@ -5,7 +5,7 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 public class Scope {
 
   public enum Type {
-    ALL, PACKAGE, FILE
+    PROJECT, PACKAGE, FILE
   }
 
   private final Type type;

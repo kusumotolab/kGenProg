@@ -176,7 +176,7 @@ public class RandomMutationTest {
       final Random random) {
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection,
-        Type.ALL);
+        Type.PROJECT);
     randomMutation.setCandidates(sourceCode.getProductAsts());
     return randomMutation;
   }

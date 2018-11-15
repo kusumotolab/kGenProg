@@ -19,10 +19,10 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class RouletteStatementSelectionTest {
 
   @Test
-  public void testAllScope() {
+  public void testProjectScope() {
     final StatementSelection statementSelection = createStatementSelection();
     final Roulette<ReuseCandidate<Statement>> roulette = statementSelection.getRoulette(
-        new Scope(Type.ALL, null));
+        new Scope(Type.PROJECT, null));
     assertThat(roulette.getCandidateList()).hasSize(3);
   }
 

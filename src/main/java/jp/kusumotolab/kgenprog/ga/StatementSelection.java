@@ -17,7 +17,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 public abstract class StatementSelection implements CandidateSelection {
 
   private final Random random;
-  private Roulette<ReuseCandidate<Statement>> allRoulette;
+  private Roulette<ReuseCandidate<Statement>> projectRoulette;
   private final Multimap<String, ReuseCandidate<Statement>> packageNameStatementMultimap = HashMultimap.create();
   private final Multimap<FullyQualifiedName, ReuseCandidate<Statement>> fqnStatementMultiMap = HashMultimap.create();
   private final Map<String, Roulette<ReuseCandidate<Statement>>> packageNameRouletteMap = new HashMap<>();
@@ -34,7 +34,7 @@ public abstract class StatementSelection implements CandidateSelection {
 
     putMaps(reuseCandidates);
 
-    allRoulette = createRoulette(reuseCandidates);
+    projectRoulette = createRoulette(reuseCandidates);
   }
 
   public abstract double getStatementWeight(final ReuseCandidate<Statement> reuseCandidate);
@@ -53,8 +53,8 @@ public abstract class StatementSelection implements CandidateSelection {
     }
   }
 
-  private Roulette<ReuseCandidate<Statement>> getRouletteInAllScope() {
-    return allRoulette;
+  private Roulette<ReuseCandidate<Statement>> getRouletteInProjectScope() {
+    return projectRoulette;
   }
 
   private Roulette<ReuseCandidate<Statement>> getRouletteInPackage(final String packageName) {
@@ -81,8 +81,8 @@ public abstract class StatementSelection implements CandidateSelection {
   Roulette<ReuseCandidate<Statement>> getRoulette(final Scope scope) {
     final FullyQualifiedName fqn = scope.getFqn();
     switch (scope.getType()) {
-      case ALL:
-        return getRouletteInAllScope();
+      case PROJECT:
+        return getRouletteInProjectScope();
       case PACKAGE:
         return getRouletteInPackage(fqn.getPackageName());
       case FILE:
