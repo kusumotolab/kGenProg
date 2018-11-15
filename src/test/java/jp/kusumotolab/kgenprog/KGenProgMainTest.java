@@ -145,7 +145,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // TODO まだ修正無理 ref: https://github.com/kusumotolab/kGenProg/issues/341
+  @Ignore // このテスト単体では成功するが，このテストを実行すると続く別のテストが遅くなる．
   @Test
   public void testQuickSort01() {
     final Path rootPath = Paths.get("example/QuickSort01");
@@ -156,8 +156,6 @@ public class KGenProgMainTest {
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
-
-    kGenProgMain.run();
 
     // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
     assertThat(variants).hasSize(1)
