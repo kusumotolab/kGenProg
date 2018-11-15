@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
+import jp.kusumotolab.kgenprog.ga.Scope.Type;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
@@ -174,12 +175,14 @@ public class RandomMutationTest {
   private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode,
       final Random random) {
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
-    final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection);
+    final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection,
+        Type.ALL);
     randomMutation.setCandidates(sourceCode.getProductAsts());
     return randomMutation;
   }
 
-  private GeneratedJDTAST<ProductSourcePath> createGeneratedAST(final GeneratedSourceCode sourceCode) {
+  private GeneratedJDTAST<ProductSourcePath> createGeneratedAST(
+      final GeneratedSourceCode sourceCode) {
     final List<GeneratedAST<ProductSourcePath>> asts = sourceCode.getProductAsts();
     return (GeneratedJDTAST<ProductSourcePath>) asts.get(0);
   }

@@ -5,17 +5,19 @@ import java.util.Random;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
-public abstract class Mutation<T> {
+public abstract class Mutation {
 
   protected final Random random;
   protected final int mutationGeneratingCount;
-  protected final CandidateSelection<T> candidateSelection;
+  protected final CandidateSelection candidateSelection;
+  protected final Scope.Type type;
 
   public Mutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection<T> candidateSelection) {
+      final CandidateSelection candidateSelection, final Scope.Type type) {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
+    this.type = type;
   }
 
   public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
