@@ -404,5 +404,7 @@ local.properties
 !example/BuildSuccess06/.classpath
 !example/BuildSuccess13/lib/example/Bar.class
 
+kgenprog-out/
 example/real-bugs/
+
 
