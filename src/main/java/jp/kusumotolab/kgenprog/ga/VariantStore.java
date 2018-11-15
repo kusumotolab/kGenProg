@@ -126,7 +126,7 @@ public class VariantStore {
    * currentVariantsおよびgeneratedVariantsから次世代のVariantsを選択し，それらを次のcurrentVariantsとする
    * また，generatedVariantsをclearする
    */
-  public void changeGeneration() {
+  public void proceedNextGeneration() {
 
     final List<Variant> nextVariants =
         strategies.execVariantSelection(currentVariants, generatedVariants);

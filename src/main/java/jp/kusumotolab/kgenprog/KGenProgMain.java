@@ -85,7 +85,7 @@ public class KGenProgMain {
       }
 
       // 次世代に向けての準備
-      variantStore.changeGeneration();
+      variantStore.proceedNextGeneration();
     }
 
     // 生成されたバリアントのパッチ出力
