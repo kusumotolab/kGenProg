@@ -34,7 +34,8 @@ public class TestExecutor {
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
     try {
-      future.get(config.getTestTimeLimitSeconds(), TimeUnit.SECONDS);
+      //future.get(config.getTestTimeLimitSeconds(), TimeUnit.SECONDS);
+      future.get();
     } catch (final ExecutionException e) {
       // TODO Should handle safely
       // Executor側での例外をそのまま通す．
@@ -42,9 +43,12 @@ public class TestExecutor {
     } catch (final InterruptedException e) {
       // TODO Should handle safely
       e.printStackTrace();
-    } catch (final TimeoutException e) {
+    }
+    /*
+    catch (final TimeoutException e) {
       return EmptyTestResults.instance;
     }
+    */
 
     return testThread.getTestResults();
   }
