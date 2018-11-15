@@ -12,14 +12,14 @@ public class Patches {
 
   private static Logger log = LoggerFactory.getLogger(Patches.class);
 
-  private final List<Patch> patches = new ArrayList<>();
+  private final List<FileDiff> diffs = new ArrayList<>();
 
-  public void add(final Patch patche) {
-    this.patches.add(patche);
+  public void add(final FileDiff diff) {
+    this.diffs.add(diff);
   }
 
-  public Patch get(final int index) {
-    return patches.get(index);
+  public FileDiff get(final int index) {
+    return diffs.get(index);
   }
 
   public void writeToFile(final Path outDir) {
@@ -31,14 +31,14 @@ public class Patches {
       log.error(e.getMessage());
     }
 
-    for (final Patch patch : patches) {
-      patch.write(outDir);
+    for (final FileDiff fileDiff : diffs) {
+      fileDiff.write(outDir);
     }
   }
 
   public void writeToLogger() {
-    for (final Patch patch : patches) {
-      log.info(System.lineSeparator() + patch.getDiff());
+    for (final FileDiff fileDiff : diffs) {
+      log.info(System.lineSeparator() + fileDiff.getDiff());
     }
   }
 }

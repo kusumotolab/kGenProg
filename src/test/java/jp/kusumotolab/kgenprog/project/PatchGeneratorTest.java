@@ -14,7 +14,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.output.Patch;
+import jp.kusumotolab.kgenprog.output.FileDiff;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -62,9 +62,9 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -111,9 +111,9 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -168,9 +168,9 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -225,9 +225,9 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -277,9 +277,9 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
 
-    assertThat(patch.getDiff()).isEqualToNormalizingNewlines(expected);
+    assertThat(fileDiff.getDiff()).isEqualToNormalizingNewlines(expected);
   }
 }

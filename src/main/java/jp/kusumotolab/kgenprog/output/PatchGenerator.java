@@ -29,12 +29,12 @@ public class PatchGenerator {
 
     for (final GeneratedAST<ProductSourcePath> ast : modifiedAsts) {
       try {
-        final Patch patch = makePatch(ast);
-        final String diff = patch.getDiff();
+        final FileDiff fileDiff = makeFileDiff(ast);
+        final String diff = fileDiff.getDiff();
         if (diff.isEmpty()) {
           continue;
         }
-        patches.add(patch);
+        patches.add(fileDiff);
       } catch (final IOException | DiffException e) {
         log.error(e.getMessage());
         return new Patches();
@@ -44,14 +44,14 @@ public class PatchGenerator {
   }
 
   /***
-   * patch オブジェクトの生成を行う
+   * FileDiff オブジェクトの生成を行う
    *
    * @param ast
    * @return
    * @throws IOException
    * @throws DiffException
    */
-  private Patch makePatch(final GeneratedAST<?> ast) throws IOException, DiffException {
+  private FileDiff makeFileDiff(final GeneratedAST<?> ast) throws IOException, DiffException {
     final Path originPath = ast.getSourcePath().path;
 
     final String modifiedSourceCodeText = ast.getSourceCode();
@@ -66,7 +66,7 @@ public class PatchGenerator {
     final List<String> diffLines =
         makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
 
-    return new Patch(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
+    return new FileDiff(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
   }
 
   /***

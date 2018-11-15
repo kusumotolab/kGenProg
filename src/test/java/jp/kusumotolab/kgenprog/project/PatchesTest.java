@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import jp.kusumotolab.kgenprog.output.Patch;
+import jp.kusumotolab.kgenprog.output.FileDiff;
 import jp.kusumotolab.kgenprog.output.Patches;
 
 public class PatchesTest {
@@ -23,9 +23,9 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
     final Patches patches = new Patches();
-    patches.add(patch);
+    patches.add(fileDiff);
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
@@ -41,9 +41,9 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
     final Patches patches = new Patches();
-    patches.add(patch);
+    patches.add(fileDiff);
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
@@ -59,9 +59,9 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
     final Patches patches = new Patches();
-    patches.add(patch);
+    patches.add(fileDiff);
 
     final File folder = tempFolder.getRoot();
     patches.writeToLogger();
