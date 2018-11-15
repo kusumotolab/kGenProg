@@ -45,6 +45,7 @@ public class QuickSort {
     value[j] = tmp;
   }
 
+  @SuppressWarnings("unused")
   private void reuse_me() {
     int i = 0;
     i++;
