@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.output;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +13,9 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class PatchGenerator {
 

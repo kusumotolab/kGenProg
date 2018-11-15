@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.output;
 
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;

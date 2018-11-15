@@ -10,6 +10,8 @@ import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import jp.kusumotolab.kgenprog.output.Patch;
+import jp.kusumotolab.kgenprog.output.Patches;
 
 public class PatchesTest {
 
