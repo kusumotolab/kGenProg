@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/***
+ * 全てのテストを通過したバリアントの変更内容の集合．
+ * @author k-naitou
+ *
+ */
 public class PatchStore {
 
   private final List<Patch> patchList = new ArrayList<>();

@@ -7,6 +7,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/***
+ * 1ファイルの変更内容．
+ * @author k-naitou
+ *
+ */
 public class FileDiff {
 
   private static final Logger log = LoggerFactory.getLogger(FileDiff.class);

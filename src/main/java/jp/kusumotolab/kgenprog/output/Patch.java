@@ -8,6 +8,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/***
+ * 1バリアントの変更内容の集合．
+ * @author k-naitou
+ *
+ */
 public class Patch {
 
   private static Logger log = LoggerFactory.getLogger(Patch.class);
