@@ -80,7 +80,7 @@ public class StatementSelection implements CandidateSelection {
     return roulette;
   }
 
-  private Roulette<ReuseCandidate<Statement>> getRoulette(final Scope scope) {
+  Roulette<ReuseCandidate<Statement>> getRoulette(final Scope scope) {
     final FullyQualifiedName fqn = scope.getFqn();
     switch (scope.getType()) {
       case ALL:
