@@ -53,7 +53,7 @@ public class KGenProgMain {
   public List<Variant> run() {
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
-    final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
+    final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
     sourceCodeGeneration.initialize(initialVariant);
