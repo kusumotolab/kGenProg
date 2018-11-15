@@ -8,9 +8,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Patches {
+public class Patch {
 
-  private static Logger log = LoggerFactory.getLogger(Patches.class);
+  private static Logger log = LoggerFactory.getLogger(Patch.class);
 
   private final List<FileDiff> diffs = new ArrayList<>();
 

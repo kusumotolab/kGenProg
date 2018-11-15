@@ -21,9 +21,9 @@ public class PatchGenerator {
 
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
-  public Patches exec(final Variant modifiedVariant) {
+  public Patch exec(final Variant modifiedVariant) {
 
-    final Patches patches = new Patches();
+    final Patch patch = new Patch();
     final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
     final List<GeneratedAST<ProductSourcePath>> modifiedAsts = modifiedSourceCode.getProductAsts();
 
@@ -34,13 +34,13 @@ public class PatchGenerator {
         if (diff.isEmpty()) {
           continue;
         }
-        patches.add(fileDiff);
+        patch.add(fileDiff);
       } catch (final IOException | DiffException e) {
         log.error(e.getMessage());
-        return new Patches();
+        return new Patch();
       }
     }
-    return patches;
+    return patch;
   }
 
   /***
