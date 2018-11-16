@@ -60,7 +60,7 @@ public class KGenProgMain {
 
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
-    final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
+    final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
     sourceCodeGeneration.initialize(initialVariant);
@@ -102,7 +102,7 @@ public class KGenProgMain {
       }
 
       // 次世代に向けての準備
-      variantStore.changeGeneration();
+      variantStore.proceedNextGeneration();
 
       logGenerationSummary(stopwatch.toString(), variantsByMutation, variantsByCrossover);
     }

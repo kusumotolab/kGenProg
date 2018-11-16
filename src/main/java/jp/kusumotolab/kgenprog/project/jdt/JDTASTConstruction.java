@@ -86,7 +86,7 @@ public class JDTASTConstruction {
     return new GeneratedJDTAST<>(this, sourcePath, (CompilationUnit) parser.createAST(null), data);
   }
 
-  private ASTParser createNewParser() {
+  public static ASTParser createNewParser() {
     final ASTParser parser = ASTParser.newParser(AST.JLS10);
 
     @SuppressWarnings("unchecked")
