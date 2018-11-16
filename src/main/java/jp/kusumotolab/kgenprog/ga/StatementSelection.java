@@ -88,7 +88,7 @@ public abstract class StatementSelection implements CandidateSelection {
       case FILE:
         return getRouletteInFile(fqn);
     }
-    return null;
+    throw new IllegalArgumentException("This scope is not implemented.");
   }
 
   private Roulette<ReuseCandidate<Statement>> createRoulette(
