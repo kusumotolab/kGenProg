@@ -4,6 +4,7 @@ import java.util.List;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class Variant {
@@ -31,6 +32,14 @@ public class Variant {
 
   public boolean isCompleted() {
     return fitness.isMaximum();
+  }
+
+  public boolean isSyntaxValid() {
+    return generatedSourceCode.isGenerationSuccess();
+  }
+
+  public boolean isBuildSucceeded() {
+    return EmptyTestResults.class != testResults.getClass();
   }
 
   public OrdinalNumber getGenerationNumber() {
