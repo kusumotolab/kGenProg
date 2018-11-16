@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.output;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,42 +13,45 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class PatchGenerator {
 
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
-  public Patches exec(final Variant modifiedVariant) {
+  public Patch exec(final Variant modifiedVariant) {
 
-    final Patches patches = new Patches();
+    final Patch patch = new Patch();
     final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
     final List<GeneratedAST<ProductSourcePath>> modifiedAsts = modifiedSourceCode.getProductAsts();
 
     for (final GeneratedAST<ProductSourcePath> ast : modifiedAsts) {
       try {
-        final Patch patch = makePatch(ast);
-        final String diff = patch.getDiff();
+        final FileDiff fileDiff = makeFileDiff(ast);
+        final String diff = fileDiff.getDiff();
         if (diff.isEmpty()) {
           continue;
         }
-        patches.add(patch);
+        patch.add(fileDiff);
       } catch (final IOException | DiffException e) {
         log.error(e.getMessage());
-        return new Patches();
+        return new Patch();
       }
     }
-    return patches;
+    return patch;
   }
 
   /***
-   * patch オブジェクトの生成を行う
+   * FileDiff オブジェクトの生成を行う
    *
    * @param ast
    * @return
    * @throws IOException
    * @throws DiffException
    */
-  private Patch makePatch(final GeneratedAST<?> ast) throws IOException, DiffException {
+  private FileDiff makeFileDiff(final GeneratedAST<?> ast) throws IOException, DiffException {
     final Path originPath = ast.getSourcePath().path;
 
     final String modifiedSourceCodeText = ast.getSourceCode();
@@ -63,7 +66,7 @@ public class PatchGenerator {
     final List<String> diffLines =
         makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
 
-    return new Patch(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
+    return new FileDiff(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
   }
 
   /***

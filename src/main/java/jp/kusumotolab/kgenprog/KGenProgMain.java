@@ -11,8 +11,8 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
-import jp.kusumotolab.kgenprog.project.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.PatchesStore;
+import jp.kusumotolab.kgenprog.output.PatchGenerator;
+import jp.kusumotolab.kgenprog.output.PatchStore;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -103,18 +103,18 @@ public class KGenProgMain {
   }
 
   private void logPatch(final VariantStore variantStore) {
-    final PatchesStore patchesStore = new PatchesStore();
+    final PatchStore patchStore = new PatchStore();
     final List<Variant> completedVariants =
         variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
 
     for (final Variant completedVariant : completedVariants) {
-      patchesStore.add(patchGenerator.exec(completedVariant));
+      patchStore.add(patchGenerator.exec(completedVariant));
     }
 
-    patchesStore.writeToLogger();
+    patchStore.writeToLogger();
 
     if (!config.needNotOutput()) {
-      patchesStore.writeToFile(config.getOutDir());
+      patchStore.writeToFile(config.getOutDir());
     }
   }
 }

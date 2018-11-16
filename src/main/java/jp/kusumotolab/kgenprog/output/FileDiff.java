@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.output;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,16 +7,21 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Patch {
+/***
+ * 1ファイルの変更内容．
+ * @author k-naitou
+ *
+ */
+public class FileDiff {
 
-  private static final Logger log = LoggerFactory.getLogger(Patch.class);
+  private static final Logger log = LoggerFactory.getLogger(FileDiff.class);
 
   private final List<String> diff;
   public final String fileName;
   private final List<String> originalSourceCodeLines;
   private final List<String> modifiedSourceCodeLines;
 
-  public Patch(final List<String> diff, final String fileName,
+  public FileDiff(final List<String> diff, final String fileName,
       final List<String> originalSourceCodeLines, final List<String> modifiedSourceCodeLines) {
     this.diff = diff;
     this.fileName = fileName;

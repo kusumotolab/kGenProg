@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.output;
 
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -6,33 +6,38 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PatchesStore {
+/***
+ * 全てのテストを通過したバリアントの変更内容．
+ * @author k-naitou
+ *
+ */
+public class PatchStore {
 
-  private final List<Patches> patchesList = new ArrayList<>();
+  private final List<Patch> patchList = new ArrayList<>();
 
-  public void add(final Patches patch) {
-    patchesList.add(patch);
+  public void add(final Patch patch) {
+    patchList.add(patch);
   }
 
   public void writeToFile(final Path outDir) {
     final String timeStamp = getTimeStamp();
     final Path outDirInthisExecution = outDir.resolve(timeStamp);
 
-    for (final Patches patches : patchesList) {
-      final String variantId = makeVariantId(patches);
+    for (final Patch patch : patchList) {
+      final String variantId = makeVariantId(patch);
       final Path variantDir = outDirInthisExecution.resolve(variantId);
-      patches.writeToFile(variantDir);
+      patch.writeToFile(variantDir);
     }
   }
 
   public void writeToLogger() {
-    for (final Patches patches : patchesList) {
-      patches.writeToLogger();
+    for (final Patch patch : patchList) {
+      patch.writeToLogger();
     }
   }
 
-  private String makeVariantId(final Patches patches) {
-    return "variant" + (patchesList.indexOf(patches) + 1);
+  private String makeVariantId(final Patch patch) {
+    return "variant" + (patchList.indexOf(patch) + 1);
   }
 
   private String getTimeStamp() {
