@@ -43,7 +43,7 @@ public class RouletteStatementSelectionTest {
   }
 
   private StatementSelection createStatementSelection() {
-    final Path basePath = Paths.get("example/BuildSuccess16");
+    final Path basePath = Paths.get("example/BuildSuccess15");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode sourceCode= TestUtil.createGeneratedSourceCode(
         targetProject);
