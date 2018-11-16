@@ -4,8 +4,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
@@ -34,7 +32,7 @@ public class TestExecutor {
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
     try {
-      future.get(config.getTestTimeLimitSeconds(), TimeUnit.SECONDS);
+      future.get();
     } catch (final ExecutionException e) {
       // TODO Should handle safely
       // Executor側での例外をそのまま通す．
@@ -42,8 +40,6 @@ public class TestExecutor {
     } catch (final InterruptedException e) {
       // TODO Should handle safely
       e.printStackTrace();
-    } catch (final TimeoutException e) {
-      return EmptyTestResults.instance;
     }
 
     return testThread.getTestResults();
