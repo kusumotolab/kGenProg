@@ -43,7 +43,7 @@ public class InsertOperationTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    final JDTASTLocation location = new JDTASTLocation(sourcePath, statement);
+    final JDTASTLocation location = new JDTASTLocation(sourcePath, statement, ast);
 
     // 挿入対象生成
     final Statement insertStatement = createInsertionTarget();

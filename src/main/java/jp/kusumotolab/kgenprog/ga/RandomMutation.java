@@ -6,6 +6,10 @@ import java.util.Random;
 import java.util.function.Function;
 import org.eclipse.jdt.core.dom.ASTNode;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
+import jp.kusumotolab.kgenprog.ga.Scope.Type;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -15,8 +19,9 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 public class RandomMutation extends Mutation {
 
   public RandomMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection) {
-    super(mutationGeneratingCount, random, candidateSelection);
+      final CandidateSelection candidateSelection,
+      final Type type) {
+    super(mutationGeneratingCount, random, candidateSelection, type);
   }
 
   @Override
@@ -54,24 +59,28 @@ public class RandomMutation extends Mutation {
   }
 
   private Base makeBase(final Suspiciousness suspiciousness) {
-    return new Base(suspiciousness.getLocation(), makeOperationAtRandom());
+    final ASTLocation location = suspiciousness.getLocation();
+    final GeneratedAST<?> generatedAST = location.getGeneratedAST();
+    final FullyQualifiedName fqn = generatedAST.getPrimaryClassName();
+    return new Base(location, makeOperationAtRandom(fqn));
   }
 
-  private Operation makeOperationAtRandom() {
+  private Operation makeOperationAtRandom(final FullyQualifiedName fqn) {
     final int randomNumber = random.nextInt(3);
     switch (randomNumber) {
       case 0:
         return new DeleteOperation();
       case 1:
-        return new InsertOperation(chooseNodeAtRandom());
+        return new InsertOperation(chooseNodeAtRandom(fqn));
       case 2:
-        return new ReplaceOperation(chooseNodeAtRandom());
+        return new ReplaceOperation(chooseNodeAtRandom(fqn));
     }
     return new NoneOperation();
   }
 
-  private ASTNode chooseNodeAtRandom() {
-    return candidateSelection.exec();
+  private ASTNode chooseNodeAtRandom(final FullyQualifiedName fqn) {
+    final Scope scope = new Scope(type, fqn);
+    return candidateSelection.exec(scope);
   }
 
   private Gene makeGene(final Gene parent, final Base base) {

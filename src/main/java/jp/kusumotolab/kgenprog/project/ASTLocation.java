@@ -12,4 +12,6 @@ public interface ASTLocation {
    * @return 行番号の範囲
    */
   public LineNumberRange inferLineNumbers();
+  
+  public GeneratedAST<?> getGeneratedAST();
 }

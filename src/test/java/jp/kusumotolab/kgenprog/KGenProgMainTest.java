@@ -21,6 +21,7 @@ import jp.kusumotolab.kgenprog.ga.GenerationalVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
+import jp.kusumotolab.kgenprog.ga.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
@@ -63,8 +64,8 @@ public class KGenProgMainTest {
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
-    final Mutation mutation =
-        new RandomMutation(config.getMutationGeneratingCount(), random, statementSelection);
+    final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
+        statementSelection, Type.PROJECT);
     final Crossover crossover =
         new SinglePointCrossover(random, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();

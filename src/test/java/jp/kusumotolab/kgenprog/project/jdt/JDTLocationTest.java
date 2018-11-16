@@ -38,14 +38,14 @@ public class JDTLocationTest {
     final Statement statement1 = (Statement) method.getBody()
         .statements()
         .get(0);
-    final ASTLocation location1 = new JDTASTLocation(null, statement1);
+    final ASTLocation location1 = new JDTASTLocation(null, statement1, ast);
 
     assertThat(location1.inferLineNumbers()).isEqualTo(new LineNumberRange(4, 9));
 
     final Statement statement2 = (Statement) method.getBody()
         .statements()
         .get(1);
-    final ASTLocation location2 = new JDTASTLocation(null, statement2);
+    final ASTLocation location2 = new JDTASTLocation(null, statement2, ast);
 
     assertThat(location2.inferLineNumbers()).isEqualTo(new LineNumberRange(10, 10));
   }

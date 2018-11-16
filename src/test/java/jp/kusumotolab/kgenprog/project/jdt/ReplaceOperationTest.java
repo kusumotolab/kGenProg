@@ -44,7 +44,7 @@ public class ReplaceOperationTest {
         .get(0);
     final MethodDeclaration method = type.getMethods()[0];
     final Block block = method.getBody();
-    final JDTASTLocation location = new JDTASTLocation(path, block);
+    final JDTASTLocation location = new JDTASTLocation(path, block, ast);
 
     // 置換対象生成
     final Block replaceBlock = createReplacementBlockTarget();
@@ -91,7 +91,7 @@ public class ReplaceOperationTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(1);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
 
     // 置換対象生成
     final AST jdtAST = ast.getRoot()
