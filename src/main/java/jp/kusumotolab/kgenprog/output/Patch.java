@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /***
- * 1バリアントの変更内容の集合．
+ * 1バリアントの変更内容．
  * @author k-naitou
  *
  */

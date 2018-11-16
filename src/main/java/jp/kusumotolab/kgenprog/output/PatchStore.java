@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 /***
- * 全てのテストを通過したバリアントの変更内容の集合．
+ * 全てのテストを通過したバリアントの変更内容．
  * @author k-naitou
  *
  */
