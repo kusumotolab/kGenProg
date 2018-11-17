@@ -1,0 +1,5 @@
+root-dir = "./"
+src = ["src/"]
+test = ["test/"]
+scope = "FILE"
+

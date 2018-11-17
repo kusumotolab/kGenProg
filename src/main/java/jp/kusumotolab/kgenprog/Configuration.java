@@ -27,6 +27,8 @@ import com.electronwill.nightconfig.core.conversion.SpecNotNull;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
+import jp.kusumotolab.kgenprog.ga.Scope;
+import jp.kusumotolab.kgenprog.ga.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -45,6 +47,7 @@ public class Configuration {
   public static final Path DEFAULT_WORKING_DIR;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
+  public static final Scope.Type DEFAULT_SCOPE = Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
 
   static {
@@ -69,6 +72,7 @@ public class Configuration {
   private final int requiredSolutionsCount;
   private final Level logLevel;
   private final long randomSeed;
+  private final Scope.Type scope;
   private final boolean needNotOutput;
   // endregion
 
@@ -88,6 +92,7 @@ public class Configuration {
     requiredSolutionsCount = builder.requiredSolutionsCount;
     logLevel = builder.logLevel;
     randomSeed = builder.randomSeed;
+    scope = builder.scope;
     needNotOutput = builder.needNotOutput;
   }
 
@@ -151,6 +156,10 @@ public class Configuration {
 
   public long getRandomSeed() {
     return randomSeed;
+  }
+
+  public Scope.Type getScope() {
+    return scope;
   }
 
   public boolean needNotOutput() {
@@ -239,6 +248,11 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("random-seed")
     @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
+
+    @com.electronwill.nightconfig.core.conversion.Path("scope")
+    @PreserveNotNull
+    @Conversion(ScopeTypeToString.class)
+    private Scope.Type scope = DEFAULT_SCOPE;
 
     @Option(name = "--no-output", hidden = true)
     @com.electronwill.nightconfig.core.conversion.Path("no-output")
@@ -389,6 +403,11 @@ public class Configuration {
 
     public Builder addExecutionTest(final String executionTest) {
       this.executionTests.add(executionTest);
+      return this;
+    }
+
+    public Builder setScope(final Scope.Type scope) {
+      this.scope = scope;
       return this;
     }
 
@@ -602,6 +621,12 @@ public class Configuration {
       this.randomSeed = randomSeed;
     }
 
+    @Option(name = "--scope", usage = "Specify the area of the source code to be reused",
+        depends = {"-r", "-s", "-t"})
+    private void setScopeFromCmdLineParser(final Scope.Type scope) {
+      this.scope = scope;
+    }
+
     // endregion
 
     private static class PathToString implements Converter<Path, String> {
@@ -690,6 +715,41 @@ public class Configuration {
         }
 
         return (int) value.getSeconds();
+      }
+    }
+
+    private static class ScopeTypeToString implements Converter<Scope.Type, String> {
+
+      @Override
+      public Type convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        switch (value) {
+          case "PROJECT":
+            return Type.PROJECT;
+          case "PACKAGE":
+            return Type.PACKAGE;
+          case "FILE":
+            return Type.FILE;
+        }
+        throw new IllegalArgumentException(value + " is not a correct scope.");
+      }
+
+      @Override
+      public String convertFromField(final Type value) {
+        if (value == null) {
+          return null;
+        }
+        switch (value) {
+          case PROJECT:
+            return "PROJECT";
+          case PACKAGE:
+            return "PACKAGE";
+          case FILE:
+            return "FILE";
+        }
+        throw new IllegalArgumentException("Illegal Scope Type.");
       }
     }
   }

@@ -12,6 +12,8 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.Configuration.Builder;
+import jp.kusumotolab.kgenprog.ga.Scope;
+import jp.kusumotolab.kgenprog.ga.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -47,6 +49,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -78,6 +81,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -109,6 +113,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -140,6 +145,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -171,6 +177,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -202,6 +209,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -234,6 +242,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -264,6 +273,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -295,6 +305,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -326,6 +337,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRequiredSolutionsCount()).isEqualTo(requiredSolutionsCount);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -357,6 +369,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(logLevel);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -387,6 +400,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Level.DEBUG);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -418,6 +432,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -449,6 +464,39 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(randomSeed);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
+        testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildWithScope() {
+    final Scope.Type scope = Type.FILE;
+    final Builder builder = new Builder(rootDir, productPaths, testPaths).setScope(scope);
+    final Configuration config = builder.build();
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(scope);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -479,6 +527,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isTrue();
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -510,6 +559,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -543,6 +593,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -576,6 +627,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -608,6 +660,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -641,6 +694,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -674,6 +728,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -707,6 +762,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -740,6 +796,7 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -772,6 +829,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRequiredSolutionsCount()).isEqualTo(requiredSolutionsCount);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -804,6 +862,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Level.DEBUG);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -836,6 +895,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Level.ERROR);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -869,6 +929,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -902,6 +963,41 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(randomSeed);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final TargetProject expectedProject =
+        TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
+            ImmutableList.of(testPath), Collections.emptyList(), JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildFromCmdLineArgsWithScope() {
+    final Scope.Type scope = Type.FILE;
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), "--scope", "FILE"};
+    final Configuration config = Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(scope);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1002,6 +1098,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isTrue();
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
@@ -1033,6 +1130,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1066,6 +1164,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1101,6 +1200,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1135,6 +1235,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1168,6 +1269,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1203,6 +1305,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1238,6 +1341,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1272,6 +1376,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1306,6 +1411,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1340,6 +1446,7 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1375,6 +1482,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(logLevel);
 
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1407,6 +1515,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final Path classPath = rootDir.resolve("lib");
@@ -1443,6 +1552,43 @@ public class ConfigurationBuilderTest {
     final int randomSeed = 50;
     assertThat(config.getRandomSeed()).isEqualTo(randomSeed);
 
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final TargetProject expectedProject =
+        TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
+            JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildFromConfigFileWithScope() {
+    final Path configPath = rootDir.resolve("withScope.toml");
+    final String[] args = {"--config", configPath.toString()};
+    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+
+    final Scope.Type scope = Type.FILE;
+    assertThat(config.getScope()).isEqualTo(scope);
+
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
@@ -1475,6 +1621,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final String executionTest1 = "example.FooTest";
@@ -1511,6 +1658,7 @@ public class ConfigurationBuilderTest {
         .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isNotEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
     final TargetProject expectedProject =
