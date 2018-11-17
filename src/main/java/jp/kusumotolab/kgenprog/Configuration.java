@@ -621,7 +621,7 @@ public class Configuration {
       this.randomSeed = randomSeed;
     }
 
-    @Option(name = "--scope", usage = "Specify the area of the source code to be reused",
+    @Option(name = "--scope", usage = "Specify the scope from which source code to be reused",
         depends = {"-r", "-s", "-t"})
     private void setScopeFromCmdLineParser(final Scope.Type scope) {
       this.scope = scope;
@@ -725,15 +725,7 @@ public class Configuration {
         if (value == null) {
           return null;
         }
-        switch (value) {
-          case "PROJECT":
-            return Type.PROJECT;
-          case "PACKAGE":
-            return Type.PACKAGE;
-          case "FILE":
-            return Type.FILE;
-        }
-        throw new IllegalArgumentException(value + " is not a correct scope.");
+        return Type.valueOf(value);
       }
 
       @Override
@@ -741,15 +733,7 @@ public class Configuration {
         if (value == null) {
           return null;
         }
-        switch (value) {
-          case PROJECT:
-            return "PROJECT";
-          case PACKAGE:
-            return "PACKAGE";
-          case FILE:
-            return "FILE";
-        }
-        throw new IllegalArgumentException("Illegal Scope Type.");
+        return value.toString();
       }
     }
   }

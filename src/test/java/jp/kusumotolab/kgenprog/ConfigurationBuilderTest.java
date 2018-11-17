@@ -125,7 +125,8 @@ public class ConfigurationBuilderTest {
   public void testBuildWithMutationGeneratingCount() {
     final int mutationGeneratingCount = 50;
     final Builder builder =
-        new Builder(rootDir, productPaths, testPaths).setMutationGeneratingCount(mutationGeneratingCount);
+        new Builder(rootDir, productPaths, testPaths).setMutationGeneratingCount(
+            mutationGeneratingCount);
     final Configuration config = builder.build();
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -640,7 +641,8 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithMutationGeneratingCount() {
     final int mutationGeneratingCount = 50;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "--mutation-generating-count", Integer.toString(mutationGeneratingCount)};
+        testPath.toString(), "--mutation-generating-count",
+        Integer.toString(mutationGeneratingCount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -976,7 +978,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromCmdLineArgsWithScope() {
     final Scope.Type scope = Type.FILE;
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "--scope", "FILE"};
+        testPath.toString(), "--scope", scope.toString()};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -1069,7 +1071,8 @@ public class ConfigurationBuilderTest {
     Builder.buildFromCmdLineArgs(args);
 
     // 警告でないはず
-    assertThat(out.toString()).doesNotContain("The directory where kGenProg is running is different");
+    assertThat(out.toString()).doesNotContain(
+        "The directory where kGenProg is running is different");
 
     System.setOut(printStream);
   }
@@ -1252,7 +1255,8 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getMutationGeneratingCount()).isEqualTo(Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
 
     final int crossoverGeneratingCount = 50;
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(crossoverGeneratingCount);
