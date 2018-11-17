@@ -71,4 +71,5 @@ $ java -jar path/to/kGenProg.jar
 | `--test-time-limit` | Specifies a time limit in seconds to build and test each variant. | 10 |
 | `--required-solutions` | Terminates searching solutions when the specified number of solutions are found. | 1 |
 | `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
+| `--scope` | Specify the scope from which source code to be reused (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
 
