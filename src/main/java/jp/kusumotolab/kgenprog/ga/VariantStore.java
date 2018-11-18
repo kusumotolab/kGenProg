@@ -1,32 +1,21 @@
 package jp.kusumotolab.kgenprog.ga;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.factory.TargetProject;
-import jp.kusumotolab.kgenprog.project.test.TestResult;
-import jp.kusumotolab.kgenprog.project.test.TestResultSerializer;
 import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.InsertTimeoutRuleFieldOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
-import jp.kusumotolab.kgenprog.project.test.TestResultsSerializer;
 
 public class VariantStore {
 
@@ -83,7 +72,7 @@ public class VariantStore {
   }
 
   public TargetProject getTargetProject() {
-    return targetProject;
+    return config.getTargetProject();
   }
 
   public OrdinalNumber getGenerationNumber() {
@@ -186,42 +175,5 @@ public class VariantStore {
     return new Variant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
         testResults, fitness, suspiciousnesses,
         element);
-  }
-
-  public void writeToFile(final Path outDir) {
-
-    final Path outputPath = createOutputPath(outDir);
-    final Gson gson = createGson();
-
-    try (final BufferedWriter out = Files.newBufferedWriter(outputPath)) {
-      if (Files.notExists(outDir)) {
-        Files.createDirectories(outDir);
-      }
-      gson.toJson(this, out);
-    } catch (final IOException e) {
-      log.error(e.getMessage(), e);
-    }
-  }
-
-  private Path createOutputPath(final Path outDir) {
-    final LocalDateTime currentTime = LocalDateTime.now();
-    final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-    final String formattedCurrentTime = dateTimeFormatter.format(currentTime);
-    final String projectName = targetProject.rootPath.getFileName()
-        .toString();
-
-    final String fileName = projectName + "_" + formattedCurrentTime + ".json";
-    return outDir.resolve(fileName);
-  }
-
-  private Gson createGson() {
-    final GsonBuilder gsonBuilder = new GsonBuilder();
-    return gsonBuilder.registerTypeAdapter(Variant.class, new VariantSerializer())
-        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
-        .registerTypeAdapter(TestResult.class, new TestResultSerializer())
-        .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
-        .setPrettyPrinting()
-        .disableHtmlEscaping()
-        .create();
   }
 }

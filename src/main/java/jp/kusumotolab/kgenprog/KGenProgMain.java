@@ -13,6 +13,7 @@ import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.output.PatchStore;
+import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -88,11 +89,11 @@ public class KGenProgMain {
       variantStore.proceedNextGeneration();
     }
 
-    // jsonの出力
-    variantStore.writeToFile(config.getOutDir());
-
     // 生成されたバリアントのパッチ出力
     logPatch(variantStore);
+
+    // jsonの出力
+    writeJson(variantStore);
 
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
@@ -120,4 +121,13 @@ public class KGenProgMain {
       patchStore.writeToFile(config.getOutDir());
     }
   }
+
+  private void writeJson(final VariantStore variantStore) {
+    final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
+
+    if (!config.needNotOutput()) {
+      variantStoreExporter.writeToFile(config.getOutDir(), variantStore);
+    }
+  }
+
 }
