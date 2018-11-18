@@ -56,7 +56,7 @@ public class Variant {
     return testResults;
   }
 
-  int getSelectionCount() {
+  public int getSelectionCount() {
     return selectionCount;
   }
 
