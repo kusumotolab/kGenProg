@@ -42,7 +42,7 @@ public class StatementListVisitor extends ASTVisitor {
     this.unit = unit;
     int lineNumberLength = unit.getLineNumber(unit.getLength() - 1);
     this.lineToStatements = IntStream.rangeClosed(0, lineNumberLength)
-        .mapToObj(ArrayList<Statement>::new)
+        .mapToObj(v -> new ArrayList<Statement>(0))
         .collect(Collectors.toList());
 
     unit.accept(this);

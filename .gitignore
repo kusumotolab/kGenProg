@@ -402,8 +402,9 @@ local.properties
 # End of https://www.gitignore.io/api/eclipse
 
 !example/BuildSuccess06/.classpath
+!example/BuildSuccess13/lib/example/Bar.class
 
-kgenprog-out
-
+kgenprog-out/
 example/real-bugs/
+
 

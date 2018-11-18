@@ -4,8 +4,9 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
-public class InsertOperation implements JDTOperation {
+public class InsertOperation extends JDTOperation {
 
   private final ASTNode astNode;
 
@@ -14,8 +15,8 @@ public class InsertOperation implements JDTOperation {
   }
 
   @Override
-  public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
-      final ASTRewrite astRewrite) {
+  protected <T extends SourcePath> void applyToASTRewrite(final GeneratedJDTAST<T> ast,
+      final JDTASTLocation location, final ASTRewrite astRewrite) {
     final ASTNode target = location.locate(ast.getRoot());
     final ListRewrite listRewrite = astRewrite.getListRewrite(target.getParent(),
         (ChildListPropertyDescriptor) target.getLocationInParent());

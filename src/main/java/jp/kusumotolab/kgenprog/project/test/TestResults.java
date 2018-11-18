@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.BuildResults;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.build.BuildResults;
+import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
 public class TestResults implements Serializable {
 
@@ -108,8 +110,12 @@ public class TestResults implements Serializable {
       final ASTLocation location, final Coverage.Status status, final boolean failed) {
 
     // 翻訳1: SourcePath → [FQN]
-    final Set<FullyQualifiedName> correspondingFqns =
-        this.buildResults.getPathToFQNs(productSourcePath.path);
+    // 翻訳1: SourcePath → [FQN]
+    final Set<FullyQualifiedName> correspondingFqns = buildResults.getBinaryStore()
+        .get(productSourcePath)
+        .stream()
+        .map(JavaBinaryObject::getFqn)
+        .collect(Collectors.toSet());
 
     // 翻訳2: location → 行番号
     // TODO
@@ -144,7 +150,7 @@ public class TestResults implements Serializable {
     for (final TestResult testResult : this.value.values()) {
       final Coverage coverage = testResult.getCoverages(targetFQN);
 
-      if (lineNumber > coverage.statuses.size()) {
+      if (coverage == null || lineNumber > coverage.statuses.size()) {
         // 計測対象（targetFQN）の行の外を参照した場合．
         // （＝内部クラス等の理由で，その行の実行結果が別テストのcoverageに記述されている場合）
         // 何もしなくて良い．

@@ -1,0 +1,4 @@
+root-dir = "./"
+src = ["src/"]
+test = ["test/"]
+mutation-generating-count = 50

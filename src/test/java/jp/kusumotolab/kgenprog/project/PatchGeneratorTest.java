@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -14,6 +14,8 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Base;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.output.FileDiff;
+import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -40,8 +42,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 削除位置の Location 作成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -52,16 +55,16 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
     final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -88,8 +91,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 削除位置の Location 作成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -100,16 +104,16 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
     final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -137,8 +141,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -149,7 +154,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -163,9 +168,9 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(0,0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -190,8 +195,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 挿入位置のLocation生成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -202,7 +208,7 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -219,9 +225,9 @@ public class PatchGeneratorTest {
     final Variant modifiedVariant = new Variant(0,0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
-    final String modifiedSourceCode = String.join("\n", patch.getModifiedSourceCodeLines());
+    final String modifiedSourceCode = String.join("\n", fileDiff.getModifiedSourceCodeLines());
 
     assertThat(modifiedSourceCode).isEqualToNormalizingNewlines(expected);
   }
@@ -251,8 +257,9 @@ public class PatchGeneratorTest {
 
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
 
     // 削除位置の Location 作成
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
@@ -263,16 +270,16 @@ public class PatchGeneratorTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement);
+        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
     final Variant modifiedVariant = new Variant(0,0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
-    final Patch patch = patchGenerator.exec(modifiedVariant)
+    final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
         .get(0);
 
-    assertThat(patch.getDiff()).isEqualToNormalizingNewlines(expected);
+    assertThat(fileDiff.getDiff()).isEqualToNormalizingNewlines(expected);
   }
 }

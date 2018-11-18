@@ -16,7 +16,6 @@ import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.OriginalHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
@@ -46,8 +45,7 @@ public class TestUtil {
   }
 
   public static GeneratedSourceCode createGeneratedSourceCode(final TargetProject project) {
-    final List<GeneratedAST> constructAST = new JDTASTConstruction().constructAST(project);
-    final GeneratedSourceCode sourceCode = new GeneratedSourceCode(constructAST);
+    final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(project);
     return sourceCode;
   }
 

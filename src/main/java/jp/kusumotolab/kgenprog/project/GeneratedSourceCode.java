@@ -2,63 +2,64 @@ package jp.kusumotolab.kgenprog.project;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * APR によって生成されたソースコード 複数ソースファイルの AST の集合を持つ
  */
 public class GeneratedSourceCode {
 
-  private static Logger log = LoggerFactory.getLogger(GeneratedSourceCode.class);
   private static final String DIGEST_ALGORITHM = "MD5";
 
-  // TODO listは順序が保証されず重複を許容してしまう．Mapで名前から引ける方が外から使いやすい．
-  private final List<GeneratedAST> asts;
-  private final Map<SourcePath, GeneratedAST> pathToAst;
+  private final List<GeneratedAST<ProductSourcePath>> productAsts;
+  private final List<GeneratedAST<TestSourcePath>> testAsts;
+  private final Map<SourcePath, GeneratedAST<ProductSourcePath>> pathToAst;
   private final String messageDigest;
 
-  public GeneratedSourceCode(List<GeneratedAST> asts) {
-    this.asts = asts;
-    pathToAst = asts.stream()
-        .collect(Collectors.toMap(GeneratedAST::getProductSourcePath, v -> v));
+  /**
+   * @param productAsts ProductソースコードのAST
+   * @param testAsts TestソースコードのList
+   */
+  public GeneratedSourceCode(final List<GeneratedAST<ProductSourcePath>> productAsts,
+      final List<GeneratedAST<TestSourcePath>> testAsts) {
+    this.productAsts = productAsts;
+    this.testAsts = testAsts;
+    pathToAst = productAsts.stream()
+        .collect(Collectors.toMap(GeneratedAST::getSourcePath, v -> v));
     this.messageDigest = createMessageDigest();
   }
 
-  public List<GeneratedAST> getAsts() {
-    log.debug("enter getAsts()");
-    return asts;
+  public List<GeneratedAST<?>> getAllAsts() {
+    final List<GeneratedAST<?>> list = new ArrayList<>();
+    list.addAll(productAsts);
+    list.addAll(testAsts);
+    return list;
   }
 
-  public GeneratedAST getAst(SourcePath path) {
-    log.debug("enter getAst()");
+  public List<GeneratedAST<ProductSourcePath>> getProductAsts() {
+    return productAsts;
+  }
+
+  public List<GeneratedAST<TestSourcePath>> getTestAsts() {
+    return testAsts;
+  }
+
+  /**
+   * 引数のソースコードに対応するASTを取得する
+   */
+  public GeneratedAST<ProductSourcePath> getProductAst(final ProductSourcePath path) {
     return pathToAst.get(path);
   }
 
-  public List<ASTLocation> inferLocations(SourcePath path, int lineNumber) {
-    log.debug("enter inferLocations(SourcePath, int)");
-    GeneratedAST ast = getAst(path);
-    if (ast == null) {
-      return Collections.emptyList();
-    }
-    return ast.inferLocations(lineNumber);
-  }
-
-  public List<ASTLocation> getAllLocations() {
-    return asts.stream()
-        .flatMap(v -> v.getAllLocations()
-            .stream())
-        .collect(Collectors.toList());
-  }
-
-  public LineNumberRange inferLineNumbers(ASTLocation location) {
-    log.debug("enter inferLineNumbers(Location)");
+  /**
+   * ASTLocationが対応する行番号を推定する
+   */
+  public LineNumberRange inferLineNumbers(final ASTLocation location) {
     return location.inferLineNumbers();
   }
 
@@ -70,12 +71,16 @@ public class GeneratedSourceCode {
     return true;
   }
 
+  public String getGenerationMessage() {
+    return "";
+  }
+
   private String createMessageDigest() {
     try {
       final MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
 
-      asts.stream()
-          .sorted(Comparator.comparing(v -> v.getProductSourcePath()
+      productAsts.stream()
+          .sorted(Comparator.comparing(v -> v.getSourcePath()
               .toString()))
           .map(GeneratedAST::getMessageDigest)
           .map(String::getBytes)
@@ -83,7 +88,7 @@ public class GeneratedSourceCode {
 
       return Hex.encodeHexString(digest.digest());
 
-    } catch (NoSuchAlgorithmException e) {
+    } catch (final NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
   }

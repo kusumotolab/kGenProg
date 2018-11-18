@@ -2,30 +2,26 @@ package jp.kusumotolab.kgenprog.ga;
 
 import java.util.List;
 import java.util.Random;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public abstract class Mutation {
 
-  private static Logger log = LoggerFactory.getLogger(Mutation.class);
-
   protected final Random random;
-  protected final int numberOfBase;
+  protected final int mutationGeneratingCount;
   protected final CandidateSelection candidateSelection;
+  protected final Scope.Type type;
 
-  public Mutation(final int numberOfBase, final Random random,
-      final CandidateSelection candidateSelection) {
+  public Mutation(final int mutationGeneratingCount, final Random random,
+      final CandidateSelection candidateSelection, final Scope.Type type) {
     this.random = random;
-    this.numberOfBase = numberOfBase;
+    this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
+    this.type = type;
   }
 
-  public void setCandidates(final List<GeneratedAST> candidates) {
-    log.debug("enter setCandidates(List<>)");
-
+  public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
     candidateSelection.setCandidates(candidates);
-    log.debug("exit setCandidates(List<>)");
   }
 
   public abstract List<Variant> exec(VariantStore variantStore);

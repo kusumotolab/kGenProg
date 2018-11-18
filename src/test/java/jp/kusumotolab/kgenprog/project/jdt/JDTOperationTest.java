@@ -9,6 +9,7 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class JDTOperationTest {
 
@@ -20,21 +21,23 @@ public class JDTOperationTest {
     final ProductSourcePath productSourcePath = new ProductSourcePath(path);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedSourceCode generatedSourceCode = new GeneratedSourceCode(
-        constructor.constructAST(Collections.singletonList(productSourcePath)));
+    final GeneratedSourceCode generatedSourceCode = constructor
+        .constructAST(Collections.singletonList(productSourcePath), Collections.emptyList());
 
     final GeneratedSourceCode applied =
-        operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null));
+        operation.apply(generatedSourceCode, new JDTASTLocation(productSourcePath, null, null));
 
-    assertThat(applied).isEqualTo(GenerationFailedSourceCode.instance);
+    assertThat(applied).isInstanceOf(GenerationFailedSourceCode.class);
+    assertThat(applied.isGenerationSuccess()).isFalse();
+    assertThat(applied.getGenerationMessage()).isEqualTo("generation failed");
   }
 
-  static class ExceptionOperation implements JDTOperation {
-    @Override
-    public void applyToASTRewrite(final GeneratedJDTAST ast, final JDTASTLocation location,
-        final ASTRewrite astRewrite) {
-      throw new IllegalArgumentException();
-    }
+  static class ExceptionOperation extends JDTOperation {
 
+    @Override
+    public <T extends SourcePath> void applyToASTRewrite(final GeneratedJDTAST<T> ast,
+        final JDTASTLocation location, final ASTRewrite astRewrite) {
+      throw new IllegalArgumentException("generation failed");
+    }
   }
 }

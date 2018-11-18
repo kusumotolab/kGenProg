@@ -2,49 +2,40 @@ package jp.kusumotolab.kgenprog.project.jdt;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Hex;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.ASTLocations;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
-public class GeneratedJDTAST implements GeneratedAST {
+public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
   private static final String DIGEST_ALGORITHM = "MD5";
 
   private final JDTASTConstruction construction;
   private final CompilationUnit root;
-  private final ProductSourcePath productSourcePath;
-  private final List<List<Statement>> lineNumberToStatements;
-  private final List<ASTLocation> allLocations;
-  private final String primaryClassName;
+  private final T sourcePath;
+  private final FullyQualifiedName primaryClassName;
   private final String sourceCode;
   private final String messageDigest;
+  private final int numberOfLines;
 
-  public GeneratedJDTAST(final JDTASTConstruction construction,
-      final ProductSourcePath productSourcePath, final CompilationUnit root, final String source) {
+  public GeneratedJDTAST(final JDTASTConstruction construction, final T sourcePath,
+      final CompilationUnit root, final String source) {
     this.construction = construction;
     this.root = root;
-    this.productSourcePath = productSourcePath;
+    this.sourcePath = sourcePath;
     this.sourceCode = source;
 
-    final StatementListVisitor visitor = new StatementListVisitor();
-    visitor.analyzeStatement(root);
-    this.lineNumberToStatements = visitor.getLineToStatements();
-    this.allLocations = visitor.getStatements()
-        .stream()
-        .map(v -> new JDTASTLocation(productSourcePath, v))
-        .collect(Collectors.toList());
     this.primaryClassName = searchPrimaryClassName(root);
     this.messageDigest = createMessageDigest();
+    this.numberOfLines = calculateNumberOfLines();
   }
 
   @Override
@@ -53,23 +44,28 @@ public class GeneratedJDTAST implements GeneratedAST {
   }
 
   @Override
-  public ProductSourcePath getProductSourcePath() {
-    return productSourcePath;
+  public T getSourcePath() {
+    return sourcePath;
   }
 
   @Override
-  public String getPrimaryClassName() {
+  public FullyQualifiedName getPrimaryClassName() {
     return primaryClassName;
   }
 
   @Override
-  public List<ASTLocation> getAllLocations() {
-    return allLocations;
+  public ASTLocations createLocations() {
+    return new JDTASTLocations<>(this, root, sourcePath);
   }
 
   @Override
   public String getMessageDigest() {
     return messageDigest;
+  }
+
+  @Override
+  public int getNumberOfLines() {
+    return numberOfLines;
   }
 
   public CompilationUnit getRoot() {
@@ -80,18 +76,7 @@ public class GeneratedJDTAST implements GeneratedAST {
     return construction;
   }
 
-  @Override
-  public List<ASTLocation> inferLocations(final int lineNumber) {
-    if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
-      return lineNumberToStatements.get(lineNumber)
-          .stream()
-          .map(statement -> new JDTASTLocation(this.productSourcePath, statement))
-          .collect(Collectors.toList());
-    }
-    return Collections.emptyList();
-  }
-
-  private String searchPrimaryClassName(final CompilationUnit root) {
+  private FullyQualifiedName searchPrimaryClassName(final CompilationUnit root) {
     @SuppressWarnings("unchecked")
     final List<AbstractTypeDeclaration> types = root.types();
     final Optional<AbstractTypeDeclaration> findAny = types.stream()
@@ -110,7 +95,7 @@ public class GeneratedJDTAST implements GeneratedAST {
           .getIdentifier();
 
     } else {
-      typeName = productSourcePath.path.getFileName()
+      typeName = sourcePath.path.getFileName()
           .toString();
       final int idx = typeName.indexOf(".");
       if (idx > 0) {
@@ -120,13 +105,15 @@ public class GeneratedJDTAST implements GeneratedAST {
     return constructFQN(root.getPackage(), typeName);
   }
 
-  private String constructFQN(final PackageDeclaration packageName, final String name) {
+  private FullyQualifiedName constructFQN(final PackageDeclaration packageName, final String name) {
+    final String fqnString;
     if (packageName == null) {
-      return name;
+      fqnString = name;
     } else {
-      return packageName.getName()
+      fqnString = packageName.getName()
           .getFullyQualifiedName() + "." + name;
     }
+    return sourcePath.createFullyQualifiedName(fqnString);
   }
 
   private String createMessageDigest() {
@@ -135,8 +122,13 @@ public class GeneratedJDTAST implements GeneratedAST {
 
       return Hex.encodeHexString(digest.digest(root.toString()
           .getBytes()));
-    } catch (NoSuchAlgorithmException e) {
+    } catch (final NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private int calculateNumberOfLines() {
+    final int pos = root.getExtendedStartPosition(root) + root.getExtendedLength(root) - 1;
+    return root.getLineNumber(pos);
   }
 }

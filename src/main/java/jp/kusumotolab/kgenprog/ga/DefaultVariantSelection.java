@@ -3,12 +3,8 @@ package jp.kusumotolab.kgenprog.ga;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DefaultVariantSelection implements VariantSelection {
-
-  private static Logger log = LoggerFactory.getLogger(DefaultCodeValidation.class);
 
   final private int maxVariantsPerGeneration;
 
@@ -22,8 +18,6 @@ public class DefaultVariantSelection implements VariantSelection {
 
   @Override
   public List<Variant> exec(final List<Variant> current, final List<Variant> generated) {
-    log.debug("enter exec(List<Variant>, List<Variant>)");
-
     final List<Variant> list = Stream.concat(current.stream(), generated.stream())
         .sorted((o1, o2) -> compareFitness(o1.getFitness(), o2.getFitness()))
         .limit(maxVariantsPerGeneration)

@@ -12,11 +12,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jp.kusumotolab.kgenprog.Counter;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -24,14 +23,14 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResultSerializer;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertTimeoutRuleFieldOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 import jp.kusumotolab.kgenprog.project.test.TestResultsSerializer;
 
 public class VariantStore {
 
-  private static Logger log = LoggerFactory.getLogger(VariantStore.class);
-
-  private final TargetProject targetProject;
+  private final Configuration config;
   private final Strategies strategies;
   private final Variant initialVariant;
   private List<Variant> currentVariants;
@@ -41,8 +40,8 @@ public class VariantStore {
   private final OrdinalNumber generation;
   private final Counter variantCounter;
 
-  public VariantStore(final TargetProject targetProject, final Strategies strategies) {
-    this.targetProject = targetProject;
+  public VariantStore(final Configuration config, final Strategies strategies) {
+    this.config = config;
     this.strategies = strategies;
 
     variantCounter = new Counter();
@@ -61,7 +60,7 @@ public class VariantStore {
    */
   @Deprecated
   public VariantStore(final Variant initialVariant) {
-    this.targetProject = null;
+    this.config = null;
     this.strategies = null;
     this.initialVariant = initialVariant;
 
@@ -142,12 +141,10 @@ public class VariantStore {
    * @param variant
    */
   public void addGeneratedVariant(final Variant variant) {
-    log.debug("enter addNextGenerationVariant(Variant)");
 
     allVariants.add(variant);
     if (variant.isCompleted()) {
       foundSolutions.add(variant);
-      log.info("{} solution has been found", getFoundSolutionsNumber());
     } else {
       generatedVariants.add(variant);
     }
@@ -159,30 +156,31 @@ public class VariantStore {
    * currentVariantsおよびgeneratedVariantsから次世代のVariantsを選択し，それらを次のcurrentVariantsとする
    * また，generatedVariantsをclearする
    */
-  public void changeGeneration() {
-    log.debug("enter changeGeneration()");
+  public void proceedNextGeneration() {
 
     final List<Variant> nextVariants =
         strategies.execVariantSelection(currentVariants, generatedVariants);
     nextVariants.forEach(Variant::incrementSelectionCount);
     generation.incrementAndGet();
-    log.info("exec selection. {} variants: ({}, {}) => {}", generation, currentVariants.size(),
-        generatedVariants.size(), nextVariants.size());
 
     currentVariants = nextVariants;
     generatedVariants = new ArrayList<>();
   }
 
   private Variant createInitialVariant() {
-    final GeneratedSourceCode sourceCode = strategies.execASTConstruction(targetProject);
-    return createVariant(new Gene(Collections.emptyList()), sourceCode,
+    final GeneratedSourceCode sourceCode =
+        strategies.execASTConstruction(config.getTargetProject());
+    final Operation operation =
+        new InsertTimeoutRuleFieldOperation(config.getTestTimeLimitSeconds());
+    final GeneratedSourceCode appliedSourceCode = operation.apply(sourceCode, null);
+    return createVariant(new Gene(Collections.emptyList()), appliedSourceCode,
         new OriginalHistoricalElement());
   }
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
     final TestResults testResults = strategies.execTestExecutor(sourceCode);
-    final Fitness fitness = strategies.execSourceCodeValidation(this, testResults);
+    final Fitness fitness = strategies.execSourceCodeValidation(sourceCode, testResults);
     final List<Suspiciousness> suspiciousnesses =
         strategies.execFaultLocalization(sourceCode, testResults);
     return new Variant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,

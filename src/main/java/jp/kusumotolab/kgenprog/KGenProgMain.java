@@ -11,13 +11,14 @@ import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
-import jp.kusumotolab.kgenprog.project.Patch;
-import jp.kusumotolab.kgenprog.project.PatchGenerator;
+import jp.kusumotolab.kgenprog.output.PatchGenerator;
+import jp.kusumotolab.kgenprog.output.PatchStore;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMain {
 
+  @SuppressWarnings("unused")
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
 
   private final Configuration config;
@@ -50,22 +51,19 @@ public class KGenProgMain {
   }
 
   public List<Variant> run() {
-    log.debug("enter run()");
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
-    final VariantStore variantStore = new VariantStore(config.getTargetProject(), strategies);
+    final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
+    sourceCodeGeneration.initialize(initialVariant);
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
-        .getAsts());
+        .getProductAsts());
 
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
 
     while (true) {
-
-      log.info("in the era of the " + variantStore.getGenerationNumber()
-          .toString() + " generation (" + stopwatch.toString() + ")");
 
       // 変異プログラムを生成
       variantStore.addGeneratedVariants(mutation.exec(variantStore));
@@ -73,24 +71,21 @@ public class KGenProgMain {
 
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
-        log.info("reached the required solutions");
         break;
       }
 
       // 制限時間に達した場合には GA を抜ける
       if (stopwatch.isTimeout()) {
-        log.info("reached the time limit");
         break;
       }
 
       // 最大世代数に到達した場合には GA を抜ける
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
-        log.info("reached the maximum generation");
         break;
       }
 
       // 次世代に向けての準備
-      variantStore.changeGeneration();
+      variantStore.proceedNextGeneration();
     }
 
     // jsonの出力
@@ -99,34 +94,30 @@ public class KGenProgMain {
     // 生成されたバリアントのパッチ出力
     logPatch(variantStore);
 
-    log.debug("exit run()");
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
 
   private boolean reachedMaxGeneration(final OrdinalNumber generation) {
-    log.debug("enter reachedMaxGeneration(OrdinalNumber)");
     return config.getMaxGeneration() <= generation.get();
   }
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
-    log.debug("enter areEnoughCompletedVariants(List<Variant>)");
     return config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
   private void logPatch(final VariantStore variantStore) {
+    final PatchStore patchStore = new PatchStore();
     final List<Variant> completedVariants =
         variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
-    log.debug("enter outputPatch(VariantStore)");
-    for (final Variant completedVariant : completedVariants) {
-      final List<Patch> patches = patchGenerator.exec(completedVariant);
-      log.info(makeVariantId(completedVariants, completedVariant));
-      for (final Patch patch : patches) {
-        log.info(System.lineSeparator() + patch.getDiff());
-      }
-    }
-  }
 
-  private String makeVariantId(final List<Variant> variants, final Variant variant) {
-    return "variant" + (variants.indexOf(variant) + 1);
+    for (final Variant completedVariant : completedVariants) {
+      patchStore.add(patchGenerator.exec(completedVariant));
+    }
+
+    patchStore.writeToLogger();
+
+    if (!config.needNotOutput()) {
+      patchStore.writeToFile(config.getOutDir());
+    }
   }
 }

@@ -18,11 +18,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import jp.kusumotolab.kgenprog.project.BuildResults;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ProjectBuilder;
-import jp.kusumotolab.kgenprog.project.build.CompilationPackage;
-import jp.kusumotolab.kgenprog.project.build.CompilationUnit;
+import jp.kusumotolab.kgenprog.project.build.BinaryStore;
+import jp.kusumotolab.kgenprog.project.build.BuildResults;
+import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
@@ -37,13 +36,14 @@ public class MemoryClassLoaderTest {
   final static Path ROOT_PATH = Paths.get("example/BuildSuccess01");
   static BuildResults buildResults;
 
-  static MemoryClassLoader Loader;
+  static MemoryClassLoader loader;
 
   @BeforeClass
   public static void beforeClass() {
     // 一度だけビルドしておく
     final TargetProject targetProject = TargetProjectFactory.create(ROOT_PATH);
-    final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(targetProject);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     buildResults = projectBuilder.build(generatedSourceCode);
   }
@@ -54,24 +54,25 @@ public class MemoryClassLoaderTest {
   }
 
   private void setupMemoryClassLoader() throws MalformedURLException {
-    Loader = new MemoryClassLoader();
-    final CompilationPackage compilationPackage = buildResults.getCompilationPackage();
-    final List<CompilationUnit> units = compilationPackage.getUnits();
-    units.forEach(unit -> Loader.addDefinition(new TargetFullyQualifiedName(unit.getName()),
-        unit.getBytecode()));
+    loader = new MemoryClassLoader();
+
+    // クラスローダに全バイナリを設置しておく
+    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    binaryStore.getAll()
+        .forEach(jmo -> loader.addDefinition(jmo.getFqn(), jmo.getByteCode()));
   }
 
   @After
   public void after() throws IOException {
-    if (Loader != null) {
-      Loader.close();
+    if (loader != null) {
+      loader.close();
     }
   }
 
   @Test
   public void testDynamicClassLoading01() throws Exception {
     // 動的ロード
-    final Class<?> clazz = Loader.loadClass(FOO);
+    final Class<?> clazz = loader.loadClass(FOO);
     final Object instance = clazz.newInstance();
 
     // きちんと存在するか？その名前は正しいか？
@@ -83,7 +84,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testDynamicClassLoading02() throws Exception {
     // 動的ロード（Override側のメソッドで試す）
-    final Class<?> clazz = Loader.loadClass(FOO.toString(), false);
+    final Class<?> clazz = loader.loadClass(FOO.toString(), false);
     final Object instance = clazz.newInstance();
 
     // きちんと存在するか？その名前は正しいか？
@@ -109,7 +110,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testDynamicClassLoading05() throws Exception {
     // リフレクション + MemoryLoaderで動的ロード，これは成功するはず
-    final Class<?> clazz = Class.forName(FOO.toString(), true, Loader);
+    final Class<?> clazz = Class.forName(FOO.toString(), true, loader);
 
     assertThat(clazz.getName()).isEqualTo(FOO.toString());
   }
@@ -117,7 +118,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testClassUnloadingByGC01() throws Exception {
     // まず動的ロード
-    Class<?> clazz = Loader.loadClass(FOO);
+    Class<?> clazz = loader.loadClass(FOO);
 
     // 弱参照（アンロードの監視）の準備
     final WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -126,8 +127,8 @@ public class MemoryClassLoaderTest {
     assertThat(targetClassWR.get()).isNotNull();
 
     // ロード先への参照（インスタンス）を完全に削除
-    Loader.close();
-    Loader = null;
+    loader.close();
+    loader = null;
     clazz = null;
 
     // GCして
@@ -140,7 +141,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testClassUnloadingByGC02() throws Exception {
     // まず動的ロード
-    final Class<?> clazz = Loader.loadClass(FOO);
+    final Class<?> clazz = loader.loadClass(FOO);
 
     // 弱参照（アンロードの監視）の準備
     final WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -163,7 +164,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testClassUnloadingByGC03() throws Exception {
     // まず動的ロード
-    Class<?> clazz = Loader.loadClass(FOO);
+    Class<?> clazz = loader.loadClass(FOO);
 
     // 弱参照（アンロードの監視）の準備
     WeakReference<?> targetClassWR = new WeakReference<>(clazz);
@@ -172,8 +173,8 @@ public class MemoryClassLoaderTest {
     assertThat(targetClassWR.get()).isNotNull();
 
     // ロード先への参照（インスタンス）を完全に削除
-    Loader.close();
-    Loader = null;
+    loader.close();
+    loader = null;
     clazz = null;
 
     // GCして
@@ -185,7 +186,7 @@ public class MemoryClassLoaderTest {
     // もう一度ロードすると
     setupMemoryClassLoader();
 
-    clazz = Loader.loadClass(FOO);
+    clazz = loader.loadClass(FOO);
     targetClassWR = new WeakReference<>(clazz);
 
     // ロードされているはず
@@ -195,7 +196,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testJUnitWithMemoryLoader01() throws Exception {
     // CloseToZeroTestをロードしておく
-    final Class<?> clazz = Loader.loadClass(FOO_TEST);
+    final Class<?> clazz = loader.loadClass(FOO_TEST);
 
     // テストを実行
     // * ここでBCTestのClassLoaderには上記MemoryClassLoaderが紐づく（自身をロードしたローダーが指定される）
@@ -211,13 +212,13 @@ public class MemoryClassLoaderTest {
   @Test
   public void testJUnitWithMemoryLoader02() throws Exception {
     // まず何もロードされていないはず
-    assertThat(listLoadedClasses(Loader)).isEmpty();
+    assertThat(listLoadedClasses(loader)).isEmpty();
 
     // テストだけをロード
-    final Class<?> clazz = Loader.loadClass(FOO_TEST);
+    final Class<?> clazz = loader.loadClass(FOO_TEST);
 
     // BCTestがロードされているはず
-    assertThat(listLoadedClasses(Loader)).contains(FOO_TEST.toString());
+    assertThat(listLoadedClasses(loader)).contains(FOO_TEST.toString());
 
     // テストを実行
     // * ここでBCTestのClassLoaderには上記MemoryClassLoaderが紐づく（自身をロードしたローダーが指定される）
@@ -226,7 +227,7 @@ public class MemoryClassLoaderTest {
     junitCore.run(clazz);
 
     // 上記テストの実行により，BCTestに加えBCもロードされているはず
-    assertThat(listLoadedClasses(Loader)).contains(FOO_TEST.toString(), FOO.toString());
+    assertThat(listLoadedClasses(loader)).contains(FOO_TEST.toString(), FOO.toString());
   }
 
   @Test(expected = ClassFormatError.class)
@@ -235,18 +236,19 @@ public class MemoryClassLoaderTest {
     final byte[] invalidByteCode = new byte[] {0, 0, 0, 0, 0};
 
     // addDefinitionで定義追加
-    Loader.addDefinition(FOO, invalidByteCode);
+    loader.addDefinition(FOO, invalidByteCode);
 
     // クラスロード（バグるはず）
-    Loader.loadClass(FOO);
+    loader.loadClass(FOO);
   }
 
   @Test
   public void testDuplicatedClassLoading() throws Exception {
     // 二重ロードしてみても落ちないはず
-    Loader.loadClass(FOO_TEST);
-    Loader.loadClass(FOO_TEST);
+    loader.loadClass(FOO_TEST);
+    loader.loadClass(FOO_TEST);
   }
+
   /**
    * 指定クラスローダによってロードされたクラス名一覧の取得
    * 

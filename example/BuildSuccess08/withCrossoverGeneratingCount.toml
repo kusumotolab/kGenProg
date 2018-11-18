@@ -1,0 +1,4 @@
+root-dir = "./"
+src = ["src/"]
+test = ["test/"]
+crossover-generating-count = 50

@@ -21,12 +21,13 @@ import jp.kusumotolab.kgenprog.ga.GenerationalVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
+import jp.kusumotolab.kgenprog.ga.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.project.PatchGenerator;
+import jp.kusumotolab.kgenprog.output.PatchGenerator;
 
 public class KGenProgMainTest {
 
@@ -54,14 +55,19 @@ public class KGenProgMainTest {
     final Configuration config =
         new Configuration.Builder(rootPath, productPaths, testPaths).setWorkingDir(WORK_PATH)
             .setTimeLimitSeconds(600)
+            .setTestTimeLimitSeconds(1)
             .setMaxGeneration(100)
             .setRequiredSolutionsCount(1)
+            .setNeedNotOutput(true)
+            .setRandomSeed(2) // CTZ04の修正に時間がかかるので早めに終わるよう微調整（for テスト高速化）
             .build();
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
-    final Mutation mutation = new RandomMutation(10, random, statementSelection);
-    final Crossover crossover = new SinglePointCrossover(random);
+    final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
+        statementSelection, Type.PROJECT);
+    final Crossover crossover =
+        new SinglePointCrossover(random, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
@@ -84,7 +90,6 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // Be ignored but should not be ignored
   @Test
   public void testCloseToZero02() {
     final Path rootPath = Paths.get("example/CloseToZero02");
@@ -98,7 +103,6 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // Be ignored but should not be ignored
   @Test
   public void testCloseToZero03() {
     final Path rootPath = Paths.get("example/CloseToZero03");
@@ -112,7 +116,6 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // Be ignored but should not be ignored
   @Test
   public void testCloseToZero04() {
     final Path rootPath = Paths.get("example/CloseToZero04");
@@ -126,7 +129,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore
+  // @Ignore
   @Test
   public void testGCD01() {
     final Path rootPath = Paths.get("example/GCD01");
@@ -143,7 +146,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore
+  @Ignore // このテスト単体では成功するが，このテストを実行すると続く別のテストが遅くなる．
   @Test
   public void testQuickSort01() {
     final Path rootPath = Paths.get("example/QuickSort01");
@@ -154,8 +157,6 @@ public class KGenProgMainTest {
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
-
-    kGenProgMain.run();
 
     // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
     assertThat(variants).hasSize(1)
