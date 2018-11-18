@@ -213,15 +213,15 @@ public class RandomMutationTest {
     }
 
     final Gene initialGene = new Gene(Collections.emptyList());
-    return new Variant(0, initialGene, sourceCode, null, new SimpleFitness(0.0), suspiciousnesses,
-        null);
+    return new Variant(0, 0, initialGene, sourceCode, null, new SimpleFitness(0.0),
+        suspiciousnesses, null);
   }
 
   private VariantStore createVariantStore(final Variant initialVariant) {
     final VariantStore variantStore = mock(VariantStore.class);
     when(variantStore.getCurrentVariants()).thenReturn(Collections.singletonList(initialVariant));
     when(variantStore.createVariant(any(), any())).then(ans -> {
-      return new Variant(0, ans.getArgument(0), null, null, null, null, ans.getArgument(1));
+      return new Variant(0, 0, ans.getArgument(0), null, null, null, null, ans.getArgument(1));
     });
     return variantStore;
   }
