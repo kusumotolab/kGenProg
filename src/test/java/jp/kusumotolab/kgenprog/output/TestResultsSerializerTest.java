@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project.test;
+package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
@@ -12,9 +12,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
@@ -27,7 +32,6 @@ public class TestResultsSerializerTest {
   public void setup() {
     gson = new GsonBuilder().registerTypeAdapter(TestResult.class, new TestResultSerializer())
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
-        .setPrettyPrinting()
         .create();
   }
 

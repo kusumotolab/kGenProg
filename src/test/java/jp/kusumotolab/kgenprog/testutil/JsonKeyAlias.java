@@ -25,7 +25,7 @@ public class JsonKeyAlias {
     public final static String SELECTION_COUNT = "selectionCount";
     public final static String FITNESS = "fitness";
     public final static String IS_BUILD_SUCCESS = "isBuildSuccess";
-    public final static String PATCHES = "patches";
+    public final static String PATCH = "patch";
     public final static String OPERATIONS = "operations";
     public final static String TEST_SUMMARY = "testSummary";
   }
