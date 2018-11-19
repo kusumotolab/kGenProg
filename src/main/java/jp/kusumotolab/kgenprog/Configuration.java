@@ -621,7 +621,7 @@ public class Configuration {
       this.randomSeed = randomSeed;
     }
 
-    @Option(name = "--scope", usage = "Specify the scope from which source code to be reused",
+    @Option(name = "--scope", usage = "Specify the scope from which source code to be reused is selected.",
         depends = {"-r", "-s", "-t"})
     private void setScopeFromCmdLineParser(final Scope.Type scope) {
       this.scope = scope;
