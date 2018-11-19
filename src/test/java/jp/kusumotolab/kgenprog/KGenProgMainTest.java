@@ -65,7 +65,7 @@ public class KGenProgMainTest {
     final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
-        statementSelection, Type.PROJECT);
+        statementSelection, config.getScope());
     final Crossover crossover =
         new SinglePointCrossover(random, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();

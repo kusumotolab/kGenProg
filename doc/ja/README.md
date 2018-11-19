@@ -72,4 +72,5 @@ $ java -jar path/to/kGenProg.jar
 | `--test-time-limit` | 各個体のビルドおよびテストを打ち切る時間（秒） | 10 |
 | `--required-solutions` | 出力する解（修正パッチ）の数 | 1 |
 | `--random-seed` | kGenProg 全体で用いる乱数のシード値 | 0 |
+| `--scope` | 再利用候補の範囲（`PROJECT`，`PACKAGE`，`FILE`） | `PACKAGE` |
 
