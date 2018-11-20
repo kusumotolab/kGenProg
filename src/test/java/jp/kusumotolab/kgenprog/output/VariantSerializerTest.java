@@ -91,7 +91,7 @@ public class VariantSerializerTest {
 
     final boolean isBuildSuccess = serializedVariant.get(JsonKeyAlias.Variant.IS_BUILD_SUCCESS)
         .getAsBoolean();
-    assertThat(isBuildSuccess).isEqualTo(true);
+    assertThat(isBuildSuccess).isEqualTo(false);
 
     final JsonArray serializedOperations = serializedVariant.get(JsonKeyAlias.Variant.OPERATIONS)
         .getAsJsonArray();
