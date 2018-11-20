@@ -54,7 +54,7 @@ public class VariantStore {
     this.initialVariant = initialVariant;
 
     currentVariants = Collections.singletonList(initialVariant);
-    allVariants = new LinkedList<>();
+    allVariants = new ArrayList<>();
     allVariants.add(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
