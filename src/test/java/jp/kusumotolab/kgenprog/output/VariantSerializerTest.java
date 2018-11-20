@@ -17,7 +17,6 @@ import jp.kusumotolab.kgenprog.ga.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.OriginalHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
