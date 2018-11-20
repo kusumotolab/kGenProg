@@ -126,7 +126,7 @@ public class KGenProgMain {
     final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
 
     if (!config.needNotOutput()) {
-      variantStoreExporter.writeToFile(config.getOutDir(), variantStore);
+      variantStoreExporter.writeToFile(config, variantStore);
     }
   }
 
