@@ -71,10 +71,6 @@ public class VariantStore {
     return initialVariant;
   }
 
-  public TargetProject getTargetProject() {
-    return config.getTargetProject();
-  }
-
   public OrdinalNumber getGenerationNumber() {
     return generation;
   }

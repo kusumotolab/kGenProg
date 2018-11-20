@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,11 +35,9 @@ import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
 
 public class VariantStoreSerializerTest {
 
-  private Gson gson;
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder().registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
+  private Gson createGson(final Configuration config) {
+    return new GsonBuilder().registerTypeAdapter(VariantStore.class,
+        new VariantStoreSerializer(config))
         .registerTypeAdapter(Variant.class, new VariantSerializer())
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeAdapter(TestResult.class, new TestResultSerializer())
@@ -54,6 +51,10 @@ public class VariantStoreSerializerTest {
   public void testVariantStoreSerializer() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
+    final Configuration config = new Configuration.Builder(project)
+        .build();
+    // gsonのセットアップ
+    final Gson gson = createGson(config);
 
     final List<Suspiciousness> faultLocalizationResult = new ArrayList<>();
     final GeneratedSourceCode sourceCodeGenerationResult =
@@ -69,9 +70,6 @@ public class VariantStoreSerializerTest {
     when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
-
-    final Configuration config = mock(Configuration.class);
-    when(config.getTargetProject()).thenReturn(project);
 
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
