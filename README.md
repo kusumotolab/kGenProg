@@ -39,7 +39,7 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 ```
 
 You can configure parameters with a `.toml` file using `--config` option.
-See [example/CloseToZero01/kgenprog.toml](example/CloseToZero01/kgenprog.toml) to learn how to write a config file.
+See [doc/kgenprog-config-template.toml](doc/kgenprog-config-template.toml) to learn how to write a config file.
 ```sh
 $ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
 ```
