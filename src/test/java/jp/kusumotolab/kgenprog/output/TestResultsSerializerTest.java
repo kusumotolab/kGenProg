@@ -26,7 +26,6 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class TestResultsSerializerTest {
 
   private Gson gson;
-  private final static long TIMEOUT_SEC = 60;
 
   @Before
   public void setup() {
@@ -41,7 +40,6 @@ public class TestResultsSerializerTest {
     final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(
         targetProject);
     final Configuration config = new Configuration.Builder(targetProject)
-        .setTimeLimitSeconds(TIMEOUT_SEC)
         .build();
     final TestExecutor executor = new TestExecutor(config);
     return executor.exec(generatedSourceCode);
