@@ -78,7 +78,7 @@ public class PatchSerializerTest {
 
     // 差分を作るために適当な位置にコードを挿入する
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST ast = (GeneratedJDTAST) originalSourceCode.getProductAsts()
+    final GeneratedJDTAST<ProductSourcePath> ast = (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
         .get(0);
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
