@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -164,6 +165,25 @@ public class Configuration {
 
   public boolean needNotOutput() {
     return needNotOutput;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    final Class<?> clazz = this.getClass();
+    for (final Field field : clazz.getDeclaredFields()) {
+      try {
+        field.setAccessible(true);
+        final String name = field.getName();
+        if (name.startsWith("DEFAULT_")) {
+          continue;
+        }
+        sb.append(name + " = " + field.get(this) + System.lineSeparator());
+      } catch (final IllegalAccessException e) {
+        sb.append(field.getName() + " = " + "access denied" + System.lineSeparator());
+      }
+    }
+    return sb.toString();
   }
 
   public static class Builder {
