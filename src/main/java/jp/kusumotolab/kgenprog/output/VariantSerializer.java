@@ -20,7 +20,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
         .get();
     final double fitness = variant.getFitness()
         .getValue();
-    final boolean buildSuccess = !Double.isNaN(fitness);
+    final boolean buildSuccess = variant.isBuildSucceeded();
     final Patch patch = patchGenerator.exec(variant);
 
     final JsonObject serializedVariant = new JsonObject();
