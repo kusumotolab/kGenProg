@@ -23,7 +23,7 @@ public class VariantStore {
   private final Strategies strategies;
   private final Variant initialVariant;
   private List<Variant> currentVariants;
-  private List<Variant> allVariants;
+  private final List<Variant> allVariants;
   private List<Variant> generatedVariants;
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
