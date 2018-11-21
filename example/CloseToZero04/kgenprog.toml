@@ -39,7 +39,7 @@ test = ["src/example/CloseToZeroTest.java"]
 #headcount = <num>
 
 # Terminates searching solutions when the specified number of generations reached.
-#max-generation = <num>
+max-generation = 100
 
 # Terminates searching solutions when the specified time has passed.
 #time-limit = <sec>
