@@ -23,7 +23,8 @@ public class VariantStoreExporter {
 
   public void writeToFile(final Configuration config, final VariantStore variantStore) {
 
-    final Path outputPath = createOutputPath(config);
+    final Path outputPath = config.getOutDir()
+        .resolve("history.json");
     final Gson gson = createGson(config);
 
     try (final BufferedWriter out = Files.newBufferedWriter(outputPath)) {
@@ -34,18 +35,6 @@ public class VariantStoreExporter {
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
     }
-  }
-
-  private Path createOutputPath(final Configuration config) {
-    final LocalDateTime currentTime = LocalDateTime.now();
-    final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-    final String formattedCurrentTime = dateTimeFormatter.format(currentTime);
-    final String projectName = config.getTargetProject().rootPath.getFileName()
-        .toString();
-
-    final String fileName = projectName + "_" + formattedCurrentTime + ".json";
-    return config.getOutDir()
-        .resolve(fileName);
   }
 
   private Gson createGson(final Configuration config) {
