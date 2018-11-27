@@ -36,17 +36,17 @@ import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class TestExecutorTest {
+public class LocalTestExecutorTest {
 
   @Test
   // 正常系題材の確認
-  public void testExecForBuildSuccess01() throws Exception {
+  public void testExecForBuildSuccess01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストは4個のはず
@@ -76,13 +76,13 @@ public class TestExecutorTest {
 
   @Test
   // 正常系題材の確認
-  public void testExecForBuildSuccess02() throws Exception {
+  public void testExecForBuildSuccess02() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストは10個のはず
@@ -122,13 +122,13 @@ public class TestExecutorTest {
 
   @Test
   // そもそもビルドできない題材の確認
-  public void testExecForBuildFailure01() throws Exception {
+  public void testExecForBuildFailure01() {
     final Path rootPath = Paths.get("example/BuildFailure01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストはないはず
@@ -138,13 +138,13 @@ public class TestExecutorTest {
 
   @Test
   // 内部クラスを持つ題材に対するFLメトリクスの確認
-  public void testExecWithRetrievingFLParametersWithInnerClass() throws Exception {
+  public void testExecWithRetrievingFLParametersWithInnerClass() {
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 内部クラスを持つBazのASTと，Baz#OuterClassのL66のASTLocationを取り出す
@@ -190,7 +190,7 @@ public class TestExecutorTest {
   // JUnitアノテーションの差し込みは Variant 生成時に限るので，以下テストでは適切にタイムアウト処理が行われず無限ループとなる．
   @Test
   // 無限ループする題材の確認
-  public void testExecForInfiniteLoop() throws Exception {
+  public void testExecForInfiniteLoop() {
     final Path rootPath = Paths.get("example/BuildSuccess04");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
@@ -198,7 +198,7 @@ public class TestExecutorTest {
     final Configuration config = new Configuration.Builder(targetProject) //
         .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
         .build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
@@ -207,7 +207,7 @@ public class TestExecutorTest {
 
   @Test
   // 実行テスト指定の確認
-  public void testExecWithSpecifyingExecutionTest() throws Exception {
+  public void testExecWithSpecifyingExecutionTest() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
@@ -216,7 +216,7 @@ public class TestExecutorTest {
     final Configuration config = new Configuration.Builder(targetProject) //
         .addExecutionTest("example.FooTest")
         .build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストは10個から4個に減ったはず
@@ -243,7 +243,7 @@ public class TestExecutorTest {
 
   @Test
   // 実行テスト名の指定ミスの確認
-  public void testExecWithSpecifyingMissingExecutionTest() throws Exception {
+  public void testExecWithSpecifyingMissingExecutionTest() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
@@ -251,7 +251,7 @@ public class TestExecutorTest {
     final Configuration config = new Configuration.Builder(targetProject) //
         .addExecutionTest("example.FooTestXXXXXXXX") // no such method
         .build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストはないはず
@@ -261,13 +261,13 @@ public class TestExecutorTest {
 
   @Test
   // テストの途中でクラスロードを要する題材の確認
-  public void testExecForClassLoadingDuringTestExecution() throws Exception {
+  public void testExecForClassLoadingDuringTestExecution() {
     final Path rootPath = Paths.get("example/BuildSuccess10");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストは4個のはず
@@ -283,13 +283,13 @@ public class TestExecutorTest {
 
   @Test
   // 継承ベースの古いJUnitテストを試す題材の確認
-  public void testExecForExtendBasedTestCase() throws Exception {
+  public void testExecForExtendBasedTestCase() {
     final Path rootPath = Paths.get("example/BuildSuccess11");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストは4個のはず
@@ -305,7 +305,7 @@ public class TestExecutorTest {
 
   @Test
   // テスト内で別テスト系クラス（ユーティリティ等）に依存する題材の確認
-  public void testExecWithUtilityDependentTestCase() throws Exception {
+  public void testExecWithUtilityDependentTestCase() {
     final Path rootPath = Paths.get("example/BuildSuccess12");
     final List<Path> productPaths = Arrays.asList(rootPath.resolve("src"));
     final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
@@ -316,7 +316,7 @@ public class TestExecutorTest {
     final Configuration config = new Configuration.Builder(targetProject) //
         .addExecutionTest(FOO_TEST.value) // FooTestのみ実行する（非依存テストは実行しない）
         .build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(source);
 
     // 実行されたテストは4個のはず（BarTest#test01は実行されない）
@@ -332,13 +332,13 @@ public class TestExecutorTest {
 
   @Test
   // 正常系題材の確認
-  public void testExecForBuildSuccessWithMultipleTestExecution() throws Exception {
+  public void testExecForBuildSuccessWithMultipleTestExecution() {
     final Path rootPath = Paths.get("example/BuildSuccess14");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result1 = executor.exec(source);
 
     // 実行されたテストは4個のはず
