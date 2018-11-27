@@ -4,7 +4,9 @@
 #
 version: 2
 jobs:
-  build:
+
+  # Execute `gradle test`
+  test:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
@@ -56,3 +58,13 @@ jobs:
       - store_artifacts:
           path: ~/junit
 
+workflows:
+  version: 2
+
+  # Test a commit except on master branch
+  test-commit:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: master
