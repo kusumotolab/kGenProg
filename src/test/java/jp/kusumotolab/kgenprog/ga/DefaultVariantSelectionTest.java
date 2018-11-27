@@ -93,7 +93,7 @@ public class DefaultVariantSelectionTest {
   }
 
   private Variant createVariant(final Fitness fitness) {
-    final Variant variant = new Variant(0, null, null, null, fitness, null, null);
+    final Variant variant = new Variant(0 ,0, null, null, null, fitness, null, null);
     return variant;
   }
 }

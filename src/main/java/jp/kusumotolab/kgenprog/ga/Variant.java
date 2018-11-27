@@ -9,18 +9,21 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class Variant {
 
+  private final long id;
   private final int generationNumber;
   private final Gene gene;
   private final GeneratedSourceCode generatedSourceCode;
   private final TestResults testResults;
   private final Fitness fitness;
+  private int selectionCount = 0;
   private final List<Suspiciousness> suspiciousnesses;
   private final HistoricalElement historicalElement;
 
-  public Variant(final int generationNumber, final Gene gene,
+  public Variant(final long id, final int generationNumber, final Gene gene,
       final GeneratedSourceCode generatedSourceCode, final TestResults testResults,
       final Fitness fitness, final List<Suspiciousness> suspiciousnesses,
       final HistoricalElement historicalElement) {
+    this.id = id;
     this.generationNumber = generationNumber;
     this.gene = gene;
     this.generatedSourceCode = generatedSourceCode;
@@ -34,6 +37,10 @@ public class Variant {
     return fitness.isMaximum();
   }
 
+  public long getId(){
+    return id;
+  }
+  
   public boolean isSyntaxValid() {
     return generatedSourceCode.isGenerationSuccess();
   }
@@ -58,6 +65,10 @@ public class Variant {
     return testResults;
   }
 
+  public int getSelectionCount() {
+    return selectionCount;
+  }
+
   public Fitness getFitness() {
     return fitness;
   }
@@ -68,5 +79,9 @@ public class Variant {
 
   public HistoricalElement getHistoricalElement() {
     return historicalElement;
+  }
+
+  void incrementSelectionCount() {
+    selectionCount++;
   }
 }
