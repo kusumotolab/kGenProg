@@ -59,10 +59,10 @@ public class JaccardTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = 1.0 / (1.0 + 0.0 + 1.0); // 0.875 (the most suspicious stmt)
-    final double susp2 = 1.0 / (1.0 + 0.0 + 3.0); // 0.625
-    final double susp3 = 1.0 / (1.0 + 0.0 + 3.0); // 0.625
-    final double susp4 = 1.0 / (1.0 + 0.0 + 3.0); // 0.625
+    final double susp1 = 1.0 / (1.0 + 0.0 + 1.0); // 0.50 (the most suspicious stmt)
+    final double susp2 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
+    final double susp3 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
+    final double susp4 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
         .containsExactly(susp1, susp2, susp3, susp4);
   }
