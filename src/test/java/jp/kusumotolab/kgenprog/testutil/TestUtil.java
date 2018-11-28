@@ -20,7 +20,6 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
-import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class TestUtil {
