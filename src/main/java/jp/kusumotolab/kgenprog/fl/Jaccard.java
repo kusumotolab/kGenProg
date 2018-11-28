@@ -29,7 +29,7 @@ public class Jaccard implements FaultLocalization {
           final long ef = testResults.getNumberOfFailedTestsExecutingTheStatement(path, l);
           final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, l);
           final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, l);
-          final double value = ef / (ef + nf + ep);
+          final double value = ef / (double)(ef + nf + ep);
           if (0d < value) {
             final Suspiciousness s = new Suspiciousness(l, value);
             suspiciousnesses.add(s);

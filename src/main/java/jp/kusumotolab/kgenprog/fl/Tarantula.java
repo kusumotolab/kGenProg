@@ -30,7 +30,7 @@ public class Tarantula implements FaultLocalization {
           final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, l);
           final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, l);
           final long np = testResults.getNumberOfPassedTestsNotExecutingTheStatement(path, l);
-          final double value = (ef / (ef + nf)) / (ef / (ef + nf) + ep / (ep + np));
+          final double value = (ef / (double)(ef + nf)) / (ef / (double)(ef + nf) + ep / (double)(ep + np));
           if (0d < value) {
             final Suspiciousness s = new Suspiciousness(l, value);
             suspiciousnesses.add(s);

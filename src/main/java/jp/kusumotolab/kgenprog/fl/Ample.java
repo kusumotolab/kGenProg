@@ -30,7 +30,7 @@ public class Ample implements FaultLocalization {
           final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, l);
           final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, l);
           final long np = testResults.getNumberOfPassedTestsNotExecutingTheStatement(path, l);
-          final double value = Math.abs(ef / (ef + nf) - ep / (ep + np));
+          final double value = Math.abs(ef / (double)(ef + nf) - ep / (double)(ep + np));
           if (0d < value) {
             final Suspiciousness s = new Suspiciousness(l, value);
             suspiciousnesses.add(s);
