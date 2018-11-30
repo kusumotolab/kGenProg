@@ -1,0 +1,55 @@
+# Specifies the path to the root directory of the target project.
+root-dir = "./"
+
+# Specifies paths to "product" source code (i.e. main, non-test code),
+# or to directories containing them.
+src = ["src/example/CloseToZero.java"]
+
+# Specifies paths to test source code, or to directories containing them.
+test = ["src/example/CloseToZeroTest.java"]
+
+# Specifies class paths needed to build the target project.
+#cp = [<class-path>, ...]
+
+# Specifies fully qualified names of test classes executed during evaluation
+# of variants (i.e. fix-candidates).
+# By default, all tests are executed. It might take a terribly long time,
+# so we recommend you specify test classes detecting a bug.
+#exec-test = [<fqn>, ...]
+
+# Specifies the path to working directory. By default, a working directory is
+# created under system temporary directory (i.e. $TMPDIR on *nix, %TMP% on Windows)
+# every kGenProg execution.
+#working-dir = <path>
+
+# Writes patches kGenProg generated to the specified directory.
+#out-dir = <path>
+
+# Selects the log level to be shown at least.
+# Acceptable values are "OFF", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", or "ALL"
+#log-level = <level>
+
+# Specifies how many variants are generated in a generation by a mutation.
+#mutation-generating-count = <num>
+
+# Specifies how many variants are generated in a generation by a crossover.
+#crossover-generating-count = <num>
+
+# Specifies how many variants survive in a generation.
+#headcount = <num>
+
+# Terminates searching solutions when the specified number of generations reached.
+max-generation = 100
+
+# Terminates searching solutions when the specified time has passed.
+#time-limit = <sec>
+
+# Specifies time limit to build and test for each variant in second
+#test-time-limit = <sec>
+
+# Terminates searching solutions when the specified number of solutions are found.
+#required-solutions = <num>
+
+# Specifies random seed used by random number generator.
+#random-seed = <num>
+
