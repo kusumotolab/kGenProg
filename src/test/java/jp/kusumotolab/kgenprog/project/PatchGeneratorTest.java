@@ -59,7 +59,7 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,
+    final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
@@ -108,7 +108,7 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,
+    final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
@@ -165,7 +165,7 @@ public class PatchGeneratorTest {
 
     final InsertOperation operation = new InsertOperation(insertStatement);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,
+    final Variant modifiedVariant = new Variant(0,0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
@@ -222,7 +222,7 @@ public class PatchGeneratorTest {
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,
+    final Variant modifiedVariant = new Variant(0,0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
@@ -274,7 +274,7 @@ public class PatchGeneratorTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,
+    final Variant modifiedVariant = new Variant(0,0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)

@@ -18,6 +18,12 @@ public class MutationHistoricalElement implements HistoricalElement {
     return Collections.singletonList(parent);
   }
 
+  @Override
+  public String getOperationName() {
+    return appendedBase.getOperation()
+        .getName();
+  }
+
   public Base getAppendedBase() {
     return appendedBase;
   }

@@ -2,9 +2,15 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
-version: 2
+version: 2.1
+
+orbs:
+  github-release: h-matsuo/github-release@0.1.3
+
 jobs:
-  build:
+
+  # Execute `gradle test`
+  test:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
@@ -56,3 +62,91 @@ jobs:
       - store_artifacts:
           path: ~/junit
 
+  # Execute `build gradle`
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      # ===== Same as `test` job
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          - v1-dependencies-
+      - run: gradle dependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      # ===== Test and build a jar file
+      - run: gradle build
+      # ===== Save the built jar file
+      - run:
+          name: Collect artifacts to be released
+          command: |
+            mkdir artifacts
+            cp ./build/libs/kGenProg.jar ./artifacts/
+      - persist_to_workspace:
+          root: ./artifacts
+          paths:
+            - .
+
+  # Publish as a nightly-build release
+  publish-nightly-build:
+    executor: github-release/default
+    steps:
+      # ===== Initialize
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "34:c6:33:a2:0a:e1:13:74:4b:03:1c:3e:33:e3:3f:e0"
+      - run:
+          name: Set up git
+          command: |
+            git config push.default current
+              git config user.email "ci@circleci.com"
+              git config user.name "CircleCI"
+      - attach_workspace:
+          at: ./artifacts
+      # ===== Delete the existing nightly-build release
+      - github-release/delete:
+          tag: nightly-build
+      - run:
+          name: Delete existing nightly-build tag
+          command: git push origin :nightly-build
+      # ===== Publish a new nightly-build release
+      - github-release/create:
+          tag: nightly-build
+          target: master
+          title: Nightly Build
+          description: |
+            This is a nightly-build release, automatically generated with \`master\` branch.
+            Using following commit SHA: ${CIRCLE_SHA1}
+            Execute the following command to download the latest version:
+            \`\`\`
+            curl -O https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg.jar
+            \`\`\`
+          file-path: ./artifacts/
+          pre-release: true
+
+workflows:
+  version: 2
+
+  # Test a commit except on master branch
+  test-commit:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: master
+
+  # Build a commit and publish as a nightly-build release only on master branch
+  nightly-build-and-release:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - publish-nightly-build:
+          requires:
+            - build

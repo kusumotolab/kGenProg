@@ -18,6 +18,7 @@ import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.output.PatchStore;
+import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -110,8 +111,12 @@ public class KGenProgMain {
     // 生成されたバリアントのパッチ出力
     logPatch(variantStore);
 
+    // jsonの出力
+    writeJson(variantStore);
+
     stopwatch.unsplit();
     log.info("execution time: " + stopwatch.toString());
+
 
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
@@ -137,6 +142,14 @@ public class KGenProgMain {
 
     if (!config.needNotOutput()) {
       patchStore.writeToFile(config.getOutDir());
+    }
+  }
+
+  private void writeJson(final VariantStore variantStore) {
+    final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
+
+    if (!config.needNotOutput()) {
+      variantStoreExporter.writeToFile(config, variantStore);
     }
   }
 
@@ -202,14 +215,22 @@ public class KGenProgMain {
   }
 
   private String getMaxText(final List<Variant> variants) {
+    final Map<Double, Long> frequencies = getFrequencies(variants);
+    if (frequencies.isEmpty()) {
+      return "--";
+    }
     final Map.Entry<Double, Long> max =
-        Collections.max(getFrequencies(variants).entrySet(), Map.Entry.comparingByKey());
+        Collections.max(frequencies.entrySet(), Map.Entry.comparingByKey());
     return max.getKey() + "(" + max.getValue() + ")";
   }
 
   private String getMinText(final List<Variant> variants) {
+    final Map<Double, Long> frequencies = getFrequencies(variants);
+    if (frequencies.isEmpty()) {
+      return "--";
+    }
     final Map.Entry<Double, Long> min =
-        Collections.min(getFrequencies(variants).entrySet(), Map.Entry.comparingByKey());
+        Collections.min(frequencies.entrySet(), Map.Entry.comparingByKey());
     return min.getKey() + "(" + min.getValue() + ")";
   }
 
@@ -218,7 +239,7 @@ public class KGenProgMain {
         .filter(v -> v.isBuildSucceeded())
         .mapToDouble(v -> getFitnessValue(v))
         .average()
-        .getAsDouble();
+        .orElse(Double.NaN);
   }
 
   private Map<Double, Long> getFrequencies(final List<Variant> variants) {

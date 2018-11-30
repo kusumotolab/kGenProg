@@ -59,9 +59,9 @@ public class SinglePointCrossoverTest {
         insertOperationBase, insertOperationBase, insertOperationBase);
 
     final Variant noneOperationVariant =
-        new Variant(0, new Gene(noneBases), null, null, null, null, null);
+        new Variant(0, 0, new Gene(noneBases), null, null, null, null, null);
     final Variant insertOperationVariant =
-        new Variant(0, new Gene(insertBases), null, null, null, null, null);
+        new Variant(0, 0, new Gene(insertBases), null, null, null, null, null);
 
     final Random random = new MockRandom();
     random.setSeed(0);
@@ -90,9 +90,9 @@ public class SinglePointCrossoverTest {
         insertOperationBase, insertOperationBase, insertOperationBase);
 
     final Variant noneOperationVariant =
-        new Variant(0, new Gene(noneBases), null, null, null, null, null);
+        new Variant(0, 0, new Gene(noneBases), null, null, null, null, null);
     final Variant insertOperationVariant =
-        new Variant(0, new Gene(insertBases), null, null, null, null, null);
+        new Variant(0, 0, new Gene(insertBases), null, null, null, null, null);
 
     final Random random = new MockRandom();
     random.setSeed(0);

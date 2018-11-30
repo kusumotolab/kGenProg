@@ -27,6 +27,10 @@ public class Patch {
     return diffs.get(index);
   }
 
+  List<FileDiff> getAll() {
+    return diffs;
+  }
+
   public void writeToFile(final Path outDir) {
     try {
       if (Files.notExists(outDir)) {

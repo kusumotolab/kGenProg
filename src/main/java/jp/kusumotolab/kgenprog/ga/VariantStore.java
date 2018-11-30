@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -20,17 +22,22 @@ public class VariantStore {
   private final Strategies strategies;
   private final Variant initialVariant;
   private List<Variant> currentVariants;
+  private final List<Variant> allVariants;
   private List<Variant> generatedVariants;
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
+  private final Counter variantCounter;
 
   public VariantStore(final Configuration config, final Strategies strategies) {
     this.config = config;
     this.strategies = strategies;
 
+    variantCounter = new Counter();
     generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
+    allVariants = new LinkedList<>();
+    allVariants.add(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
     generation.incrementAndGet();
@@ -46,9 +53,12 @@ public class VariantStore {
     this.initialVariant = initialVariant;
 
     currentVariants = Collections.singletonList(initialVariant);
+    allVariants = new ArrayList<>();
+    allVariants.add(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
     generation = new OrdinalNumber(1);
+    variantCounter = new Counter(1);
   }
 
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
@@ -74,6 +84,10 @@ public class VariantStore {
 
   public List<Variant> getGeneratedVariants() {
     return generatedVariants;
+  }
+
+  public List<Variant> getAllVariants() {
+    return allVariants;
   }
 
   public List<Variant> getFoundSolutions() {
@@ -106,13 +120,13 @@ public class VariantStore {
   }
 
   /**
-   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
-   * の場合，foundSolutionとして追加され次世代のVariantには追加されない
+   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true} の場合，foundSolutionとして追加され次世代のVariantには追加されない
    *
    * @param variant
    */
   public void addGeneratedVariant(final Variant variant) {
 
+    allVariants.add(variant);
     if (variant.isCompleted()) {
       foundSolutions.add(variant);
     } else {
@@ -130,6 +144,7 @@ public class VariantStore {
 
     final List<Variant> nextVariants =
         strategies.execVariantSelection(currentVariants, generatedVariants);
+    nextVariants.forEach(Variant::incrementSelectionCount);
     generation.incrementAndGet();
 
     currentVariants = nextVariants;
@@ -152,8 +167,8 @@ public class VariantStore {
     final Fitness fitness = strategies.execSourceCodeValidation(sourceCode, testResults);
     final List<Suspiciousness> suspiciousnesses =
         strategies.execFaultLocalization(sourceCode, testResults);
-    return new Variant(generation.get(), gene, sourceCode, testResults, fitness, suspiciousnesses,
+    return new Variant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
+        testResults, fitness, suspiciousnesses,
         element);
   }
-
 }

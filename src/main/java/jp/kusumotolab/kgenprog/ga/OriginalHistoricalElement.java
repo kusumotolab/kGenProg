@@ -10,4 +10,9 @@ public class OriginalHistoricalElement implements HistoricalElement {
     return Collections.emptyList();
   }
 
+  @Override
+  public String getOperationName() {
+    return "";
+  }
+
 }

@@ -7,8 +7,12 @@ public interface HistoricalElement {
   /**
    * 親の遺伝子
    *
-   * @return
+   * @return 親の遺伝子のList
    */
   public List<Variant> getParents();
 
+  /**
+   * @return 適用した操作の名前
+   */
+  public String getOperationName();
 }
