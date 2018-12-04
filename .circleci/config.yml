@@ -94,6 +94,8 @@ jobs:
   # Publish as a nightly-build release
   publish-nightly-build:
     executor: github-release/default
+    environment:
+      TZ: "/usr/share/zoneinfo/Asia/Tokyo"
     steps:
       # ===== Initialize
       - checkout
@@ -118,10 +120,9 @@ jobs:
       - github-release/create:
           tag: nightly-build
           target: master
-          title: Nightly Build
+          title: "Nightly Build ($(date +'%y/%m/%d %H:%M') JST)"
           description: |
-            This is a nightly-build release, automatically generated with \`master\` branch.
-            Using following commit SHA: ${CIRCLE_SHA1}
+            This is a nightly-build release, automatically built on \`master\` branch (commit SHA: ${CIRCLE_SHA1}).
             Execute the following command to download the latest version:
             \`\`\`
             $ curl -LO https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg.jar
