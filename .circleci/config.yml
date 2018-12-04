@@ -124,7 +124,7 @@ jobs:
             Using following commit SHA: ${CIRCLE_SHA1}
             Execute the following command to download the latest version:
             \`\`\`
-            curl -O https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg.jar
+            $ curl -LO https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg.jar
             \`\`\`
           file-path: ./artifacts/
           pre-release: true
