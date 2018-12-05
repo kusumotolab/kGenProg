@@ -14,7 +14,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
-      
+
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -26,7 +26,7 @@ jobs:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-    
+
     steps:
       - checkout
 
@@ -43,7 +43,7 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-        
+
       # run tests!
       - run: gradle test
 
@@ -94,6 +94,8 @@ jobs:
   # Publish as a nightly-build release
   publish-nightly-build:
     executor: github-release/default
+    environment:
+      TZ: "/usr/share/zoneinfo/Asia/Tokyo"
     steps:
       # ===== Initialize
       - checkout
@@ -118,13 +120,12 @@ jobs:
       - github-release/create:
           tag: nightly-build
           target: master
-          title: Nightly Build
+          title: "Nightly Build ($(date +'%y/%m/%d %H:%M') JST)"
           description: |
-            This is a nightly-build release, automatically generated with \`master\` branch.
-            Using following commit SHA: ${CIRCLE_SHA1}
+            This is a nightly-build release, automatically built on \`master\` branch (commit SHA: ${CIRCLE_SHA1}).
             Execute the following command to download the latest version:
             \`\`\`
-            curl -O https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg.jar
+            $ curl -LO https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg.jar
             \`\`\`
           file-path: ./artifacts/
           pre-release: true
