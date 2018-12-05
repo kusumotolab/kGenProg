@@ -507,7 +507,9 @@ public class ConfigurationBuilderTest {
 
   @Test
   public void testBuildWithNeedNotOutput() {
-    final Builder builder = new Builder(rootDir, productPaths, testPaths).setNeedNotOutput(true);
+    final boolean needNotOutput = true;
+    final Builder builder = new Builder(rootDir, productPaths, testPaths).setNeedNotOutput(
+        needNotOutput);
     final Configuration config = builder.build();
 
     assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
@@ -529,7 +531,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isTrue();
+    assertThat(config.needNotOutput()).isEqualTo(needNotOutput);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -1663,7 +1665,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isNotEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final boolean needNotOutput = true;
+    assertThat(config.needNotOutput()).isEqualTo(needNotOutput);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
