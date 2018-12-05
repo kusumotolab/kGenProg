@@ -274,7 +274,7 @@ public class Configuration {
     @Conversion(ScopeTypeToString.class)
     private Scope.Type scope = DEFAULT_SCOPE;
 
-    @Option(name = "--no-output", hidden = true)
+    @Option(name = "--no-output", usage = "Do not output anything.", hidden = true)
     @com.electronwill.nightconfig.core.conversion.Path("no-output")
     @PreserveNotNull
     private boolean needNotOutput = DEFAULT_NEED_NOT_OUTPUT;
