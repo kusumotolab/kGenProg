@@ -298,7 +298,7 @@ public class Configuration {
     }
 
     /**
-     * Do not call me except from buildFromCmdLineArgs
+     * Do not call me except from {@link #buildFromCmdLineArgs}
      */
     private Builder() {
       productPaths = new ArrayList<>();
