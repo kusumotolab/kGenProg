@@ -41,7 +41,7 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final PatchGenerator patchGenerator) {
+      final TestExecutor testExecutor,final PatchGenerator patchGenerator) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -50,7 +50,7 @@ public class KGenProgMain {
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.sourceCodeValidation = sourceCodeValidation;
     this.variantSelection = variantSelection;
-    this.testExecutor = new TestExecutor(config);
+    this.testExecutor = testExecutor;
     this.astConstruction = new JDTASTConstruction();
     this.patchGenerator = patchGenerator;
   }

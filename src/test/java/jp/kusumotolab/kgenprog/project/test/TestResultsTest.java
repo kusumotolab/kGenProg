@@ -49,7 +49,7 @@ public class TestResultsTest {
     final Configuration config =
         new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
             .build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     // TODO
@@ -117,7 +117,7 @@ public class TestResultsTest {
     final Configuration config =
         new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
             .build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     final TestResults result = executor.exec(generatedSourceCode);
 
     final String expected = new StringBuilder().append("")

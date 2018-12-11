@@ -19,7 +19,7 @@ import jp.kusumotolab.kgenprog.ga.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
-import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class TestUtil {
@@ -37,7 +37,7 @@ public class TestUtil {
   public static Variant createVariant(final Configuration config) {
     final Gene gene = new Gene(Collections.emptyList());
     final GeneratedSourceCode sourceCode = createGeneratedSourceCode(config.getTargetProject());
-    final TestResults testResults = new TestExecutor(config).exec(sourceCode);
+    final TestResults testResults = new LocalTestExecutor(config).exec(sourceCode);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
     final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();
