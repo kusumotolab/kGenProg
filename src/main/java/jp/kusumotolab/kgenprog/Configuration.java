@@ -38,9 +38,9 @@ public class Configuration {
 
   // region Fields
   public static final int DEFAULT_MAX_GENERATION = 10;
-  public static final int DEFAULT_MUTATION_GENERATING_COUNT = 10;
+  public static final int DEFAULT_MUTATION_GENERATING_COUNT = 90;
   public static final int DEFAULT_CROSSOVER_GENERATING_COUNT = 10;
-  public static final int DEFAULT_HEADCOUNT = 100;
+  public static final int DEFAULT_HEADCOUNT = 10;
   public static final int DEFAULT_REQUIRED_SOLUTIONS_COUNT = 1;
   public static final Duration DEFAULT_TIME_LIMIT = Duration.ofSeconds(60);
   public static final Duration DEFAULT_TEST_TIME_LIMIT = Duration.ofSeconds(10);
