@@ -17,6 +17,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
@@ -41,7 +42,7 @@ public class TestResultsSerializerTest {
         targetProject);
     final Configuration config = new Configuration.Builder(targetProject)
         .build();
-    final TestExecutor executor = new TestExecutor(config);
+    final TestExecutor executor = new LocalTestExecutor(config);
     return executor.exec(generatedSourceCode);
   }
 
