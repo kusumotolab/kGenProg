@@ -309,7 +309,8 @@ public class Configuration {
 
     // region Methods
 
-    public static Configuration buildFromCmdLineArgs(final String[] args) {
+    public static Configuration buildFromCmdLineArgs(final String[] args)
+        throws IllegalArgumentException {
 
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
@@ -326,7 +327,7 @@ public class Configuration {
           | NoSuchFileException e) {
         // todo: make error message of InvalidValueException more user-friendly
         parser.printUsage(System.err);
-        System.exit(1);
+        throw new IllegalArgumentException(e.getMessage());
       }
 
       return builder.build();
