@@ -441,6 +441,10 @@ public class Configuration {
     // region Private methods
 
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
+      validateCurrentDir(builder);
+    }
+
+    private static void validateCurrentDir(Builder builder) {
       final Path currentDir = Paths.get(".");
       final Path projectRootDir = builder.rootDir;
 
