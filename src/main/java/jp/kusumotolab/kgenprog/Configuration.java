@@ -441,7 +441,23 @@ public class Configuration {
     // region Private methods
 
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
+      validateExistences(builder);
       validateCurrentDir(builder);
+    }
+
+    private static void validateExistences(final Builder builder) throws IllegalArgumentException {
+      validateExistence(builder.rootDir);
+      builder.productPaths.forEach(Builder::validateExistence);
+      builder.testPaths.forEach(Builder::validateExistence);
+      builder.classPaths.forEach(Builder::validateExistence);
+      validateExistence(builder.workingDir);
+    }
+
+    private static void validateExistence(final Path path) throws IllegalArgumentException {
+      if (Files.notExists(path)) {
+        log.error(path.toString() + " does not exist.");
+        throw new IllegalArgumentException(path.toString() + " does not exist.");
+      }
     }
 
     private static void validateCurrentDir(Builder builder) {
