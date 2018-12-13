@@ -10,11 +10,9 @@ import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
-import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.InsertTimeoutRuleFieldOperation;
-import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class VariantStore {
 
@@ -163,12 +161,6 @@ public class VariantStore {
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
-    final TestResults testResults = strategies.execTestExecutor(sourceCode);
-    final Fitness fitness = strategies.execSourceCodeValidation(sourceCode, testResults);
-    final List<Suspiciousness> suspiciousnesses =
-        strategies.execFaultLocalization(sourceCode, testResults);
-    return new Variant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
-        testResults, fitness, suspiciousnesses,
-        element);
+    return strategies.execVariantFactory(generation, variantCounter, gene, sourceCode, element);
   }
 }

@@ -14,6 +14,7 @@ import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.VariantFactory;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
@@ -36,12 +37,14 @@ public class KGenProgMain {
   private final TestExecutor testExecutor;
   private final PatchGenerator patchGenerator;
   private final JDTASTConstruction astConstruction;
+  private final VariantFactory variantFactory;
 
   public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor,final PatchGenerator patchGenerator) {
+      final TestExecutor testExecutor, final PatchGenerator patchGenerator,
+      final VariantFactory variantFactory) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -53,6 +56,7 @@ public class KGenProgMain {
     this.testExecutor = testExecutor;
     this.astConstruction = new JDTASTConstruction();
     this.patchGenerator = patchGenerator;
+    this.variantFactory = variantFactory;
   }
 
   public List<Variant> run() {
@@ -60,7 +64,7 @@ public class KGenProgMain {
     logConfig();
 
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
-        sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
+        sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection, variantFactory);
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
@@ -116,7 +120,6 @@ public class KGenProgMain {
 
     stopwatch.unsplit();
     log.info("execution time: " + stopwatch.toString());
-
 
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
