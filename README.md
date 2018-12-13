@@ -20,13 +20,10 @@ You can download all the bugs from [here](https://github.com/kusumotolab/kGenPro
 
 ## Usage
 ```
-$ java -jar path/to/kGenProg.jar
-$ java -jar path/to/kGenProg.jar --config <path>
-$ java -jar path/to/kGenProg.jar -r <path> -s <path>... -t <path>... [-x <fqn>...] [-c <path>...]
-    [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>] [--headcount <num>]
-    [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
+$ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
+    [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>]
+    [--headcount <num>] [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>]
-
 ```
 
 ### Example

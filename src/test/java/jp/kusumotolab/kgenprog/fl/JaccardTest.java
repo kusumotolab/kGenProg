@@ -15,7 +15,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class OchiaiTest {
+public class JaccardTest {
 
   private final static Path WORK_PATH = Paths.get("tmp/work");
 
@@ -32,16 +32,16 @@ public class OchiaiTest {
     final Configuration config = new Configuration.Builder(targetProject).build();
     final Variant initialVariant = TestUtil.createVariant(config);
 
-    final FaultLocalization fl = new Ochiai();
+    final FaultLocalization fl = new Jaccard();
     final List<Suspiciousness> suspiciousnesses =
         fl.exec(initialVariant.getGeneratedSourceCode(), initialVariant.getTestResults());
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 1.0)); // 0.707107 (the most suspicious stmt)
-    final double susp2 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
-    final double susp3 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
-    final double susp4 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
+    final double susp1 = 1.0 / (1.0 + 0.0 + 1.0); // 0.50 (the most suspicious stmt)
+    final double susp2 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
+    final double susp3 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
+    final double susp4 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
         .containsExactly(susp1, susp2, susp3, susp4);
   }
@@ -53,16 +53,16 @@ public class OchiaiTest {
     final Configuration config = new Configuration.Builder(targetProject).build();
     final Variant initialVariant = TestUtil.createVariant(config);
 
-    final FaultLocalization fl = new Ochiai();
+    final FaultLocalization fl = new Jaccard();
     final List<Suspiciousness> suspiciousnesses =
         fl.exec(initialVariant.getGeneratedSourceCode(), initialVariant.getTestResults());
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 1.0)); // 0.707107 (the most suspicious stmt)
-    final double susp2 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
-    final double susp3 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
-    final double susp4 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
+    final double susp1 = 1.0 / (1.0 + 0.0 + 1.0); // 0.50 (the most suspicious stmt)
+    final double susp2 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
+    final double susp3 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
+    final double susp4 = 1.0 / (1.0 + 0.0 + 3.0); // 0.25
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
         .containsExactly(susp1, susp2, susp3, susp4);
   }
@@ -74,7 +74,7 @@ public class OchiaiTest {
     final Configuration config = new Configuration.Builder(targetProject).build();
     final Variant initialVariant = TestUtil.createVariant(config);
 
-    final FaultLocalization fl = new Ochiai();
+    final FaultLocalization fl = new Jaccard();
     final List<Suspiciousness> suspiciousnesses =
         fl.exec(initialVariant.getGeneratedSourceCode(), initialVariant.getTestResults());
 

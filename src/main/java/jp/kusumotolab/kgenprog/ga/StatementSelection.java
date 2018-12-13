@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 import org.eclipse.jdt.core.dom.Statement;
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -18,8 +18,8 @@ public abstract class StatementSelection implements CandidateSelection {
 
   private final Random random;
   private Roulette<ReuseCandidate<Statement>> projectRoulette;
-  private final Multimap<String, ReuseCandidate<Statement>> packageNameStatementMultimap = HashMultimap.create();
-  private final Multimap<FullyQualifiedName, ReuseCandidate<Statement>> fqnStatementMultiMap = HashMultimap.create();
+  private final Multimap<String, ReuseCandidate<Statement>> packageNameStatementMultimap = ArrayListMultimap.create();
+  private final Multimap<FullyQualifiedName, ReuseCandidate<Statement>> fqnStatementMultiMap = ArrayListMultimap.create();
   private final Map<String, Roulette<ReuseCandidate<Statement>>> packageNameRouletteMap = new HashMap<>();
   private final Map<FullyQualifiedName, Roulette<ReuseCandidate<Statement>>> fqnRouletteMap = new HashMap<>();
 
