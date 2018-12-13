@@ -13,10 +13,10 @@ public class Variant {
   private final int generationNumber;
   private final Gene gene;
   private final GeneratedSourceCode generatedSourceCode;
-  protected TestResults testResults;
-  protected Fitness fitness;
+  private final TestResults testResults;
+  private final Fitness fitness;
   private int selectionCount = 0;
-  protected List<Suspiciousness> suspiciousnesses;
+  private final List<Suspiciousness> suspiciousnesses;
   private final HistoricalElement historicalElement;
 
   public Variant(final long id, final int generationNumber, final Gene gene,

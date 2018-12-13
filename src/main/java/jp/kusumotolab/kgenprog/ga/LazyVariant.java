@@ -25,7 +25,7 @@ public class LazyVariant extends Variant {
     this.fitnessSingle = fitnessSingle;
     this.suspiciousnessListSingle = suspiciousnessListSingle;
 
-    this.testResultsSingle.subscribe(v -> this.testResults = v, Throwable::printStackTrace);
+    this.testResultsSingle.subscribe();
   }
 
   @Override

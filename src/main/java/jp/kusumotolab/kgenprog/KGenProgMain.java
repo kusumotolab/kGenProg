@@ -121,6 +121,7 @@ public class KGenProgMain {
     stopwatch.unsplit();
     log.info("execution time: " + stopwatch.toString());
 
+
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
 

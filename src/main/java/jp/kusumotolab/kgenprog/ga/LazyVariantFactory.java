@@ -19,12 +19,12 @@ public class LazyVariantFactory implements VariantFactory {
 
     final Single<TestResults> resultsSingle = Single.create(
         emitter -> emitter.onSuccess(strategies.execTestExecutor(sourceCode)))
+        .subscribeOn(Schedulers.newThread())
         .cast(TestResults.class)
         .cache();
 
     final Single<Fitness> fitnessSingle = resultsSingle.map(
         v -> strategies.execSourceCodeValidation(sourceCode, v))
-        .subscribeOn(Schedulers.newThread())
         .cache();
 
     final Single<List<Suspiciousness>> suspiciousnessListSingle = resultsSingle.map(
