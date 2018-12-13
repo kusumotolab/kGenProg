@@ -22,8 +22,10 @@ import jp.kusumotolab.kgenprog.ga.Fitness;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.MutationHistoricalElement;
+import jp.kusumotolab.kgenprog.ga.SequentialVariantFactory;
 import jp.kusumotolab.kgenprog.ga.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.VariantFactory;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -60,9 +62,10 @@ public class VariantStoreSerializerTest {
     final GeneratedSourceCode sourceCodeGenerationResult =
         new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList());
     final TestResults testExecutorResult = mock(TestResults.class);
-    final Fitness sourceCodeValidationResult = new SimpleFitness(Double.NaN);
+    final Fitness sourceCodeValidationResult = new SimpleFitness(1.0d);
     final GeneratedSourceCode astConstructionResult =
         new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList());
+    final VariantFactory variantFactory = new SequentialVariantFactory();
     final Strategies strategies = mock(Strategies.class);
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);
@@ -70,6 +73,9 @@ public class VariantStoreSerializerTest {
     when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
+    when(strategies.execVariantFactory(any(), any(), any(), any(), any())).then(
+        v -> variantFactory.exec(v.getArgument(0), v.getArgument(1), v.getArgument(2),
+            v.getArgument(3), v.getArgument(4), strategies));
 
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
