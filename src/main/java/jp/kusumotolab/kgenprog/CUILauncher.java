@@ -24,9 +24,13 @@ import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 public class CUILauncher {
 
   public static void main(final String[] args) {
-    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
-    final CUILauncher launcher = new CUILauncher();
-    launcher.launch(config);
+    try {
+      final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
+      final CUILauncher launcher = new CUILauncher();
+      launcher.launch(config);
+    } catch (IllegalArgumentException e) {
+      System.exit(1);
+    }
   }
 
   public void launch(final Configuration config) {
