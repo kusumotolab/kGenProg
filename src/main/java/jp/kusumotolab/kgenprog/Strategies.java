@@ -1,15 +1,14 @@
 package jp.kusumotolab.kgenprog;
 
 import java.util.List;
+import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Fitness;
 import jp.kusumotolab.kgenprog.ga.Gene;
-import jp.kusumotolab.kgenprog.ga.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantFactory;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -26,12 +25,11 @@ public class Strategies {
   private final SourceCodeValidation sourceCodeValidation;
   private final TestExecutor testExecutor;
   private final VariantSelection variantSelection;
-  private final VariantFactory variantFactory;
 
   public Strategies(final FaultLocalization faultLocalization,
       final JDTASTConstruction astConstruction, final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final TestExecutor testExecutor,
-      final VariantSelection variantSelection, final VariantFactory variantFactory) {
+      final VariantSelection variantSelection) {
 
     this.faultLocalization = faultLocalization;
     this.astConstruction = astConstruction;
@@ -39,7 +37,6 @@ public class Strategies {
     this.sourceCodeValidation = sourceCodeValidation;
     this.testExecutor = testExecutor;
     this.variantSelection = variantSelection;
-    this.variantFactory = variantFactory;
   }
 
   public List<Suspiciousness> execFaultLocalization(final GeneratedSourceCode generatedSourceCode,
@@ -56,6 +53,10 @@ public class Strategies {
     return testExecutor.exec(generatedSourceCode);
   }
 
+  public Single<TestResults> execAsyncTestExecutor(final Single<GeneratedSourceCode> sourceCodeSingle) {
+    return testExecutor.execAsync(sourceCodeSingle);
+  }
+
   public Fitness execSourceCodeValidation(final GeneratedSourceCode sourceCode,
       final TestResults testResults) {
     return sourceCodeValidation.exec(sourceCode, testResults);
@@ -68,10 +69,5 @@ public class Strategies {
   public List<Variant> execVariantSelection(final List<Variant> current,
       final List<Variant> generated) {
     return variantSelection.exec(current, generated);
-  }
-
-  public Variant execVariantFactory(final OrdinalNumber generation, final Counter variantCounter, final Gene gene,
-      final GeneratedSourceCode sourceCode, final HistoricalElement element) {
-    return variantFactory.exec(generation, variantCounter, gene, sourceCode, element, this);
   }
 }

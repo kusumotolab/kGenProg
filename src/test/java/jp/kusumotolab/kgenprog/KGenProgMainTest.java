@@ -21,12 +21,10 @@ import jp.kusumotolab.kgenprog.ga.GenerationalVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
-import jp.kusumotolab.kgenprog.ga.SequentialVariantFactory;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantFactory;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
@@ -76,10 +74,9 @@ public class KGenProgMainTest {
     final VariantSelection variantSelection = new GenerationalVariantSelection();
     final TestExecutor testExecutor = new LocalTestExecutor(config);
     final PatchGenerator patchGenerator = new PatchGenerator();
-    final VariantFactory variantFactory = new SequentialVariantFactory();
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, testExecutor, patchGenerator, variantFactory);
+        sourceCodeValidation, variantSelection, testExecutor, patchGenerator);
   }
 
   @Test

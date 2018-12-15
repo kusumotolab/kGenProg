@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -22,15 +23,15 @@ import jp.kusumotolab.kgenprog.ga.Fitness;
 import jp.kusumotolab.kgenprog.ga.Gene;
 import jp.kusumotolab.kgenprog.ga.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.MutationHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.SequentialVariantFactory;
 import jp.kusumotolab.kgenprog.ga.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantFactory;
 import jp.kusumotolab.kgenprog.ga.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
@@ -65,7 +66,7 @@ public class VariantStoreSerializerTest {
     final Fitness sourceCodeValidationResult = new SimpleFitness(1.0d);
     final GeneratedSourceCode astConstructionResult =
         new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList());
-    final VariantFactory variantFactory = new SequentialVariantFactory();
+    final TestExecutor testExecutor = new LocalTestExecutor(config);
     final Strategies strategies = mock(Strategies.class);
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);
@@ -73,9 +74,10 @@ public class VariantStoreSerializerTest {
     when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
-    when(strategies.execVariantFactory(any(), any(), any(), any(), any())).then(
-        v -> variantFactory.exec(v.getArgument(0), v.getArgument(1), v.getArgument(2),
-            v.getArgument(3), v.getArgument(4), strategies));
+    when(strategies.execAsyncTestExecutor(any())).then(v -> {
+      final Single<GeneratedSourceCode> sourceCodeSingle = v.getArgument(0);
+      return testExecutor.execAsync(sourceCodeSingle);
+    });
 
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();

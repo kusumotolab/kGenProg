@@ -13,11 +13,9 @@ import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.Mutation;
 import jp.kusumotolab.kgenprog.ga.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
-import jp.kusumotolab.kgenprog.ga.SequentialVariantFactory;
 import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.VariantFactory;
 import jp.kusumotolab.kgenprog.ga.VariantSelection;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
@@ -47,11 +45,10 @@ public class CUILauncher {
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount());
     final TestExecutor testExecutor = new LocalTestExecutor(config);
     final PatchGenerator patchGenerator = new PatchGenerator();
-    final VariantFactory variantFactory = new SequentialVariantFactory();
 
     final KGenProgMain kGenProgMain = new KGenProgMain(config, faultLocalization, mutation,
         crossover, sourceCodeGeneration, sourceCodeValidation, variantSelection, testExecutor,
-        patchGenerator, variantFactory);
+        patchGenerator);
 
     kGenProgMain.run();
   }

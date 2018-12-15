@@ -6,13 +6,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
+import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.InsertTimeoutRuleFieldOperation;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class VariantStore {
 
@@ -161,6 +165,22 @@ public class VariantStore {
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
-    return strategies.execVariantFactory(generation, variantCounter, gene, sourceCode, element);
+    final Single<GeneratedSourceCode> sourceCodeSingle = Single.create(
+        (SingleEmitter<GeneratedSourceCode> emitter) -> emitter.onSuccess(sourceCode))
+        .cache();
+
+    final Single<TestResults> resultsSingle = strategies.execAsyncTestExecutor(sourceCodeSingle)
+        .cache();
+
+    final Single<Fitness> fitnessSingle = resultsSingle.map(
+        v -> strategies.execSourceCodeValidation(sourceCode, v))
+        .cache();
+
+    final Single<List<Suspiciousness>> suspiciousnessListSingle = resultsSingle.map(
+        v -> strategies.execFaultLocalization(sourceCode, v))
+        .cache();
+
+    return new LazyVariant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
+        resultsSingle, fitnessSingle, suspiciousnessListSingle, element);
   }
 }
