@@ -2,7 +2,7 @@ package jp.kusumotolab.kgenprog.ga;
 
 public interface Fitness {
 
-  public double getValue();
+  double getValue();
 
-  public boolean isMaximum();
+  boolean isMaximum();
 }
