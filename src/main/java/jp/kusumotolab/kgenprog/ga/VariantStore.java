@@ -165,9 +165,7 @@ public class VariantStore {
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
-    final Single<GeneratedSourceCode> sourceCodeSingle = Single.create(
-        (SingleEmitter<GeneratedSourceCode> emitter) -> emitter.onSuccess(sourceCode))
-        .cache();
+    final Single<GeneratedSourceCode> sourceCodeSingle = Single.just(sourceCode);
 
     final Single<TestResults> resultsSingle = strategies.execAsyncTestExecutor(sourceCodeSingle)
         .cache();

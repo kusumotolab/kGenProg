@@ -46,7 +46,7 @@ public class VariantStoreTest {
     when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
-    when(strategies.execAsyncTestExecutor(any())).thenReturn(Single.create(emitter -> emitter.onSuccess(testExecutorResult)));
+    when(strategies.execAsyncTestExecutor(any())).thenReturn(Single.just(testExecutorResult));
 
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
