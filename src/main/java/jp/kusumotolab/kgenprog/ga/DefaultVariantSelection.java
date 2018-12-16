@@ -9,10 +9,6 @@ public class DefaultVariantSelection implements VariantSelection {
 
   final private int maxVariantsPerGeneration;
 
-  public DefaultVariantSelection() {
-    this.maxVariantsPerGeneration = 100;
-  }
-
   public DefaultVariantSelection(int maxVariantPerGeneration) {
     this.maxVariantsPerGeneration = maxVariantPerGeneration;
   }
@@ -24,18 +20,5 @@ public class DefaultVariantSelection implements VariantSelection {
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
     return list;
-  }
-
-  private int compareFitness(final Fitness fitness1, final Fitness fitness2) {
-    if (Double.isNaN(fitness1.getValue()) && Double.isNaN(fitness2.getValue())) {
-      return 0;
-    }
-    if (Double.isNaN(fitness1.getValue())) {
-      return 1;
-    }
-    if (Double.isNaN(fitness2.getValue())) {
-      return -1;
-    }
-    return -Double.compare(fitness1.getValue(), fitness2.getValue());
   }
 }
