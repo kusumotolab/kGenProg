@@ -41,7 +41,7 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor,final PatchGenerator patchGenerator) {
+      final TestExecutor testExecutor, final PatchGenerator patchGenerator) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;

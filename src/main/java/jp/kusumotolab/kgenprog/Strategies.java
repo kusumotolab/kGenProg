@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog;
 
 import java.util.List;
+import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Fitness;
@@ -50,6 +51,10 @@ public class Strategies {
 
   public TestResults execTestExecutor(final GeneratedSourceCode generatedSourceCode) {
     return testExecutor.exec(generatedSourceCode);
+  }
+
+  public Single<TestResults> execAsyncTestExecutor(final Single<GeneratedSourceCode> sourceCodeSingle) {
+    return testExecutor.execAsync(sourceCodeSingle);
   }
 
   public Fitness execSourceCodeValidation(final GeneratedSourceCode sourceCode,

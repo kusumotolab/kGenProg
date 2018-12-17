@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
@@ -163,12 +164,20 @@ public class VariantStore {
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
-    final TestResults testResults = strategies.execTestExecutor(sourceCode);
-    final Fitness fitness = strategies.execSourceCodeValidation(sourceCode, testResults);
-    final List<Suspiciousness> suspiciousnesses =
-        strategies.execFaultLocalization(sourceCode, testResults);
-    return new Variant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
-        testResults, fitness, suspiciousnesses,
-        element);
+    final Single<GeneratedSourceCode> sourceCodeSingle = Single.just(sourceCode);
+
+    final Single<TestResults> resultsSingle = strategies.execAsyncTestExecutor(sourceCodeSingle)
+        .cache();
+
+    final Single<Fitness> fitnessSingle = resultsSingle.map(
+        v -> strategies.execSourceCodeValidation(sourceCode, v))
+        .cache();
+
+    final Single<List<Suspiciousness>> suspiciousnessListSingle = resultsSingle.map(
+        v -> strategies.execFaultLocalization(sourceCode, v))
+        .cache();
+
+    return new LazyVariant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
+        resultsSingle, fitnessSingle, suspiciousnessListSingle, element);
   }
 }
