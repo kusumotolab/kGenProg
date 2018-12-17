@@ -112,4 +112,8 @@ public class JDTASTLocation implements ASTLocation {
   public GeneratedAST<?> getGeneratedAST() {
     return generatedAST;
   }
+
+  public ASTNode getNode() {
+    return node;
+  }
 }
