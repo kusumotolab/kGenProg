@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
