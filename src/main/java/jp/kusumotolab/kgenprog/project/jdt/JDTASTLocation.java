@@ -18,7 +18,7 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
  * @author r-arima
  *
  */
-final public class JDTASTLocation implements ASTLocation {
+public class JDTASTLocation implements ASTLocation {
 
   public final ASTNode node;
 
