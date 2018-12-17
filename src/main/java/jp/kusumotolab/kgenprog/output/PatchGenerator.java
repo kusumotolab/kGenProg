@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
-import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
