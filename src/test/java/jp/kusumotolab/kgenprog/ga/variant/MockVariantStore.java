@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.variant;
 
 import java.util.List;
-import jp.kusumotolab.kgenprog.ga.history.HistoricalElement;
 
 public class MockVariantStore extends VariantStore {
 

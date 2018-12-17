@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jp.kusumotolab.kgenprog.Configuration;
-import jp.kusumotolab.kgenprog.ga.history.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.test.TestResult;

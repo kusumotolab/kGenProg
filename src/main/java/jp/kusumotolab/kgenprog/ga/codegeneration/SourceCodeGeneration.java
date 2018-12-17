@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.generation;
+package jp.kusumotolab.kgenprog.ga.codegeneration;
 
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;

@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.generation;
+package jp.kusumotolab.kgenprog.ga.codegeneration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;

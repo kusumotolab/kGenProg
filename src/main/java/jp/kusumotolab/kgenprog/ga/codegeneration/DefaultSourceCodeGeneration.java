@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.generation;
+package jp.kusumotolab.kgenprog.ga.codegeneration;
 
 import java.util.HashSet;
 import java.util.Set;

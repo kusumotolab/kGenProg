@@ -1,8 +1,7 @@
-package jp.kusumotolab.kgenprog.ga.history;
+package jp.kusumotolab.kgenprog.ga.variant;
 
 import java.util.Collections;
 import java.util.List;
-import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class OriginalHistoricalElement implements HistoricalElement {
 

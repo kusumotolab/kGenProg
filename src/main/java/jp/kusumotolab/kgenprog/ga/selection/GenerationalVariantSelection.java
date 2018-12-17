@@ -1,9 +1,7 @@
 package jp.kusumotolab.kgenprog.ga.selection;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import jp.kusumotolab.kgenprog.ga.history.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class GenerationalVariantSelection extends DefaultVariantSelection {
