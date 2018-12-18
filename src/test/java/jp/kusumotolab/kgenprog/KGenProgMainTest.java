@@ -13,21 +13,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
-import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
-import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
-import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.selection.GenerationalVariantSelection;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
-import jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover;
-import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.selection.GenerationalVariantSelection;
+import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
+import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
-import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
+import jp.kusumotolab.kgenprog.project.test.ParallelLocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMainTest {
@@ -72,7 +72,7 @@ public class KGenProgMainTest {
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
-    final TestExecutor testExecutor = new LocalTestExecutor(config);
+    final TestExecutor testExecutor = new ParallelLocalTestExecutor(config);
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
