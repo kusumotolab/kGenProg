@@ -23,4 +23,9 @@ public class ReplaceOperation extends JDTOperation {
   public String getName(){
     return "replace";
   }
+
+  @Override
+  public String getTargetSnippet() {
+    return astNode.toString();
+  }
 }
