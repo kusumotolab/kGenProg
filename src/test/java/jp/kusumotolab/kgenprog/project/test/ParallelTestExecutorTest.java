@@ -3,13 +3,12 @@ package jp.kusumotolab.kgenprog.project.test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import io.reactivex.Observable;
@@ -21,14 +20,9 @@ public class ParallelTestExecutorTest {
   @Test
   public void testExec() {
     final TestExecutor mockExecutor = mock(TestExecutor.class);
-    final AtomicBoolean called = new AtomicBoolean(false);
-    when(mockExecutor.exec(any())).then(e -> {
-      called.set(true);
-      return null;
-    });
     final TestExecutor testExecutor = new ParallelTestExecutor(mockExecutor);
     testExecutor.exec(null);
-    assertThat(called).isTrue();
+    verify(mockExecutor, times(1)).exec(any());
   }
 
   @Test
@@ -56,11 +50,8 @@ public class ParallelTestExecutorTest {
         .collect(Collectors.toList());
 
     // 全ての Observables を一つの Single にまとめる
-    final Single<List<String>> listSingle = Observable.zip(observables,
-        objects -> Arrays.stream(objects)
-            .map(e -> ((String) e))
-            .collect(Collectors.toList()))
-        .single(Collections.emptyList());
+    final Single<List<String>> listSingle = Single.concat(singleList)
+        .toList();
 
     // まとめた Single の結果を取得
     final List<String> list = listSingle.blockingGet();
