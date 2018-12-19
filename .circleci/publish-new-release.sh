@@ -23,7 +23,9 @@ echo "Starting to publish a new release as the version: ${WANTED_VERSION} ..."
 CHANGELOG="## Change Log
 
 $(cat ./artifacts/CHANGELOG.md)"
+
 rm ./artifacts/CHANGELOG.md
+rm ./artifacts/current-version.txt
 
 ghr \
   --token $GITHUB_TOKEN \
