@@ -27,7 +27,8 @@ import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
-import jp.kusumotolab.kgenprog.project.test.ParallelLocalTestExecutor;
+import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
+import jp.kusumotolab.kgenprog.project.test.ParallelTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMainTest {
@@ -72,7 +73,8 @@ public class KGenProgMainTest {
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
-    final TestExecutor testExecutor = new ParallelLocalTestExecutor(config);
+    final LocalTestExecutor localTestExecutor = new LocalTestExecutor(config);
+    final TestExecutor testExecutor = new ParallelTestExecutor(localTestExecutor);
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
