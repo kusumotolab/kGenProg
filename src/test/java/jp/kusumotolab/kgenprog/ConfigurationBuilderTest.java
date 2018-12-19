@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
@@ -12,8 +13,8 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.Configuration.Builder;
-import jp.kusumotolab.kgenprog.ga.Scope;
-import jp.kusumotolab.kgenprog.ga.Scope.Type;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -1109,6 +1110,61 @@ public class ConfigurationBuilderTest {
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testNotExistingRootDir() {
+    final Path notExistingRootDir = Paths.get("notExistingRootDir");
+    final String[] args = {"-r", notExistingRootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString()};
+
+    assertThatThrownBy(() -> Builder.buildFromCmdLineArgs(args))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage(notExistingRootDir.toString() + " does not exist.");
+  }
+
+  @Test
+  public void testNotExistingProductDir() {
+    final Path notExistingProductDir = Paths.get("notExistingProductDir");
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(),
+        notExistingProductDir.toString(), "-t", testPath.toString()};
+
+    assertThatThrownBy(() -> Builder.buildFromCmdLineArgs(args))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage(notExistingProductDir.toString() + " does not exist.");
+  }
+
+  @Test
+  public void testNotExistingTestDir() {
+    final Path notExistingTestDir = Paths.get("notExistingTestDir");
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), notExistingTestDir.toString()};
+
+    assertThatThrownBy(() -> Builder.buildFromCmdLineArgs(args))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage(notExistingTestDir.toString() + " does not exist.");
+  }
+
+  @Test
+  public void testNotExistingClassPath() {
+    final Path notExistingClassPath = Paths.get("notExistingClassPath");
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), "-c", notExistingClassPath.toString()};
+
+    assertThatThrownBy(() -> Builder.buildFromCmdLineArgs(args))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage(notExistingClassPath.toString() + " does not exist.");
+  }
+
+  @Test
+  public void testNotExistingWorkingDir() {
+    final Path notExistingWorkingDir = Paths.get("notExistingWorkingDir");
+    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
+        testPath.toString(), "-w", notExistingWorkingDir.toString()};
+
+    assertThatThrownBy(() -> Builder.buildFromCmdLineArgs(args))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage(notExistingWorkingDir.toString() + " does not exist.");
   }
 
   @Test

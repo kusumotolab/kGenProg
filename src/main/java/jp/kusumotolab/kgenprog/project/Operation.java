@@ -7,4 +7,8 @@ public interface Operation {
   default String getName(){
     return "";
   }
+
+  default String getTargetSnippet() {
+    return "";
+  }
 }

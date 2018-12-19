@@ -28,8 +28,8 @@ import com.electronwill.nightconfig.core.conversion.SpecNotNull;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
-import jp.kusumotolab.kgenprog.ga.Scope;
-import jp.kusumotolab.kgenprog.ga.Scope.Type;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -309,7 +309,8 @@ public class Configuration {
 
     // region Methods
 
-    public static Configuration buildFromCmdLineArgs(final String[] args) {
+    public static Configuration buildFromCmdLineArgs(final String[] args)
+        throws IllegalArgumentException {
 
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
@@ -337,7 +338,7 @@ public class Configuration {
           | NoSuchFileException e) {
         // todo: make error message of InvalidValueException more user-friendly
         parser.printUsage(System.err);
-        System.exit(1);
+        throw new IllegalArgumentException(e.getMessage());
       }
 
       return builder.build();
@@ -452,6 +453,26 @@ public class Configuration {
     // region Private methods
 
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
+      validateExistences(builder);
+      validateCurrentDir(builder);
+    }
+
+    private static void validateExistences(final Builder builder) throws IllegalArgumentException {
+      validateExistence(builder.rootDir);
+      builder.productPaths.forEach(Builder::validateExistence);
+      builder.testPaths.forEach(Builder::validateExistence);
+      builder.classPaths.forEach(Builder::validateExistence);
+      validateExistence(builder.workingDir);
+    }
+
+    private static void validateExistence(final Path path) throws IllegalArgumentException {
+      if (Files.notExists(path)) {
+        log.error(path.toString() + " does not exist.");
+        throw new IllegalArgumentException(path.toString() + " does not exist.");
+      }
+    }
+
+    private static void validateCurrentDir(Builder builder) {
       final Path currentDir = Paths.get(".");
       final Path projectRootDir = builder.rootDir;
 

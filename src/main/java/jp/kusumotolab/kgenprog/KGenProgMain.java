@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.ga.Crossover;
-import jp.kusumotolab.kgenprog.ga.Mutation;
-import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.ga.VariantStore;
+import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.output.PatchStore;
 import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
@@ -41,7 +41,7 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor,final PatchGenerator patchGenerator) {
+      final TestExecutor testExecutor, final PatchGenerator patchGenerator) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;

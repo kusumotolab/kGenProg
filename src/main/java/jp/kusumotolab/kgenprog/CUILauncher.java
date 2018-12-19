@@ -6,17 +6,17 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
-import jp.kusumotolab.kgenprog.ga.Crossover;
-import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
-import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.DefaultVariantSelection;
-import jp.kusumotolab.kgenprog.ga.Mutation;
-import jp.kusumotolab.kgenprog.ga.RandomMutation;
-import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
-import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
-import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.VariantSelection;
+import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
+import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
+import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
+import jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
@@ -24,9 +24,13 @@ import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 public class CUILauncher {
 
   public static void main(final String[] args) {
-    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
-    final CUILauncher launcher = new CUILauncher();
-    launcher.launch(config);
+    try {
+      final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
+      final CUILauncher launcher = new CUILauncher();
+      launcher.launch(config);
+    } catch (IllegalArgumentException e) {
+      System.exit(1);
+    }
   }
 
   public void launch(final Configuration config) {

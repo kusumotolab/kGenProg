@@ -49,6 +49,12 @@ public class Coverage implements Serializable {
     this.statuses = convertClassCoverage(classCoverage);
   }
 
+  public Coverage(final FullyQualifiedName executedTargetFQN,
+      final List<Status> statuses) {
+    this.executedTargetFQN = executedTargetFQN;
+    this.statuses = statuses;
+  }
+
   /**
    * ClassCoverageに格納されたCoverageをList<Status>に変換する． 実質enumの型変換やってるだけ．
    * 

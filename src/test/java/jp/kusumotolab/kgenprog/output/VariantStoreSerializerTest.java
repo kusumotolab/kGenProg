@@ -14,21 +14,24 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.ga.Base;
-import jp.kusumotolab.kgenprog.ga.Fitness;
-import jp.kusumotolab.kgenprog.ga.Gene;
-import jp.kusumotolab.kgenprog.ga.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.MutationHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.SimpleFitness;
-import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantStore;
+import jp.kusumotolab.kgenprog.ga.variant.Base;
+import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
+import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
@@ -60,9 +63,10 @@ public class VariantStoreSerializerTest {
     final GeneratedSourceCode sourceCodeGenerationResult =
         new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList());
     final TestResults testExecutorResult = mock(TestResults.class);
-    final Fitness sourceCodeValidationResult = new SimpleFitness(Double.NaN);
+    final Fitness sourceCodeValidationResult = new SimpleFitness(1.0d);
     final GeneratedSourceCode astConstructionResult =
         new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList());
+    final TestExecutor testExecutor = new LocalTestExecutor(config);
     final Strategies strategies = mock(Strategies.class);
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);
@@ -70,6 +74,10 @@ public class VariantStoreSerializerTest {
     when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
+    when(strategies.execAsyncTestExecutor(any())).then(v -> {
+      final Single<GeneratedSourceCode> sourceCodeSingle = v.getArgument(0);
+      return testExecutor.execAsync(sourceCodeSingle);
+    });
 
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
