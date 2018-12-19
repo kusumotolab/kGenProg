@@ -9,9 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.Test;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
@@ -44,16 +42,8 @@ public class ParallelTestExecutorTest {
       singleList.add(threadName);
     }
 
-    // Single => Observable
-    final List<Observable<String>> observables = singleList.stream()
-        .map(Single::toObservable)
-        .collect(Collectors.toList());
-
-    // 全ての Observables を一つの Single にまとめる
     final Single<List<String>> listSingle = Single.concat(singleList)
         .toList();
-
-    // まとめた Single の結果を取得
     final List<String> list = listSingle.blockingGet();
     final HashSet<String> threadNameSet = new HashSet<>(list);
     assertThat(threadNameSet.size()).isGreaterThanOrEqualTo(2);
