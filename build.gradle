@@ -94,3 +94,12 @@ jar {
   }
 }
 
+// Define App's version
+version = currentVersion
+
+task printCurrentVersion {
+  description 'Prints the current kGenProg version.'
+  doLast {
+    println version
+  }
+}
