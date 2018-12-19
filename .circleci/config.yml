@@ -134,6 +134,37 @@ jobs:
           file-path: ./artifacts/
           pre-release: true
 
+  # Job: generate-change-log
+  #   Generate a change log from GitHub's merged pull requests.
+  generate-change-log:
+    docker:
+      - image: circleci/node:10.14
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./artifacts
+      - run: touch CHANGELOG.md
+      - run:
+          name: Generate a change log when needed
+          command: ./.circleci/generate-change-log.sh
+      - persist_to_workspace:
+          root: .
+          paths:
+            - CHANGELOG.md
+
+  # Job: publish-as-new-release
+  #   Publish to the GitHub Releases as a latest release.
+  publish-as-new-release:
+    docker:
+      - image: circleci/golang:1.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: Publish a new release when needed
+          command: ./.circleci/publish-new-release.sh
+
 workflows:
   version: 2
 
