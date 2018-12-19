@@ -20,7 +20,6 @@ go get -u github.com/tcnksm/ghr
 
 echo "Starting to publish a new release as the version: ${WANTED_VERSION} ..."
 
-ls ./artifacts
 CHANGELOG="## Change Log
 
 $(cat ./artifacts/CHANGELOG.md)"
