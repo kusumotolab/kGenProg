@@ -10,23 +10,36 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class LazyVariant extends Variant {
 
-  private final Single<TestResults> testResultsSingle;
-  private final Single<Fitness> fitnessSingle;
-  private final Single<List<Suspiciousness>> suspiciousnessListSingle;
+  private Single<TestResults> testResultsSingle;
+  private Single<Fitness> fitnessSingle;
+  private Single<List<Suspiciousness>> suspiciousnessListSingle;
 
-  public LazyVariant(final long id, final int generationNumber,
-      final Gene gene, final GeneratedSourceCode generatedSourceCode,
-      final Single<TestResults> testResultsSingle, final Single<Fitness> fitnessSingle,
-      final Single<List<Suspiciousness>> suspiciousnessListSingle,
-      final HistoricalElement historicalElement) {
+  public LazyVariant(final long id, final int generationNumber, final Gene gene,
+      final GeneratedSourceCode generatedSourceCode, final HistoricalElement historicalElement) {
     super(id, generationNumber, gene, generatedSourceCode, null, null, null,
         historicalElement);
+  }
 
+  void subscribe() {
+    if (testResultsSingle == null) {
+      return;
+    }
+    testResultsSingle.subscribe();
+  }
+
+  void setTestResultsSingle(
+      final Single<TestResults> testResultsSingle) {
     this.testResultsSingle = testResultsSingle;
-    this.fitnessSingle = fitnessSingle;
-    this.suspiciousnessListSingle = suspiciousnessListSingle;
+  }
 
-    this.testResultsSingle.subscribe();
+  void setFitnessSingle(
+      final Single<Fitness> fitnessSingle) {
+    this.fitnessSingle = fitnessSingle;
+  }
+
+  void setSuspiciousnessListSingle(
+      final Single<List<Suspiciousness>> suspiciousnessListSingle) {
+    this.suspiciousnessListSingle = suspiciousnessListSingle;
   }
 
   @Override
@@ -37,7 +50,8 @@ public class LazyVariant extends Variant {
 
   @Override
   public boolean isBuildSucceeded() {
-    return EmptyTestResults.class != testResultsSingle.blockingGet().getClass();
+    return EmptyTestResults.class != testResultsSingle.blockingGet()
+        .getClass();
   }
 
   @Override
