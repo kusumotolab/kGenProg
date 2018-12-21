@@ -398,7 +398,7 @@ public class LocalTestExecutorTest {
         FOO_TEST01);
 
     // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST01).failed).isTrue();
   }
 
   @Test
