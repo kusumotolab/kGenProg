@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.atIndex;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +22,10 @@ import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.TestSourcePath;
+import jp.kusumotolab.kgenprog.project.factory.TargetProject;
+import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class GeneratedJDTASTTest {
 
@@ -229,7 +234,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
 
     // 挿入対象生成
     final AST ast = jdtAst.getRoot()
@@ -283,7 +288,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
     final DeleteOperation operation = new DeleteOperation();
 
     final GeneratedJDTAST<ProductSourcePath> newJdtAst =
@@ -324,7 +329,7 @@ public class GeneratedJDTASTTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(path, statement);
+    final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
 
 
     // 置換対象の生成
@@ -393,5 +398,21 @@ public class GeneratedJDTASTTest {
     final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2);
 
     assertThat(ast1.getMessageDigest()).isNotEqualTo(ast2.getMessageDigest());
+  }
+
+  @Test
+  public void testGetNumberOfLines() {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode generatedSourceCode =
+        TestUtil.createGeneratedSourceCode(targetProject);
+
+    final GeneratedAST<ProductSourcePath> productAst = generatedSourceCode.getProductAsts()
+        .get(0);
+    assertThat(productAst.getNumberOfLines()).isEqualTo(12);
+
+    final GeneratedAST<TestSourcePath> testAst = generatedSourceCode.getTestAsts()
+        .get(0);
+    assertThat(testAst.getNumberOfLines()).isEqualTo(17);
   }
 }

@@ -1,4 +1,4 @@
-[submodule "example/kGenProg-example"]
+[submodule "example/real-bugs"]
 	path = example/real-bugs
 	url = git@github.com:kusumotolab/kGenProg-example.git
 	ignore = dirty

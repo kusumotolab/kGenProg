@@ -20,13 +20,10 @@ You can download all the bugs from [here](https://github.com/kusumotolab/kGenPro
 
 ## Usage
 ```
-$ java -jar path/to/kGenProg.jar
-$ java -jar path/to/kGenProg.jar --config <path>
-$ java -jar path/to/kGenProg.jar -r <path> -s <path>... -t <path>... [-x <fqn>...] [-c <path>...]
-    [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>] [--headcount <num>]
-    [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
+$ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
+    [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>]
+    [--headcount <num>] [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>]
-
 ```
 
 ### Example
@@ -39,7 +36,7 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 ```
 
 You can configure parameters with a `.toml` file using `--config` option.
-See [example/CloseToZero01/kgenprog.toml](example/CloseToZero01/kgenprog.toml) to learn how to write a config file.
+See [doc/kgenprog-config-template.toml](doc/kgenprog-config-template.toml) to learn how to write a config file.
 ```sh
 $ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
 ```
@@ -71,4 +68,5 @@ $ java -jar path/to/kGenProg.jar
 | `--test-time-limit` | Specifies a time limit in seconds to build and test each variant. | 10 |
 | `--required-solutions` | Terminates searching solutions when the specified number of solutions are found. | 1 |
 | `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
+| `--scope` | Specify the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
 

@@ -12,15 +12,15 @@ public class Roulette<T> {
 
   private final double total;
   private final List<Double> separateList = new ArrayList<>();
-  private final List<T> valueList = new ArrayList<>();
+  private final List<T> candidateList = new ArrayList<>();
   private final Random random;
 
-  public Roulette(final List<T> valueList, final Function<T, Double> weightFunction,
+  public Roulette(final List<T> candidateList, final Function<T, Double> weightFunction,
       final Random random) {
-    if (valueList.isEmpty()) {
-      throw new IllegalArgumentException("valueList must have at least one element.");
+    if (candidateList.isEmpty()) {
+      throw new IllegalArgumentException("candidateList must have at least one element.");
     }
-    final List<Double> weightList = valueList.stream()
+    final List<Double> weightList = candidateList.stream()
         .map(weightFunction)
         .collect(Collectors.toList());
     double total = 0.0d;
@@ -29,7 +29,7 @@ public class Roulette<T> {
       separateList.add(total);
     }
     this.total = total;
-    this.valueList.addAll(valueList);
+    this.candidateList.addAll(candidateList);
     this.random = random;
   }
 
@@ -38,7 +38,11 @@ public class Roulette<T> {
     final int searchResult =
         Collections.binarySearch(separateList, weight, Comparator.naturalOrder());
     final int index = convertToIndex(searchResult);
-    return valueList.get(index);
+    return candidateList.get(index);
+  }
+
+  public List<T> getCandidateList() {
+    return candidateList;
   }
 
   private int convertToIndex(final int searchResult) {

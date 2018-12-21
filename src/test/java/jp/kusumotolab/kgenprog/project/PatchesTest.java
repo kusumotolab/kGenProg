@@ -10,6 +10,8 @@ import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import jp.kusumotolab.kgenprog.output.FileDiff;
+import jp.kusumotolab.kgenprog.output.Patch;
 
 public class PatchesTest {
 
@@ -21,13 +23,13 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
-    final Patches patches = new Patches();
-    patches.add(patch);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final Patch patch = new Patch();
+    patch.add(fileDiff);
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
-    patches.writeToFile(folderPath);
+    patch.writeToFile(folderPath);
 
     final List<String> actual = Files.readAllLines(folderPath.resolve("test.java"));
 
@@ -39,13 +41,13 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
-    final Patches patches = new Patches();
-    patches.add(patch);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final Patch patch = new Patch();
+    patch.add(fileDiff);
 
     final File folder = tempFolder.getRoot();
     final Path folderPath = folder.toPath();
-    patches.writeToFile(folderPath);
+    patch.writeToFile(folderPath);
 
     final List<String> actual = Files.readAllLines(folderPath.resolve("test.patch"));
 
@@ -57,12 +59,12 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final Patch patch = new Patch(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
-    final Patches patches = new Patches();
-    patches.add(patch);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final Patch patch = new Patch();
+    patch.add(fileDiff);
 
     final File folder = tempFolder.getRoot();
-    patches.writeToLogger();
+    patch.writeToLogger();
 
     final File[] files = folder.listFiles();
     assertThat(files.length).isEqualTo(0);

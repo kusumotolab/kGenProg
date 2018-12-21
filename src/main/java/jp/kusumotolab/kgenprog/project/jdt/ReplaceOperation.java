@@ -18,4 +18,14 @@ public class ReplaceOperation extends JDTOperation {
     final ASTNode copiedNode = ASTNode.copySubtree(astRewrite.getAST(), astNode);
     astRewrite.replace(location.locate(ast.getRoot()), copiedNode, null);
   }
+
+  @Override
+  public String getName(){
+    return "replace";
+  }
+
+  @Override
+  public String getTargetSnippet() {
+    return astNode.toString();
+  }
 }

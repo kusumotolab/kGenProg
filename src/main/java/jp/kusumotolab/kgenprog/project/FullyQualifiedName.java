@@ -13,6 +13,14 @@ public abstract class FullyQualifiedName implements Serializable {
     this.value = value;
   }
 
+  public String getPackageName() {
+    final int lastIndexOf = value.lastIndexOf(".");
+    if (lastIndexOf == -1) {
+      return "";
+    }
+    return value.substring(0, lastIndexOf);
+  }
+
   @Override
   public boolean equals(final Object o) {
     return this.toString()

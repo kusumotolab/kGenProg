@@ -10,16 +10,16 @@ import org.apache.commons.io.FileUtils;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
-import jp.kusumotolab.kgenprog.ga.Fitness;
-import jp.kusumotolab.kgenprog.ga.Gene;
-import jp.kusumotolab.kgenprog.ga.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.OriginalHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
+import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.OriginalHistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
-import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class TestUtil {
@@ -37,11 +37,11 @@ public class TestUtil {
   public static Variant createVariant(final Configuration config) {
     final Gene gene = new Gene(Collections.emptyList());
     final GeneratedSourceCode sourceCode = createGeneratedSourceCode(config.getTargetProject());
-    final TestResults testResults = new TestExecutor(config).exec(sourceCode);
+    final TestResults testResults = new LocalTestExecutor(config).exec(sourceCode);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
     final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();
-    return new Variant(0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
+    return new Variant(0,0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
   }
 
   public static GeneratedSourceCode createGeneratedSourceCode(final TargetProject project) {

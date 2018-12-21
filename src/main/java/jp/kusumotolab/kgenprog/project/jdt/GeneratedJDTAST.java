@@ -24,6 +24,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
   private final FullyQualifiedName primaryClassName;
   private final String sourceCode;
   private final String messageDigest;
+  private final int numberOfLines;
 
   public GeneratedJDTAST(final JDTASTConstruction construction, final T sourcePath,
       final CompilationUnit root, final String source) {
@@ -34,6 +35,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
     this.primaryClassName = searchPrimaryClassName(root);
     this.messageDigest = createMessageDigest();
+    this.numberOfLines = calculateNumberOfLines();
   }
 
   @Override
@@ -53,12 +55,17 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
 
   @Override
   public ASTLocations createLocations() {
-    return new JDTASTLocations<>(root, sourcePath);
+    return new JDTASTLocations<>(this, root, sourcePath);
   }
 
   @Override
   public String getMessageDigest() {
     return messageDigest;
+  }
+
+  @Override
+  public int getNumberOfLines() {
+    return numberOfLines;
   }
 
   public CompilationUnit getRoot() {
@@ -118,5 +125,10 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
     } catch (final NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private int calculateNumberOfLines() {
+    final int pos = root.getExtendedStartPosition(root) + root.getExtendedLength(root) - 1;
+    return root.getLineNumber(pos);
   }
 }

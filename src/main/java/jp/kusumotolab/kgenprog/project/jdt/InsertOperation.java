@@ -23,4 +23,14 @@ public class InsertOperation extends JDTOperation {
     final ASTNode copiedNode = ASTNode.copySubtree(astRewrite.getAST(), this.astNode);
     listRewrite.insertAfter(copiedNode, target, null);
   }
+
+  @Override
+  public String getName(){
+    return "insert";
+  }
+
+  @Override
+  public String getTargetSnippet() {
+    return astNode.toString();
+  }
 }

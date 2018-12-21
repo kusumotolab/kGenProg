@@ -14,15 +14,17 @@ public class JDTASTLocations<T extends SourcePath> implements ASTLocations {
   private final List<List<Statement>> lineNumberToStatements;
   private final List<ASTLocation> allLocations;
   private final T sourcePath;
+  private final GeneratedJDTAST<?> generatedAST;
 
-  public JDTASTLocations(final CompilationUnit root, final T sourcePath) {
+  public JDTASTLocations(final GeneratedJDTAST<?> generatedAST, final CompilationUnit root, final T sourcePath) {
+    this.generatedAST = generatedAST;
     this.sourcePath = sourcePath;
     final StatementListVisitor visitor = new StatementListVisitor();
     visitor.analyzeStatement(root);
     this.lineNumberToStatements = visitor.getLineToStatements();
     this.allLocations = visitor.getStatements()
         .stream()
-        .map(v -> new JDTASTLocation(sourcePath, v))
+        .map(v -> new JDTASTLocation(sourcePath, v, generatedAST))
         .collect(Collectors.toList());
   }
 
@@ -36,7 +38,7 @@ public class JDTASTLocations<T extends SourcePath> implements ASTLocations {
     if (0 <= lineNumber && lineNumber < lineNumberToStatements.size()) {
       return lineNumberToStatements.get(lineNumber)
           .stream()
-          .map(statement -> new JDTASTLocation(this.sourcePath, statement))
+          .map(statement -> new JDTASTLocation(this.sourcePath, statement, generatedAST))
           .collect(Collectors.toList());
     }
     return Collections.emptyList();

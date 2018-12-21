@@ -13,20 +13,23 @@ import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
-import jp.kusumotolab.kgenprog.ga.CandidateSelection;
-import jp.kusumotolab.kgenprog.ga.Crossover;
-import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
-import jp.kusumotolab.kgenprog.ga.DefaultSourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.GenerationalVariantSelection;
-import jp.kusumotolab.kgenprog.ga.Mutation;
-import jp.kusumotolab.kgenprog.ga.RandomMutation;
-import jp.kusumotolab.kgenprog.ga.RouletteStatementSelection;
-import jp.kusumotolab.kgenprog.ga.SinglePointCrossover;
-import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.project.PatchGenerator;
+import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover;
+import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
+import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
+import jp.kusumotolab.kgenprog.ga.selection.GenerationalVariantSelection;
+import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
+import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.output.PatchGenerator;
+import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
+import jp.kusumotolab.kgenprog.project.test.ParallelTestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMainTest {
 
@@ -63,17 +66,19 @@ public class KGenProgMainTest {
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
-    final Mutation mutation =
-        new RandomMutation(config.getMutationGeneratingCount(), random, statementSelection);
+    final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
+        statementSelection, config.getScope());
     final Crossover crossover =
         new SinglePointCrossover(random, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new GenerationalVariantSelection();
+    final LocalTestExecutor localTestExecutor = new LocalTestExecutor(config);
+    final TestExecutor testExecutor = new ParallelTestExecutor(localTestExecutor);
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, patchGenerator);
+        sourceCodeValidation, variantSelection, testExecutor, patchGenerator);
   }
 
   @Test
@@ -145,7 +150,7 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // TODO まだ修正無理 ref: https://github.com/kusumotolab/kGenProg/issues/341
+  @Ignore // このテスト単体では成功するが，このテストを実行すると続く別のテストが遅くなる．
   @Test
   public void testQuickSort01() {
     final Path rootPath = Paths.get("example/QuickSort01");
@@ -156,8 +161,6 @@ public class KGenProgMainTest {
 
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();
-
-    kGenProgMain.run();
 
     // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
     assertThat(variants).hasSize(1)

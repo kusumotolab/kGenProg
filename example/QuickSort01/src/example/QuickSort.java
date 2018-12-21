@@ -7,7 +7,7 @@ public class QuickSort {
     int right = value.length - 1;
     quicksort(value, left, right);
   }
-  
+
   /**
    * 無限ループするバグを含むメソッド
    * 
@@ -43,5 +43,25 @@ public class QuickSort {
     int tmp = value[i];
     value[i] = value[j];
     value[j] = tmp;
+  }
+
+  @SuppressWarnings("unused")
+  private void reuse_me() {
+    int i = 0;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
+    i++;
   }
 }

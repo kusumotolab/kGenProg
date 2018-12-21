@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class TestResults implements Serializable {
   // 直接valueへのアクセスを回避するために可視性を下げておく
   private final Map<FullyQualifiedName, TestResult> value;
 
-  TestResults() {
+  public TestResults() {
     this.value = new HashMap<>();
   }
 
@@ -110,12 +110,7 @@ public class TestResults implements Serializable {
       final ASTLocation location, final Coverage.Status status, final boolean failed) {
 
     // 翻訳1: SourcePath → [FQN]
-    // 翻訳1: SourcePath → [FQN]
-    final Set<FullyQualifiedName> correspondingFqns = buildResults.getBinaryStore()
-        .get(productSourcePath)
-        .stream()
-        .map(JavaBinaryObject::getFqn)
-        .collect(Collectors.toSet());
+    final Set<FullyQualifiedName> correspondingFqns = getCorrespondingFqns(productSourcePath);
 
     // 翻訳2: location → 行番号
     // TODO
@@ -129,8 +124,8 @@ public class TestResults implements Serializable {
 
     return correspondingFqns.stream()
         .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, status, failed))
-        .flatMap(v -> v.stream())
-        .count();
+        .mapToLong(Collection::size)
+        .sum();
   }
 
   /**
@@ -227,7 +222,7 @@ public class TestResults implements Serializable {
    * 
    * @param testResults serialize対象のオブジェクト
    */
-  public static void serialize(TestResults testResults) {
+  public static void serialize(final TestResults testResults) {
     try {
       Files.deleteIfExists(getSerFilePath());
       Files.createFile(getSerFilePath());
@@ -235,10 +230,7 @@ public class TestResults implements Serializable {
           new ObjectOutputStream(Files.newOutputStream(getSerFilePath()));
       out.writeObject(testResults);
       out.close();
-    } catch (FileNotFoundException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (final IOException e) {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
     }
@@ -280,4 +272,15 @@ public class TestResults implements Serializable {
     this.buildResults = buildResults;
   }
 
+  public BuildResults getBuildResults() {
+    return buildResults;
+  }
+
+  public Set<FullyQualifiedName> getCorrespondingFqns(final ProductSourcePath productSourcePath) {
+    return buildResults.getBinaryStore()
+        .get(productSourcePath)
+        .stream()
+        .map(JavaBinaryObject::getFqn)
+        .collect(Collectors.toSet());
+  }
 }
