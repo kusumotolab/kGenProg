@@ -9,7 +9,7 @@ public class FooTest{
   @Test
   public void test01() {
     final Foo foo = new Foo();
-    final Path path = Paths.get("./example/BuildSuccess15/resources/test.txt");
+    final Path path = Paths.get("./resources/test.txt");
     assertEquals(foo.readFile(path), "Hello World");
   }
 }
