@@ -16,15 +16,16 @@ public class FooTest{
 
   @Test
   public void test01() throws IOException {
-    final String hello = "Hello World";
+    final Double random = Math.random();
+    final String randomNumber = random.toString();
     final String fileName = "foo";
     final Path path = tempFolder.getRoot().toPath().resolve(fileName);
-    final List<String> list = Arrays.asList(hello);
+    final List<String> list = Arrays.asList(randomNumber);
 
     final Foo foo = new Foo();
     foo.write(path, list);
 
     final String str = Files.readAllLines(path).get(0);
-    assertEquals(str, hello);
+    assertEquals(str, randomNumber);
   }
 }
