@@ -48,7 +48,7 @@ public class SinglePointCrossover implements Crossover {
 
   private List<Variant> makeVariants(final List<Variant> variants, final VariantStore store) {
     final Variant variantA = selectFirstVariant(variants);
-    final Variant variantB = selectSecondVariant(variants);
+    final Variant variantB = selectSecondVariant(variants, variantA);
     final Gene geneA = variantA.getGene();
     final Gene geneB = variantB.getGene();
     final List<Base> basesA = geneA.getBases();
@@ -65,11 +65,23 @@ public class SinglePointCrossover implements Crossover {
         store.createVariant(newGeneB, elementB));
   }
 
+  /**
+   * 一つ目のバリアントを選ぶためのメソッド．
+   * 
+   * @param variants
+   * @return
+   */
   protected Variant selectFirstVariant(final List<Variant> variants) {
     return variants.get(random.nextInt(variants.size()));
   }
 
-  protected Variant selectSecondVariant(final List<Variant> variants) {
+  /**
+   * 二つ目のバリアントを選ぶためのメソッド． 一つ目に選んだバリアントの情報を利用できるように，引数で受け取る．
+   * 
+   * @param variants
+   * @return
+   */
+  protected Variant selectSecondVariant(final List<Variant> variants, final Variant firstVariant) {
     return variants.get(random.nextInt(variants.size()));
   }
 
