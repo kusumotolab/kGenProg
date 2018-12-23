@@ -33,7 +33,7 @@ public class SinglePointCrossover implements Crossover {
 
     final List<Variant> variants = new ArrayList<>();
 
-    for (int i = 0; i < crossoverGeneratingCount/2; i++) {
+    for (int i = 0; i < crossoverGeneratingCount / 2; i++) {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
       variants.addAll(newVariants);
     }
@@ -47,8 +47,8 @@ public class SinglePointCrossover implements Crossover {
   }
 
   private List<Variant> makeVariants(final List<Variant> variants, final VariantStore store) {
-    final Variant variantA = variants.get(random.nextInt(variants.size()));
-    final Variant variantB = variants.get(random.nextInt(variants.size()));
+    final Variant variantA = selectFirstVariant(variants);
+    final Variant variantB = selectSecondVariant(variants);
     final Gene geneA = variantA.getGene();
     final Gene geneB = variantB.getGene();
     final List<Base> basesA = geneA.getBases();
@@ -63,6 +63,14 @@ public class SinglePointCrossover implements Crossover {
     final HistoricalElement elementB = new CrossoverHistoricalElement(variantB, variantA, index);
     return Arrays.asList(store.createVariant(newGeneA, elementA),
         store.createVariant(newGeneB, elementB));
+  }
+
+  protected Variant selectFirstVariant(final List<Variant> variants) {
+    return variants.get(random.nextInt(variants.size()));
+  }
+
+  protected Variant selectSecondVariant(final List<Variant> variants) {
+    return variants.get(random.nextInt(variants.size()));
   }
 
   private boolean canMakeVariant(final List<Base> basesA, final List<Base> basesB) {
