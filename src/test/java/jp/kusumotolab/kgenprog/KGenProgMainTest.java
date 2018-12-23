@@ -72,7 +72,8 @@ public class KGenProgMainTest {
         new SinglePointCrossover(random, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection = new GenerationalVariantSelection();
+    final VariantSelection variantSelection = new GenerationalVariantSelection(
+        config.getHeadcount());
     final LocalTestExecutor localTestExecutor = new LocalTestExecutor(config);
     final TestExecutor testExecutor = new ParallelTestExecutor(localTestExecutor);
     final PatchGenerator patchGenerator = new PatchGenerator();
