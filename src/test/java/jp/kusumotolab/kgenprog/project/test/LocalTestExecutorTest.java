@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import static org.mockito.Mockito.mock;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
@@ -16,6 +17,7 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST04;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -24,6 +26,7 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -47,7 +50,9 @@ public class LocalTestExecutorTest {
 
     final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -83,7 +88,9 @@ public class LocalTestExecutorTest {
 
     final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストは10個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -129,7 +136,9 @@ public class LocalTestExecutorTest {
 
     final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストはないはず
     assertThat(result).isInstanceOf(EmptyTestResults.class);
@@ -145,7 +154,9 @@ public class LocalTestExecutorTest {
 
     final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 内部クラスを持つBazのASTと，Baz#OuterClassのL66のASTLocationを取り出す
     final ProductSourcePath baz = new ProductSourcePath(rootPath.resolve(Src.BAZ));
@@ -199,7 +210,9 @@ public class LocalTestExecutorTest {
         .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
         .build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
     assertThat(result).isInstanceOf(EmptyTestResults.class);
@@ -217,7 +230,9 @@ public class LocalTestExecutorTest {
         .addExecutionTest("example.FooTest")
         .build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストは10個から4個に減ったはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -252,7 +267,9 @@ public class LocalTestExecutorTest {
         .addExecutionTest("example.FooTestXXXXXXXX") // no such method
         .build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストはないはず
     assertThat(result).isInstanceOf(EmptyTestResults.class);
@@ -268,7 +285,9 @@ public class LocalTestExecutorTest {
 
     final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -290,7 +309,9 @@ public class LocalTestExecutorTest {
 
     final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストは4個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -317,7 +338,9 @@ public class LocalTestExecutorTest {
         .addExecutionTest(FOO_TEST.value) // FooTestのみ実行する（非依存テストは実行しない）
         .build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(source);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
 
     // 実行されたテストは4個のはず（BarTest#test01は実行されない）
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -339,7 +362,9 @@ public class LocalTestExecutorTest {
 
     final Configuration config = new Configuration.Builder(targetProject).build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result1 = executor.exec(source);
+    final Variant variant1 = mock(Variant.class);
+    when(variant1.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result1 = executor.exec(variant1);
 
     // 実行されたテストは4個のはず
     assertThat(result1.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
@@ -366,7 +391,9 @@ public class LocalTestExecutorTest {
     final GeneratedSourceCode source2 = dop.apply(source, location);
 
     // 再度テスト実行
-    final TestResults result2 = executor.exec(source2);
+    final Variant variant2 = mock(Variant.class);
+    when(variant2.getGeneratedSourceCode()).thenReturn(source2);
+    final TestResults result2 = executor.exec(variant2);
 
     // 実行されたテストは4個のはず
     assertThat(result2.getExecutedTestFQNs()).containsExactlyInAnyOrder( //

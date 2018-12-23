@@ -75,8 +75,8 @@ public class VariantStoreSerializerTest {
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).then(v -> {
-      final Single<GeneratedSourceCode> sourceCodeSingle = v.getArgument(0);
-      return testExecutor.execAsync(sourceCodeSingle);
+      final Single<Variant> variantSingle = v.getArgument(0);
+      return testExecutor.execAsync(variantSingle);
     });
 
     final VariantStore variantStore = new VariantStore(config, strategies);

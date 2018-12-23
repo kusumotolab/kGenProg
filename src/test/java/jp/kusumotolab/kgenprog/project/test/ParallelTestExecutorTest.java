@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import org.junit.Test;
 import io.reactivex.Single;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
 public class ParallelTestExecutorTest {
@@ -32,9 +33,10 @@ public class ParallelTestExecutorTest {
     final List<Single<String>> singleList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
-      final Single<GeneratedSourceCode> sourceCodeSingle = Single.just(
-          mock(GeneratedSourceCode.class));
-      final Single<TestResults> single = testExecutor.execAsync(sourceCodeSingle);
+      final Variant variant = mock(Variant.class);
+      when(variant.getGeneratedSourceCode()).thenReturn(mock(GeneratedSourceCode.class));
+      final Single<Variant> variantSingle = Single.just(variant);
+      final Single<TestResults> single = testExecutor.execAsync(variantSingle);
       final Single<String> threadName = single.map(e -> {
         final Thread currentThread = Thread.currentThread();
         return currentThread.getName();

@@ -165,20 +165,29 @@ public class VariantStore {
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
-    final Single<GeneratedSourceCode> sourceCodeSingle = Single.just(sourceCode);
 
-    final Single<TestResults> resultsSingle = strategies.execAsyncTestExecutor(sourceCodeSingle)
+    final LazyVariant variant = new LazyVariant(variantCounter.getAndIncrement(),
+        generation.get(), gene, sourceCode, element);
+    final Single<Variant> variantSingle = Single.just(variant)
+        .cast(Variant.class)
         .cache();
 
-    final Single<Fitness> fitnessSingle = resultsSingle.map(
-        v -> strategies.execSourceCodeValidation(sourceCode, v))
+    final Single<TestResults> resultsSingle = strategies.execAsyncTestExecutor(variantSingle)
         .cache();
+    variant.setTestResultsSingle(resultsSingle);
 
-    final Single<List<Suspiciousness>> suspiciousnessListSingle = resultsSingle.map(
-        v -> strategies.execFaultLocalization(sourceCode, v))
+    final Single<Fitness> fitnessSingle = variantSingle.map(
+        v -> strategies.execSourceCodeValidation(sourceCode, v.getTestResults()))
         .cache();
+    variant.setFitnessSingle(fitnessSingle);
 
-    return new LazyVariant(variantCounter.getAndIncrement(), generation.get(), gene, sourceCode,
-        resultsSingle, fitnessSingle, suspiciousnessListSingle, element);
+    final Single<List<Suspiciousness>> suspiciousnessListSingle = variantSingle.map(
+        v -> strategies.execFaultLocalization(sourceCode, v.getTestResults()))
+        .cache();
+    variant.setSuspiciousnessListSingle(suspiciousnessListSingle);
+
+    variant.subscribe();
+
+    return variant;
   }
 }

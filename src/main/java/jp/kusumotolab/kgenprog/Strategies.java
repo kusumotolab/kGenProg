@@ -49,12 +49,12 @@ public class Strategies {
     return sourceCodeGeneration.exec(variantStore, gene);
   }
 
-  public TestResults execTestExecutor(final GeneratedSourceCode generatedSourceCode) {
-    return testExecutor.exec(generatedSourceCode);
+  public TestResults execTestExecutor(final Variant variant) {
+    return testExecutor.exec(variant);
   }
 
-  public Single<TestResults> execAsyncTestExecutor(final Single<GeneratedSourceCode> sourceCodeSingle) {
-    return testExecutor.execAsync(sourceCodeSingle);
+  public Single<TestResults> execAsyncTestExecutor(final Single<Variant> variantSingle) {
+    return testExecutor.execAsync(variantSingle);
   }
 
   public Fitness execSourceCodeValidation(final GeneratedSourceCode sourceCode,

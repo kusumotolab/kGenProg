@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class ParallelTestExecutor implements TestExecutor {
 
@@ -17,13 +17,13 @@ public class ParallelTestExecutor implements TestExecutor {
   }
 
   @Override
-  public TestResults exec(final GeneratedSourceCode generatedSourceCode) {
-    return testExecutor.exec(generatedSourceCode);
+  public TestResults exec(final Variant variant) {
+    return testExecutor.exec(variant);
   }
 
   @Override
-  public Single<TestResults> execAsync(final Single<GeneratedSourceCode> generatedSourceCode) {
-    return generatedSourceCode.subscribeOn(Schedulers.from(executorService))
+  public Single<TestResults> execAsync(final Single<Variant> variantSingle) {
+    return variantSingle.subscribeOn(Schedulers.from(executorService))
         .map(testExecutor::exec);
   }
 }
