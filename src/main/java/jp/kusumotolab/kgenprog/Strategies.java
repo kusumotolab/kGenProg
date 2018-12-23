@@ -1,15 +1,16 @@
 package jp.kusumotolab.kgenprog;
 
 import java.util.List;
+import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.ga.Fitness;
-import jp.kusumotolab.kgenprog.ga.Gene;
-import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.ga.VariantStore;
+import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
@@ -48,8 +49,12 @@ public class Strategies {
     return sourceCodeGeneration.exec(variantStore, gene);
   }
 
-  public TestResults execTestExecutor(final GeneratedSourceCode generatedSourceCode) {
-    return testExecutor.exec(generatedSourceCode);
+  public TestResults execTestExecutor(final Variant variant) {
+    return testExecutor.exec(variant);
+  }
+
+  public Single<TestResults> execAsyncTestExecutor(final Single<Variant> variantSingle) {
+    return testExecutor.execAsync(variantSingle);
   }
 
   public Fitness execSourceCodeValidation(final GeneratedSourceCode sourceCode,

@@ -1,8 +1,13 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import io.reactivex.Single;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public interface TestExecutor {
 
-  TestResults exec(final GeneratedSourceCode generatedSourceCode);
+  TestResults exec(final Variant variant);
+
+  default Single<TestResults> execAsync(final Single<Variant> variantSingle){
+    return variantSingle.map(this::exec);
+  }
 }

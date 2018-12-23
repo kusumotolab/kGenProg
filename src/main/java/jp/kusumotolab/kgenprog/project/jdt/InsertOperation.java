@@ -28,4 +28,9 @@ public class InsertOperation extends JDTOperation {
   public String getName(){
     return "insert";
   }
+
+  @Override
+  public String getTargetSnippet() {
+    return astNode.toString();
+  }
 }

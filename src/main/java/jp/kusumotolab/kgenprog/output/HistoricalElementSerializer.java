@@ -6,8 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import jp.kusumotolab.kgenprog.ga.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class HistoricalElementSerializer implements JsonSerializer<HistoricalElement> {
 

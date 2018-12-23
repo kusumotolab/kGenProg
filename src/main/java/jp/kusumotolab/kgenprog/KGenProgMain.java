@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.ga.Crossover;
-import jp.kusumotolab.kgenprog.ga.Mutation;
-import jp.kusumotolab.kgenprog.ga.SourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.ga.Variant;
-import jp.kusumotolab.kgenprog.ga.VariantSelection;
-import jp.kusumotolab.kgenprog.ga.VariantStore;
+import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.output.PatchStore;
 import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
@@ -41,7 +41,7 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor,final PatchGenerator patchGenerator) {
+      final TestExecutor testExecutor, final PatchGenerator patchGenerator) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -76,36 +76,39 @@ public class KGenProgMain {
       // 新しい世代に入ったことをログ出力
       logGeneration(variantStore.getGenerationNumber());
 
-      stopwatch.split();
-
       // 変異プログラムを生成
       final List<Variant> variantsByMutation = mutation.exec(variantStore);
       final List<Variant> variantsByCrossover = crossover.exec(variantStore);
       variantStore.addGeneratedVariants(variantsByMutation);
       variantStore.addGeneratedVariants(variantsByCrossover);
 
+      // 世代別サマリの出力
+      logGenerationSummary(stopwatch.toString(), variantsByMutation, variantsByCrossover);
+      stopwatch.split();
+
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
-        log.info("found enough solutions.");
+        log.info("enough solutions have been found.");
+        logGAStopped(variantStore.getGenerationNumber());
         break;
       }
 
       // 制限時間に達した場合には GA を抜ける
       if (stopwatch.isTimeout()) {
-        log.info("reached the time limit.");
+        log.info("GA reached the time limit.");
+        logGAStopped(variantStore.getGenerationNumber());
         break;
       }
 
       // 最大世代数に到達した場合には GA を抜ける
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
-        log.info("reached the maximum generation.");
+        log.info("GA reached the maximum generation.");
+        logGAStopped(variantStore.getGenerationNumber());
         break;
       }
 
       // 次世代に向けての準備
       variantStore.proceedNextGeneration();
-
-      logGenerationSummary(stopwatch.toString(), variantsByMutation, variantsByCrossover);
     }
 
     // 生成されたバリアントのパッチ出力
@@ -251,5 +254,14 @@ public class KGenProgMain {
   private double getFitnessValue(final Variant variant) {
     return variant.getFitness()
         .getValue();
+  }
+
+  private void logGAStopped(final OrdinalNumber generation) {
+    final StringBuilder sb = new StringBuilder();
+    sb//
+        .append("GA stopped at the era of ")
+        .append(generation.toString())
+        .append(" generation.");
+    log.info(sb.toString());
   }
 }

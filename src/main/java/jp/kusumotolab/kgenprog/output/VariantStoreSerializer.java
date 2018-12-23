@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.Configuration;
-import jp.kusumotolab.kgenprog.ga.VariantStore;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class VariantStoreSerializer implements JsonSerializer<VariantStore> {

@@ -28,8 +28,8 @@ import com.electronwill.nightconfig.core.conversion.SpecNotNull;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
-import jp.kusumotolab.kgenprog.ga.Scope;
-import jp.kusumotolab.kgenprog.ga.Scope.Type;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -274,7 +274,7 @@ public class Configuration {
     @Conversion(ScopeTypeToString.class)
     private Scope.Type scope = DEFAULT_SCOPE;
 
-    @Option(name = "--no-output", hidden = true)
+    @Option(name = "--no-output", usage = "Do not output anything.", hidden = true)
     @com.electronwill.nightconfig.core.conversion.Path("no-output")
     @PreserveNotNull
     private boolean needNotOutput = DEFAULT_NEED_NOT_OUTPUT;
@@ -298,7 +298,7 @@ public class Configuration {
     }
 
     /**
-     * Do not call me except from buildFromCmdLineArgs
+     * Do not call me except from {@link #buildFromCmdLineArgs}
      */
     private Builder() {
       productPaths = new ArrayList<>();
@@ -309,16 +309,28 @@ public class Configuration {
 
     // region Methods
 
-    public static Configuration buildFromCmdLineArgs(final String[] args) {
+    public static Configuration buildFromCmdLineArgs(final String[] args)
+        throws IllegalArgumentException {
 
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
 
       try {
         parser.parseArgument(args);
+        final List<String> executionTestsFromCmdLine = builder.executionTests;
+        final List<Path> classPathsFromCmdLine = builder.classPaths;
 
         if (needsParseConfigFile(args)) {
           builder.parseConfigFile();
+
+          // Overwrite config values with ones from CLI
+          parser.parseArgument(args);
+          if (!executionTestsFromCmdLine.isEmpty()) {
+            builder.executionTests.retainAll(executionTestsFromCmdLine);
+          }
+          if (!classPathsFromCmdLine.isEmpty()) {
+            builder.classPaths.retainAll(classPathsFromCmdLine);
+          }
         }
 
         validateArgument(builder);
@@ -326,7 +338,7 @@ public class Configuration {
           | NoSuchFileException e) {
         // todo: make error message of InvalidValueException more user-friendly
         parser.printUsage(System.err);
-        System.exit(1);
+        throw new IllegalArgumentException(e.getMessage());
       }
 
       return builder.build();
@@ -441,6 +453,26 @@ public class Configuration {
     // region Private methods
 
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
+      validateExistences(builder);
+      validateCurrentDir(builder);
+    }
+
+    private static void validateExistences(final Builder builder) throws IllegalArgumentException {
+      validateExistence(builder.rootDir);
+      builder.productPaths.forEach(Builder::validateExistence);
+      builder.testPaths.forEach(Builder::validateExistence);
+      builder.classPaths.forEach(Builder::validateExistence);
+      validateExistence(builder.workingDir);
+    }
+
+    private static void validateExistence(final Path path) throws IllegalArgumentException {
+      if (Files.notExists(path)) {
+        log.error(path.toString() + " does not exist.");
+        throw new IllegalArgumentException(path.toString() + " does not exist.");
+      }
+    }
+
+    private static void validateCurrentDir(Builder builder) {
       final Path currentDir = Paths.get(".");
       final Path projectRootDir = builder.rootDir;
 
@@ -516,8 +548,7 @@ public class Configuration {
 
     // region Methods for CmdLineParser
 
-    @Option(name = "--config", metaVar = "<path>", usage = "Specifies the path to the config file.",
-        forbids = {"-r", "-s", "-t"})
+    @Option(name = "--config", metaVar = "<path>", usage = "Specifies the path to the config file.")
     private void setConfigPathFromCmdLineParser(final String configPath) {
       this.configPath = Paths.get(configPath);
     }
@@ -546,7 +577,7 @@ public class Configuration {
 
     @Option(name = "-c", aliases = "--cp", metaVar = "<class path> ...",
         usage = "Specifies class paths needed to build the target project.",
-        depends = {"-r", "-s", "-t"}, handler = StringArrayOptionHandler.class)
+        handler = StringArrayOptionHandler.class)
     private void addClassPathFromCmdLineParser(final String classPath) {
       this.classPaths.add(Paths.get(classPath));
     }
@@ -554,95 +585,84 @@ public class Configuration {
     @Option(name = "-x", aliases = "--exec-test", metaVar = "<fqn> ...",
         usage = "Specifies fully qualified names of test classes executed"
             + " during evaluation of variants (i.e. fix-candidates).",
-        depends = {"-r", "-s", "-t"}, handler = StringArrayOptionHandler.class)
+        handler = StringArrayOptionHandler.class)
     private void addExecutionTestFromCmdLineParser(final String executionTest) {
       this.executionTests.add(executionTest);
     }
 
     @Option(name = "-w", aliases = "--working-dir", metaVar = "<path>",
-        usage = "Specifies the path to working directory.", depends = {"-r", "-s", "-t"})
+        usage = "Specifies the path to working directory.")
     private void setWorkingDirFromCmdLineParser(final String workingDir) {
       this.workingDir = Paths.get(workingDir);
     }
 
     @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
-        usage = "Writes patches kGenProg generated to the specified directory.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Writes patches kGenProg generated to the specified directory.")
     private void setOutDirFromCmdLineParser(final String outDir) {
       this.outDir = Paths.get(outDir);
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",
-        usage = "Specifies how many variants are generated in a generation by a mutation.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Specifies how many variants are generated in a generation by a mutation.")
     private void setMutationGeneratingCountFromCmdLineParser(final int mutationGeneratingCount) {
       this.mutationGeneratingCount = mutationGeneratingCount;
     }
 
     @Option(name = "--crossover-generating-count", metaVar = "<num>",
-        usage = "Specifies how many variants are generated in a generation by a crossover.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Specifies how many variants are generated in a generation by a crossover.")
     private void setCrossOverGeneratingCountFromCmdLineParser(final int crossoverGeneratingCount) {
       this.crossoverGeneratingCount = crossoverGeneratingCount;
     }
 
     @Option(name = "--headcount", metaVar = "<num>",
-        usage = "Specifies how many variants survive in a generation.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Specifies how many variants survive in a generation.")
     private void setHeadcountFromCmdLineParser(final int headcount) {
       this.headcount = headcount;
     }
 
     @Option(name = "--max-generation", metaVar = "<num>",
-        usage = "Terminates searching solutions when the specified number of generations reached.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Terminates searching solutions when the specified number of generations reached.")
     private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
       this.maxGeneration = maxGeneration;
     }
 
     @Option(name = "--time-limit", metaVar = "<sec>",
-        usage = "Terminates searching solutions when the specified time has passed.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Terminates searching solutions when the specified time has passed.")
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
       this.timeLimit = Duration.ofSeconds(timeLimit);
     }
 
     // todo update usage
     @Option(name = "--test-time-limit", metaVar = "<sec>",
-        usage = "Specifies time limit to build and test for each variant in second",
-        depends = {"-r", "-s", "-t"})
+        usage = "Specifies time limit to build and test for each variant in second")
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
       this.testTimeLimit = Duration.ofSeconds(testTimeLimit);
     }
 
     @Option(name = "--required-solutions", metaVar = "<num>",
-        usage = "Terminates searching solutions when the specified number of solutions are found.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Terminates searching solutions when the specified number of solutions are found.")
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       this.requiredSolutionsCount = requiredSolutionsCount;
     }
 
     @Option(name = "-v", aliases = "--verbose",
-        usage = "Be more verbose, printing DEBUG level logs.", depends = {"-r", "-s", "-t"})
+        usage = "Be more verbose, printing DEBUG level logs.")
     private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
       logLevel = Level.DEBUG;
     }
 
-    @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.",
-        depends = {"-r", "-s", "-t"})
+    @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.")
     private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
       logLevel = Level.ERROR;
     }
 
     @Option(name = "--random-seed", metaVar = "<num>",
-        usage = "Specifies random seed used by random number generator.",
-        depends = {"-r", "-s", "-t"})
+        usage = "Specifies random seed used by random number generator.")
     private void setRandomSeedFromCmdLineParser(final long randomSeed) {
       this.randomSeed = randomSeed;
     }
 
-    @Option(name = "--scope", usage = "Specify the scope from which source code to be reused is selected.",
-        depends = {"-r", "-s", "-t"})
+    @Option(name = "--scope", usage = "Specify the scope from which source code to be reused is selected.")
     private void setScopeFromCmdLineParser(final Scope.Type scope) {
       this.scope = scope;
     }

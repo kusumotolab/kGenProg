@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.testutil;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,12 +12,12 @@ import org.apache.commons.io.FileUtils;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.ga.DefaultCodeValidation;
-import jp.kusumotolab.kgenprog.ga.Fitness;
-import jp.kusumotolab.kgenprog.ga.Gene;
-import jp.kusumotolab.kgenprog.ga.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.OriginalHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.Variant;
+import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
+import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.OriginalHistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
@@ -37,7 +39,9 @@ public class TestUtil {
   public static Variant createVariant(final Configuration config) {
     final Gene gene = new Gene(Collections.emptyList());
     final GeneratedSourceCode sourceCode = createGeneratedSourceCode(config.getTargetProject());
-    final TestResults testResults = new LocalTestExecutor(config).exec(sourceCode);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(sourceCode);
+    final TestResults testResults = new LocalTestExecutor(config).exec(variant);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
     final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();

@@ -1,7 +1,3 @@
-# Java Gradle CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
 version: 2.1
 
 orbs:
@@ -9,105 +5,93 @@ orbs:
 
 jobs:
 
-  # Execute `gradle test`
-  test:
+  # Job: run-unit-tests
+  #   Execute `gradle test` to run unit tests on the target commit.
+  run-unit-tests:
     docker:
-      # specify the version you desire here
       - image: circleci/openjdk:8-jdk
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
     working_directory: ~/repo
-
     environment:
-      # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-
     steps:
+      # ===== Initialize the environment
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
-          # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
-      - run: gradle dependencies
-
+      - run: ./gradlew dependencies
       - save_cache:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-
-      # run tests!
-      - run: gradle test
-
-      # Collect test meta data
+      # ===== Run `gradle test`
+      - run: ./gradlew test
+      # ===== Collect and upload test results
       - run:
-          name: Save test results
+          name: Collect test results
           command: |
             mkdir -p ~/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
             cp -r build/reports/tests/test/* ~/junit/
           when: always
-
       - store_test_results:
           path: ~/junit
-
       - store_artifacts:
           path: ~/junit
 
-  # Execute `build gradle`
-  build:
+  # Job: build-artifacts
+  #   Execute `gradle assemble` to generate a jar file on the target commit.
+  build-artifacts:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
-      # ===== Same as `test` job
+      # ===== Initialize the environment
       - checkout
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
           - v1-dependencies-
-      - run: gradle dependencies
+      - run: ./gradlew dependencies
       - save_cache:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-      # ===== Test and build a jar file
-      - run: gradle build
-      # ===== Save the built jar file
+      # ===== Assemble jar file
+      - run: ./gradlew assemble
+      # ===== Save current version
+      - run: ./gradlew -q printCurrentVersion > current-version.txt
+      # ===== Collect and persist the built artifacts
       - run:
           name: Collect artifacts to be released
           command: |
             mkdir artifacts
-            cp ./build/libs/kGenProg.jar ./artifacts/
+            cp ./build/libs/* ./artifacts/
+            cp current-version.txt ./artifacts/
       - persist_to_workspace:
           root: ./artifacts
           paths:
             - .
 
-  # Publish as a nightly-build release
-  publish-nightly-build:
+  # Job: publish-as-nightly-build
+  #   Publish to the GitHub Releases as a nightly-build release.
+  publish-as-nightly-build:
     executor: github-release/default
     environment:
       TZ: "/usr/share/zoneinfo/Asia/Tokyo"
     steps:
-      # ===== Initialize
+      # ===== Initialize the environment
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "34:c6:33:a2:0a:e1:13:74:4b:03:1c:3e:33:e3:3f:e0"
       - run:
-          name: Set up git
+          name: Set up git command
           command: |
             git config push.default current
-              git config user.email "ci@circleci.com"
-              git config user.name "CircleCI"
+            git config user.email "ci@circleci.com"
+            git config user.name "CircleCI"
       - attach_workspace:
           at: ./artifacts
       # ===== Delete the existing nightly-build release
@@ -116,6 +100,10 @@ jobs:
       - run:
           name: Delete existing nightly-build tag
           command: git push origin :nightly-build
+      # ===== Rename a jar file
+      - run:
+          name: Rename jar file
+          command: mv ./artifacts/kGenProg*.jar ./artifacts/kGenProg-nightly-build.jar
       # ===== Publish a new nightly-build release
       - github-release/create:
           tag: nightly-build
@@ -125,29 +113,80 @@ jobs:
             This is a nightly-build release, automatically built on \`master\` branch (commit SHA: ${CIRCLE_SHA1}).
             Execute the following command to download the latest version:
             \`\`\`
-            $ curl -LO https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg.jar
+            $ curl -LO https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg-nightly-build.jar
             \`\`\`
           file-path: ./artifacts/
           pre-release: true
 
+  # Job: generate-change-log
+  #   Generate a change log from GitHub's merged pull requests.
+  generate-change-log:
+    docker:
+      - image: circleci/node:10.14
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./artifacts
+      - run: touch CHANGELOG.md
+      - run:
+          name: Generate a change log when needed
+          command: ./.circleci/generate-change-log.sh
+      - persist_to_workspace:
+          root: .
+          paths:
+            - CHANGELOG.md
+
+  # Job: publish-as-new-release
+  #   Publish to the GitHub Releases as a latest release.
+  publish-as-new-release:
+    docker:
+      - image: circleci/golang:1.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: Publish a new release when needed
+          command: ./.circleci/publish-new-release.sh
+
 workflows:
   version: 2
 
-  # Test a commit except on master branch
-  test-commit:
+  # Workflow: test-branches
+  #   Execute the unit tests on every branch except for master on the GitHub.
+  test-branches:
     jobs:
-      - test:
+      - run-unit-tests:
           filters:
             branches:
               ignore: master
 
-  # Build a commit and publish as a nightly-build release only on master branch
-  nightly-build-and-release:
+  # Workflow: build-and-release
+  #   Execute testing, building and publishing on master branch.
+  #   This workflow performs:
+  #   - On every push to the master branch:
+  #     - Test and build the commit
+  #     - Publish the built jar to the GitHub Releases as a nightly-build
+  #   - Only when gradle.properties has changed:
+  #     - Generate a change log based on the GitHub's merged pull requests
+  #     - Publish the built jar to the GitHub Releases as a latest release
+  build-and-release:
     jobs:
-      - build:
+      - run-unit-tests:
           filters:
             branches:
               only: master
-      - publish-nightly-build:
+      - build-artifacts:
+          filters:
+            branches:
+              only: master
+      - publish-as-nightly-build:
           requires:
-            - build
+            - run-unit-tests
+            - build-artifacts
+      - generate-change-log:
+          requires:
+            - publish-as-nightly-build
+      - publish-as-new-release:
+          requires:
+            - generate-change-log
