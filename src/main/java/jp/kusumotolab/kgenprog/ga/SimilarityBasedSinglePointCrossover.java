@@ -3,6 +3,10 @@ package jp.kusumotolab.kgenprog.ga;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * バリアントの類似度に基づき一点交叉を行うクラス． 一つ目のバリアントはランダムに選び，二つ目のバリアントは一つ目と最もGeneの類似度が低いものを選らぶ．
+ * 
+ */
 public class SimilarityBasedSinglePointCrossover extends SinglePointCrossover {
 
   public SimilarityBasedSinglePointCrossover(final Random random,
