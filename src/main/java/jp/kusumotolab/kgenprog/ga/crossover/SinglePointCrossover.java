@@ -33,7 +33,8 @@ public class SinglePointCrossover implements Crossover {
             .isEmpty())
         .collect(Collectors.toList());
 
-    if (filteredVariants.isEmpty()) {
+    // filteredVariantsの要素数が2に満たない場合は交叉しない
+    if (filteredVariants.size() < 2) {
       return Collections.emptyList();
     }
 
