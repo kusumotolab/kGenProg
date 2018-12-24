@@ -21,7 +21,7 @@ public class SimilarityBasedSinglePointCrossover extends SinglePointCrossover {
 
     final Gene firstGene = firstVariant.getGene();
     double minSimilarity = 1.0d;
-    Variant secondVariant = null;
+    Variant secondVariant = firstVariant;
 
     for (final Variant variant : variants) {
       final Gene gene = variant.getGene();
