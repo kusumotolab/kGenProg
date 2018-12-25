@@ -1,16 +1,22 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.MockVariantStore;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
@@ -19,21 +25,14 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
 public class SimilarityBasedSinglePointCrossoverTest {
 
-  @SuppressWarnings("serial")
-  private class MockRandom extends Random {
 
-    private int counter = 0;
+  public static Random random;
 
-    @Override
-    public boolean nextBoolean() {
-      return false;
-    }
-
-    @Override
-    public int nextInt(int divisor) {
-      counter += 1;
-      return counter % divisor;
-    }
+  @Before
+  public void setup() {
+    random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(false);
+    when(random.nextInt(anyInt())).thenReturn(1);
   }
 
   @Test
@@ -69,14 +68,11 @@ public class SimilarityBasedSinglePointCrossoverTest {
         new Variant(0, 0, new Gene(noneBases), null, null, null, null, null);
     final Variant insertOperationVariant =
         new Variant(0, 0, new Gene(insertBases), null, null, null, null, null);
+    final VariantStore variantStore =
+        makeVariantStore(noneOperationVariant, insertOperationVariant);
 
-    final Random random = new MockRandom();
-    random.setSeed(0);
     final SinglePointCrossover singlePointCrossover =
         new SimilarityBasedSinglePointCrossover(random, 10);
-    final VariantStore variantStore =
-        new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
-
     final List<Variant> variants = singlePointCrossover.exec(variantStore);
 
     final Variant variant = variants.get(0);
@@ -85,7 +81,7 @@ public class SimilarityBasedSinglePointCrossoverTest {
 
     final CrossoverHistoricalElement cElement = (CrossoverHistoricalElement) element;
     assertThat(cElement.getParents()).containsExactly(insertOperationVariant, noneOperationVariant);
-    assertThat(cElement.getCrossoverPoint()).isEqualTo(3);
+    assertThat(cElement.getCrossoverPoint()).isEqualTo(2);
   }
 
   private List<Variant> execCrossover(final int crossoverGeneratingCount) {
@@ -101,15 +97,30 @@ public class SimilarityBasedSinglePointCrossoverTest {
         new Variant(0, 0, new Gene(noneBases), null, null, null, null, null);
     final Variant insertOperationVariant =
         new Variant(0, 0, new Gene(insertBases), null, null, null, null, null);
+    final VariantStore variantStore =
+        makeVariantStore(noneOperationVariant, insertOperationVariant);
 
-    final Random random = new MockRandom();
-    random.setSeed(0);
     final SinglePointCrossover singlePointCrossover =
         new SimilarityBasedSinglePointCrossover(random, crossoverGeneratingCount);
-    final VariantStore variantStore =
-        new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
-
     return singlePointCrossover.exec(variantStore);
+  }
+
+  private VariantStore makeVariantStore(final Variant noneOperationVariant,
+      final Variant insertOperationVariant) {
+    final VariantStore variantStore = Mockito.mock(VariantStore.class);
+    when(variantStore.getCurrentVariants())
+        .thenReturn(Arrays.asList(noneOperationVariant, insertOperationVariant));
+    when(variantStore.createVariant(ArgumentMatchers.<Gene>any(),
+        ArgumentMatchers.<HistoricalElement>any())).thenAnswer(new Answer<Variant>() {
+
+          @Override
+          public Variant answer(final InvocationOnMock invocation) throws Throwable {
+            final Gene gene = invocation.getArgument(0);
+            final HistoricalElement element = invocation.getArgument(1);
+            return new Variant(0, 0, gene, null, null, null, null, element);
+          }
+        });
+    return variantStore;
   }
 
   private boolean containNoneOperationAndInsertOperation(final Gene gene) {
