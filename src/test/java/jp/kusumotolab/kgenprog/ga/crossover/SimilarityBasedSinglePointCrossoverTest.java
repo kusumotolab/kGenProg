@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import java.util.Arrays;
@@ -9,10 +10,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
@@ -26,7 +24,7 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 public class SimilarityBasedSinglePointCrossoverTest {
 
 
-  public static Random random;
+  private static Random random;
 
   @Before
   public void setup() {
@@ -110,16 +108,11 @@ public class SimilarityBasedSinglePointCrossoverTest {
     final VariantStore variantStore = Mockito.mock(VariantStore.class);
     when(variantStore.getCurrentVariants())
         .thenReturn(Arrays.asList(noneOperationVariant, insertOperationVariant));
-    when(variantStore.createVariant(ArgumentMatchers.<Gene>any(),
-        ArgumentMatchers.<HistoricalElement>any())).thenAnswer(new Answer<Variant>() {
-
-          @Override
-          public Variant answer(final InvocationOnMock invocation) throws Throwable {
-            final Gene gene = invocation.getArgument(0);
-            final HistoricalElement element = invocation.getArgument(1);
-            return new Variant(0, 0, gene, null, null, null, null, element);
-          }
-        });
+    when(variantStore.createVariant(any(), any())).thenAnswer(invocation -> {
+      final Gene gene = invocation.getArgument(0);
+      final HistoricalElement element = invocation.getArgument(1);
+      return new Variant(0, 0, gene, null, null, null, null, element);
+    });
     return variantStore;
   }
 
