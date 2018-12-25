@@ -38,12 +38,12 @@ public class VariantStoreExporter {
   private Gson createGson(final Configuration config) {
     final GsonBuilder gsonBuilder = new GsonBuilder();
     return gsonBuilder.registerTypeAdapter(VariantStore.class, new VariantStoreSerializer(config))
-        .registerTypeAdapter(Variant.class, new VariantSerializer())
+        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
-        .registerTypeAdapter(TestResult.class, new TestResultSerializer())
+        .registerTypeHierarchyAdapter(TestResult.class, new TestResultSerializer())
         .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .registerTypeAdapter(Patch.class, new PatchSerializer())
-        .registerTypeAdapter(FileDiff.class, new FileDiffSerializer())
+        .registerTypeHierarchyAdapter(Patch.class, new PatchSerializer())
+        .registerTypeHierarchyAdapter(FileDiff.class, new FileDiffSerializer())
         .create();
   }
 }
