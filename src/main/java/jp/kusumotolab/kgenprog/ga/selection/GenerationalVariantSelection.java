@@ -6,10 +6,6 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class GenerationalVariantSelection extends DefaultVariantSelection {
 
-  public GenerationalVariantSelection() {
-    this(100);
-  }
-
   public GenerationalVariantSelection(final int maxVariantPerGeneration) {
     super(maxVariantPerGeneration);
   }
