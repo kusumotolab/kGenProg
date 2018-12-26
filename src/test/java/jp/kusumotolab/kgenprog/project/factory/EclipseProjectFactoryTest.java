@@ -12,8 +12,8 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class EclipseProjectFactoryTest {
 
-  private final static ClassPath JUNIT_CLASSPATH = new ClassPath(
-      Paths.get("example/BuildSuccess06/./lib/junit-4.12.jar"));
+  private final static ClassPath JUNIT_CLASSPATH =
+      new ClassPath(Paths.get("example/BuildSuccess06/./lib/junit-4.12.jar"));
 
   @Test
   public void testCreateBySingleEclipseProject() {
@@ -21,8 +21,8 @@ public class EclipseProjectFactoryTest {
     final EclipseProjectFactory eclipseProjectFactory = new EclipseProjectFactory(rootPath);
     final TargetProject project = eclipseProjectFactory.create();
 
-    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(FOO));
-    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(FOO_TEST));
+    final ProductSourcePath foo = new ProductSourcePath(rootPath, FOO);
+    final TestSourcePath fooTest = new TestSourcePath(rootPath, FOO_TEST);
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo);

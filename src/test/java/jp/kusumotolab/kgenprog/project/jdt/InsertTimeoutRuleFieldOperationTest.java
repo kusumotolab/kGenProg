@@ -19,7 +19,7 @@ public class InsertTimeoutRuleFieldOperationTest {
         .append("}")
         .toString();
 
-    final TestSourcePath sourcePath = new TestSourcePath(Paths.get("A.java"));
+    final TestSourcePath sourcePath = new TestSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<TestSourcePath> ast = constructor.constructAST(sourcePath, source);
     final GeneratedSourceCode sourceCode =
@@ -54,7 +54,7 @@ public class InsertTimeoutRuleFieldOperationTest {
         .append("}")
         .toString();
 
-    final TestSourcePath sourcePath = new TestSourcePath(Paths.get("A.java"));
+    final TestSourcePath sourcePath = new TestSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<TestSourcePath> ast = constructor.constructAST(sourcePath, source);
     final GeneratedSourceCode sourceCode =

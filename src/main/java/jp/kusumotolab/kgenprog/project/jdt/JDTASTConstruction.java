@@ -34,15 +34,16 @@ public class JDTASTConstruction {
   public GeneratedSourceCode constructAST(final List<ProductSourcePath> productSourcePaths,
       final List<TestSourcePath> testSourcePaths) {
     final String[] paths = Stream.concat(productSourcePaths.stream(), testSourcePaths.stream())
-        .map(path -> path.path.toString())
+        .map(path -> path.getResolvedPath()
+            .toString())
         .toArray(String[]::new);
 
     final ASTParser parser = createNewParser();
 
     final Map<Path, ProductSourcePath> pathToProductSourcePath = productSourcePaths.stream()
-        .collect(Collectors.toMap(path -> path.path, path -> path));
+        .collect(Collectors.toMap(path -> path.getResolvedPath(), path -> path));
     final Map<Path, TestSourcePath> pathToTestSourcePath = testSourcePaths.stream()
-        .collect(Collectors.toMap(path -> path.path, path -> path));
+        .collect(Collectors.toMap(path -> path.getResolvedPath(), path -> path));
 
     final List<GeneratedAST<ProductSourcePath>> productAsts = new ArrayList<>();
     final List<GeneratedAST<TestSourcePath>> testAsts = new ArrayList<>();

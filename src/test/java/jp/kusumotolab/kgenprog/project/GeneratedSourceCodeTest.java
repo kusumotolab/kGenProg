@@ -51,8 +51,8 @@ public class GeneratedSourceCodeTest {
 
   @Test
   public void testGetMessageDigest01() {
-    final ProductSourcePath p1 = new ProductSourcePath(Paths.get("a"));
-    final ProductSourcePath p2 = new ProductSourcePath(Paths.get("b"));
+    final ProductSourcePath p1 = new ProductSourcePath(Paths.get("."), Paths.get("a"));
+    final ProductSourcePath p2 = new ProductSourcePath(Paths.get("."), Paths.get("b"));
     final GeneratedAST<ProductSourcePath> ast1 = new GeneratedASTMock(p1, "aaa");
     final GeneratedAST<ProductSourcePath> ast2 = new GeneratedASTMock(p2, "bbb");
     final GeneratedSourceCode g =
@@ -63,9 +63,9 @@ public class GeneratedSourceCodeTest {
 
   @Test
   public void testGetMessageDigest02() {
-    final ProductSourcePath p1 = new ProductSourcePath(Paths.get("a"));
-    final ProductSourcePath p2 = new ProductSourcePath(Paths.get("b"));
-    final ProductSourcePath p3 = new ProductSourcePath(Paths.get("c"));
+    final ProductSourcePath p1 = new ProductSourcePath(Paths.get("."), Paths.get("a"));
+    final ProductSourcePath p2 = new ProductSourcePath(Paths.get("."), Paths.get("b"));
+    final ProductSourcePath p3 = new ProductSourcePath(Paths.get("."), Paths.get("c"));
     final GeneratedAST<ProductSourcePath> ast1 = new GeneratedASTMock(p1, "aaa");
     final GeneratedAST<ProductSourcePath> ast2 = new GeneratedASTMock(p2, "bbb");
     final GeneratedAST<ProductSourcePath> ast3 = new GeneratedASTMock(p3, "ccc");

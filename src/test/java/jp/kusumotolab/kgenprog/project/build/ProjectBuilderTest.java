@@ -223,7 +223,7 @@ public class ProjectBuilderTest {
     assertThat(binaryStore1.getAll()).hasSize(3);
 
     // Fooのdigestを書き換えてコンパイル対象に加わるように
-    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Src.FOO));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath, Src.FOO);
     final GeneratedAST<?> ast = source.getProductAst(fooPath);
     final Class<?> clazz = ast.getClass();
     final Field field = clazz.getDeclaredField("messageDigest");
@@ -292,7 +292,7 @@ public class ProjectBuilderTest {
     assertThat(jmo.getByteCode()).hasSize(4);
 
     // Fooのdigestを書き換えてコンパイル対象に加わるように
-    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Src.FOO));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath, Src.FOO);
     final GeneratedAST<?> ast = source.getProductAst(fooPath);
     final Class<?> clazz = ast.getClass();
     final Field field = clazz.getDeclaredField("messageDigest");

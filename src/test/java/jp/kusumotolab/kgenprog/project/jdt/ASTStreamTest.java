@@ -22,7 +22,7 @@ public class ASTStreamTest {
         .append("}")
         .toString();
 
-    final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("A.java"));
+    final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
 
