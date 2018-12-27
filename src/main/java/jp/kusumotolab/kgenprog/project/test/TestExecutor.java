@@ -13,5 +13,5 @@ public interface TestExecutor {
 
   default void initialize() {}
 
-  default void finalize() {}
+  default void finish() {}
 }

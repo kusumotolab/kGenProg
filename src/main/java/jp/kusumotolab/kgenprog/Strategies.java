@@ -39,12 +39,13 @@ public class Strategies {
     this.variantSelection = variantSelection;
   }
 
-  public void initialize() {
+  public void initialize(final Variant variant) {
+    sourceCodeGeneration.initialize(variant);
     testExecutor.initialize();
   }
 
-  public void finalize() {
-    testExecutor.finalize();
+  public void finish() {
+    testExecutor.finish();
   }
 
   public List<Suspiciousness> execFaultLocalization(final GeneratedSourceCode generatedSourceCode,
