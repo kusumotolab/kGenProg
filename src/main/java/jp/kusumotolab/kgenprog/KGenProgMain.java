@@ -64,9 +64,9 @@ public class KGenProgMain {
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
 
-    sourceCodeGeneration.initialize(initialVariant);
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getProductAsts());
+    strategies.initialize(initialVariant);
 
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
@@ -118,6 +118,7 @@ public class KGenProgMain {
     writeJson(variantStore);
 
     stopwatch.unsplit();
+    strategies.finish();
     log.info("execution time: " + stopwatch.toString());
 
 

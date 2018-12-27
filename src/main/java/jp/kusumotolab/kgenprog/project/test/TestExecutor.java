@@ -10,4 +10,8 @@ public interface TestExecutor {
   default Single<TestResults> execAsync(final Single<Variant> variantSingle){
     return variantSingle.map(this::exec);
   }
+
+  default void initialize() {}
+
+  default void finish() {}
 }
