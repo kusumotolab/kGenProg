@@ -21,7 +21,7 @@ import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
-public class SimilarityBasedSinglePointCrossoverTest {
+public class GeneSimilarityBasedSinglePointCrossoverTest {
 
 
   private static Random random;
@@ -70,7 +70,7 @@ public class SimilarityBasedSinglePointCrossoverTest {
         makeVariantStore(noneOperationVariant, insertOperationVariant);
 
     final SinglePointCrossover singlePointCrossover =
-        new SimilarityBasedSinglePointCrossover(random, 10);
+        new GeneSimilarityBasedSinglePointCrossover(random, 10);
     final List<Variant> variants = singlePointCrossover.exec(variantStore);
 
     final Variant variant = variants.get(0);
@@ -99,7 +99,7 @@ public class SimilarityBasedSinglePointCrossoverTest {
         makeVariantStore(noneOperationVariant, insertOperationVariant);
 
     final SinglePointCrossover singlePointCrossover =
-        new SimilarityBasedSinglePointCrossover(random, crossoverGeneratingCount);
+        new GeneSimilarityBasedSinglePointCrossover(random, crossoverGeneratingCount);
     return singlePointCrossover.exec(variantStore);
   }
 
