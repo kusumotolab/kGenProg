@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,20 +22,6 @@ import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
 public class TestResults implements Serializable {
-
-  static public double getSimilarity(final TestResults testResultsA,
-      final TestResults testResultsB) {
-
-    final Set<FullyQualifiedName> union = new HashSet<>();
-    union.addAll(testResultsA.getFailedTestFQNs());
-    union.addAll(testResultsB.getFailedTestFQNs());
-
-    final Set<FullyQualifiedName> intersection = new HashSet<>();
-    intersection.addAll(testResultsA.getFailedTestFQNs());
-    intersection.retainAll(testResultsB.getFailedTestFQNs());
-
-    return (double) intersection.size() / (double) union.size();
-  }
 
   private static final long serialVersionUID = 1L;
 
