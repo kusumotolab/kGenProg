@@ -13,7 +13,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
-public class TestBasedSinglePointCrossoverTest {
+public class TestSimilarityBasedSinglePointCrossoverTest {
 
   private static Random random;
   private static Variant variantA;
@@ -64,7 +64,7 @@ public class TestBasedSinglePointCrossoverTest {
 
   @Test
   public void test_selectSecondVariant() {
-    final SinglePointCrossover crossover = new TestBasedSinglePointCrossover(random, 1);
+    final SinglePointCrossover crossover = new TestSimilarityBasedSinglePointCrossover(random, 1);
     List<Variant> variants = Arrays.asList(variantA, variantB, variantC, variantD);
 
     final Variant variant1 = crossover.selectSecondVariant(variants, variantA);
