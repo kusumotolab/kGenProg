@@ -10,16 +10,15 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 
 public class JDTOperationTest {
 
   @Test
   public void testApplyHandlingException() {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
     final JDTOperation operation = new ExceptionOperation();
-
-    final Path path = Paths.get("example/BuildSuccess01/src/example/Foo.java");
-    final ProductSourcePath productSourcePath = new ProductSourcePath(path);
-
+    final ProductSourcePath productSourcePath = new ProductSourcePath(rootPath, Src.FOO);
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode = constructor
         .constructAST(Collections.singletonList(productSourcePath), Collections.emptyList());

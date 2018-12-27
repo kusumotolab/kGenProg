@@ -23,6 +23,7 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class PatchGeneratorTest {
@@ -54,8 +55,8 @@ public class PatchGeneratorTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
+    final JDTASTLocation location =
+        new JDTASTLocation(new ProductSourcePath(basePath, Src.FOO), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
@@ -103,8 +104,8 @@ public class PatchGeneratorTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Bar.java")), statement, ast);
+    final JDTASTLocation location =
+        new JDTASTLocation(new ProductSourcePath(basePath, Src.BAR), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
@@ -153,8 +154,8 @@ public class PatchGeneratorTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
+    final JDTASTLocation location =
+        new JDTASTLocation(new ProductSourcePath(basePath, Src.FOO), statement, ast);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -165,7 +166,7 @@ public class PatchGeneratorTest {
 
     final InsertOperation operation = new InsertOperation(insertStatement);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,0,
+    final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
@@ -207,8 +208,8 @@ public class PatchGeneratorTest {
     Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
+    final JDTASTLocation location =
+        new JDTASTLocation(new ProductSourcePath(basePath, Src.FOO), statement, ast);
 
     // 挿入対象生成
     final AST jdtAST = ast.getRoot()
@@ -222,7 +223,7 @@ public class PatchGeneratorTest {
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,0,
+    final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)
@@ -269,12 +270,12 @@ public class PatchGeneratorTest {
     final Statement statement = (Statement) method.getBody()
         .statements()
         .get(0);
-    final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(basePath.resolve("src/example/Foo.java")), statement, ast);
+    final JDTASTLocation location =
+        new JDTASTLocation(new ProductSourcePath(basePath, Src.FOO), statement, ast);
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final Variant modifiedVariant = new Variant(0,0,
+    final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);
 
     final FileDiff fileDiff = patchGenerator.exec(modifiedVariant)

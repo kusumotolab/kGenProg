@@ -26,7 +26,7 @@ public class DeleteOperationTest {
 
   @Test
   public void testDeleteStatement() {
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
     @SuppressWarnings("unchecked")

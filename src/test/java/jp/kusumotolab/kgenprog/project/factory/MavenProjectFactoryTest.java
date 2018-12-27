@@ -21,13 +21,13 @@ public class MavenProjectFactoryTest {
 
     final List<ProductSourcePath> productSourcePaths = targetProject.getProductSourcePaths();
     assertThat(productSourcePaths).hasSize(1);
-    assertThat(productSourcePaths).contains(new ProductSourcePath(
-        Paths.get(path.toString(), "src", "main", "java", "example", "Foo.java")));
+    assertThat(productSourcePaths)
+        .contains(new ProductSourcePath(path, Paths.get("src/main/java/example/Foo.java")));
 
     final List<TestSourcePath> testSourcePaths = targetProject.getTestSourcePaths();
     assertThat(testSourcePaths).hasSize(1);
-    assertThat(testSourcePaths).contains(new TestSourcePath(
-        Paths.get(path.toString(), "src", "test", "java", "example", "FooTest.java")));
+    assertThat(testSourcePaths)
+        .contains(new TestSourcePath(path, Paths.get("src/test/java/example/FooTest.java")));
 
     final List<ClassPath> classPaths = targetProject.getClassPaths();
     assertThat(classPaths).hasSize(2);

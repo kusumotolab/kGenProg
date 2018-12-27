@@ -52,7 +52,8 @@ public class PatchGenerator {
    * @throws DiffException
    */
   private FileDiff makeFileDiff(final GeneratedAST<?> ast) throws IOException, DiffException {
-    final Path originPath = ast.getSourcePath().path;
+    final Path originPath = ast.getSourcePath()
+        .getResolvedPath();
 
     final String modifiedSourceCodeText = ast.getSourceCode();
     final Document document = new Document(modifiedSourceCodeText);
@@ -62,7 +63,8 @@ public class PatchGenerator {
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));
     final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
-    final List<String> noBlankLineOriginalSourceCodeLines = removeEndDelimiter(originalSourceCodeLines);
+    final List<String> noBlankLineOriginalSourceCodeLines =
+        removeEndDelimiter(originalSourceCodeLines);
     final List<String> diffLines =
         makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
 

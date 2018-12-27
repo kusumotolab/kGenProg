@@ -14,6 +14,7 @@ import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class JDTLocationTest {
@@ -25,8 +26,7 @@ public class JDTLocationTest {
     final GeneratedSourceCode generatedSourceCode =
         TestUtil.createGeneratedSourceCode(targetProject);
 
-    final Path path = rootPath.resolve("src/example/Foo.java");
-    final ProductSourcePath productSourcePath = new ProductSourcePath(path);
+    final ProductSourcePath productSourcePath = new ProductSourcePath(rootPath, Src.FOO);
     final GeneratedJDTAST<ProductSourcePath> ast =
         (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getProductAst(productSourcePath);
 
