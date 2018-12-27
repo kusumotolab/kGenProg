@@ -31,13 +31,13 @@ public class JDTASTConstructionTest {
     assertThat(productAsts).hasSize(2)
         .extracting(GeneratedAST::getSourcePath)
         .extracting(p -> p.path)
-        .containsExactlyInAnyOrder(basePath.resolve(FOO), basePath.resolve(BAR));
+        .containsExactlyInAnyOrder(FOO, BAR);
 
     final List<GeneratedAST<TestSourcePath>> testAsts = generatedSourceCode.getTestAsts();
     assertThat(testAsts).hasSize(2)
         .extracting(GeneratedAST::getSourcePath)
         .extracting(p -> p.path)
-        .containsExactlyInAnyOrder(basePath.resolve(FOO_TEST), basePath.resolve(BAR_TEST));
+        .containsExactlyInAnyOrder(FOO_TEST, BAR_TEST);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class JDTASTConstructionTest {
     assertThat(productAsts).hasSize(1)
         .extracting(GeneratedAST::getSourcePath)
         .extracting(p -> p.path)
-        .containsExactlyInAnyOrder(basePath.resolve(FOO));
+        .containsExactlyInAnyOrder(FOO);
 
     // テストのASTはゼロのはず
     final List<GeneratedAST<TestSourcePath>> testAsts = generatedSourceCode.getTestAsts();

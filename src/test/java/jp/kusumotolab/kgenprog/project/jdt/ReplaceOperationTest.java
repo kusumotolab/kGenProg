@@ -30,7 +30,7 @@ public class ReplaceOperationTest {
   @Test
   public void testReplaceStatement() {
 
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
@@ -75,7 +75,7 @@ public class ReplaceOperationTest {
 
   @Test
   public void testReplaceStatementInList() {
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
@@ -134,7 +134,7 @@ public class ReplaceOperationTest {
         .append("}")
         .toString();
 
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("B.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("B.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);

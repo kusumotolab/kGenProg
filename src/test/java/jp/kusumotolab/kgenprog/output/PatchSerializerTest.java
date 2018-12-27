@@ -16,13 +16,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
+import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.OriginalHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -39,8 +39,8 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class PatchSerializerTest {
 
   private Gson gson;
-  private JDTASTConstruction astConstruction = new JDTASTConstruction();
-  private PatchGenerator patchGenerator = new PatchGenerator();
+  private final JDTASTConstruction astConstruction = new JDTASTConstruction();
+  private final PatchGenerator patchGenerator = new PatchGenerator();
 
   @Before
   public void setup() {
@@ -49,13 +49,11 @@ public class PatchSerializerTest {
         .create();
   }
 
-  private Variant createVariant(final Fitness fitness,
-      final TargetProject targetProject) {
+  private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 
     return new Variant(0, 0, new Gene(Collections.emptyList()),
-        astConstruction.constructAST(targetProject),
-        EmptyTestResults.instance, fitness, Collections.emptyList(),
-        new OriginalHistoricalElement());
+        astConstruction.constructAST(targetProject), EmptyTestResults.instance, fitness,
+        Collections.emptyList(), new OriginalHistoricalElement());
   }
 
   private Variant createVariant(final long id, final int generationNumber, final Fitness fitness,
@@ -73,13 +71,14 @@ public class PatchSerializerTest {
   public void testPatch() {
     // 初期Variant
     final Path rootPath = Paths.get("example/CloseToZero01");
-    TargetProject project = TargetProjectFactory.create(rootPath);
+    final TargetProject project = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = createVariant(new SimpleFitness(0.0d), project);
 
     // 差分を作るために適当な位置にコードを挿入する
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
-    final GeneratedJDTAST<ProductSourcePath> ast = (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
-        .get(0);
+    final GeneratedJDTAST<ProductSourcePath> ast =
+        (GeneratedJDTAST<ProductSourcePath>) originalSourceCode.getProductAsts()
+            .get(0);
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
         .get(0);
@@ -88,7 +87,7 @@ public class PatchSerializerTest {
         .statements()
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(
-        new ProductSourcePath(rootPath.resolve("src/example/CloseToZero.java")), statement, ast);
+        new ProductSourcePath(rootPath, Paths.get("src/example/CloseToZero.java")), statement, ast);
 
     // 挿入操作を適用する
     final AST jdtAST = ast.getRoot()
@@ -99,10 +98,10 @@ public class PatchSerializerTest {
     final InsertOperation operation = new InsertOperation(insertStatement);
     final Base appendBase = new Base(location, operation);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final HistoricalElement historicalElement = new MutationHistoricalElement(initialVariant,
-        appendBase);
-    final Variant modifiedVariant = createVariant(1L, 1, new SimpleFitness(0.0d), code,
-        historicalElement);
+    final HistoricalElement historicalElement =
+        new MutationHistoricalElement(initialVariant, appendBase);
+    final Variant modifiedVariant =
+        createVariant(1L, 1, new SimpleFitness(0.0d), code, historicalElement);
 
     final Patch patch = patchGenerator.exec(modifiedVariant);
 

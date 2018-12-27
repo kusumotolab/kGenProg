@@ -33,8 +33,8 @@ public class TargetProjectFactoryTest {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(FOO));
-    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(FOO_TEST));
+    final ProductSourcePath foo = new ProductSourcePath(rootPath, FOO);
+    final TestSourcePath fooTest = new TestSourcePath(rootPath, FOO_TEST);
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo);
@@ -47,10 +47,10 @@ public class TargetProjectFactoryTest {
     final Path rootPath = Paths.get("example/BuildSuccess02");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(FOO));
-    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(FOO_TEST));
-    final ProductSourcePath bar = new ProductSourcePath(rootPath.resolve(BAR));
-    final TestSourcePath barTest = new TestSourcePath(rootPath.resolve(BAR_TEST));
+    final ProductSourcePath foo = new ProductSourcePath(rootPath, FOO);
+    final TestSourcePath fooTest = new TestSourcePath(rootPath, FOO_TEST);
+    final ProductSourcePath bar = new ProductSourcePath(rootPath, BAR);
+    final TestSourcePath barTest = new TestSourcePath(rootPath, BAR_TEST);
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo, bar);
@@ -63,12 +63,12 @@ public class TargetProjectFactoryTest {
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject project = TargetProjectFactory.create(rootPath);
 
-    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(FOO));
-    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(FOO_TEST));
-    final ProductSourcePath bar = new ProductSourcePath(rootPath.resolve(BAR));
-    final TestSourcePath barTest = new TestSourcePath(rootPath.resolve(BAR_TEST));
-    final ProductSourcePath baz = new ProductSourcePath(rootPath.resolve(BAZ));
-    final TestSourcePath bazTest = new TestSourcePath(rootPath.resolve(BAZ_TEST));
+    final ProductSourcePath foo = new ProductSourcePath(rootPath, FOO);
+    final TestSourcePath fooTest = new TestSourcePath(rootPath, FOO_TEST);
+    final ProductSourcePath bar = new ProductSourcePath(rootPath, BAR);
+    final TestSourcePath barTest = new TestSourcePath(rootPath, BAR_TEST);
+    final ProductSourcePath baz = new ProductSourcePath(rootPath, BAZ);
+    final TestSourcePath bazTest = new TestSourcePath(rootPath, BAZ_TEST);
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo, bar, baz);
@@ -89,9 +89,9 @@ public class TargetProjectFactoryTest {
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths())
-        .containsExactlyInAnyOrder(new ProductSourcePath(rootPath.resolve(FOO)));
+        .containsExactlyInAnyOrder(new ProductSourcePath(rootPath, FOO));
     assertThat(project.getTestSourcePaths())
-        .containsExactlyInAnyOrder(new TestSourcePath(rootPath.resolve(FOO_TEST)));
+        .containsExactlyInAnyOrder(new TestSourcePath(rootPath, FOO_TEST));
     assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT, HAMCREST);
   }
 
@@ -115,7 +115,7 @@ public class TargetProjectFactoryTest {
     System.setErr(new PrintStream(new OutputStream() {
 
       @Override
-      public void write(int b) {} // 何もしないwriter
+      public void write(final int b) {} // 何もしないwriter
     }));
 
     // 一時的にダミーbuild.xmlを生成
@@ -155,10 +155,10 @@ public class TargetProjectFactoryTest {
     final String barTestStr = BAR_TEST.toString()
         .replace("src", "test");
 
-    final ProductSourcePath foo = new ProductSourcePath(rootPath.resolve(FOO));
-    final TestSourcePath fooTest = new TestSourcePath(rootPath.resolve(fooTestStr));
-    final ProductSourcePath bar = new ProductSourcePath(rootPath.resolve(BAR));
-    final TestSourcePath barTest = new TestSourcePath(rootPath.resolve(barTestStr));
+    final ProductSourcePath foo = new ProductSourcePath(rootPath, FOO);
+    final TestSourcePath fooTest = new TestSourcePath(rootPath, Paths.get(fooTestStr));
+    final ProductSourcePath bar = new ProductSourcePath(rootPath, BAR);
+    final TestSourcePath barTest = new TestSourcePath(rootPath, Paths.get(barTestStr));
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo, bar);

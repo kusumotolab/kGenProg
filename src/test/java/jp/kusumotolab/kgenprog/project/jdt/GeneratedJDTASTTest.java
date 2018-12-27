@@ -25,6 +25,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class GeneratedJDTASTTest {
@@ -50,7 +51,8 @@ public class GeneratedJDTASTTest {
 
   @Before
   public void setup() {
-    final ProductSourcePath productSourcePath = new ProductSourcePath(Paths.get(FILE_NAME));
+    final ProductSourcePath productSourcePath =
+        new ProductSourcePath(Paths.get("."), Paths.get(FILE_NAME));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     this.ast = constructor.constructAST(productSourcePath, SOURCE);
   }
@@ -119,7 +121,8 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName01() {
     final String source = "package a.b.c; class T1{} public class T2{}";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("a/b/c/T2.java"));
+    final ProductSourcePath path =
+        new ProductSourcePath(Paths.get("."), Paths.get("a/b/c/T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
@@ -130,7 +133,7 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName02() {
     final String source = "class T1{} public class T2{}";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("T2.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
@@ -141,7 +144,8 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName03() {
     final String source = "package a.b.c; class T1{} class T2{} class T3{}";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("a/b/c/T2.java"));
+    final ProductSourcePath path =
+        new ProductSourcePath(Paths.get("."), Paths.get("a/b/c/T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
@@ -152,7 +156,8 @@ public class GeneratedJDTASTTest {
   @Test
   public void testgetPrimaryClassName04() {
     final String source = "package a.b.c;";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("a/b/c/package-info.java"));
+    final ProductSourcePath path =
+        new ProductSourcePath(Paths.get("."), Paths.get("a/b/c/package-info.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
@@ -163,7 +168,8 @@ public class GeneratedJDTASTTest {
   @Test
   public void testStaticImport() {
     final String source = "import static java.lang.Math.max; class StaticImport{ }";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("StaticImport.java"));
+    final ProductSourcePath path =
+        new ProductSourcePath(Paths.get("."), Paths.get("StaticImport.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
@@ -211,7 +217,7 @@ public class GeneratedJDTASTTest {
   @Test
   public void testInferLocationAfterInsertOperation() {
     final String foo = "example/BuildSuccess01/src/example/Foo.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(foo));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get(foo));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
@@ -264,8 +270,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterDeleteOperation() {
-    final String source = "example/BuildSuccess01/src/example/Foo.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(source));
+    final Path root = Paths.get("example/BuildSuccess01/");
+    final ProductSourcePath path = new ProductSourcePath(root, Src.FOO);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
@@ -305,8 +311,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testInferLocationAfterReplaceOperation() {
-    final String source = "example/BuildSuccess01/src/example/Foo.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(source));
+    final Path root = Paths.get("example/BuildSuccess01/");
+    final ProductSourcePath path = new ProductSourcePath(root, Src.FOO);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
@@ -363,8 +369,8 @@ public class GeneratedJDTASTTest {
 
   @Test
   public void testGetMessageDigest01() {
-    final String source = "example/BuildSuccess01/src/example/Foo.java";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get(source));
+    final Path root = Paths.get("example/BuildSuccess01/");
+    final ProductSourcePath path = new ProductSourcePath(root, Src.FOO);
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedSourceCode generatedSourceCode =
@@ -380,7 +386,7 @@ public class GeneratedJDTASTTest {
   public void testGetMessageDigest02() {
     final String source1 = "class A { public void a() { b(1); } public void b(int v){}}";
     final String source2 = "class A { public void a() { b(1); } public void b(int v){}}\n\n";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1);
     final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2);
@@ -392,7 +398,7 @@ public class GeneratedJDTASTTest {
   public void testGetMessageDigest03() {
     final String source1 = "class A { public void a() { b(1); } public void b(int v){}}";
     final String source2 = "class A { public void a() { b(2); } public void b(int v){}}";
-    final ProductSourcePath path = new ProductSourcePath(Paths.get("A.java"));
+    final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1);
     final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2);

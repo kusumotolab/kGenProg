@@ -59,7 +59,7 @@ public class TestResultsTest {
 
     // expected確保の作業
     // まずast生成
-    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(ExampleAlias.Src.FOO));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath, ExampleAlias.Src.FOO);
     final GeneratedJDTAST<ProductSourcePath> fooAst =
         (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getProductAst(fooPath);
     final ASTLocations fooAstLocations = fooAst.createLocations();

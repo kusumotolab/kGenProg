@@ -25,14 +25,15 @@ public class DefaultProjectFactory implements ProjectFactory {
   private final List<ClassPath> classPaths;
 
   public DefaultProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
-      final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
+      final List<Path> pathsForTestSource, final List<Path> pathsForClass,
+      final JUnitVersion junitVersion) {
 
     this.rootPath = rootPath;
     this.productSourcePaths = getFilePaths(pathsForProductSource, ".java").stream()
-        .map(ProductSourcePath::new)
+        .map(p -> ProductSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
     this.testSourcePaths = getFilePaths(pathsForTestSource, ".java").stream()
-        .map(TestSourcePath::new)
+        .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
     this.classPaths = pathsForClass.stream()
         .map(ClassPath::new)
@@ -56,7 +57,7 @@ public class DefaultProjectFactory implements ProjectFactory {
    * @param paths
    * @return
    */
-  private static List<Path> getFilePaths(final List<Path> paths, String... suffixes) {
+  private static List<Path> getFilePaths(final List<Path> paths, final String... suffixes) {
     final List<Path> javaFilePaths = new ArrayList<>();
     for (final Path path : paths) {
 

@@ -52,23 +52,23 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
     return new TargetProject(rootPath, sourcePathList, testSourcePathList, classPathList);
   }
 
-  private List<ProductSourcePath> resolveSourcePath(Path rootPath) {
+  private List<ProductSourcePath> resolveSourcePath(final Path rootPath) {
     final Path path = rootPath.resolve("src")
         .resolve("main")
         .resolve("java");
     final List<Path> javaFilePaths = searchJavaFilePaths(path);
     return javaFilePaths.stream()
-        .map(ProductSourcePath::new)
+        .map(p -> ProductSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
   }
 
-  private List<TestSourcePath> resolveTestPath(Path rootPath) {
+  private List<TestSourcePath> resolveTestPath(final Path rootPath) {
     final Path path = rootPath.resolve("src")
         .resolve("test")
         .resolve("java");
     final List<Path> javaFilePaths = searchJavaFilePaths(path);
     return javaFilePaths.stream()
-        .map(TestSourcePath::new)
+        .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
   }
 
@@ -95,13 +95,13 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
     final JavaFileVisitor visitor = new JavaFileVisitor();
     try {
       Files.walkFileTree(rootPath, visitor);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       e.printStackTrace();
     }
     return visitor.getJavaFilePathList();
   }
 
-  private List<ClassPath> resolveClassPath(Path rootPath) {
+  private List<ClassPath> resolveClassPath(final Path rootPath) {
     final Path pomFilePath = rootPath.resolve(CONFIG_FILE_NAME);
     return extractDependencyPaths(pomFilePath).stream()
         .map(ClassPath::new)
@@ -126,7 +126,7 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
 
         Path path = repositoryPath;
         final String groupId = dependency.getGroupId();
-        for (String string : groupId.split("\\.")) {
+        for (final String string : groupId.split("\\.")) {
           path = path.resolve(string);
         }
 

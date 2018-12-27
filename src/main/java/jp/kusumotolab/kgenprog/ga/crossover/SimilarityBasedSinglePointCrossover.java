@@ -2,30 +2,22 @@ package jp.kusumotolab.kgenprog.ga.crossover;
 
 import java.util.List;
 import java.util.Random;
-import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
-/**
- * バリアントの類似度に基づき一点交叉を行うクラス． 一つ目のバリアントはランダムに選び，二つ目のバリアントは一つ目と最もGeneの類似度が低いものを選らぶ．
- * 
- */
-public class SimilarityBasedSinglePointCrossover extends SinglePointCrossover {
+public abstract class SimilarityBasedSinglePointCrossover extends SinglePointCrossover {
 
   public SimilarityBasedSinglePointCrossover(final Random random,
-      final int crossoverGeneratingCount) {
-    super(random, crossoverGeneratingCount);
+      final int crossoverGenerationCount) {
+    super(random, crossoverGenerationCount);
   }
 
   @Override
   public Variant selectSecondVariant(final List<Variant> variants, final Variant firstVariant) {
-
-    final Gene firstGene = firstVariant.getGene();
     double minSimilarity = 1.0d;
     Variant secondVariant = firstVariant;
 
     for (final Variant variant : variants) {
-      final Gene gene = variant.getGene();
-      final double similarity = Gene.getSimilarity(firstGene, gene);
+      final double similarity = calculateSimilarity(firstVariant, variant);
       if (similarity < minSimilarity) {
         minSimilarity = similarity;
         secondVariant = variant;
@@ -34,4 +26,6 @@ public class SimilarityBasedSinglePointCrossover extends SinglePointCrossover {
 
     return secondVariant;
   }
+
+  protected abstract double calculateSimilarity(final Variant variant1, final Variant variant2);
 }

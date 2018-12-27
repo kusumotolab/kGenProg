@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import static org.mockito.Mockito.mock;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.COVERED;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.EMPTY;
 import static jp.kusumotolab.kgenprog.project.test.Coverage.Status.NOT_COVERED;
@@ -17,6 +16,7 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST02;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST04;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -159,7 +159,7 @@ public class LocalTestExecutorTest {
     final TestResults result = executor.exec(variant);
 
     // 内部クラスを持つBazのASTと，Baz#OuterClassのL66のASTLocationを取り出す
-    final ProductSourcePath baz = new ProductSourcePath(rootPath.resolve(Src.BAZ));
+    final ProductSourcePath baz = new ProductSourcePath(rootPath, Src.BAZ);
     final ASTLocation loc1 = source.getProductAst(baz)
         .createLocations()
         .getAll()
@@ -377,7 +377,7 @@ public class LocalTestExecutorTest {
     assertThat(result1.getTestResult(FOO_TEST04).failed).isFalse();
 
     // FooのASTを取り出す
-    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(Src.FOO));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath, Src.FOO);
     final GeneratedAST<?> ast = source.getProductAst(fooPath);
 
     // バグ箇所を取り出す（7行目のはず）
