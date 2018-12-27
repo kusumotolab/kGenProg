@@ -58,7 +58,7 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
         .resolve("java");
     final List<Path> javaFilePaths = searchJavaFilePaths(path);
     return javaFilePaths.stream()
-        .map(p -> ProductSourcePath.create(rootPath, p))
+        .map(p -> ProductSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
   }
 
@@ -68,7 +68,7 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
         .resolve("java");
     final List<Path> javaFilePaths = searchJavaFilePaths(path);
     return javaFilePaths.stream()
-        .map(p -> TestSourcePath.create(rootPath, p))
+        .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
   }
 

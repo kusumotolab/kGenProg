@@ -11,7 +11,7 @@ public final class ProductSourcePath extends SourcePath {
    * @param path ソースコードへのパス（絶対パスもしくはカレントディレクトリからの相対パス）
    * @return ProductSourcePath
    */
-  public static ProductSourcePath create(final Path rootPath, final Path path) {
+  public static ProductSourcePath relativizeAndCreate(final Path rootPath, final Path path) {
     return new ProductSourcePath(rootPath, SourcePath.relativize(rootPath, path));
   }
 

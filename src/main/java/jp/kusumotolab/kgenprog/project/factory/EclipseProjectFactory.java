@@ -78,9 +78,9 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
           for (final Path javaSourcePath : collectJavaSourcePath(sourceRootPath)) {
             if (javaSourcePath.toString()
                 .endsWith("Test.java")) {
-              testSourcePaths.add(TestSourcePath.create(rootPath, javaSourcePath));
+              testSourcePaths.add(TestSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             } else {
-              productSourcePaths.add(ProductSourcePath.create(rootPath, javaSourcePath));
+              productSourcePaths.add(ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             }
           }
           break;

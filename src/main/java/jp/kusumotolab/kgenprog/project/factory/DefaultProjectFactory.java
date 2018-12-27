@@ -30,10 +30,10 @@ public class DefaultProjectFactory implements ProjectFactory {
 
     this.rootPath = rootPath;
     this.productSourcePaths = getFilePaths(pathsForProductSource, ".java").stream()
-        .map(p -> ProductSourcePath.create(rootPath, p))
+        .map(p -> ProductSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
     this.testSourcePaths = getFilePaths(pathsForTestSource, ".java").stream()
-        .map(p -> TestSourcePath.create(rootPath, p))
+        .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
     this.classPaths = pathsForClass.stream()
         .map(ClassPath::new)

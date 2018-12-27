@@ -11,7 +11,7 @@ public class TestSourcePath extends SourcePath {
    * @param path ソースコードへのパス（絶対パスもしくはカレントディレクトリからの相対パス）
    * @return TestSourcePath
    */
-  public static TestSourcePath create(final Path rootPath, final Path path) {
+  public static TestSourcePath relativizeAndCreate(final Path rootPath, final Path path) {
     return new TestSourcePath(rootPath, SourcePath.relativize(rootPath, path));
   }
 
