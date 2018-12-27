@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +23,20 @@ import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
 public class TestResults implements Serializable {
+
+  static public double getSimilarity(final TestResults testResultsA,
+      final TestResults testResultsB) {
+
+    final Set<FullyQualifiedName> union = new HashSet<>();
+    union.addAll(testResultsA.getFailedTestFQNs());
+    union.addAll(testResultsB.getFailedTestFQNs());
+
+    final Set<FullyQualifiedName> intersection = new HashSet<>();
+    intersection.addAll(testResultsA.getFailedTestFQNs());
+    intersection.retainAll(testResultsB.getFailedTestFQNs());
+
+    return (double) intersection.size() / (double) union.size();
+  }
 
   private static final long serialVersionUID = 1L;
 
@@ -72,6 +87,32 @@ public class TestResults implements Serializable {
    */
   public Set<FullyQualifiedName> getExecutedTestFQNs() {
     return this.value.keySet();
+  }
+
+  /**
+   * 失敗したテストのFQN一覧を取得．
+   * 
+   * @return
+   */
+  public List<FullyQualifiedName> getFailedTestFQNs() {
+    return this.value.values()
+        .stream()
+        .filter(r -> r.failed)
+        .map(r -> r.executedTestFQN)
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 成功したテストのFQN一覧を取得．
+   *
+   * @return
+   */
+  public List<FullyQualifiedName> getSuccessedTestFQNs() {
+    return this.value.values()
+        .stream()
+        .filter(r -> !r.failed)
+        .map(r -> r.executedTestFQN)
+        .collect(Collectors.toList());
   }
 
   /**
