@@ -39,11 +39,6 @@ public class Strategies {
     this.variantSelection = variantSelection;
   }
 
-  public void initialize(final Variant variant) {
-    sourceCodeGeneration.initialize(variant);
-    testExecutor.initialize();
-  }
-
   public void finish() {
     testExecutor.finish();
   }
