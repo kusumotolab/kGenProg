@@ -406,4 +406,32 @@ public class LocalTestExecutorTest {
     assertThat(result2.getTestResult(FOO_TEST04).failed).isFalse();
   }
 
+  @Test
+  // 正常系題材の確認
+  public void testExecForBuildSuccessWithExternalLibLoading() {
+    final Path rootPath = Paths.get("example/BuildSuccess16");
+    final List<Path> sources = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> tests = Arrays.asList(rootPath.resolve("test"));
+    final List<Path> cps = Arrays.asList(rootPath.resolve("lib"));
+
+    final TargetProject targetProject =
+        TargetProjectFactory.create(rootPath, sources, tests, cps, JUnitVersion.JUNIT4);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
+
+    // 実行されたテストは4個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
+
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
+  }
 }
