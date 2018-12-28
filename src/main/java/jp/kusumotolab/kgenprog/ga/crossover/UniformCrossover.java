@@ -13,6 +13,10 @@ import jp.kusumotolab.kgenprog.ga.variant.UniformCrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
+/**
+ * 一様交叉を行うクラス
+ *
+ */
 public class UniformCrossover implements Crossover {
 
   private final Random random;
