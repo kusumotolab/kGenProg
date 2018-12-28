@@ -59,6 +59,8 @@ public class KGenProgMain {
 
     logConfig();
 
+    testExecutor.initialize();
+
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config, strategies);
@@ -66,7 +68,7 @@ public class KGenProgMain {
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getProductAsts());
-    strategies.initialize(initialVariant);
+    sourceCodeGeneration.initialize(initialVariant);
 
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
