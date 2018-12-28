@@ -407,12 +407,15 @@ public class LocalTestExecutorTest {
   }
 
   @Test
-  // 正常系題材の確認
+  // テスト内で外部libを参照する題材の確認
   public void testExecForBuildSuccessWithExternalLibLoading() {
     final Path rootPath = Paths.get("example/BuildSuccess16");
     final List<Path> sources = Arrays.asList(rootPath.resolve("src"));
     final List<Path> tests = Arrays.asList(rootPath.resolve("test"));
-    final List<Path> cps = Arrays.asList(rootPath.resolve("lib"));
+    final List<Path> cps = Arrays.asList(//
+        rootPath.resolve("lib1"), // .classを含むlibへのパス
+        rootPath.resolve("lib2/Baz.jar") // .jarを含むlibへのパス
+    );
 
     final TargetProject targetProject =
         TargetProjectFactory.create(rootPath, sources, tests, cps, JUnitVersion.JUNIT4);

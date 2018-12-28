@@ -22,6 +22,6 @@ public class FooTest {
 
   @Test
   public void test04() {
-    assertEquals(-2, new Foo().foo(-1));
+    assertEquals(0, new Foo().foo2());
   }
 }
