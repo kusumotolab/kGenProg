@@ -24,8 +24,16 @@ jobs:
             git config user.email "ci@circleci.com"
             git config user.name "CircleCI"
       - run:
-          name: Merge branch `master`
-          command: git merge origin/master -m 'Merge branch `master`'
+          name: Ensure there are no conflicts
+          command: |
+            git format-patch origin/master --stdout > changes.patch
+            git checkout origin/master
+            git apply changes.patch --check
+      - run:
+          name: Merge branch `origin/master`
+          command: |
+            git checkout -
+            git merge origin/master -m 'Merge branch `origin/master`'
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
