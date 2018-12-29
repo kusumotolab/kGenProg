@@ -21,9 +21,6 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
 public class UniformCrossoverTest {
 
-
-  private static Random random;
-
   private static Base noneOperationBase;
   private static Base insertOperationBase;
   private static Variant noneOperationVariant;
@@ -32,10 +29,6 @@ public class UniformCrossoverTest {
 
   @Before
   public void setup() {
-    random = Mockito.mock(Random.class);
-    when(random.nextBoolean()).thenReturn(false);
-    when(random.nextInt(anyInt())).thenReturn(1);
-
     noneOperationBase = new Base(null, new NoneOperation());
     insertOperationBase = new Base(null, new InsertOperation(null));
 
