@@ -101,7 +101,7 @@ public class UniformCrossoverTest {
         .toArray(new Base[0])).containsExactly(insertOperationBase, insertOperationBase,
             insertOperationBase, insertOperationBase);
 
-    // 一つ目と二つ目のバリアントのBaseを口語に返すはず
+    // 一つ目と二つ目のバリアントのBaseを交互に返すはず
     when(random.nextBoolean()).thenReturn(true)
         .thenReturn(false)
         .thenReturn(true)
