@@ -22,10 +22,7 @@ echo "Starting to publish a new release as the version: ${WANTED_VERSION} ..."
 
 CHANGELOG="## Change Log
 
-$(cat ./artifacts/CHANGELOG.md)"
-
-rm ./artifacts/CHANGELOG.md
-rm ./artifacts/current-version.txt
+$(cat ./workspace/CHANGELOG.md)"
 
 ghr \
   --token $GITHUB_TOKEN \
@@ -34,4 +31,4 @@ ghr \
   --commitish $CIRCLE_SHA1 \
   --name "Version $WANTED_VERSION" \
   --body "$CHANGELOG" \
-    $VERSION_GIT_TAG ./artifacts/
+    $VERSION_GIT_TAG ./workspace/artifacts/
