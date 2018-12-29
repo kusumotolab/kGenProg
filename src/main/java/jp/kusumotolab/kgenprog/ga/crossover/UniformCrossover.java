@@ -98,7 +98,7 @@ public class UniformCrossover implements Crossover {
 
   private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {
     final List<Base> bases = new ArrayList<>();
-    for (int i = 0; i < basesA.size() || i < basesB.size(); i++) {
+    for (int i = 0; i < Math.max(basesA.size(), basesB.size()); i++) {
 
       if (basesA.size() <= i) {
         if (this.random.nextBoolean()) {
