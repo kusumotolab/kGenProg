@@ -80,9 +80,8 @@ public class UniformCrossoverTest {
         .thenReturn(1);
     final Variant variant1 = execCrossover(random, 1).get(0);
     assertThat(variant1.getGene()
-        .getBases()
-        .toArray(new Base[0])).containsExactly(noneOperationBase, noneOperationBase,
-            noneOperationBase, noneOperationBase);
+        .getBases()).containsExactly(noneOperationBase, noneOperationBase, noneOperationBase,
+            noneOperationBase);
 
     // 常に二つ目のバリアントのBaseを返すはず
     when(random.nextBoolean()).thenReturn(false);
@@ -90,9 +89,8 @@ public class UniformCrossoverTest {
         .thenReturn(1);
     final Variant variant2 = execCrossover(random, 1).get(0);
     assertThat(variant2.getGene()
-        .getBases()
-        .toArray(new Base[0])).containsExactly(insertOperationBase, insertOperationBase,
-            insertOperationBase, insertOperationBase);
+        .getBases()).containsExactly(insertOperationBase, insertOperationBase, insertOperationBase,
+            insertOperationBase);
 
     // 一つ目と二つ目のバリアントのBaseを交互に返すはず
     when(random.nextBoolean()).thenReturn(true)
