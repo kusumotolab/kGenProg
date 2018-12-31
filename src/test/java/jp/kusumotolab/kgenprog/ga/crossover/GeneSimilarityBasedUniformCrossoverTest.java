@@ -23,7 +23,7 @@ public class GeneSimilarityBasedUniformCrossoverTest {
   }
 
   @Test
-  public void test_exec1() {
+  public void test01() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -46,7 +46,7 @@ public class GeneSimilarityBasedUniformCrossoverTest {
   }
 
   @Test
-  public void test_exec2() {
+  public void test02() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
