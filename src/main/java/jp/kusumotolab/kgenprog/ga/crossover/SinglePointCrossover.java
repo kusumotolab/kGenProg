@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
+import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
@@ -33,13 +33,14 @@ public class SinglePointCrossover implements Crossover {
             .isEmpty())
         .collect(Collectors.toList());
 
-    if (filteredVariants.isEmpty()) {
+    // filteredVariantsの要素数が2に満たない場合は交叉しない
+    if (filteredVariants.size() < 2) {
       return Collections.emptyList();
     }
 
     final List<Variant> variants = new ArrayList<>();
 
-    for (int i = 0; i < crossoverGeneratingCount/2; i++) {
+    for (int i = 0; i < crossoverGeneratingCount / 2; i++) {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
       variants.addAll(newVariants);
     }
@@ -53,8 +54,8 @@ public class SinglePointCrossover implements Crossover {
   }
 
   private List<Variant> makeVariants(final List<Variant> variants, final VariantStore store) {
-    final Variant variantA = variants.get(random.nextInt(variants.size()));
-    final Variant variantB = variants.get(random.nextInt(variants.size()));
+    final Variant variantA = selectFirstVariant(variants);
+    final Variant variantB = selectSecondVariant(variants, variantA);
     final Gene geneA = variantA.getGene();
     final Gene geneB = variantB.getGene();
     final List<Base> basesA = geneA.getBases();
@@ -69,6 +70,27 @@ public class SinglePointCrossover implements Crossover {
     final HistoricalElement elementB = new CrossoverHistoricalElement(variantB, variantA, index);
     return Arrays.asList(store.createVariant(newGeneA, elementA),
         store.createVariant(newGeneB, elementB));
+  }
+
+
+  /**
+   * 一つ目のバリアントを選ぶためのメソッド．
+   * 
+   * @param variants
+   * @return
+   */
+  protected Variant selectFirstVariant(final List<Variant> variants) {
+    return variants.get(random.nextInt(variants.size()));
+  }
+
+  /**
+   * 二つ目のバリアントを選ぶためのメソッド． 一つ目に選んだバリアントの情報を利用できるように，引数で受け取る．
+   * 
+   * @param variants
+   * @return
+   */
+  protected Variant selectSecondVariant(final List<Variant> variants, final Variant firstVariant) {
+    return variants.get(random.nextInt(variants.size()));
   }
 
   private boolean canMakeVariant(final List<Base> basesA, final List<Base> basesB) {

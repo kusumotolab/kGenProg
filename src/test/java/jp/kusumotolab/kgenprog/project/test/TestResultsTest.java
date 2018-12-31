@@ -4,16 +4,17 @@ import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST01;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -31,14 +32,11 @@ public class TestResultsTest {
 
   private final static long TIMEOUT_SEC = 60;
 
-  @Before
-  public void before() throws IOException {}
-
   /**
    * FLで用いる4メトリクスのテスト
    */
   @Test
-  public void testFLMetricsInTestResultsForExample02() throws Exception {
+  public void testFLMetricsInTestResultsForExample02() {
     // actual確保のためにテストの実行
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
@@ -50,7 +48,9 @@ public class TestResultsTest {
         new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
             .build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(generatedSourceCode);
+    final TestResults result = executor.exec(variant);
 
     // TODO
     // buildResultsのセットは本来，TestExcecutorでやるべき．
@@ -59,7 +59,7 @@ public class TestResultsTest {
 
     // expected確保の作業
     // まずast生成
-    final ProductSourcePath fooPath = new ProductSourcePath(rootPath.resolve(ExampleAlias.Src.FOO));
+    final ProductSourcePath fooPath = new ProductSourcePath(rootPath, ExampleAlias.Src.FOO);
     final GeneratedJDTAST<ProductSourcePath> fooAst =
         (GeneratedJDTAST<ProductSourcePath>) generatedSourceCode.getProductAst(fooPath);
     final ASTLocations fooAstLocations = fooAst.createLocations();
@@ -107,7 +107,7 @@ public class TestResultsTest {
    * toString()のテスト．JSON形式の確認
    */
   @Test
-  public void testToString() throws Exception {
+  public void testToString() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode generatedSourceCode =
@@ -118,9 +118,11 @@ public class TestResultsTest {
         new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
             .build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    final TestResults result = executor.exec(generatedSourceCode);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(generatedSourceCode);
+    final TestResults result = executor.exec(variant);
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()//
         .append("[")
         .append("  {")
         .append("    \"executedTestFQN\": \"example.FooTest.test04\",")

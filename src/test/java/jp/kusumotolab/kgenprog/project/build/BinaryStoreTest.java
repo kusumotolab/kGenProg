@@ -7,6 +7,8 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.QUX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,6 +25,7 @@ public class BinaryStoreTest {
   static String digest1;
   static String digest2;
   static String digest3;
+  static Path root;
   static SourcePath path1;
   static SourcePath path2;
   static SourcePath path3;
@@ -41,9 +44,10 @@ public class BinaryStoreTest {
     digest2 = "2222";
     digest3 = "3333";
 
-    path1 = new ProductSourcePath(Src.FOO);
-    path2 = new ProductSourcePath(Src.BAR);
-    path3 = new ProductSourcePath(Src.BAZ);
+    root = Paths.get(".");
+    path1 = new ProductSourcePath(root, Src.FOO);
+    path2 = new ProductSourcePath(root, Src.BAR);
+    path3 = new ProductSourcePath(root, Src.BAZ);
 
     object1 = new JavaBinaryObject(FOO, FOO, digest1, path1, false);
     object2 = new JavaBinaryObject(BAR, BAR, digest2, path2, false);

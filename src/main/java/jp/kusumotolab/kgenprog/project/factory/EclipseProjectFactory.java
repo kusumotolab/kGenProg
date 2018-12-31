@@ -38,15 +38,14 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
       final Path configFilePath = rootPath.resolve(Paths.get(CONFIG_FILE_NAME));
       saxParser.parse(configFilePath.toString(), classPathHandler);
 
-      return new TargetProject(rootPath,
-          classPathHandler.getProductSourcePaths(),
-          classPathHandler.getTestSourcePaths(),
-          classPathHandler.getClassPaths());
+      return new TargetProject(rootPath, classPathHandler.getProductSourcePaths(),
+          classPathHandler.getTestSourcePaths(), classPathHandler.getClassPaths());
 
     } catch (final SAXException | ParserConfigurationException | IOException e) {
       log.error(e.getMessage(), e);
     }
-    return new TargetProject(rootPath, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+    return new TargetProject(rootPath, Collections.emptyList(), Collections.emptyList(),
+        Collections.emptyList());
   }
 
   @Override
@@ -66,9 +65,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
     private final List<ClassPath> classPaths = new ArrayList<>();
 
     @Override
-    public void startElement(final String uri,
-        final String localName,
-        final String qName,
+    public void startElement(final String uri, final String localName, final String qName,
         final Attributes attributes) {
 
       if (!qName.equals("classpathentry")) {
@@ -81,9 +78,9 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
           for (final Path javaSourcePath : collectJavaSourcePath(sourceRootPath)) {
             if (javaSourcePath.toString()
                 .endsWith("Test.java")) {
-              testSourcePaths.add(new TestSourcePath(javaSourcePath));
+              testSourcePaths.add(TestSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             } else {
-              productSourcePaths.add(new ProductSourcePath(javaSourcePath));
+              productSourcePaths.add(ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             }
           }
           break;

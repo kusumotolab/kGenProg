@@ -20,11 +20,9 @@ go get -u github.com/tcnksm/ghr
 
 echo "Starting to publish a new release as the version: ${WANTED_VERSION} ..."
 
-ls ./artifacts
 CHANGELOG="## Change Log
 
-$(cat ./artifacts/CHANGELOG.md)"
-rm ./artifacts/CHANGELOG.md
+$(cat ./workspace/CHANGELOG.md)"
 
 ghr \
   --token $GITHUB_TOKEN \
@@ -33,4 +31,4 @@ ghr \
   --commitish $CIRCLE_SHA1 \
   --name "Version $WANTED_VERSION" \
   --body "$CHANGELOG" \
-    $VERSION_GIT_TAG ./artifacts/
+    $VERSION_GIT_TAG ./workspace/artifacts/

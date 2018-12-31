@@ -7,7 +7,7 @@ GITHUB_TAG_URL_BASE="https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJ
 
 # Analyze target version to be release
 
-WANTED_VERSION="$(cat ./artifacts/current-version.txt)"
+WANTED_VERSION="$(cat ./workspace/current-version.txt)"
 WANTED_VERSION="$(echo $WANTED_VERSION)" # Trim whitespaces
 
 VERSION_GIT_TAG="v${WANTED_VERSION}"

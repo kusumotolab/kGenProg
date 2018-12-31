@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
@@ -12,6 +14,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
@@ -43,7 +46,9 @@ public class TestResultsSerializerTest {
     final Configuration config = new Configuration.Builder(targetProject)
         .build();
     final TestExecutor executor = new LocalTestExecutor(config);
-    return executor.exec(generatedSourceCode);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(generatedSourceCode);
+    return executor.exec(variant);
   }
 
   /**

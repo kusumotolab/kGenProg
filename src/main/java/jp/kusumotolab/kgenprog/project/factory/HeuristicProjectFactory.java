@@ -32,7 +32,7 @@ public class HeuristicProjectFactory implements ProjectFactory {
             .filter(file -> !file.getName()
                 .endsWith("Test.java"))
             .map(file -> file.toPath())
-            .map(ProductSourcePath::new)
+            .map(p -> ProductSourcePath.relativizeAndCreate(rootPath, p))
             .collect(Collectors.toList());
 
     final List<TestSourcePath> testSourcePaths =
@@ -41,7 +41,7 @@ public class HeuristicProjectFactory implements ProjectFactory {
             .filter(file -> file.getName()
                 .endsWith("Test.java"))
             .map(file -> file.toPath())
-            .map(TestSourcePath::new)
+            .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
             .collect(Collectors.toList());
 
     final List<ClassPath> classPath = JUnitLibraryResolver.libraries.get(JUnitVersion.JUNIT4);

@@ -183,8 +183,8 @@ public class VariantStoreTest {
     when(strategies.execSourceCodeValidation(any(), any())).then(v -> new SimpleFitness(1.0d));
     when(strategies.execFaultLocalization(any(), any())).then(v -> Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).then(v -> {
-      final Single<GeneratedSourceCode> sourceCodeSingle = v.getArgument(0);
-      return testExecutor.execAsync(sourceCodeSingle);
+      final Single<Variant> variantSingle = v.getArgument(0);
+      return testExecutor.execAsync(variantSingle);
     });
     return strategies;
   }

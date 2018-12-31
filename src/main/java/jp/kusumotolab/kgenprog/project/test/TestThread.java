@@ -84,9 +84,12 @@ class TestThread extends Thread {
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
 
+    // set memoryClassLoader as ContextClassLoader during JUnit execution
     final List<ClassPath> classPaths = targetProject.getClassPaths();
     final URL[] classpathUrls = convertClasspathsToURLs(classPaths);
     final MemoryClassLoader classLoader = new MemoryClassLoader(classpathUrls);
+    Thread.currentThread()
+        .setContextClassLoader(classLoader);
 
     try {
       addAllDefinitions(classLoader, productFQNs);

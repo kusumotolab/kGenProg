@@ -75,6 +75,32 @@ public class TestResults implements Serializable {
   }
 
   /**
+   * 失敗したテストのFQN一覧を取得．
+   * 
+   * @return
+   */
+  public List<FullyQualifiedName> getFailedTestFQNs() {
+    return this.value.values()
+        .stream()
+        .filter(r -> r.failed)
+        .map(r -> r.executedTestFQN)
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * 成功したテストのFQN一覧を取得．
+   *
+   * @return
+   */
+  public List<FullyQualifiedName> getSuccessedTestFQNs() {
+    return this.value.values()
+        .stream()
+        .filter(r -> !r.failed)
+        .map(r -> r.executedTestFQN)
+        .collect(Collectors.toList());
+  }
+
+  /**
    * 実行された単一テストメソッドの結果を返す．
    * 
    * @param testFQN 対象のテストメソッドFQN
