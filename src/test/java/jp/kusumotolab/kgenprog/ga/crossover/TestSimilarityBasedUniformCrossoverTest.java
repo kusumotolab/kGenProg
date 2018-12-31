@@ -30,7 +30,7 @@ public class TestSimilarityBasedUniformCrossoverTest {
     when(random.nextInt(anyInt())).thenReturn(0);
 
     // バリアントの生成
-    final UniformCrossover crossover = new TestSimilarityBasedUniformCrossover(random, 1);
+    final Crossover crossover = new TestSimilarityBasedUniformCrossover(random, 1);
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
@@ -53,7 +53,7 @@ public class TestSimilarityBasedUniformCrossoverTest {
     when(random.nextInt(anyInt())).thenReturn(2);
 
     // バリアントの生成
-    final UniformCrossover crossover = new TestSimilarityBasedUniformCrossover(random, 1);
+    final Crossover crossover = new TestSimilarityBasedUniformCrossover(random, 1);
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
