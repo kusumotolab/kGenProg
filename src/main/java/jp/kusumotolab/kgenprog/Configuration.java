@@ -517,31 +517,49 @@ public class Configuration {
     private void resolvePaths() {
       final Path configDir = getParent(configPath, Paths.get("."));
 
-      rootDir = configDir.resolve(rootDir)
+      rootDir = configDir.resolve(checkRelativePath(rootDir))
           .normalize();
       productPaths = productPaths.stream()
+          .peek(this::checkRelativePath)
           .map(p -> configDir.resolve(p)
               .normalize())
           .collect(Collectors.toList());
       testPaths = testPaths.stream()
+          .peek(this::checkRelativePath)
           .map(p -> configDir.resolve(p)
               .normalize())
           .collect(Collectors.toList());
       classPaths = classPaths.stream()
+          .peek(this::checkRelativePath)
           .map(p -> configDir.resolve(p)
               .normalize())
           .collect(Collectors.toList());
-      workingDir = configDir.resolve(workingDir)
+      workingDir = configDir.resolve(checkRelativePath(workingDir))
           .normalize();
 
       if (!outDir.equals(DEFAULT_OUT_DIR)) {
-        outDir = configDir.resolve(outDir)
+        outDir = configDir.resolve(checkRelativePath(outDir))
             .normalize();
       }
     }
 
     private Path getParent(final Path path, final Path defaultPath) {
       return path.getParent() != null ? path.getParent() : defaultPath;
+    }
+
+    /**
+     * Checks the given path is relative, and returns it as is. If it is relative, outputs warning
+     * message; otherwise do nothing.
+     *
+     * @param path the path to be checked
+     * @return the given path
+     */
+    private Path checkRelativePath(final Path path) {
+      if (!path.isAbsolute()) {
+        log.warn("relative paths may not be resolved: " + path.toString());
+      }
+
+      return path;
     }
 
     // endregion
