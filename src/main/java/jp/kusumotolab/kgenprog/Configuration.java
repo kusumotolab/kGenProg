@@ -515,36 +515,29 @@ public class Configuration {
     }
 
     private void resolvePaths() {
-      final Path configDir = getParent(configPath, Paths.get("."));
-
-      rootDir = configDir.resolve(checkRelativePath(rootDir))
-          .normalize();
+      rootDir = resolveAgainstConfigDirAndNormalize(checkRelativePath(rootDir));
+      workingDir = resolveAgainstConfigDirAndNormalize(checkRelativePath(workingDir));
       productPaths = productPaths.stream()
           .peek(this::checkRelativePath)
-          .map(p -> configDir.resolve(p)
-              .normalize())
+          .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
       testPaths = testPaths.stream()
           .peek(this::checkRelativePath)
-          .map(p -> configDir.resolve(p)
-              .normalize())
+          .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
       classPaths = classPaths.stream()
           .peek(this::checkRelativePath)
-          .map(p -> configDir.resolve(p)
-              .normalize())
+          .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
-      workingDir = configDir.resolve(checkRelativePath(workingDir))
-          .normalize();
 
       if (!outDir.equals(DEFAULT_OUT_DIR)) {
-        outDir = configDir.resolve(checkRelativePath(outDir))
-            .normalize();
+        outDir = resolveAgainstConfigDirAndNormalize(checkRelativePath(outDir));
       }
     }
 
-    private Path getParent(final Path path, final Path defaultPath) {
-      return path.getParent() != null ? path.getParent() : defaultPath;
+    private Path resolveAgainstConfigDirAndNormalize(final Path path) {
+      return configPath.resolveSibling(checkRelativePath(path))
+          .normalize();
     }
 
     /**
