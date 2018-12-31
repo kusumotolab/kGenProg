@@ -39,7 +39,7 @@ public class TestSimilarityBasedSinglePointCrossoverTest {
     final HistoricalElement element = variant.getHistoricalElement();
     assertThat(element.getParents()).containsExactly(testVariants.variantA, testVariants.variantB);
 
-    // 交叉ポイントは0なので，生成されたバリアントのGeneはvariantBと同じになっているはず
+    // 交叉ポイントは1なので，0はvariantAと同じ，123はvariantBと同じになっているはず
     final Gene gene = variant.getGene();
     assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
         testVariants.noneBase, testVariants.insertBase);
@@ -62,7 +62,7 @@ public class TestSimilarityBasedSinglePointCrossoverTest {
     final HistoricalElement element = variant.getHistoricalElement();
     assertThat(element.getParents()).containsExactly(testVariants.variantC, testVariants.variantD);
 
-    // 交叉ポイントは2なので，0と1はvariantCと同じ，2と3はvarriantDと同じ担っているはず
+    // 交叉ポイントは3なので，012はvariantCと同じ，3はvarriantDと同じになっているはず
     final Gene gene = variant.getGene();
     assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.insertBase,
         testVariants.insertBase, testVariants.insertBase);
