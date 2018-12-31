@@ -383,7 +383,7 @@ public class LocalTestExecutorTest {
   @Test
   // テスト内でファイル読み込みがある題材の確認
   public void testExecWithTestCaseIncludeFileInput() throws Exception {
-    final Path rootPath = Paths.get("example/BuildSuccess16");
+    final Path rootPath = Paths.get("example/BuildSuccess17");
     final List<Path> productPaths = Arrays.asList(rootPath.resolve("src"));
     final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
     final TargetProject targetProject = TargetProjectFactory.create(rootPath, productPaths,
@@ -406,7 +406,7 @@ public class LocalTestExecutorTest {
   @Test
   // テスト内でファイル書き込みがある題材の確認
   public void testExecWithTestCaseIncludeFileOutput() throws Exception {
-    final Path rootPath = Paths.get("example/BuildSuccess17");
+    final Path rootPath = Paths.get("example/BuildSuccess18");
     final List<Path> productPaths = Arrays.asList(rootPath.resolve("src"));
     final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
     final TargetProject targetProject = TargetProjectFactory.create(rootPath, productPaths,

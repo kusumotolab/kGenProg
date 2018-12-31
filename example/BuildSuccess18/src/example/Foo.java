@@ -3,17 +3,15 @@ package example;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class Foo {
 
-  public String readFile(final Path path) {
-    String result = "";
+  public void write(final Path path, final List<String> list) {
     try {
-      result = Files.readAllLines(path).get(0);
+      Files.write(path, list);
     } catch (final IOException e) {
       e.printStackTrace();
     }
-
-    return result;
   }
 }
