@@ -14,11 +14,19 @@ import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+// 4つの疑似バリアントからなるですとデータ．
+//
 // 10のテストケースが存在すると仮定する．
-// testResultsA は奇数番目のテストを失敗する．
-// testResultsB は偶数番目のテストを失敗する．
-// TestResultsC は1〜6のテストを失敗する．
-// TestResultsD は5〜10のテストを失敗する．
+// バリアントAは奇数番目のテストを失敗する．
+// バリアントBは偶数番目のテストを失敗する．
+// バリアントCは1〜6のテストを失敗する．
+// バリアントDは5〜10のテストを失敗する．
+//
+// 各バリアントは4つのBaseを持つ．
+// バリアントAは，none, none, none, none．
+// バリアントBは，none, none, none, insert．
+// バリアントCは，none, insert, insert, insert．
+// バリアントDは，insert, insert, insert, insert．
 public class CrossoverTestVariants {
 
   final Base noneBase;
