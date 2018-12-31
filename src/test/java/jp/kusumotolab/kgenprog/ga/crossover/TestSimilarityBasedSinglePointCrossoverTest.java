@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Random;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
@@ -13,14 +12,6 @@ import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class TestSimilarityBasedSinglePointCrossoverTest {
-
-
-  private static CrossoverTestVariants testVariants;
-
-  @Before
-  public void setup() {
-    testVariants = new CrossoverTestVariants();
-  }
 
   @Test
   public void test01() {
@@ -32,6 +23,7 @@ public class TestSimilarityBasedSinglePointCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new TestSimilarityBasedSinglePointCrossover(random, 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
@@ -55,6 +47,7 @@ public class TestSimilarityBasedSinglePointCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new TestSimilarityBasedSinglePointCrossover(random, 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
