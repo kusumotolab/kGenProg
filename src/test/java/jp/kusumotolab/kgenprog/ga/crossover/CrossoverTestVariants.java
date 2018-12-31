@@ -14,7 +14,7 @@ import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
-// 4つの疑似バリアントからなるですとデータ．
+// 4つの疑似バリアントからなるテストデータ．
 //
 // 10のテストケースが存在すると仮定する．
 // バリアントAは奇数番目のテストを失敗する．
