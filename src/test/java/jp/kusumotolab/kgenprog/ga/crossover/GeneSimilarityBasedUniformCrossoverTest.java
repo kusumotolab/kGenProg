@@ -11,7 +11,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
-public class TestSimilarityBasedSinglePointCrossoverTest {
+public class GeneSimilarityBasedUniformCrossoverTest {
 
   @Test
   public void test01() {
@@ -22,19 +22,19 @@ public class TestSimilarityBasedSinglePointCrossoverTest {
     when(random.nextInt(anyInt())).thenReturn(0);
 
     // バリアントの生成
-    final Crossover crossover = new TestSimilarityBasedSinglePointCrossover(random, 1);
+    final Crossover crossover = new GeneSimilarityBasedUniformCrossover(random, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
-    // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantBが選ばれているはず
+    // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantDが選ばれているはず
     final HistoricalElement element = variant.getHistoricalElement();
-    assertThat(element.getParents()).containsExactly(testVariants.variantA, testVariants.variantB);
+    assertThat(element.getParents()).containsExactly(testVariants.variantA, testVariants.variantD);
 
-    // 交叉ポイントは1なので，0はvariantAと同じ，123はvariantBと同じになっているはず
+    // 生成されたバリアントのGeneはvariantAと同じになっているはず
     final Gene gene = variant.getGene();
     assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
-        testVariants.noneBase, testVariants.insertBase);
+        testVariants.noneBase, testVariants.noneBase);
   }
 
   @Test
@@ -46,18 +46,18 @@ public class TestSimilarityBasedSinglePointCrossoverTest {
     when(random.nextInt(anyInt())).thenReturn(2);
 
     // バリアントの生成
-    final Crossover crossover = new TestSimilarityBasedSinglePointCrossover(random, 1);
+    final Crossover crossover = new GeneSimilarityBasedUniformCrossover(random, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
-    // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantDが選ばれているはず
+    // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantAが選ばれているはず
     final HistoricalElement element = variant.getHistoricalElement();
-    assertThat(element.getParents()).containsExactly(testVariants.variantC, testVariants.variantD);
+    assertThat(element.getParents()).containsExactly(testVariants.variantC, testVariants.variantA);
 
-    // 交叉ポイントは3なので，012はvariantCと同じ，3はvarriantDと同じになっているはず
+    // 生成されたバリアントのGeneはvariantAと同じになっているはず
     final Gene gene = variant.getGene();
-    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.insertBase,
-        testVariants.insertBase, testVariants.insertBase);
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
+        testVariants.noneBase, testVariants.noneBase);
   }
 }
