@@ -25,9 +25,25 @@ public class JsonKeyAlias {
     public final static String SELECTION_COUNT = "selectionCount";
     public final static String FITNESS = "fitness";
     public final static String IS_BUILD_SUCCESS = "isBuildSuccess";
+    public final static String IS_SYNTAX_VALID = "isSyntaxValid";
     public final static String PATCH = "patch";
     public final static String OPERATIONS = "operations";
     public final static String TEST_SUMMARY = "testSummary";
+    public final static String BASES = "bases";
+  }
+
+  public static class Base {
+
+    public final static String FQN = "fqn";
+    public final static String NAME = "name";
+    public final static String LINE_NUMBER_RANGE = "lineNumberRange";
+    public final static String SNIPPET = "snippet";
+  }
+
+  public static class LineNumberRange {
+
+    public final static String START = "start";
+    public final static String END = "end";
   }
 
   public static class Operation {

@@ -47,6 +47,7 @@ public class VariantStoreSerializerTest {
         .registerTypeAdapter(Patch.class, new PatchSerializer())
         .registerTypeAdapter(FileDiff.class, new FileDiffSerializer())
         .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
         .create();
   }
 
