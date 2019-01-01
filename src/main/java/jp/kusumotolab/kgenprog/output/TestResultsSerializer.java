@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.output;
 
 import java.lang.reflect.Type;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.google.gson.JsonElement;
@@ -19,9 +20,11 @@ public class TestResultsSerializer implements JsonSerializer<TestResults> {
     final JsonObject serializedTestSummary = new JsonObject();
     final double successRate = testResults.getSuccessRate();
     // TestResultの集合を取得する
+    // fqn の辞書順にソートする
     final List<TestResult> testResultList = testResults.getExecutedTestFQNs()
         .stream()
         .map(testResults::getTestResult)
+        .sorted(Comparator.comparing(e -> e.executedTestFQN.value))
         .collect(Collectors.toList());
     final JsonElement serializedTestResultList = context.serialize(testResultList);
 
