@@ -71,10 +71,12 @@ public class VariantSerializerTest {
         JsonKeyAlias.Variant.FITNESS,
         JsonKeyAlias.Variant.GENERATION_NUMBER,
         JsonKeyAlias.Variant.IS_BUILD_SUCCESS,
+        JsonKeyAlias.Variant.IS_SYNTAX_VALID,
         JsonKeyAlias.Variant.OPERATIONS,
         JsonKeyAlias.Variant.TEST_SUMMARY,
         JsonKeyAlias.Variant.SELECTION_COUNT,
-        JsonKeyAlias.Variant.PATCH);
+        JsonKeyAlias.Variant.PATCH,
+        JsonKeyAlias.Variant.BASES);
 
     // 各値のチェック
     final String id = serializedVariant.get(JsonKeyAlias.Variant.ID)
@@ -91,7 +93,11 @@ public class VariantSerializerTest {
 
     final boolean isBuildSuccess = serializedVariant.get(JsonKeyAlias.Variant.IS_BUILD_SUCCESS)
         .getAsBoolean();
-    assertThat(isBuildSuccess).isEqualTo(false);
+    assertThat(isBuildSuccess).isEqualTo(variant.isBuildSucceeded());
+
+    final boolean isSyntaxValid = serializedVariant.get(JsonKeyAlias.Variant.IS_SYNTAX_VALID)
+        .getAsBoolean();
+    assertThat(isSyntaxValid).isEqualTo(variant.isSyntaxValid());
 
     final JsonArray serializedOperations = serializedVariant.get(JsonKeyAlias.Variant.OPERATIONS)
         .getAsJsonArray();
