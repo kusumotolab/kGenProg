@@ -45,6 +45,8 @@ public class UniformCrossover extends CrossoverAdaptor {
     final List<Base> bases = new ArrayList<>();
     for (int i = 0; i < Math.max(basesA.size(), basesB.size()); i++) {
 
+      // iがbasesAのサイズよりも大きい場合は，
+      // basesBからBaseを取得するかどうかをランダムで決める
       if (basesA.size() <= i) {
         if (this.random.nextBoolean()) {
           bases.add(basesB.get(i));
@@ -52,6 +54,8 @@ public class UniformCrossover extends CrossoverAdaptor {
         continue;
       }
 
+      // iがbasesBのサイズよりも大きい場合は，
+      // basesAからBaseを取得するかどうかをランダムで決める
       if (basesB.size() <= i) {
         if (this.random.nextBoolean()) {
           bases.add(basesA.get(i));
@@ -59,6 +63,8 @@ public class UniformCrossover extends CrossoverAdaptor {
         continue;
       }
 
+      // iがbaseAとbaseBのどちらのサイズよりも小さい場合は，
+      // どちらのBaseを取得するかランダムに決める
       bases.add(this.random.nextBoolean() ? basesA.get(i) : basesB.get(i));
     }
     return new Gene(bases);

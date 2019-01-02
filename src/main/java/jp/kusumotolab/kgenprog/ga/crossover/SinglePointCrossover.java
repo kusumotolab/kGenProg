@@ -1,9 +1,10 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
@@ -42,15 +43,15 @@ public class SinglePointCrossover extends CrossoverAdaptor {
   }
 
   private int getPointAtRandom(final int a, final int b) {
-    // random.nextInt(a) は 0 ~ a の間の値をランダムで出力するので、
+    // random.nextInt(a) は 0 ~ a の間の整数値（0は含むがaは含まない）をランダムで出力するので、
     // 0 を避けるために 1 足している
     final int min = Math.min(a, b);
     return random.nextInt(min - 1) + 1;
   }
 
   private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {
-    final ArrayList<Base> bases = new ArrayList<>(basesA);
-    bases.addAll(basesB);
+    final List<Base> bases = Stream.concat(basesA.stream(), basesB.stream())
+        .collect(Collectors.toList());
     return new Gene(bases);
   }
 }

@@ -43,7 +43,7 @@ public class RandomCrossover extends CrossoverAdaptor {
     return Arrays.asList(store.createVariant(newGene, newElement));
   }
 
-  protected Gene makeGene(final List<Base> basesA, final List<Base> basesB) {
+  private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {
 
     final List<Base> concatenatedBases = Stream.concat(basesA.stream(), basesB.stream())
         .collect(Collectors.toList());
