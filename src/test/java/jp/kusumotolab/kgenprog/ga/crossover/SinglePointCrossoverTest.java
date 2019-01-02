@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
+import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.MockVariantStore;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
@@ -72,7 +72,8 @@ public class SinglePointCrossoverTest {
 
     final Random random = new MockRandom();
     random.setSeed(0);
-    final SinglePointCrossover singlePointCrossover = new SinglePointCrossover(random, 10);
+    final SinglePointCrossover singlePointCrossover = new SinglePointCrossover(random,
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 10);
     final VariantStore variantStore =
         new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
 
@@ -103,8 +104,9 @@ public class SinglePointCrossoverTest {
 
     final Random random = new MockRandom();
     random.setSeed(0);
-    final SinglePointCrossover singlePointCrossover = new SinglePointCrossover(random,
-        crossoverGeneratingCount);
+    final SinglePointCrossover singlePointCrossover =
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantRandomSelection(random), crossoverGeneratingCount);
     final VariantStore variantStore =
         new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
 

@@ -24,7 +24,8 @@ public class RandomCrossoverTest {
         .thenReturn(2);
 
     // バリアントの生成
-    final Crossover crossover = new RandomCrossover(random, 1);
+    final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
+        new SecondVariantRandomSelection(random), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -50,7 +51,8 @@ public class RandomCrossoverTest {
         .thenReturn(3);
 
     // バリアントの生成
-    final Crossover crossover = new RandomCrossover(random, 1);
+    final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
+        new SecondVariantRandomSelection(random), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);

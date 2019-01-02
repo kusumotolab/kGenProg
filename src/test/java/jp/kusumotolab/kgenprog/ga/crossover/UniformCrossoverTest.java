@@ -149,7 +149,9 @@ public class UniformCrossoverTest {
   }
 
   private List<Variant> execCrossover(final Random random, final int crossoverGeneratingCount) {
-    final UniformCrossover crossover = new UniformCrossover(random, crossoverGeneratingCount);
+    final UniformCrossover crossover =
+        new UniformCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantRandomSelection(random), crossoverGeneratingCount);
     return crossover.exec(variantStore);
   }
 
