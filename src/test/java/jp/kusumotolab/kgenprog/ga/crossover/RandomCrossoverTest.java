@@ -14,10 +14,39 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 public class RandomCrossoverTest {
 
   /**
+   * 生成するバリアントの数をテストするテストケース
+   */
+  @Test
+  public void testNumberOfGeneratedVariants() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(true);
+    when(random.nextInt(anyInt())).thenReturn(0);
+
+    // テストデータを初期化
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+
+    // バリアントの生成
+    final Crossover crossover10 =
+        new RandomCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(), 10);
+    final List<Variant> variants10 = crossover10.exec(testVariants.variantStore);
+    assertThat(variants10.size()).isEqualTo(10);
+
+    // バリアントの生成
+    final Crossover crossover100 =
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(), 100);
+    final List<Variant> variants100 = crossover100.exec(testVariants.variantStore);
+    assertThat(variants100.size()).isEqualTo(100);
+  }
+
+  /**
    * 一つ目のバリアントをランダム，二つ目のバリアントもランダムで選択するランダム交叉のテスト
    */
   @Test
-  public void test01() {
+  public void testGeneratedVariants01() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -47,7 +76,7 @@ public class RandomCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントもランダムで選択するランダム交叉のテスト
    */
   @Test
-  public void test02() {
+  public void testGeneratedVariants02() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -77,7 +106,7 @@ public class RandomCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントを遺伝子の類似度で選択するランダム交叉のテスト
    */
   @Test
-  public void test03() {
+  public void testGeneratedVariants03() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -105,7 +134,7 @@ public class RandomCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントを遺伝子の類似度で選択するランダム交叉のテスト
    */
   @Test
-  public void test04() {
+  public void testGeneratedVariants04() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -133,7 +162,7 @@ public class RandomCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントをテスト結果の類似度で選択するランダム交叉のテスト
    */
   @Test
-  public void test05() {
+  public void testGeneratedVariants05() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -161,7 +190,7 @@ public class RandomCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントをテスト結果の類似度で選択するランダム交叉のテスト
    */
   @Test
-  public void test06() {
+  public void testGeneratedVariants06() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);

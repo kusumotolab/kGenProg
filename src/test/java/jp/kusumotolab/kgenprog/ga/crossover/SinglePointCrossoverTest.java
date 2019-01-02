@@ -3,138 +3,50 @@ package jp.kusumotolab.kgenprog.ga.crossover;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import org.junit.Test;
 import org.mockito.Mockito;
-import jp.kusumotolab.kgenprog.ga.variant.Base;
-import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.MockVariantStore;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
-import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.project.NoneOperation;
-import jp.kusumotolab.kgenprog.project.Operation;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
 public class SinglePointCrossoverTest {
 
-  @SuppressWarnings("serial")
-  private class MockRandom extends Random {
-
-    private int counter = 0;
-
-    @Override
-    public boolean nextBoolean() {
-      return false;
-    }
-
-    @Override
-    public int nextInt(int divisor) {
-      counter += 1;
-      return counter % divisor;
-    }
-  }
-
+  /**
+   * 生成するバリアントの数をテストするテストケース
+   */
   @Test
-  public void testCrossover() {
-    final List<Variant> variants = execCrossover(10);
-    final List<Gene> genes = variants.stream()
-        .map(Variant::getGene)
-        .collect(Collectors.toList());
+  public void testNumberOfGeneratedVariants() {
 
-    assertThat(genes).anyMatch(this::containNoneOperationAndInsertOperation);
-  }
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(true);
+    when(random.nextInt(anyInt())).thenReturn(0);
 
-  @Test
-  public void testGeneratingVariantsSize() {
-    List<Variant> variants = execCrossover(10);
-    assertThat(variants).hasSize(10);
+    // テストデータを初期化
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
 
-    variants = execCrossover(13);
-    assertThat(variants).hasSize(13);
-  }
-
-  @Test
-  public void testHistoricalElement() {
-    final Base noneOperationBase = new Base(null, new NoneOperation());
-    final Base insertOperationBase = new Base(null, new InsertOperation(null));
-
-    final List<Base> noneBases = Arrays.asList(noneOperationBase, noneOperationBase,
-        noneOperationBase, noneOperationBase, noneOperationBase);
-    final List<Base> insertBases = Arrays.asList(insertOperationBase, insertOperationBase,
-        insertOperationBase, insertOperationBase, insertOperationBase);
-
-    final Variant noneOperationVariant =
-        new Variant(0, 0, new Gene(noneBases), null, null, null, null, null);
-    final Variant insertOperationVariant =
-        new Variant(0, 0, new Gene(insertBases), null, null, null, null, null);
-
-    final Random random = new MockRandom();
-    random.setSeed(0);
-    final SinglePointCrossover singlePointCrossover = new SinglePointCrossover(random,
-        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 10);
-    final VariantStore variantStore =
-        new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
-
-    final List<Variant> variants = singlePointCrossover.exec(variantStore);
-
-    final Variant variant = variants.get(0);
-    final HistoricalElement element = variant.getHistoricalElement();
-    assertThat(element).isInstanceOf(CrossoverHistoricalElement.class);
-
-    final CrossoverHistoricalElement cElement = (CrossoverHistoricalElement) element;
-    assertThat(cElement.getParents()).containsExactly(insertOperationVariant, noneOperationVariant);
-    assertThat(cElement.getCrossoverPoint()).isEqualTo(4);
-  }
-
-  private List<Variant> execCrossover(final int crossoverGeneratingCount) {
-    final Base noneOperationBase = new Base(null, new NoneOperation());
-    final Base insertOperationBase = new Base(null, new InsertOperation(null));
-
-    final List<Base> noneBases = Arrays.asList(noneOperationBase, noneOperationBase,
-        noneOperationBase, noneOperationBase, noneOperationBase);
-    final List<Base> insertBases = Arrays.asList(insertOperationBase, insertOperationBase,
-        insertOperationBase, insertOperationBase, insertOperationBase);
-
-    final Variant noneOperationVariant =
-        new Variant(0, 0, new Gene(noneBases), null, null, null, null, null);
-    final Variant insertOperationVariant =
-        new Variant(0, 0, new Gene(insertBases), null, null, null, null, null);
-
-    final Random random = new MockRandom();
-    random.setSeed(0);
-    final SinglePointCrossover singlePointCrossover =
+    // バリアントの生成
+    final Crossover crossover10 =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantRandomSelection(random), crossoverGeneratingCount);
-    final VariantStore variantStore =
-        new MockVariantStore(Arrays.asList(noneOperationVariant, insertOperationVariant));
+            new SecondVariantGeneSimilarityBasedSelection(), 10);
+    final List<Variant> variants10 = crossover10.exec(testVariants.variantStore);
+    assertThat(variants10.size()).isEqualTo(10);
 
-    return singlePointCrossover.exec(variantStore);
-  }
-
-  private boolean containNoneOperationAndInsertOperation(final Gene gene) {
-    final List<Operation> operations = gene.getBases()
-        .stream()
-        .map(Base::getOperation)
-        .collect(Collectors.toList());
-
-    final boolean containNoneOperation = operations.stream()
-        .anyMatch(e -> e instanceof NoneOperation);
-    final boolean containInsertOperation = operations.stream()
-        .anyMatch(e -> e instanceof InsertOperation);
-
-    return containNoneOperation && containInsertOperation;
+    // バリアントの生成
+    final Crossover crossover100 =
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(), 100);
+    final List<Variant> variants100 = crossover100.exec(testVariants.variantStore);
+    assertThat(variants100.size()).isEqualTo(100);
   }
 
   /**
    * 一つ目のバリアントをランダム，二つ目のバリアントもランダムで選択する一点交叉のテスト
    */
   @Test
-  public void test01() {
+  public void testGeneratedVariants01() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -164,7 +76,7 @@ public class SinglePointCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントもランダムで選択する一点交叉のテスト
    */
   @Test
-  public void test02() {
+  public void testGeneratedVariants02() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -194,7 +106,7 @@ public class SinglePointCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントを遺伝子の類似度で選択する一点交叉のテスト
    */
   @Test
-  public void test03() {
+  public void testGeneratedVariants03() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -223,7 +135,7 @@ public class SinglePointCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントを遺伝子の類似度で選択する一点交叉のテスト
    */
   @Test
-  public void test04() {
+  public void testGeneratedVariants04() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -252,7 +164,7 @@ public class SinglePointCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントをテスト結果の類似度で選択する一点交叉のテスト
    */
   @Test
-  public void test05() {
+  public void testGeneratedVariants05() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
@@ -281,7 +193,7 @@ public class SinglePointCrossoverTest {
    * 一つ目のバリアントをランダム，二つ目のバリアントをテスト結果の類似度で選択する一点交叉のテスト
    */
   @Test
-  public void test06() {
+  public void testGeneratedVariants06() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
