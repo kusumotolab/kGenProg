@@ -36,7 +36,7 @@ public abstract class CrossoverAdaptor implements Crossover {
 
     final List<Variant> filteredVariants = variantStore.getCurrentVariants()
         .stream()
-        .filter(e -> 2 < e.getGene()
+        .filter(e -> 1 < e.getGene()
             .getBases()
             .size())
         .collect(Collectors.toList());

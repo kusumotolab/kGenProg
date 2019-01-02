@@ -10,8 +10,8 @@ import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantRandomSelection;
-import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantGeneSimilarityBasedSelection;
-import jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover;
+import jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover;
+import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantRandomSelection;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
@@ -44,9 +44,8 @@ public class CUILauncher {
         new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
         rouletteStatementSelection, config.getScope());
-    final Crossover crossover =
-        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(), config.getCrossoverGeneratingCount());
+    final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
+        new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount());

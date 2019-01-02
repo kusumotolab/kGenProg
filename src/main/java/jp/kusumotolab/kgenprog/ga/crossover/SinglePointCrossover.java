@@ -45,7 +45,7 @@ public class SinglePointCrossover extends CrossoverAdaptor {
     // random.nextInt(a) は 0 ~ a の間の値をランダムで出力するので、
     // 0 を避けるために 1 足している
     final int min = Math.min(a, b);
-    return random.nextInt(min - 2) + 1;
+    return random.nextInt(min - 1) + 1;
   }
 
   private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {

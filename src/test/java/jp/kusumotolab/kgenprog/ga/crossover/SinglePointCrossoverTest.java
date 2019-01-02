@@ -85,7 +85,7 @@ public class SinglePointCrossoverTest {
 
     final CrossoverHistoricalElement cElement = (CrossoverHistoricalElement) element;
     assertThat(cElement.getParents()).containsExactly(insertOperationVariant, noneOperationVariant);
-    assertThat(cElement.getCrossoverPoint()).isEqualTo(1);
+    assertThat(cElement.getCrossoverPoint()).isEqualTo(4);
   }
 
   private List<Variant> execCrossover(final int crossoverGeneratingCount) {
