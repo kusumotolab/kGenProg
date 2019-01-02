@@ -155,4 +155,56 @@ public class UniformCrossoverTest {
     return crossover.exec(variantStore);
   }
 
+
+  @Test
+  public void test01() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(true);
+    when(random.nextInt(anyInt())).thenReturn(0) // variantAを選ぶための0
+        .thenReturn(1); // variantBを選ぶための1
+
+    // バリアントの生成
+    final Crossover crossover = new UniformCrossover(random,
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantBが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantA, testVariants.variantB);
+
+    // 生成されたバリアントのGeneはvariantAと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
+        testVariants.noneBase, testVariants.noneBase);
+  }
+
+  @Test
+  public void test02() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(false);
+    when(random.nextInt(anyInt())).thenReturn(1) // variantBを選ぶための1
+        .thenReturn(2); // variantCを選ぶための2
+
+    // バリアントの生成
+    final Crossover crossover = new UniformCrossover(random,
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantDが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantB, testVariants.variantC);
+
+    // 生成されたバリアントのGeneはvariantCと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.insertBase,
+        testVariants.insertBase, testVariants.insertBase);
+  }
 }
