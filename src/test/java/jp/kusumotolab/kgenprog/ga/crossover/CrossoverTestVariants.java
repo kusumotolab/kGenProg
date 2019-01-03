@@ -4,6 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import org.mockito.Mockito;
+import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
@@ -67,18 +69,31 @@ public class CrossoverTestVariants {
     final Gene geneC = new Gene(Arrays.asList(noneBase, insertBase, insertBase, insertBase));
     final Gene geneD = new Gene(Arrays.asList(insertBase, insertBase, insertBase, insertBase));
 
+    final Fitness fitnessA = new SimpleFitness(0.5d);
+    final Fitness fitnessB = new SimpleFitness(0.5d);
+    final Fitness fitnessC = new SimpleFitness(0.4d);
+    final Fitness fitnessD = new SimpleFitness(0.4d);
+
     variantA = Mockito.mock(Variant.class);
+    when(variantA.getId()).thenReturn(0l);
     when(variantA.getTestResults()).thenReturn(testResultsA);
     when(variantA.getGene()).thenReturn(geneA);
+    when(variantA.getFitness()).thenReturn(fitnessA);
     variantB = Mockito.mock(Variant.class);
+    when(variantB.getId()).thenReturn(1l);
     when(variantB.getTestResults()).thenReturn(testResultsB);
     when(variantB.getGene()).thenReturn(geneB);
+    when(variantB.getFitness()).thenReturn(fitnessB);
     variantC = Mockito.mock(Variant.class);
+    when(variantC.getId()).thenReturn(2l);
     when(variantC.getTestResults()).thenReturn(testResultsC);
     when(variantC.getGene()).thenReturn(geneC);
+    when(variantC.getFitness()).thenReturn(fitnessC);
     variantD = Mockito.mock(Variant.class);
+    when(variantD.getId()).thenReturn(3l);
     when(variantD.getTestResults()).thenReturn(testResultsD);
     when(variantD.getGene()).thenReturn(geneD);
+    when(variantD.getFitness()).thenReturn(fitnessD);
 
     variantStore = Mockito.mock(VariantStore.class);
     when(variantStore.getCurrentVariants())
