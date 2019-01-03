@@ -36,7 +36,7 @@ public abstract class CrossoverAdaptor implements Crossover {
 
     final List<Variant> filteredVariants = variantStore.getCurrentVariants()
         .stream()
-        .filter(e -> 1 < e.getGene()
+        .filter(e -> 1 < e.getGene() // 遺伝子の長さが2に満たないバリアントは交叉に使えない
             .getBases()
             .size())
         .collect(Collectors.toList());
@@ -48,7 +48,7 @@ public abstract class CrossoverAdaptor implements Crossover {
 
     final List<Variant> variants = new ArrayList<>();
 
-    // genetingCountを超えるまでバリアントを作りづづける
+    // generatingCountを超えるまでバリアントを作りづづける
     while (variants.size() < generatingCount) {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
       variants.addAll(newVariants);
