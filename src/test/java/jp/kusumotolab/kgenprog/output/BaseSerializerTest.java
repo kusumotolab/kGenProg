@@ -142,16 +142,15 @@ public class BaseSerializerTest {
   private void check(final Base base, final JsonObject serializedBase) {
     // キーの存在チェック
     assertThat(serializedBase.keySet()).containsOnly(
-        JsonKeyAlias.Base.FQN,
+        JsonKeyAlias.Base.FILE_NAME,
         JsonKeyAlias.Base.LINE_NUMBER_RANGE,
         JsonKeyAlias.Base.NAME,
         JsonKeyAlias.Base.SNIPPET);
 
-    // fqnのチェック
+    // ファイル名のチェック
     final String expectFqn = base.getTargetLocation()
-        .getGeneratedAST()
-        .getPrimaryClassName().value;
-    final String serializedFqn = serializedBase.get(JsonKeyAlias.Base.FQN)
+        .getSourcePath().path.toString();
+    final String serializedFqn = serializedBase.get(JsonKeyAlias.Base.FILE_NAME)
         .getAsString();
     assertThat(serializedFqn).isEqualTo(expectFqn);
 

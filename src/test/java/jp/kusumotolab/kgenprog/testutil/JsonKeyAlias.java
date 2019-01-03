@@ -32,7 +32,7 @@ public class JsonKeyAlias {
 
   public static class Base {
 
-    public final static String FQN = "fqn";
+    public final static String FILE_NAME = "fileName";
     public final static String NAME = "name";
     public final static String LINE_NUMBER_RANGE = "lineNumberRange";
     public final static String SNIPPET = "snippet";
