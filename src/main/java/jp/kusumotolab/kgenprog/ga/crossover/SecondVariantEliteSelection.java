@@ -13,7 +13,8 @@ public class SecondVariantEliteSelection implements SecondVariantSelectionStrate
   @Override
   public Variant exec(final List<Variant> variants, final Variant firstVariant) {
     return variants.stream()
-        .sorted(Comparator.comparing(Variant::getFitness))
+        .sorted(Comparator.comparing(Variant::getFitness)
+            .reversed())
         .filter(v -> v != firstVariant) // TODO 本来は Variantにequalsメソッドを定義すべき？
         .findFirst()
         .get();
