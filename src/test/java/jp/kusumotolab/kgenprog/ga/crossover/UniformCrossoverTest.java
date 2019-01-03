@@ -1,156 +1,218 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.UniformCrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
-import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.project.NoneOperation;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 
 public class UniformCrossoverTest {
 
-  private static Base noneOperationBase;
-  private static Base insertOperationBase;
-  private static Variant noneOperationVariant;
-  private static Variant insertOperationVariant;
-  private static VariantStore variantStore;
-
-  @Before
-  public void setup() {
-    noneOperationBase = new Base(null, new NoneOperation());
-    insertOperationBase = new Base(null, new InsertOperation(null));
-
-    final List<Base> noneBases =
-        Arrays.asList(noneOperationBase, noneOperationBase, noneOperationBase, noneOperationBase);
-    final List<Base> insertBases = Arrays.asList(insertOperationBase, insertOperationBase,
-        insertOperationBase, insertOperationBase);
-
-    noneOperationVariant = new Variant(0, 0, new Gene(noneBases), null, null, null, null, null);
-    insertOperationVariant = new Variant(0, 0, new Gene(insertBases), null, null, null, null, null);
-    variantStore = makeVariantStore(noneOperationVariant, insertOperationVariant);
-  }
-
-  private VariantStore makeVariantStore(final Variant noneOperationVariant,
-      final Variant insertOperationVariant) {
-    final VariantStore variantStore = Mockito.mock(VariantStore.class);
-    when(variantStore.getCurrentVariants())
-        .thenReturn(Arrays.asList(noneOperationVariant, insertOperationVariant));
-    when(variantStore.createVariant(any(), any())).thenAnswer(invocation -> {
-      final Gene gene = invocation.getArgument(0);
-      final HistoricalElement element = invocation.getArgument(1);
-      return new Variant(0, 0, gene, null, null, null, null, element);
-    });
-    return variantStore;
-  }
-
+  /**
+   * 生成するバリアントの数をテストするテストケース
+   */
   @Test
-  public void testGeneratingVariantsSize() {
+  public void testNumberOfGeneratedVariants() {
 
+    // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0);
 
-    List<Variant> variants = execCrossover(random, 10);
-    assertThat(variants).hasSize(10);
+    // テストデータを初期化
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
 
-    variants = execCrossover(random, 13);
-    assertThat(variants).hasSize(13);
+    // バリアントの生成
+    final Crossover crossover10 =
+        new UniformCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(), 10);
+    final List<Variant> variants10 = crossover10.exec(testVariants.variantStore);
+    assertThat(variants10.size()).isEqualTo(10);
+
+    // バリアントの生成
+    final Crossover crossover100 =
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(), 100);
+    final List<Variant> variants100 = crossover100.exec(testVariants.variantStore);
+    assertThat(variants100.size()).isEqualTo(100);
   }
 
+  /**
+   * 一つ目のバリアントをランダム，二つ目のバリアントもランダムで選択する一様交叉のテスト
+   */
   @Test
-  public void testVariants() {
+  public void testGeneratedVariants01() {
 
+    // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
-
-    // 常に一つ目のバリアントのBaseを返すはず
     when(random.nextBoolean()).thenReturn(true);
-    when(random.nextInt(anyInt())).thenReturn(0)
-        .thenReturn(1);
-    final Variant variant1 = execCrossover(random, 1).get(0);
-    assertThat(variant1.getGene()
-        .getBases()).containsExactly(noneOperationBase, noneOperationBase, noneOperationBase,
-            noneOperationBase);
+    when(random.nextInt(anyInt())).thenReturn(0) // variantAを選ぶための0
+        .thenReturn(1); // variantBを選ぶための1
 
-    // 常に二つ目のバリアントのBaseを返すはず
+    // バリアントの生成
+    final Crossover crossover = new UniformCrossover(random,
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantBが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantA, testVariants.variantB);
+
+    // 生成されたバリアントのGeneはvariantAと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
+        testVariants.noneBase, testVariants.noneBase);
+  }
+
+  /**
+   * 一つ目のバリアントをランダム，二つ目のバリアントもランダムで選択する一様交叉のテスト
+   */
+  @Test
+  public void testGeneratedVariants02() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(false);
-    when(random.nextInt(anyInt())).thenReturn(0)
-        .thenReturn(1);
-    final Variant variant2 = execCrossover(random, 1).get(0);
-    assertThat(variant2.getGene()
-        .getBases()).containsExactly(insertOperationBase, insertOperationBase, insertOperationBase,
-            insertOperationBase);
+    when(random.nextInt(anyInt())).thenReturn(1) // variantBを選ぶための1
+        .thenReturn(2); // variantCを選ぶための2
 
-    // 一つ目と二つ目のバリアントのBaseを交互に返すはず
-    when(random.nextBoolean()).thenReturn(true)
-        .thenReturn(false)
-        .thenReturn(true)
-        .thenReturn(false);
-    when(random.nextInt(anyInt())).thenReturn(0)
-        .thenReturn(1);
-    final Variant variant3 = execCrossover(random, 1).get(0);
-    assertThat(variant3.getGene()
-        .getBases())
-            .isEqualTo(Arrays.asList(noneOperationBase, insertOperationBase, noneOperationBase,
-                insertOperationBase));
+    // バリアントの生成
+    final Crossover crossover = new UniformCrossover(random,
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantDが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantB, testVariants.variantC);
+
+    // 生成されたバリアントのGeneはvariantCと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.insertBase,
+        testVariants.insertBase, testVariants.insertBase);
   }
 
+  /**
+   * 一つ目のバリアントをランダム，二つ目のバリアントを遺伝子の類似度で選択する一様交叉のテスト
+   */
   @Test
-  public void testHistoricalElements() {
+  public void testGeneratedVariants03() {
 
+    // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);
-
-    // nonOperationVariantを2つの親として持つバリアントを生成
     when(random.nextBoolean()).thenReturn(true);
-    when(random.nextInt(anyInt())).thenReturn(0); // noneOperationVariantを親として選ぶモック
-    final Variant variant1 = execCrossover(random, 1).get(0);
-    final HistoricalElement element1 = variant1.getHistoricalElement();
-    assertThat(element1).isInstanceOf(UniformCrossoverHistoricalElement.class);
-    final UniformCrossoverHistoricalElement uElement1 =
-        (UniformCrossoverHistoricalElement) element1;
-    assertThat(uElement1.getParents()).containsExactly(noneOperationVariant, noneOperationVariant);
+    when(random.nextInt(anyInt())).thenReturn(0);
 
-    // insertOperationVariantを2つの親として持つバリアントを生成
-    when(random.nextBoolean()).thenReturn(true);
-    when(random.nextInt(anyInt())).thenReturn(1); // insertOperationVariantを親として選ぶモック
-    final Variant variant2 = execCrossover(random, 1).get(0);
-    final HistoricalElement element2 = variant2.getHistoricalElement();
-    assertThat(element2).isInstanceOf(UniformCrossoverHistoricalElement.class);
-    final UniformCrossoverHistoricalElement uElement2 =
-        (UniformCrossoverHistoricalElement) element2;
-    assertThat(uElement2.getParents()).containsExactly(insertOperationVariant,
-        insertOperationVariant);
+    // バリアントの生成
+    final Crossover crossover =
+        new UniformCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
 
-    // noneOperationVariantとinsertOperationVariantを2つの親として持つバリアントを生成
-    when(random.nextBoolean()).thenReturn(true)
-        .thenReturn(false)
-        .thenReturn(true)
-        .thenReturn(false);
-    when(random.nextInt(anyInt())).thenReturn(0) // 一つ目の親としてnoneOperationVariantを選ぶ
-        .thenReturn(1); // 二つ目の親としてinsertOperationVariantを親として選ぶ
-    final Variant variant3 = execCrossover(random, 1).get(0);
-    final HistoricalElement element3 = variant3.getHistoricalElement();
-    assertThat(element3).isInstanceOf(UniformCrossoverHistoricalElement.class);
-    final UniformCrossoverHistoricalElement uElement3 =
-        (UniformCrossoverHistoricalElement) element3;
-    assertThat(uElement3.getParents()).containsExactly(noneOperationVariant,
-        insertOperationVariant);
+    // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantDが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantA, testVariants.variantD);
+
+    // 生成されたバリアントのGeneはvariantAと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
+        testVariants.noneBase, testVariants.noneBase);
   }
 
-  private List<Variant> execCrossover(final Random random, final int crossoverGeneratingCount) {
-    final UniformCrossover crossover = new UniformCrossover(random, crossoverGeneratingCount);
-    return crossover.exec(variantStore);
+  /**
+   * 一つ目のバリアントをランダム，二つ目のバリアントを遺伝子の類似度で選択する一様交叉のテスト
+   */
+  @Test
+  public void testGeneratedVariants04() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(false);
+    when(random.nextInt(anyInt())).thenReturn(2);
+
+    // バリアントの生成
+    final Crossover crossover =
+        new UniformCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantAが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantC, testVariants.variantA);
+
+    // 生成されたバリアントのGeneはvariantAと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
+        testVariants.noneBase, testVariants.noneBase);
   }
 
+  /**
+   * 一つ目のバリアントをランダム，二つ目のバリアントをテスト結果の類似度で選択する一様交叉のテスト
+   */
+  @Test
+  public void testGeneratedVariants05() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(true);
+    when(random.nextInt(anyInt())).thenReturn(0);
+
+    // バリアントの生成
+    final Crossover crossover =
+        new UniformCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantTestSimilarityBasedSelection(), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantBが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantA, testVariants.variantB);
+
+    // 生成されたバリアントのGeneはvariantAと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.noneBase, testVariants.noneBase,
+        testVariants.noneBase, testVariants.noneBase);
+  }
+
+  /**
+   * 一つ目のバリアントをランダム，二つ目のバリアントをテスト結果の類似度で選択する一様交叉のテスト
+   */
+  @Test
+  public void testGeneratedVariants06() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(false);
+    when(random.nextInt(anyInt())).thenReturn(2);
+
+    // バリアントの生成
+    final Crossover crossover =
+        new UniformCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantTestSimilarityBasedSelection(), 1);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantDが選ばれているはず
+    final HistoricalElement element = variant.getHistoricalElement();
+    assertThat(element.getParents()).containsExactly(testVariants.variantC, testVariants.variantD);
+
+    // 生成されたバリアントのGeneはvariantDと同じになっているはず
+    final Gene gene = variant.getGene();
+    assertThat(gene.getBases()).containsExactly(testVariants.insertBase, testVariants.insertBase,
+        testVariants.insertBase, testVariants.insertBase);
+  }
 }

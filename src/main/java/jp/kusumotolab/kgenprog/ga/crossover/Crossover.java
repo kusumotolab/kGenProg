@@ -7,4 +7,8 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 public interface Crossover {
 
   public List<Variant> exec(VariantStore variantStore);
+
+  public FirstVariantSelectionStrategy getFirstVariantSelectionStrategy();
+
+  public SecondVariantSelectionStrategy getSecondVariantSelectionStrategy();
 }

@@ -1,18 +1,13 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
 import java.util.List;
-import java.util.Random;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
-public abstract class SimilarityBasedSinglePointCrossover extends SinglePointCrossover {
-
-  public SimilarityBasedSinglePointCrossover(final Random random,
-      final int crossoverGenerationCount) {
-    super(random, crossoverGenerationCount);
-  }
+public abstract class SecondVariantSimilarityBasedSelection
+    implements SecondVariantSelectionStrategy {
 
   @Override
-  public Variant selectSecondVariant(final List<Variant> variants, final Variant firstVariant) {
+  public Variant exec(final List<Variant> variants, final Variant firstVariant) {
     double minSimilarity = 1.0d;
     Variant secondVariant = firstVariant;
 

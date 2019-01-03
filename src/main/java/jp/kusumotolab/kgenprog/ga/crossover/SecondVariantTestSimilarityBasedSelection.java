@@ -1,14 +1,9 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
-import java.util.Random;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
-public class TestSimilarityBasedUniformCrossover extends SimilarityBasedUniformCrossover {
-
-  public TestSimilarityBasedUniformCrossover(final Random random,
-      final int crossoverGeneratingCount) {
-    super(random, crossoverGeneratingCount);
-  }
+public class SecondVariantTestSimilarityBasedSelection
+    extends SecondVariantSimilarityBasedSelection {
 
   @Override
   protected double calculateSimilarity(final Variant variant1, final Variant variant2) {

@@ -16,6 +16,8 @@ import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantRandomSelection;
+import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantRandomSelection;
 import jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
@@ -69,11 +71,12 @@ public class KGenProgMainTest {
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
         statementSelection, config.getScope());
     final Crossover crossover =
-        new SinglePointCrossover(random, config.getCrossoverGeneratingCount());
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection = new GenerationalVariantSelection(
-        config.getHeadcount());
+    final VariantSelection variantSelection =
+        new GenerationalVariantSelection(config.getHeadcount());
     final LocalTestExecutor localTestExecutor = new LocalTestExecutor(config);
     final TestExecutor testExecutor = new ParallelTestExecutor(localTestExecutor);
     final PatchGenerator patchGenerator = new PatchGenerator();
