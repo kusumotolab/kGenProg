@@ -1,4 +1,0 @@
-root-dir = "../BuildSuccess07"
-src = ["src/"]
-test = ["test/"]
-

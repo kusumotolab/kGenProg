@@ -515,41 +515,38 @@ public class Configuration {
     }
 
     private void resolvePaths() {
-      rootDir = resolveAgainstConfigDirAndNormalize(checkRelativePath(rootDir));
-      workingDir = resolveAgainstConfigDirAndNormalize(checkRelativePath(workingDir));
+      rootDir = resolveAgainstConfigDirAndNormalize(rootDir);
+      workingDir = resolveAgainstConfigDirAndNormalize(workingDir);
       productPaths = productPaths.stream()
-          .peek(this::checkRelativePath)
           .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
       testPaths = testPaths.stream()
-          .peek(this::checkRelativePath)
           .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
       classPaths = classPaths.stream()
-          .peek(this::checkRelativePath)
           .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
 
       if (!outDir.equals(DEFAULT_OUT_DIR)) {
-        outDir = resolveAgainstConfigDirAndNormalize(checkRelativePath(outDir));
+        outDir = resolveAgainstConfigDirAndNormalize(outDir);
       }
     }
 
     private Path resolveAgainstConfigDirAndNormalize(final Path path) {
-      return configPath.resolveSibling(checkRelativePath(path))
-          .normalize();
+      return checkSymbolicLink(configPath.resolveSibling(path)
+          .normalize());
     }
 
     /**
-     * Checks the given path is relative, and returns it as is. If it is relative, outputs warning
-     * message; otherwise do nothing.
+     * Checks whether the given path is a symbolic link, and returns it as is. If it is a symbolic
+     * link, outputs warning message; otherwise do nothing.
      *
      * @param path the path to be checked
      * @return the given path
      */
-    private Path checkRelativePath(final Path path) {
-      if (!path.isAbsolute()) {
-        log.warn("relative paths may not be resolved: " + path.toString());
+    private Path checkSymbolicLink(final Path path) {
+      if (Files.isSymbolicLink(path)) {
+        log.warn("symbolic link may not be resolved: " + path.toString());
       }
 
       return path;

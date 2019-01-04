@@ -2319,12 +2319,12 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromConfigFileWithRelativePath() {
+  public void testBuildFromConfigFileWithSymbolicLink() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     final PrintStream printStream = System.out;
     System.setOut(new PrintStream(out));
 
-    final Path configPath = rootDir.resolve("withRelativePath.toml");
+    final Path configPath = rootDir.resolve("withSymbolicLink.toml");
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
@@ -2349,12 +2349,12 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
-    final Path rootDirFromConfigFile = Paths.get("example/BuildSuccess07");
+    final Path productPathFromConfigFile = rootDir.resolve("src-example");
     final TargetProject expectedProject =
-        TargetProjectFactory.create(rootDirFromConfigFile, productPaths, testPaths, Collections.emptyList(),
+        TargetProjectFactory.create(rootDir, ImmutableList.of(productPathFromConfigFile), testPaths, Collections.emptyList(),
             JUnitVersion.JUNIT4);
     assertThat(config.getTargetProject()).isEqualTo(expectedProject);
-    assertThat(out.toString()).contains("relative paths may not be resolved:");
+    assertThat(out.toString()).contains("symbolic link may not be resolved:");
 
     System.setOut(printStream);
   }
