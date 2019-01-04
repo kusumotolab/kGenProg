@@ -29,6 +29,7 @@ public class GreatestCommonDivider {
     return a;
   }
 
+  @SuppressWarnings("unused")
   private int reuse_me(int a, int b) {
     if (a > b) {
       return a;
