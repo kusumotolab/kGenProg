@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -47,7 +48,7 @@ class TestThread extends Thread {
   private final List<String> executionTestNames;
 
   public TestThread(final BuildResults buildResults, final TargetProject targetProject,
-      final List<String> executionTestNames) {
+      final List<String> executionTestNames, final long timeout) {
 
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
@@ -56,6 +57,10 @@ class TestThread extends Thread {
     this.buildResults = buildResults;
     this.targetProject = targetProject;
     this.executionTestNames = executionTestNames;
+
+    // カスタムJUnit上でのタイムアウト時間を設定
+    org.junit.experimental.KgpGlobalConfig.timeout = timeout;
+    org.junit.experimental.KgpGlobalConfig.timeUnit = TimeUnit.SECONDS;
   }
 
   // Result extraction point for multi thread

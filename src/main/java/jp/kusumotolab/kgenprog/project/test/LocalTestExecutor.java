@@ -29,8 +29,8 @@ public class LocalTestExecutor implements TestExecutor {
 
     final BuildResults buildResults = projectBuilder.build(generatedSourceCode);
 
-    final TestThread testThread =
-        new TestThread(buildResults, config.getTargetProject(), config.getExecutedTests());
+    final TestThread testThread = new TestThread(buildResults, config.getTargetProject(),
+        config.getExecutedTests(), config.getTestTimeLimitSeconds());
     final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<?> future = executor.submit(testThread);
     executor.shutdown();
