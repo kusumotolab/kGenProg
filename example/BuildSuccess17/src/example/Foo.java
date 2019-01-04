@@ -6,14 +6,13 @@ import java.nio.file.Path;
 
 public class Foo {
 
-  public String readFile(final Path path) {
-    String result = "";
+  public String read(final Path path) {
     try {
-      result = Files.readAllLines(path).get(0);
+      return Files.readAllLines(path).get(0);
     } catch (final IOException e) {
       e.printStackTrace();
     }
 
-    return result;
+    return "";
   }
 }

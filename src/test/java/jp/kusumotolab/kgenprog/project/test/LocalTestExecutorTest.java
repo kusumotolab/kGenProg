@@ -443,10 +443,7 @@ public class LocalTestExecutorTest {
   // テスト内でファイル読み込みがある題材の確認
   public void testExecWithTestCaseIncludeFileInput() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess17");
-    final List<Path> productPaths = Arrays.asList(rootPath.resolve("src"));
-    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath, productPaths,
-        testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
@@ -456,8 +453,7 @@ public class LocalTestExecutorTest {
     final TestResults result = executor.exec(variant);
 
     // 実行されたテストは1個のはず
-    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
-        FOO_TEST01);
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
 
     //TODO 別プロセスに切り出して，成功するテストに変更すべき
     // 全テストの成否はこうなるはず
@@ -468,10 +464,7 @@ public class LocalTestExecutorTest {
   // テスト内でファイル書き込みがある題材の確認
   public void testExecWithTestCaseIncludeFileOutput() throws Exception {
     final Path rootPath = Paths.get("example/BuildSuccess18");
-    final List<Path> productPaths = Arrays.asList(rootPath.resolve("src"));
-    final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath, productPaths,
-        testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
 
     final Configuration config = new Configuration.Builder(targetProject).build();
@@ -481,8 +474,7 @@ public class LocalTestExecutorTest {
     final TestResults result = executor.exec(variant);
 
     // 実行されたテストは1個のはず
-    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
-        FOO_TEST01);
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
 
     // 全テストの成否はこうなるはず
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
