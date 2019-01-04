@@ -5,11 +5,11 @@
 
 ### BuildFailure01
 単純なコンパイルエラーを含む．  
-bug：定義されていない変数を参照している．  
+bug：定義されていない変数を参照している．
 
 ### BuildFailure02
 単純なコンパイルエラーを含む．  
-bug：セミコロンが不足している．  
+bug：セミコロンが不足している．
 
 # BuildSuccess
 ビルドに成功する題材．  
@@ -44,7 +44,7 @@ TargetProjectFactoryのテスト用．
 
 ### BuildSuccess06
 1実装クラスと1テストクラス．  
-Eclipse（.classpath）プロジェクト．  
+Eclipse（.classpath）プロジェクト．
 TargetProjectFactoryのテスト用．  
 
 ### BuildSuccess07
@@ -119,9 +119,9 @@ APR用の題材．
 無限ループを含む題材．  
 
 # real-bugs
-実アプリの題材．  
-Apache Commons Mathの開発過程で生じたバグ．  
-[Defects4J](https://github.com/rjust/defects4j)から取得．  
+実アプリの題材．
+Apache Commons Mathの開発過程で生じたバグ．
+[Defects4J](https://github.com/rjust/defects4j)から取得．
 
 ### Math02
 Developer's patch:
@@ -137,7 +137,7 @@ index 81e180c..2769127 100644
 +        return getSampleSize() * (getNumberOfSuccesses() / (double) getPopulationSize());
 -        return (double) (getSampleSize() * getNumberOfSuccesses()) / (double) getPopulationSize();
      }
-
+ 
      /**
 ```
 http://program-repair.org/defects4j-dissection/#!/bug/Math/2
@@ -151,12 +151,12 @@ index ac8185b..22b23f2 100644
 +++ b/org/apache/commons/math3/complex/Complex.java
 @@ -302,7 +302,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
          }
-
+ 
          if (real == 0.0 && imaginary == 0.0) {
 +            return INF;
 -            return NaN;
          }
-
+ 
          if (isInfinite) {
 ```
 http://program-repair.org/defects4j-dissection/#!/bug/Math/5
@@ -175,7 +175,7 @@ index 180caef..3f66927 100644
 +        return solve(f, min, max);
 -        return solve(min, max);
      }
-
+ 
      /** {@inheritDoc} */
 ```
 http://program-repair.org/defects4j-dissection/#!/bug/Math/70
@@ -190,7 +190,7 @@ index e0cb427..4e95ed5 100644
 @@ -32,11 +32,6 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
   */
  public class BrentSolver extends UnivariateRealSolverImpl {
-
+ 
 +    /** Error message for non-bracketing interval. */
 +    private static final String NON_BRACKETING_MESSAGE =
 +        "function values at endpoints do not have different signs.  " +
@@ -198,11 +198,11 @@ index e0cb427..4e95ed5 100644
 -
      /** Serializable version identifier */
      private static final long serialVersionUID = 7694577816772532779L;
-
+ 
 @@ -133,11 +128,6 @@ public class BrentSolver extends UnivariateRealSolverImpl {
              return solve(f, initial, yInitial, max, yMax, initial, yInitial);
          }
-
+ 
 +        if (yMin * yMax > 0) {
 +            throw MathRuntimeException.createIllegalArgumentException(
 +                  NON_BRACKETING_MESSAGE, min, max, yMin, yMax);
@@ -210,7 +210,7 @@ index e0cb427..4e95ed5 100644
 -
          // full Brent algorithm starting with provided initial guess
          return solve(f, min, yMin, max, yMax, initial, yInitial);
-
+ 
 @@ -186,7 +176,9 @@ public class BrentSolver extends UnivariateRealSolverImpl {
              } else {
                  // neither value is close to zero and min and max do not bracket root.
@@ -235,7 +235,7 @@ index e6398f6..5b76415 100644
 @@ -195,7 +195,7 @@ public class UnivariateRealSolverUtils {
          } while ((fa * fb > 0.0) && (numIterations < maximumIterations) &&
                  ((a > lowerBound) || (b < upperBound)));
-
+ 
 +        if (fa * fb > 0.0 ) {
 -        if (fa * fb >= 0.0 ) {
              throw new ConvergenceException(
