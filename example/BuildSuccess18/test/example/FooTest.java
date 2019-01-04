@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.Test;
 
 public class FooTest{
+
   @Test
   public void test01() throws IOException {
     final Path outPath = Paths.get("resources/out.txt");
