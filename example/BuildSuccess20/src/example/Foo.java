@@ -20,7 +20,7 @@ public class Foo {
   }
 
   private void printThreadInfo() {
-    final StackTraceElement st = Thread.currentThread().getStackTrace()[2];
+    final StackTraceElement st = Thread.currentThread().getStackTrace()[3];
     final String caller = st.getClassName() + "." + st.getMethodName();
     final int threadCount = ManagementFactory.getThreadMXBean().getDaemonThreadCount();
     System.out.printf("BS20: %s [%d]\n", caller, threadCount);
