@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.junit.After;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -50,11 +49,6 @@ public class LocalTestExecutorTest {
   // カスタムjunitがロードされているかテスト
   public void testForJunitVersion() {
     assertThat(junit.runner.Version.id()).isEqualTo("4.12-kgp-custom");
-  }
-
-  @After
-  public void after() {
-    org.junit.experimental.KgpGlobalConfig.timeout = 0;
   }
 
   @Test
@@ -430,6 +424,30 @@ public class LocalTestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST03).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
+  }
+
+  @Test
+  // 無限ループする題材の確認 （より詳細なテストは02参照）
+  public void testExecForInfiniteLoop01() {
+    final Path rootPath = Paths.get("example/BuildSuccess04");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
+        .build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
+
+    // 無限ループが発生するが3つのテストが実行されるはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03);
+
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
   }
 
   @Test
