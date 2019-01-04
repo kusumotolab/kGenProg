@@ -233,9 +233,9 @@ index e6398f6..5b76415 100644
 --- a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
 +++ b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
 @@ -195,7 +195,7 @@ public class UnivariateRealSolverUtils {
-         } while ((fa * fb > 0.0) && (numIterations < maximumIterations) &&
+         } while ((fa * fb > 0.0) && (numIterations < maximumIterations) && 
                  ((a > lowerBound) || (b < upperBound)));
- 
+    
 +        if (fa * fb > 0.0 ) {
 -        if (fa * fb >= 0.0 ) {
              throw new ConvergenceException(
