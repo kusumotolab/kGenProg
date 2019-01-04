@@ -20,10 +20,20 @@ repositories {
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+
+    // Use local lib folder
+    flatDir {
+        dirs 'src/main/resources/junit4'
+    }
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
+
+  // Use custom junit jar to terminate timed out process during apr loop
+  compile name: 'junit-4.12-kgp-custom'
+  compile name: 'hamcrest-core-1.3'
+
   // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
   compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
 
@@ -55,7 +65,7 @@ dependencies {
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
 
   // https://mvnrepository.com/artifact/junit/junit
-  compile group: 'junit', name: 'junit', version: '4.12'
+  // compile group: 'junit', name: 'junit', version: '4.12'
 
   // https://mvnrepository.com/artifact/org.apache.lucene/lucene-spellchecker
   // compile group: 'org.apache.lucene', name: 'lucene-spellchecker', version: '3.6.2'
@@ -84,6 +94,7 @@ dependencies {
   compile 'com.electronwill.night-config:toml:3.4.0'
 
   compile "io.reactivex.rxjava2:rxjava:2.2.4"
+
 }
 
 jar {
