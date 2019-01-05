@@ -176,13 +176,13 @@ public class VariantStore {
         .cache();
     variant.setTestResultsSingle(resultsSingle);
 
-    final Single<Fitness> fitnessSingle = variantSingle.map(
-        v -> strategies.execSourceCodeValidation(sourceCode, v.getTestResults()))
+    final Single<Fitness> fitnessSingle = Single.zip(variantSingle, resultsSingle,
+        (v, r) -> strategies.execSourceCodeValidation(sourceCode, r))
         .cache();
     variant.setFitnessSingle(fitnessSingle);
 
-    final Single<List<Suspiciousness>> suspiciousnessListSingle = variantSingle.map(
-        v -> strategies.execFaultLocalization(sourceCode, v.getTestResults()))
+    final Single<List<Suspiciousness>> suspiciousnessListSingle = Single.zip(variantSingle, resultsSingle,
+        (v, r) -> strategies.execFaultLocalization(sourceCode, r))
         .cache();
     variant.setSuspiciousnessListSingle(suspiciousnessListSingle);
 
