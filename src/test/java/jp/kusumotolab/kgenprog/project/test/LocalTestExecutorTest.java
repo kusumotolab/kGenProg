@@ -18,12 +18,16 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST04;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Ignore;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -40,6 +44,12 @@ import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class LocalTestExecutorTest {
+
+  @Test
+  // カスタムjunitがロードされているかテスト
+  public void testForJunitVersion() {
+    assertThat(junit.runner.Version.id()).isEqualTo("4.12-kgp-custom");
+  }
 
   @Test
   // 正常系題材の確認
@@ -194,28 +204,6 @@ public class LocalTestExecutorTest {
     assertThat(np2).isEqualTo(9); // BazTest#test02 & FooTest#testXX(3個) & BarTest#testXX(5個)
     assertThat(ef2).isEqualTo(0);
     assertThat(nf2).isEqualTo(1); // FooTest#test03
-  }
-
-  @Ignore
-  // #408 テスト打ち切り方針をJUnitアノテーションに変更したので，以下テストは成功しなくなった．
-  // JUnitアノテーションの差し込みは Variant 生成時に限るので，以下テストでは適切にタイムアウト処理が行われず無限ループとなる．
-  @Test
-  // 無限ループする題材の確認
-  public void testExecForInfiniteLoop() {
-    final Path rootPath = Paths.get("example/BuildSuccess04");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
-
-    final Configuration config = new Configuration.Builder(targetProject) //
-        .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
-        .build();
-    final TestExecutor executor = new LocalTestExecutor(config);
-    final Variant variant = mock(Variant.class);
-    when(variant.getGeneratedSourceCode()).thenReturn(source);
-    final TestResults result = executor.exec(variant);
-
-    // 無限ループが発生し，タイムアウトで打ち切られてEmptyになるはず
-    assertThat(result).isInstanceOf(EmptyTestResults.class);
   }
 
   @Test
@@ -437,4 +425,143 @@ public class LocalTestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST03).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
   }
+
+  @Test
+  // 無限ループする題材の確認 （より詳細なテストは02参照）
+  public void testExecForInfiniteLoop01() {
+    final Path rootPath = Paths.get("example/BuildSuccess04");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
+        .build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
+
+    // 無限ループが発生するが3つのテストが実行されるはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03);
+
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+  }
+
+  @Test
+  // 無限ループする題材の確認
+  public void testExecForInfiniteLoop02() {
+    final Path rootPath = Paths.get("example/BuildSuccess19");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
+        .build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+
+    // スレッド打ち切り確認のために標準出力と標準エラーを捕まえておく
+    final PrintStream origStdout = System.out;
+    final OutputStream stdout = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(stdout));
+
+    // TODO 標準エラーが握りつぶされてしまうためひとまずコメントアウト．
+    // 標準エラー上で "interrupted" を期待するようなテストが題材に含まれる場合，バグる可能性高いので注意．
+    // final PrintStream origStderr = System.err;
+    // final OutputStream stderr = new ByteArrayOutputStream();
+    // System.setErr(new PrintStream(stderr));
+
+    // テスト実行
+    final TestResults result = executor.exec(variant);
+
+    // 標準出力と標準エラーを戻しておく
+    System.setOut(origStdout);
+    // System.setErr(origStderr);
+
+    // TEST01で無限ループが発生するが，続く残りの2個のテストも実行されるはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03);
+
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+
+    // スレッド打ち切りの確認：
+
+    // 各テスト名は3回出力されるはず．スレッドが生き残ると3回以上の出力される （300ms / 1000ms = 3）
+    // TODO 割り込みタイミングによって結果が揺れる可能性あり．
+    assertThat(countPattern(stdout.toString(), FOO_TEST02.value)).isSameAs(3);
+    assertThat(countPattern(stdout.toString(), FOO_TEST03.value)).isSameAs(3);
+
+    // 標準エラーには割り込み例外が2回出力されるはず （握りつぶされるのでコメントアウト）
+    // assertThat(countPattern(stderr.toString(), "sleep interrupted")).isSameAs(2);
+  }
+
+  @Test
+  // 無限ループする題材の確認 （継承ベース）
+  public void testExecForInfiniteLoopWithExtendBased() {
+    final Path rootPath = Paths.get("example/BuildSuccess20");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject) //
+        .setTestTimeLimitSeconds(1) // タイムアウト時間を短めに設定（CI高速化のため）
+        .build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+
+    // スレッド打ち切り確認のために標準出力と標準エラーを捕まえておく
+    final PrintStream origStdout = System.out;
+    final OutputStream stdout = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(stdout));
+
+    // TODO 標準エラーが握りつぶされてしまうためひとまずコメントアウト．
+    // 標準エラー上で "interrupted" を期待するようなテストが題材に含まれる場合，バグる可能性高いので注意．
+    // final PrintStream origStderr = System.err;
+    // final OutputStream stderr = new ByteArrayOutputStream();
+    // System.setErr(new PrintStream(stderr));
+
+    // テスト実行
+    final TestResults result = executor.exec(variant);
+
+    // 標準出力と標準エラーを戻しておく
+    System.setOut(origStdout);
+    // System.setErr(origStderr);
+
+    // TEST01で無限ループが発生するが，続く残りの2個のテストも実行されるはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03);
+
+    // 全テストの成否はこうなるはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isTrue();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isTrue();
+
+    // スレッド打ち切りの確認：
+
+    // 各テスト名は3回出力されるはず．スレッドが生き残ると3回以上の出力される （300ms / 1000ms = 3）
+    // TODO 割り込みタイミングによって結果が揺れる可能性あり．
+    assertThat(countPattern(stdout.toString(), FOO_TEST02.value)).isSameAs(3);
+    assertThat(countPattern(stdout.toString(), FOO_TEST03.value)).isSameAs(3);
+
+    // 標準エラーには割り込み例外が2回出力されるはず （握りつぶされるのでコメントアウト）
+    // assertThat(countPattern(stderr.toString(), "sleep interrupted")).isSameAs(2);
+  }
+
+  private int countPattern(final String str, final String substr) {
+    final Pattern pattern = Pattern.compile(substr);
+    final Matcher matcher = pattern.matcher(str);
+    int count = 0;
+    while (matcher.find()) {
+      count++;
+    }
+    return count;
+  }
+
 }
