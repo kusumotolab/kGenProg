@@ -13,7 +13,7 @@ public class FooTest{
 
   @Test
   public void test01() throws IOException {
-    final Path outPath = Paths.get("tmp/out.txt");
+    final Path outPath = Paths.get("output/out.txt");
     final List<String> contents = Arrays.asList(Double.toString(Math.random()));
 
     new Foo().write(outPath, contents);
