@@ -155,9 +155,6 @@ public class VariantStore {
   private Variant createInitialVariant() {
     final GeneratedSourceCode sourceCode =
         strategies.execASTConstruction(config.getTargetProject());
-    // final Operation operation =
-    // new InsertTimeoutRuleFieldOperation(config.getTestTimeLimitSeconds());
-    // final GeneratedSourceCode appliedSourceCode = operation.apply(sourceCode, null);
     return createVariant(new Gene(Collections.emptyList()), sourceCode,
         new OriginalHistoricalElement());
   }
