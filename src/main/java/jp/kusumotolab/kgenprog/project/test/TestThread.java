@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -46,8 +47,11 @@ class TestThread extends Thread {
   private final TargetProject targetProject;
   private final List<String> executionTestNames;
 
+  private long timeout;
+  private TimeUnit timeUnit;
+
   public TestThread(final BuildResults buildResults, final TargetProject targetProject,
-      final List<String> executionTestNames) {
+      final List<String> executionTestNames, final long timeout) {
 
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
@@ -56,6 +60,10 @@ class TestThread extends Thread {
     this.buildResults = buildResults;
     this.targetProject = targetProject;
     this.executionTestNames = executionTestNames;
+
+    // カスタムJUnit上でのタイムアウト時間を設定
+    this.timeout = timeout;
+    this.timeUnit = TimeUnit.SECONDS; // TODO タイムアウトは秒単位が前提
   }
 
   // Result extraction point for multi thread
@@ -96,8 +104,11 @@ class TestThread extends Thread {
       final List<Class<?>> testClasses = loadAllClasses(classLoader, executionTestFQNs);
 
       final JUnitCore junitCore = new JUnitCore();
-      final CoverageMeasurementListener listener =
-          new CoverageMeasurementListener(productFQNs, testResults);
+
+      // JUnitカスタムによる強制タイムアウトの指定
+      junitCore.setTimeout(timeout, timeUnit);
+
+      final RunListener listener = new CoverageMeasurementListener(productFQNs, testResults);
       junitCore.addListener(listener);
       junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 

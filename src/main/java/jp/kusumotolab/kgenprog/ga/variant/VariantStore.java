@@ -14,8 +14,6 @@ import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.Operation;
-import jp.kusumotolab.kgenprog.project.jdt.InsertTimeoutRuleFieldOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class VariantStore {
@@ -122,7 +120,8 @@ public class VariantStore {
   }
 
   /**
-   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true} の場合，foundSolutionとして追加され次世代のVariantには追加されない
+   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
+   * の場合，foundSolutionとして追加され次世代のVariantには追加されない
    *
    * @param variant
    */
@@ -156,18 +155,15 @@ public class VariantStore {
   private Variant createInitialVariant() {
     final GeneratedSourceCode sourceCode =
         strategies.execASTConstruction(config.getTargetProject());
-    final Operation operation =
-        new InsertTimeoutRuleFieldOperation(config.getTestTimeLimitSeconds());
-    final GeneratedSourceCode appliedSourceCode = operation.apply(sourceCode, null);
-    return createVariant(new Gene(Collections.emptyList()), appliedSourceCode,
+    return createVariant(new Gene(Collections.emptyList()), sourceCode,
         new OriginalHistoricalElement());
   }
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
 
-    final LazyVariant variant = new LazyVariant(variantCounter.getAndIncrement(),
-        generation.get(), gene, sourceCode, element);
+    final LazyVariant variant = new LazyVariant(variantCounter.getAndIncrement(), generation.get(),
+        gene, sourceCode, element);
     final Single<Variant> variantSingle = Single.just(variant)
         .cast(Variant.class)
         .cache();
@@ -176,13 +172,15 @@ public class VariantStore {
         .cache();
     variant.setTestResultsSingle(resultsSingle);
 
-    final Single<Fitness> fitnessSingle = variantSingle.map(
-        v -> strategies.execSourceCodeValidation(sourceCode, v.getTestResults()))
+    final Single<Fitness> fitnessSingle = Single
+        .zip(variantSingle, resultsSingle,
+            (v, r) -> strategies.execSourceCodeValidation(sourceCode, r))
         .cache();
     variant.setFitnessSingle(fitnessSingle);
 
-    final Single<List<Suspiciousness>> suspiciousnessListSingle = variantSingle.map(
-        v -> strategies.execFaultLocalization(sourceCode, v.getTestResults()))
+    final Single<List<Suspiciousness>> suspiciousnessListSingle = Single
+        .zip(variantSingle, resultsSingle,
+            (v, r) -> strategies.execFaultLocalization(sourceCode, r))
         .cache();
     variant.setSuspiciousnessListSingle(suspiciousnessListSingle);
 

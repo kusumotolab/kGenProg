@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Random;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
@@ -137,7 +136,6 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  // @Ignore
   @Test
   public void testGCD01() {
     final Path rootPath = Paths.get("example/GCD01");
@@ -154,7 +152,6 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // このテスト単体では成功するが，このテストを実行すると続く別のテストが遅くなる．
   @Test
   public void testQuickSort01() {
     final Path rootPath = Paths.get("example/QuickSort01");

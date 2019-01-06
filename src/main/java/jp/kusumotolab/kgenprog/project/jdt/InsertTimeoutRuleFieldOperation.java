@@ -23,7 +23,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
-
+@Deprecated
 public class InsertTimeoutRuleFieldOperation implements Operation {
 
   private static final Logger log = LoggerFactory.getLogger(InsertTimeoutRuleFieldOperation.class);

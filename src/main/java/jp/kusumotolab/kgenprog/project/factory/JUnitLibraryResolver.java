@@ -20,7 +20,7 @@ public class JUnitLibraryResolver {
   private static final String JUNIT3_DIR = "junit3/";
   private static final String JUNIT4_DIR = "junit4/";
   private static final String JUNIT3_JUNIT = "junit-3.8.2.jar";
-  private static final String JUNIT4_JUNIT = "junit-4.12.jar";
+  private static final String JUNIT4_JUNIT = "junit-4.12-kgp-custom.jar";
   private static final String JUNIT4_HAMCREST = "hamcrest-core-1.3.jar";
   private static final String SYSTEM_TEMP_DIR = System.getProperty("java.io.tmpdir");
 
