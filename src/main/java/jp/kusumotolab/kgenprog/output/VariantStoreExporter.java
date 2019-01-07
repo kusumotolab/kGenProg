@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.ga.variant.Base;
+import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
@@ -42,6 +45,11 @@ public class VariantStoreExporter {
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeHierarchyAdapter(TestResult.class, new TestResultSerializer())
         .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
+            new MutationHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
+            new CrossoverHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
         .registerTypeHierarchyAdapter(Patch.class, new PatchSerializer())
         .registerTypeHierarchyAdapter(FileDiff.class, new FileDiffSerializer())
         .create();
