@@ -439,6 +439,7 @@ public class LocalTestExecutorTest {
     when(variant.getGeneratedSourceCode()).thenReturn(source);
 
     // 現在のworking-dirを擬似的に対象プロジェクトに移動する．別プロセス切り出しが難しいため
+    final String userDir = System.getProperty("user.dir");
     System.setProperty("user.dir", rootPath.toAbsolutePath()
         .toString());
 
@@ -446,6 +447,9 @@ public class LocalTestExecutorTest {
 
     // 実行されたテストは1個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
+
+    // user.dir を戻しておく（副作用回避）
+    System.setProperty("user.dir", userDir);
 
     // テストは成功するはず
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
@@ -464,6 +468,7 @@ public class LocalTestExecutorTest {
     when(variant.getGeneratedSourceCode()).thenReturn(source);
 
     // 現在のworking-dirを擬似的に対象プロジェクトに移動する．別プロセス切り出しが難しいため
+    final String userDir = System.getProperty("user.dir");
     System.setProperty("user.dir", rootPath.toAbsolutePath()
         .toString());
 
@@ -472,10 +477,12 @@ public class LocalTestExecutorTest {
     // 実行されたテストは1個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
 
+    // user.dir を戻しておく（副作用回避）
+    System.setProperty("user.dir", userDir);
+
     // テストは成功するはず
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
   }
-
 
   @Test
   // 無限ループする題材の確認 （より詳細なテストは02参照）
