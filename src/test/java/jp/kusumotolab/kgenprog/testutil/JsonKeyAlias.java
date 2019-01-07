@@ -25,9 +25,11 @@ public class JsonKeyAlias {
     public final static String SELECTION_COUNT = "selectionCount";
     public final static String FITNESS = "fitness";
     public final static String IS_BUILD_SUCCESS = "isBuildSuccess";
+    public final static String IS_SYNTAX_VALID = "isSyntaxValid";
     public final static String PATCH = "patch";
-    public final static String OPERATIONS = "operations";
+    public final static String OPERATION = "operation";
     public final static String TEST_SUMMARY = "testSummary";
+    public final static String BASES = "bases";
   }
 
   public static class Base {
@@ -44,10 +46,20 @@ public class JsonKeyAlias {
     public final static String END = "end";
   }
 
-  public static class Operation {
+  public static class HistoricalElement {
 
-    public final static String ID = "id";
-    public final static String OPERATION_NAME = "operationName";
+    public final static String PARENT_IDS = "parentIds";
+    public final static String NAME = "name";
+  }
+
+  public static class MutationHistoricalElement extends HistoricalElement {
+
+    public final static String APPEND_BASE = "appendBase";
+  }
+
+  public static class CrossoverHistoricalElement extends HistoricalElement {
+
+    public final static String CROSSOVER_POINT = "crossoverPoint";
   }
 
   public static class Patch {
