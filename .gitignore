@@ -407,5 +407,4 @@ local.properties
 kgenprog-out/
 example/real-bugs/
 
-example/BuildSuccess18/output/*
 !.gitkeep
