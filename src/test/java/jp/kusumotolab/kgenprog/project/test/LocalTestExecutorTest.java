@@ -427,6 +427,57 @@ public class LocalTestExecutorTest {
   }
 
   @Test
+  // テスト内でファイル読み込みがある題材の確認
+  public void testExecWithTestCaseIncludeFileInput() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess17");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+
+    // 現在のworking-dirを擬似的に対象プロジェクトに移動する．別プロセス切り出しが難しいため
+    System.setProperty("user.dir", rootPath.toAbsolutePath()
+        .toString());
+
+    final TestResults result = executor.exec(variant);
+
+    // 実行されたテストは1個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
+
+    // テストは成功するはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+  }
+
+  @Test
+  // テスト内でファイル書き込みがある題材の確認
+  public void testExecWithTestCaseIncludeFileOutput() throws Exception {
+    final Path rootPath = Paths.get("example/BuildSuccess18");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+
+    // 現在のworking-dirを擬似的に対象プロジェクトに移動する．別プロセス切り出しが難しいため
+    System.setProperty("user.dir", rootPath.toAbsolutePath()
+        .toString());
+
+    final TestResults result = executor.exec(variant);
+
+    // 実行されたテストは1個のはず
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
+
+    // テストは成功するはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+  }
+
+
+  @Test
   // 無限ループする題材の確認 （より詳細なテストは02参照）
   public void testExecForInfiniteLoop01() {
     final Path rootPath = Paths.get("example/BuildSuccess04");
