@@ -1,12 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,11 +14,8 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
-public class TestResults implements Serializable {
+public class TestResults {
 
-  private static final long serialVersionUID = 1L;
-
-  // 直接valueへのアクセスを回避するために可視性を下げておく
   private final Map<FullyQualifiedName, TestResult> value;
 
   public TestResults() {
@@ -232,46 +222,6 @@ public class TestResults implements Serializable {
   public long getNumberOfFailedTestsNotExecutingTheStatement(
       final ProductSourcePath productSourcePath, final ASTLocation location) {
     return getNumberOfTests(productSourcePath, location, Coverage.Status.NOT_COVERED, true);
-  }
-
-  /**
-   * serialize()とdeserialize()で用いる.serファイルパス． 注意：固定名で処理しているので，並列処理は不可能．
-   * 
-   * @return
-   */
-  public static Path getSerFilePath() {
-    return Paths.get(System.getProperty("java.io.tmpdir"), "kgenprog-testresults.ser");
-  }
-
-  /**
-   * ファイルシステム上の.serへのserializer． 注意：固定名で処理しているので，並列処理は不可能．
-   * 
-   * @param testResults serialize対象のオブジェクト
-   */
-  public static void serialize(final TestResults testResults) {
-    try {
-      Files.deleteIfExists(getSerFilePath());
-      Files.createFile(getSerFilePath());
-      final ObjectOutputStream out =
-          new ObjectOutputStream(Files.newOutputStream(getSerFilePath()));
-      out.writeObject(testResults);
-      out.close();
-    } catch (final IOException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * ファイルシステム上の.serからのdeserializer() 注意：固定名で処理しているので，並列処理は不可能．
-   * 
-   * @return deserialize後のオブジェクト
-   */
-  public static TestResults deserialize() throws IOException, ClassNotFoundException {
-    final ObjectInputStream in = new ObjectInputStream(Files.newInputStream(getSerFilePath()));
-    final TestResults testResults = (TestResults) in.readObject();
-    in.close();
-    return testResults;
   }
 
   @Override

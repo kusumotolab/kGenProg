@@ -1,15 +1,12 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
-public class TestResult implements Serializable {
-
-  private static final long serialVersionUID = 1L;
+public class TestResult {
 
   final public FullyQualifiedName executedTestFQN;
   final public boolean failed;

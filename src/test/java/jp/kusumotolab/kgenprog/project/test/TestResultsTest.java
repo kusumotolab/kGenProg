@@ -1,16 +1,11 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST01;
-import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Fqn.FOO_TEST03;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
@@ -160,117 +155,6 @@ public class TestResultsTest {
         .toString();
 
     assertThat(result.toString()).isEqualToIgnoringNewLines(expected);
-  }
-
-  /**
-   * 単純なserialize -> deserializeの確認
-   */
-  @Test
-  public void testSerializeDeserialize01() throws Exception {
-    final TestResults r1 = new TestResults();
-
-    // ダミーな内部要素を追加
-    r1.add(new TestResult(FOO_TEST01, false, Collections.emptyMap()));
-    r1.add(new TestResult(FOO_TEST03, false, Collections.emptyMap()));
-
-    // serializeして
-    TestResults.serialize(r1);
-
-    // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath()).exists();
-
-    // deserializeして
-    final TestResults r2 = TestResults.deserialize();
-
-    // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01, FOO_TEST03);
-  }
-
-  /**
-   * serialize -> 要素書き換え -> deserializeの確認
-   */
-  @Test
-  public void testSerializeDeserialize02() throws Exception {
-    final TestResults r1 = new TestResults();
-
-    // ダミーな内部要素を追加
-    r1.add(new TestResult(FOO_TEST01, false, Collections.emptyMap()));
-
-    // serializeして
-    TestResults.serialize(r1);
-
-    // serialize後に03を追加
-    r1.add(new TestResult(FOO_TEST03, false, Collections.emptyMap()));
-
-    // deserializeして
-    final TestResults r2 = TestResults.deserialize();
-
-    // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
-  }
-
-  /**
-   * serialize -> serialize -> deserializeの確認
-   */
-  @Test
-  public void testSerializeDeserialize03() throws Exception {
-    final TestResults r1 = new TestResults();
-
-    // ダミーな内部要素を追加
-    r1.add(new TestResult(FOO_TEST01, false, Collections.emptyMap()));
-
-    // serializeして
-    TestResults.serialize(r1);
-
-    // serialize後に03を追加
-    r1.add(new TestResult(FOO_TEST03, false, Collections.emptyMap()));
-
-    // serializeして
-    TestResults.serialize(r1);
-
-    // deserializeして
-    final TestResults r2 = TestResults.deserialize();
-
-    // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01, FOO_TEST03);
-  }
-
-  /**
-   * 重複要素を持つ要素のserialize -> deserializeの確認
-   */
-  @Test
-  public void testSerializeDeserialize04() throws Exception {
-    final TestResults r1 = new TestResults();
-
-    // ダミーな内部要素を追加（重複するtest03を追加）
-    r1.add(new TestResult(FOO_TEST01, false, Collections.emptyMap()));
-    r1.add(new TestResult(FOO_TEST03, false, Collections.emptyMap()));
-    r1.add(new TestResult(FOO_TEST03, false, Collections.emptyMap()));
-    r1.add(new TestResult(FOO_TEST03, false, Collections.emptyMap()));
-
-    // serializeして
-    TestResults.serialize(r1);
-
-    // ファイルが存在するはず
-    assertThat(TestResults.getSerFilePath()).exists();
-
-    // deserializeして
-    final TestResults r2 = TestResults.deserialize();
-
-    // 要素が正しいはず
-    assertThat(r2.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01, FOO_TEST03);
-  }
-
-  /**
-   * いきなりdeserializeした際の確認
-   */
-  @Test(expected = NoSuchFileException.class)
-  public void testSerializeDeserialize05() throws Exception {
-    // serializeファイルを消しておいて
-    Files.deleteIfExists(TestResults.getSerFilePath());
-
-    // deserializeでNoSuchFileExceptionが返ってくるはず
-    TestResults.deserialize();
   }
 
 }
