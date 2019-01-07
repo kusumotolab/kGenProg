@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -427,7 +426,6 @@ public class LocalTestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
   }
 
-  @Ignore
   @Test
   // テスト内でファイル読み込みがある題材の確認
   public void testExecWithTestCaseIncludeFileInput() throws Exception {
@@ -439,17 +437,20 @@ public class LocalTestExecutorTest {
     final TestExecutor executor = new LocalTestExecutor(config);
     final Variant variant = mock(Variant.class);
     when(variant.getGeneratedSourceCode()).thenReturn(source);
+
+    // 現在のworking-dirを擬似的に対象プロジェクトに移動する．別プロセス切り出しが難しいため
+    System.setProperty("user.dir", rootPath.toAbsolutePath()
+        .toString());
+
     final TestResults result = executor.exec(variant);
 
     // 実行されたテストは1個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
 
-    //TODO 別プロセスに切り出して，成功するテストに変更すべき
-    // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FOO_TEST01).failed).isTrue();
+    // テストは成功するはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
   }
 
-  @Ignore
   @Test
   // テスト内でファイル書き込みがある題材の確認
   public void testExecWithTestCaseIncludeFileOutput() throws Exception {
@@ -461,15 +462,20 @@ public class LocalTestExecutorTest {
     final TestExecutor executor = new LocalTestExecutor(config);
     final Variant variant = mock(Variant.class);
     when(variant.getGeneratedSourceCode()).thenReturn(source);
+
+    // 現在のworking-dirを擬似的に対象プロジェクトに移動する．別プロセス切り出しが難しいため
+    System.setProperty("user.dir", rootPath.toAbsolutePath()
+        .toString());
+
     final TestResults result = executor.exec(variant);
 
     // 実行されたテストは1個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
 
-    //TODO 別プロセスに切り出して，成功するテストに変更すべき
-    // 全テストの成否はこうなるはず
-    assertThat(result.getTestResult(FOO_TEST01).failed).isTrue();
+    // テストは成功するはず
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
   }
+
 
   @Test
   // 無限ループする題材の確認 （より詳細なテストは02参照）
