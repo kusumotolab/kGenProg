@@ -17,7 +17,7 @@ public class DefaultCodeValidationTest {
   private final static Path WORK_PATH = Paths.get("tmp/work");
 
   @Before
-  public void before() throws IOException {
+  public void before() {
     TestUtil.deleteWorkDirectory(WORK_PATH);
   }
 
