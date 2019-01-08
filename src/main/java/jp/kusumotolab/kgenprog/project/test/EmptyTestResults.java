@@ -5,8 +5,6 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class EmptyTestResults extends TestResults {
 
-  private static final long serialVersionUID = 1L;
-
   public static final EmptyTestResults instance = new EmptyTestResults();
 
   private EmptyTestResults() {}
