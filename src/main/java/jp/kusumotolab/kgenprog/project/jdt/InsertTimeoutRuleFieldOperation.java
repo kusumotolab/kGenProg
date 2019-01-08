@@ -23,6 +23,8 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
+// #507 の修正により不要になったため本クラスは @Deprecated．
+// TODO いずれ消したほうが良い．
 @Deprecated
 public class InsertTimeoutRuleFieldOperation implements Operation {
 

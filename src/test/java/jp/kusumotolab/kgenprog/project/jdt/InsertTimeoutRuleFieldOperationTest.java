@@ -3,11 +3,15 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import java.nio.file.Paths;
 import java.util.Collections;
+import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
-
+// #507 の修正により不要になったため本テストは @Ignore
+// TODO いずれ消したほうが良い．
+@Ignore
+@SuppressWarnings("deprecation")
 public class InsertTimeoutRuleFieldOperationTest {
 
   @Test
