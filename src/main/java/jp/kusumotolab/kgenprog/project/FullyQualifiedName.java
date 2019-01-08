@@ -1,10 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import java.io.Serializable;
-
-public abstract class FullyQualifiedName implements Serializable {
-
-  private static final long serialVersionUID = 1L;
+public abstract class FullyQualifiedName {
 
   final public String value;
 
