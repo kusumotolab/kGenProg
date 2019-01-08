@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Before;
