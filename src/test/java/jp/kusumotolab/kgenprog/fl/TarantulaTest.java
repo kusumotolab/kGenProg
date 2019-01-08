@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -16,14 +15,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TarantulaTest {
-
-  private final static Path WORK_PATH = Paths.get("tmp/work");
-
-  @Before
-  public void before() throws IOException {
-    System.gc();
-    TestUtil.deleteWorkDirectory(WORK_PATH);
-  }
 
   @Test
   public void testForExample01() {

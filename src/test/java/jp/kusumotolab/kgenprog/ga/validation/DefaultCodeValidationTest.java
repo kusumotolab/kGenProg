@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.ga.validation;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -12,13 +11,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class DefaultCodeValidationTest {
-
-  private final static Path WORK_PATH = Paths.get("tmp/work");
-
-  @Before
-  public void before() {
-    TestUtil.deleteWorkDirectory(WORK_PATH);
-  }
 
   @Test
   public void testExec() {
