@@ -13,7 +13,7 @@ public final class ClassPath {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     if (this == o) {
       return true;
     }
@@ -24,7 +24,7 @@ public final class ClassPath {
     final ClassPath that = (ClassPath) o;
     try {
       return Files.isSameFile(path, that.path);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       return false;
     }
   }
