@@ -3,11 +3,16 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import java.nio.file.Paths;
 import java.util.Collections;
+import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
-
+/**
+ *
+ * @deprecated #507 の修正により不要になったため，本クラスは廃止 & Ignore
+ */
+@Ignore
 public class InsertTimeoutRuleFieldOperationTest {
 
   @Test
