@@ -23,9 +23,11 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
-// #507 の修正により不要になったため本クラスは @Deprecated．
-// TODO いずれ消したほうが良い．
-@Deprecated
+/**
+ * テストメソッドに対してJUnitの@Timeoutを差し込むクラス．
+ *
+ * @deprecated #507 の修正により不要になったため，本クラスは廃止
+ */
 public class InsertTimeoutRuleFieldOperation implements Operation {
 
   private static final Logger log = LoggerFactory.getLogger(InsertTimeoutRuleFieldOperation.class);
