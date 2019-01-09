@@ -32,7 +32,7 @@ import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
 public class CrossoverHistoricalElementSerializerTest {
 
   private Gson gson;
-  private JDTASTConstruction astConstruction = new JDTASTConstruction();
+  private final JDTASTConstruction astConstruction = new JDTASTConstruction();
 
   @Before
   public void setup() {
@@ -69,7 +69,7 @@ public class CrossoverHistoricalElementSerializerTest {
   public void testCrossover() {
     // 初期Variant
     final Path rootPath = Paths.get("example/CloseToZero01");
-    TargetProject project = TargetProjectFactory.create(rootPath);
+    final TargetProject project = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = createVariant(new SimpleFitness(0.0d), project);
 
     // 親1

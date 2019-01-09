@@ -31,7 +31,7 @@ import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
 public class VariantSerializerTest {
 
   private Gson gson;
-  private JDTASTConstruction astConstruction = new JDTASTConstruction();
+  private final JDTASTConstruction astConstruction = new JDTASTConstruction();
 
   @Before
   public void setup() {
@@ -67,7 +67,7 @@ public class VariantSerializerTest {
   public void testVariant() {
     // 初期Variantの作成
     final Path rootPath = Paths.get("example/CloseToZero01");
-    TargetProject project = TargetProjectFactory.create(rootPath);
+    final TargetProject project = TargetProjectFactory.create(rootPath);
     final Variant variant = createVariant(new SimpleFitness(0.0d), project);
 
     final JsonObject serializedVariant = gson.toJsonTree(variant)

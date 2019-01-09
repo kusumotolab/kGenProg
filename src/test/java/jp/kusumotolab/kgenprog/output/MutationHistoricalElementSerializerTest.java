@@ -40,7 +40,7 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class MutationHistoricalElementSerializerTest {
 
   private Gson gson;
-  private JDTASTConstruction astConstruction = new JDTASTConstruction();
+  private final JDTASTConstruction astConstruction = new JDTASTConstruction();
 
   @Before
   public void setup() {
@@ -88,7 +88,7 @@ public class MutationHistoricalElementSerializerTest {
   public void testInsertOperation() {
     // 初期Variant
     final Path rootPath = Paths.get("example/CloseToZero01");
-    TargetProject project = TargetProjectFactory.create(rootPath);
+    final TargetProject project = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = createVariant(new SimpleFitness(0.0d), project);
 
     // 差分はいらないのでNullやNullObjectにする
@@ -133,7 +133,7 @@ public class MutationHistoricalElementSerializerTest {
   public void testDeleteOperation() {
     // 初期Variant
     final Path rootPath = Paths.get("example/CloseToZero01");
-    TargetProject project = TargetProjectFactory.create(rootPath);
+    final TargetProject project = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = createVariant(new SimpleFitness(0.0d), project);
 
     // 差分はいらないのでNullやNullObjectにする
@@ -178,7 +178,7 @@ public class MutationHistoricalElementSerializerTest {
 
     // 初期Variant
     final Path rootPath = Paths.get("example/CloseToZero01");
-    TargetProject project = TargetProjectFactory.create(rootPath);
+    final TargetProject project = TargetProjectFactory.create(rootPath);
     final Variant initialVariant = createVariant(new SimpleFitness(0.0d), project);
 
     // 差分はいらないのでNullやNullObjectにする
