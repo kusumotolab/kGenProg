@@ -26,7 +26,8 @@ public class HistoricalElementSerializerTest {
   @Test
   public void testOriginalHistoricalElement() {
     final OriginalHistoricalElement originalHistoricalElement = new OriginalHistoricalElement();
-    final JsonObject serializedOriginalHistoricalElement = gson.toJsonTree(originalHistoricalElement)
+    final JsonObject serializedOriginalHistoricalElement = gson.toJsonTree(
+        originalHistoricalElement)
         .getAsJsonObject();
 
     // キーの存在チェック
