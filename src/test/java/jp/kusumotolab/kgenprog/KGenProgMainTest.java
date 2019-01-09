@@ -1,14 +1,11 @@
 package jp.kusumotolab.kgenprog;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
@@ -37,15 +34,6 @@ public class KGenProgMainTest {
   private final static String PRODUCT_NAME = "src/example/CloseToZero.java";
   private final static String TEST_NAME = "src/example/CloseToZeroTest.java";
 
-  private final static Path WORK_PATH = Paths.get("tmp/work");
-  private final static Path OUT_PATH = Paths.get("tmp/out");
-
-  @Before
-  public void before() throws IOException {
-    FileUtils.deleteDirectory(WORK_PATH.toFile());
-    FileUtils.deleteDirectory(OUT_PATH.toFile());
-  }
-
   /*
    * KGenProgMainオブジェクトを生成するヘルパーメソッド
    */
@@ -56,8 +44,7 @@ public class KGenProgMainTest {
     final List<Path> testPaths = Arrays.asList(testPath);
 
     final Configuration config =
-        new Configuration.Builder(rootPath, productPaths, testPaths).setWorkingDir(WORK_PATH)
-            .setTimeLimitSeconds(600)
+        new Configuration.Builder(rootPath, productPaths, testPaths).setTimeLimitSeconds(600)
             .setTestTimeLimitSeconds(1)
             .setMaxGeneration(100)
             .setRequiredSolutionsCount(1)
