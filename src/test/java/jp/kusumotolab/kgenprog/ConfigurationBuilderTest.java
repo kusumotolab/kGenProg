@@ -2354,9 +2354,16 @@ public class ConfigurationBuilderTest {
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPathFromConfigFile), testPaths, Collections.emptyList(),
             JUnitVersion.JUNIT4);
     assertThat(config.getTargetProject()).isEqualTo(expectedProject);
-    assertThat(out.toString()).contains("symbolic link may not be resolved:");
+
+    if (!isWindows()) {
+      assertThat(out.toString()).contains("symbolic link may not be resolved:");
+    }
 
     System.setOut(printStream);
+  }
+
+  private boolean isWindows() {
+    return System.getProperty("os.name").toLowerCase().startsWith("windows");
   }
 
   // todo: 引数がなかった場合の挙動を確かめるために，カレントディレクトリを変更した上でテスト実行
