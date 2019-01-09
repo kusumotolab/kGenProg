@@ -15,7 +15,6 @@ public class VariantSerializer implements JsonSerializer<Variant> {
   public JsonElement serialize(final Variant variant, final Type type,
       final JsonSerializationContext context) {
 
-    final String id = String.valueOf(variant.getId());
     final int generationNumber = variant.getGenerationNumber()
         .get();
     final double fitness = variant.getFitness()
@@ -24,7 +23,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
 
     final JsonObject serializedVariant = new JsonObject();
 
-    serializedVariant.addProperty("id", id);
+    serializedVariant.addProperty("id", variant.getId());
     serializedVariant.addProperty("generationNumber", generationNumber);
     serializedVariant.addProperty("selectionCount", variant.getSelectionCount());
     serializedVariant.addProperty("fitness", !Double.isNaN(fitness) ? fitness : -1.0d);
