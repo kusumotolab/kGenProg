@@ -18,23 +18,25 @@ import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
+import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
+import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.CrossoverHistoricalElement;
 
 public class VariantStoreSerializerTest {
 
@@ -47,6 +49,11 @@ public class VariantStoreSerializerTest {
         .registerTypeAdapter(Patch.class, new PatchSerializer())
         .registerTypeAdapter(FileDiff.class, new FileDiffSerializer())
         .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
+            new MutationHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
+            new CrossoverHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
         .create();
   }
 
@@ -82,8 +89,14 @@ public class VariantStoreSerializerTest {
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
     final Gene gene = new Gene(Collections.emptyList());
+
+    // このテストはBaseのシリアライズをテストしないのでtargetLocationはモックにする
+    final ASTLocation targetLocation = mock(ASTLocation.class);
+    when(targetLocation.getSourcePath()).thenReturn(project.getProductSourcePaths()
+        .get(0));
+    when(targetLocation.inferLineNumbers()).thenReturn(ASTLocation.NONE);
     final HistoricalElement element = new MutationHistoricalElement(initialVariant,
-        new Base(null, new InsertOperation(null)));
+        new Base(targetLocation, new DeleteOperation()));
 
     for (int i = 0; i < 10; i++) {
       final Variant variant = variantStore.createVariant(gene, element);
@@ -94,7 +107,8 @@ public class VariantStoreSerializerTest {
     final JsonObject serializedVariantStore = gson.toJsonTree(variantStore)
         .getAsJsonObject();
     // キーのチェック
-    assertThat(serializedVariantStore.keySet()).containsOnly(JsonKeyAlias.VariantStore.PROJECT_NAME,
+    assertThat(serializedVariantStore.keySet()).containsOnly(
+        JsonKeyAlias.VariantStore.PROJECT_NAME,
         JsonKeyAlias.VariantStore.VARIANTS);
 
     // 値のチェック

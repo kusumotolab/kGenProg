@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.output;
 
 import java.lang.reflect.Type;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -15,15 +14,14 @@ public class HistoricalElementSerializer implements JsonSerializer<HistoricalEle
   public JsonElement serialize(final HistoricalElement historicalElement, final Type type,
       final JsonSerializationContext context) {
 
-    final JsonArray serializedHistoricalElement = new JsonArray();
+    final long[] parentIds = historicalElement.getParents()
+        .stream()
+        .mapToLong(Variant::getId)
+        .toArray();
 
-    for (final Variant parent : historicalElement.getParents()) {
-      final JsonObject serializedOperation = new JsonObject();
-      serializedOperation.addProperty("id", String.valueOf(parent.getId()));
-      serializedOperation.addProperty("operationName", historicalElement.getOperationName());
-
-      serializedHistoricalElement.add(serializedOperation);
-    }
+    final JsonObject serializedHistoricalElement = new JsonObject();
+    serializedHistoricalElement.add("parentIds", context.serialize(parentIds));
+    serializedHistoricalElement.addProperty("name", historicalElement.getOperationName());
 
     return serializedHistoricalElement;
   }

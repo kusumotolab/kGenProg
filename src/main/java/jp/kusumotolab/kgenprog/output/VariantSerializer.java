@@ -15,23 +15,24 @@ public class VariantSerializer implements JsonSerializer<Variant> {
   public JsonElement serialize(final Variant variant, final Type type,
       final JsonSerializationContext context) {
 
-    final String id = String.valueOf(variant.getId());
     final int generationNumber = variant.getGenerationNumber()
         .get();
     final double fitness = variant.getFitness()
         .getValue();
-    final boolean buildSuccess = variant.isBuildSucceeded();
     final Patch patch = patchGenerator.exec(variant);
 
     final JsonObject serializedVariant = new JsonObject();
 
-    serializedVariant.addProperty("id", id);
+    serializedVariant.addProperty("id", variant.getId());
     serializedVariant.addProperty("generationNumber", generationNumber);
     serializedVariant.addProperty("selectionCount", variant.getSelectionCount());
     serializedVariant.addProperty("fitness", !Double.isNaN(fitness) ? fitness : -1.0d);
-    serializedVariant.addProperty("isBuildSuccess", buildSuccess);
+    serializedVariant.addProperty("isBuildSuccess", variant.isBuildSucceeded());
+    serializedVariant.addProperty("isSyntaxValid", variant.isSyntaxValid());
+    serializedVariant.add("bases", context.serialize(variant.getGene()
+        .getBases()));
     serializedVariant.add("patch", context.serialize(patch));
-    serializedVariant.add("operations", context.serialize(variant.getHistoricalElement()));
+    serializedVariant.add("operation", context.serialize(variant.getHistoricalElement()));
     serializedVariant.add("testSummary", context.serialize(variant.getTestResults()));
 
     return serializedVariant;

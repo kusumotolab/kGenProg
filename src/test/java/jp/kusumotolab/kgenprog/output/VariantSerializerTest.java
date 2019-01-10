@@ -12,10 +12,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
+import jp.kusumotolab.kgenprog.ga.variant.Base;
+import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.OriginalHistoricalElement;
-import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -28,7 +31,7 @@ import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
 public class VariantSerializerTest {
 
   private Gson gson;
-  private JDTASTConstruction astConstruction = new JDTASTConstruction();
+  private final JDTASTConstruction astConstruction = new JDTASTConstruction();
 
   @Before
   public void setup() {
@@ -38,6 +41,11 @@ public class VariantSerializerTest {
         .registerTypeAdapter(Patch.class, new PatchSerializer())
         .registerTypeAdapter(FileDiff.class, new FileDiffSerializer())
         .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
+            new MutationHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
+            new CrossoverHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
         .create();
   }
 
@@ -59,7 +67,7 @@ public class VariantSerializerTest {
   public void testVariant() {
     // 初期Variantの作成
     final Path rootPath = Paths.get("example/CloseToZero01");
-    TargetProject project = TargetProjectFactory.create(rootPath);
+    final TargetProject project = TargetProjectFactory.create(rootPath);
     final Variant variant = createVariant(new SimpleFitness(0.0d), project);
 
     final JsonObject serializedVariant = gson.toJsonTree(variant)
@@ -71,10 +79,12 @@ public class VariantSerializerTest {
         JsonKeyAlias.Variant.FITNESS,
         JsonKeyAlias.Variant.GENERATION_NUMBER,
         JsonKeyAlias.Variant.IS_BUILD_SUCCESS,
-        JsonKeyAlias.Variant.OPERATIONS,
+        JsonKeyAlias.Variant.OPERATION,
         JsonKeyAlias.Variant.TEST_SUMMARY,
         JsonKeyAlias.Variant.SELECTION_COUNT,
-        JsonKeyAlias.Variant.PATCH);
+        JsonKeyAlias.Variant.PATCH,
+        JsonKeyAlias.Variant.IS_SYNTAX_VALID,
+        JsonKeyAlias.Variant.BASES);
 
     // 各値のチェック
     final String id = serializedVariant.get(JsonKeyAlias.Variant.ID)
@@ -91,11 +101,7 @@ public class VariantSerializerTest {
 
     final boolean isBuildSuccess = serializedVariant.get(JsonKeyAlias.Variant.IS_BUILD_SUCCESS)
         .getAsBoolean();
-    assertThat(isBuildSuccess).isEqualTo(false);
-
-    final JsonArray serializedOperations = serializedVariant.get(JsonKeyAlias.Variant.OPERATIONS)
-        .getAsJsonArray();
-    assertThat(serializedOperations).isEmpty();
+    assertThat(isBuildSuccess).isEqualTo(variant.isBuildSucceeded());
 
     final int selectionCount = serializedVariant.get(JsonKeyAlias.Variant.SELECTION_COUNT)
         .getAsInt();
@@ -104,5 +110,11 @@ public class VariantSerializerTest {
     final JsonArray serializedPatches = serializedVariant.get(JsonKeyAlias.Variant.PATCH)
         .getAsJsonArray();
     assertThat(serializedPatches).isEmpty();
+
+    assertThat(serializedVariant.get(JsonKeyAlias.Variant.BASES)
+        .getAsJsonArray()).isEmpty();
+
+    assertThat(serializedVariant.get(JsonKeyAlias.Variant.IS_SYNTAX_VALID)
+        .getAsBoolean()).isEqualTo(variant.isSyntaxValid());
   }
 }
