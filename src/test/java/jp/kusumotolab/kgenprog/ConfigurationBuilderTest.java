@@ -3,7 +3,9 @@ package jp.kusumotolab.kgenprog;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -2107,7 +2109,12 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromConfigFileWithSymbolicLink() {
+  public void testBuildFromConfigFileWithSymbolicLink() throws IOException {
+    final Path src = rootDir.resolve("src");
+    final Path link = rootDir.resolve("src-example");
+    Files.deleteIfExists(link);
+    Files.createSymbolicLink(link, src.toAbsolutePath());
+
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     final PrintStream printStream = System.out;
     System.setOut(new PrintStream(out));
@@ -2136,24 +2143,13 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
 
-    final Path productPathFromConfigFile = rootDir.resolve("src-example");
-    final TargetProject expectedProject =
-        TargetProjectFactory.create(rootDir, ImmutableList.of(productPathFromConfigFile), testPaths,
-            Collections.emptyList(),
-            JUnitVersion.JUNIT4);
+    final TargetProject expectedProject = TargetProjectFactory.create(rootDir,
+        ImmutableList.of(link), testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
     assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+    assertThat(out.toString()).contains("symbolic link may not be resolved:");
 
-    if (!isWindows()) {
-      assertThat(out.toString()).contains("symbolic link may not be resolved:");
-    }
-
+    Files.delete(link);
     System.setOut(printStream);
-  }
-
-  private boolean isWindows() {
-    return System.getProperty("os.name")
-        .toLowerCase()
-        .startsWith("windows");
   }
 
   // todo: 引数がなかった場合の挙動を確かめるために，カレントディレクトリを変更した上でテスト実行
