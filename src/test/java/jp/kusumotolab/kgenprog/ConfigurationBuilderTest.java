@@ -1096,7 +1096,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-
     final Path outDir = rootDir.resolve("out");
     assertThat(config.getOutDir()).isEqualTo(outDir);
 
@@ -1579,7 +1578,6 @@ public class ConfigurationBuilderTest {
     final Path outDirFromCmdLine = rootDir.resolve("out-dir");
     final String[] args = {"--config", configPath.toString(), "-o", outDirFromCmdLine.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
-
 
     final Path outDirFromConfigFile = rootDir.resolve("out");
     assertThat(config.getOutDir()).isNotEqualTo(outDirFromConfigFile);
@@ -2106,6 +2104,56 @@ public class ConfigurationBuilderTest {
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
             JUnitVersion.JUNIT4);
     assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildFromConfigFileWithSymbolicLink() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    final PrintStream printStream = System.out;
+    System.setOut(new PrintStream(out));
+
+    final Path configPath = rootDir.resolve("withSymbolicLink.toml");
+    final String[] args = {"--config", configPath.toString()};
+    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+
+    final Path productPathFromConfigFile = rootDir.resolve("src-example");
+    final TargetProject expectedProject =
+        TargetProjectFactory.create(rootDir, ImmutableList.of(productPathFromConfigFile), testPaths,
+            Collections.emptyList(),
+            JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+
+    if (!isWindows()) {
+      assertThat(out.toString()).contains("symbolic link may not be resolved:");
+    }
+
+    System.setOut(printStream);
+  }
+
+  private boolean isWindows() {
+    return System.getProperty("os.name")
+        .toLowerCase()
+        .startsWith("windows");
   }
 
   // todo: 引数がなかった場合の挙動を確かめるために，カレントディレクトリを変更した上でテスト実行

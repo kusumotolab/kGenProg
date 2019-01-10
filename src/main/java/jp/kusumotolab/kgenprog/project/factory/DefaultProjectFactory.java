@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class DefaultProjectFactory implements ProjectFactory {
 
       if (Files.isDirectory(path)) {
         try {
-          final Set<Path> javaPaths = Files.walk(path)
+          final Set<Path> javaPaths = Files.walk(path, FileVisitOption.FOLLOW_LINKS)
               .filter(p -> endsWith(p, suffixes))
               .collect(Collectors.toSet());
           javaFilePaths.addAll(javaPaths);

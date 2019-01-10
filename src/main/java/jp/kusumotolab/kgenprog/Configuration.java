@@ -488,31 +488,40 @@ public class Configuration {
     }
 
     private void resolvePaths() {
-      final Path configDir = getParent(configPath, Paths.get("."));
-
-      rootDir = configDir.resolve(rootDir)
-          .normalize();
+      rootDir = resolveAgainstConfigDirAndNormalize(rootDir);
       productPaths = productPaths.stream()
-          .map(p -> configDir.resolve(p)
-              .normalize())
+          .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
       testPaths = testPaths.stream()
-          .map(p -> configDir.resolve(p)
-              .normalize())
+          .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
       classPaths = classPaths.stream()
-          .map(p -> configDir.resolve(p)
-              .normalize())
+          .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());
 
       if (!outDir.equals(DEFAULT_OUT_DIR)) {
-        outDir = configDir.resolve(outDir)
-            .normalize();
+        outDir = resolveAgainstConfigDirAndNormalize(outDir);
       }
     }
 
-    private Path getParent(final Path path, final Path defaultPath) {
-      return path.getParent() != null ? path.getParent() : defaultPath;
+    private Path resolveAgainstConfigDirAndNormalize(final Path path) {
+      return checkSymbolicLink(configPath.resolveSibling(path)
+          .normalize());
+    }
+
+    /**
+     * Checks whether the given path is a symbolic link, and returns it as is. If it is a symbolic
+     * link, outputs warning message; otherwise do nothing.
+     *
+     * @param path the path to be checked
+     * @return the given path
+     */
+    private Path checkSymbolicLink(final Path path) {
+      if (Files.isSymbolicLink(path)) {
+        log.warn("symbolic link may not be resolved: " + path.toString());
+      }
+
+      return path;
     }
 
     // endregion

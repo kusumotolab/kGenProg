@@ -1,0 +1,4 @@
+root-dir = "./"
+src = ["src-example"]
+test = ["test/"]
+
