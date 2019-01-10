@@ -1,21 +1,19 @@
 package jp.kusumotolab.kgenprog;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantRandomSelection;
+import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantRandomSelection;
 import jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
@@ -36,15 +34,6 @@ public class KGenProgMainTest {
   private final static String PRODUCT_NAME = "src/example/CloseToZero.java";
   private final static String TEST_NAME = "src/example/CloseToZeroTest.java";
 
-  private final static Path WORK_PATH = Paths.get("tmp/work");
-  private final static Path OUT_PATH = Paths.get("tmp/out");
-
-  @Before
-  public void before() throws IOException {
-    FileUtils.deleteDirectory(WORK_PATH.toFile());
-    FileUtils.deleteDirectory(OUT_PATH.toFile());
-  }
-
   /*
    * KGenProgMainオブジェクトを生成するヘルパーメソッド
    */
@@ -55,8 +44,7 @@ public class KGenProgMainTest {
     final List<Path> testPaths = Arrays.asList(testPath);
 
     final Configuration config =
-        new Configuration.Builder(rootPath, productPaths, testPaths).setWorkingDir(WORK_PATH)
-            .setTimeLimitSeconds(600)
+        new Configuration.Builder(rootPath, productPaths, testPaths).setTimeLimitSeconds(600)
             .setTestTimeLimitSeconds(1)
             .setMaxGeneration(100)
             .setRequiredSolutionsCount(1)
@@ -69,11 +57,12 @@ public class KGenProgMainTest {
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
         statementSelection, config.getScope());
     final Crossover crossover =
-        new SinglePointCrossover(random, config.getCrossoverGeneratingCount());
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection = new GenerationalVariantSelection(
-        config.getHeadcount());
+    final VariantSelection variantSelection =
+        new GenerationalVariantSelection(config.getHeadcount());
     final LocalTestExecutor localTestExecutor = new LocalTestExecutor(config);
     final TestExecutor testExecutor = new ParallelTestExecutor(localTestExecutor);
     final PatchGenerator patchGenerator = new PatchGenerator();
@@ -134,7 +123,6 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  // @Ignore
   @Test
   public void testGCD01() {
     final Path rootPath = Paths.get("example/GCD01");
@@ -151,7 +139,6 @@ public class KGenProgMainTest {
         .allMatch(Variant::isCompleted);
   }
 
-  @Ignore // このテスト単体では成功するが，このテストを実行すると続く別のテストが遅くなる．
   @Test
   public void testQuickSort01() {
     final Path rootPath = Paths.get("example/QuickSort01");

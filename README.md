@@ -56,7 +56,6 @@ $ java -jar path/to/kGenProg.jar
 | `-t`, `--test` | Specifies paths to test source code, or to directories containing them. Paths are separated with spaces. | Nothing |
 | `-x`, `--exec-test` | Specifies fully qualified names of test classes executed during evaluation of variants (i.e. fix-candidates). It is recommended to specify test classes detecting a bug. Class names are separated with spaces. | All test classes |
 | `-c`, `--cp` | Specifies class paths needed to build the target project. Paths are separated with spaces. | Nothing |
-| `-w`, `--working-dir` | Specifies a path to a working directory. | A working directory having a name that starts with `kgenprog-work` is created under the system temporary directory (i.e. `$TMPDIR` on *nix, `%TMP%` on Windows) every kGenProg execution. |
 | `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |

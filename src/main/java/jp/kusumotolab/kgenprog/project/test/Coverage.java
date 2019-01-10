@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.test;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,9 +9,7 @@ import org.jacoco.core.analysis.ICounter;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
-public class Coverage implements Serializable {
-
-  private static final long serialVersionUID = 1L;
+public class Coverage {
 
   public enum Status {
     /**
@@ -49,8 +46,7 @@ public class Coverage implements Serializable {
     this.statuses = convertClassCoverage(classCoverage);
   }
 
-  public Coverage(final FullyQualifiedName executedTargetFQN,
-      final List<Status> statuses) {
+  public Coverage(final FullyQualifiedName executedTargetFQN, final List<Status> statuses) {
     this.executedTargetFQN = executedTargetFQN;
     this.statuses = statuses;
   }

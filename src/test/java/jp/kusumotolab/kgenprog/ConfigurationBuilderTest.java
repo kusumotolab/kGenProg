@@ -32,39 +32,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
-    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getMutationGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
-    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
-    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
-    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
-    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
-    assertThat(config.getTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
-    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
-    assertThat(config.getTestTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
-    assertThat(config.getRequiredSolutionsCount())
-        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
-    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
-    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
-    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
-
-    final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
-        testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
-    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
-  }
-
-  @Test
-  public void testBuildWithWorkingDir() {
-    final Path workingDir = rootDir.resolve("work");
-    final Builder builder = new Builder(rootDir, productPaths, testPaths).setWorkingDir(workingDir);
-    final Configuration config = builder.build();
-
-    assertThat(config.getWorkingDir()).isEqualTo(workingDir);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -96,7 +63,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).setOutDir(outDir);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(outDir);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -130,7 +96,6 @@ public class ConfigurationBuilderTest {
             mutationGeneratingCount);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -162,7 +127,6 @@ public class ConfigurationBuilderTest {
         .setCrossoverGeneratingCount(crossoverGeneratingCount);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -193,7 +157,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).setHeadcount(headcount);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -226,7 +189,6 @@ public class ConfigurationBuilderTest {
         new Builder(rootDir, productPaths, testPaths).setMaxGeneration(maxGeneration);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -258,7 +220,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).setTimeLimit(timeLimit);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -290,7 +251,6 @@ public class ConfigurationBuilderTest {
         new Builder(rootDir, productPaths, testPaths).setTimeLimitSeconds(timeLimitSeconds);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -322,7 +282,6 @@ public class ConfigurationBuilderTest {
         .setRequiredSolutionsCount(requiredSolutionsCount);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -353,7 +312,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).setLogLevel(logLevel);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -384,7 +342,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).setLogLevel("DEBUG");
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -416,7 +373,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).addClassPaths(classPaths);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -448,7 +404,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).setRandomSeed(randomSeed);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -480,7 +435,6 @@ public class ConfigurationBuilderTest {
     final Builder builder = new Builder(rootDir, productPaths, testPaths).setScope(scope);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -513,7 +467,6 @@ public class ConfigurationBuilderTest {
         needNotOutput);
     final Configuration config = builder.build();
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -545,41 +498,6 @@ public class ConfigurationBuilderTest {
         {"-r", rootDir.toString(), "-s", productPath.toString(), "-t", testPath.toString(),};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
-    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getMutationGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
-    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
-    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
-    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
-    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
-    assertThat(config.getTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
-    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
-    assertThat(config.getTestTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
-    assertThat(config.getRequiredSolutionsCount())
-        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
-    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
-    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
-    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
-
-    final TargetProject expectedProject =
-        TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
-            ImmutableList.of(testPath), Collections.emptyList(), JUnitVersion.JUNIT4);
-    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
-  }
-
-  @Test
-  public void testBuildFromCmdLineArgsWithWorkingDir() {
-    final Path workingDir = rootDir.resolve("work");
-    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-w", workingDir.toString()};
-    final Configuration config = Builder.buildFromCmdLineArgs(args);
-
-    assertThat(config.getWorkingDir()).isEqualTo(workingDir);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -613,7 +531,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "-o", outDir.toString()};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(outDir);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -648,7 +565,6 @@ public class ConfigurationBuilderTest {
         Integer.toString(mutationGeneratingCount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -682,7 +598,6 @@ public class ConfigurationBuilderTest {
         Integer.toString(crossoverGeneratingCount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -715,7 +630,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--headcount", Integer.toString(headcount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -749,7 +663,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--max-generation", Integer.toString(maxGeneration)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -783,7 +696,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--time-limit", Long.toString(timeLimit.getSeconds())};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -817,7 +729,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--required-solutions", Integer.toString(requiredSolutionsCount)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -849,7 +760,6 @@ public class ConfigurationBuilderTest {
         {"-r", rootDir.toString(), "-s", productPath.toString(), "-t", testPath.toString(), "-v"};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -882,7 +792,6 @@ public class ConfigurationBuilderTest {
         {"-r", rootDir.toString(), "-s", productPath.toString(), "-t", testPath.toString(), "-q"};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -916,7 +825,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "-c", classPath.toString()};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -950,7 +858,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--random-seed", Long.toString(randomSeed)};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -984,7 +891,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--scope", scope.toString()};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1018,7 +924,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "-x", executionTest};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getExecutedTests()).containsExactlyInAnyOrder(executionTest);
   }
 
@@ -1030,7 +935,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "-x", executionTest1, executionTest2};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getExecutedTests()).containsExactlyInAnyOrder(executionTest1, executionTest2);
   }
 
@@ -1041,7 +945,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--test-time-limit", String.valueOf(testTimeLimit.getSeconds())};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getTestTimeLimit()).isEqualTo(testTimeLimit);
     assertThat(config.getTestTimeLimitSeconds()).isEqualTo(testTimeLimit.getSeconds());
   }
@@ -1086,7 +989,6 @@ public class ConfigurationBuilderTest {
         testPath.toString(), "--no-output"};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1157,57 +1059,11 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testNotExistingWorkingDir() {
-    final Path notExistingWorkingDir = Paths.get("notExistingWorkingDir");
-    final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "-w", notExistingWorkingDir.toString()};
-
-    assertThatThrownBy(() -> Builder.buildFromCmdLineArgs(args))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(notExistingWorkingDir.toString() + " does not exist.");
-  }
-
-  @Test
   public void testBuildFromConfigFile() {
     final Path configPath = rootDir.resolve("kgenprog.toml");
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
-    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getMutationGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
-    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
-    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
-    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
-    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
-    assertThat(config.getTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
-    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
-    assertThat(config.getTestTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
-    assertThat(config.getRequiredSolutionsCount())
-        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
-    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
-    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
-    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
-
-    final TargetProject expectedProject =
-        TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
-            JUnitVersion.JUNIT4);
-    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
-  }
-
-  @Test
-  public void testBuildFromConfigFileWithWorkingDir() {
-    final Path configPath = rootDir.resolve("withWorkingDir.toml");
-    final String[] args = {"--config", configPath.toString()};
-    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
-
-    final Path workingDir = rootDir.resolve("work");
-    assertThat(config.getWorkingDir()).isEqualTo(workingDir);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1240,7 +1096,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
 
     final Path outDir = rootDir.resolve("out");
     assertThat(config.getOutDir()).isEqualTo(outDir);
@@ -1276,7 +1131,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
 
     final int mutationGeneratingCount = 50;
@@ -1311,7 +1165,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1346,7 +1199,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1382,7 +1234,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1418,7 +1269,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1453,7 +1303,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1488,7 +1337,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1523,7 +1371,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1559,7 +1406,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1593,7 +1439,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1629,7 +1474,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1665,7 +1509,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1702,7 +1545,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1732,51 +1574,12 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromConfigFileWithWorkingDirOverwrittenFromCmdLineArgs() {
-    final Path configPath = rootDir.resolve("withWorkingDir.toml");
-    final Path workingDirFromCmdLine = rootDir.resolve("working-dir");
-    final String[] args = {"--config", configPath.toString(), "-w",
-        workingDirFromCmdLine.toString()};
-    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
-
-    final Path workingDirFromConfigFile = rootDir.resolve("work");
-    assertThat(config.getWorkingDir()).isNotEqualTo(workingDirFromConfigFile);
-    assertThat(config.getWorkingDir()).isEqualTo(workingDirFromCmdLine);
-
-    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getMutationGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
-    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
-        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
-    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
-    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
-    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
-    assertThat(config.getTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
-    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
-    assertThat(config.getTestTimeLimitSeconds())
-        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
-    assertThat(config.getRequiredSolutionsCount())
-        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
-    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
-    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
-    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
-
-    final TargetProject expectedProject =
-        TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
-            JUnitVersion.JUNIT4);
-    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
-  }
-
-  @Test
   public void testBuildFromConfigFileWithOutDirOverwrittenFromCmdLineArgs() {
     final Path configPath = rootDir.resolve("withOutDir.toml");
     final Path outDirFromCmdLine = rootDir.resolve("out-dir");
     final String[] args = {"--config", configPath.toString(), "-o", outDirFromCmdLine.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
 
     final Path outDirFromConfigFile = rootDir.resolve("out");
     assertThat(config.getOutDir()).isNotEqualTo(outDirFromConfigFile);
@@ -1815,7 +1618,6 @@ public class ConfigurationBuilderTest {
         Integer.toString(mutationGeneratingCountFromCmdLine)};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
 
     final int mutationGeneratingCountFromConfigFile = 50;
@@ -1855,7 +1657,6 @@ public class ConfigurationBuilderTest {
         Integer.toString(crossoverGeneratingCountFromCmdLine)};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1895,7 +1696,6 @@ public class ConfigurationBuilderTest {
         Integer.toString(headCountFromCmdLine)};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1934,7 +1734,6 @@ public class ConfigurationBuilderTest {
         Integer.toString(maxGenerationFromCmdLine)};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -1974,7 +1773,6 @@ public class ConfigurationBuilderTest {
 
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2013,7 +1811,6 @@ public class ConfigurationBuilderTest {
         Long.toString(testTimeLimitFromCmdLine)};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2054,7 +1851,6 @@ public class ConfigurationBuilderTest {
         Integer.toString(requiredSolutionsCountFromCmdLine)};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2092,7 +1888,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString(), "-q"};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2131,7 +1926,6 @@ public class ConfigurationBuilderTest {
         classPathFromCmdLine.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2172,7 +1966,6 @@ public class ConfigurationBuilderTest {
         String.valueOf(randomSeedFromCmdLine)};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2211,7 +2004,6 @@ public class ConfigurationBuilderTest {
         scopeFromCmdLine.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2249,7 +2041,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString(), "-x", executionTestFromCmdLine};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
@@ -2288,7 +2079,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString(), "--no-output"};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);

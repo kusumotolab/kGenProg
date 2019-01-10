@@ -30,6 +30,20 @@ public class JsonKeyAlias {
     public final static String TEST_SUMMARY = "testSummary";
   }
 
+  public static class Base {
+
+    public final static String FILE_NAME = "fileName";
+    public final static String NAME = "name";
+    public final static String LINE_NUMBER_RANGE = "lineNumberRange";
+    public final static String SNIPPET = "snippet";
+  }
+
+  public static class LineNumberRange {
+
+    public final static String START = "start";
+    public final static String END = "end";
+  }
+
   public static class Operation {
 
     public final static String ID = "id";
