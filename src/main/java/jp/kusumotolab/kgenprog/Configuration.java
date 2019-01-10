@@ -489,7 +489,6 @@ public class Configuration {
 
     private void resolvePaths() {
       rootDir = resolveAgainstConfigDirAndNormalize(rootDir);
-      workingDir = resolveAgainstConfigDirAndNormalize(workingDir);
       productPaths = productPaths.stream()
           .map(this::resolveAgainstConfigDirAndNormalize)
           .collect(Collectors.toList());

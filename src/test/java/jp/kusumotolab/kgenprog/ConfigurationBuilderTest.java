@@ -2118,7 +2118,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-    assertThat(config.getWorkingDir()).isEqualTo(Configuration.DEFAULT_WORKING_DIR);
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
