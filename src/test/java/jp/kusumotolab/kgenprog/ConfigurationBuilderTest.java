@@ -1096,7 +1096,6 @@ public class ConfigurationBuilderTest {
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
-
     final Path outDir = rootDir.resolve("out");
     assertThat(config.getOutDir()).isEqualTo(outDir);
 
@@ -1579,7 +1578,6 @@ public class ConfigurationBuilderTest {
     final Path outDirFromCmdLine = rootDir.resolve("out-dir");
     final String[] args = {"--config", configPath.toString(), "-o", outDirFromCmdLine.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
-
 
     final Path outDirFromConfigFile = rootDir.resolve("out");
     assertThat(config.getOutDir()).isNotEqualTo(outDirFromConfigFile);
@@ -2140,7 +2138,8 @@ public class ConfigurationBuilderTest {
 
     final Path productPathFromConfigFile = rootDir.resolve("src-example");
     final TargetProject expectedProject =
-        TargetProjectFactory.create(rootDir, ImmutableList.of(productPathFromConfigFile), testPaths, Collections.emptyList(),
+        TargetProjectFactory.create(rootDir, ImmutableList.of(productPathFromConfigFile), testPaths,
+            Collections.emptyList(),
             JUnitVersion.JUNIT4);
     assertThat(config.getTargetProject()).isEqualTo(expectedProject);
 
@@ -2152,7 +2151,9 @@ public class ConfigurationBuilderTest {
   }
 
   private boolean isWindows() {
-    return System.getProperty("os.name").toLowerCase().startsWith("windows");
+    return System.getProperty("os.name")
+        .toLowerCase()
+        .startsWith("windows");
   }
 
   // todo: 引数がなかった場合の挙動を確かめるために，カレントディレクトリを変更した上でテスト実行
