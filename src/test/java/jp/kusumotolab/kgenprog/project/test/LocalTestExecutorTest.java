@@ -626,8 +626,8 @@ public class LocalTestExecutorTest {
 
 
   @Test
-  // resourcesにアクセスする題材の確認
-  public void testExecForResourceAcess() {
+  // resources内のファイルにアクセスする題材の確認
+  public void testExecForResourceAccess() {
     final Path rootPath = Paths.get("example/BuildSuccess21");
 
     final List<Path> sources = Arrays.asList(rootPath.resolve("src"));
@@ -664,4 +664,5 @@ public class LocalTestExecutorTest {
     assertThat(result.getTestResult(test13).failed).isFalse();
     assertThat(result.getTestResult(test14).failed).isFalse();
   }
+
 }
