@@ -32,10 +32,12 @@ import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -622,4 +624,44 @@ public class LocalTestExecutorTest {
     return count;
   }
 
+
+  @Test
+  // resourcesにアクセスする題材の確認
+  public void testExecForResourceAcess() {
+    final Path rootPath = Paths.get("example/BuildSuccess21");
+
+    final List<Path> sources = Arrays.asList(rootPath.resolve("src"));
+    final List<Path> tests = Arrays.asList(rootPath.resolve("test"));
+    final List<Path> cps = Arrays.asList(rootPath.resolve("resources"));
+    final TargetProject targetProject =
+        TargetProjectFactory.create(rootPath, sources, tests, cps, JUnitVersion.JUNIT4);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
+
+    final FullyQualifiedName test01 = new TargetFullyQualifiedName("example.FooTest.test01");
+    final FullyQualifiedName test02 = new TargetFullyQualifiedName("example.FooTest.test02");
+    final FullyQualifiedName test03 = new TargetFullyQualifiedName("example.FooTest.test03");
+    final FullyQualifiedName test04 = new TargetFullyQualifiedName("example.FooTest.test04");
+    final FullyQualifiedName test11 = new TargetFullyQualifiedName("example.FooTest.test11");
+    final FullyQualifiedName test12 = new TargetFullyQualifiedName("example.FooTest.test12");
+    final FullyQualifiedName test13 = new TargetFullyQualifiedName("example.FooTest.test13");
+    final FullyQualifiedName test14 = new TargetFullyQualifiedName("example.FooTest.test14");
+
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        test01, test02, test03, test04, test11, test12, test13, test14);
+
+    assertThat(result.getTestResult(test01).failed).isFalse();
+    assertThat(result.getTestResult(test02).failed).isFalse();
+    assertThat(result.getTestResult(test03).failed).isFalse();
+    assertThat(result.getTestResult(test04).failed).isFalse();
+    assertThat(result.getTestResult(test11).failed).isFalse();
+    assertThat(result.getTestResult(test12).failed).isFalse();
+    assertThat(result.getTestResult(test13).failed).isFalse();
+    assertThat(result.getTestResult(test14).failed).isFalse();
+  }
 }
