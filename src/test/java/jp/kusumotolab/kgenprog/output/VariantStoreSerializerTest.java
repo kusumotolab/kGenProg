@@ -54,6 +54,7 @@ public class VariantStoreSerializerTest {
         .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
             new CrossoverHistoricalElementSerializer())
         .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
+        .excludeFieldsWithoutExposeAnnotation()
         .create();
   }
 
@@ -109,7 +110,8 @@ public class VariantStoreSerializerTest {
     // キーのチェック
     assertThat(serializedVariantStore.keySet()).containsOnly(
         JsonKeyAlias.VariantStore.PROJECT_NAME,
-        JsonKeyAlias.VariantStore.VARIANTS);
+        JsonKeyAlias.VariantStore.VARIANTS,
+        JsonKeyAlias.VariantStore.CONFIGURATION);
 
     // 値のチェック
     final String projectName = serializedVariantStore.get(JsonKeyAlias.VariantStore.PROJECT_NAME)
@@ -120,5 +122,58 @@ public class VariantStoreSerializerTest {
         JsonKeyAlias.VariantStore.VARIANTS)
         .getAsJsonArray();
     assertThat(serializedVariants).hasSize(11);
+  }
+
+  @Test
+  public void testConfigurationSerialization() {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject project = TargetProjectFactory.create(rootPath);
+    final Configuration config = new Configuration.Builder(project)
+        .build();
+    // gsonのセットアップ
+    final Gson gson = createGson(config);
+
+    final JsonObject serializedConfiguration = gson.toJsonTree(config)
+        .getAsJsonObject();
+
+    // キーのチェック
+    assertThat(serializedConfiguration.keySet()).containsOnly(
+        JsonKeyAlias.Configuration.CROSSOVER_GENERATING_COUNT,
+        JsonKeyAlias.Configuration.HEAD_COUNT,
+        JsonKeyAlias.Configuration.MAX_GENERATION,
+        JsonKeyAlias.Configuration.MUTATION_GENERATING_COUNT,
+        JsonKeyAlias.Configuration.RANDOM_SEED,
+        JsonKeyAlias.Configuration.REQUIRED_SOLUTIONS_COUNT);
+
+    // 値のチェック
+    final int crossoverGeneratingCount = serializedConfiguration.get(
+        JsonKeyAlias.Configuration.CROSSOVER_GENERATING_COUNT)
+        .getAsInt();
+    assertThat(crossoverGeneratingCount).isEqualTo(config.getCrossoverGeneratingCount());
+
+    final int headCount = serializedConfiguration.get(
+        JsonKeyAlias.Configuration.HEAD_COUNT)
+        .getAsInt();
+    assertThat(headCount).isEqualTo(config.getHeadcount());
+
+    final int maxGeneration = serializedConfiguration.get(
+        JsonKeyAlias.Configuration.MAX_GENERATION)
+        .getAsInt();
+    assertThat(maxGeneration).isEqualTo(config.getMaxGeneration());
+
+    final int mutationGeneratingCount = serializedConfiguration.get(
+        JsonKeyAlias.Configuration.MUTATION_GENERATING_COUNT)
+        .getAsInt();
+    assertThat(mutationGeneratingCount).isEqualTo(config.getMutationGeneratingCount());
+
+    final int randomSeed = serializedConfiguration.get(
+        JsonKeyAlias.Configuration.RANDOM_SEED)
+        .getAsInt();
+    assertThat(randomSeed).isEqualTo(config.getRandomSeed());
+
+    final int requiredSolutionsCount = serializedConfiguration.get(
+        JsonKeyAlias.Configuration.REQUIRED_SOLUTIONS_COUNT)
+        .getAsInt();
+    assertThat(requiredSolutionsCount).isEqualTo(config.getRequiredSolutionsCount());
   }
 }
