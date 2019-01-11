@@ -27,6 +27,7 @@ import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
 import com.electronwill.nightconfig.core.conversion.SpecNotNull;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.common.collect.ImmutableList;
+import com.google.gson.annotations.Expose;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
@@ -53,14 +54,20 @@ public class Configuration {
   private final TargetProject targetProject;
   private final List<String> executionTests;
   private final Path outDir;
+  @Expose
   private final int mutationGeneratingCount;
+  @Expose
   private final int crossoverGeneratingCount;
+  @Expose
   private final int headcount;
+  @Expose
   private final int maxGeneration;
   private final Duration timeLimit;
   private final Duration testTimeLimit;
+  @Expose
   private final int requiredSolutionsCount;
   private final Level logLevel;
+  @Expose
   private final long randomSeed;
   private final Scope.Type scope;
   private final boolean needNotOutput;
