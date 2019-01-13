@@ -7,4 +7,8 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 public interface FaultLocalization {
 
   public List<Suspiciousness> exec(GeneratedSourceCode generatedSourceCode, TestResults testResults);
+
+  public enum Technique {
+    Ample, Jaccard, Ochiai, Tarantula, Zoltar
+  }
 }

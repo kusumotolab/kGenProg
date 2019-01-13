@@ -28,6 +28,7 @@ import com.electronwill.nightconfig.core.conversion.SpecNotNull;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
+import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
@@ -49,6 +50,7 @@ public class Configuration {
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
+  public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -64,6 +66,7 @@ public class Configuration {
   private final long randomSeed;
   private final Scope.Type scope;
   private final boolean needNotOutput;
+  private final FaultLocalization.Technique faultLocalization;
   // endregion
 
   // region Constructor
@@ -83,6 +86,7 @@ public class Configuration {
     randomSeed = builder.randomSeed;
     scope = builder.scope;
     needNotOutput = builder.needNotOutput;
+    faultLocalization = builder.faultLocalization;
   }
 
   // endregion
@@ -149,6 +153,10 @@ public class Configuration {
 
   public boolean needNotOutput() {
     return needNotOutput;
+  }
+
+  public FaultLocalization.Technique getFaultLocalization() {
+    return faultLocalization;
   }
 
   @Override
@@ -257,6 +265,10 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("no-output")
     @PreserveNotNull
     private boolean needNotOutput = DEFAULT_NEED_NOT_OUTPUT;
+
+    @com.electronwill.nightconfig.core.conversion.Path("fault-localization")
+    @PreserveNotNull
+    private FaultLocalization.Technique faultLocalization = DEFAULT_FAULT_LOCALIZATION;
 
     // endregion
 
@@ -419,6 +431,11 @@ public class Configuration {
 
     public Builder setNeedNotOutput(final boolean needNotOutput) {
       this.needNotOutput = needNotOutput;
+      return this;
+    }
+
+    public Builder setFaultLocalization(final FaultLocalization.Technique faultLocalization) {
+      this.faultLocalization = faultLocalization;
       return this;
     }
 
@@ -639,6 +656,12 @@ public class Configuration {
     @Option(name = "--scope", usage = "Specify the scope from which source code to be reused is selected.")
     private void setScopeFromCmdLineParser(final Scope.Type scope) {
       this.scope = scope;
+    }
+
+    @Option(name = "-f", aliases = "--fault-localization", metaVar = "<name>",
+            usage = "Specifies technique of fault localization.")
+    private void setFaultLocalizationFromCmdLineParser(final FaultLocalization.Technique faultLocalization) {
+      this.faultLocalization = faultLocalization;
     }
 
     // endregion
