@@ -26,4 +26,14 @@ public class ParallelTestExecutor implements TestExecutor {
     return variantSingle.subscribeOn(Schedulers.from(executorService))
         .map(testExecutor::exec);
   }
+
+  @Override
+  public void initialize() {
+    testExecutor.initialize();
+  }
+
+  @Override
+  public void finish() {
+    testExecutor.finish();
+  }
 }
