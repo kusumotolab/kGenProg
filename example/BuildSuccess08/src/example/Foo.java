@@ -1,10 +1,13 @@
 package example;
 
-import com.google.common.primitives.Ints;
+public class Foo {
 
-class Foo {
-
-  public static int max(final int a, final int b) {
-    return Ints.max(a, b);
+  public int foo(int n) {
+    if (n > 0) {
+      n--;
+    } else {
+      n++;
+    }
+    return n;
   }
 }
