@@ -51,8 +51,11 @@ public class Configuration {
   public static final Scope.Type DEFAULT_SCOPE = Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
 
+  @Expose
   private final TargetProject targetProject;
+  @Expose
   private final List<String> executionTests;
+  @Expose
   private final Path outDir;
   @Expose
   private final int mutationGeneratingCount;
@@ -62,14 +65,19 @@ public class Configuration {
   private final int headcount;
   @Expose
   private final int maxGeneration;
+  @Expose
   private final Duration timeLimit;
+  @Expose
   private final Duration testTimeLimit;
   @Expose
   private final int requiredSolutionsCount;
+  @Expose
   private final Level logLevel;
   @Expose
   private final long randomSeed;
+  @Expose
   private final Scope.Type scope;
+  @Expose
   private final boolean needNotOutput;
   // endregion
 
