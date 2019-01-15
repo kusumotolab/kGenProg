@@ -1,9 +1,5 @@
 package jp.kusumotolab.kgenprog.testutil;
 
-import java.time.Duration;
-import com.google.gson.annotations.Expose;
-import ch.qos.logback.classic.Level;
-
 /**
  * JSONのキーのエイリアスを保持するクラス
  */
@@ -77,15 +73,5 @@ public class JsonKeyAlias {
     public final static String PROJECT_NAME = "projectName";
     public final static String VARIANTS = "variants";
     public final static String CONFIGURATION = "configuration";
-  }
-
-  public static class Configuration {
-
-    public final static String MUTATION_GENERATING_COUNT = "mutationGeneratingCount";
-    public final static String CROSSOVER_GENERATING_COUNT = "crossoverGeneratingCount";
-    public final static String HEAD_COUNT = "headcount";
-    public final static String MAX_GENERATION = "maxGeneration";
-    public final static String REQUIRED_SOLUTIONS_COUNT = "requiredSolutionsCount";
-    public final static String RANDOM_SEED = "randomSeed";
   }
 }
