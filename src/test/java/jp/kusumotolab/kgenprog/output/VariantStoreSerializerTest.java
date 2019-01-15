@@ -127,7 +127,7 @@ public class VariantStoreSerializerTest {
   }
 
   @Test
-  public void testConfigurationSerialization() throws IllegalAccessException {
+  public void testConfigurationSerialization() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
     final Configuration config = new Configuration.Builder(project)
