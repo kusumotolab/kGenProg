@@ -140,12 +140,9 @@ public class VariantStoreSerializerTest {
 
     // キーのチェック
     final Class<?> clazz = config.getClass();
-    final Field[] configFields = Arrays.stream(clazz.getDeclaredFields())
-        .filter(e -> !e.getName()
-            .startsWith("DEFAULT_"))
-        .toArray(Field[]::new);
-    final String[] configFieldNames = Arrays.stream(configFields)
+    final String[] configFieldNames = Arrays.stream(clazz.getDeclaredFields())
         .map(Field::getName)
+        .filter(e -> !e.startsWith("DEFAULT_"))
         .toArray(String[]::new);
     assertThat(serializedConfiguration.keySet()).containsOnly(configFieldNames);
   }
