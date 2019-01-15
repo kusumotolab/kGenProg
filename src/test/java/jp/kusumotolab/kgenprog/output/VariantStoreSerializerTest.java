@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
@@ -125,7 +127,7 @@ public class VariantStoreSerializerTest {
   }
 
   @Test
-  public void testConfigurationSerialization() {
+  public void testConfigurationSerialization() throws IllegalAccessException {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
     final Configuration config = new Configuration.Builder(project)
@@ -137,43 +139,14 @@ public class VariantStoreSerializerTest {
         .getAsJsonObject();
 
     // キーのチェック
-    assertThat(serializedConfiguration.keySet()).containsOnly(
-        JsonKeyAlias.Configuration.CROSSOVER_GENERATING_COUNT,
-        JsonKeyAlias.Configuration.HEAD_COUNT,
-        JsonKeyAlias.Configuration.MAX_GENERATION,
-        JsonKeyAlias.Configuration.MUTATION_GENERATING_COUNT,
-        JsonKeyAlias.Configuration.RANDOM_SEED,
-        JsonKeyAlias.Configuration.REQUIRED_SOLUTIONS_COUNT);
-
-    // 値のチェック
-    final int crossoverGeneratingCount = serializedConfiguration.get(
-        JsonKeyAlias.Configuration.CROSSOVER_GENERATING_COUNT)
-        .getAsInt();
-    assertThat(crossoverGeneratingCount).isEqualTo(config.getCrossoverGeneratingCount());
-
-    final int headCount = serializedConfiguration.get(
-        JsonKeyAlias.Configuration.HEAD_COUNT)
-        .getAsInt();
-    assertThat(headCount).isEqualTo(config.getHeadcount());
-
-    final int maxGeneration = serializedConfiguration.get(
-        JsonKeyAlias.Configuration.MAX_GENERATION)
-        .getAsInt();
-    assertThat(maxGeneration).isEqualTo(config.getMaxGeneration());
-
-    final int mutationGeneratingCount = serializedConfiguration.get(
-        JsonKeyAlias.Configuration.MUTATION_GENERATING_COUNT)
-        .getAsInt();
-    assertThat(mutationGeneratingCount).isEqualTo(config.getMutationGeneratingCount());
-
-    final int randomSeed = serializedConfiguration.get(
-        JsonKeyAlias.Configuration.RANDOM_SEED)
-        .getAsInt();
-    assertThat(randomSeed).isEqualTo(config.getRandomSeed());
-
-    final int requiredSolutionsCount = serializedConfiguration.get(
-        JsonKeyAlias.Configuration.REQUIRED_SOLUTIONS_COUNT)
-        .getAsInt();
-    assertThat(requiredSolutionsCount).isEqualTo(config.getRequiredSolutionsCount());
+    final Class<?> clazz = config.getClass();
+    final Field[] configFields = Arrays.stream(clazz.getDeclaredFields())
+        .filter(e -> !e.getName()
+            .startsWith("DEFAULT_"))
+        .toArray(Field[]::new);
+    final String[] configFieldNames = Arrays.stream(configFields)
+        .map(Field::getName)
+        .toArray(String[]::new);
+    assertThat(serializedConfiguration.keySet()).containsOnly(configFieldNames);
   }
 }
