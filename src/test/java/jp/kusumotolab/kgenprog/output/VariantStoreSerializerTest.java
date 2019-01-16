@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
@@ -54,6 +56,7 @@ public class VariantStoreSerializerTest {
         .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
             new CrossoverHistoricalElementSerializer())
         .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
+        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
         .create();
   }
 
@@ -109,7 +112,8 @@ public class VariantStoreSerializerTest {
     // キーのチェック
     assertThat(serializedVariantStore.keySet()).containsOnly(
         JsonKeyAlias.VariantStore.PROJECT_NAME,
-        JsonKeyAlias.VariantStore.VARIANTS);
+        JsonKeyAlias.VariantStore.VARIANTS,
+        JsonKeyAlias.VariantStore.CONFIGURATION);
 
     // 値のチェック
     final String projectName = serializedVariantStore.get(JsonKeyAlias.VariantStore.PROJECT_NAME)
@@ -120,5 +124,26 @@ public class VariantStoreSerializerTest {
         JsonKeyAlias.VariantStore.VARIANTS)
         .getAsJsonArray();
     assertThat(serializedVariants).hasSize(11);
+  }
+
+  @Test
+  public void testConfigurationSerialization() {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final TargetProject project = TargetProjectFactory.create(rootPath);
+    final Configuration config = new Configuration.Builder(project)
+        .build();
+    // gsonのセットアップ
+    final Gson gson = createGson(config);
+
+    final JsonObject serializedConfiguration = gson.toJsonTree(config)
+        .getAsJsonObject();
+
+    // キーのチェック
+    final Class<?> clazz = config.getClass();
+    final String[] configFieldNames = Arrays.stream(clazz.getDeclaredFields())
+        .map(Field::getName)
+        .filter(e -> !e.startsWith("DEFAULT_"))
+        .toArray(String[]::new);
+    assertThat(serializedConfiguration.keySet()).containsOnly(configFieldNames);
   }
 }

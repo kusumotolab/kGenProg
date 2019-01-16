@@ -52,6 +52,7 @@ public class VariantStoreExporter {
         .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
         .registerTypeHierarchyAdapter(Patch.class, new PatchSerializer())
         .registerTypeHierarchyAdapter(FileDiff.class, new FileDiffSerializer())
+        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
         .create();
   }
 }

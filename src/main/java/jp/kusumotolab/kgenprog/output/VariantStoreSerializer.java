@@ -29,6 +29,7 @@ public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
 
     serializedVariantStore.addProperty("projectName", projectName);
     serializedVariantStore.add("variants", context.serialize(variantStore.getAllVariants()));
+    serializedVariantStore.add("configuration", context.serialize(config));
 
     return serializedVariantStore;
   }
