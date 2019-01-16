@@ -56,7 +56,7 @@ public class VariantStoreSerializerTest {
         .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
             new CrossoverHistoricalElementSerializer())
         .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .excludeFieldsWithoutExposeAnnotation()
+        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
         .create();
   }
 
