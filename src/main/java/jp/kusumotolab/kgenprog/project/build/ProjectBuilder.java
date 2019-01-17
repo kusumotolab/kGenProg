@@ -19,6 +19,10 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 public class ProjectBuilder {
 
+  // TODO デフォルトのコンパイラバージョンは要検討．ひとまず1.8固定．
+  // TODO #289: 加え，toml からコンパイラバージョンを指定できるようにするべき．
+  private static final String DEFAULT_JDK_VERSION = "1.8";
+
   private final TargetProject targetProject;
   private final BinaryStore binaryStore;
   private final JavaCompiler compiler;
@@ -126,7 +130,12 @@ public class ProjectBuilder {
         .collect(Collectors.toList());
     final String classpaths = String.join(File.pathSeparator, classpathList);
 
-    return Arrays.asList("-encoding", "UTF-8", "-classpath", classpaths, "-verbose");
+    return Arrays.asList( //
+        "-source", DEFAULT_JDK_VERSION, //
+        "-target", DEFAULT_JDK_VERSION, //
+        "-encoding", "UTF-8", //
+        "-classpath", classpaths, //
+        "-verbose");
   }
 
 }

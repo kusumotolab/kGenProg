@@ -28,6 +28,7 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
  *
  * @deprecated #507 の修正により不要になったため，本クラスは廃止
  */
+@Deprecated
 public class InsertTimeoutRuleFieldOperation implements Operation {
 
   private static final Logger log = LoggerFactory.getLogger(InsertTimeoutRuleFieldOperation.class);

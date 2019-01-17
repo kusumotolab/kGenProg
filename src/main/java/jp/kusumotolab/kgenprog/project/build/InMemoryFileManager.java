@@ -9,8 +9,8 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import com.google.common.collect.Iterables;
-import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 
@@ -101,20 +101,20 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     return fileManager.inferBinaryName(location, file);
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
-  // unsupported operations
-
   @Override
   public FileObject getFileForInput(final Location location, final String packageName,
       final String relativeName) throws IOException {
-    throw new UnsupportedOperationException();
+    return super.getFileForInput(location, packageName, relativeName);
   }
 
   @Override
   public JavaFileObject getJavaFileForInput(final Location location, final String className,
       final Kind kind) throws IOException {
-    throw new UnsupportedOperationException();
+    return super.getJavaFileForInput(location, className, kind);
   }
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // unsupported operations
 
   @Override
   public boolean isSameFile(final FileObject a, final FileObject b) {
