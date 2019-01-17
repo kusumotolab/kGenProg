@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +16,15 @@ public class TargetProjectFactory {
    * @return TargetProject
    */
   public static TargetProject create(final Path rootPath) {
-    ProjectFactory applicableFactory = instanceProjectFactories(rootPath).stream()
+    if (!Files.exists(rootPath)) {
+      throw new IllegalArgumentException("Specified project does not exist: \"" + rootPath + "\".");
+    }
+
+    final ProjectFactory applicableFactory = instanceProjectFactories(rootPath).stream()
         .filter(ProjectFactory::isApplicable)
         .findFirst()
         .orElse(new HeuristicProjectFactory(rootPath));
+
     return applicableFactory.create();
   }
 
@@ -42,7 +48,8 @@ public class TargetProjectFactory {
    * @return TargetProject
    */
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
-      final List<Path> pathsForTestSource, List<Path> pathsForClass, JUnitVersion junitVersion) {
+      final List<Path> pathsForTestSource, final List<Path> pathsForClass,
+      final JUnitVersion junitVersion) {
     return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
         pathsForClass, junitVersion).create();
   }
