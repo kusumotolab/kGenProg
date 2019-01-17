@@ -7,6 +7,14 @@
  * user guide available at https://docs.gradle.org/2.14.1/userguide/tutorial_java_projects.html
  */
 
+buildscript {
+  repositories { jcenter() }
+  dependencies {
+    // Gradle linter
+    classpath 'com.netflix.nebula:gradle-lint-plugin:latest.release'
+  }
+}
+
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -18,6 +26,10 @@ targetCompatibility = '1.8'
 // Set default encoding to UTF-8
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
+
+// Configure gradle linter
+apply plugin: 'nebula.lint'
+gradleLint.rules = ['all-dependency'] // include all rules
 
 // In this section you declare where to find the dependencies of your project
 repositories {
