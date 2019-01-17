@@ -73,7 +73,8 @@ public class MemoryClassLoaderTest {
   public void testDynamicClassLoading01() throws Exception {
     // 動的ロード
     final Class<?> clazz = loader.loadClass(FOO);
-    final Object instance = clazz.newInstance();
+    final Object instance = clazz.getDeclaredConstructor()
+        .newInstance();
 
     // きちんと存在するか？その名前は正しいか？
     assertThat(instance).isNotNull();
@@ -85,7 +86,8 @@ public class MemoryClassLoaderTest {
   public void testDynamicClassLoading02() throws Exception {
     // 動的ロード（Override側のメソッドで試す）
     final Class<?> clazz = loader.loadClass(FOO.toString(), false);
-    final Object instance = clazz.newInstance();
+    final Object instance = clazz.getDeclaredConstructor()
+        .newInstance();
 
     // きちんと存在するか？その名前は正しいか？
     assertThat(instance).isNotNull();
