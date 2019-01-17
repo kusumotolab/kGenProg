@@ -6,15 +6,18 @@ buildscript {
   }
 }
 
-// Apply the java plugin to add support for Java
+// Apply java plugin
 apply plugin: 'java'
+
+// Apply IDE plugins
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 // Set compiler version
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
-// Set default encoding to UTF-8
+// Set default encoding
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
