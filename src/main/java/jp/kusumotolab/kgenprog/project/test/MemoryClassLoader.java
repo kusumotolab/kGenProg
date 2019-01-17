@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -71,4 +73,18 @@ public class MemoryClassLoader extends URLClassLoader {
     return super.loadClass(name.toString(), resolve);
   }
 
+  @Override
+  public InputStream getResourceAsStream(final String name) {
+    final String fqn = convertStringNameToFqn(name);
+    final byte[] bytes = definitions.get(fqn);
+    if (null == bytes) {
+      return super.getResourceAsStream(name);
+    }
+    return new ByteArrayInputStream(bytes);
+  }
+
+  private String convertStringNameToFqn(final String name) {
+    return name.replaceAll("\\.class$", "")
+        .replaceAll("\\/", ".");
+  }
 }

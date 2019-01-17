@@ -72,5 +72,6 @@ public class JsonKeyAlias {
 
     public final static String PROJECT_NAME = "projectName";
     public final static String VARIANTS = "variants";
+    public final static String CONFIGURATION = "configuration";
   }
 }
