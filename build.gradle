@@ -24,6 +24,7 @@ compileTestJava.options.encoding = 'UTF-8'
 // Configure gradle linter
 apply plugin: 'nebula.lint'
 gradleLint.rules = ['all-dependency'] // include all rules
+gradleLint.alwaysRun = false
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -39,7 +40,6 @@ dependencies {
 
   compile 'args4j:args4j:2.33'
   compile 'ch.qos.logback:logback-classic:1.2.3'
-  compile 'com.electronwill.night-config:toml:3.4.0'
   compile 'com.github.wumpz:diffutils:2.2'
   compile 'com.google.code.gson:gson:2.8.5'
   compile 'com.google.guava:guava:26.0-jre'
@@ -47,12 +47,28 @@ dependencies {
   compile 'commons-io:commons-io:2.6'
   compile 'io.reactivex.rxjava2:rxjava:2.2.4'
   compile 'org.apache.commons:commons-lang3:3.7'
-  compile 'org.apache.maven:maven-core:3.5.4'
+  compile 'org.apache.maven:maven-model:3.5.4'
+  compile 'org.codehaus.plexus:plexus-utils:3.1.0'
   compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.102'
+  compile 'org.eclipse.platform:org.eclipse.equinox.common:3.10.200'
+  compile 'org.eclipse.platform:org.eclipse.text:3.8.0'
   compile 'org.jacoco:org.jacoco.core:0.8.1'
-  compile 'org.slf4j:slf4j-api:1.7.21'
+  compile 'org.slf4j:slf4j-api:1.7.25'
+
   testCompile 'org.assertj:assertj-core:3.10.0'
   testCompile 'org.mockito:mockito-core:2.+'
+
+  // Patch for gradle lint
+  gradleLint.ignore {
+    // As of 2019-01-17, gradle lint alerts "transitive-duplicate-dependency-class" warning
+    // to "net.bytebuggy" which is used by "org.mockito".
+    compile 'net.bytebuddy:byte-buddy:1.9.3'
+
+    // Both dependencies of "core" and "toml" are necessary for night-config to suppress
+    // lint warnings because of its dynamic class loading
+    compile 'com.electronwill.night-config:toml:3.4.0'
+    compile 'com.electronwill.night-config:core:3.4.0'
+  }
 }
 
 jar {
