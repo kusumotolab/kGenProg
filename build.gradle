@@ -64,7 +64,7 @@ dependencies {
   compile group: 'org.apache.maven', name: 'maven-core', version: '3.5.4'
 
   // https://mvnrepository.com/artifact/commons-io/commons-io
-  compile group: 'commons-io', name: 'commons-io', version: '2.6'
+  // compile group: 'commons-io', name: 'commons-io', version: '2.6'
 
   // https://mvnrepository.com/artifact/commons-lang/commons-lang
   // compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
