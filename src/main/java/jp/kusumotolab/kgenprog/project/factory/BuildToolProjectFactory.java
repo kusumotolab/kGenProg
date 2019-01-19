@@ -1,11 +1,11 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 
 public abstract class BuildToolProjectFactory implements ProjectFactory {
 
@@ -16,11 +16,15 @@ public abstract class BuildToolProjectFactory implements ProjectFactory {
   }
 
   final protected Collection<Path> getConfigPath() {
-    return FileUtils
-        .listFiles(rootPath.toFile(), FileFilterUtils.nameFileFilter(getConfigFileName()), null)
-        .stream()
-        .map(File::toPath)
-        .collect(Collectors.toList());
+    try {
+      return Files.walk(rootPath)
+          .filter(p -> p.toString()
+              .endsWith(getConfigFileName()))
+          .collect(Collectors.toList());
+    } catch (IOException e) {
+      ; // do nothing
+    }
+    return Collections.emptyList();
   }
 
   abstract protected String getConfigFileName();
