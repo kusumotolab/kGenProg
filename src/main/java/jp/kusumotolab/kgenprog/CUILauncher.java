@@ -43,7 +43,6 @@ public class CUILauncher {
     setLogLevel(config.getLogLevel());
 
     final FaultLocalization faultLocalization;
-
     switch (config.getFaultLocalization()) {
         case Ample:
             faultLocalization = new Ample();
@@ -64,7 +63,6 @@ public class CUILauncher {
             faultLocalization = new Ochiai();
             break;
     }
-
     final Random random = new Random(config.getRandomSeed());
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);
