@@ -2201,7 +2201,7 @@ public class ConfigurationBuilderTest {
   public void testBuildFromConfigFileWithFaultLocalizationOverwrittenFromCmdLineArgs() {
     final Path configPath = rootDir.resolve("withFaultLocalization.toml");
     final FaultLocalization.Technique faultLocalizationFromCmdLine = FaultLocalization.Technique.Ochiai;
-    final String[] args = {"--config", configPath.toString(), "-f", faultLocalizationFromCmdLine.toString()};
+    final String[] args = {"--config", configPath.toString(), "--fault-localization", faultLocalizationFromCmdLine.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);

@@ -658,7 +658,7 @@ public class Configuration {
       this.scope = scope;
     }
 
-    @Option(name = "-f", aliases = "--fault-localization", metaVar = "<name>",
+    @Option(name = "--fault-localization", metaVar = "<name>",
             usage = "Specifies technique of fault localization.")
     private void setFaultLocalizationFromCmdLineParser(final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
