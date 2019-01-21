@@ -43,11 +43,6 @@ public class MemoryClassLoader extends URLClassLoader {
     return loadClass(fqn.value);
   }
 
-  @Override
-  public Class<?> loadClass(final String name) throws ClassNotFoundException {
-    return loadClass(name, false);
-  }
-
   /**
    * クラスロード． メモリ上のバイト配列のクラス定義を優先で探し，それがなければファイルシステム上の.classファイルからロードを行う．
    */
