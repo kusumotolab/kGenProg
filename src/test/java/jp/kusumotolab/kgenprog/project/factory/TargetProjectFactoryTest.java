@@ -26,7 +26,6 @@ import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Lib;
 public class TargetProjectFactoryTest {
 
   private final static ClassPath JUNIT = new ClassPath(Lib.JUNIT);
-  private final static ClassPath HAMCREST = new ClassPath(Lib.HAMCREST);
 
   @Test
   public void testCreateByBasePath01() {
@@ -39,7 +38,7 @@ public class TargetProjectFactoryTest {
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTest);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT, HAMCREST);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
   }
 
   @Test
@@ -55,7 +54,7 @@ public class TargetProjectFactoryTest {
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo, bar);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTest, barTest);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT, HAMCREST);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
   }
 
   @Test
@@ -73,7 +72,7 @@ public class TargetProjectFactoryTest {
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo, bar, baz);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTest, barTest, bazTest);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT, HAMCREST);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
   }
 
   @Test
@@ -92,7 +91,7 @@ public class TargetProjectFactoryTest {
         .containsExactlyInAnyOrder(new ProductSourcePath(rootPath, FOO));
     assertThat(project.getTestSourcePaths())
         .containsExactlyInAnyOrder(new TestSourcePath(rootPath, FOO_TEST));
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT, HAMCREST);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -163,6 +162,6 @@ public class TargetProjectFactoryTest {
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo, bar);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTest, barTest);
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT, HAMCREST);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
   }
 }
