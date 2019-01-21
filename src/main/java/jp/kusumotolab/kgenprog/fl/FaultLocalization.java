@@ -9,6 +9,41 @@ public interface FaultLocalization {
   public List<Suspiciousness> exec(GeneratedSourceCode generatedSourceCode, TestResults testResults);
 
   public enum Technique {
-    Ample, Jaccard, Ochiai, Tarantula, Zoltar
+    Ample {
+      @Override
+      public FaultLocalization initialize() {
+        return new Ample();
+      }
+    },
+
+    Jaccard {
+      @Override
+      public FaultLocalization initialize() {
+        return new Jaccard();
+      }
+    },
+
+    Ochiai {
+      @Override
+      public FaultLocalization initialize() {
+        return new Ochiai();
+      }
+    },
+
+    Tarantula {
+      @Override
+      public FaultLocalization initialize() {
+        return new Tarantula();
+      }
+    },
+
+    Zoltar {
+      @Override
+      public FaultLocalization initialize() {
+        return new Zoltar();
+      }
+    };
+
+    public abstract FaultLocalization initialize();
   }
 }

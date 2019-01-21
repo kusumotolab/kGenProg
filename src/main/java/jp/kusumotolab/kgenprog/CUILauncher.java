@@ -42,27 +42,7 @@ public class CUILauncher {
   public void launch(final Configuration config) {
     setLogLevel(config.getLogLevel());
 
-    final FaultLocalization faultLocalization;
-    switch (config.getFaultLocalization()) {
-        case Ample:
-            faultLocalization = new Ample();
-            break;
-        case Jaccard:
-            faultLocalization = new Jaccard();
-            break;
-        case Ochiai:
-            faultLocalization = new Ochiai();
-            break;
-        case Tarantula:
-            faultLocalization = new Tarantula();
-            break;
-        case Zoltar:
-            faultLocalization = new Zoltar();
-            break;
-        default:
-            faultLocalization = new Ochiai();
-            break;
-    }
+    final FaultLocalization faultLocalization = config.getFaultLocalization().initialize();
     final Random random = new Random(config.getRandomSeed());
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);

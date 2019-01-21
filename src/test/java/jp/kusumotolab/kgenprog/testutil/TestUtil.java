@@ -32,27 +32,7 @@ public class TestUtil {
     when(variant.getGeneratedSourceCode()).thenReturn(sourceCode);
     final TestResults testResults = new LocalTestExecutor(config).exec(variant);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
-    final List<Suspiciousness> suspiciousnesses;
-    switch (config.getFaultLocalization()) {
-      case Ample:
-        suspiciousnesses = new Ample().exec(sourceCode, testResults);
-        break;
-      case Jaccard:
-        suspiciousnesses = new Jaccard().exec(sourceCode, testResults);
-        break;
-      case Ochiai:
-        suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
-        break;
-      case Tarantula:
-        suspiciousnesses = new Tarantula().exec(sourceCode, testResults);
-        break;
-      case Zoltar:
-        suspiciousnesses = new Zoltar().exec(sourceCode, testResults);
-        break;
-      default:
-        suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
-        break;
-    }
+    final List<Suspiciousness> suspiciousnesses = config.getFaultLocalization().initialize().exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();
     return new Variant(0, 0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
   }
