@@ -24,7 +24,7 @@ kGenProg は単一の jar ファイルにまとめてあります．[ここ](htt
 $ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
     [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>]
     [--headcount <num>] [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
-    [--required-solutions <num>] [--random-seed <num>]
+    [--required-solutions <num>] [--random-seed <num>] [--fault-localization <name>]
 ```
 
 ### 使用例
@@ -69,4 +69,5 @@ $ java -jar path/to/kGenProg.jar
 | `--required-solutions` | 出力する解（修正パッチ）の数 | 1 |
 | `--random-seed` | kGenProg 全体で用いる乱数のシード値 | 0 |
 | `--scope` | 再利用候補の範囲（`PROJECT`，`PACKAGE`，`FILE`） | `PACKAGE` |
+| `--fault-localization` | 欠陥限局の手法（Fault Localization）（`Ample`，`Jaccard`，`Ochiai`，`Tarantula`，`Zoltar`） | `Ochiai` |
 
