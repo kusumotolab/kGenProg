@@ -23,8 +23,8 @@ public class ParallelTestExecutor implements TestExecutor {
 
   @Override
   public Single<TestResults> execAsync(final Single<Variant> variantSingle) {
-    return variantSingle.subscribeOn(Schedulers.from(executorService))
-        .map(testExecutor::exec);
+    variantSingle.subscribeOn(Schedulers.from(executorService));
+    return variantSingle.flatMap(e -> testExecutor.execAsync(Single.just(e)));
   }
 
   @Override
@@ -35,5 +35,6 @@ public class ParallelTestExecutor implements TestExecutor {
   @Override
   public void finish() {
     testExecutor.finish();
+    executorService.shutdown();
   }
 }
