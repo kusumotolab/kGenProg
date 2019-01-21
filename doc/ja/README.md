@@ -69,5 +69,5 @@ $ java -jar path/to/kGenProg.jar
 | `--required-solutions` | 出力する解（修正パッチ）の数 | 1 |
 | `--random-seed` | kGenProg 全体で用いる乱数のシード値 | 0 |
 | `--scope` | 再利用候補の範囲（`PROJECT`，`PACKAGE`，`FILE`） | `PACKAGE` |
-| `--fault-localization` | テスト失敗の原因となるコードの箇所を推定する手法（フォールトローカリゼーション）（`Ample`，`Jaccard`，`Ochiai`，`Tarantula`，`Zoltar`） | `Ochiai` |
+| `--fault-localization` | 欠陥限局の手法（Fault Localization）（`Ample`，`Jaccard`，`Ochiai`，`Tarantula`，`Zoltar`） | `Ochiai` |
 
