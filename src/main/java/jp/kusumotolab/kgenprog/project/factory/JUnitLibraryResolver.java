@@ -21,7 +21,6 @@ public class JUnitLibraryResolver {
   private static final String JUNIT4_DIR = "junit4/";
   private static final String JUNIT3_JUNIT = "junit-3.8.2.jar";
   private static final String JUNIT4_JUNIT = "junit-4.12-kgp-custom.jar";
-  private static final String JUNIT4_HAMCREST = "hamcrest-core-1.3.jar";
   private static final String SYSTEM_TEMP_DIR = System.getProperty("java.io.tmpdir");
 
   public final static EnumMap<JUnitVersion, List<ClassPath>> libraries =
@@ -35,28 +34,21 @@ public class JUnitLibraryResolver {
           classLoader.getResourceAsStream(JUNIT3_DIR + JUNIT3_JUNIT);
       final InputStream junit4JInputStream =
           classLoader.getResourceAsStream(JUNIT4_DIR + JUNIT4_JUNIT);
-      final InputStream junit4HInputStream =
-          classLoader.getResourceAsStream(JUNIT4_DIR + JUNIT4_HAMCREST);
 
       final Path systemTempPath = Paths.get(SYSTEM_TEMP_DIR);
       final Path junit3JPath = systemTempPath.resolve(JUNIT3_JUNIT);
       final Path junit4JPath = systemTempPath.resolve(JUNIT4_JUNIT);
-      final Path junit4HPath = systemTempPath.resolve(JUNIT4_HAMCREST);
 
       Files.copy(junit3JInputStream, junit3JPath, StandardCopyOption.REPLACE_EXISTING);
       Files.copy(junit4JInputStream, junit4JPath, StandardCopyOption.REPLACE_EXISTING);
-      Files.copy(junit4HInputStream, junit4HPath, StandardCopyOption.REPLACE_EXISTING);
 
       junit3JPath.toFile()
           .deleteOnExit();
       junit4JPath.toFile()
           .deleteOnExit();
-      junit4HPath.toFile()
-          .deleteOnExit();
 
       libraries.put(JUnitVersion.JUNIT3, Arrays.asList(new ClassPath(junit3JPath)));
-      libraries.put(JUnitVersion.JUNIT4,
-          Arrays.asList(new ClassPath(junit4JPath), new ClassPath(junit4HPath)));
+      libraries.put(JUnitVersion.JUNIT4, Arrays.asList(new ClassPath(junit4JPath)));
     } catch (Exception e) {
       e.printStackTrace();
     }
