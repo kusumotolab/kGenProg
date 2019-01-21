@@ -49,23 +49,32 @@ public class MemoryClassLoader extends URLClassLoader {
   @Override
   public Class<?> loadClass(final String name, final boolean resolve)
       throws ClassNotFoundException {
-    final byte[] bytes = definitions.get(name);
-    if (bytes != null) {
-      try {
-        return defineClass(name, bytes, 0, bytes.length);
-      } catch (final LinkageError e) {
-        // クラスのロードに失敗した，可能性はバイナリが不正か，二重ロード．
 
-        // 既にロードされているクラスを探してみる（二重ロードの可能性を考える）
-        final Class<?> clazz = findLoadedClass(name);
+    // まず既にロードされているクラスを探す
+    Class<?> clazz = findLoadedClass(name);
 
-        // それでも無理ならおそらくバイナリ不正っぽい
-        if (null == clazz) {
+    if (clazz == null) {
+      // 無理ならメモリからロードを試みる
+      final byte[] bytes = definitions.get(name);
+      if (bytes != null) {
+        try {
+          clazz = defineClass(name, bytes, 0, bytes.length);
+        } catch (final LinkageError e) {
+          // おそらくバイナリ不正
           throw e;
         }
       }
+
+      if (clazz == null) {
+        // 無理なら親にまかす
+        clazz = super.loadClass(name, resolve);
+      }
     }
-    return super.loadClass(name, resolve);
+
+    if (resolve) {
+      resolveClass(clazz);
+    }
+    return clazz;
   }
 
   @Override
