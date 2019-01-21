@@ -13,6 +13,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+// Apply JaCoCo plugin
+apply plugin: 'jacoco'
+
 // Set compiler version
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -90,5 +93,12 @@ task printCurrentVersion {
   description 'Prints the current kGenProg version.'
   doLast {
     println version
+  }
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
+    html.enabled false
   }
 }
