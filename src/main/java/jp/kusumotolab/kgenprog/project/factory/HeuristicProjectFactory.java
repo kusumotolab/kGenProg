@@ -1,9 +1,11 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
+import java.util.stream.Stream;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -24,29 +26,32 @@ public class HeuristicProjectFactory implements ProjectFactory {
 
   @Override
   public TargetProject create() {
-    final String[] javaExtension = {"java"};
+    final List<ProductSourcePath> productSourcePaths = listFiles(rootPath, ".java") //
+        .filter(p -> !p.toString()
+            .endsWith("Test.java"))
+        .map(p -> ProductSourcePath.relativizeAndCreate(rootPath, p))
+        .collect(Collectors.toList());
 
-    final List<ProductSourcePath> productSourcePaths =
-        FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
-            .stream()
-            .filter(file -> !file.getName()
-                .endsWith("Test.java"))
-            .map(file -> file.toPath())
-            .map(p -> ProductSourcePath.relativizeAndCreate(rootPath, p))
-            .collect(Collectors.toList());
-
-    final List<TestSourcePath> testSourcePaths =
-        FileUtils.listFiles(rootPath.toFile(), javaExtension, true)
-            .stream()
-            .filter(file -> file.getName()
-                .endsWith("Test.java"))
-            .map(file -> file.toPath())
-            .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
-            .collect(Collectors.toList());
+    final List<TestSourcePath> testSourcePaths = listFiles(rootPath, ".java") //
+        .filter(p -> p.toString()
+            .endsWith("Test.java"))
+        .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
+        .collect(Collectors.toList());
 
     final List<ClassPath> classPath = JUnitLibraryResolver.libraries.get(JUnitVersion.JUNIT4);
 
     return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPath);
+  }
+
+  private Stream<Path> listFiles(final Path path, final String extension) {
+    try {
+      return Files.walk(rootPath)
+          .filter(Files::isRegularFile)
+          .filter(p -> p.toString()
+              .endsWith(extension));
+    } catch (final IOException e) {
+      return Stream.empty();
+    }
   }
 
 }

@@ -44,7 +44,6 @@ dependencies {
   compile 'com.google.code.gson:gson:2.8.5'
   compile 'com.google.guava:guava:26.0-jre'
   compile 'commons-codec:commons-codec:1.11'
-  compile 'commons-io:commons-io:2.6'
   compile 'io.reactivex.rxjava2:rxjava:2.2.4'
   compile 'org.apache.commons:commons-lang3:3.7'
   compile 'org.apache.maven:maven-model:3.5.4'
