@@ -5,6 +5,26 @@ orbs:
 
 jobs:
 
+  measure-code-coverage:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      # ===== Initialize the environment
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          - v1-dependencies-
+      - run: ./gradlew dependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      # ===== Run `gradle test`
+      - run: ./gradlew jacocoTestReport
+      # ===== Collect and upload coverage reports
+      - run: bash <(curl -s https://codecov.io/bash)
+
   # Job: run-unit-tests
   #   Execute `gradle test` to run unit tests on the target commit.
   run-unit-tests:
@@ -160,6 +180,10 @@ jobs:
 
 workflows:
   version: 2
+
+  report-code-coverage:
+    jobs:
+      - measure-code-coverage
 
   # Workflow: test-branches
   #   Execute the unit tests on every branch except for master on the GitHub.
