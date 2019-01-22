@@ -1,7 +1,6 @@
 package example;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 
 public class FooTest {
@@ -22,7 +21,6 @@ public class FooTest {
   @Test(expected = ClassNotFoundException.class)
   public void test03() throws Exception {
     new Foo().load("jp.kusumotolab.kgenprog.CUILauncher");
-    fail();
   }
 
   // test01と全く同じ内容．記法を変えただけ．
@@ -30,7 +28,6 @@ public class FooTest {
   public void test04() {
     try {
       new Foo().load("jp.kusumotolab.kgenprog.CUILauncher");
-      fail();
     } catch (ClassNotFoundException e) {
       assertTrue(true);
     }
