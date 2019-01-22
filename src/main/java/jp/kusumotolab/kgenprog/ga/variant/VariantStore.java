@@ -13,7 +13,6 @@ import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
-import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
@@ -122,8 +121,7 @@ public class VariantStore {
   }
 
   /**
-   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
-   * の場合，foundSolutionとして追加され次世代のVariantには追加されない
+   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true} の場合，foundSolutionとして追加され次世代のVariantには追加されない
    *
    * @param variant
    */
@@ -171,6 +169,7 @@ public class VariantStore {
 
     final Single<TestResults> resultsSingle = sourceCode.isGenerationSuccess()
         ? strategies.execAsyncTestExecutor(variantSingle)
+        .cache()
         : Single.just(EmptyTestResults.instance);
     variant.setTestResultsSingle(resultsSingle);
 
