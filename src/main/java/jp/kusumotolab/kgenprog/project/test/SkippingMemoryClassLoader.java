@@ -55,23 +55,23 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
       // First, check if the class has already been loaded
       Class<?> c = findLoadedClass(name);
 
-      if (c == null) {
+      if (null == c) {
         try {
           // Second, try to load using extension class loader
           c = extensionClassLoader.loadClass(name);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
           // ignore
         }
       }
-      if (c == null) {
+      if (null == c) {
         try {
           // Finally, try to load from memory
           c = findClass(name);
-        } catch (Exception e) {
+        } catch (final ClassNotFoundException e) {
           // ignore
         }
       }
-      if (c == null) {
+      if (null == c) {
         throw new ClassNotFoundException(name);
       }
       if (resolve) {
