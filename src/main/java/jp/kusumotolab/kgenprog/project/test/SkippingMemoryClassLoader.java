@@ -28,7 +28,7 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
   }
 
   /**
-   * クラスローダの親子関係を探索して，委譲先のextensionClassLoaderを探す．
+   * クラスローダの親子関係を探索して，委譲先となるextensionClassLoaderを探す．
    * 
    * @param cl
    * @return
@@ -47,10 +47,12 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
   @Override
   protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 
+    // JUnit関係のクラスのみロードを通常の委譲関係に任す．これがないとJUnitが期待通りに動かない．
     if (name.startsWith("org.junit.Test") || name.startsWith("junit.framework")) {
       return getParent().loadClass(name);
     }
 
+    // 委譲処理．java.lang.ClassLoader#loadClassを参考に作成．
     synchronized (getClassLoadingLock(name)) {
       // First, check if the class has already been loaded
       Class<?> c = findLoadedClass(name);
@@ -59,6 +61,12 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
         try {
           // Second, try to load using extension class loader
           c = extensionClassLoader.loadClass(name);
+
+          // Don't delegate to the parent.
+          // c = parent.loadClass(name);
+
+          // TODO 可視性の問題で，resolve変数が反映されていない．本来以下であるべき．リフレクションでなんとかなる．
+          // c = extensionClassLoader.loadClass(name, resolve);
         } catch (final ClassNotFoundException e) {
           // ignore
         }
