@@ -1,10 +1,13 @@
 package jp.kusumotolab.kgenprog.output;
 
+import static jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion.JUNIT4;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,9 +41,10 @@ public class TestResultsSerializerTest {
         .create();
   }
 
-  private TestResults execTest(final String root) {
-    final Path rootPath = Paths.get(root);
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+  private TestResults execTest(final Path rootPath, final List<Path> sourcePaths,
+      final List<Path> testPaths) {
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath, sourcePaths,
+        testPaths, Collections.emptyList(), JUNIT4);
     final GeneratedSourceCode generatedSourceCode = TestUtil.createGeneratedSourceCode(
         targetProject);
     final Configuration config = new Configuration.Builder(targetProject)
@@ -57,7 +61,10 @@ public class TestResultsSerializerTest {
   @Test
   public void testSerializedTestResultsOnBuildFail() {
     // テストの実行
-    final TestResults result = execTest("example/BuildFailure01");
+    final Path rootPath = Paths.get("example/BuildFailure01");
+    final Path sourcePath = rootPath.resolve("src");
+    final TestResults result = execTest(rootPath, Collections.singletonList(sourcePath),
+        Collections.emptyList());
 
     // シリアライズ
     final JsonObject serializedTestResults = gson.toJsonTree(result)
@@ -88,7 +95,12 @@ public class TestResultsSerializerTest {
   @Test
   public void testSerializedTestResultsOnBuildSuccess() {
     // テストの実行
-    final TestResults result = execTest("example/CloseToZero01");
+    final Path rootPath = Paths.get("example/CloseToZero01");
+    final Path sourcePath = rootPath.resolve("src/example/CloseToZero.java");
+    final Path testPath = rootPath.resolve("src/example/CloseToZeroTest.java");
+
+    final TestResults result = execTest(rootPath, Collections.singletonList(sourcePath),
+        Collections.singletonList(testPath));
 
     // シリアライズ
     final JsonObject serializedTestResults = gson.toJsonTree(result)
