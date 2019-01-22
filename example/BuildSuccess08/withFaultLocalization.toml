@@ -1,4 +1,5 @@
 root-dir = "./"
 src = ["src/"]
 test = ["test/"]
-faultLocalization = "Ample"
+fault-localization = "Ample"
+
