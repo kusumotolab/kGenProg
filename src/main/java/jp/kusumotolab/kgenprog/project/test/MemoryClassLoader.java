@@ -45,7 +45,7 @@ public class MemoryClassLoader extends URLClassLoader {
   }
 
   /**
-   * メモリ上からクラスを探す． メモリ上のバイト配列のクラス定義を優先で探し，それがなければurlで指定されたパス上の.classファイルからロードを行う．
+   * メモリ上からクラスを探す． まずURLClassLoaderによるファイルシステム上のクラスのロードを試み，それがなければメモリ上のクラスロードを試す．
    */
   @Override
   protected Class<?> findClass(final String name) throws ClassNotFoundException {
