@@ -2,10 +2,11 @@ package example;
 
 public class Foo {
 
-  public void foo() throws ClassNotFoundException {
+  // 指定FQNのクラスをロードする
+  public void load(final String name) throws ClassNotFoundException {
     this.getClass()
         .getClassLoader()
-        .loadClass("jp.kusumotolab.kgenprog.CUILauncher");
+        .loadClass(name);
   }
 
 }

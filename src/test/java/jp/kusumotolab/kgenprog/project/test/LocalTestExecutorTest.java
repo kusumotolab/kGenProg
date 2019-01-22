@@ -685,7 +685,7 @@ public class LocalTestExecutorTest {
   }
 
   @Test
-  //
+  // クラスローダの委譲処理が適切にスキップされるかどうかを試す題材．
   public void testExecForSkippingClassLoading() {
     final Path rootPath = Paths.get("example/BuildSuccess23");
 
@@ -698,8 +698,11 @@ public class LocalTestExecutorTest {
     when(variant.getGeneratedSourceCode()).thenReturn(source);
     final TestResults result = executor.exec(variant);
 
-    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01, FOO_TEST02);
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
+        FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04);
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST03).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST04).failed).isFalse();
   }
 }
