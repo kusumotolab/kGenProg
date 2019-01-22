@@ -683,4 +683,23 @@ public class LocalTestExecutorTest {
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
   }
+
+  @Test
+  //
+  public void testExecForSkippingClassLoading() {
+    final Path rootPath = Paths.get("example/BuildSuccess23");
+
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Configuration config = new Configuration.Builder(targetProject).build();
+    final TestExecutor executor = new LocalTestExecutor(config);
+    final Variant variant = mock(Variant.class);
+    when(variant.getGeneratedSourceCode()).thenReturn(source);
+    final TestResults result = executor.exec(variant);
+
+    assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01, FOO_TEST02);
+    assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
+    assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+  }
 }
