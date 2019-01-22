@@ -122,8 +122,7 @@ public class VariantStore {
   }
 
   /**
-   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
-   * の場合，foundSolutionとして追加され次世代のVariantには追加されない
+   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true} の場合，foundSolutionとして追加され次世代のVariantには追加されない
    *
    * @param variant
    */
@@ -171,6 +170,7 @@ public class VariantStore {
 
     final Single<TestResults> resultsSingle = sourceCode.isGenerationSuccess()
         ? strategies.execAsyncTestExecutor(variantSingle)
+        .cache()
         : Single.just(EmptyTestResults.instance);
     variant.setTestResultsSingle(resultsSingle);
 
