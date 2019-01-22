@@ -85,7 +85,7 @@ public class MemoryClassLoaderTest {
   @Test
   public void testDynamicClassLoading02() throws Exception {
     // 動的ロード（Override側のメソッドで試す）
-    final Class<?> clazz = loader.loadClass(FOO.toString(), false);
+    final Class<?> clazz = loader.loadClass(FOO.toString());
     final Object instance = clazz.getDeclaredConstructor()
         .newInstance();
 
