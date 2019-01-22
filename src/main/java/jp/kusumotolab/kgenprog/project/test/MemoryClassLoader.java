@@ -61,8 +61,8 @@ public class MemoryClassLoader extends URLClassLoader {
       if (bytes != null) {
         try {
           c = defineClass(name, bytes, 0, bytes.length);
-        } catch (final LinkageError e) {
-          throw e; // おそらくバイナリ不正
+        } catch (final ClassFormatError e) {
+          throw e;
         }
       }
     }
