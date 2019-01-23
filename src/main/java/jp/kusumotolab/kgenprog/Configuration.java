@@ -31,7 +31,7 @@ import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization.Technique;
 import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
-import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy.Strategy;
+import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
@@ -56,6 +56,8 @@ public class Configuration {
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
   public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
           FirstVariantSelectionStrategy.Strategy.Random;
+  public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
+          SecondVariantSelectionStrategy.Strategy.Random;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -73,6 +75,7 @@ public class Configuration {
   private final boolean needNotOutput;
   private final FaultLocalization.Technique faultLocalization;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
+  private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
   // endregion
 
   // region Constructor
@@ -94,6 +97,7 @@ public class Configuration {
     needNotOutput = builder.needNotOutput;
     faultLocalization = builder.faultLocalization;
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
+    secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
   }
 
   // endregion
@@ -168,6 +172,10 @@ public class Configuration {
 
   public FirstVariantSelectionStrategy.Strategy getFirstVariantSelectionStrategy() {
     return firstVariantSelectionStrategy;
+  }
+
+  public SecondVariantSelectionStrategy.Strategy getSecondVariantSelectionStrategy() {
+    return secondVariantSelectionStrategy;
   }
 
   @Override
@@ -287,6 +295,12 @@ public class Configuration {
     @Conversion(FirstVariantSelectionStrategyToString.class)
     private FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy =
             DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY;
+
+    @com.electronwill.nightconfig.core.conversion.Path("second-variant-selection-strategy")
+    @PreserveNotNull
+    @Conversion(SecondVariantSelectionStrategyToString.class)
+    private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
+            DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
     // endregion
 
@@ -460,6 +474,12 @@ public class Configuration {
     public Builder setFirstVariantSelectionStrategy
             (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
       this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
+      return this;
+    }
+
+    public Builder setSecondVariantSelectionStrategy
+            (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+      this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
       return this;
     }
 
@@ -693,6 +713,12 @@ public class Configuration {
       this.faultLocalization = faultLocalization;
     }
 
+    @Option(name = "--crossover-second-variant", usage = "Specifies second variant selection strategy for crossover.")
+    private void setSecondVariantSelectionStrategyFromCmdLineParser
+            (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+      this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
+    }
+
     // endregion
 
     private static class PathToString implements Converter<Path, String> {
@@ -825,15 +851,34 @@ public class Configuration {
     private static class FirstVariantSelectionStrategyToString implements Converter<FirstVariantSelectionStrategy.Strategy, String> {
 
       @Override
-      public Strategy convertToField(final String value) {
+      public FirstVariantSelectionStrategy.Strategy convertToField(final String value) {
         if (value == null) {
           return null;
         }
-        return Strategy.valueOf(value);
+        return FirstVariantSelectionStrategy.Strategy.valueOf(value);
       }
 
       @Override
-      public String convertFromField(final Strategy value) {
+      public String convertFromField(final FirstVariantSelectionStrategy.Strategy value) {
+        if (value == null) {
+          return null;
+        }
+        return value.toString();
+      }
+    }
+
+    private static class SecondVariantSelectionStrategyToString implements Converter<SecondVariantSelectionStrategy.Strategy, String> {
+
+      @Override
+      public SecondVariantSelectionStrategy.Strategy convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        return SecondVariantSelectionStrategy.Strategy.valueOf(value);
+      }
+
+      @Override
+      public String convertFromField(final SecondVariantSelectionStrategy.Strategy value) {
         if (value == null) {
           return null;
         }

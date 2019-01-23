@@ -8,7 +8,7 @@ import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover;
-import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantRandomSelection;
+import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
@@ -45,8 +45,10 @@ public class CUILauncher {
         rouletteStatementSelection, config.getScope());
     final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
             config.getFirstVariantSelectionStrategy().initialize(random);
+    final SecondVariantSelectionStrategy secondVariantSelectionStrategy =
+            config.getSecondVariantSelectionStrategy().initialize(random);
     final Crossover crossover = new RandomCrossover(random, firstVariantSelectionStrategy,
-        new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
+            secondVariantSelectionStrategy, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount());
