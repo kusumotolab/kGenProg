@@ -7,12 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.fl.Ample;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.fl.Jaccard;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
-import jp.kusumotolab.kgenprog.fl.Tarantula;
-import jp.kusumotolab.kgenprog.fl.Zoltar;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
@@ -54,7 +50,7 @@ public class KGenProgMainTest {
             .setRandomSeed(2) // CTZ04の修正に時間がかかるので早めに終わるよう微調整（for テスト高速化）
             .build();
 
-    final FaultLocalization faultLocalization = config.getFaultLocalization().initialize();
+    final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
