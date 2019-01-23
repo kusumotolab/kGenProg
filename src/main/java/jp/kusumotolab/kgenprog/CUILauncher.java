@@ -7,7 +7,6 @@ import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
-import jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover;
 import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
@@ -47,7 +46,7 @@ public class CUILauncher {
             config.getFirstVariantSelectionStrategy().initialize(random);
     final SecondVariantSelectionStrategy secondVariantSelectionStrategy =
             config.getSecondVariantSelectionStrategy().initialize(random);
-    final Crossover crossover = new RandomCrossover(random, firstVariantSelectionStrategy,
+    final Crossover crossover = config.getCrossoverType().initialize(random, firstVariantSelectionStrategy,
             secondVariantSelectionStrategy, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();

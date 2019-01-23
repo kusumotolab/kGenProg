@@ -733,7 +733,7 @@ public class Configuration {
     @Option(name = "--crossover-first-variant", usage = "Specifies first variant selection strategy for crossover.")
     private void setFirstVariantSelectionStrategyFromCmdLineParser
             (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
-      this.faultLocalization = faultLocalization;
+      this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
     }
 
     @Option(name = "--crossover-second-variant", usage = "Specifies second variant selection strategy for crossover.")
