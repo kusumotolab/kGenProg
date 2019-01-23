@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
@@ -54,6 +56,8 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -85,6 +89,8 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -118,6 +124,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -150,6 +157,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -182,6 +190,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -215,6 +224,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -246,6 +256,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -278,6 +289,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -310,6 +322,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -342,6 +355,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -373,6 +387,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -405,6 +420,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, classPaths, JUnitVersion.JUNIT4);
@@ -437,6 +453,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -469,6 +486,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(scope);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -502,6 +520,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(needNotOutput);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -534,6 +553,42 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(faultLocalization);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
+
+    final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
+            testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildWithFirstVariantSelectionStrategy() {
+    final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy =
+            FirstVariantSelectionStrategy.Strategy.Random;
+    final Builder builder = new Builder(rootDir, productPaths, testPaths)
+            .setFirstVariantSelectionStrategy(firstVariantSelectionStrategy);
+    final Configuration config = builder.build();
+
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+            Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+            Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+            .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+            .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+            .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(firstVariantSelectionStrategy);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
             testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -566,6 +621,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -600,6 +656,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -634,6 +691,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -668,6 +726,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -702,6 +761,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -736,6 +796,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -770,6 +831,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -803,6 +865,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -836,6 +899,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -869,6 +933,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -903,6 +968,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -937,6 +1003,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -971,6 +1038,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(scope);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1070,6 +1138,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isTrue();
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -1146,6 +1215,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1181,6 +1251,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1216,6 +1287,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1251,6 +1323,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1287,6 +1360,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1323,6 +1397,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1358,6 +1433,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1393,6 +1469,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1428,6 +1505,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1464,6 +1542,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1497,6 +1576,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final Path classPath = rootDir.resolve("lib");
     final TargetProject expectedProject =
@@ -1534,6 +1614,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1570,6 +1651,7 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1603,6 +1685,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final String executionTest1 = "example.FooTest";
     final String executionTest2 = "example.BarTest";
@@ -1639,6 +1722,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final boolean needNotOutput = true;
     assertThat(config.needNotOutput()).isEqualTo(needNotOutput);
@@ -1679,6 +1763,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1719,6 +1804,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1759,6 +1845,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1798,6 +1885,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1837,6 +1925,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1877,6 +1966,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1918,6 +2008,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1957,6 +2048,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1995,6 +2087,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2030,6 +2123,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final Path classPathFromConfigFile = rootDir.resolve("lib");
     final TargetProject projectWithClassPathFromConfigFile =
@@ -2075,6 +2169,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2114,6 +2209,7 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2148,6 +2244,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final String executionTestFromConfigFile1 = "example.FooTest";
     final String executionTestFromConfigFile2 = "example.BarTest";
@@ -2190,6 +2287,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.needNotOutput()).isNotEqualTo(needNotOutputFromConfigFile);
     assertThat(config.needNotOutput()).isTrue();
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2227,6 +2325,47 @@ public class ConfigurationBuilderTest {
     final FaultLocalization.Technique faultLocalizationFromConfigFile = FaultLocalization.Technique.Ample;
     assertThat(config.getFaultLocalization()).isNotEqualTo(faultLocalizationFromConfigFile);
     assertThat(config.getFaultLocalization()).isEqualTo(faultLocalizationFromCmdLine);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
+
+    final TargetProject expectedProject =
+            TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
+                    JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
+  public void testBuildFromConfigFileWithFirstVariantSelectionStrategyOverwrittenFromCmdLineArgs() {
+    final Path configPath = rootDir.resolve("withFirstVariantSelectionStrategy.toml");
+    final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategyFromCmdLine =
+            FirstVariantSelectionStrategy.Strategy.Elite;
+    final String[] args = {"--config", configPath.toString(), "--crossover-first-variant", firstVariantSelectionStrategyFromCmdLine.toString()};
+    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+            Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+            Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+            .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+            .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+            .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+
+    final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategyFromConfigFile =
+            FirstVariantSelectionStrategy.Strategy.Random;
+    assertThat(config.getFirstVariantSelectionStrategy()).isNotEqualTo(firstVariantSelectionStrategyFromConfigFile);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(firstVariantSelectionStrategyFromCmdLine);
 
     final TargetProject expectedProject =
             TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2269,6 +2408,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
     assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir,
         ImmutableList.of(link), testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);

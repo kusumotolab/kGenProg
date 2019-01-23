@@ -30,6 +30,8 @@ import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization.Technique;
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy.Strategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
@@ -52,6 +54,8 @@ public class Configuration {
   public static final Scope.Type DEFAULT_SCOPE = Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
+  public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
+          FirstVariantSelectionStrategy.Strategy.Random;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -68,6 +72,7 @@ public class Configuration {
   private final Scope.Type scope;
   private final boolean needNotOutput;
   private final FaultLocalization.Technique faultLocalization;
+  private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   // endregion
 
   // region Constructor
@@ -88,6 +93,7 @@ public class Configuration {
     scope = builder.scope;
     needNotOutput = builder.needNotOutput;
     faultLocalization = builder.faultLocalization;
+    firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
   }
 
   // endregion
@@ -158,6 +164,10 @@ public class Configuration {
 
   public FaultLocalization.Technique getFaultLocalization() {
     return faultLocalization;
+  }
+
+  public FirstVariantSelectionStrategy.Strategy getFirstVariantSelectionStrategy() {
+    return firstVariantSelectionStrategy;
   }
 
   @Override
@@ -271,6 +281,12 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(FaultLocalizationTechniqueToString.class)
     private FaultLocalization.Technique faultLocalization = DEFAULT_FAULT_LOCALIZATION;
+
+    @com.electronwill.nightconfig.core.conversion.Path("first-variant-selection-strategy")
+    @PreserveNotNull
+    @Conversion(FirstVariantSelectionStrategyToString.class)
+    private FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy =
+            DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY;
 
     // endregion
 
@@ -438,6 +454,12 @@ public class Configuration {
 
     public Builder setFaultLocalization(final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
+      return this;
+    }
+
+    public Builder setFirstVariantSelectionStrategy
+            (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+      this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
       return this;
     }
 
@@ -665,6 +687,12 @@ public class Configuration {
       this.faultLocalization = faultLocalization;
     }
 
+    @Option(name = "--crossover-first-variant", usage = "Specifies first variant selection strategy for crossover.")
+    private void setFirstVariantSelectionStrategyFromCmdLineParser
+            (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+      this.faultLocalization = faultLocalization;
+    }
+
     // endregion
 
     private static class PathToString implements Converter<Path, String> {
@@ -787,6 +815,25 @@ public class Configuration {
 
       @Override
       public String convertFromField(final Technique value) {
+        if (value == null) {
+          return null;
+        }
+        return value.toString();
+      }
+    }
+
+    private static class FirstVariantSelectionStrategyToString implements Converter<FirstVariantSelectionStrategy.Strategy, String> {
+
+      @Override
+      public Strategy convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        return Strategy.valueOf(value);
+      }
+
+      @Override
+      public String convertFromField(final Strategy value) {
         if (value == null) {
           return null;
         }

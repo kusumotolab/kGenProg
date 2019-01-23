@@ -4,18 +4,13 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
-import jp.kusumotolab.kgenprog.fl.Ample;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.fl.Jaccard;
-import jp.kusumotolab.kgenprog.fl.Ochiai;
-import jp.kusumotolab.kgenprog.fl.Tarantula;
-import jp.kusumotolab.kgenprog.fl.Zoltar;
-import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
-import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
-import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantRandomSelection;
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover;
 import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantRandomSelection;
+import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
@@ -48,7 +43,9 @@ public class CUILauncher {
         new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
         rouletteStatementSelection, config.getScope());
-    final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
+    final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
+            config.getFirstVariantSelectionStrategy().initialize(random);
+    final Crossover crossover = new RandomCrossover(random, firstVariantSelectionStrategy,
         new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
