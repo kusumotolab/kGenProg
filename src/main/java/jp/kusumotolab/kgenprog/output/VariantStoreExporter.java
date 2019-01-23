@@ -28,11 +28,14 @@ public class VariantStoreExporter {
         .resolve("history.json");
     final Gson gson = createGson(config);
 
-    try (final BufferedWriter out = Files.newBufferedWriter(outputPath)) {
+    try {
       if (Files.notExists(config.getOutDir())) {
         Files.createDirectories(config.getOutDir());
       }
+
+      final BufferedWriter out = Files.newBufferedWriter(outputPath);
       gson.toJson(variantStore, out);
+      out.close();
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
     }
