@@ -30,10 +30,10 @@ import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization.Technique;
+import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
-import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -51,9 +51,10 @@ public class Configuration {
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
-  public static final Scope.Type DEFAULT_SCOPE = Type.PACKAGE;
+  public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
+  public static final Crossover.Type DEFAULT_CROSSOVER_TYPE = Crossover.Type.Random;
   public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
           FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
@@ -74,6 +75,7 @@ public class Configuration {
   private final Scope.Type scope;
   private final boolean needNotOutput;
   private final FaultLocalization.Technique faultLocalization;
+  private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
   // endregion
@@ -96,6 +98,7 @@ public class Configuration {
     scope = builder.scope;
     needNotOutput = builder.needNotOutput;
     faultLocalization = builder.faultLocalization;
+    crossoverType = builder.crossoverType;
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
   }
@@ -168,6 +171,10 @@ public class Configuration {
 
   public FaultLocalization.Technique getFaultLocalization() {
     return faultLocalization;
+  }
+
+  public Crossover.Type getCrossoverType() {
+    return crossoverType;
   }
 
   public FirstVariantSelectionStrategy.Strategy getFirstVariantSelectionStrategy() {
@@ -289,6 +296,11 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(FaultLocalizationTechniqueToString.class)
     private FaultLocalization.Technique faultLocalization = DEFAULT_FAULT_LOCALIZATION;
+
+    @com.electronwill.nightconfig.core.conversion.Path("crossover-type")
+    @PreserveNotNull
+    @Conversion(CrossoverTypeToString.class)
+    private Crossover.Type crossoverType = DEFAULT_CROSSOVER_TYPE;
 
     @com.electronwill.nightconfig.core.conversion.Path("first-variant-selection-strategy")
     @PreserveNotNull
@@ -468,6 +480,11 @@ public class Configuration {
 
     public Builder setFaultLocalization(final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
+      return this;
+    }
+
+    public Builder setCrossoverType(final Crossover.Type crossoverType) {
+      this.crossoverType = crossoverType;
       return this;
     }
 
@@ -707,6 +724,12 @@ public class Configuration {
       this.faultLocalization = faultLocalization;
     }
 
+    @Option(name = "--crossover-type", usage = "Specifies crossover type.")
+    private void setCrossoverTypeFromCmdLineParser
+            (final Crossover.Type crossoverType) {
+      this.crossoverType = crossoverType;
+    }
+
     @Option(name = "--crossover-first-variant", usage = "Specifies first variant selection strategy for crossover.")
     private void setFirstVariantSelectionStrategyFromCmdLineParser
             (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
@@ -813,15 +836,15 @@ public class Configuration {
     private static class ScopeTypeToString implements Converter<Scope.Type, String> {
 
       @Override
-      public Type convertToField(final String value) {
+      public Scope.Type convertToField(final String value) {
         if (value == null) {
           return null;
         }
-        return Type.valueOf(value);
+        return Scope.Type.valueOf(value);
       }
 
       @Override
-      public String convertFromField(final Type value) {
+      public String convertFromField(final Scope.Type value) {
         if (value == null) {
           return null;
         }
@@ -841,6 +864,25 @@ public class Configuration {
 
       @Override
       public String convertFromField(final Technique value) {
+        if (value == null) {
+          return null;
+        }
+        return value.toString();
+      }
+    }
+
+    private static class CrossoverTypeToString implements Converter<Crossover.Type, String> {
+
+      @Override
+      public Crossover.Type convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        return Crossover.Type.valueOf(value);
+      }
+
+      @Override
+      public String convertFromField(final Crossover.Type value) {
         if (value == null) {
           return null;
         }
