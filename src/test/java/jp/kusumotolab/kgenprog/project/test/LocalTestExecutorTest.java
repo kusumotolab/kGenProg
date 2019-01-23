@@ -656,11 +656,11 @@ public class LocalTestExecutorTest {
 
     assertThat(result.getTestResult(test01).failed).isFalse();
     assertThat(result.getTestResult(test02).failed).isFalse();
-    assertThat(result.getTestResult(test03).failed).isFalse();
+    assertThat(result.getTestResult(test03).failed).isTrue(); // ContextClassLoader経由のロードは失敗する
     assertThat(result.getTestResult(test04).failed).isFalse();
     assertThat(result.getTestResult(test11).failed).isFalse();
     assertThat(result.getTestResult(test12).failed).isFalse();
-    assertThat(result.getTestResult(test13).failed).isFalse();
+    assertThat(result.getTestResult(test13).failed).isTrue(); // ContextClassLoader経由のロードは失敗する
     assertThat(result.getTestResult(test14).failed).isFalse();
   }
 
