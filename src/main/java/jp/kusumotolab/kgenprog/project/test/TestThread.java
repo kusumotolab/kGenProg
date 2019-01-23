@@ -109,8 +109,9 @@ class TestThread extends Thread {
       final RunListener listener = new CoverageMeasurementListener(productFQNs, testResults);
       junitCore.addListener(listener);
 
-      Thread.currentThread()
-          .setContextClassLoader(classLoader);
+      // JUnit実行対象の題材テストはMemClassLoaderでロードされているので，
+      // 以下ContextClassLoaderのセットは不要．むしろKGPスレッド全体に作用してしまうのでないほうが良い．
+      // Thread.currentThread().setContextClassLoader(classLoader);
 
       junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 
