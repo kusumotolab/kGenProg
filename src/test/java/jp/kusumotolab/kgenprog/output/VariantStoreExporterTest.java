@@ -38,5 +38,8 @@ public class VariantStoreExporterTest {
     // 出力ファイルの存在をチェック
     final Path exportedJsonFile = outDir.resolve("history.json");
     assertThat(exportedJsonFile).exists();
+
+    // 後始末
+    Files.deleteIfExists(outDir);
   }
 }
