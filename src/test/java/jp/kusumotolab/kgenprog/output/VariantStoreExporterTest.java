@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class VariantExporterTest {
+public class VariantStoreExporterTest {
 
   @Test
   public void testWriteToFile() throws IOException {
