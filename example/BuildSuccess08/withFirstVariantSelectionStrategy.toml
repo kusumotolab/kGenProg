@@ -1,4 +1,4 @@
 root-dir = "./"
 src = ["src/"]
 test = ["test/"]
-first-variant-selection-strategy = "Elite"
+crossover-first-variant = "Elite"

@@ -302,13 +302,13 @@ public class Configuration {
     @Conversion(CrossoverTypeToString.class)
     private Crossover.Type crossoverType = DEFAULT_CROSSOVER_TYPE;
 
-    @com.electronwill.nightconfig.core.conversion.Path("first-variant-selection-strategy")
+    @com.electronwill.nightconfig.core.conversion.Path("crossover-first-variant")
     @PreserveNotNull
     @Conversion(FirstVariantSelectionStrategyToString.class)
     private FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy =
             DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY;
 
-    @com.electronwill.nightconfig.core.conversion.Path("second-variant-selection-strategy")
+    @com.electronwill.nightconfig.core.conversion.Path("crossover-second-variant")
     @PreserveNotNull
     @Conversion(SecondVariantSelectionStrategyToString.class)
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
