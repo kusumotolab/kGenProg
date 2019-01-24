@@ -1,4 +1,5 @@
 root-dir = "./"
 src = ["src/"]
 test = ["test/"]
-crossover-type = "Random"
+crossover-type = "SinglePoint"
+
