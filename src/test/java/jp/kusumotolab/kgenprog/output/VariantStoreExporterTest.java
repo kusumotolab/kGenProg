@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
@@ -22,7 +24,7 @@ public class VariantStoreExporterTest {
      * 出力先ディレクトリを作成できている確認するため
      **/
     final Path outDir = Paths.get("./tmp/_out-dir-for-test");
-    Files.deleteIfExists(outDir);
+    deleteFile(outDir);
 
     // 適当なTargetProjectを作る
     final Path rootPath = Paths.get("example/BuildSuccess01");
@@ -40,6 +42,26 @@ public class VariantStoreExporterTest {
     assertThat(exportedJsonFile).exists();
 
     // 後始末
-    Files.deleteIfExists(outDir);
+    deleteFile(outDir);
+  }
+
+  /**
+   * ディレクトリの中身ごとディレクトリを削除する
+   */
+  private void deleteFile(final Path path) throws IOException {
+    if (Files.notExists(path)) {
+      return;
+    }
+
+    if (Files.isDirectory(path)) {
+      final List<Path> subFiles = Files.list(path)
+          .collect(Collectors.toList());
+
+      for (final Path subFile : subFiles) {
+        deleteFile(subFile);
+      }
+    }
+
+    Files.delete(path);
   }
 }
