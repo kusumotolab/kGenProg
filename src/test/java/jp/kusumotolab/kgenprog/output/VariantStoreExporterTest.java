@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
@@ -16,16 +18,27 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class VariantStoreExporterTest {
 
-  @Test
-  public void testWriteToFile() throws IOException {
+  private Path outDir;
+
+  @Before
+  public void setUp() throws IOException {
     /*
      * ./tmp/outが存在するときは./tmp/outを削除する
      * VariantExporter.writeToFile()が出力先ディレクトリが存在しないときに
      * 出力先ディレクトリを作成できている確認するため
      **/
-    final Path outDir = Paths.get("./tmp/_out-dir-for-test");
+    outDir = Paths.get("./tmp/_out-dir-for-test");
     deleteFile(outDir);
+  }
 
+  @After
+  public void tearDown() throws IOException {
+    // 後始末
+    deleteFile(outDir);
+  }
+
+  @Test
+  public void testWriteToFile() {
     // 適当なTargetProjectを作る
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
@@ -40,9 +53,6 @@ public class VariantStoreExporterTest {
     // 出力ファイルの存在をチェック
     final Path exportedJsonFile = outDir.resolve("history.json");
     assertThat(exportedJsonFile).exists();
-
-    // 後始末
-    deleteFile(outDir);
   }
 
   /**
