@@ -7,8 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.fl.Ample;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
+import jp.kusumotolab.kgenprog.fl.Jaccard;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
+import jp.kusumotolab.kgenprog.fl.Tarantula;
+import jp.kusumotolab.kgenprog.fl.Zoltar;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
@@ -26,8 +30,6 @@ import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
-import jp.kusumotolab.kgenprog.project.test.ParallelTestExecutor;
-import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 public class KGenProgMainTest {
 
@@ -51,7 +53,8 @@ public class KGenProgMainTest {
             .setNeedNotOutput(true)
             .setRandomSeed(2) // CTZ04の修正に時間がかかるので早めに終わるよう微調整（for テスト高速化）
             .build();
-    final FaultLocalization faultLocalization = new Ochiai();
+
+    final FaultLocalization faultLocalization = config.getFaultLocalization().initialize();
     final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
@@ -63,8 +66,7 @@ public class KGenProgMainTest {
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection =
         new GenerationalVariantSelection(config.getHeadcount());
-    final LocalTestExecutor localTestExecutor = new LocalTestExecutor(config);
-    final TestExecutor testExecutor = new ParallelTestExecutor(localTestExecutor);
+    final LocalTestExecutor testExecutor = new LocalTestExecutor(config);
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,

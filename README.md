@@ -23,7 +23,7 @@ You can download all the bugs from [here](https://github.com/kusumotolab/kGenPro
 $ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
     [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>]
     [--headcount <num>] [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
-    [--required-solutions <num>] [--random-seed <num>]
+    [--required-solutions <num>] [--random-seed <num>] [--fault-localization <name>]
 ```
 
 ### Example
@@ -68,4 +68,5 @@ $ java -jar path/to/kGenProg.jar
 | `--required-solutions` | Terminates searching solutions when the specified number of solutions are found. | 1 |
 | `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
 | `--scope` | Specify the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
+| `--fault-localization` | Specifies technique of fault localization. (`Ample`，`Jaccard`，`Ochiai`，`Tarantula`，`Zoltar`). | `Ochiai` |
 
