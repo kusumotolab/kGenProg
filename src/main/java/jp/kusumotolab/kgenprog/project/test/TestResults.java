@@ -161,14 +161,14 @@ public class TestResults {
     for (final TestResult testResult : this.value.values()) {
       final Coverage coverage = testResult.getCoverages(targetFQN);
 
-      if (coverage == null || lineNumber > coverage.statuses.size()) {
+      if (coverage == null || lineNumber > coverage.getStatusesSize()) {
         // 計測対象（targetFQN）の行の外を参照した場合．
         // （＝内部クラス等の理由で，その行の実行結果が別テストのcoverageに記述されている場合）
         // 何もしなくて良い．
         // その行の結果は別のcoverageインスタンスに保存されているため．
         continue;
       }
-      final Coverage.Status _status = coverage.statuses.get(lineNumber - 1);
+      final Coverage.Status _status = coverage.getStatus(lineNumber - 1);
       if (status == _status && failed == testResult.failed) {
         result.add(testResult.executedTestFQN);
       }

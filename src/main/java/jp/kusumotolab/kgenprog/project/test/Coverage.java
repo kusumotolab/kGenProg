@@ -31,14 +31,13 @@ public class Coverage {
     PARTLY_COVERED
   }
 
-  final public FullyQualifiedName executedTargetFQN;
-  final public List<Status> statuses;
+  private final FullyQualifiedName executedTargetFQN;
+  private final List<Status> statuses;
 
   /**
    * constructor． jacocoで生成したIClassCoverageから生成．
    * 
-   * @param className Coverage計測対象のクラス名
-   * @param statuses Coverage計測の結果
+   * @param classCoverage Jacocoが出力したCoverageの情報
    */
   public Coverage(final IClassCoverage classCoverage) {
     this.executedTargetFQN = new TargetFullyQualifiedName(classCoverage.getName()
@@ -46,6 +45,11 @@ public class Coverage {
     this.statuses = convertClassCoverage(classCoverage);
   }
 
+
+  /**
+   * @param executedTargetFQN Coverage計測対象のクラス
+   * @param statuses Coverage計測対象のクラスの各行の情報
+   */
   public Coverage(final FullyQualifiedName executedTargetFQN, final List<Status> statuses) {
     this.executedTargetFQN = executedTargetFQN;
     this.statuses = statuses;
@@ -54,8 +58,8 @@ public class Coverage {
   /**
    * ClassCoverageに格納されたCoverageをList<Status>に変換する． 実質enumの型変換やってるだけ．
    * 
-   * @param classCoverage
-   * @return
+   * @param classCoverage Jacocoが出力したCoverageの情報
+   * @return enumに変換した結果
    */
   private List<Status> convertClassCoverage(final IClassCoverage classCoverage) {
     final List<Coverage.Status> statuses = new ArrayList<>();
@@ -76,6 +80,18 @@ public class Coverage {
       statuses.add(status);
     }
     return statuses;
+  }
+
+  public FullyQualifiedName getExecutedTargetFQN() {
+    return executedTargetFQN;
+  }
+
+  public Status getStatus(final int index) {
+    return statuses.get(index);
+  }
+
+  public int getStatusesSize() {
+    return statuses.size();
   }
 
   @Override
