@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master) [![codecov](https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg)](https://codecov.io/gh/kusumotolab/kGenProg)
 
-:us: EN / [:jp: JP](./doc/ja/README.md)
+:us: EN / [:jp: JA](./doc/ja/README.md)
 
 kGenProg is an Automated Program Repair tool written in Java for Java.
 This is a reimplementation of GenProg, which automatically repairs bugs using genetic algorithm.

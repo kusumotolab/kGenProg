@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master) [![codecov](https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg)](https://codecov.io/gh/kusumotolab/kGenProg)
 
-[:us: EN](../../README.md) / :jp: JP
+[:us: EN](../../README.md) / :jp: JA
 
 kGenProg は Java プログラム向けの自動プログラム修正ツールです．
 C 言語向けの自動プログラム修正ツール GenProg の Java 向け実装です．
