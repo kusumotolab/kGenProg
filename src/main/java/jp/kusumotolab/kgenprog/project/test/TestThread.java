@@ -322,7 +322,7 @@ class TestThread extends Thread {
 
       final Map<FullyQualifiedName, Coverage> coverages = coverageBuilder.getClasses()
           .stream()
-          .map(Coverage::new)
+          .map(RawCoverage::new)
           .collect(Collectors.toMap(Coverage::getExecutedTargetFQN, Functions.identity()));
 
       final TestResult testResult = new TestResult(testMethodFQN, wasFailed, coverages);
