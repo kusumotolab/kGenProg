@@ -56,9 +56,9 @@ public class Configuration {
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
   public static final Crossover.Type DEFAULT_CROSSOVER_TYPE = Crossover.Type.Random;
   public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
-          FirstVariantSelectionStrategy.Strategy.Random;
+      FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
-          SecondVariantSelectionStrategy.Strategy.Random;
+      SecondVariantSelectionStrategy.Strategy.Random;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -306,13 +306,13 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(FirstVariantSelectionStrategyToString.class)
     private FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy =
-            DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY;
+        DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY;
 
     @com.electronwill.nightconfig.core.conversion.Path("crossover-second-variant")
     @PreserveNotNull
     @Conversion(SecondVariantSelectionStrategyToString.class)
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
-            DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
+        DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
     // endregion
 
@@ -489,13 +489,13 @@ public class Configuration {
     }
 
     public Builder setFirstVariantSelectionStrategy
-            (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+        (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
       this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
       return this;
     }
 
     public Builder setSecondVariantSelectionStrategy
-            (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+        (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
       return this;
     }
@@ -720,25 +720,26 @@ public class Configuration {
     }
 
     @Option(name = "--fault-localization", usage = "Specifies technique of fault localization.")
-    private void setFaultLocalizationFromCmdLineParser(final FaultLocalization.Technique faultLocalization) {
+    private void setFaultLocalizationFromCmdLineParser(
+        final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
     }
 
     @Option(name = "--crossover-type", usage = "Specifies crossover type.")
     private void setCrossoverTypeFromCmdLineParser
-            (final Crossover.Type crossoverType) {
+        (final Crossover.Type crossoverType) {
       this.crossoverType = crossoverType;
     }
 
     @Option(name = "--crossover-first-variant", usage = "Specifies first variant selection strategy for crossover.")
     private void setFirstVariantSelectionStrategyFromCmdLineParser
-            (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+        (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
       this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
     }
 
     @Option(name = "--crossover-second-variant", usage = "Specifies second variant selection strategy for crossover.")
     private void setSecondVariantSelectionStrategyFromCmdLineParser
-            (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+        (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
     }
 
@@ -852,7 +853,8 @@ public class Configuration {
       }
     }
 
-    private static class FaultLocalizationTechniqueToString implements Converter<FaultLocalization.Technique, String> {
+    private static class FaultLocalizationTechniqueToString implements
+        Converter<FaultLocalization.Technique, String> {
 
       @Override
       public Technique convertToField(final String value) {
@@ -890,7 +892,8 @@ public class Configuration {
       }
     }
 
-    private static class FirstVariantSelectionStrategyToString implements Converter<FirstVariantSelectionStrategy.Strategy, String> {
+    private static class FirstVariantSelectionStrategyToString implements
+        Converter<FirstVariantSelectionStrategy.Strategy, String> {
 
       @Override
       public FirstVariantSelectionStrategy.Strategy convertToField(final String value) {
@@ -909,7 +912,8 @@ public class Configuration {
       }
     }
 
-    private static class SecondVariantSelectionStrategyToString implements Converter<SecondVariantSelectionStrategy.Strategy, String> {
+    private static class SecondVariantSelectionStrategyToString implements
+        Converter<SecondVariantSelectionStrategy.Strategy, String> {
 
       @Override
       public SecondVariantSelectionStrategy.Strategy convertToField(final String value) {

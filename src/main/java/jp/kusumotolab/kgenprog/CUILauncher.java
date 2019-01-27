@@ -36,17 +36,21 @@ public class CUILauncher {
   public void launch(final Configuration config) {
     setLogLevel(config.getLogLevel());
 
-    final FaultLocalization faultLocalization = config.getFaultLocalization().initialize();
+    final FaultLocalization faultLocalization = config.getFaultLocalization()
+        .initialize();
     final Random random = new Random(config.getRandomSeed());
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
         rouletteStatementSelection, config.getScope());
     final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
-            config.getFirstVariantSelectionStrategy().initialize(random);
+        config.getFirstVariantSelectionStrategy()
+            .initialize(random);
     final SecondVariantSelectionStrategy secondVariantSelectionStrategy =
-            config.getSecondVariantSelectionStrategy().initialize(random);
-    final Crossover crossover = config.getCrossoverType().initialize(random, firstVariantSelectionStrategy,
+        config.getSecondVariantSelectionStrategy()
+            .initialize(random);
+    final Crossover crossover = config.getCrossoverType()
+        .initialize(random, firstVariantSelectionStrategy,
             secondVariantSelectionStrategy, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
