@@ -1,6 +1,6 @@
-:us: [:jp:](./doc/ja/README.md)
+:us: EN / [:jp: JA](./doc/ja/README.md)
 
-[![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master)
+[![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master) [![codecov](https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg)](https://codecov.io/gh/kusumotolab/kGenProg)
 
 # kGenProg
 kGenProg is an Automated Program Repair tool written in Java for Java.

@@ -49,6 +49,10 @@ jobs:
           path: ~/junit
       - store_artifacts:
           path: ~/junit
+      # ==== Measure code coverage
+      - run: ./gradlew jacocoTestReport
+      # ===== Collect and upload coverage reports
+      - run: bash <(curl -s https://codecov.io/bash)
 
   # Job: build-artifacts
   #   Execute `gradle assemble` to generate a jar file on the target commit.

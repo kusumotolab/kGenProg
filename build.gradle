@@ -13,6 +13,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+// Apply JaCoCo plugin to measure KGP's coverage but not to calculate fault localization metric
+apply plugin: 'jacoco'
+
 // Set compiler version
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -90,5 +93,21 @@ task printCurrentVersion {
   description 'Prints the current kGenProg version.'
   doLast {
     println version
+  }
+}
+
+jacocoTestReport {
+  dependsOn test
+  reports {
+    xml.enabled true
+    html.enabled false
+  }
+  // Exclude jUnit classes to avoid exceptions when creating jacoco report
+  afterEvaluate {
+    classDirectories = files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: [
+        '**/*junit**'
+      ])
+    })
   }
 }
