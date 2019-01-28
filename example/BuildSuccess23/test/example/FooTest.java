@@ -23,7 +23,7 @@ public class FooTest {
     new Foo().load("jp.kusumotolab.kgenprog.CUILauncher");
   }
 
-  // test01と全く同じ内容．記法を変えただけ．
+  // test03と全く同じ内容．記法を変えただけ．
   @Test
   public void test04() {
     try {
