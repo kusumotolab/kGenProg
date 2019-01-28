@@ -1,0 +1,4 @@
+root-dir = "./"
+src = ["src/"]
+test = ["test/"]
+crossover-second-variant = "Elite"

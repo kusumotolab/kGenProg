@@ -30,8 +30,10 @@ import com.google.common.collect.ImmutableList;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization.Technique;
+import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
+import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
-import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -49,9 +51,14 @@ public class Configuration {
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
-  public static final Scope.Type DEFAULT_SCOPE = Type.PACKAGE;
+  public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
+  public static final Crossover.Type DEFAULT_CROSSOVER_TYPE = Crossover.Type.Random;
+  public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
+      FirstVariantSelectionStrategy.Strategy.Random;
+  public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
+      SecondVariantSelectionStrategy.Strategy.Random;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -68,6 +75,9 @@ public class Configuration {
   private final Scope.Type scope;
   private final boolean needNotOutput;
   private final FaultLocalization.Technique faultLocalization;
+  private final Crossover.Type crossoverType;
+  private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
+  private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
   // endregion
 
   // region Constructor
@@ -88,6 +98,9 @@ public class Configuration {
     scope = builder.scope;
     needNotOutput = builder.needNotOutput;
     faultLocalization = builder.faultLocalization;
+    crossoverType = builder.crossoverType;
+    firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
+    secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
   }
 
   // endregion
@@ -158,6 +171,18 @@ public class Configuration {
 
   public FaultLocalization.Technique getFaultLocalization() {
     return faultLocalization;
+  }
+
+  public Crossover.Type getCrossoverType() {
+    return crossoverType;
+  }
+
+  public FirstVariantSelectionStrategy.Strategy getFirstVariantSelectionStrategy() {
+    return firstVariantSelectionStrategy;
+  }
+
+  public SecondVariantSelectionStrategy.Strategy getSecondVariantSelectionStrategy() {
+    return secondVariantSelectionStrategy;
   }
 
   @Override
@@ -271,6 +296,23 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(FaultLocalizationTechniqueToString.class)
     private FaultLocalization.Technique faultLocalization = DEFAULT_FAULT_LOCALIZATION;
+
+    @com.electronwill.nightconfig.core.conversion.Path("crossover-type")
+    @PreserveNotNull
+    @Conversion(CrossoverTypeToString.class)
+    private Crossover.Type crossoverType = DEFAULT_CROSSOVER_TYPE;
+
+    @com.electronwill.nightconfig.core.conversion.Path("crossover-first-variant")
+    @PreserveNotNull
+    @Conversion(FirstVariantSelectionStrategyToString.class)
+    private FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy =
+        DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY;
+
+    @com.electronwill.nightconfig.core.conversion.Path("crossover-second-variant")
+    @PreserveNotNull
+    @Conversion(SecondVariantSelectionStrategyToString.class)
+    private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
+        DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
     // endregion
 
@@ -438,6 +480,23 @@ public class Configuration {
 
     public Builder setFaultLocalization(final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
+      return this;
+    }
+
+    public Builder setCrossoverType(final Crossover.Type crossoverType) {
+      this.crossoverType = crossoverType;
+      return this;
+    }
+
+    public Builder setFirstVariantSelectionStrategy
+        (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+      this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
+      return this;
+    }
+
+    public Builder setSecondVariantSelectionStrategy
+        (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+      this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
       return this;
     }
 
@@ -661,8 +720,27 @@ public class Configuration {
     }
 
     @Option(name = "--fault-localization", usage = "Specifies technique of fault localization.")
-    private void setFaultLocalizationFromCmdLineParser(final FaultLocalization.Technique faultLocalization) {
+    private void setFaultLocalizationFromCmdLineParser(
+        final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
+    }
+
+    @Option(name = "--crossover-type", usage = "Specifies crossover type.")
+    private void setCrossoverTypeFromCmdLineParser
+        (final Crossover.Type crossoverType) {
+      this.crossoverType = crossoverType;
+    }
+
+    @Option(name = "--crossover-first-variant", usage = "Specifies first variant selection strategy for crossover.")
+    private void setFirstVariantSelectionStrategyFromCmdLineParser
+        (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+      this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
+    }
+
+    @Option(name = "--crossover-second-variant", usage = "Specifies second variant selection strategy for crossover.")
+    private void setSecondVariantSelectionStrategyFromCmdLineParser
+        (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+      this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
     }
 
     // endregion
@@ -759,15 +837,15 @@ public class Configuration {
     private static class ScopeTypeToString implements Converter<Scope.Type, String> {
 
       @Override
-      public Type convertToField(final String value) {
+      public Scope.Type convertToField(final String value) {
         if (value == null) {
           return null;
         }
-        return Type.valueOf(value);
+        return Scope.Type.valueOf(value);
       }
 
       @Override
-      public String convertFromField(final Type value) {
+      public String convertFromField(final Scope.Type value) {
         if (value == null) {
           return null;
         }
@@ -775,7 +853,8 @@ public class Configuration {
       }
     }
 
-    private static class FaultLocalizationTechniqueToString implements Converter<FaultLocalization.Technique, String> {
+    private static class FaultLocalizationTechniqueToString implements
+        Converter<FaultLocalization.Technique, String> {
 
       @Override
       public Technique convertToField(final String value) {
@@ -787,6 +866,65 @@ public class Configuration {
 
       @Override
       public String convertFromField(final Technique value) {
+        if (value == null) {
+          return null;
+        }
+        return value.toString();
+      }
+    }
+
+    private static class CrossoverTypeToString implements Converter<Crossover.Type, String> {
+
+      @Override
+      public Crossover.Type convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        return Crossover.Type.valueOf(value);
+      }
+
+      @Override
+      public String convertFromField(final Crossover.Type value) {
+        if (value == null) {
+          return null;
+        }
+        return value.toString();
+      }
+    }
+
+    private static class FirstVariantSelectionStrategyToString implements
+        Converter<FirstVariantSelectionStrategy.Strategy, String> {
+
+      @Override
+      public FirstVariantSelectionStrategy.Strategy convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        return FirstVariantSelectionStrategy.Strategy.valueOf(value);
+      }
+
+      @Override
+      public String convertFromField(final FirstVariantSelectionStrategy.Strategy value) {
+        if (value == null) {
+          return null;
+        }
+        return value.toString();
+      }
+    }
+
+    private static class SecondVariantSelectionStrategyToString implements
+        Converter<SecondVariantSelectionStrategy.Strategy, String> {
+
+      @Override
+      public SecondVariantSelectionStrategy.Strategy convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        return SecondVariantSelectionStrategy.Strategy.valueOf(value);
+      }
+
+      @Override
+      public String convertFromField(final SecondVariantSelectionStrategy.Strategy value) {
         if (value == null) {
           return null;
         }
