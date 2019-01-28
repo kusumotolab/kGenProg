@@ -95,9 +95,7 @@ class TestThread extends Thread {
     // set memoryClassLoader as ContextClassLoader during JUnit execution
     final List<ClassPath> classPaths = targetProject.getClassPaths();
     final URL[] classpathUrls = convertClasspathsToURLs(classPaths);
-    final MemoryClassLoader classLoader = new MemoryClassLoader(classpathUrls);
-    Thread.currentThread()
-        .setContextClassLoader(classLoader);
+    final MemoryClassLoader classLoader = new SkippingMemoryClassLoader(classpathUrls);
 
     try {
       addAllDefinitions(classLoader, productFQNs);
@@ -110,6 +108,11 @@ class TestThread extends Thread {
 
       final RunListener listener = new CoverageMeasurementListener(productFQNs, testResults);
       junitCore.addListener(listener);
+
+      // JUnit実行対象の題材テストはMemClassLoaderでロードされているので，
+      // 以下ContextClassLoaderのセットは不要．むしろKGPスレッド全体に作用してしまうのでないほうが良い．
+      // Thread.currentThread().setContextClassLoader(classLoader);
+
       junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 
     } catch (final ClassNotFoundException e) {

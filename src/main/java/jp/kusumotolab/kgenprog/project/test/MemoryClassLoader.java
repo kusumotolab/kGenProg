@@ -16,11 +16,12 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
  */
 public class MemoryClassLoader extends URLClassLoader {
 
+
   public MemoryClassLoader() throws MalformedURLException {
     this(new URL[] {});
   }
 
-  public MemoryClassLoader(URL[] urls) {
+  public MemoryClassLoader(final URL[] urls) {
     super(urls);
   }
 
@@ -43,34 +44,32 @@ public class MemoryClassLoader extends URLClassLoader {
     return loadClass(fqn.value);
   }
 
-  @Override
-  public Class<?> loadClass(final String name) throws ClassNotFoundException {
-    return loadClass(name, false);
-  }
-
   /**
-   * クラスロード． メモリ上のバイト配列のクラス定義を優先で探し，それがなければファイルシステム上の.classファイルからロードを行う．
+   * メモリ上からクラスを探す． まずURLClassLoaderによるファイルシステム上のクラスのロードを試み，それがなければメモリ上のクラスロードを試す．
    */
   @Override
-  public Class<?> loadClass(final String name, final boolean resolve)
-      throws ClassNotFoundException {
-    final byte[] bytes = definitions.get(name);
-    if (bytes != null) {
-      try {
-        return defineClass(name.toString(), bytes, 0, bytes.length);
-      } catch (final LinkageError e) {
-        // クラスのロードに失敗した，可能性はバイナリが不正か，二重ロード．
+  protected Class<?> findClass(final String name) throws ClassNotFoundException {
+    Class<?> c = null;
+    try {
+      c = super.findClass(name);
+    } catch (final ClassNotFoundException e1) {
+      // ignore
+    }
 
-        // 既にロードされているクラスを探してみる（二重ロードの可能性を考える）
-        final Class<?> clazz = findLoadedClass(name.toString());
-
-        // それでも無理ならおそらくバイナリ不正っぽい
-        if (null == clazz) {
+    if (null == c) {
+      final byte[] bytes = definitions.get(name);
+      if (bytes != null) {
+        try {
+          c = defineClass(name, bytes, 0, bytes.length);
+        } catch (final ClassFormatError e) {
           throw e;
         }
       }
     }
-    return super.loadClass(name.toString(), resolve);
+    if (null == c) {
+      throw new ClassNotFoundException(name);
+    }
+    return c;
   }
 
   @Override
