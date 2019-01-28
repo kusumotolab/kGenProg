@@ -131,8 +131,8 @@ public class LocalTestExecutorTest {
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
     final Coverage fooTest01coverage = fooTest01result.getCoverages(FOO);
-    assertThat(extractStatuses(fooTest01coverage)).containsExactlyInAnyOrder(EMPTY, COVERED,
-        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
+    assertThat(extractStatuses(fooTest01coverage)).containsExactly(EMPTY, COVERED, EMPTY, COVERED,
+        COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // BarTest.test01()ではFooとBarが実行されたはず
     final TestResult barTest01r = result.getTestResult(BAR_TEST01);
@@ -140,8 +140,8 @@ public class LocalTestExecutorTest {
 
     // BarTest.test01()で実行されたBarのカバレッジはこうなるはず
     final Coverage barTest01rCoverage = barTest01r.getCoverages(BAR);
-    assertThat(extractStatuses(barTest01rCoverage)).containsExactlyInAnyOrder(EMPTY, NOT_COVERED,
-        EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED);
+    assertThat(extractStatuses(barTest01rCoverage)).containsExactly(EMPTY, NOT_COVERED, EMPTY,
+        COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED);
 
     // TODO 最後のNOT_COVERDだけ理解できない．謎．
   }
@@ -250,8 +250,8 @@ public class LocalTestExecutorTest {
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
     final Coverage coverage = fooTest01result.getCoverages(FOO);
-    assertThat(extractStatuses(coverage)).containsExactlyInAnyOrder(EMPTY, COVERED,
-        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
+    assertThat(extractStatuses(coverage)).containsExactly(EMPTY, COVERED, EMPTY, COVERED, COVERED,
+        EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
   }
 
   @Test
