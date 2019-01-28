@@ -13,7 +13,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-// Apply JaCoCo plugin
+// Apply JaCoCo plugin to measure KGP's coverage but not to calculate fault localization metric
 apply plugin: 'jacoco'
 
 // Set compiler version
