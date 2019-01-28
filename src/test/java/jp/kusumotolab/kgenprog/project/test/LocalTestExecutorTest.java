@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -42,6 +44,7 @@ import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
+import jp.kusumotolab.kgenprog.project.test.Coverage.Status;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
@@ -83,12 +86,14 @@ public class LocalTestExecutorTest {
     final TestResult fooTest04result = result.getTestResult(FOO_TEST04);
 
     // FooTest.test01 実行によるFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(FOO).statuses).containsExactly(EMPTY, COVERED, EMPTY,
-        COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
+    final Coverage coverage01 = fooTest01result.getCoverages(FOO);
+    assertThat(extractStatuses(coverage01)).containsExactly(EMPTY, COVERED, EMPTY, COVERED, COVERED,
+        EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // FooTest.test04 実行によるFooのバレッジはこうなるはず
-    assertThat(fooTest04result.getCoverages(FOO).statuses).containsExactly(EMPTY, COVERED, EMPTY,
-        COVERED, NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
+    final Coverage coverage04 = fooTest04result.getCoverages(FOO);
+    assertThat(extractStatuses(coverage04)).containsExactly(EMPTY, COVERED, EMPTY, COVERED,
+        NOT_COVERED, EMPTY, EMPTY, COVERED, EMPTY, COVERED);
   }
 
   @Test
@@ -125,16 +130,18 @@ public class LocalTestExecutorTest {
     assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(FOO).statuses).containsExactlyInAnyOrder(EMPTY, COVERED,
-        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
+    final Coverage fooTest01coverage = fooTest01result.getCoverages(FOO);
+    assertThat(extractStatuses(fooTest01coverage)).containsExactly(EMPTY, COVERED, EMPTY, COVERED,
+        COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
     // BarTest.test01()ではFooとBarが実行されたはず
     final TestResult barTest01r = result.getTestResult(BAR_TEST01);
     assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
 
     // BarTest.test01()で実行されたBarのカバレッジはこうなるはず
-    assertThat(barTest01r.getCoverages(BAR).statuses).containsExactlyInAnyOrder(EMPTY, NOT_COVERED,
-        EMPTY, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED);
+    final Coverage barTest01rCoverage = barTest01r.getCoverages(BAR);
+    assertThat(extractStatuses(barTest01rCoverage)).containsExactly(EMPTY, NOT_COVERED, EMPTY,
+        COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED);
 
     // TODO 最後のNOT_COVERDだけ理解できない．謎．
   }
@@ -242,8 +249,9 @@ public class LocalTestExecutorTest {
     assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
-    assertThat(fooTest01result.getCoverages(FOO).statuses).containsExactlyInAnyOrder(EMPTY, COVERED,
-        EMPTY, COVERED, COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
+    final Coverage coverage = fooTest01result.getCoverages(FOO);
+    assertThat(extractStatuses(coverage)).containsExactly(EMPTY, COVERED, EMPTY, COVERED, COVERED,
+        EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
   }
 
   @Test
@@ -682,5 +690,11 @@ public class LocalTestExecutorTest {
 
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
     assertThat(result.getTestResult(FOO_TEST02).failed).isFalse();
+  }
+
+  private List<Status> extractStatuses(final Coverage coverage) {
+    return IntStream.range(0, coverage.getStatusesSize())
+        .mapToObj(coverage::getStatus)
+        .collect(Collectors.toList());
   }
 }
