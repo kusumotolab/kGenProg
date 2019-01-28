@@ -123,7 +123,6 @@ public class KGenProgMain {
     strategies.finish();
     log.info("execution time: " + stopwatch.toString());
 
-
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
 

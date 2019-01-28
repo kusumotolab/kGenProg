@@ -14,6 +14,7 @@ import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class VariantStore {
@@ -120,8 +121,7 @@ public class VariantStore {
   }
 
   /**
-   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
-   * の場合，foundSolutionとして追加され次世代のVariantには追加されない
+   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true} の場合，foundSolutionとして追加され次世代のVariantには追加されない
    *
    * @param variant
    */
@@ -161,15 +161,16 @@ public class VariantStore {
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
-
     final LazyVariant variant = new LazyVariant(variantCounter.getAndIncrement(), generation.get(),
         gene, sourceCode, element);
     final Single<Variant> variantSingle = Single.just(variant)
         .cast(Variant.class)
         .cache();
 
-    final Single<TestResults> resultsSingle = strategies.execAsyncTestExecutor(variantSingle)
-        .cache();
+    final Single<TestResults> resultsSingle = sourceCode.isGenerationSuccess()
+        ? strategies.execAsyncTestExecutor(variantSingle)
+        .cache()
+        : Single.just(EmptyTestResults.instance);
     variant.setTestResultsSingle(resultsSingle);
 
     final Single<Fitness> fitnessSingle = Single

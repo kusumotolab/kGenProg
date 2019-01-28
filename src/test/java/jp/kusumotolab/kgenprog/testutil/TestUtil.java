@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 import jp.kusumotolab.kgenprog.Configuration;
-import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
@@ -28,7 +27,7 @@ public class TestUtil {
     when(variant.getGeneratedSourceCode()).thenReturn(sourceCode);
     final TestResults testResults = new LocalTestExecutor(config).exec(variant);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
-    final List<Suspiciousness> suspiciousnesses = new Ochiai().exec(sourceCode, testResults);
+    final List<Suspiciousness> suspiciousnesses = config.getFaultLocalization().initialize().exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();
     return new Variant(0, 0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
   }

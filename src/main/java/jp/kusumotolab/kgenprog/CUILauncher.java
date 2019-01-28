@@ -5,13 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
-import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
-import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantRandomSelection;
-import jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover;
-import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantRandomSelection;
+import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
+import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.RandomMutation;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
@@ -38,14 +36,22 @@ public class CUILauncher {
   public void launch(final Configuration config) {
     setLogLevel(config.getLogLevel());
 
-    final FaultLocalization faultLocalization = new Ochiai();
+    final FaultLocalization faultLocalization = config.getFaultLocalization()
+        .initialize();
     final Random random = new Random(config.getRandomSeed());
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
         rouletteStatementSelection, config.getScope());
-    final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
-        new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
+    final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
+        config.getFirstVariantSelectionStrategy()
+            .initialize(random);
+    final SecondVariantSelectionStrategy secondVariantSelectionStrategy =
+        config.getSecondVariantSelectionStrategy()
+            .initialize(random);
+    final Crossover crossover = config.getCrossoverType()
+        .initialize(random, firstVariantSelectionStrategy,
+            secondVariantSelectionStrategy, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount());
