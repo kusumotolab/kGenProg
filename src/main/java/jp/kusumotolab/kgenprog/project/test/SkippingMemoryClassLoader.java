@@ -38,14 +38,15 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
       throw new RuntimeException("Cannot find extension class loader.");
     }
     if (!cl.toString()
-        .contains("$ExtClassLoader@")) {
-      return findExtClassLoader(cl.getParent());
+        .contains("$ExtClassLoader@")) { // clが取り出したいExtClassLoaderではない場合，
+      return findExtClassLoader(cl.getParent()); // 再帰的に親を探す
     }
     return cl;
   }
 
   @Override
-  protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+  protected Class<?> loadClass(final String name, final boolean resolve)
+      throws ClassNotFoundException {
 
     // JUnit関係のクラスのみロードを通常の委譲関係に任す．これがないとJUnitが期待通りに動かない．
     if (name.startsWith("org.junit.") || name.startsWith("junit.")) {
