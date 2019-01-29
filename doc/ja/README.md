@@ -1,12 +1,23 @@
-[:us: EN](../../README.md) / :jp: JA
+<h1 align="center">kGenProg</h1>
 
-[![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master) [![codecov](https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg)](https://codecov.io/gh/kusumotolab/kGenProg)
+<p align="center">
+    <strong>kGenProg は Java プログラム向けの自動プログラム修正ツールです．</strong><br>
+    C 言語向けの自動プログラム修正ツール GenProg の Java 向け実装です．
+    遺伝的アルゴリズムを用いて修正を行います．
+</p>
 
-# kGenProg
-kGenProg は Java プログラム向けの自動プログラム修正ツールです．
-C 言語向けの自動プログラム修正ツール GenProg の Java 向け実装です．
-遺伝的アルゴリズムを用いて修正を行います．
+<p align=center>
+    <a href="https://github.com/kusumotolab/kGenProg/releases/latest" alt="release"><img src="https://img.shields.io/github/release/kusumotolab/kGenProg.svg"></a>
+    <a href="https://circleci.com/gh/kusumotolab/kGenProg/tree/master" alt="CircleCI"><img src="https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=shield"></a>
+    <a href="https://codecov.io/gh/kusumotolab/kGenProg" alt="Codecov"><img src="https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg"></a>
+    <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="release"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+</p>
 
+<p align=center>
+    <a href="../../README.md">:us: English</a> &middot; :jp: 日本語
+</p>
+
+---
 
 ## 動作条件
 - JDK8

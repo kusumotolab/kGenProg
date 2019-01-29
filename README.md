@@ -1,11 +1,22 @@
-:us: EN / [:jp: JA](./doc/ja/README.md)
+<h1 align="center">kGenProg</h1>
 
-[![CircleCI](https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=svg)](https://circleci.com/gh/kusumotolab/kGenProg/tree/master) [![codecov](https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg)](https://codecov.io/gh/kusumotolab/kGenProg)
+<p align="center">
+    <strong>kGenProg is an Automated Program Repair tool written in Java for Java.</strong><br>
+    This is a reimplementation of GenProg, which automatically repairs bugs using genetic algorithm.
+</p>
 
-# kGenProg
-kGenProg is an Automated Program Repair tool written in Java for Java.
-This is a reimplementation of GenProg, which automatically repairs bugs using genetic algorithm.
+<p align=center>
+    <a href="https://github.com/kusumotolab/kGenProg/releases/latest" alt="release"><img src="https://img.shields.io/github/release/kusumotolab/kGenProg.svg"></a>
+    <a href="https://circleci.com/gh/kusumotolab/kGenProg/tree/master" alt="CircleCI"><img src="https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=shield"></a>
+    <a href="https://codecov.io/gh/kusumotolab/kGenProg" alt="Codecov"><img src="https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg"></a>
+    <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="release"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+</p>
 
+<p align=center>
+    :us: English &middot; <a href="./doc/ja/README.md">:jp: 日本語</a>
+</p>
+
+---
 
 ## Requirements
 - JDK8
