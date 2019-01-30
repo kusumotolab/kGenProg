@@ -10,7 +10,7 @@
     <a href="https://github.com/kusumotolab/kGenProg/releases/latest" alt="release"><img src="https://img.shields.io/github/release/kusumotolab/kGenProg.svg"></a>
     <a href="https://circleci.com/gh/kusumotolab/kGenProg/tree/master" alt="CircleCI"><img src="https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=shield"></a>
     <a href="https://codecov.io/gh/kusumotolab/kGenProg" alt="Codecov"><img src="https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg"></a>
-    <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="release"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+    <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="license"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
 <p align=center>
