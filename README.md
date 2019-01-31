@@ -13,7 +13,7 @@
 </p>
 
 <p align=center>
-    :us:English <a href="./doc/ja/README.md"> &nbsp; :jp:日本語</a>
+    :us:English &nbsp; <a href="./doc/ja/README.md"> :jp:日本語</a>
 </p>
 
 ---
