@@ -32,7 +32,7 @@ public class DefaultVariantSelectionTest {
         .extracting(Variant::getFitness)
         .extracting(Fitness::getValue)
         .hasSize(10)
-        .containsExactly(0.00d, 0.05d, 0.20d, 0.15d, 0.40d, 0.25d, 0.60d, 0.35d, 0.80d, 0.45d);
+        .contains(0.00d, 0.05d, 0.20d, 0.15d, 0.40d, 0.25d, 0.60d, 0.35d, 0.80d, 0.45d);
 
     assertThat(selectedVariants).hasSize(variantSize)
         .extracting(Variant::getFitness)
