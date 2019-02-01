@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.selection;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,8 @@ public class DefaultVariantSelection implements VariantSelection {
 
   @Override
   public List<Variant> exec(final List<Variant> current, final List<Variant> generated) {
+    Collections.shuffle(current);
+    Collections.shuffle(generated);
     final List<Variant> list = Stream.concat(current.stream(), generated.stream())
         .sorted(Comparator.comparing(Variant::getFitness).reversed())
         .limit(maxVariantsPerGeneration)
