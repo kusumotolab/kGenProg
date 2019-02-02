@@ -32,7 +32,7 @@ public class DefaultVariantSelectionTest {
         .extracting(Variant::getFitness)
         .extracting(Fitness::getValue)
         .hasSize(10)
-        .contains(0.00d, 0.05d, 0.20d, 0.15d, 0.40d, 0.25d, 0.60d, 0.35d, 0.80d, 0.45d);
+        .containsExactly(0.00d, 0.05d, 0.20d, 0.15d, 0.40d, 0.25d, 0.60d, 0.35d, 0.80d, 0.45d);
 
     assertThat(selectedVariants).hasSize(variantSize)
         .extracting(Variant::getFitness)
@@ -95,8 +95,47 @@ public class DefaultVariantSelectionTest {
     }
   }
 
+  @Test
+  public void testOrderOfVariants() {
+    final int variantSize = 5;
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize);
+    final List<Variant> current = new ArrayList<>();
+    final List<Variant> generated = new ArrayList<>();
+
+    for (int i = 0; i < 10; i++) {
+      final double divider = 10;
+      final double value = (1.0d * (i + (i % 2))) / divider;
+      final SimpleFitness fitness = new SimpleFitness(value);
+      current.add(createVariant(fitness, i));
+      generated.add(createVariant(fitness, i + 10));
+    }
+
+    final List<Variant> selectedVariants = variantSelection.exec(current, generated);
+
+    assertThat(current).hasSize(10)
+        .extracting(Variant::getFitness)
+        .extracting(Fitness::getValue)
+        .hasSize(10)
+        .containsExactly(0.00d, 0.20d, 0.20d, 0.40d, 0.40d, 0.60d, 0.60d, 0.80d, 0.80d, 1.00d);
+
+    assertThat(generated).hasSize(10)
+        .extracting(Variant::getFitness)
+        .extracting(Fitness::getValue)
+        .hasSize(10)
+        .containsExactly(0.00d, 0.20d, 0.20d, 0.40d, 0.40d, 0.60d, 0.60d, 0.80d, 0.80d, 1.00d);
+
+    assertThat(selectedVariants).hasSize(variantSize)
+        .extracting(Variant::getId)
+        .doesNotContainSequence(9L, 19L, 7L, 8L, 17L);
+  }
+
   private Variant createVariant(final Fitness fitness) {
-    final Variant variant = new Variant(0 ,0, null, null, null, fitness, null, null);
+    final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null);
+    return variant;
+  }
+
+  private Variant createVariant(final Fitness fitness, final int id) {
+    final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null);
     return variant;
   }
 }
