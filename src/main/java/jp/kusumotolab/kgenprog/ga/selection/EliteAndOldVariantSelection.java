@@ -10,14 +10,15 @@ public class EliteAndOldVariantSelection implements VariantSelection {
 
   final private int maxVariantsPerGeneration;
 
-  public EliteAndOldVariantSelection(int maxVariantPerGeneration) {
+  public EliteAndOldVariantSelection(final int maxVariantPerGeneration) {
     this.maxVariantsPerGeneration = maxVariantPerGeneration;
   }
 
   @Override
   public List<Variant> exec(final List<Variant> current, final List<Variant> generated) {
     final List<Variant> list = Stream.concat(current.stream(), generated.stream())
-        .sorted(Comparator.comparing(Variant::getFitness).reversed())
+        .sorted(Comparator.comparing(Variant::getFitness)
+            .reversed())
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
     return list;
