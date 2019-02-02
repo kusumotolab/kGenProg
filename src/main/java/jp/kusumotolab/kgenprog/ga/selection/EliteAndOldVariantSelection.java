@@ -1,26 +1,22 @@
 package jp.kusumotolab.kgenprog.ga.selection;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
-public class DefaultVariantSelection implements VariantSelection {
+public class EliteAndOldVariantSelection implements VariantSelection {
 
   final private int maxVariantsPerGeneration;
 
-  public DefaultVariantSelection(final int maxVariantPerGeneration) {
+  public EliteAndOldVariantSelection(final int maxVariantPerGeneration) {
     this.maxVariantsPerGeneration = maxVariantPerGeneration;
   }
 
   @Override
   public List<Variant> exec(final List<Variant> current, final List<Variant> generated) {
-    final ArrayList<Variant> variants = new ArrayList<>(current);
-    variants.addAll(generated);
-    Collections.shuffle(variants);
-    final List<Variant> list = variants.stream()
+    final List<Variant> list = Stream.concat(current.stream(), generated.stream())
         .sorted(Comparator.comparing(Variant::getFitness)
             .reversed())
         .limit(maxVariantsPerGeneration)

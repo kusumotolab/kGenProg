@@ -12,12 +12,13 @@ import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
-public class DefaultVariantSelectionTest {
+public class EliteAndOldVariantSelectionTest {
 
   @Test
   public void testExec() {
     final int variantSize = 5;
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize);
+    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(
+        variantSize);
     final List<Variant> variants = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
@@ -43,7 +44,7 @@ public class DefaultVariantSelectionTest {
 
   @Test
   public void testExecForEmptyVariants() {
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
     final List<Variant> variants1 = Collections.emptyList();
     final List<Variant> variants2 = Collections.emptyList();
     final List<Variant> resultVariants = variantSelection.exec(variants1, variants2);
@@ -52,7 +53,7 @@ public class DefaultVariantSelectionTest {
 
   @Test
   public void testExecForNan() {
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
     final List<Variant> variants = new ArrayList<>();
 
     final List<Variant> nanVariants = IntStream.range(0, 10)
@@ -75,7 +76,7 @@ public class DefaultVariantSelectionTest {
 
   @Test
   public void testExecForNanCompare() {
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
 
     final List<Variant> nanVariants = IntStream.range(0, 100)
         .mapToObj(e -> {
@@ -98,7 +99,8 @@ public class DefaultVariantSelectionTest {
   @Test
   public void testOrderOfVariants() {
     final int variantSize = 5;
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize);
+    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(
+        variantSize);
     final List<Variant> current = new ArrayList<>();
     final List<Variant> generated = new ArrayList<>();
 
@@ -126,7 +128,7 @@ public class DefaultVariantSelectionTest {
 
     assertThat(selectedVariants).hasSize(variantSize)
         .extracting(Variant::getId)
-        .doesNotContainSequence(9L, 19L, 7L, 8L, 17L);
+        .containsSequence(9L, 19L, 7L, 8L, 17L);
   }
 
   private Variant createVariant(final Fitness fitness) {
