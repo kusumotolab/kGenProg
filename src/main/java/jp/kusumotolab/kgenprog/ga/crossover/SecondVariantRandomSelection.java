@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -27,7 +26,6 @@ public class SecondVariantRandomSelection implements SecondVariantSelectionStrat
     if (secondVariantCandidates.isEmpty()) { // 候補リストが空の時はnullを返す
       return null;
     }
-    Collections.shuffle(secondVariantCandidates, random);
-    return secondVariantCandidates.get(0);
+    return secondVariantCandidates.get(random.nextInt(secondVariantCandidates.size()));
   }
 }

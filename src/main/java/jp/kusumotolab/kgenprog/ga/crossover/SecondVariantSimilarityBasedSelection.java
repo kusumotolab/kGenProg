@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -28,8 +27,8 @@ public abstract class SecondVariantSimilarityBasedSelection
     if (secondVariantCandidates.isEmpty()) { // 候補リストが空の時はnullを返す
       return null;
     }
-    Collections.shuffle(secondVariantCandidates, random);
-    Variant secondVariant = secondVariantCandidates.get(0);
+    Variant secondVariant =
+        secondVariantCandidates.get(random.nextInt(secondVariantCandidates.size()));
 
     for (final Variant variant : variants) {
       final double similarity = calculateSimilarity(firstVariant, variant);
