@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.ga.crossover;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -26,8 +25,8 @@ public abstract class SecondVariantSimilarityBasedSelection
     final List<Variant> secondVariantCandidates = variants.stream()
         .filter(v -> !v.equals(firstVariant))
         .collect(Collectors.toList());
-    if (secondVariantCandidates.isEmpty()) {
-      throw new NoSuchElementException("there is no candidate for second parent for crossover");
+    if (secondVariantCandidates.isEmpty()) { // 候補リストが空の時はnullを返す
+      return null;
     }
     Collections.shuffle(secondVariantCandidates, random);
     Variant secondVariant = secondVariantCandidates.get(0);
