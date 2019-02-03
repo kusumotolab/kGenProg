@@ -52,7 +52,7 @@ public class RandomCrossoverTest {
     final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0)
-        .thenReturn(1)
+        .thenReturn(0)
         .thenReturn(2);
 
     // バリアントの生成
@@ -82,7 +82,7 @@ public class RandomCrossoverTest {
     final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(1)
-        .thenReturn(2)
+        .thenReturn(1)
         .thenReturn(3);
 
     // バリアントの生成

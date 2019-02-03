@@ -52,7 +52,7 @@ public class UniformCrossoverTest {
     final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0) // variantAを選ぶための0
-        .thenReturn(1); // variantBを選ぶための1
+        .thenReturn(0); // variantBを選ぶための1
 
     // バリアントの生成
     final Crossover crossover = new UniformCrossover(random,
@@ -81,7 +81,7 @@ public class UniformCrossoverTest {
     final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(false);
     when(random.nextInt(anyInt())).thenReturn(1) // variantBを選ぶための1
-        .thenReturn(2); // variantCを選ぶための2
+        .thenReturn(1); // variantCを選ぶための1
 
     // バリアントの生成
     final Crossover crossover = new UniformCrossover(random,

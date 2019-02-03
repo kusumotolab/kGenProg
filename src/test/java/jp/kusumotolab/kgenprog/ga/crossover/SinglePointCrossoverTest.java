@@ -52,7 +52,7 @@ public class SinglePointCrossoverTest {
     final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0) // variantAを選ぶための0
-        .thenReturn(1) // variantBを選ぶための1
+        .thenReturn(0) // variantBを選ぶための0
         .thenReturn(0); // 交叉ポイントを1にするための0
 
     // バリアントの生成
@@ -82,7 +82,7 @@ public class SinglePointCrossoverTest {
     final Random random = Mockito.mock(Random.class);
     when(random.nextBoolean()).thenReturn(false);
     when(random.nextInt(anyInt())).thenReturn(2) // variantCを選ぶための2
-        .thenReturn(3) // variantDを選ぶための3
+        .thenReturn(2) // variantDを選ぶための2
         .thenReturn(1); // 交叉ポイントを2にするための1
 
     // バリアントの生成
