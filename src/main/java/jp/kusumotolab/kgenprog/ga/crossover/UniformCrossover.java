@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.ga.crossover;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -31,6 +32,9 @@ public class UniformCrossover extends CrossoverAdaptor {
   public List<Variant> makeVariants(final List<Variant> variants, final VariantStore store) {
     final Variant variantA = getFirstVariantSelectionStrategy().exec(variants);
     final Variant variantB = getSecondVariantSelectionStrategy().exec(variants, variantA);
+    if (null == variantB) { // 二つ目の親となるバリアントがない場合は空のリストを返す
+      return Collections.emptyList();
+    }
     final Gene geneA = variantA.getGene();
     final Gene geneB = variantB.getGene();
     final List<Base> basesA = geneA.getBases();

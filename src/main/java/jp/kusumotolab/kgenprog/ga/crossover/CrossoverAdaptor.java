@@ -20,7 +20,7 @@ public abstract class CrossoverAdaptor implements Crossover {
     this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
     this.generatingCount = generatingCount;
   }
-  
+
   @Override
   public FirstVariantSelectionStrategy getFirstVariantSelectionStrategy() {
     return firstVariantSelectionStrategy;
@@ -51,6 +51,9 @@ public abstract class CrossoverAdaptor implements Crossover {
     // generatingCountを超えるまでバリアントを作りづづける
     while (variants.size() < generatingCount) {
       final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+      if (newVariants.isEmpty()) { // 交叉によりバリアントが生成されなかった場合はループを抜ける
+        break;
+      }
       variants.addAll(newVariants);
     }
 
