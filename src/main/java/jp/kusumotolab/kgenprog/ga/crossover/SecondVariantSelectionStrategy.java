@@ -34,7 +34,7 @@ public interface SecondVariantSelectionStrategy {
 
       @Override
       public SecondVariantSelectionStrategy initialize(final Random random) {
-        return new SecondVariantGeneSimilarityBasedSelection();
+        return new SecondVariantGeneSimilarityBasedSelection(random);
       }
     },
 
@@ -50,7 +50,7 @@ public interface SecondVariantSelectionStrategy {
 
       @Override
       public SecondVariantSelectionStrategy initialize(final Random random) {
-        return new SecondVariantTestSimilarityBasedSelection();
+        return new SecondVariantTestSimilarityBasedSelection(random);
       }
     };
 

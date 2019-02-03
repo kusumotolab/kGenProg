@@ -30,14 +30,14 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossover10 =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(), 10);
+            new SecondVariantGeneSimilarityBasedSelection(random), 10);
     final List<Variant> variants10 = crossover10.exec(testVariants.variantStore);
     assertThat(variants10.size()).isEqualTo(10);
 
     // バリアントの生成
     final Crossover crossover100 =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(), 100);
+            new SecondVariantGeneSimilarityBasedSelection(random), 100);
     final List<Variant> variants100 = crossover100.exec(testVariants.variantStore);
     assertThat(variants100.size()).isEqualTo(100);
   }
@@ -116,7 +116,7 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(), 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -145,7 +145,7 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(), 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -174,7 +174,7 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(), 1);
+            new SecondVariantTestSimilarityBasedSelection(random), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -203,7 +203,7 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(), 1);
+            new SecondVariantTestSimilarityBasedSelection(random), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
