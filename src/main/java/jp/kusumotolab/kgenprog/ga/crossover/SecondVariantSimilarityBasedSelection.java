@@ -16,7 +16,8 @@ public abstract class SecondVariantSimilarityBasedSelection
   }
 
   @Override
-  public Variant exec(final List<Variant> variants, final Variant firstVariant) {
+  public Variant exec(final List<Variant> variants, final Variant firstVariant)
+      throws CrossoverInfeasibleException {
 
     double minSimilarity = 1.0d;
 
@@ -24,8 +25,8 @@ public abstract class SecondVariantSimilarityBasedSelection
     final List<Variant> secondVariantCandidates = variants.stream()
         .filter(v -> !v.equals(firstVariant))
         .collect(Collectors.toList());
-    if (secondVariantCandidates.isEmpty()) { // 候補リストが空の時はnullを返す
-      return null;
+    if (secondVariantCandidates.isEmpty()) { // 候補リストが空の時は例外を投げる
+      throw new CrossoverInfeasibleException("no variant for second parent");
     }
     Variant secondVariant =
         secondVariantCandidates.get(random.nextInt(secondVariantCandidates.size()));

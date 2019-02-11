@@ -19,7 +19,7 @@ public interface SecondVariantSelectionStrategy {
    * @param firstVariant 一つ目の親として選択されたバリアント
    * @return 二つ目の親として選択されたバリアント
    */
-  Variant exec(List<Variant> variants, Variant firstVariant);
+  Variant exec(List<Variant> variants, Variant firstVariant) throws CrossoverInfeasibleException;
 
   public enum Strategy {
     Elite {
