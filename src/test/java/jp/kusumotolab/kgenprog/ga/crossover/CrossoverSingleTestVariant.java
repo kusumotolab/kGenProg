@@ -19,7 +19,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 // 1つの疑似バリアントからなるテストデータ．
 //
 // 10のテストケースが存在し，奇数番目のテストを失敗する．
-// 4つのBaseを持ち，none，none，nsert，insertである．
+// 4つのBaseを持ち，none，none，insert，insertである．
 public class CrossoverSingleTestVariant {
 
   final Base noneBase;
