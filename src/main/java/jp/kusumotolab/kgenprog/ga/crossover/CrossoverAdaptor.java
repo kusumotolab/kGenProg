@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 public abstract class CrossoverAdaptor implements Crossover {
+
+  private static Logger log = LoggerFactory.getLogger(CrossoverAdaptor.class);
 
   private final FirstVariantSelectionStrategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy secondVariantSelectionStrategy;
@@ -20,7 +24,7 @@ public abstract class CrossoverAdaptor implements Crossover {
     this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
     this.generatingCount = generatingCount;
   }
-  
+
   @Override
   public FirstVariantSelectionStrategy getFirstVariantSelectionStrategy() {
     return firstVariantSelectionStrategy;
@@ -47,16 +51,20 @@ public abstract class CrossoverAdaptor implements Crossover {
     }
 
     final List<Variant> variants = new ArrayList<>();
-
-    // generatingCountを超えるまでバリアントを作りづづける
-    while (variants.size() < generatingCount) {
-      final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
-      variants.addAll(newVariants);
+    try {
+      // generatingCountを超えるまでバリアントを作りづづける
+      while (variants.size() < generatingCount) {
+        final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+        variants.addAll(newVariants);
+      }
+    } catch (final CrossoverInfeasibleException e) {
+      log.debug(e.getMessage());
     }
 
     // バリアントを作りすぎた場合はそれを除いてリターン
     return variants.subList(0, generatingCount);
   }
 
-  protected abstract List<Variant> makeVariants(List<Variant> variants, VariantStore variantStore);
+  protected abstract List<Variant> makeVariants(List<Variant> variants, VariantStore variantStore)
+      throws CrossoverInfeasibleException;
 }

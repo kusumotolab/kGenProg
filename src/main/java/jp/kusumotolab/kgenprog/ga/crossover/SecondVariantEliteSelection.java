@@ -11,12 +11,13 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 public class SecondVariantEliteSelection implements SecondVariantSelectionStrategy {
 
   @Override
-  public Variant exec(final List<Variant> variants, final Variant firstVariant) {
+  public Variant exec(final List<Variant> variants, final Variant firstVariant)
+      throws CrossoverInfeasibleException {
     return variants.stream()
         .sorted(Comparator.comparing(Variant::getFitness)
             .reversed())
         .filter(v -> v != firstVariant) // TODO 本来は Variantにequalsメソッドを定義すべき？
         .findFirst()
-        .get();
+        .orElseThrow(() -> new CrossoverInfeasibleException("no variant for second parent"));
   }
 }
