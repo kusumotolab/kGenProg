@@ -9,7 +9,11 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class VariantSerializer implements JsonSerializer<Variant> {
 
-  private final PatchGenerator patchGenerator = new PatchGenerator();
+  private final PatchGenerator patchGenerator;
+
+  public VariantSerializer(final PatchGenerator patchGenerator) {
+    this.patchGenerator = patchGenerator;
+  }
 
   @Override
   public JsonElement serialize(final Variant variant, final Type type,

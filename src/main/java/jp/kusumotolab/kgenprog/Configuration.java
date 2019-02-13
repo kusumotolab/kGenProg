@@ -53,12 +53,14 @@ public class Configuration {
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
-  public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
+  public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION =
+      FaultLocalization.Technique.Ochiai;
   public static final Crossover.Type DEFAULT_CROSSOVER_TYPE = Crossover.Type.Random;
   public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
       FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
       SecondVariantSelectionStrategy.Strategy.Random;
+  public static final boolean DEFAULT_NORMALIZE_SOURCE_CODE = false;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -78,6 +80,7 @@ public class Configuration {
   private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
+  private final boolean normalizeSourceCode;
   // endregion
 
   // region Constructor
@@ -101,6 +104,7 @@ public class Configuration {
     crossoverType = builder.crossoverType;
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
+    normalizeSourceCode = builder.normalizeSourceCode;
   }
 
   // endregion
@@ -183,6 +187,10 @@ public class Configuration {
 
   public SecondVariantSelectionStrategy.Strategy getSecondVariantSelectionStrategy() {
     return secondVariantSelectionStrategy;
+  }
+
+  public boolean isNormalizeSourceCode() {
+    return normalizeSourceCode;
   }
 
   @Override
@@ -313,6 +321,12 @@ public class Configuration {
     @Conversion(SecondVariantSelectionStrategyToString.class)
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
         DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
+
+    @Option(name = "--normalize-source-code", usage = "Normalize source code in output.",
+        hidden = true)
+    @com.electronwill.nightconfig.core.conversion.Path("normalize-source-code")
+    @PreserveNotNull
+    private boolean normalizeSourceCode = DEFAULT_NORMALIZE_SOURCE_CODE;
 
     // endregion
 
@@ -500,6 +514,11 @@ public class Configuration {
       return this;
     }
 
+    public Builder setNormalizeSourceCode(final boolean normalizeSourceCode) {
+      this.normalizeSourceCode = normalizeSourceCode;
+      return this;
+    }
+
     // endregion
 
     // region Private methods
@@ -523,7 +542,7 @@ public class Configuration {
       }
     }
 
-    private static void validateCurrentDir(Builder builder) {
+    private static void validateCurrentDir(final Builder builder) {
       final Path currentDir = Paths.get(".");
       final Path projectRootDir = builder.rootDir;
 
@@ -714,7 +733,8 @@ public class Configuration {
       this.randomSeed = randomSeed;
     }
 
-    @Option(name = "--scope", usage = "Specify the scope from which source code to be reused is selected.")
+    @Option(name = "--scope",
+        usage = "Specify the scope from which source code to be reused is selected.")
     private void setScopeFromCmdLineParser(final Scope.Type scope) {
       this.scope = scope;
     }
@@ -726,20 +746,21 @@ public class Configuration {
     }
 
     @Option(name = "--crossover-type", usage = "Specifies crossover type.")
-    private void setCrossoverTypeFromCmdLineParser
-        (final Crossover.Type crossoverType) {
+    private void setCrossoverTypeFromCmdLineParser(final Crossover.Type crossoverType) {
       this.crossoverType = crossoverType;
     }
 
-    @Option(name = "--crossover-first-variant", usage = "Specifies first variant selection strategy for crossover.")
-    private void setFirstVariantSelectionStrategyFromCmdLineParser
-        (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+    @Option(name = "--crossover-first-variant",
+        usage = "Specifies first variant selection strategy for crossover.")
+    private void setFirstVariantSelectionStrategyFromCmdLineParser(
+        final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
       this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
     }
 
-    @Option(name = "--crossover-second-variant", usage = "Specifies second variant selection strategy for crossover.")
-    private void setSecondVariantSelectionStrategyFromCmdLineParser
-        (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+    @Option(name = "--crossover-second-variant",
+        usage = "Specifies second variant selection strategy for crossover.")
+    private void setSecondVariantSelectionStrategyFromCmdLineParser(
+        final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
     }
 
@@ -853,8 +874,8 @@ public class Configuration {
       }
     }
 
-    private static class FaultLocalizationTechniqueToString implements
-        Converter<FaultLocalization.Technique, String> {
+    private static class FaultLocalizationTechniqueToString
+        implements Converter<FaultLocalization.Technique, String> {
 
       @Override
       public Technique convertToField(final String value) {
@@ -892,8 +913,8 @@ public class Configuration {
       }
     }
 
-    private static class FirstVariantSelectionStrategyToString implements
-        Converter<FirstVariantSelectionStrategy.Strategy, String> {
+    private static class FirstVariantSelectionStrategyToString
+        implements Converter<FirstVariantSelectionStrategy.Strategy, String> {
 
       @Override
       public FirstVariantSelectionStrategy.Strategy convertToField(final String value) {
@@ -912,8 +933,8 @@ public class Configuration {
       }
     }
 
-    private static class SecondVariantSelectionStrategyToString implements
-        Converter<SecondVariantSelectionStrategy.Strategy, String> {
+    private static class SecondVariantSelectionStrategyToString
+        implements Converter<SecondVariantSelectionStrategy.Strategy, String> {
 
       @Override
       public SecondVariantSelectionStrategy.Strategy convertToField(final String value) {

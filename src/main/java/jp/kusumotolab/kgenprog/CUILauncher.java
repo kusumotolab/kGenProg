@@ -56,7 +56,7 @@ public class CUILauncher {
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount());
     final TestExecutor testExecutor = new LocalTestExecutor(config);
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final PatchGenerator patchGenerator = new PatchGenerator(config.isNormalizeSourceCode());
 
     final KGenProgMain kGenProgMain =
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,

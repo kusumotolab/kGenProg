@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -35,7 +36,9 @@ public class VariantSerializerTest {
 
   @Before
   public void setup() {
-    gson = new GsonBuilder().registerTypeAdapter(Variant.class, new VariantSerializer())
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
+    gson = new GsonBuilder().registerTypeAdapter(Variant.class, new VariantSerializer(patchGenerator))
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeAdapter(TestResult.class, new TestResultSerializer())
         .registerTypeAdapter(Patch.class, new PatchSerializer())

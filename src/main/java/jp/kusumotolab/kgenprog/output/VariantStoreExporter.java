@@ -42,9 +42,10 @@ public class VariantStoreExporter {
   }
 
   private Gson createGson(final Configuration config) {
+    final PatchGenerator patchGenerator = new PatchGenerator(config.isNormalizeSourceCode());
     final GsonBuilder gsonBuilder = new GsonBuilder();
     return gsonBuilder.registerTypeAdapter(VariantStore.class, new VariantStoreSerializer(config))
-        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
+        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer(patchGenerator))
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeHierarchyAdapter(TestResult.class, new TestResultSerializer())
         .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())

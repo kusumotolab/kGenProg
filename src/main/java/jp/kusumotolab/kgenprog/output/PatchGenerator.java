@@ -6,25 +6,43 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.eclipse.jface.text.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
+import jp.kusumotolab.kgenprog.ga.variant.Base;
+import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.jdt.InsertBlockOperation;
 
 public class PatchGenerator {
 
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
+  private final boolean normalizeSourceCode;
+
+  public PatchGenerator(final boolean normalizeSourceCode) {
+    this.normalizeSourceCode = normalizeSourceCode;
+  }
 
   public Patch exec(final Variant modifiedVariant) {
 
     final Patch patch = new Patch();
-    final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
+    final GeneratedSourceCode modifiedSourceCode;
+    if (normalizeSourceCode) {
+      modifiedSourceCode = normalizeGeneratedSourceCode(modifiedVariant.getGene(),
+          modifiedVariant.getGeneratedSourceCode());
+    } else {
+      modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
+    }
+
     final List<GeneratedAST<ProductSourcePath>> modifiedAsts = modifiedSourceCode.getProductAsts();
 
     for (final GeneratedAST<ProductSourcePath> ast : modifiedAsts) {
@@ -41,6 +59,30 @@ public class PatchGenerator {
       }
     }
     return patch;
+  }
+
+  // テストのためにpackage privateとする
+  GeneratedSourceCode normalizeGeneratedSourceCode(final Gene gene,
+      final GeneratedSourceCode origin) {
+    // 変更されたファイルのみ、正規化を行う
+    final List<ASTLocation> locations = gene.getBases()
+        .stream()
+        .map(Base::getTargetLocation)
+        .collect(
+            Collectors.groupingBy(ASTLocation::getSourcePath, Collectors.reducing((a, b) -> a)))
+        .values()
+        .stream()
+        .map(Optional::get)
+        .collect(Collectors.toList());
+
+    GeneratedSourceCode current = origin;
+    final InsertBlockOperation operation = new InsertBlockOperation();
+
+    for (final ASTLocation location : locations) {
+      current = operation.apply(current, location);
+    }
+
+    return current;
   }
 
   /***

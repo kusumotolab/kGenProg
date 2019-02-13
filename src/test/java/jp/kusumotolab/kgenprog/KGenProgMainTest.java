@@ -63,7 +63,8 @@ public class KGenProgMainTest {
     final VariantSelection variantSelection =
         new GenerationalVariantSelection(config.getHeadcount());
     final LocalTestExecutor testExecutor = new LocalTestExecutor(config);
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(config.isNormalizeSourceCode());
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
         sourceCodeValidation, variantSelection, testExecutor, patchGenerator);

@@ -43,9 +43,11 @@ import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.CrossoverHistoricalElement;
 public class VariantStoreSerializerTest {
 
   private Gson createGson(final Configuration config) {
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
     return new GsonBuilder().registerTypeAdapter(VariantStore.class,
         new VariantStoreSerializer(config))
-        .registerTypeAdapter(Variant.class, new VariantSerializer())
+        .registerTypeAdapter(Variant.class, new VariantSerializer(patchGenerator))
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeAdapter(TestResult.class, new TestResultSerializer())
         .registerTypeAdapter(Patch.class, new PatchSerializer())

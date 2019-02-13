@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -40,7 +41,8 @@ public class PatchSerializerTest {
 
   private Gson gson;
   private final JDTASTConstruction astConstruction = new JDTASTConstruction();
-  private final PatchGenerator patchGenerator = new PatchGenerator();
+  private final PatchGenerator patchGenerator =
+      new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
 
   @Before
   public void setup() {

@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.project;
+package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
@@ -11,11 +11,15 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
-import jp.kusumotolab.kgenprog.output.FileDiff;
-import jp.kusumotolab.kgenprog.output.PatchGenerator;
+import jp.kusumotolab.kgenprog.project.GeneratedAST;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.NoneOperation;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -23,6 +27,7 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
+import jp.kusumotolab.kgenprog.testutil.ExampleAlias;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
@@ -31,7 +36,8 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator1() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
 
     final String expected = new StringBuilder().append("")
         .append("package example;\n")
@@ -73,7 +79,8 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator2() {
     final Path basePath = Paths.get("example/BuildSuccess02");
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
 
     final String expected = new StringBuilder().append("")
         .append("package example;\n")
@@ -122,7 +129,8 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator3() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
 
     final String expected = new StringBuilder().append("")
         .append("package example;\n")
@@ -180,7 +188,8 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator4() {
     final Path basePath = Paths.get("example/BuildSuccess01/");
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
 
     final String expected = new StringBuilder().append("")
         .append("package example;\n")
@@ -236,7 +245,8 @@ public class PatchGeneratorTest {
   @Test
   public void testPatchGenerator5() {
     final Path basePath = Paths.get("example/BuildSuccess09");
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final PatchGenerator patchGenerator =
+        new PatchGenerator(Configuration.DEFAULT_NORMALIZE_SOURCE_CODE);
 
     final String delimiter = System.lineSeparator();
     final String expected = new StringBuilder().append("")
@@ -282,5 +292,40 @@ public class PatchGeneratorTest {
         .get(0);
 
     assertThat(fileDiff.getDiff()).isEqualToNormalizingNewlines(expected);
+  }
+
+  @Test
+  public void testNormalizeGeneratedSourceCode() {
+    final Path rootPath = Paths.get("example/BuildSuccess25");
+    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
+    final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
+
+    final Operation operation = new NoneOperation();
+
+    final ProductSourcePath pathFoo = new ProductSourcePath(rootPath, ExampleAlias.Src.FOO);
+    final ProductSourcePath pathBar = new ProductSourcePath(rootPath, ExampleAlias.Src.BAR);
+    final ProductSourcePath pathBaz = new ProductSourcePath(rootPath, ExampleAlias.Src.BAZ);
+
+    final Base baseFoo = new Base(new JDTASTLocation(pathFoo, null, null), operation);
+    final Base baseBaz = new Base(new JDTASTLocation(pathBaz, null, null), operation);
+    final Gene gene = new Gene(Arrays.asList(baseFoo, baseBaz));
+
+    final PatchGenerator patchGenerator = new PatchGenerator(true);
+    final GeneratedSourceCode normalizedSource =
+        patchGenerator.normalizeGeneratedSourceCode(gene, source);
+
+    // Geneに含まれるソースは変更されているはず
+    assertThat(isSameSource(source, normalizedSource, pathFoo)).isFalse();
+    assertThat(isSameSource(source, normalizedSource, pathBar)).isTrue();
+    assertThat(isSameSource(source, normalizedSource, pathBaz)).isFalse();
+
+  }
+
+  private boolean isSameSource(final GeneratedSourceCode origin,
+      final GeneratedSourceCode normalized, final ProductSourcePath path) {
+    final GeneratedAST<ProductSourcePath> originAst = origin.getProductAst(path);
+    final GeneratedAST<ProductSourcePath> normalizedAst = normalized.getProductAst(path);
+    return originAst.getSourceCode()
+        .equals(normalizedAst.getSourceCode());
   }
 }
