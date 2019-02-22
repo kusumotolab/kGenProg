@@ -1,13 +1,14 @@
 package jp.kusumotolab.kgenprog.ga.selection;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class GenerationalVariantSelection extends DefaultVariantSelection {
 
-  public GenerationalVariantSelection(final int maxVariantPerGeneration) {
-    super(maxVariantPerGeneration);
+  public GenerationalVariantSelection(final int maxVariantPerGeneration, final Random random) {
+    super(maxVariantPerGeneration, random);
   }
 
   @Override
