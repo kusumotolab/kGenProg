@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
@@ -14,10 +16,17 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class DefaultVariantSelectionTest {
 
+  private Random random;
+
+  @Before
+  public void setup() {
+    this.random = new Random(0);
+  }
+
   @Test
   public void testExec() {
     final int variantSize = 5;
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize, random);
     final List<Variant> variants = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
@@ -43,7 +52,7 @@ public class DefaultVariantSelectionTest {
 
   @Test
   public void testExecForEmptyVariants() {
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10, random);
     final List<Variant> variants1 = Collections.emptyList();
     final List<Variant> variants2 = Collections.emptyList();
     final List<Variant> resultVariants = variantSelection.exec(variants1, variants2);
@@ -52,7 +61,7 @@ public class DefaultVariantSelectionTest {
 
   @Test
   public void testExecForNan() {
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10, random);
     final List<Variant> variants = new ArrayList<>();
 
     final List<Variant> nanVariants = IntStream.range(0, 10)
@@ -75,7 +84,7 @@ public class DefaultVariantSelectionTest {
 
   @Test
   public void testExecForNanCompare() {
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10, random);
 
     final List<Variant> nanVariants = IntStream.range(0, 100)
         .mapToObj(e -> {
@@ -98,7 +107,7 @@ public class DefaultVariantSelectionTest {
   @Test
   public void testOrderOfVariants() {
     final int variantSize = 5;
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize, random);
     final List<Variant> current = new ArrayList<>();
     final List<Variant> generated = new ArrayList<>();
 
