@@ -174,7 +174,7 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestSimilarityBasedSelection(), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -203,7 +203,7 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestSimilarityBasedSelection(), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -308,9 +308,8 @@ public class SinglePointCrossoverTest {
     assertThat(variantsEG).isEmpty();
 
     // バリアントの生成
-    final Crossover crossoverET =
-        new SinglePointCrossover(random, new FirstVariantEliteSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+    final Crossover crossoverET = new SinglePointCrossover(random,
+        new FirstVariantEliteSelection(random), new SecondVariantTestSimilarityBasedSelection(), 1);
     final List<Variant> variantsET = crossoverET.exec(singleTestVariant.variantStore);
     assertThat(variantsET).isEmpty();
 
@@ -336,7 +335,7 @@ public class SinglePointCrossoverTest {
     // バリアントの生成
     final Crossover crossoverRT =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestSimilarityBasedSelection(), 1);
     final List<Variant> variantsRT = crossoverRT.exec(singleTestVariant.variantStore);
     assertThat(variantsRT).isEmpty();
   }

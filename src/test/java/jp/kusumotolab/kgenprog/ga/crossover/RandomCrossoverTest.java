@@ -171,7 +171,7 @@ public class RandomCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
-        new SecondVariantTestSimilarityBasedSelection(random), 1);
+        new SecondVariantTestSimilarityBasedSelection(), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -199,7 +199,7 @@ public class RandomCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
-        new SecondVariantTestSimilarityBasedSelection(random), 1);
+        new SecondVariantTestSimilarityBasedSelection(), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -306,7 +306,7 @@ public class RandomCrossoverTest {
     // バリアントの生成
     final Crossover crossoverET =
         new RandomCrossover(random, new FirstVariantEliteSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestSimilarityBasedSelection(), 1);
     final List<Variant> variantsET = crossoverET.exec(singleTestVariant.variantStore);
     assertThat(variantsET).isEmpty();
 
@@ -332,7 +332,7 @@ public class RandomCrossoverTest {
     // バリアントの生成
     final Crossover crossoverRT =
         new RandomCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestSimilarityBasedSelection(), 1);
     final List<Variant> variantsRT = crossoverRT.exec(singleTestVariant.variantStore);
     assertThat(variantsRT).isEmpty();
   }
