@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.ga.crossover;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import org.mockito.Mockito;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
@@ -14,6 +15,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 // 4つの疑似バリアントからなるテストデータ．
@@ -41,26 +43,137 @@ public class CrossoverTestVariants {
 
   public CrossoverTestVariants() {
 
+    final TestResult successedTestResult = Mockito.mock(TestResult.class);
+    final TestResult failedTestResult = Mockito.mock(TestResult.class);
+
+    try {
+      Class<?> c = Class.forName("jp.kusumotolab.kgenprog.project.test.TestResult");
+      Field f = c.getDeclaredField("failed");
+      f.setAccessible(true);
+      f.set(successedTestResult, false);
+      f.set(failedTestResult, true);
+    } catch (ClassNotFoundException | NoSuchFieldException | SecurityException
+        | IllegalArgumentException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+
     final TestResults testResultsA = Mockito.mock(TestResults.class);
+    when(testResultsA.getSuccessedTestFQNs())
+        .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test2"),
+            new TestFullyQualifiedName("Test4"), new TestFullyQualifiedName("Test6"),
+            new TestFullyQualifiedName("Test8"), new TestFullyQualifiedName("Test10")));
     when(testResultsA.getFailedTestFQNs())
         .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test1"),
             new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test5"),
             new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test9")));
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test1")))
+        .thenReturn(failedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test2")))
+        .thenReturn(successedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test3")))
+        .thenReturn(failedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test4")))
+        .thenReturn(successedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test5")))
+        .thenReturn(failedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test6")))
+        .thenReturn(successedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test7")))
+        .thenReturn(failedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test8")))
+        .thenReturn(successedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test9")))
+        .thenReturn(failedTestResult);
+    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test10")))
+        .thenReturn(successedTestResult);
+
     final TestResults testResultsB = Mockito.mock(TestResults.class);
+    when(testResultsB.getSuccessedTestFQNs())
+        .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test1"),
+            new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test5"),
+            new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test9")));
     when(testResultsB.getFailedTestFQNs())
         .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test2"),
             new TestFullyQualifiedName("Test4"), new TestFullyQualifiedName("Test6"),
             new TestFullyQualifiedName("Test8"), new TestFullyQualifiedName("Test10")));
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test1")))
+        .thenReturn(successedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test2")))
+        .thenReturn(failedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test3")))
+        .thenReturn(successedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test4")))
+        .thenReturn(failedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test5")))
+        .thenReturn(successedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test6")))
+        .thenReturn(failedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test7")))
+        .thenReturn(successedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test8")))
+        .thenReturn(failedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test9")))
+        .thenReturn(successedTestResult);
+    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test10")))
+        .thenReturn(failedTestResult);
+
     final TestResults testResultsC = Mockito.mock(TestResults.class);
+    when(testResultsC.getSuccessedTestFQNs()).thenReturn(
+        Arrays.asList(new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test8"),
+            new TestFullyQualifiedName("Test9"), new TestFullyQualifiedName("Test10")));
     when(testResultsC.getFailedTestFQNs()).thenReturn(
         Arrays.asList(new TestFullyQualifiedName("Test1"), new TestFullyQualifiedName("Test2"),
             new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test4"),
             new TestFullyQualifiedName("Test5"), new TestFullyQualifiedName("Test6")));
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test1")))
+        .thenReturn(failedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test2")))
+        .thenReturn(failedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test3")))
+        .thenReturn(failedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test4")))
+        .thenReturn(failedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test5")))
+        .thenReturn(failedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test6")))
+        .thenReturn(failedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test7")))
+        .thenReturn(successedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test8")))
+        .thenReturn(successedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test9")))
+        .thenReturn(successedTestResult);
+    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test10")))
+        .thenReturn(successedTestResult);
+
     final TestResults testResultsD = Mockito.mock(TestResults.class);
+    when(testResultsD.getSuccessedTestFQNs()).thenReturn(
+        Arrays.asList(new TestFullyQualifiedName("Test1"), new TestFullyQualifiedName("Test2"),
+            new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test4")));
     when(testResultsD.getFailedTestFQNs()).thenReturn(
         Arrays.asList(new TestFullyQualifiedName("Test5"), new TestFullyQualifiedName("Test6"),
             new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test8"),
             new TestFullyQualifiedName("Test9"), new TestFullyQualifiedName("Test10")));
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test1")))
+        .thenReturn(successedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test2")))
+        .thenReturn(successedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test3")))
+        .thenReturn(successedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test4")))
+        .thenReturn(successedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test5")))
+        .thenReturn(failedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test6")))
+        .thenReturn(failedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test7")))
+        .thenReturn(failedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test8")))
+        .thenReturn(failedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test9")))
+        .thenReturn(failedTestResult);
+    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test10")))
+        .thenReturn(failedTestResult);
 
     noneBase = new Base(null, new NoneOperation());
     insertBase = new Base(null, new InsertOperation(null));
