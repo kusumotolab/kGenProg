@@ -11,9 +11,6 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class SecondVariantTestSimilarityBasedSelection implements SecondVariantSelectionStrategy {
 
-  // 第一バリアントにおける失敗テスト群と成功テスト群に分けて処理を行うため，
-  // 親クラス（SecondVariantSimilarityBasedSelection）のexecでは処理しにくい．
-  // そのため，このクラスでは独自のexecメソッドを定義してる（SecondVariantSimilarityBasedSelectionを継承していない）．
   // 処理手順は以下の通り．
   // 1. 第一バリアントを取り除いたバリアントのリスト（secondVariantCandidates）を作成
   // 2. secondVariantCandidatesを，第一バリアントが成功したテストについてテストの成功数の降順でソート．
@@ -36,18 +33,14 @@ public class SecondVariantTestSimilarityBasedSelection implements SecondVariantS
     final List<FullyQualifiedName> failedTestFQNs = testResults.getFailedTestFQNs();
     final List<FullyQualifiedName> successedTestFQNs = testResults.getSuccessedTestFQNs();
 
-    // secondVariantCandidatesを，successedTestFQNsにおいて成功したテストが多い順にソート
-    Collections.sort(secondVariantCandidates,
-        Comparator
-            .<Variant>comparingLong(v -> getSuccessedNumber(v.getTestResults(), successedTestFQNs))
-            .reversed());
-
-
-    // secondVariantCandidatesを，failedTestFQNsにおいて成功したテストが多い順にソート
-    Collections.sort(secondVariantCandidates,
-        Comparator
-            .<Variant>comparingLong(v -> getSuccessedNumber(v.getTestResults(), failedTestFQNs))
-            .reversed());
+    // secondVariantCandidatesを，successedTestFQNsにおいて成功したテストが多い順にソートし，
+    // そのあとにfailedTestFQNsにおいて成功したテストが多い順にソート
+    final Comparator<Variant> comparator = Comparator
+        .<Variant>comparingLong(v -> getSuccessedNumber(v.getTestResults(), successedTestFQNs))
+        .reversed()
+        .thenComparingLong(v -> getSuccessedNumber(v.getTestResults(), failedTestFQNs))
+        .reversed();
+    Collections.sort(secondVariantCandidates, comparator);
 
     // variantsの最初の要素を返す
     return secondVariantCandidates.get(0);
