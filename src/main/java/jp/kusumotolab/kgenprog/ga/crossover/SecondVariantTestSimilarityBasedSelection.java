@@ -48,8 +48,8 @@ public class SecondVariantTestSimilarityBasedSelection implements SecondVariantS
 
   private Long getSuccessedNumber(final TestResults testResults,
       final Collection<FullyQualifiedName> targetFQNs) {
-    return new Long(targetFQNs.stream()
+    return targetFQNs.stream()
         .filter(fqn -> !testResults.getTestResult(fqn).failed)
-        .count());
+        .count();
   }
 }
