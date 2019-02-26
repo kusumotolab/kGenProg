@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
-public class SecondVariantTestSimilarityBasedSelection implements SecondVariantSelectionStrategy {
+public class SecondVariantTestComplementaryBasedSelection implements SecondVariantSelectionStrategy {
 
   // 処理手順は以下の通り．
   // 1. 第一バリアントを取り除いたバリアントのリスト（secondVariantCandidates）を作成
