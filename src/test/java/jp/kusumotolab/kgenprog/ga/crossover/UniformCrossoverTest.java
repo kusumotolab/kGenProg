@@ -172,7 +172,7 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestComplementaryBasedSelection(), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -201,7 +201,7 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestComplementaryBasedSelection(), 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
     final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
@@ -306,9 +306,8 @@ public class UniformCrossoverTest {
     assertThat(variantsEG).isEmpty();
 
     // バリアントの生成
-    final Crossover crossoverET =
-        new UniformCrossover(random, new FirstVariantEliteSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+    final Crossover crossoverET = new UniformCrossover(random,
+        new FirstVariantEliteSelection(random), new SecondVariantTestComplementaryBasedSelection(), 1);
     final List<Variant> variantsET = crossoverET.exec(singleTestVariant.variantStore);
     assertThat(variantsET).isEmpty();
 
@@ -334,7 +333,7 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossoverRT =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestSimilarityBasedSelection(random), 1);
+            new SecondVariantTestComplementaryBasedSelection(), 1);
     final List<Variant> variantsRT = crossoverRT.exec(singleTestVariant.variantStore);
     assertThat(variantsRT).isEmpty();
   }
