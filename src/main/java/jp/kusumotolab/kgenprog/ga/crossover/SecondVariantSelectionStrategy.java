@@ -46,7 +46,7 @@ public interface SecondVariantSelectionStrategy {
       }
     },
 
-    TestSimilarity {
+    TestComplementary {
 
       @Override
       public SecondVariantSelectionStrategy initialize(final Random random) {
