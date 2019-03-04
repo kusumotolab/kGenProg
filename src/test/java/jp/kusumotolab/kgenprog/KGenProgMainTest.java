@@ -61,7 +61,7 @@ public class KGenProgMainTest {
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection =
-        new GenerationalVariantSelection(config.getHeadcount());
+        new GenerationalVariantSelection(config.getHeadcount(), random);
     final LocalTestExecutor testExecutor = new LocalTestExecutor(config);
     final PatchGenerator patchGenerator = new PatchGenerator();
 

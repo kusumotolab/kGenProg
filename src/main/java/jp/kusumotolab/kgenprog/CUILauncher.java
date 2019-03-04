@@ -54,7 +54,7 @@ public class CUILauncher {
             secondVariantSelectionStrategy, config.getCrossoverGeneratingCount());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount());
+    final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount(), random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
     final PatchGenerator patchGenerator = new PatchGenerator();
 
