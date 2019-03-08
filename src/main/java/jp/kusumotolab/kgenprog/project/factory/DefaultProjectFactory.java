@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -24,10 +25,11 @@ public class DefaultProjectFactory implements ProjectFactory {
   private final List<ProductSourcePath> productSourcePaths;
   private final List<TestSourcePath> testSourcePaths;
   private final List<ClassPath> classPaths;
+  private final List<BuildConfigPath> buildConfigPaths;
 
   public DefaultProjectFactory(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, final List<Path> pathsForClass,
-      final JUnitVersion junitVersion) {
+      final JUnitVersion junitVersion, final List<Path> pathsForBuildConfig) {
 
     this.rootPath = rootPath;
     this.productSourcePaths = getFilePaths(pathsForProductSource, ".java").stream()
@@ -40,11 +42,14 @@ public class DefaultProjectFactory implements ProjectFactory {
         .map(ClassPath::new)
         .collect(Collectors.toList());
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
+    this.buildConfigPaths = pathsForBuildConfig.stream()
+        .map(p -> BuildConfigPath.relativizeAndCreate(rootPath, p))
+        .collect(Collectors.toList());
   }
 
   @Override
   public TargetProject create() {
-    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPaths);
+    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPaths, buildConfigPaths);
   }
 
   @Override

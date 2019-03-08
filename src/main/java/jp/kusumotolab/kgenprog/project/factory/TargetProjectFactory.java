@@ -52,7 +52,7 @@ public class TargetProjectFactory {
       final List<Path> pathsForTestSource, final List<Path> pathsForClass,
       final JUnitVersion junitVersion) {
     return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
-        pathsForClass, junitVersion).create();
+        pathsForClass, junitVersion, getBuildConfigPaths(rootPath)).create();
   }
 
   /**
@@ -64,5 +64,33 @@ public class TargetProjectFactory {
   private static List<ProjectFactory> instanceProjectFactories(final Path rootPath) {
     return Arrays.asList(new AntProjectFactory(rootPath), new MavenProjectFactory(rootPath),
         new GradleProjectFactory(rootPath));
+  }
+
+  /**
+   * ファクトリ一覧の生成（BuildToolProject）
+   *
+   * @param rootPath
+   * @return
+   */
+  private static List<BuildToolProjectFactory> instanceProjectFactoriesWithBuildTool(
+      final Path rootPath) {
+    return Arrays.asList(new AntProjectFactory(rootPath), new MavenProjectFactory(rootPath),
+        new GradleProjectFactory(rootPath));
+  }
+
+  /**
+   * ビルドツールの設定ファイルへのパスを得る
+   *
+   * @param rootPath
+   * @return
+   */
+  private static List<Path> getBuildConfigPaths(final Path rootPath) {
+    final BuildToolProjectFactory factory = instanceProjectFactoriesWithBuildTool(
+        rootPath).stream()
+        .filter(ProjectFactory::isApplicable)
+        .findFirst()
+        .orElse(null);
+
+    return (List<Path>) factory.getConfigPath();
   }
 }

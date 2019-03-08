@@ -40,7 +40,7 @@ public class HeuristicProjectFactory implements ProjectFactory {
 
     final List<ClassPath> classPath = JUnitLibraryResolver.libraries.get(JUnitVersion.JUNIT4);
 
-    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPath);
+    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPath, null);
   }
 
   private Stream<Path> listFiles(final Path path, final String extension) {
