@@ -44,7 +44,8 @@ public class TargetProjectFactory {
    * @param rootPath 対象のルートパス
    * @param pathsForProductSource
    * @param pathsForTestSource
-   * @param classPaths
+   * @param pathsForClass
+   * @param junitVersion
    * @return TargetProject
    */
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
