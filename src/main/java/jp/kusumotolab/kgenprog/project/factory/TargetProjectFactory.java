@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
@@ -73,7 +72,7 @@ public class TargetProjectFactory {
    * @param rootPath
    * @return
    */
-  private static List<BuildToolProjectFactory> instanceProjectFactoriesWithBuildTool(
+  private static List<BuildToolProjectFactory> instanceProjectFactoriesInBuildTool(
       final Path rootPath) {
     return Arrays.asList(new AntProjectFactory(rootPath), new MavenProjectFactory(rootPath),
         new GradleProjectFactory(rootPath));
@@ -87,7 +86,7 @@ public class TargetProjectFactory {
    * @return
    */
   private static List<Path> getBuildConfigPaths(final Path rootPath) {
-    final BuildToolProjectFactory factory = instanceProjectFactoriesWithBuildTool(
+    final BuildToolProjectFactory factory = instanceProjectFactoriesInBuildTool(
         rootPath).stream()
         .filter(ProjectFactory::isApplicable)
         .findFirst()
