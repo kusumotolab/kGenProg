@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
@@ -80,6 +81,7 @@ public class TargetProjectFactory {
 
   /**
    * ビルドツールの設定ファイルへのパスを得る
+   * 入手不可なときはnullを返す
    *
    * @param rootPath
    * @return
@@ -91,6 +93,6 @@ public class TargetProjectFactory {
         .findFirst()
         .orElse(null);
 
-    return (List<Path>) factory.getConfigPath();
+    return factory != null ? (List<Path>) factory.getConfigPath() : null;
   }
 }
