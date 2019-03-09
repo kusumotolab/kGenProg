@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -21,11 +22,13 @@ public class EclipseProjectFactoryTest {
     final ProductSourcePath foo = new ProductSourcePath(rootPath, FOO);
     final TestSourcePath fooTest = new TestSourcePath(rootPath, FOO_TEST);
     final ClassPath cp = new ClassPath(rootPath.resolve("lib/dummy.jar"));
+    final BuildConfigPath bp = new BuildConfigPath(rootPath, Paths.get(".classpath"));
 
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getProductSourcePaths()).containsExactlyInAnyOrder(foo);
     assertThat(project.getTestSourcePaths()).containsExactlyInAnyOrder(fooTest);
     assertThat(project.getClassPaths()).containsExactlyInAnyOrder(cp);
+    assertThat(project.getBuildConfigPaths()).containsExactlyInAnyOrder(bp);
   }
 
 }

@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -100,6 +101,50 @@ public class TargetProjectFactoryTest {
 
     // Exception to be thrown
     TargetProjectFactory.create(rootPath);
+  }
+
+  @Test
+  public void testBuildConfigPaths01() throws IOException {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final List<Path> fooPath = Arrays.asList(rootPath.resolve(FOO));
+    final List<Path> fooTestPath = Arrays.asList(rootPath.resolve(FOO_TEST));
+
+    final TargetProject project = TargetProjectFactory.create(rootPath, fooPath, fooTestPath,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
+
+    // runtime exceptionを隠すためにsystem.errを退避して無効化
+    final PrintStream ps = System.err;
+    System.setErr(new PrintStream(new OutputStream() {
+
+      @Override
+      public void write(final int b) {}
+    }));
+
+    // 一時的にダミーbuild.xmlを生成
+    // ビルドツールの設定ファイルを想定
+    final Path configPath = rootPath.resolve("build.xml");
+    try {
+      Files.createFile(configPath);
+    } catch (final IOException e) {
+      if (!Files.exists(configPath)) {
+        // 一時ファイルの生成に失敗
+        throw e;
+      }
+    }
+
+    final BuildConfigPath bp = new BuildConfigPath(rootPath, Paths.get("build.xml"));
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getProductSourcePaths())
+        .containsExactlyInAnyOrder(new ProductSourcePath(rootPath, FOO));
+    assertThat(project.getTestSourcePaths())
+        .containsExactlyInAnyOrder(new TestSourcePath(rootPath, FOO_TEST));
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
+    assertThat(project.getBuildConfigPaths()).containsExactlyInAnyOrder(bp);
+
+    // ファイル生成の後処理
+    Files.deleteIfExists(configPath);
+    System.setErr(ps);
   }
 
   @Test
