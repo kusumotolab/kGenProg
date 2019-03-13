@@ -50,9 +50,7 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
     final List<ProductSourcePath> sourcePathList = resolveSourcePath(rootPath);
     final List<TestSourcePath> testSourcePathList = resolveTestPath(rootPath);
     final List<ClassPath> classPathList = resolveClassPath(rootPath);
-    final List<BuildConfigPath> buildConfigPathList = getConfigPath().stream()
-        .map(p -> BuildConfigPath.relativizeAndCreate(rootPath, p))
-        .collect(Collectors.toList());
+    final List<BuildConfigPath> buildConfigPathList = resolveBuildConfigPath(rootPath);
 
     return new TargetProject(rootPath, sourcePathList, testSourcePathList, classPathList,
         buildConfigPathList);
@@ -75,6 +73,12 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
     final List<Path> javaFilePaths = searchJavaFilePaths(path);
     return javaFilePaths.stream()
         .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
+        .collect(Collectors.toList());
+  }
+
+  private List<BuildConfigPath> resolveBuildConfigPath(final Path rootPath) {
+    return getConfigPath().stream()
+        .map(p -> BuildConfigPath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
   }
 
