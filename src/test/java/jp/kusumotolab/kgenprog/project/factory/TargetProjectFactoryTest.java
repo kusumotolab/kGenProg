@@ -114,7 +114,8 @@ public class TargetProjectFactoryTest {
     System.setErr(new PrintStream(new OutputStream() {
 
       @Override
-      public void write(final int b) {}
+      public void write(final int b) {
+      }
     }));
 
     // 一時的にダミーbuild.xmlを生成
@@ -134,7 +135,9 @@ public class TargetProjectFactoryTest {
 
     final String actualBuildConfigPath = new BuildConfigPath(rootPath,
         Paths.get("build.xml")).toString();
-    final String projectBuildConfigPath = project.getBuildConfigPaths().get(0).toString();
+    final String projectBuildConfigPath = project.getBuildConfigPaths()
+        .get(0)
+        .toString();
 
     // ファイル生成の後処理
     Files.deleteIfExists(configPath);
@@ -157,7 +160,8 @@ public class TargetProjectFactoryTest {
     System.setErr(new PrintStream(new OutputStream() {
 
       @Override
-      public void write(final int b) {} // 何もしないwriter
+      public void write(final int b) {
+      } // 何もしないwriter
     }));
 
     // 一時的にダミーbuild.xmlを生成
