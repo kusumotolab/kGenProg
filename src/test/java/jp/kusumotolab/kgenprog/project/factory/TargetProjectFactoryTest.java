@@ -109,9 +109,6 @@ public class TargetProjectFactoryTest {
     final List<Path> fooPath = Arrays.asList(rootPath.resolve(FOO));
     final List<Path> fooTestPath = Arrays.asList(rootPath.resolve(FOO_TEST));
 
-    final TargetProject project = TargetProjectFactory.create(rootPath, fooPath, fooTestPath,
-        Collections.emptyList(), JUnitVersion.JUNIT4);
-
     // runtime exceptionを隠すためにsystem.errを退避して無効化
     final PrintStream ps = System.err;
     System.setErr(new PrintStream(new OutputStream() {
@@ -132,19 +129,20 @@ public class TargetProjectFactoryTest {
       }
     }
 
-    final BuildConfigPath bp = new BuildConfigPath(rootPath, Paths.get("build.xml"));
+    final TargetProject project = TargetProjectFactory.create(rootPath, fooPath, fooTestPath,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
 
-    assertThat(project.rootPath).isSameAs(rootPath);
-    assertThat(project.getProductSourcePaths())
-        .containsExactlyInAnyOrder(new ProductSourcePath(rootPath, FOO));
-    assertThat(project.getTestSourcePaths())
-        .containsExactlyInAnyOrder(new TestSourcePath(rootPath, FOO_TEST));
-    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
-    assertThat(project.getBuildConfigPaths()).containsExactlyInAnyOrder(bp);
+    final String actualBuildConfigPath = new BuildConfigPath(rootPath,
+        Paths.get("build.xml")).toString();
+    final String projectBuildConfigPath = project.getBuildConfigPaths().get(0).toString();
 
     // ファイル生成の後処理
     Files.deleteIfExists(configPath);
     System.setErr(ps);
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
+    assertThat(projectBuildConfigPath).isEqualTo(actualBuildConfigPath);
   }
 
   @Test
