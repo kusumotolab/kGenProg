@@ -51,7 +51,8 @@ public class DefaultProjectFactory implements ProjectFactory {
 
   @Override
   public TargetProject create() {
-    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPaths, buildConfigPaths);
+    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPaths,
+        buildConfigPaths);
   }
 
   @Override

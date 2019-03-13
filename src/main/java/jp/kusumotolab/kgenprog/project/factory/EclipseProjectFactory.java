@@ -20,7 +20,6 @@ import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
-import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
 public class EclipseProjectFactory extends BuildToolProjectFactory {
 
@@ -45,7 +44,8 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
           .collect(Collectors.toList());
 
       return new TargetProject(rootPath, classPathHandler.getProductSourcePaths(),
-          classPathHandler.getTestSourcePaths(), classPathHandler.getClassPaths(), buildConfigPathList);
+          classPathHandler.getTestSourcePaths(), classPathHandler.getClassPaths(),
+          buildConfigPathList);
 
     } catch (final SAXException | ParserConfigurationException | IOException e) {
       log.error(e.getMessage(), e);
@@ -86,7 +86,8 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
                 .endsWith("Test.java")) {
               testSourcePaths.add(TestSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             } else {
-              productSourcePaths.add(ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
+              productSourcePaths.add(
+                  ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             }
           }
           break;

@@ -79,8 +79,7 @@ public class TargetProjectFactory {
   }
 
   /**
-   * ビルドツールの設定ファイルへのパスを得る
-   * 入手不可なときはnullを返す
+   * ビルドツールの設定ファイルへのパスを得る 入手不可なときはnullを返す
    *
    * @param rootPath
    * @return
