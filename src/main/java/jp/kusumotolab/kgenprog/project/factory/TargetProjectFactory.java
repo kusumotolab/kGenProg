@@ -51,8 +51,9 @@ public class TargetProjectFactory {
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, final List<Path> pathsForClass,
       final JUnitVersion junitVersion) {
+    final List<Path> pathsForBuildConfig = getBuildConfigPaths(rootPath);
     return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
-        pathsForClass, junitVersion, getBuildConfigPaths(rootPath)).create();
+        pathsForClass, junitVersion, pathsForBuildConfig).create();
   }
 
   /**
