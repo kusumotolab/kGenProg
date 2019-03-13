@@ -114,8 +114,7 @@ public class TargetProjectFactoryTest {
     System.setErr(new PrintStream(new OutputStream() {
 
       @Override
-      public void write(final int b) {
-      }
+      public void write(final int b) {}
     }));
 
     // 一時的にダミーbuild.xmlを生成
@@ -160,8 +159,7 @@ public class TargetProjectFactoryTest {
     System.setErr(new PrintStream(new OutputStream() {
 
       @Override
-      public void write(final int b) {
-      } // 何もしないwriter
+      public void write(final int b) {} // 何もしないwriter
     }));
 
     // 一時的にダミーbuild.xmlを生成
