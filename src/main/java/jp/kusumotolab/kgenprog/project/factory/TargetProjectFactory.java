@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
@@ -92,6 +93,6 @@ public class TargetProjectFactory {
         .findFirst()
         .orElse(null);
 
-    return factory != null ? (List<Path>) factory.getConfigPath() : null;
+    return factory != null ? (List<Path>) factory.getConfigPath() : Collections.emptyList();
   }
 }

@@ -42,11 +42,9 @@ public class DefaultProjectFactory implements ProjectFactory {
         .map(ClassPath::new)
         .collect(Collectors.toList());
     this.classPaths.addAll(JUnitLibraryResolver.libraries.get(junitVersion));
-    this.buildConfigPaths = pathsForBuildConfig != null
-        ? pathsForBuildConfig.stream()
+    this.buildConfigPaths = pathsForBuildConfig.stream()
         .map(p -> BuildConfigPath.relativizeAndCreate(rootPath, p))
-        .collect(Collectors.toList())
-        : null;
+        .collect(Collectors.toList());
   }
 
   @Override

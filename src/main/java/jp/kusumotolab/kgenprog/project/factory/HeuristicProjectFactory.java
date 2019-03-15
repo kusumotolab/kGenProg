@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,7 +41,8 @@ public class HeuristicProjectFactory implements ProjectFactory {
 
     final List<ClassPath> classPath = JUnitLibraryResolver.libraries.get(JUnitVersion.JUNIT4);
 
-    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPath, null);
+    return new TargetProject(rootPath, productSourcePaths, testSourcePaths, classPath,
+        Collections.emptyList());
   }
 
   private Stream<Path> listFiles(final Path path, final String extension) {
