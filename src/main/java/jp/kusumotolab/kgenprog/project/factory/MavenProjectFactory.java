@@ -17,7 +17,6 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -50,10 +49,7 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
     final List<ProductSourcePath> sourcePathList = resolveSourcePath(rootPath);
     final List<TestSourcePath> testSourcePathList = resolveTestPath(rootPath);
     final List<ClassPath> classPathList = resolveClassPath(rootPath);
-    final List<BuildConfigPath> buildConfigPathList = resolveBuildConfigPath(rootPath);
-
-    return new TargetProject(rootPath, sourcePathList, testSourcePathList, classPathList,
-        buildConfigPathList);
+    return new TargetProject(rootPath, sourcePathList, testSourcePathList, classPathList);
   }
 
   private List<ProductSourcePath> resolveSourcePath(final Path rootPath) {
@@ -73,12 +69,6 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
     final List<Path> javaFilePaths = searchJavaFilePaths(path);
     return javaFilePaths.stream()
         .map(p -> TestSourcePath.relativizeAndCreate(rootPath, p))
-        .collect(Collectors.toList());
-  }
-
-  private List<BuildConfigPath> resolveBuildConfigPath(final Path rootPath) {
-    return getConfigPath().stream()
-        .map(p -> BuildConfigPath.relativizeAndCreate(rootPath, p))
         .collect(Collectors.toList());
   }
 

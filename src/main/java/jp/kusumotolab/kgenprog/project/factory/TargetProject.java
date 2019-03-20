@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -14,17 +13,14 @@ public class TargetProject {
   private final List<ProductSourcePath> productSourcePaths;
   private List<TestSourcePath> testSourcePaths;
   private final List<ClassPath> classPaths;
-  private final List<BuildConfigPath> buildConfigPaths;
 
   // Must be package-private. Should be created only from TargetProjectFactory#create
   TargetProject(final Path rootPath, final List<ProductSourcePath> productSourcePaths,
-      final List<TestSourcePath> testSourcePaths, final List<ClassPath> classPaths,
-      final List<BuildConfigPath> buildConfigPaths) {
+      final List<TestSourcePath> testSourcePaths, final List<ClassPath> classPaths) {
     this.rootPath = rootPath;
     this.productSourcePaths = productSourcePaths;
     this.testSourcePaths = testSourcePaths;
     this.classPaths = classPaths;
-    this.buildConfigPaths = buildConfigPaths;
   }
 
   public List<ProductSourcePath> getProductSourcePaths() {
@@ -37,10 +33,6 @@ public class TargetProject {
 
   public List<ClassPath> getClassPaths() {
     return classPaths;
-  }
-
-  public List<BuildConfigPath> getBuildConfigPaths() {
-    return buildConfigPaths;
   }
 
   public void setTestSourcePaths(final List<TestSourcePath> testSourcePaths) {

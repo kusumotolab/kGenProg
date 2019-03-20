@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -39,19 +38,14 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
       final Path configFilePath = rootPath.resolve(Paths.get(CONFIG_FILE_NAME));
       saxParser.parse(configFilePath.toString(), classPathHandler);
 
-      final List<BuildConfigPath> buildConfigPathList = getConfigPath().stream()
-          .map(p -> BuildConfigPath.relativizeAndCreate(rootPath, p))
-          .collect(Collectors.toList());
-
       return new TargetProject(rootPath, classPathHandler.getProductSourcePaths(),
-          classPathHandler.getTestSourcePaths(), classPathHandler.getClassPaths(),
-          buildConfigPathList);
+          classPathHandler.getTestSourcePaths(), classPathHandler.getClassPaths());
 
     } catch (final SAXException | ParserConfigurationException | IOException e) {
       log.error(e.getMessage(), e);
     }
     return new TargetProject(rootPath, Collections.emptyList(), Collections.emptyList(),
-        Collections.emptyList(), Collections.emptyList());
+        Collections.emptyList());
   }
 
   @Override
