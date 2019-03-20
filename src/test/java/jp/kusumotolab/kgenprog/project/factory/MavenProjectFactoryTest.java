@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -34,8 +33,5 @@ public class MavenProjectFactoryTest {
     assertThat(classPaths).hasSize(2);
     assertThat(classPaths.get(0)
         .toString()).endsWith("junit-4.12.jar");
-
-    final BuildConfigPath bp = new BuildConfigPath(path, Paths.get("pom.xml"));
-    assertThat(targetProject.getBuildConfigPaths()).containsExactlyInAnyOrder(bp);
   }
 }

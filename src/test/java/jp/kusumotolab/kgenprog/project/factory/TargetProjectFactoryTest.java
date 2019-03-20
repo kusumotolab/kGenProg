@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.BuildConfigPath;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
@@ -132,9 +131,8 @@ public class TargetProjectFactoryTest {
     final TargetProject project = TargetProjectFactory.create(rootPath, fooPath, fooTestPath,
         Collections.emptyList(), JUnitVersion.JUNIT4);
 
-    final String actualBuildConfigPath = new BuildConfigPath(rootPath,
-        Paths.get("build.xml")).toString();
-    final String projectBuildConfigPath = project.getBuildConfigPaths()
+    final String actualBuildConfigPath = "example/BuildSuccess01/build.xml";
+    final String projectBuildConfigPath = TargetProjectFactory.getBuildConfigPaths(rootPath)
         .get(0)
         .toString();
 

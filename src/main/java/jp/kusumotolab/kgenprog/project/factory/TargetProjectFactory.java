@@ -86,7 +86,7 @@ public class TargetProjectFactory {
    * @param rootPath
    * @return
    */
-  private static List<Path> getBuildConfigPaths(final Path rootPath) {
+  static List<Path> getBuildConfigPaths(final Path rootPath) {
     final BuildToolProjectFactory factory = instanceProjectFactoriesInBuildTool(
         rootPath).stream()
         .filter(ProjectFactory::isApplicable)
