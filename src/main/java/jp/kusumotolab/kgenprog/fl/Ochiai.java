@@ -9,8 +9,18 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ *  FL戦略の一つ(Ochiai).
+ *  {@code value = ef / Math.sqrt((ef + nf) * (ef + ep))}
+ */
 public class Ochiai implements FaultLocalization {
 
+  /**
+   * 疑惑値を計算する.
+   * @param generatedSourceCode
+   * @param testResults
+   * @return suspiciousnesses 疑惑値
+   */
   @Override
   public List<Suspiciousness> exec(final GeneratedSourceCode generatedSourceCode,
       final TestResults testResults) {

@@ -9,8 +9,18 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ *  FL戦略の一つ(Zoltar).
+ *  {@code value = ef / (ef + nf + ep + 10000 * nf * ep / ef)}
+ */
 public class Zoltar implements FaultLocalization {
 
+  /**
+   * 疑惑値を計算する.
+   * @param generatedSourceCode
+   * @param testResults
+   * @return suspiciousnesses 疑惑値
+   */
   @Override
   public List<Suspiciousness> exec(final GeneratedSourceCode generatedSourceCode,
       final TestResults testResults) {

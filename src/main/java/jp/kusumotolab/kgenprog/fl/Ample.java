@@ -9,8 +9,18 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ *  FL戦略の一つ(Ample).
+ *  {@code value = Math.abs(ef / (ef + nf) - ep / (ep + np))}
+ */
 public class Ample implements FaultLocalization {
 
+  /**
+   * 疑惑値を計算する.
+   * @param generatedSourceCode
+   * @param testResults
+   * @return suspiciousnesses 疑惑値
+   */
   @Override
   public List<Suspiciousness> exec(final GeneratedSourceCode generatedSourceCode,
       final TestResults testResults) {
