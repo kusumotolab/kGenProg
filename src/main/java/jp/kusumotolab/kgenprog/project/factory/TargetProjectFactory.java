@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 
@@ -44,12 +45,14 @@ public class TargetProjectFactory {
    * @param rootPath 対象のルートパス
    * @param pathsForProductSource
    * @param pathsForTestSource
-   * @param classPaths
+   * @param pathsForClass
+   * @param junitVersion
    * @return TargetProject
    */
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, final List<Path> pathsForClass,
       final JUnitVersion junitVersion) {
+    final List<Path> pathsForBuildConfig = getBuildConfigPaths(rootPath);
     return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
         pathsForClass, junitVersion).create();
   }
@@ -63,5 +66,33 @@ public class TargetProjectFactory {
   private static List<ProjectFactory> instanceProjectFactories(final Path rootPath) {
     return Arrays.asList(new AntProjectFactory(rootPath), new MavenProjectFactory(rootPath),
         new GradleProjectFactory(rootPath));
+  }
+
+  /**
+   * ファクトリ一覧の生成（BuildToolProject）
+   *
+   * @param rootPath
+   * @return
+   */
+  private static List<BuildToolProjectFactory> instanceProjectFactoriesInBuildTool(
+      final Path rootPath) {
+    return Arrays.asList(new AntProjectFactory(rootPath), new MavenProjectFactory(rootPath),
+        new GradleProjectFactory(rootPath));
+  }
+
+  /**
+   * ビルドツールの設定ファイルへのパスを得る 入手不可なときはemptyListを返す
+   *
+   * @param rootPath
+   * @return
+   */
+  static List<Path> getBuildConfigPaths(final Path rootPath) {
+    final BuildToolProjectFactory factory = instanceProjectFactoriesInBuildTool(
+        rootPath).stream()
+        .filter(ProjectFactory::isApplicable)
+        .findFirst()
+        .orElse(null);
+
+    return factory != null ? (List<Path>) factory.getConfigPath() : Collections.emptyList();
   }
 }

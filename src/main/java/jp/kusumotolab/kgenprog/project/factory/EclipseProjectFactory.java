@@ -80,7 +80,8 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
                 .endsWith("Test.java")) {
               testSourcePaths.add(TestSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             } else {
-              productSourcePaths.add(ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
+              productSourcePaths.add(
+                  ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
             }
           }
           break;

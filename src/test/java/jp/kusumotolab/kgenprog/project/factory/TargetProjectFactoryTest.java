@@ -103,6 +103,49 @@ public class TargetProjectFactoryTest {
   }
 
   @Test
+  public void testBuildConfigPaths01() throws IOException {
+    final Path rootPath = Paths.get("example/BuildSuccess01");
+    final List<Path> fooPath = Arrays.asList(rootPath.resolve(FOO));
+    final List<Path> fooTestPath = Arrays.asList(rootPath.resolve(FOO_TEST));
+
+    // runtime exceptionを隠すためにsystem.errを退避して無効化
+    final PrintStream ps = System.err;
+    System.setErr(new PrintStream(new OutputStream() {
+
+      @Override
+      public void write(final int b) {}
+    }));
+
+    // 一時的にダミーbuild.xmlを生成
+    // ビルドツールの設定ファイルを想定
+    final Path configPath = rootPath.resolve("build.xml");
+    try {
+      Files.createFile(configPath);
+    } catch (final IOException e) {
+      if (!Files.exists(configPath)) {
+        // 一時ファイルの生成に失敗
+        throw e;
+      }
+    }
+
+    final TargetProject project = TargetProjectFactory.create(rootPath, fooPath, fooTestPath,
+        Collections.emptyList(), JUnitVersion.JUNIT4);
+
+    final String actualBuildConfigPath = "example/BuildSuccess01/build.xml";
+    final String projectBuildConfigPath = TargetProjectFactory.getBuildConfigPaths(rootPath)
+        .get(0)
+        .toString();
+
+    // ファイル生成の後処理
+    Files.deleteIfExists(configPath);
+    System.setErr(ps);
+
+    assertThat(project.rootPath).isSameAs(rootPath);
+    assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
+    assertThat(projectBuildConfigPath).isEqualTo(actualBuildConfigPath);
+  }
+
+  @Test
   public void testFactorialBehavior01() throws IOException {
     // Factoryとして正しく振る舞っているかを確認．
     // スタブを実行する一時的なテスト．
