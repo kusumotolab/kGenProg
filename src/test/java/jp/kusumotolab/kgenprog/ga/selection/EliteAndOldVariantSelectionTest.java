@@ -12,8 +12,14 @@ import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
+/**
+ * EliteAndOldVariantSelectionに関するテストクラス.
+ */
 public class EliteAndOldVariantSelectionTest {
 
+  /**
+   * Variantの算出を正しく行えているかテストする.
+   */
   @Test
   public void testExec() {
     final int variantSize = 5;
@@ -42,6 +48,10 @@ public class EliteAndOldVariantSelectionTest {
         .containsExactly(0.80d, 0.60d, 0.45d, 0.40d, 0.35d);
   }
 
+  /**
+   * 空のリストに対するVariantの算出を正しく行えているかテストする.
+   * 結果として空のリストを得られることを期待する.
+   */
   @Test
   public void testExecForEmptyVariants() {
     final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
@@ -51,6 +61,10 @@ public class EliteAndOldVariantSelectionTest {
     assertThat(resultVariants).hasSize(0);
   }
 
+  /**
+   * NaNが含まれるリストに対するVariantの算出を正しく行えているかテストする.
+   * 結果としてNaNよりも通常の値が優先されることを期待する.
+   */
   @Test
   public void testExecForNan() {
     final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
@@ -74,6 +88,10 @@ public class EliteAndOldVariantSelectionTest {
     assertThat(result2.get(0)).isEqualTo(normalVariant);
   }
 
+  /**
+   * NaNが多数含まれるリストに対するVariantの比較を正しく行えているかテストする.
+   * 結果として個体数を制限し，NaNよりも通常の値が優先されることを期待する.
+   */
   @Test
   public void testExecForNanCompare() {
     final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
@@ -96,6 +114,11 @@ public class EliteAndOldVariantSelectionTest {
     }
   }
 
+  /**
+   * 個体の選択を正しく行えているかテストする.
+   * Fitnessが同値の個体同士ではより古い個体を優先して残す.
+   * 各Variantにユニークなidを付加し，それを元にして確認を行う.
+   */
   @Test
   public void testOrderOfVariants() {
     final int variantSize = 5;
@@ -131,11 +154,24 @@ public class EliteAndOldVariantSelectionTest {
         .containsSequence(9L, 19L, 7L, 8L, 17L);
   }
 
+  /**
+   * Variantを生成するメソッド.
+   * Fitnessのみを指定する.
+   * @param fitness
+   * @return variant
+   */
   private Variant createVariant(final Fitness fitness) {
     final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null);
     return variant;
   }
 
+  /**
+   * Variantを生成するメソッド.
+   * FitnessとIdを指定する.
+   * @param fitness
+   * @param id
+   * @return variant
+   */
   private Variant createVariant(final Fitness fitness, final int id) {
     final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null);
     return variant;
