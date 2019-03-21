@@ -104,6 +104,11 @@ public class DefaultVariantSelectionTest {
     }
   }
 
+  /**
+   * 個体の選択を正しく行えているかテストする.
+   * Fitnessが同値の個体があればその中からランダムに選択する.
+   * 各Variantにユニークなidを付加し，それを元にして確認を行う.
+   */
   @Test
   public void testOrderOfVariants() {
     final int variantSize = 5;
@@ -138,11 +143,24 @@ public class DefaultVariantSelectionTest {
         .doesNotContainSequence(9L, 19L, 7L, 8L, 17L);
   }
 
+  /**
+   * Variantを生成するメソッド.
+   * Fitnessのみを指定する.
+   * @param fitness
+   * @return variant
+   */
   private Variant createVariant(final Fitness fitness) {
     final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null);
     return variant;
   }
 
+  /**
+   * Variantを生成するメソッド.
+   * FitnessとIdを指定する.
+   * @param fitness
+   * @param id
+   * @return variant
+   */
   private Variant createVariant(final Fitness fitness, final int id) {
     final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null);
     return variant;
