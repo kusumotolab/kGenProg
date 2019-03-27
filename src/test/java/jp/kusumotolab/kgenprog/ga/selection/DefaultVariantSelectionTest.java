@@ -105,8 +105,8 @@ public class DefaultVariantSelectionTest {
   }
 
   /**
-   * 個体の選択を正しく行えているかテストする.
-   * Fitnessが同値の個体があればその中からランダムに選択する.
+   * 個体の選択を正しく行えているかテストする.<br>
+   * Fitnessが同値の個体があればその中からランダムに選択する.<br>
    * 各Variantにユニークなidを付加し，それを元にして確認を行う.
    */
   @Test
@@ -144,8 +144,8 @@ public class DefaultVariantSelectionTest {
   }
 
   /**
-   * Variantを生成するメソッド.
-   * Fitnessのみを指定する.
+   * Variantを生成するメソッド.Fitnessのみを指定する.
+   *
    * @param fitness
    * @return variant
    */
@@ -155,8 +155,8 @@ public class DefaultVariantSelectionTest {
   }
 
   /**
-   * Variantを生成するメソッド.
-   * FitnessとIdを指定する.
+   * Variantを生成するメソッド.FitnessとIdを指定する.
+   *
    * @param fitness
    * @param id
    * @return variant

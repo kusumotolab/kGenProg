@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- *  FL戦略の一つ(Zoltar).
+ *  FL戦略の一つ(Zoltar).<br>
  *  {@code value = ef / (ef + nf + ep + 10000 * nf * ep / ef)}
  */
 public class Zoltar implements FaultLocalization {

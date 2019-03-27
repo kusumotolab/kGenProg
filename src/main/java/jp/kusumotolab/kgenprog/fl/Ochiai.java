@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- *  FL戦略の一つ(Ochiai).
+ *  FL戦略の一つ(Ochiai).<br>
  *  {@code value = ef / Math.sqrt((ef + nf) * (ef + ep))}
  */
 public class Ochiai implements FaultLocalization {

@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- *  FL戦略の一つ(Tarantula).
+ *  FL戦略の一つ(Tarantula).<br>
  *  {@code value = (ef / (ef + nf)) / (ef / (ef + nf) + ep / (ep + np))}
  */
 public class Tarantula implements FaultLocalization {

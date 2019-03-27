@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- *  FL戦略の一つ(Jaccard).
+ *  FL戦略の一つ(Jaccard).<br>
  *  {@code value = ef / (ef + nf + ep)}
  */
 public class Jaccard implements FaultLocalization {

@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- *  FL戦略の一つ(Ample).
+ *  FL戦略の一つ(Ample).<br>
  *  {@code value = Math.abs(ef / (ef + nf) - ep / (ep + np))}
  */
 public class Ample implements FaultLocalization {
