@@ -10,11 +10,12 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- *  FL戦略の一つ(Tarantula).<br>
- *  {@code value = (ef / (ef + nf)) / (ef / (ef + nf) + ep / (ep + np))}
- *  {@code ef}:該当する文を実行し，通過しなかったテストの個数
- *  {@code nf}:該当する文を実行せずに，通過しなかったテストの個数
- *  {@code ep}:該当する文を実行し，通過したテストの個数
+ *  FL戦略の一つ(Tarantula).
+ *  <br>
+ *  {@code value = (ef / (ef + nf)) / (ef / (ef + nf) + ep / (ep + np))}<br>
+ *  {@code ef}:該当する文を実行し，通過しなかったテストの個数<br>
+ *  {@code nf}:該当する文を実行せずに，通過しなかったテストの個数<br>
+ *  {@code ep}:該当する文を実行し，通過したテストの個数<br>
  *  {@code np}:該当する文を実行せずに，通過したテストの個数
  */
 public class Tarantula implements FaultLocalization {

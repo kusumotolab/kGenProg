@@ -49,7 +49,8 @@ public class EliteAndOldVariantSelectionTest {
   }
 
   /**
-   * 空のリストに対するVariantの算出を正しく行えているかテストする.<br>
+   * 空のリストに対するVariantの算出を正しく行えているかテストする.
+   * <br>
    * 結果として空のリストを得られることを期待する.
    */
   @Test
@@ -62,7 +63,8 @@ public class EliteAndOldVariantSelectionTest {
   }
 
   /**
-   * NaNが含まれるリストに対するVariantの算出を正しく行えているかテストする.<br>
+   * NaNが含まれるリストに対するVariantの算出を正しく行えているかテストする.
+   * <br>
    * 結果としてNaNよりも通常の値が優先されることを期待する.
    */
   @Test
@@ -89,7 +91,8 @@ public class EliteAndOldVariantSelectionTest {
   }
 
   /**
-   * NaNが多数含まれるリストに対するVariantの比較を正しく行えているかテストする.<br>
+   * NaNが多数含まれるリストに対するVariantの比較を正しく行えているかテストする.
+   * <br>
    * 結果として個体数を制限し，NaNよりも通常の値が優先されることを期待する.
    */
   @Test
@@ -115,7 +118,8 @@ public class EliteAndOldVariantSelectionTest {
   }
 
   /**
-   * 個体の選択を正しく行えているかテストする.<br>
+   * 個体の選択を正しく行えているかテストする.
+   * <br>
    * Fitnessが同値の個体同士ではより古い個体を優先して残す.<br>
    * 各Variantにユニークなidを付加し，それを元にして確認を行う.
    */

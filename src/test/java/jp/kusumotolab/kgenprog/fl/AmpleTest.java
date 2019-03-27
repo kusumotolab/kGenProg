@@ -70,7 +70,8 @@ public class AmpleTest {
   }
 
   /**
-   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.<br>
+   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
+   *  <br>
    *  疑惑値のリストが空になることを期待する.
    */
   @Test
