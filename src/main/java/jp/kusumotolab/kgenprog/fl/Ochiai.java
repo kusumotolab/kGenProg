@@ -12,6 +12,9 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 /**
  *  FL戦略の一つ(Ochiai).<br>
  *  {@code value = ef / Math.sqrt((ef + nf) * (ef + ep))}
+ *  {@code ef}:該当する文を実行し，通過しなかったテストの個数
+ *  {@code nf}:該当する文を実行せずに，通過しなかったテストの個数
+ *  {@code ep}:該当する文を実行し，通過したテストの個数
  */
 public class Ochiai implements FaultLocalization {
 
