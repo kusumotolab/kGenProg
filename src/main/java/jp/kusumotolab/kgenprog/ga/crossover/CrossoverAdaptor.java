@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 /**
- * 交叉のアダプタークラス．交叉アルゴリズムを実装するクラスはインターフェースCrossoverを直接実装する代わりにこのクラスを継承しても よい．
+ * 交叉のアダプタークラス．交叉アルゴリズムを実装するクラスはインターフェースCrossoverを直接実装する代わりにこのクラスを継承してもよい．
  * このクラスを継承した方が，コードの記述量が少なくなるはず．
  * 
  * @author higo
