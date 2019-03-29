@@ -46,6 +46,18 @@ public interface Crossover {
   enum Type {
     Random {
 
+      /**
+       * 交叉を行うインスタンスを生成するメソッド．
+       * 
+       * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
+       *      SecondVariantSelectionStrategy, int)
+       * 
+       * @param random 交叉処理の内部でランダム処理を行うためのシード
+       * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
+       * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
+       * @param generatingCount 一度の交叉処理で生成する個体の数
+       * @return 交叉を行うインスタンス
+       */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
@@ -58,6 +70,18 @@ public interface Crossover {
 
     SinglePoint {
 
+      /**
+       * 交叉を行うインスタンスを生成するメソッド．
+       * 
+       * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
+       *      SecondVariantSelectionStrategy, int)
+       * 
+       * @param random 交叉処理の内部でランダム処理を行うためのシード
+       * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
+       * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
+       * @param generatingCount 一度の交叉処理で生成する個体の数
+       * @return 交叉を行うインスタンス
+       */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
@@ -70,6 +94,18 @@ public interface Crossover {
 
     Uniform {
 
+      /**
+       * 交叉を行うインスタンスを生成するメソッド．
+       * 
+       * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
+       *      SecondVariantSelectionStrategy, int)
+       * 
+       * @param random 交叉処理の内部でランダム処理を行うためのシード
+       * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
+       * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
+       * @param generatingCount 一度の交叉処理で生成する個体の数
+       * @return 交叉を行うインスタンス
+       */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
@@ -81,7 +117,7 @@ public interface Crossover {
     };
 
     /**
-     * 交叉を行うインスタンスを生成するための抽象メソッド．交叉アルゴリズムを実装するクラスはこのメソッドを実装しなければならない．
+     * 交叉を行うインスタンスを生成するための抽象メソッド．
      * 
      * @param random 交叉処理の内部でランダム処理を行うためのシード
      * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム

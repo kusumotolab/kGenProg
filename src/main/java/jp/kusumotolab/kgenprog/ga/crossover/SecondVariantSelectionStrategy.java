@@ -30,8 +30,17 @@ public interface SecondVariantSelectionStrategy {
    *
    */
   public enum Strategy {
+    
     Elite {
 
+      /**
+       * 2つ目の親の選択を行うインスタンスを生成するための抽象メソッド．
+       * 
+       * @see SecondVariantSelectionStrategy.Strategy#initialize(Random)
+       * 
+       * @param random 選択においてランダム処理を行うためのシード
+       * @return 2つ目の親の選択を行うインスタンス
+       */
       @Override
       public SecondVariantSelectionStrategy initialize(final Random random) {
         return new SecondVariantEliteSelection();
@@ -40,6 +49,14 @@ public interface SecondVariantSelectionStrategy {
 
     GeneSimilarity {
 
+      /**
+       * 2つ目の親の選択を行うインスタンスを生成するための抽象メソッド．
+       * 
+       * @see SecondVariantSelectionStrategy.Strategy#initialize(Random)
+       * 
+       * @param random 選択においてランダム処理を行うためのシード
+       * @return 2つ目の親の選択を行うインスタンス
+       */
       @Override
       public SecondVariantSelectionStrategy initialize(final Random random) {
         return new SecondVariantGeneSimilarityBasedSelection(random);
@@ -48,6 +65,14 @@ public interface SecondVariantSelectionStrategy {
 
     Random {
 
+      /**
+       * 2つ目の親の選択を行うインスタンスを生成するための抽象メソッド．
+       * 
+       * @see SecondVariantSelectionStrategy.Strategy#initialize(Random)
+       * 
+       * @param random 選択においてランダム処理を行うためのシード
+       * @return 2つ目の親の選択を行うインスタンス
+       */
       @Override
       public SecondVariantSelectionStrategy initialize(final java.util.Random random) {
         return new SecondVariantRandomSelection(random);
@@ -56,12 +81,26 @@ public interface SecondVariantSelectionStrategy {
 
     TestComplementary {
 
+      /**
+       * 2つ目の親の選択を行うインスタンスを生成するための抽象メソッド．
+       * 
+       * @see SecondVariantSelectionStrategy.Strategy#initialize(Random)
+       * 
+       * @param random 選択においてランダム処理を行うためのシード
+       * @return 2つ目の親の選択を行うインスタンス
+       */
       @Override
       public SecondVariantSelectionStrategy initialize(final Random random) {
         return new SecondVariantTestComplementaryBasedSelection();
       }
     };
 
+    /**
+     * 2つ目の親の選択を行うインスタンスを生成するための抽象メソッド．
+     * 
+     * @param random 選択においてランダム処理を行うためのシード
+     * @return 2つ目の親の選択を行うインスタンス
+     */
     public abstract SecondVariantSelectionStrategy initialize(final Random random);
   }
 }

@@ -31,6 +31,14 @@ public interface FirstVariantSelectionStrategy {
   public enum Strategy {
     Elite {
 
+      /**
+       * 1つ目の親の選択を行うインスタンスを生成するメソッド．
+       * 
+       * @see FirstVariantSelectionStrategy.Strategy#initialize(Random)
+       * 
+       * @param random 選択においてランダム処理を行うためのシード
+       * @return 1つ目の親の選択を行うインスタンス
+       */
       @Override
       public FirstVariantSelectionStrategy initialize(final Random random) {
         return new FirstVariantEliteSelection(random);
@@ -39,12 +47,26 @@ public interface FirstVariantSelectionStrategy {
 
     Random {
 
+      /**
+       * 1つ目の親の選択を行うインスタンスを生成するメソッド．
+       * 
+       * @see FirstVariantSelectionStrategy.Strategy#initialize(Random)
+       * 
+       * @param random 選択においてランダム処理を行うためのシード
+       * @return 1つ目の親の選択を行うインスタンス
+       */
       @Override
       public FirstVariantSelectionStrategy initialize(final Random random) {
         return new FirstVariantRandomSelection(random);
       }
     };
 
+    /**
+     * 1つ目の親の選択を行うインスタンスを生成するための抽象メソッド．
+     * 
+     * @param random 選択においてランダム処理を行うためのシード
+     * @return 1つ目の親の選択を行うインスタンス
+     */
     public abstract FirstVariantSelectionStrategy initialize(final Random random);
   }
 }
