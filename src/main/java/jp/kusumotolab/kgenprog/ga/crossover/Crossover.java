@@ -44,6 +44,12 @@ public interface Crossover {
    *
    */
   enum Type {
+
+    /**
+     * ランダム交叉を表す型．
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover
+     */
     Random {
 
       /**
@@ -68,6 +74,11 @@ public interface Crossover {
       }
     },
 
+    /**
+     * 一点交叉を表す型．
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover
+     */
     SinglePoint {
 
       /**
@@ -92,6 +103,11 @@ public interface Crossover {
       }
     },
 
+    /**
+     * 一様交叉を表す型．
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.UniformCrossover
+     */
     Uniform {
 
       /**

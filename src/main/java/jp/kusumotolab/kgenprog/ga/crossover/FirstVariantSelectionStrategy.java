@@ -29,6 +29,12 @@ public interface FirstVariantSelectionStrategy {
    *
    */
   public enum Strategy {
+
+    /**
+     * 1つ目の親を評価関数に基づいて選択するアルゴリズムを表す型
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.FirstVariantEliteSelection
+     */
     Elite {
 
       /**
@@ -45,6 +51,11 @@ public interface FirstVariantSelectionStrategy {
       }
     },
 
+    /**
+     * 1つ目の親をランダム選択するアルゴリズムを表す型
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.FirstVariantRandomSelection
+     */
     Random {
 
       /**

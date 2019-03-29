@@ -30,7 +30,12 @@ public interface SecondVariantSelectionStrategy {
    *
    */
   public enum Strategy {
-    
+
+    /**
+     * 2つ目の親を評価関数に基づいて選択するアルゴリズムを表す型
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantEliteSelection
+     */
     Elite {
 
       /**
@@ -47,6 +52,11 @@ public interface SecondVariantSelectionStrategy {
       }
     },
 
+    /**
+     * 2つ目の親を1つ目の親との遺伝子の違いに基づいて選択するアルゴリズムを表す型．
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantGeneSimilarityBasedSelection
+     */
     GeneSimilarity {
 
       /**
@@ -63,6 +73,11 @@ public interface SecondVariantSelectionStrategy {
       }
     },
 
+    /**
+     * 2つ目の親をランダム選択するアルゴリズムを表す型
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantRandomSelection
+     */
     Random {
 
       /**
@@ -79,6 +94,11 @@ public interface SecondVariantSelectionStrategy {
       }
     },
 
+    /**
+     * 2つ目の親を1つ目の親とのテストの相補性に基づいて選択するアルゴリズムを表す型．
+     * 
+     * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantTestComplementaryBasedSelection
+     */
     TestComplementary {
 
       /**
