@@ -20,6 +20,14 @@ public interface FirstVariantSelectionStrategy {
    */
   Variant exec(List<Variant> variants);
 
+  /**
+   * kGenProgが基本実装として持つ，1つ目の親を選択するアルゴリズムを表す列挙型．
+   * 
+   * TODO ここに定義すべきではないものな気がするので将来移動させる予定．
+   * 
+   * @author higo
+   *
+   */
   public enum Strategy {
     Elite {
 

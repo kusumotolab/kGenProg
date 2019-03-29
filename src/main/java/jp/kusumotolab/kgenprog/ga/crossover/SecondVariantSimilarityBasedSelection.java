@@ -25,6 +25,15 @@ public abstract class SecondVariantSimilarityBasedSelection
     this.random = random;
   }
 
+  /**
+   * 選択を行うメソッド．選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．
+   *
+   * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
+   * 
+   * @param variants 選択対象の個体群
+   * @param firstVariant 1つ目の親として選択された個体
+   * @return 選択された個体
+   */
   @Override
   public Variant exec(final List<Variant> variants, final Variant firstVariant)
       throws CrossoverInfeasibleException {

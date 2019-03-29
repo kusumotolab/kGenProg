@@ -43,6 +43,8 @@ public abstract class CrossoverAdaptor implements Crossover {
   /**
    * 1つ目の親を返す．
    * 
+   * @see jp.kusumotolab.kgenprog.ga.crossover.Crossover#getFirstVariantSelectionStrategy()
+   * 
    * @return 1つ目の親
    */
   @Override
@@ -53,6 +55,8 @@ public abstract class CrossoverAdaptor implements Crossover {
   /**
    * 2つ目の親を返す．
    * 
+   * @see jp.kusumotolab.kgenprog.ga.crossover.Crossover#getSecondVariantSelectionStrategy()
+   * 
    * @return 2つ目の親
    */
   @Override
@@ -61,7 +65,7 @@ public abstract class CrossoverAdaptor implements Crossover {
   }
 
   /**
-   * 交叉処理を行うメソッド．交叉対象の個体群を含んだvariantStoreを引数として与える必要あり．
+   * 交叉処理を行うメソッド．交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．
    * 
    * @param variantStore 交叉対象の個体群
    * @return 交叉により生成された個体群

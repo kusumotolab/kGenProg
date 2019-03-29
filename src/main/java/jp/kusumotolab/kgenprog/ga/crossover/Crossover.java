@@ -13,12 +13,36 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
  */
 public interface Crossover {
 
+  /**
+   * 交叉処理を行うメソッド．交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．
+   * 
+   * @param variantStore 交叉対象の個体群
+   * @return 交叉により生成された個体群
+   */
   List<Variant> exec(VariantStore variantStore);
 
+  /**
+   * 1つ目の親を返す．
+   * 
+   * @return 1つ目の親
+   */
   FirstVariantSelectionStrategy getFirstVariantSelectionStrategy();
 
+  /**
+   * 2つ目の親を返す．
+   * 
+   * @return 2つ目の親
+   */
   SecondVariantSelectionStrategy getSecondVariantSelectionStrategy();
 
+  /**
+   * kGenProgが基本実装として持つ交叉種別を表す列挙型．
+   * 
+   * TODO ここに定義すべきではないものな気がするので将来移動させる予定．
+   * 
+   * @author higo
+   *
+   */
   enum Type {
     Random {
 
@@ -59,7 +83,7 @@ public interface Crossover {
     /**
      * 交叉を行うインスタンスを生成するための抽象メソッド．交叉アルゴリズムを実装するクラスはこのメソッドを実装しなければならない．
      * 
-     * @param random 交叉処理の内部でランダム処理を行うためのシード値
+     * @param random 交叉処理の内部でランダム処理を行うためのシード
      * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
      * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
      * @param generatingCount 一度の交叉処理で生成する個体の数

@@ -18,7 +18,7 @@ public class FirstVariantEliteSelection implements FirstVariantSelectionStrategy
   private final Random random;
 
   /**
-   * コンストラクタ．選択においてランダム処理を行うためのシード値を引数として渡す必要あり．
+   * コンストラクタ．選択においてランダム処理を行うためのシードを引数として渡す必要あり．
    * 
    * @param random ランダム処理を行うためのシード
    */
@@ -26,6 +26,14 @@ public class FirstVariantEliteSelection implements FirstVariantSelectionStrategy
     this.random = random;
   }
 
+  /**
+   * 選択を行うメソッド．選択対象の個体群を引数として与える必要あり．
+   * 
+   * @see jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy#exec(List)
+   * 
+   * @param variants 選択対象の個体群
+   * @return 選択された個体
+   */
   @Override
   public Variant exec(final List<Variant> variants) {
     final Fitness maxFitness = variants.stream()

@@ -23,6 +23,14 @@ public class FirstVariantRandomSelection implements FirstVariantSelectionStrateg
     this.random = random;
   }
 
+  /**
+   * 選択を行うメソッド．選択対象の個体群を引数として与える必要あり．
+   * 
+   * @see jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy#exec(List)
+   * 
+   * @param variants 選択対象の個体群
+   * @return 選択された個体
+   */
   @Override
   public Variant exec(final List<Variant> variants) {
     return variants.get(random.nextInt(variants.size()));
