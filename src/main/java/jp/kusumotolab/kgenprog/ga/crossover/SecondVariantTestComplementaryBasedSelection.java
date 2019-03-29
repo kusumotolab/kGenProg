@@ -9,18 +9,37 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
-public class SecondVariantTestComplementaryBasedSelection implements SecondVariantSelectionStrategy {
+/**
+ * 交叉において，2つ目の親を1つ目の親とのテストの相補性に基づいて選択するアルゴリズムを実装したクラス． 選択の第一基準：1つ目の親が失敗しているテストを多く成功している．
+ * 選択の第二基準：1つ目の親が成功しているテストを多く成功している．
+ * 
+ * @author higo
+ *
+ */
+public class SecondVariantTestComplementaryBasedSelection
+    implements SecondVariantSelectionStrategy {
 
-  // 処理手順は以下の通り．
-  // 1. 第一バリアントを取り除いたバリアントのリスト（secondVariantCandidates）を作成
-  // 2. secondVariantCandidatesを，第一バリアントが成功したテストについてテストの成功数の降順でソート．
-  // 3. secondVariantCandidatesを，第一バリアントが失敗したテストについてテストの成功数の降順でソート．
-  // 4. secondVariantCandidatesの先頭の要素を返す．
+
+  /**
+   * 選択を行うメソッド．選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．
+   *
+   * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
+   * 
+   * @param variants 選択対象の個体群
+   * @param firstVariant 1つ目の親として選択された個体
+   * @return 選択された個体
+   */
   @Override
   public Variant exec(final List<Variant> variants, final Variant firstVariant)
       throws CrossoverInfeasibleException {
 
-    // 第一バリアントを取り除いたバリアントのリストを作成
+    // 処理手順は以下の通り．
+    // 1. 1つ目の親を取り除いた個体群（secondVariantCandidates）を作成
+    // 2. secondVariantCandidatesを，1つ目の親が成功したテストについてテストの成功数の降順でソート．
+    // 3. secondVariantCandidatesを，1つ目の親が失敗したテストについてテストの成功数の降順でソート．
+    // 4. secondVariantCandidatesの先頭の個体を返す．
+
+    // 1つ目の親を取り除いた個体群のリストを作成
     final List<Variant> secondVariantCandidates = variants.stream()
         .filter(v -> !v.equals(firstVariant))
         .collect(Collectors.toList());
@@ -42,7 +61,7 @@ public class SecondVariantTestComplementaryBasedSelection implements SecondVaria
         .reversed();
     Collections.sort(secondVariantCandidates, comparator);
 
-    // variantsの最初の要素を返す
+    // リストの最初の要素を返す
     return secondVariantCandidates.get(0);
   }
 

@@ -14,13 +14,24 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 /**
- * ランダム交叉を行うクラス
+ * ランダム交叉を行うクラス．
+ * 
+ * @author higo
  *
  */
 public class RandomCrossover extends CrossoverAdaptor {
 
   private final Random random;
 
+  /**
+   * コンストラクタ．ランダム交叉に必要な情報を全て引数として渡す必要あり．
+   * 
+   * @param random 交叉処理の内部でランダム処理を行うためのシード値
+   * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
+   * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
+   * @param generatingCount 一度の交叉処理で生成する個体の数
+   * @return 交叉を行うインスタンス
+   */
   public RandomCrossover(final Random random,
       final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,

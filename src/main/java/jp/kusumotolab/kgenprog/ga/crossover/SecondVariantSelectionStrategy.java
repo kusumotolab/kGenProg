@@ -5,7 +5,7 @@ import java.util.Random;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
- * 交叉の二つ目の親を選択する戦略のインターフェース． 一つ目の親として選択されたバリアントとは異なるバリアントを選択する必要がある．
+ * 交叉において，2つ目の親の選択アルゴリズムを表すインターフェース． 一つ目の親として選択された個体とは異なる個体を選択する必要がある．
  * 
  * @author higo
  *
@@ -13,11 +13,11 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 public interface SecondVariantSelectionStrategy {
 
   /**
-   * 交叉の二つ目の親を選択するメソッド．
+   * 選択を行うメソッド．選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．
    * 
-   * @param variants 親の候補
-   * @param firstVariant 一つ目の親として選択されたバリアント
-   * @return 二つ目の親として選択されたバリアント
+   * @param variants 選択対象の個体群
+   * @param firstVariant 1つ目の親として選択された個体
+   * @return 選択された個体
    */
   Variant exec(List<Variant> variants, Variant firstVariant) throws CrossoverInfeasibleException;
 
