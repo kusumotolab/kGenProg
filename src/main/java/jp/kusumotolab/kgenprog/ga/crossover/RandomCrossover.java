@@ -41,7 +41,7 @@ public class RandomCrossover extends CrossoverAdaptor {
   }
 
   @Override
-  public List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
+  protected List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
       throws CrossoverInfeasibleException {
     final Variant variantA = getFirstVariantSelectionStrategy().exec(variants);
     final Variant variantB = getSecondVariantSelectionStrategy().exec(variants, variantA);
