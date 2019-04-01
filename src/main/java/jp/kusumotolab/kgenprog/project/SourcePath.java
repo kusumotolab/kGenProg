@@ -14,7 +14,7 @@ public abstract class SourcePath {
 
   /**
    * SourcePathを生成する
-   * 
+   *
    * @param rootPath プロジェクトルートへのパス {@link TargetProject#rootPath}
    * @param path ルートからの相対パス
    */
@@ -47,13 +47,15 @@ public abstract class SourcePath {
 
   /**
    * 相対パスに変換する
-   * 
+   *
    * @param base 基準となるパス
    * @param target 対象パス
    * @return 相対パス
    */
   public static Path relativize(final Path base, final Path target) {
-    return base.toAbsolutePath()
-        .relativize(target.toAbsolutePath());
+    return base.normalize()
+        .toAbsolutePath()
+        .relativize(target.normalize()
+            .toAbsolutePath());
   }
 }
