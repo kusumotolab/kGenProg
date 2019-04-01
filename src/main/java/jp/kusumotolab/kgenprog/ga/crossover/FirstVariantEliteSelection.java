@@ -8,7 +8,9 @@ import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
- * 交叉において，1つ目の親を評価関数に基づいて選択するアルゴリズムを実装したクラス． 評価関数が最大のバリアントを選択される． 最大のバリアントが複数ある場合は，それらの中からランダムに選択する．
+ * 交叉において，1つ目の親を評価関数に基づいて選択するアルゴリズムを実装したクラス．<br>
+ * 評価関数が最大のバリアントを選択される．<br>
+ * 最大のバリアントが複数ある場合は，それらの中からランダムに選択する．<br>
  * 
  * @author higo
  *

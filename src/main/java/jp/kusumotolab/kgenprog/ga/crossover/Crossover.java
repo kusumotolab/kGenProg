@@ -6,7 +6,8 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 /**
- * 交叉を表すインターフェース． 交叉アルゴリズムを実装するクラスはこのインターフェースを実装しなければならない．
+ * 交叉を表すインターフェース．<br>
+ * 交叉アルゴリズムを実装するクラスはこのインターフェースを実装しなければならない．<br>
  * 
  * @author higo
  *
@@ -14,7 +15,8 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 public interface Crossover {
 
   /**
-   * 交叉処理を行うメソッド．交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．
+   * 交叉処理を行うメソッド．<br>
+   * 交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．<br>
    * 
    * @param variantStore 交叉対象の個体群
    * @return 交叉により生成された個体群

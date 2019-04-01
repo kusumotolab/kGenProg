@@ -10,8 +10,9 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- * 交叉において，2つ目の親を1つ目の親とのテストの相補性に基づいて選択するアルゴリズムを実装したクラス． 選択の第一基準：1つ目の親が失敗しているテストを多く成功している．
- * 選択の第二基準：1つ目の親が成功しているテストを多く成功している．
+ * 交叉において，2つ目の親を1つ目の親とのテストの相補性に基づいて選択するアルゴリズムを実装したクラス．<br>
+ * 選択の第一基準：1つ目の親が失敗しているテストを多く成功している．<br>
+ * 選択の第二基準：1つ目の親が成功しているテストを多く成功している．<br>
  * 
  * @author higo
  *
@@ -21,7 +22,8 @@ public class SecondVariantTestComplementaryBasedSelection
 
 
   /**
-   * 選択を行うメソッド．選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．
+   * 選択を行うメソッド．<br>
+   * 選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．<br>
    *
    * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
    * 

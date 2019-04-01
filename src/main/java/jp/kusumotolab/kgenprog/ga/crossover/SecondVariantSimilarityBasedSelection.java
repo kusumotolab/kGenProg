@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
- * 交叉において，2つ目の親を1つ目の親との何らかの類似度に基づいて選択するアルゴリズムを実装したクラス． なお，類似度が低い方が優先的に選択されることに注意．
+ * 交叉において，2つ目の親を1つ目の親との何らかの類似度に基づいて選択するアルゴリズムを実装したクラス．<br>
+ * なお，類似度が低い方が優先的に選択されることに注意．<br>
  * 
  * @author higo
  *

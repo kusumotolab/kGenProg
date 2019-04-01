@@ -25,7 +25,8 @@ public class SecondVariantRandomSelection implements SecondVariantSelectionStrat
   }
 
   /**
-   * 選択を行うメソッド．選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．
+   * 選択を行うメソッド．<br>
+   * 選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．<br>
    *
    * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
    * 
