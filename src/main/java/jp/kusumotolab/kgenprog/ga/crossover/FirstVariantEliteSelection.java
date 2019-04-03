@@ -8,17 +8,34 @@ import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
- * 評価関数が最大のバリアントを選択する戦略． 最大のバリアントが複数ある場合は，それらの中からランダムに選択する．
+ * 交叉において，1つ目の親を評価関数に基づいて選択するアルゴリズムを実装したクラス．<br>
+ * 評価関数が最大のバリアントを選択される．<br>
+ * 最大のバリアントが複数ある場合は，それらの中からランダムに選択する．<br>
+ * 
+ * @author higo
  *
  */
 public class FirstVariantEliteSelection implements FirstVariantSelectionStrategy {
 
   private final Random random;
 
+  /**
+   * コンストラクタ．選択においてランダム処理を行うためのシードを引数として渡す必要あり．
+   * 
+   * @param random ランダム処理を行うためのシード
+   */
   public FirstVariantEliteSelection(final Random random) {
     this.random = random;
   }
 
+  /**
+   * 選択を行うメソッド．選択対象の個体群を引数として与える必要あり．
+   * 
+   * @see jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy#exec(List)
+   * 
+   * @param variants 選択対象の個体群
+   * @return 選択された個体
+   */
   @Override
   public Variant exec(final List<Variant> variants) {
     final Fitness maxFitness = variants.stream()

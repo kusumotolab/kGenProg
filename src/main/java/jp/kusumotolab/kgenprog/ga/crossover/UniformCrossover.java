@@ -12,13 +12,24 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 /**
- * 一様交叉を行うクラス
+ * 一様交叉を行うクラス．
  *
+ * @author higo
+ * 
  */
 public class UniformCrossover extends CrossoverAdaptor {
 
   private final Random random;
 
+  /**
+   * コンストラクタ．一様交叉に必要な情報を全て引数として渡す必要あり．
+   * 
+   * @param random 交叉処理の内部でランダム処理を行うためのシード値
+   * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
+   * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
+   * @param generatingCount 一世代の交叉処理で生成する個体の数
+   * @return 交叉を行うインスタンス
+   */
   public UniformCrossover(final Random random,
       final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
@@ -28,7 +39,7 @@ public class UniformCrossover extends CrossoverAdaptor {
   }
 
   @Override
-  public List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
+  protected List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
       throws CrossoverInfeasibleException {
     final Variant variantA = getFirstVariantSelectionStrategy().exec(variants);
     final Variant variantB = getSecondVariantSelectionStrategy().exec(variants, variantA);
