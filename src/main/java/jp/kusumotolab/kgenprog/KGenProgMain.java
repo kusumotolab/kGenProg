@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
+import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
-import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
+import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
-import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.output.PatchStore;
@@ -22,6 +22,14 @@ import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
+/**
+ * kGenProgのメインクラス．<br>
+ * このクラスのインスタンスを生成し，runメソッドを実行することで，自動プログラム修正を行う．<br>
+ * コマンドラインからの実行には{@link CUILauncher}}クラスを用いる．<br>
+ * 
+ * @author higo
+ *
+ */
 public class KGenProgMain {
 
   private static Logger log = LoggerFactory.getLogger(KGenProgMain.class);
@@ -37,6 +45,19 @@ public class KGenProgMain {
   private final PatchGenerator patchGenerator;
   private final JDTASTConstruction astConstruction;
 
+  /**
+   * コンストラクタ．自動プログラム修正に必要な全ての情報を渡す必要あり．
+   * 
+   * @param config 設定情報
+   * @param faultLocalization 自動バグ限局を行うインスタンス
+   * @param mutation 変異を行うインスタンス
+   * @param crossover 交叉を行うインスタンス
+   * @param sourceCodeGeneration コード生成を行うインスタンス
+   * @param sourceCodeValidation コード評価を行うインスタンス
+   * @param variantSelection 個体の選択を行うインスタンス
+   * @param testExecutor テスト実行を行うインスタンス
+   * @param patchGenerator パッチ生成を行うインスタンス
+   */
   public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
@@ -55,6 +76,12 @@ public class KGenProgMain {
     this.patchGenerator = patchGenerator;
   }
 
+  /**
+   * 自動プログラム修正を実行する．<br>
+   * 得られた解（全てのテストケースを通過するプログラム）を返す．<br>
+   * 
+   * @return 得られた解（全てのテストケースを通過するプログラム）
+   */
   public List<Variant> run() {
 
     logConfig();

@@ -2,20 +2,36 @@ package jp.kusumotolab.kgenprog;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 序数を生成するためのクラス
+ * 
+ * @author higo
+ *
+ */
 public class OrdinalNumber extends AtomicInteger {
 
   private static final long serialVersionUID = 1L;
 
+  /**
+   * コンストラクタ．初期値0でインスタンスを生成する．
+   */
   public OrdinalNumber() {
     this(0);
   }
 
+  /**
+   * コンストラクタ．初期値を与えてインスタンスを生成する．
+   * 
+   * @param initialValue 初期値
+   */
   public OrdinalNumber(final int initialValue) {
     super(initialValue);
   }
 
   /**
-   * 序数の文字列表現を返す
+   * 序数の文字列表現を返す．
+   * 
+   * @return 序数の文字列表現
    */
   @Override
   public String toString() {
