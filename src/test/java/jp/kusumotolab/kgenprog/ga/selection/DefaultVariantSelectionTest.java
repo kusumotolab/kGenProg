@@ -146,8 +146,8 @@ public class DefaultVariantSelectionTest {
   /**
    * Variantを生成するメソッド.Fitnessのみを指定する.
    *
-   * @param fitness
-   * @return variant
+   * @param fitness Variantの持つFitness
+   * @return variant 生成したVariant
    */
   private Variant createVariant(final Fitness fitness) {
     final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null);
@@ -157,9 +157,9 @@ public class DefaultVariantSelectionTest {
   /**
    * Variantを生成するメソッド.FitnessとIdを指定する.
    *
-   * @param fitness
-   * @param id
-   * @return variant
+   * @param fitness Variantの持つFitness
+   * @param id Variantに固有の値
+   * @return variant 生成したVariant
    */
   private Variant createVariant(final Fitness fitness, final int id) {
     final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null);

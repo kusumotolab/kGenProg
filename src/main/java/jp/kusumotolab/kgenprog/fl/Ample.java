@@ -22,8 +22,8 @@ public class Ample implements FaultLocalization {
 
   /**
    * 疑惑値を計算する.
-   * @param generatedSourceCode
-   * @param testResults
+   * @param generatedSourceCode 自動バグ限局の対象ソースコード
+   * @param testResults テストの実行結果
    * @return suspiciousnesses 疑惑値
    */
   @Override
