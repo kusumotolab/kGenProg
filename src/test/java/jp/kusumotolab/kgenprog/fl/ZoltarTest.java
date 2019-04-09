@@ -14,8 +14,14 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
+/**
+ * Zoltarに関するテストクラス.
+ */
 public class ZoltarTest {
 
+  /**
+   * BuildSuccess01によるテストを実行する.
+   */
   @Test
   public void testForExample01() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
@@ -37,6 +43,9 @@ public class ZoltarTest {
         .containsExactly(susp1, susp2, susp3, susp4);
   }
 
+  /**
+   * BuildSuccess02によるテストを実行する.
+   */
   @Test
   public void testForExample02() {
     final Path rootPath = Paths.get("example/BuildSuccess02");
@@ -58,6 +67,11 @@ public class ZoltarTest {
         .containsExactly(susp1, susp2, susp3, susp4);
   }
 
+  /**
+   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
+   *  <br>
+   *  疑惑値のリストが空になることを期待する.
+   */
   @Test
   public void testForFailedProject() throws IOException {
     final Path rootPath = Paths.get("example/BuildFailure01");
