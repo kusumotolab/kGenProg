@@ -19,8 +19,7 @@
 ---
 
 ## Requirements
-- JDK8
-
+- JDK8+
 
 ## Installation
 Just [download](https://github.com/kusumotolab/kGenProg/releases/latest) a jar file.
@@ -70,6 +69,7 @@ $ java -jar path/to/kGenProg.jar
 | `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
+| `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
 | `--mutation-generating-count` | Specifies how many variants are generated in a generation by a mutation. | 10 |
 | `--crossover-generating-count` | Specifies how many variants are generated in a generation by a crossover. | 10 |
 | `--headcount` | Specifies how many variants survive in a generation. | 100 |
@@ -83,3 +83,8 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
+
+### Awards
+- [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
+kGenProg: A High-Performance, High-Extensibility and High-Portability APR System
+
