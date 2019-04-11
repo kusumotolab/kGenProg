@@ -43,7 +43,7 @@ public class RandomMutation extends Mutation {
     final Roulette<Variant> variantRoulette = new Roulette<>(currentVariants, e -> {
       final Fitness fitness = e.getFitness();
       final double value = fitness.getValue();
-      return Double.isNaN(value) ? 0 : value + 1;
+      return Double.isNaN(value) ? 0 : value;
     }, random);
 
     for (int i = 0; i < mutationGeneratingCount; i++) {
