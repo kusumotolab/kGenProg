@@ -85,7 +85,7 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
 
-### Awards
+## Awards
 - [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
 kGenProg: A High-Performance, High-Extensibility and High-Portability APR System
 
