@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
@@ -26,13 +27,13 @@ public class VariantStore {
   private List<Variant> generatedVariants;
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
-  private long variantCounter;
+  private final AtomicLong variantCounter;
 
   public VariantStore(final Configuration config, final Strategies strategies) {
     this.config = config;
     this.strategies = strategies;
 
-    variantCounter = 0;
+    variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
@@ -58,7 +59,7 @@ public class VariantStore {
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
     generation = new OrdinalNumber(1);
-    variantCounter = 1;
+    variantCounter = new AtomicLong(1);
   }
 
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
@@ -160,7 +161,7 @@ public class VariantStore {
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
       final HistoricalElement element) {
-    final LazyVariant variant = new LazyVariant(variantCounter++, generation.get(),
+    final LazyVariant variant = new LazyVariant(variantCounter.getAndIncrement(), generation.get(),
         gene, sourceCode, element);
     final Single<Variant> variantSingle = Single.just(variant)
         .cast(Variant.class)
