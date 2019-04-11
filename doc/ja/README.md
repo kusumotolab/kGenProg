@@ -20,8 +20,7 @@
 ---
 
 ## 動作条件
-- JDK8
-
+- JDK8+
 
 ## インストール
 kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/latest)から jar ファイルをダウンロードしてください．
@@ -71,6 +70,7 @@ $ java -jar path/to/kGenProg.jar
 | `-o`, `--out-dir` | kGenProg が結果の出力を行うディレクトリへのパス．指定ディレクトリ直下に実行時のタイムスタンプを名前とするディレクトリが生成され，そのディレクトリに結果が出力されます． | カレントディレクトリ直下に `kgenprog-out` というディレクトリが作成される |
 | `-v`, `--verbose` | 詳細なログを出力する | `false` |
 | `-q`, `--quiet` | エラー出力のみを行う | `false` |
+| `--config` | 設定ファイルへのパス | カレントディレクトリの `kgenprog.toml` を読み込む |
 | `--mutation-generating-count` | 遺伝的アルゴリズムの変異操作によって1つの世代に生成する個体の数 | 10 |
 | `--crossover-generating-count` | 遺伝的アルゴリズムの交叉操作によって1つの世代に生成する個体の数 | 10 |
 | `--headcount` | 遺伝的アルゴリズムの選択操作によって1世代に残される個体の最大数 | 100 |
@@ -85,3 +85,6 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |
 
+## 受賞
+- [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
+kGenProg: A High-Performance, High-Extensibility and High-Portability APR System
