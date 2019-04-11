@@ -44,7 +44,7 @@ public class FileDiff {
   public void write(final Path outDir) {
     try {
       Files.write(outDir.resolve(fileName + ".java"), modifiedSourceCodeLines);
-      Files.write(outDir.resolve(fileName + ".patch"), diff);
+      Files.write(outDir.resolve(fileName + ".diff"), diff);
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
     }
