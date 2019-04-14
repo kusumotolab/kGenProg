@@ -27,7 +27,7 @@ test = ["src/example/CloseToZeroTest.java"]
 
 # Selects the log level to be shown at least.
 # Acceptable values are "OFF", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", or "ALL"
-log-level = "TRACE"
+log-level = "INFO"
 
 # Specifies how many variants are generated in a generation by a mutation.
 #mutation-generating-count = <num>
