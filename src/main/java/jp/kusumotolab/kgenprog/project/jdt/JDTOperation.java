@@ -31,8 +31,6 @@ public abstract class JDTOperation implements Operation {
           .collect(Collectors.toList());
       return new GeneratedSourceCode(newASTs, generatedSourceCode.getTestAsts());
     } catch (final Exception e) {
-      log.debug("Opperation failed: {}", e.getMessage());
-      log.trace("Trace:", e);
       return createGenerationFailedSourceCode(e);
     }
   }
