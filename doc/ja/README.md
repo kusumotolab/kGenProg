@@ -20,7 +20,7 @@
 ---
 
 ## 動作条件
-- JDK8+
+- JDK8
 
 ## インストール
 kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/latest)から jar ファイルをダウンロードしてください．
