@@ -2158,6 +2158,50 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
+  public void testBuildFromConfigFileWithIsForceOverwrittenFromCmdLineArgs() {
+    final Path configPath = rootDir.resolve("withForceFalse.toml");
+    final String[] args = {"--config", configPath.toString(), "-f"};
+    final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
+
+    assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
+
+    final boolean isForceFromConfigFile = false;
+    assertThat(config.isForce()).isNotEqualTo(isForceFromConfigFile);
+    assertThat(config.isForce()).isTrue();
+
+    assertThat(config.isForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getMutationGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
+    assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
+        Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
+    assertThat(config.getHeadcount()).isEqualTo(Configuration.DEFAULT_HEADCOUNT);
+    assertThat(config.getMaxGeneration()).isEqualTo(Configuration.DEFAULT_MAX_GENERATION);
+    assertThat(config.getTimeLimit()).isEqualTo(Configuration.DEFAULT_TIME_LIMIT);
+    assertThat(config.getTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TIME_LIMIT.getSeconds());
+    assertThat(config.getTestTimeLimit()).isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT);
+    assertThat(config.getTestTimeLimitSeconds())
+        .isEqualTo(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    assertThat(config.getRequiredSolutionsCount())
+        .isEqualTo(Configuration.DEFAULT_REQUIRED_SOLUTIONS_COUNT);
+    assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
+    assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
+    assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
+    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
+    assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
+    assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(
+        Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
+    assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
+        Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
+
+    final TargetProject expectedProject =
+        TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
+            JUnitVersion.JUNIT4);
+    assertThat(config.getTargetProject()).isEqualTo(expectedProject);
+  }
+
+  @Test
   public void testBuildFromConfigFileWithMutationGeneratingCountOverwrittenFromCmdLineArgs() {
     final Path configPath = rootDir.resolve("withMutationGeneratingCount.toml");
     final int mutationGeneratingCountFromCmdLine = 500;
