@@ -415,6 +415,11 @@ public class Configuration {
       return this;
     }
 
+    public Builder setIsForce(final boolean isForce) {
+      this.isForce = isForce;
+      return this;
+    }
+
     public Builder setMutationGeneratingCount(final int mutationGeneratingCount) {
       this.mutationGeneratingCount = mutationGeneratingCount;
       return this;
