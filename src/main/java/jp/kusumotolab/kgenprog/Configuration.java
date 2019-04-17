@@ -50,6 +50,7 @@ public class Configuration {
   public static final Duration DEFAULT_TEST_TIME_LIMIT = Duration.ofSeconds(10);
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
+  public static final boolean DEFAULT_IS_FORCE = false;
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
@@ -63,6 +64,7 @@ public class Configuration {
   private final TargetProject targetProject;
   private final List<String> executionTests;
   private final Path outDir;
+  private final boolean isForce;
   private final int mutationGeneratingCount;
   private final int crossoverGeneratingCount;
   private final int headcount;
@@ -86,6 +88,7 @@ public class Configuration {
     targetProject = builder.targetProject;
     executionTests = builder.executionTests;
     outDir = builder.outDir;
+    isForce = builder.isForce;
     mutationGeneratingCount = builder.mutationGeneratingCount;
     crossoverGeneratingCount = builder.crossoverGeneratingCount;
     headcount = builder.headcount;
@@ -115,6 +118,10 @@ public class Configuration {
 
   public Path getOutDir() {
     return outDir;
+  }
+
+  public boolean isForce() {
+    return isForce;
   }
 
   public int getMutationGeneratingCount() {
@@ -243,6 +250,10 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
+
+    @com.electronwill.nightconfig.core.conversion.Path("force")
+    @PreserveNotNull
+    private boolean isForce = DEFAULT_IS_FORCE;
 
     @com.electronwill.nightconfig.core.conversion.Path("mutation-generating-count")
     @PreserveNotNull
@@ -507,6 +518,7 @@ public class Configuration {
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
       validateExistences(builder);
       validateCurrentDir(builder);
+      validateOutDir(builder);
     }
 
     private static void validateExistences(final Builder builder) throws IllegalArgumentException {
@@ -538,6 +550,27 @@ public class Configuration {
         }
       } catch (final IOException e) {
         throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible");
+      }
+    }
+
+    private static void validateOutDir(final Builder builder) {
+
+      try {
+        if (Files.notExists(builder.outDir)) {
+          return;
+        }
+
+        if (Files.list(builder.outDir)
+            .count() > 0 && !builder.isForce) {
+          final String outDirName = builder.outDir
+              .toString();
+          log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
+          log.warn("If you want patches, please run with -f or empty {}", outDirName);
+
+          builder.needNotOutput = true;
+        }
+      } catch (final IOException e) {
+        throw new IllegalArgumentException("directory " + builder.rootDir + " is not accessible");
       }
     }
 
@@ -652,6 +685,12 @@ public class Configuration {
         usage = "Writes patches kGenProg generated to the specified directory.")
     private void setOutDirFromCmdLineParser(final String outDir) {
       this.outDir = Paths.get(outDir);
+    }
+
+    @Option(name = "-f", aliases = "--force",
+        usage = "Remove file in out directory when write patches. If the directory is empty, do not")
+    private void setIsForceFromCmdLineParser(final boolean isForce) {
+      this.isForce = isForce;
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",
