@@ -2168,8 +2168,6 @@ public class ConfigurationBuilderTest {
     final boolean isForceFromConfigFile = false;
     assertThat(config.isForce()).isNotEqualTo(isForceFromConfigFile);
     assertThat(config.isForce()).isTrue();
-
-    assertThat(config.isForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
