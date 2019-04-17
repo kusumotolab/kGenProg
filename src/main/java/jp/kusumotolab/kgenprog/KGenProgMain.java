@@ -16,6 +16,7 @@ import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.output.PatchStore;
 import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
@@ -23,12 +24,10 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 /**
- * kGenProgのメインクラス．<br>
- * このクラスのインスタンスを生成し，runメソッドを実行することで，自動プログラム修正を行う．<br>
- * コマンドラインからの実行には{@link CUILauncher}}クラスを用いる．<br>
- * 
- * @author higo
+ * kGenProgのメインクラス．<br> このクラスのインスタンスを生成し，runメソッドを実行することで，自動プログラム修正を行う．<br> コマンドラインからの実行には{@link
+ * CUILauncher}}クラスを用いる．<br>
  *
+ * @author higo
  */
 public class KGenProgMain {
 
@@ -47,7 +46,7 @@ public class KGenProgMain {
 
   /**
    * コンストラクタ．自動プログラム修正に必要な全ての情報を渡す必要あり．
-   * 
+   *
    * @param config 設定情報
    * @param faultLocalization 自動バグ限局を行うインスタンス
    * @param mutation 変異を行うインスタンス
@@ -77,9 +76,8 @@ public class KGenProgMain {
   }
 
   /**
-   * 自動プログラム修正を実行する．<br>
-   * 得られた解（全てのテストケースを通過するプログラム）を返す．<br>
-   * 
+   * 自動プログラム修正を実行する．<br> 得られた解（全てのテストケースを通過するプログラム）を返す．<br>
+   *
    * @return 得られた解（全てのテストケースを通過するプログラム）
    */
   public List<Variant> run() {
@@ -139,14 +137,11 @@ public class KGenProgMain {
       // 次世代に向けての準備
       variantStore.proceedNextGeneration();
     }
-
-    // 生成されたバリアントのパッチ出力
-    logPatch(variantStore);
-
-    // jsonの出力
-    writeJson(variantStore);
-
     stopwatch.unsplit();
+
+    // パッチ・JSONを出力
+    export(variantStore, patchGenerator);
+
     strategies.finish();
     log.info("execution time: " + stopwatch.toString());
 
@@ -161,28 +156,11 @@ public class KGenProgMain {
     return config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
-  private void logPatch(final VariantStore variantStore) {
-    final PatchStore patchStore = new PatchStore();
-    final List<Variant> completedVariants =
-        variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
+  private void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
+    final Exporter exporter = new Exporter(config, variantStore, patchGenerator);
 
-    for (final Variant completedVariant : completedVariants) {
-      patchStore.add(patchGenerator.exec(completedVariant));
-    }
-
-    patchStore.writeToLogger();
-
-    if (!config.needNotOutput()) {
-      patchStore.writeToFile(config.getOutDir());
-    }
-  }
-
-  private void writeJson(final VariantStore variantStore) {
-    final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
-
-    if (!config.needNotOutput()) {
-      variantStoreExporter.writeToFile(config, variantStore);
-    }
+    exporter.exportPatches();
+    exporter.exportJSON();
   }
 
   private void logConfig() {
