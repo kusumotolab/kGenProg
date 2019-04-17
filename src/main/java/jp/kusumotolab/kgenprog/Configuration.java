@@ -251,7 +251,7 @@ public class Configuration {
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
 
-    @com.electronwill.nightconfig.core.conversion.Path("force")
+    @com.electronwill.nightconfig.core.conversion.Path("is-force")
     @PreserveNotNull
     private boolean isForce = DEFAULT_IS_FORCE;
 
@@ -575,7 +575,7 @@ public class Configuration {
           builder.needNotOutput = true;
         }
       } catch (final IOException e) {
-        throw new IllegalArgumentException("directory " + builder.rootDir + " is not accessible");
+        throw new IllegalArgumentException("directory " + builder.outDir + " is not accessible");
       }
     }
 
