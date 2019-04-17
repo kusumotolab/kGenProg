@@ -18,8 +18,6 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
-import jp.kusumotolab.kgenprog.output.PatchStore;
-import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
