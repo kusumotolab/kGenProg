@@ -1,22 +1,24 @@
 package jp.kusumotolab.kgenprog.ga.codegeneration;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.project.DuplicatedSourceCode;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
-  private final Set<String> sourceCodeSet = new HashSet<>();
+  private final Map<String, Pair<Boolean, String>> sourceCodeMap = new HashMap<>();
 
   @Override
   public void initialize(final Variant initialVariant) {
     final GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
-    sourceCodeSet.add(generatedSourceCode.getMessageDigest());
+    putSourceCode(generatedSourceCode);
   }
 
   @Override
@@ -29,13 +31,19 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
           .apply(generatedSourceCode, base.getTargetLocation());
     }
 
-    if (sourceCodeSet.contains(generatedSourceCode.getMessageDigest())) {
-      generatedSourceCode = new GenerationFailedSourceCode("duplicate sourcecode");
+    if (sourceCodeMap.containsKey((generatedSourceCode.getMessageDigest()))) {
+      final Pair<Boolean, String> pair = sourceCodeMap.get(generatedSourceCode.getMessageDigest());
+      generatedSourceCode = new DuplicatedSourceCode(pair.getLeft(), pair.getRight());
     } else {
-      sourceCodeSet.add(generatedSourceCode.getMessageDigest());
+      putSourceCode(generatedSourceCode);
     }
 
     return generatedSourceCode;
   }
 
+  private void putSourceCode(final GeneratedSourceCode generatedSourceCode) {
+    final ImmutablePair<Boolean, String> pair = new ImmutablePair<>(
+        generatedSourceCode.isGenerationSuccess(), generatedSourceCode.getGenerationMessage());
+    sourceCodeMap.put(generatedSourceCode.getMessageDigest(), pair);
+  }
 }
