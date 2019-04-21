@@ -75,6 +75,10 @@ public class GeneratedSourceCode {
     return false;
   }
 
+  public boolean shouldBeTested() {
+    return isGenerationSuccess() && !isDuplicatedSourceCode();
+  }
+
   public String getGenerationMessage() {
     return "Generate Success";
   }

@@ -23,4 +23,9 @@ public class DuplicatedSourceCode extends GeneratedSourceCode {
   public String getGenerationMessage() {
     return "(Duplicated Source Code) " + generationMessage;
   }
+
+  @Override
+  public boolean isDuplicatedSourceCode() {
+    return true;
+  }
 }

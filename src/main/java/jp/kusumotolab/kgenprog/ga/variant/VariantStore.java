@@ -167,7 +167,7 @@ public class VariantStore {
         .cast(Variant.class)
         .cache();
 
-    final Single<TestResults> resultsSingle = sourceCode.isGenerationSuccess()
+    final Single<TestResults> resultsSingle = sourceCode.shouldBeTested()
         ? strategies.execAsyncTestExecutor(variantSingle)
         .cache()
         : Single.just(EmptyTestResults.instance);
