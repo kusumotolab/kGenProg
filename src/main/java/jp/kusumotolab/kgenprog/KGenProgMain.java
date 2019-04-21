@@ -224,9 +224,11 @@ public class KGenProgMain {
         .append("Variants: generated ")
         .append(variantsByMutation.size() + variantsByCrossover.size())
         .append(", syntax-valid ")
-        .append(count(variants, v -> v.isSyntaxValid()))
+        .append(count(variants, Variant::isSyntaxValid))
+        .append(", syntax-valid-and-new ")
+        .append(count(variants, Variant::isDuplicated))
         .append(", build-succeeded ")
-        .append(count(variants, v -> v.isBuildSucceeded()))
+        .append(count(variants, Variant::isBuildSucceeded))
         .append(System.lineSeparator())
         .append("Fitness: max ")
         .append(getMaxText(variants))
@@ -268,16 +270,16 @@ public class KGenProgMain {
 
   private double getAverage(final List<Variant> variants) {
     return variants.stream()
-        .filter(v -> v.isBuildSucceeded())
-        .mapToDouble(v -> getFitnessValue(v))
+        .filter(Variant::isBuildSucceeded)
+        .mapToDouble(this::getFitnessValue)
         .average()
         .orElse(Double.NaN);
   }
 
   private Map<Double, Long> getFrequencies(final List<Variant> variants) {
     return variants.stream()
-        .filter(v -> v.isBuildSucceeded())
-        .collect(Collectors.groupingBy(v -> getFitnessValue(v), Collectors.counting()));
+        .filter(Variant::isBuildSucceeded)
+        .collect(Collectors.groupingBy(this::getFitnessValue, Collectors.counting()));
   }
 
   private double getFitnessValue(final Variant variant) {

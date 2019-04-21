@@ -46,6 +46,10 @@ public class Variant {
     return generatedSourceCode.isGenerationSuccess();
   }
 
+  public boolean isDuplicated() {
+    return generatedSourceCode.isDuplicatedSourceCode();
+  }
+
   public boolean isBuildSucceeded() {
     return EmptyTestResults.class != testResults.getClass();
   }
