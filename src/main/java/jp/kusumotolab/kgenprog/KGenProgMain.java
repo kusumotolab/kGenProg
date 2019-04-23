@@ -229,7 +229,7 @@ public class KGenProgMain {
         .append(count(variants, v -> v.triedBuild() && !v.isBuildSucceeded()))
         .append(", syntax-invalid ")
         .append(count(variants, v -> !v.isSyntaxValid() && !v.isReproduced()))
-        .append(", duplicated ")
+        .append(", redundant ")
         .append(count(variants, Variant::isReproduced))
         .append(System.lineSeparator())
         .append("Fitness: max ")
