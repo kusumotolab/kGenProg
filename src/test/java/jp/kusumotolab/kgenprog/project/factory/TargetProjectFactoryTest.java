@@ -131,10 +131,9 @@ public class TargetProjectFactoryTest {
     final TargetProject project = TargetProjectFactory.create(rootPath, fooPath, fooTestPath,
         Collections.emptyList(), JUnitVersion.JUNIT4);
 
-    final String actualBuildConfigPath = "example/BuildSuccess01/build.xml";
-    final String projectBuildConfigPath = TargetProjectFactory.getBuildConfigPaths(rootPath)
-        .get(0)
-        .toString();
+    final Path actualBuildConfigPath = Paths.get("example/BuildSuccess01/build.xml");
+    final Path projectBuildConfigPath = TargetProjectFactory.getBuildConfigPaths(rootPath)
+        .get(0);
 
     // ファイル生成の後処理
     Files.deleteIfExists(configPath);
