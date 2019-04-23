@@ -27,8 +27,7 @@ public class DefaultSourceCodeGenerationTest {
     final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final Variant initialVariant = TestUtil.createVariant(config);
-    final VariantStore variantStore = getVariantStore(initialVariant);
+    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     final Base base = new Base(null, new NoneOperation());
     final Gene gene = new Gene(Collections.singletonList(base));
     final DefaultSourceCodeGeneration defaultSourceCodeGeneration =
@@ -51,8 +50,9 @@ public class DefaultSourceCodeGenerationTest {
     final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final Variant initialVariant = TestUtil.createVariant(config);
-    final VariantStore variantStore = getVariantStore(initialVariant);
+    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
+    final Variant initialVariant = variantStore.getInitialVariant();
+
     final Base base = new Base(null, new NoneOperation());
     final Gene gene = new Gene(Collections.singletonList(base));
     final DefaultSourceCodeGeneration defaultSourceCodeGeneration =
@@ -74,7 +74,7 @@ public class DefaultSourceCodeGenerationTest {
         TargetProjectFactory.create(Paths.get("example/BuildSuccess01"));
     final Configuration config = new Configuration.Builder(targetProject).build();
     final Variant initialVariant = TestUtil.createVariant(config);
-    final VariantStore variantStore = getVariantStore(initialVariant);
+    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final Gene initialGene = new Gene(new ArrayList<>());
     final Base noneBase = new Base(null, new NoneOperation());
@@ -104,8 +104,4 @@ public class DefaultSourceCodeGenerationTest {
 
   // TODO: None以外のOperationでテストする必要有り
 
-  @SuppressWarnings("deprecation")
-  private VariantStore getVariantStore(final Variant initialVariant) {
-    return new VariantStore(initialVariant);
-  }
 }

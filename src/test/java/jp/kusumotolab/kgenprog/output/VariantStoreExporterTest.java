@@ -46,7 +46,7 @@ public class VariantStoreExporterTest {
         .setOutDir(outDir)
         .build();
 
-    final VariantStore variantStore = new VariantStore(TestUtil.createVariant(config));
+    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
     variantStoreExporter.writeToFile(config, variantStore);
 

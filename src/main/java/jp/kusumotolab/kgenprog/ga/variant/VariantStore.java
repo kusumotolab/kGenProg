@@ -41,25 +41,9 @@ public class VariantStore {
     allVariants.add(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
+
+    // 最後に次の世代番号に進めておく
     generation.incrementAndGet();
-  }
-
-  /**
-   * テスト用
-   */
-  @Deprecated
-  public VariantStore(final Variant initialVariant) {
-    this.config = null;
-    this.strategies = null;
-    this.initialVariant = initialVariant;
-
-    currentVariants = Collections.singletonList(initialVariant);
-    allVariants = new ArrayList<>();
-    allVariants.add(initialVariant);
-    generatedVariants = new ArrayList<>();
-    foundSolutions = new ArrayList<>();
-    generation = new OrdinalNumber(1);
-    variantCounter = new AtomicLong(1);
   }
 
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
@@ -166,7 +150,6 @@ public class VariantStore {
     final Single<Variant> variantSingle = Single.just(variant)
         .cast(Variant.class)
         .cache();
-
     final Single<TestResults> resultsSingle = sourceCode.isGenerationSuccess()
         ? strategies.execAsyncTestExecutor(variantSingle)
         .cache()
