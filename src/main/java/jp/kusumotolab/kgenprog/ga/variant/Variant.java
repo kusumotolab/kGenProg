@@ -54,6 +54,10 @@ public class Variant {
     return EmptyTestResults.class != testResults.getClass();
   }
 
+  public boolean triedBuild() {
+    return generatedSourceCode.shouldBeTested();
+  }
+
   public OrdinalNumber getGenerationNumber() {
     return new OrdinalNumber(generationNumber);
   }
