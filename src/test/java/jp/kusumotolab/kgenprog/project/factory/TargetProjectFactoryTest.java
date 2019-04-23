@@ -103,7 +103,7 @@ public class TargetProjectFactoryTest {
   }
 
   @Test
-  public void testBuildConfigPaths01() throws IOException {
+  public void testCreateByBuildConfig01() throws IOException {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final List<Path> fooPath = Arrays.asList(rootPath.resolve(FOO));
     final List<Path> fooTestPath = Arrays.asList(rootPath.resolve(FOO_TEST));
@@ -139,6 +139,7 @@ public class TargetProjectFactoryTest {
     Files.deleteIfExists(configPath);
     System.setErr(ps);
 
+    // TODO いったん，buildConfigPathの中身だけチェック．本来TargetProjectを生成してその中身をassertすべき．
     assertThat(project.rootPath).isSameAs(rootPath);
     assertThat(project.getClassPaths()).containsExactlyInAnyOrder(JUNIT);
     assertThat(projectBuildConfigPath).isEqualTo(actualBuildConfigPath);

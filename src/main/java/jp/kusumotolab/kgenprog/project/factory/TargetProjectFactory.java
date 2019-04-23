@@ -52,7 +52,12 @@ public class TargetProjectFactory {
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, final List<Path> pathsForClass,
       final JUnitVersion junitVersion) {
+    
+    // TODO ビルドツールの設定ファイルを参照するように変えたが，そのファイルの中身は一切反映されていない．
+    // いったんunusedで逃げておく．
+    @SuppressWarnings("unused")
     final List<Path> pathsForBuildConfig = getBuildConfigPaths(rootPath);
+    
     return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
         pathsForClass, junitVersion).create();
   }
