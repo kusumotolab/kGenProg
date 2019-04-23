@@ -8,7 +8,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.project.DuplicatedSourceCode;
+import jp.kusumotolab.kgenprog.project.ReproducedSourceCode;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
@@ -33,7 +33,7 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
     if (sourceCodeMap.containsKey((generatedSourceCode.getMessageDigest()))) {
       final Pair<Boolean, String> pair = sourceCodeMap.get(generatedSourceCode.getMessageDigest());
-      generatedSourceCode = new DuplicatedSourceCode(pair.getLeft(), pair.getRight());
+      generatedSourceCode = new ReproducedSourceCode(pair.getLeft(), pair.getRight());
     } else {
       putSourceCode(generatedSourceCode);
     }

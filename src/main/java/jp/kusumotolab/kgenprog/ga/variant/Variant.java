@@ -46,8 +46,8 @@ public class Variant {
     return generatedSourceCode.isGenerationSuccess();
   }
 
-  public boolean isDuplicated() {
-    return generatedSourceCode.isDuplicatedSourceCode();
+  public boolean isReproduced() {
+    return generatedSourceCode.isReproducedSourceCode();
   }
 
   public boolean isBuildSucceeded() {

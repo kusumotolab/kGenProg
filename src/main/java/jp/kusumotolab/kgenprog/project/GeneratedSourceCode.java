@@ -71,12 +71,12 @@ public class GeneratedSourceCode {
     return true;
   }
 
-  public boolean isDuplicatedSourceCode() {
+  public boolean isReproducedSourceCode() {
     return false;
   }
 
   public boolean shouldBeTested() {
-    return isGenerationSuccess() && !isDuplicatedSourceCode();
+    return isGenerationSuccess() && !isReproducedSourceCode();
   }
 
   public String getGenerationMessage() {

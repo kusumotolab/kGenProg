@@ -226,7 +226,7 @@ public class KGenProgMain {
         .append(", syntax-valid ")
         .append(count(variants, Variant::isSyntaxValid))
         .append(", syntax-valid-and-new ")
-        .append(count(variants, Variant::isDuplicated))
+        .append(count(variants, Variant::isReproduced))
         .append(", build-succeeded ")
         .append(count(variants, Variant::isBuildSucceeded))
         .append(System.lineSeparator())

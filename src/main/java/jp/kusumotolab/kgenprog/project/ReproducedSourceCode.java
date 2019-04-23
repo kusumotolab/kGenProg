@@ -2,12 +2,12 @@ package jp.kusumotolab.kgenprog.project;
 
 import java.util.Collections;
 
-public class DuplicatedSourceCode extends GeneratedSourceCode {
+public class ReproducedSourceCode extends GeneratedSourceCode {
 
   private final boolean isGenerationSuccess;
   private final String generationMessage;
 
-  public DuplicatedSourceCode(final boolean isGenerationSuccess, final String generationMessage) {
+  public ReproducedSourceCode(final boolean isGenerationSuccess, final String generationMessage) {
     super(Collections.emptyList(), Collections.emptyList());
 
     this.isGenerationSuccess = isGenerationSuccess;
@@ -21,11 +21,11 @@ public class DuplicatedSourceCode extends GeneratedSourceCode {
 
   @Override
   public String getGenerationMessage() {
-    return "(Duplicated Source Code) " + generationMessage;
+    return "(Reproduced Source Code) " + generationMessage;
   }
 
   @Override
-  public boolean isDuplicatedSourceCode() {
+  public boolean isReproducedSourceCode() {
     return true;
   }
 }
