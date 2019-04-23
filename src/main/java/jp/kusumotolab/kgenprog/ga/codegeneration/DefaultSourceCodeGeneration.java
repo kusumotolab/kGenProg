@@ -2,18 +2,17 @@ package jp.kusumotolab.kgenprog.ga.codegeneration;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.project.ReproducedSourceCode;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.ReproducedSourceCode;
 
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
-  private final Map<String, Pair<Boolean, String>> sourceCodeMap = new HashMap<>();
+  private final Map<String, ReproducedStatus> sourceCodeMap = new HashMap<>();
 
   @Override
   public void initialize(final Variant initialVariant) {
@@ -27,13 +26,14 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
     GeneratedSourceCode generatedSourceCode = initialVariant.getGeneratedSourceCode();
 
     for (final Base base : gene.getBases()) {
-      generatedSourceCode = base.getOperation()
-          .apply(generatedSourceCode, base.getTargetLocation());
+      final Operation operation = base.getOperation();
+      generatedSourceCode = operation.apply(generatedSourceCode, base.getTargetLocation());
     }
 
     if (sourceCodeMap.containsKey((generatedSourceCode.getMessageDigest()))) {
-      final Pair<Boolean, String> pair = sourceCodeMap.get(generatedSourceCode.getMessageDigest());
-      generatedSourceCode = new ReproducedSourceCode(pair.getLeft(), pair.getRight());
+      final ReproducedStatus status = sourceCodeMap.get(generatedSourceCode.getMessageDigest());
+      status.incrementCounter();
+      generatedSourceCode = new ReproducedSourceCode(status);
     } else {
       putSourceCode(generatedSourceCode);
     }
@@ -42,8 +42,8 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
   }
 
   private void putSourceCode(final GeneratedSourceCode generatedSourceCode) {
-    final ImmutablePair<Boolean, String> pair = new ImmutablePair<>(
+    final ReproducedStatus status = new ReproducedStatus(
         generatedSourceCode.isGenerationSuccess(), generatedSourceCode.getGenerationMessage());
-    sourceCodeMap.put(generatedSourceCode.getMessageDigest(), pair);
+    sourceCodeMap.put(generatedSourceCode.getMessageDigest(), status);
   }
 }
