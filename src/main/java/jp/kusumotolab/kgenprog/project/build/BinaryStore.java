@@ -13,7 +13,17 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
  * 差分ビルド + インメモリビルドのためのバイナリ格納庫．<br>
- * ビルド結果となるJavaMemoryObjectバイナリを保持する． <br>
+ * 主たる責務はビルド結果となる{@link JavaBinaryObject}バイナリの集合の保持． <br>
+ * 
+ * {@link JavaBinaryObject}が保持する情報に基づき，kgp言語とjavax.tools言語を橋渡し（翻訳）する責務も取り持つ．<br>
+ * - kgp言語（SourcePath+FullyQualifiedName）<br>
+ * - javax.tools言語（fqnのString）<br> 
+ * 
+ * また，保持されているバイナリはfqnやソースパス等様々なクエリで取り出しが可能．<br>
+ * 
+ * 本クラスは2種類の使われ方がある．<br>
+ * - ProjectBuilderが保持する，全ビルド結果保持用のグローバルキャッシュ（kgpプロセスで唯一）<br>
+ * - BuildResultsが保持する，そのビルド実行のみの結果（ビルドのたびに生成される）<br>
  * 
  * @author shinsuke
  *
@@ -28,6 +38,9 @@ public class BinaryStore {
   final private Multimap<SourcePath, JavaBinaryObject> pathMap; // 1対多
   final private Multimap<String, JavaBinaryObject> originMap; // 1対多
 
+  /**
+   * コンストラクタ
+   */
   public BinaryStore() {
     cache = new HashSet<>();
     fqnMap = new HashMap<>();
@@ -35,6 +48,10 @@ public class BinaryStore {
     originMap = HashMultimap.create();
   }
 
+  /**
+   * 単一バイナリオブジェクトの格納．
+   * @param object 格納対象のバイナリ
+   */
   public void add(final JavaBinaryObject object) {
     cache.add(object);
     fqnMap.put(object.getFqn(), object);
@@ -42,18 +59,38 @@ public class BinaryStore {
     originMap.put(object.getOriginFqn() + object.getOriginDigest(), object);
   }
 
+  /**
+   * 全バイナリ集合の取得
+   * @return
+   */
   public Collection<JavaBinaryObject> getAll() {
     return cache;
   }
 
+  /**
+   * FQN+Digestをクエリとしたバイナリ集合の取得
+   * @param fqn
+   * @param digest ソースコードから生成されたMD5ハッシュ（差分ビルドのためのハッシュ情報）
+   * @return 取得結果
+   */
   public Collection<JavaBinaryObject> get(final FullyQualifiedName fqn, final String digest) {
     return originMap.get(fqn + digest);
   }
 
+  /**
+   * FQNをクエリとした単一バイナリの取得
+   * @param fqn
+   * @return 取得結果
+   */
   public JavaBinaryObject get(final FullyQualifiedName fqn) {
     return fqnMap.get(fqn);
   }
 
+  /**
+   * 
+   * @param path
+   * @return
+   */
   public Collection<JavaBinaryObject> get(final SourcePath path) {
     return pathMap.get(path);
   }

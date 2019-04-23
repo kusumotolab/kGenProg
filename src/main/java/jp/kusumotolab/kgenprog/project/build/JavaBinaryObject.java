@@ -16,8 +16,10 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
- * コンパイル後のJavaバイナリオブジェクトクラス．<br>
+ * コンパイル後の単一のJavaバイナリを表すオブジェクト．<br>
  * バイナリ自体のFQNやバイナリ生成元となったファイルのPath等，翻訳に必要な情報全てを内包する．<br>
+ * 
+ * javax.tools.JavaFileObjectの継承オブジェクトであり，java.tools.JavaFileManagerが呼び出す様々なメソッドを持つ．
  * 
  * @author shinsuke
  *
@@ -35,6 +37,8 @@ public class JavaBinaryObject implements JavaFileObject {
   private final long lastModified;
 
   /**
+   * コンストラクタ
+   * 
    * @param fqn バイナリ自体のFQN
    * @param originFqn バイナリ生成元のFQN（基本はfqn=originFqnだが内部クラスの場合特殊）
    * @param originDigest バイナリ生成元のダイジェスト

@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.build;
 
-
 import java.io.IOException;
 import java.util.Set;
 import javax.tools.FileObject;
@@ -14,6 +13,14 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 
+/**
+ * メモリ上でファイルシステムを模倣するファイルマネージャ．<br>
+ * KGP高速化のためのインメモリビルドが責務．<br>
+ * {@link javax.tools.JavaCompiler}が本クラスを操作し，ビルド結果の書き出しや依存クラスの解決を行う．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
   // ビルド結果を格納するStore
@@ -32,6 +39,11 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     this.classPathBinaries = classPathBinaries;
   }
 
+  /**
+   * バイナリをFMに書き出すメソッド．<br>
+   * 指定された書き出し対象のバイナリオブジェクトをkgp専用のオブジェクト（JavaBinaryObject）に変換し，<br>
+   * キャッシュ（BinaryStore）に格納する．
+   */
   @Override
   public JavaFileObject getJavaFileForOutput(final Location location, final String name,
       final Kind kind, final FileObject sibling) throws IOException {
@@ -63,7 +75,8 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   }
 
   /**
-   * ビルド中に呼ばれるメソッド．依存クラス等の解決に利用される．
+   * FMの保持する各種ファイルを探し出すメソッド．ビルド中に呼ばれる．<br>
+   * ソースコードファイルの探索や依存解決等に利用される．
    * 
    * @see javax.tools.ForwardingJavaFileManager#list(javax.tools.JavaFileManager.Location,
    *      java.lang.String, java.util.Set, boolean)
@@ -85,7 +98,8 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   }
 
   /**
-   * inferBinaryNameの拡張．JavaMemoryObjectの場合のみ特殊処理．
+   * バイナリの名前解決を行う．<br>
+   * KGPで利用するJavaMemoryObjectが対象の場合に限り，特殊処理を加えている．<br>
    * 
    * @see javax.tools.ForwardingJavaFileManager#inferBinaryName(javax.tools.JavaFileManager.Location,
    *      javax.tools.JavaFileObject)
@@ -101,24 +115,14 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     return fileManager.inferBinaryName(location, file);
   }
 
-  @Override
-  public FileObject getFileForInput(final Location location, final String packageName,
-      final String relativeName) throws IOException {
-    return super.getFileForInput(location, packageName, relativeName);
-  }
-
-  @Override
-  public JavaFileObject getJavaFileForInput(final Location location, final String className,
-      final Kind kind) throws IOException {
-    return super.getJavaFileForInput(location, className, kind);
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // unsupported operations
-
+  /**
+   * 指定ファイルが同一オブジェクトを確認する．<br>
+   * 
+   * TODO 現在利用されていないので無条件で例外を吐かせておく．必要なら実装する．
+   */
   @Override
   public boolean isSameFile(final FileObject a, final FileObject b) {
-    return false;
+    throw new UnsupportedOperationException();
   }
 
 }
