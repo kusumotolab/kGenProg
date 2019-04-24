@@ -16,8 +16,9 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
- * コンパイル後の単一のJavaバイナリを表すオブジェクト．<br>
+ * コンパイル後の単一Javaバイナリを表すオブジェクト．<br>
  * バイナリ自体のFQNやバイナリ生成元となったファイルのPath等，翻訳に必要な情報全てを内包する．<br>
+ * 差分コンパイル時の重複回避のために，fqnと生成元のastから得られるdigest情報をキーとして保持する．<br>
  * 
  * javax.tools.JavaFileObjectの継承オブジェクトであり，java.tools.JavaFileManagerが呼び出す様々なメソッドを持つ．
  * 
@@ -54,7 +55,7 @@ public class JavaBinaryObject implements JavaFileObject {
     this.isTest = isTest;
 
     this.kind = Kind.CLASS; // それ以外ありえないので決め打ち
-    this.uri = URI.create("jmo:///" + fqn.value.replace('.', '/') + kind.extension);
+    this.uri = URI.create("jbo:///" + fqn.value.replace('.', '/') + kind.extension);
 
     this.bos = new ByteArrayOutputStream(); // バイナリ情報の格納先
     this.lastModified = System.currentTimeMillis(); // 生成時刻

@@ -9,7 +9,10 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 /**
  * コンパイル元となるJavaのソースコードを表すオブジェクト．<br>
+ * 差分コンパイル時の重複回避のために，fqnとastから得られるdigest情報をキーとして保持する．<br>
  * 
+ * @author shinsuke
+ *
  */
 public class JavaSourceObject extends SimpleJavaFileObject {
 
