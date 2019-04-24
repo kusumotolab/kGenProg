@@ -24,7 +24,7 @@ import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 /**
  * kGenProgのメインクラス．<br>
  * このクラスのインスタンスを生成し，runメソッドを実行することで，自動プログラム修正を行う．<br>
- * コマンドラインからの実行には{@linkCUILauncher}}クラスを用いる．<br>
+ * コマンドラインからの実行には{@linkCUILauncher}クラスを用いる．<br>
  *
  * @author higo
  */
