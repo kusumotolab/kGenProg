@@ -22,19 +22,19 @@ public class VariantStoreExporterTest {
 
   @Before
   public void setUp() throws IOException {
-    /*
+    /**
      * ./tmp/outが存在するときは./tmp/outを削除する
      * VariantExporter.writeToFile()が出力先ディレクトリが存在しないときに
      * 出力先ディレクトリを作成できている確認するため
-     **/
+     */
     outDir = Paths.get("./tmp/_out-dir-for-test");
-    deleteFile(outDir);
+    TestUtil.deleteDirectory(outDir);
   }
 
   @After
   public void tearDown() throws IOException {
     // 後始末
-    deleteFile(outDir);
+    TestUtil.deleteDirectory(outDir);
   }
 
   @Test
@@ -53,25 +53,5 @@ public class VariantStoreExporterTest {
     // 出力ファイルの存在をチェック
     final Path exportedJsonFile = outDir.resolve("history.json");
     assertThat(exportedJsonFile).exists();
-  }
-
-  /**
-   * ディレクトリの中身ごとディレクトリを削除する
-   */
-  private void deleteFile(final Path path) throws IOException {
-    if (Files.notExists(path)) {
-      return;
-    }
-
-    if (Files.isDirectory(path)) {
-      final List<Path> subFiles = Files.list(path)
-          .collect(Collectors.toList());
-
-      for (final Path subFile : subFiles) {
-        deleteFile(subFile);
-      }
-    }
-
-    Files.delete(path);
   }
 }

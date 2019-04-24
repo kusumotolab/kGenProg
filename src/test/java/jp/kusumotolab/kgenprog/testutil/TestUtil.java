@@ -2,8 +2,13 @@ package jp.kusumotolab.kgenprog.testutil;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
@@ -27,7 +32,9 @@ public class TestUtil {
     when(variant.getGeneratedSourceCode()).thenReturn(sourceCode);
     final TestResults testResults = new LocalTestExecutor(config).exec(variant);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
-    final List<Suspiciousness> suspiciousnesses = config.getFaultLocalization().initialize().exec(sourceCode, testResults);
+    final List<Suspiciousness> suspiciousnesses = config.getFaultLocalization()
+        .initialize()
+        .exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();
     return new Variant(0, 0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
   }
@@ -35,6 +42,23 @@ public class TestUtil {
   public static GeneratedSourceCode createGeneratedSourceCode(final TargetProject project) {
     final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(project);
     return sourceCode;
+  }
+
+  /**
+   * 指定したディレクトリを再帰的に削除する
+   */
+  public static void deleteDirectory(final Path directory) throws IOException {
+    if (Files.notExists(directory)) {
+      return;
+    }
+
+    final List<Path> subFiles = Files.walk(directory)
+        .sorted(Comparator.reverseOrder())
+        .collect(Collectors.toList());
+
+    for (final Path subFile : subFiles) {
+      Files.deleteIfExists(subFile);
+    }
   }
 
 }

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class PatchStoreTest {
 
@@ -20,19 +21,19 @@ public class PatchStoreTest {
 
   @Before
   public void setUp() throws IOException {
-    /*
+    /**
      * ./tmp/outが存在するときは./tmp/outを削除する
      * PatchStore.writeToFile()が出力先ディレクトリが存在しないときに
      * 出力先ディレクトリを作成できているか確認するため
-     **/
+     */
     outDir = Paths.get("./tmp/_out-dir-for-test");
-    deleteFile(outDir);
+    TestUtil.deleteDirectory(outDir);
   }
 
   @After
   public void tearDown() throws IOException {
     // 後始末
-    deleteFile(outDir);
+    TestUtil.deleteDirectory(outDir);
   }
 
   /**
@@ -44,32 +45,28 @@ public class PatchStoreTest {
   public void testWriteToFile() {
     final PatchStore patchStore = new PatchStore();
 
-    // パッチを作成
+    // パッチを作成・出力
     final Patch patch = createPatch(Arrays.asList("file1", "file2"));
     patchStore.add(patch);
-
-    // パッチを出力
     patchStore.writeToFile(outDir);
 
-    // variant1ディレクトリがあるか確認する
     final Path variantDir = outDir.resolve("variant1");
+    final Path javaFile1 = variantDir.resolve("file1.java");
+    final Path javaFile2 = variantDir.resolve("file2.java");
+    final Path diffFile1 = variantDir.resolve("file1.diff");
+    final Path diffFile2 = variantDir.resolve("file2.diff");
+    final Path patchFile = outDir.resolve("variant1.patch");
+
+    // variant1ディレクトリがあるか確認する
     assertThat(variantDir).exists();
-
-    // file1.java file2.javaがあるか確認する
-    for (int i = 1; i <= 2; i++) {
-      final Path javaFile = variantDir.resolve("file" + i + ".java");
-      assertThat(javaFile).exists();
-    }
-
-    // file1.diff file2.diffがある確認する
-    for (int i = 1; i <= 2; i++) {
-      final Path diffFile = variantDir.resolve("file" + i + ".diff");
-      assertThat(diffFile).exists();
-    }
-
     // variant1.patchがあるか確認する
-    final Path variantPatch = outDir.resolve("variant1.patch");
-    assertThat(variantPatch).exists();
+    assertThat(patchFile).exists();
+    // file1.java file2.javaがあるか確認する
+    assertThat(javaFile1).exists();
+    assertThat(javaFile2).exists();
+    // file1.diff file2.diffがある確認する
+    assertThat(diffFile1).exists();
+    assertThat(diffFile2).exists();
   }
 
 
@@ -82,25 +79,5 @@ public class PatchStoreTest {
         .forEach(patch::add);
 
     return patch;
-  }
-
-  /**
-   * ディレクトリの中身ごとディレクトリを削除する
-   */
-  private void deleteFile(final Path path) throws IOException {
-    if (Files.notExists(path)) {
-      return;
-    }
-
-    if (Files.isDirectory(path)) {
-      final List<Path> subFiles = Files.list(path)
-          .collect(Collectors.toList());
-
-      for (final Path subFile : subFiles) {
-        deleteFile(subFile);
-      }
-    }
-
-    Files.delete(path);
   }
 }
