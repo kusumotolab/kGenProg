@@ -10,7 +10,10 @@ import java.util.Map;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
- * A class loader that loads classes from in-memory data.
+ * メモリ上からバイナリを読み込む特殊クラスローダ．<br>
+ * バイナリを格納する配列を抱えており，これを用いてメモリからのクラスロードを試みる．<br>
+ * 
+ * URLClassLoaderを継承しており，メモリロードを行う前に一般的なクラスパス指定の（すなわちファイルシステムからの）クラスロードを試みていることに注意．<br>
  * 
  * @see https://www.jacoco.org/jacoco/trunk/doc/examples/java/CoreTutorial.java
  */
@@ -45,17 +48,22 @@ public class MemoryClassLoader extends URLClassLoader {
   }
 
   /**
-   * メモリ上からクラスを探す． まずURLClassLoaderによるファイルシステム上のクラスのロードを試み，それがなければメモリ上のクラスロードを試す．
+   * メモリ上からクラスを探す． <br>
+   * まずURLClassLoaderによるファイルシステム上のクラスのロードを試み，それがなければメモリ上のクラスロードを試す．
+   * 
    */
   @Override
   protected Class<?> findClass(final String name) throws ClassNotFoundException {
     Class<?> c = null;
+
+    // try to load from classpath
     try {
       c = super.findClass(name);
     } catch (final ClassNotFoundException e1) {
       // ignore
     }
 
+    // if fails, try to load from memory
     if (null == c) {
       final byte[] bytes = definitions.get(name);
       if (bytes != null) {
@@ -66,6 +74,8 @@ public class MemoryClassLoader extends URLClassLoader {
         }
       }
     }
+
+    // otherwise, class not found
     if (null == c) {
       throw new ClassNotFoundException(name);
     }

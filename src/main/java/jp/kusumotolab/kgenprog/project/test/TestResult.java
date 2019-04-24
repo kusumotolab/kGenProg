@@ -6,6 +6,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
+/**
+ * 単一のテスト結果を表すオブジェクト．<br>
+ * テストの成否とカバレッジ情報を持つ．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class TestResult {
 
   final public FullyQualifiedName executedTestFQN;

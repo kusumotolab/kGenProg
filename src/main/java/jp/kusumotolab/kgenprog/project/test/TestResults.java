@@ -14,6 +14,15 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
+/**
+ * 全テストの結果を表すオブジェクト．<br>
+ * TestResultの集合．<br>
+ * 
+ * FL計算に用いる情報集約APIを持つ．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class TestResults {
 
   private final Map<FullyQualifiedName, TestResult> value;

@@ -3,6 +3,13 @@ package jp.kusumotolab.kgenprog.project.test;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
+/**
+ * テスト失敗時のテスト結果．<br>
+ * いわゆるNullオブジェクト．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class EmptyTestResults extends TestResults {
 
   public static final EmptyTestResults instance = new EmptyTestResults();
