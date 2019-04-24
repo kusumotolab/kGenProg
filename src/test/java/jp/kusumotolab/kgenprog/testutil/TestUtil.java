@@ -32,9 +32,7 @@ public class TestUtil {
     when(variant.getGeneratedSourceCode()).thenReturn(sourceCode);
     final TestResults testResults = new LocalTestExecutor(config).exec(variant);
     final Fitness fitness = new DefaultCodeValidation().exec(null, testResults);
-    final List<Suspiciousness> suspiciousnesses = config.getFaultLocalization()
-        .initialize()
-        .exec(sourceCode, testResults);
+    final List<Suspiciousness> suspiciousnesses = config.getFaultLocalization().initialize().exec(sourceCode, testResults);
     final HistoricalElement element = new OriginalHistoricalElement();
     return new Variant(0, 0, gene, sourceCode, testResults, fitness, suspiciousnesses, element);
   }
