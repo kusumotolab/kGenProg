@@ -571,8 +571,6 @@ public class Configuration {
               .toString();
           log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
           log.warn("If you want patches, please run with -f or empty {}", outDirName);
-
-          builder.needNotOutput = true;
         }
       } catch (final IOException e) {
         throw new IllegalArgumentException("directory " + builder.outDir + " is not accessible");
@@ -693,7 +691,7 @@ public class Configuration {
     }
 
     @Option(name = "-f", aliases = "--force",
-        usage = "Remove file in out directory when write patches. If the directory is empty, do not")
+        usage = "Remove file in output directory when write patches.")
     private void setIsForceFromCmdLineParser(final boolean isForce) {
       this.isForce = isForce;
     }
