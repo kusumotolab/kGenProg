@@ -11,8 +11,8 @@ public class ReproducedSourceCode extends GeneratedSourceCode {
   public ReproducedSourceCode(final ReproducedStatus status) {
     super(Collections.emptyList(), Collections.emptyList());
 
-    this.isGenerationSuccess = status.isGenerationSuccess();
-    this.generationMessage = status.getGenerationMessage();
+    this.isGenerationSuccess = status.isGenerationSuccess;
+    this.generationMessage = status.generationMessage;
   }
 
   @Override
