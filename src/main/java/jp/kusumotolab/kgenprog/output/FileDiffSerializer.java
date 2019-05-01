@@ -7,7 +7,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- * FileDiffをシリアライズするクラス</br>
+ * FileDiffをシリアライズするクラス<br>
  *
  * <table border="1">
  * <thead>

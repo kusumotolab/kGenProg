@@ -11,7 +11,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
- * VariantStoreをシリアライズするクラス</br>
+ * VariantStoreをシリアライズするクラス<br>
  *
  * <table border="1">
  * <thead>

@@ -8,7 +8,7 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
- * Variantをシリアライズするクラス</br>
+ * Variantをシリアライズするクラス<br>
  *
  * <table border="1">
  * <thead>

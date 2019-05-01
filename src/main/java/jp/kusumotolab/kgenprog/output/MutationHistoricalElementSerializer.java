@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 
 /**
- * MutationHistoricalElementをシリアライズするクラス</br>
+ * MutationHistoricalElementをシリアライズするクラス<br>
  *
  * <table border="1">
  * <thead>

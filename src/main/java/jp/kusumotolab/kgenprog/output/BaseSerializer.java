@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 
 /**
- * Baseをシリアライズするクラス</br>
+ * Baseをシリアライズするクラス<br>
  *
  * <table border="1">
  * <thead>

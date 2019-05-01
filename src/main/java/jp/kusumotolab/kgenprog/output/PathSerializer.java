@@ -7,7 +7,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 /**
- * Pathをシリアライズするクラス</br>
+ * Pathをシリアライズするクラス<br>
  * オブジェクトではなく文字列型にシリアライズする．
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>

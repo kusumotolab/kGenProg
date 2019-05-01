@@ -6,7 +6,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- * Patchをシリアライズするクラス</br>
+ * Patchをシリアライズするクラス<br>
  * シリアライズされた{@link FileDiff}の配列にシリアライズする．
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>

@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- * TestResultsをシリアライズするクラス</br>
+ * TestResultsをシリアライズするクラス<br>
  *
  * <table border="1">
  * <thead>

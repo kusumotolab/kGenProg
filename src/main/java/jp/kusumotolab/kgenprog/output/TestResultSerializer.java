@@ -8,7 +8,7 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 
 /**
- * TestResultをシリアライズするクラス</br>
+ * TestResultをシリアライズするクラス<br>
  *
  * <table border="1">
  * <thead>
