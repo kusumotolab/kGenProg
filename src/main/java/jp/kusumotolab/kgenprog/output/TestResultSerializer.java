@@ -10,25 +10,26 @@ import jp.kusumotolab.kgenprog.project.test.TestResult;
 /**
  * TestResultをシリアライズするクラス</br>
  *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(TestResult.class, new TestResultSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
  *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    {
- *      "fqn" : "example.FooTest.test01",
- *      "isSuccess" : true
- *    }
- *  }
- * </pre>
+ * <tbody>
+ * <tr>
+ * <td>fqn</td>
+ * <td>実行したテストメソッドの完全修飾名</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>isSuccess</td>
+ * <td>実行したテストメソッドの結果</td>
+ * </tr>
+ * </tbody>
+ * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
  */

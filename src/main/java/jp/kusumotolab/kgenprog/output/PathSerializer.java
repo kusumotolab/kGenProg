@@ -8,24 +8,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 /**
  * Pathをシリアライズするクラス</br>
- * JSONオブジェクトではなく文字列型を返す．
- *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
- *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    "foo.java"
- *  }
- * </pre>
+ * オブジェクトではなく文字列型にシリアライズする．
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
  */

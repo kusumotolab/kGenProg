@@ -11,25 +11,26 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 /**
  * HistoricalElementをシリアライズするクラス</br>
  *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
  *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    {
- *      "parentIds": [1, 3],
- *      "name" : "delete"
- *    }
- *  }
- * </pre>
+ * <tbody>
+ * <tr>
+ * <td>parentIds</td>
+ * <td>親バリアントのID</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>name</td>
+ * <td>適用した操作の名前</td>
+ * </tr>
+ * </tbody>
+ * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
  */

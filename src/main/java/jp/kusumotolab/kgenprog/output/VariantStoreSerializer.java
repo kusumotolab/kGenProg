@@ -11,35 +11,47 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
- * Variantをシリアライズするクラス</br>
+ * VariantStoreをシリアライズするクラス</br>
  *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
  *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    {
- *      "projectName" : "a",
- *      "variants" : [],
- *      "configuration" : {}
- *    }
- *  }
- * </pre>
+ * <tbody>
+ * <tr>
+ * <td>projectName</td>
+ * <td>プロジェクト名</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>variants</td>
+ * <td>生成したバリアントの配列</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>configuration</td>
+ * <td>kGenProgの実行時の設定</td>
+ * </tr>
+ * </tbody>
+ * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ * @see VariantSerializer
+ * @see Configuration
  */
 public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
 
   private final Configuration config;
 
+  /**
+   * コンストラクタ
+   *
+   * @param config 実行時の設定
+   */
   public VariantStoreSerializer(final Configuration config) {
     this.config = config;
   }

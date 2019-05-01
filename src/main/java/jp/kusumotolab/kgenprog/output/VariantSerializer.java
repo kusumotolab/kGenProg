@@ -10,35 +10,73 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 /**
  * Variantをシリアライズするクラス</br>
  *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
  *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    {
- *      "id" : 1,
- *      "generationNumber" : 1,
- *      "selectionCount" : 1,
- *      "fitness" : "0.0",
- *      "isBuildSuccess" : true,
- *      "isSyntaxValid" : true,
- *      "bases" : [],
- *      "patch" : "",
- *      "operation" : {"parentIds":[], "name":""},
- *      "testSummary" : {}
- *    }
- *  }
- * </pre>
+ * <tbody>
+ * <tr>
+ * <td>id</td>
+ * <td>ID</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>generationNumber</td>
+ * <td>生成された世代</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>selectionCount</td>
+ * <td>次世代のバリアントに選ばれた回数</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>fitness</td>
+ * <td>適応度．Nanのときは-1に変換する．</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>isBuildSuccess</td>
+ * <td>ビルド結果</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>isSyntaxValid</td>
+ * <td>文法的に正しいか</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>bases</td>
+ * <td>塩基の配列</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>patch</td>
+ * <td>0世代目のバリアントとの差分</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>operation</td>
+ * <td>適用した操作の配列</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>testSummary</td>
+ * <td>テスト結果</td>
+ * </tr>
+ * </tbody>
+ * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ * @see BaseSerializer
+ * @see PatchSerializer
+ * @see HistoricalElementSerializer
+ * @see MutationHistoricalElementSerializer
+ * @see TestResultSerializer
  */
 public class VariantSerializer implements JsonSerializer<Variant> {
 

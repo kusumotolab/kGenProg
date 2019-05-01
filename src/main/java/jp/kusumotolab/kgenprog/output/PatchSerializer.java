@@ -7,25 +7,7 @@ import com.google.gson.JsonSerializer;
 
 /**
  * Patchをシリアライズするクラス</br>
- *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(Patch.class, new Patch())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
- *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    [
- *    
- *    ]
- *  }
- * </pre>
+ * シリアライズされた{@link FileDiff}の配列にシリアライズする．
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
  */

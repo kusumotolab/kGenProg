@@ -14,37 +14,34 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 /**
  * TestResultsをシリアライズするクラス</br>
  *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
  *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    {
- *      "successRate" : 0.5,
- *      "executedTestsCount" : 2,
- *      "testResults" : [
- *        {
- *          "fqn" : "example.FooTest.test01",
- *          "isSuccess" : true
- *        },
- *        {
- *           "fqn" : "example.FooTest.test02",
- *           "isSuccess" : false
- *        }
- *      ]
- *    }
- *  }
- * </pre>
+ * <tbody>
+ * <tr>
+ * <td>successRate</td>
+ * <td>テストの通過率</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>executedTestsCount</td>
+ * <td>実行したテストの数</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>testResults</td>
+ * <td>シリアラズされた{@link TestResult}の配列</td>
+ * </tr>
+ * </tbody>
+ * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ * @see TestResultSerializer
  */
 public class TestResultsSerializer implements JsonSerializer<TestResults> {
 

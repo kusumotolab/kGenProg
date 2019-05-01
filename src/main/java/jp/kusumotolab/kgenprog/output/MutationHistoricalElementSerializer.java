@@ -11,35 +11,34 @@ import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 /**
  * MutationHistoricalElementをシリアライズするクラス</br>
  *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(MutationHistoricalElement.class, new MutationHistoricalElementSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
  *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    {
- *      "parentIds": [1, 3],
- *      "name" : "insert",
- *      "appendBase" : {
- *        {
- *         "name": "insert",
- *         "fileName" : "foo.java",
- *         "snippet" : "return n--;",
- *         "lineNumberRange" : [10, 12]
- *        }
- *      }
- *    }
- *  }
- * </pre>
+ * <tbody>
+ * <tr>
+ * <td>parentIds</td>
+ * <td>親バリアントのID</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>name</td>
+ * <td>適用した操作の名前</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>appendBase</td>
+ * <td>追加されたBase</td>
+ * </tr>
+ * </tbody>
+ * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ * @see BaseSerializer
  */
 public class MutationHistoricalElementSerializer implements
     JsonSerializer<MutationHistoricalElement> {

@@ -9,25 +9,26 @@ import com.google.gson.JsonSerializer;
 /**
  * FileDiffをシリアライズするクラス</br>
  *
- * 使い方
- * <pre>
- *  {@code
- *    final Gson gson = new GsonBuilder()
- *        .registerTypeHierarchyAdapter(FileDiff.class, new FileDiffSerializer())
- *        .create();
- *    gson.toJson(base);
- *  }
- * </pre>
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
  *
- * 出力されるJSON
- * <pre>
- *  {@code
- *    {
- *      "fileName" : "foo.java",
- *      "diff" : "@@ -1,3 +1,3 @@\npublic void bar(){\n-    return;\n+}"
- *    }
- *  }
- * </pre>
+ * <tbody>
+ * <tr>
+ * <td>fileName</td>
+ * <td>ファイル名</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>diff</td>
+ * <td>Unified形式の差分</td>
+ * </tr>
+ * </tbody>
+ * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
  */
