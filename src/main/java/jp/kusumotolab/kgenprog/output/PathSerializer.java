@@ -14,6 +14,13 @@ import com.google.gson.JsonSerializer;
  */
 public class PathSerializer implements JsonSerializer<Path> {
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param src シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final Path src, final Type type,
       final JsonSerializationContext context) {

@@ -43,6 +43,13 @@ import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 public class CrossoverHistoricalElementSerializer implements
     JsonSerializer<CrossoverHistoricalElement> {
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param crossoverHistoricalElement シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final CrossoverHistoricalElement crossoverHistoricalElement,
       final Type type, final JsonSerializationContext context) {

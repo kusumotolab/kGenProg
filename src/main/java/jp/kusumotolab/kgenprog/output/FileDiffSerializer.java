@@ -34,6 +34,14 @@ import com.google.gson.JsonSerializer;
  */
 public class FileDiffSerializer implements JsonSerializer<FileDiff> {
 
+
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param fileDiff シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final FileDiff fileDiff, final Type type,
       final JsonSerializationContext context) {

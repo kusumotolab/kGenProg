@@ -47,11 +47,11 @@ import jp.kusumotolab.kgenprog.project.LineNumberRange;
 public class BaseSerializer implements JsonSerializer<Base> {
 
   /**
-   * シリアライズを行う</br>
+   * シリアライズを行う<br>
    *
    * @param base シリアライズ対象のオブジェクト
    * @param type シリアライズ対象のオブジェクトの型
-   * @param context オブジェクトをシリアライズするクラス
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
    */
   @Override
   public JsonElement serialize(final Base base, final Type type,

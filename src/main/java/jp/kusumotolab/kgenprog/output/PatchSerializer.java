@@ -13,6 +13,13 @@ import com.google.gson.JsonSerializer;
  */
 public class PatchSerializer implements JsonSerializer<Patch> {
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param patch シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final Patch patch, final Type type,
       final JsonSerializationContext context) {

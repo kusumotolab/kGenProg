@@ -35,6 +35,13 @@ import jp.kusumotolab.kgenprog.project.test.TestResult;
  */
 public class TestResultSerializer implements JsonSerializer<TestResult> {
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param testResult シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final TestResult testResult, final Type type,
       final JsonSerializationContext context) {

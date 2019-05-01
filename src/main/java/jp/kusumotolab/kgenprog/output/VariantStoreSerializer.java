@@ -56,6 +56,13 @@ public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
     this.config = config;
   }
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param variantStore シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final VariantStore variantStore, final Type type,
       final JsonSerializationContext context) {

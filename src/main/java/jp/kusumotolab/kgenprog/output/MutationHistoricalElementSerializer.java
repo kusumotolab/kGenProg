@@ -43,6 +43,13 @@ import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 public class MutationHistoricalElementSerializer implements
     JsonSerializer<MutationHistoricalElement> {
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param mutationHistoricalElement シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final MutationHistoricalElement mutationHistoricalElement,
       final Type type, final JsonSerializationContext context) {

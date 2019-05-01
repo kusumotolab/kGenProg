@@ -36,6 +36,13 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
  */
 public class HistoricalElementSerializer implements JsonSerializer<HistoricalElement> {
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param historicalElement シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final HistoricalElement historicalElement, final Type type,
       final JsonSerializationContext context) {

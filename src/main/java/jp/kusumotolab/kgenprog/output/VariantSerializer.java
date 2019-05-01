@@ -82,6 +82,13 @@ public class VariantSerializer implements JsonSerializer<Variant> {
 
   private final PatchGenerator patchGenerator = new PatchGenerator();
 
+  /**
+   * シリアライズを行う<br>
+   *
+   * @param variant シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   */
   @Override
   public JsonElement serialize(final Variant variant, final Type type,
       final JsonSerializationContext context) {
