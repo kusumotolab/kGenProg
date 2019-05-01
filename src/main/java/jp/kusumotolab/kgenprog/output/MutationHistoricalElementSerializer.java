@@ -8,6 +8,39 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 
+/**
+ * MutationHistoricalElementをシリアライズするクラス</br>
+ *
+ * 使い方
+ * <pre>
+ *  {@code
+ *    final Gson gson = new GsonBuilder()
+ *        .registerTypeHierarchyAdapter(MutationHistoricalElement.class, new MutationHistoricalElementSerializer())
+ *        .create();
+ *    gson.toJson(base);
+ *  }
+ * </pre>
+ *
+ * 出力されるJSON
+ * <pre>
+ *  {@code
+ *    {
+ *      "parentIds": [1, 3],
+ *      "name" : "insert",
+ *      "appendBase" : {
+ *        {
+ *         "name": "insert",
+ *         "fileName" : "foo.java",
+ *         "snippet" : "return n--;",
+ *         "lineNumberRange" : [10, 12]
+ *        }
+ *      }
+ *    }
+ *  }
+ * </pre>
+ *
+ * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ */
 public class MutationHistoricalElementSerializer implements
     JsonSerializer<MutationHistoricalElement> {
 

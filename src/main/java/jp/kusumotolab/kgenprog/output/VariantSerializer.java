@@ -7,6 +7,39 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
+/**
+ * Variantをシリアライズするクラス</br>
+ *
+ * 使い方
+ * <pre>
+ *  {@code
+ *    final Gson gson = new GsonBuilder()
+ *        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
+ *        .create();
+ *    gson.toJson(base);
+ *  }
+ * </pre>
+ *
+ * 出力されるJSON
+ * <pre>
+ *  {@code
+ *    {
+ *      "id" : 1,
+ *      "generationNumber" : 1,
+ *      "selectionCount" : 1,
+ *      "fitness" : "0.0",
+ *      "isBuildSuccess" : true,
+ *      "isSyntaxValid" : true,
+ *      "bases" : [],
+ *      "patch" : "",
+ *      "operation" : {"parentIds":[], "name":""},
+ *      "testSummary" : {}
+ *    }
+ *  }
+ * </pre>
+ *
+ * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ */
 public class VariantSerializer implements JsonSerializer<Variant> {
 
   private final PatchGenerator patchGenerator = new PatchGenerator();

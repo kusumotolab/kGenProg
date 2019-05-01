@@ -11,6 +11,41 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ * TestResultsをシリアライズするクラス</br>
+ *
+ * 使い方
+ * <pre>
+ *  {@code
+ *    final Gson gson = new GsonBuilder()
+ *        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
+ *        .create();
+ *    gson.toJson(base);
+ *  }
+ * </pre>
+ *
+ * 出力されるJSON
+ * <pre>
+ *  {@code
+ *    {
+ *      "successRate" : 0.5,
+ *      "executedTestsCount" : 2,
+ *      "testResults" : [
+ *        {
+ *          "fqn" : "example.FooTest.test01",
+ *          "isSuccess" : true
+ *        },
+ *        {
+ *           "fqn" : "example.FooTest.test02",
+ *           "isSuccess" : false
+ *        }
+ *      ]
+ *    }
+ *  }
+ * </pre>
+ *
+ * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ */
 public class TestResultsSerializer implements JsonSerializer<TestResults> {
 
   @Override

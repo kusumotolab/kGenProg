@@ -8,8 +8,42 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 
+/**
+ * Baseをシリアライズするクラス</br>
+ *
+ * 使い方
+ * <pre>
+ *  {@code
+ *    final Gson gson = new GsonBuilder()
+ *        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
+ *        .create();
+ *    gson.toJson(base);
+ *  }
+ * </pre>
+ *
+ * 出力されるJSON
+ * <pre>
+ *  {@code
+ *    {
+ *      "name": "insert",
+ *      "fileName" : "foo.java",
+ *      "snippet" : "return n--;",
+ *      "lineNumberRange" : [10, 12]
+ *    }
+ *  }
+ * </pre>
+ *
+ * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ */
 public class BaseSerializer implements JsonSerializer<Base> {
 
+  /**
+   * シリアライズを行う</br>
+   *
+   * @param base シリアライズ対象のオブジェクト
+   * @param type シリアライズ対象のオブジェクトの型
+   * @param context オブジェクトをシリアライズするクラス
+   */
   @Override
   public JsonElement serialize(final Base base, final Type type,
       final JsonSerializationContext context) {

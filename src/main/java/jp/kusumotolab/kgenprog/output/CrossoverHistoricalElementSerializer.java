@@ -8,6 +8,33 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 
+
+/**
+ * CrossoverHistoricalElementをシリアライズするクラス</br>
+ *
+ * 使い方
+ * <pre>
+ *  {@code
+ *    final Gson gson = new GsonBuilder()
+ *        .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class, new CrossoverHistoricalElementSerializer())
+ *        .create();
+ *    gson.toJson(base);
+ *  }
+ * </pre>
+ *
+ * 出力されるJSON
+ * <pre>
+ *  {@code
+ *    {
+ *      "parentIds": [1, 3],
+ *      "name" : "crossover",
+ *      "crossoverPoint" : 5
+ *    }
+ *  }
+ * </pre>
+ *
+ * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ */
 public class CrossoverHistoricalElementSerializer implements
     JsonSerializer<CrossoverHistoricalElement> {
 
