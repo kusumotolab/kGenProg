@@ -13,6 +13,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.project.ReproducedSourceCode;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
@@ -42,8 +43,9 @@ public class DefaultSourceCodeGenerationTest {
     // 2回目の生成は失敗する
     final GeneratedSourceCode secondGeneratedSourceCode =
         defaultSourceCodeGeneration.exec(variantStore, gene);
-    assertThat(secondGeneratedSourceCode).isInstanceOf(GenerationFailedSourceCode.class);
-    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo("duplicate sourcecode");
+    assertThat(secondGeneratedSourceCode).isInstanceOf(ReproducedSourceCode.class);
+    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo(
+        "(Reproduced Source Code) Generate Success");
   }
 
   @Test
@@ -64,8 +66,9 @@ public class DefaultSourceCodeGenerationTest {
     // NoneOperationではソースコードは変わらないので失敗するはず
     final GeneratedSourceCode secondGeneratedSourceCode =
         defaultSourceCodeGeneration.exec(variantStore, gene);
-    assertThat(secondGeneratedSourceCode).isInstanceOf(GenerationFailedSourceCode.class);
-    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo("duplicate sourcecode");
+    assertThat(secondGeneratedSourceCode).isInstanceOf(ReproducedSourceCode.class);
+    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo(
+        "(Reproduced Source Code) Generate Success");
   }
 
   @Test

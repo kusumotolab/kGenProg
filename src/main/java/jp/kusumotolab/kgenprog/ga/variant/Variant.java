@@ -46,8 +46,16 @@ public class Variant {
     return generatedSourceCode.isGenerationSuccess();
   }
 
+  public boolean isReproduced() {
+    return generatedSourceCode.isReproducedSourceCode();
+  }
+
   public boolean isBuildSucceeded() {
     return EmptyTestResults.class != testResults.getClass();
+  }
+
+  public boolean triedBuild() {
+    return generatedSourceCode.shouldBeTested();
   }
 
   public OrdinalNumber getGenerationNumber() {
