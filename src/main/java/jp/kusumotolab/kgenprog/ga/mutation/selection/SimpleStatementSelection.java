@@ -9,7 +9,6 @@ import org.eclipse.jdt.core.dom.Statement;
  *
  * @see StatementSelection
  * @see RouletteStatementSelection
- *
  */
 public class SimpleStatementSelection extends StatementSelection {
 
