@@ -25,16 +25,30 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
+/**
+ * ステートメントを探索するビジター
+ */
 public class StatementVisitor extends ASTVisitor {
 
   private final List<ReuseCandidate<Statement>> reuseCandidateList = new ArrayList<>();
   private FullyQualifiedName fqn;
 
+  /**
+   * ステートメントの中に含まれるステートメントを探索する
+   *
+   * @param statement 探索するステートメント(このステートメントの中ののステートメントを探索する)
+   * @param fqn 探索するステートメントの fqn
+   */
   public StatementVisitor(final Statement statement, final FullyQualifiedName fqn) {
     this.fqn = fqn;
     statement.accept(this);
   }
 
+  /**
+   * 引数で与えられたソースごとのリストの中からステートメントを探索する
+   *
+   * @param generatedASTS この中からステートメントを探索する
+   */
   public StatementVisitor(final List<GeneratedAST<ProductSourcePath>> generatedASTS) {
     for (GeneratedAST<ProductSourcePath> generatedAST : generatedASTS) {
       this.fqn = generatedAST.getPrimaryClassName();
@@ -48,6 +62,9 @@ public class StatementVisitor extends ASTVisitor {
     reuseCandidateList.add(new ReuseCandidate<>(statement, packageName, fqn));
   }
 
+  /**
+   * @return 再利用候補のリストを返す
+   */
   public List<ReuseCandidate<Statement>> getReuseCandidateList() {
     return reuseCandidateList;
   }
