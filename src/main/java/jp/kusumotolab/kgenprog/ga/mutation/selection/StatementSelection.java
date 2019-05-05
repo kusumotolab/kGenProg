@@ -18,6 +18,8 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 /**
  * ステートメント単位で再利用候補を選択するクラス
+ *
+ * @see CandidateSelection
  */
 public abstract class StatementSelection implements CandidateSelection {
 

@@ -27,6 +27,8 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 /**
  * 乱数に基づいて変異処理をするクラス
+ *
+ * @see Mutation
  */
 public class RandomMutation extends Mutation {
 
