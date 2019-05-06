@@ -8,6 +8,11 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 重みをつけたルーレット選択をするクラス
+ *
+ * @param <T> 選択する要素のクラス
+ */
 public class Roulette<T> {
 
   private final double total;
@@ -15,6 +20,13 @@ public class Roulette<T> {
   private final List<T> candidateList = new ArrayList<>();
   private final Random random;
 
+  /**
+   * コンストラクタ
+   *
+   * @param candidateList 候補のリスト
+   * @param weightFunction 重みを計算する関数
+   * @param random 乱数生成器
+   */
   public Roulette(final List<T> candidateList, final Function<T, Double> weightFunction,
       final Random random) {
     if (candidateList.isEmpty()) {
@@ -33,6 +45,10 @@ public class Roulette<T> {
     this.random = random;
   }
 
+  /**
+   * 重みに基づいてルーレット選択をする
+   * @return 選択された要素
+   */
   public T exec() {
     final double weight = random.nextDouble() * total;
     final int searchResult =
@@ -41,6 +57,9 @@ public class Roulette<T> {
     return candidateList.get(index);
   }
 
+  /**
+   * @return 要素のリスト
+   */
   public List<T> getCandidateList() {
     return candidateList;
   }
