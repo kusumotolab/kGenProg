@@ -11,20 +11,20 @@ import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.ReproducedSourceCode;
 
 /**
- * Gene の情報を基にソースコードの生成を行うインターフェース
+ * Gene の情報を基にソースコードの生成を行うクラス
  * このクラスは重複したソースコードを生成しようとすると，
  * そのソースコードの生成をやめて，ReproducedSourceCode を返す
  *
- * @see SourceCodeGeneration インターフェース
+ * @see SourceCodeGeneration
  */
 public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
 
   private final Map<String, ReproducedStatus> sourceCodeMap = new HashMap<>();
 
   /**
-   * 重複したソースコードの生成を避けるため，初期状態のソースコードのの情報をここで保持する
+   * 重複したソースコードの生成を避けるため，初期状態のソースコードの情報をここで保持する
    *
-   * @param initialVariant 入力されたプロジェクトを表すバリアント
+   * @param initialVariant 入力されたプロジェクトを表す個体
    */
   @Override
   public void initialize(final Variant initialVariant) {
@@ -33,7 +33,7 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
   }
 
   /**
-   * @param variantStore これまでのバリアントの情報を保持している VariantStore
+   * @param variantStore これまでの個体の情報を保持している VariantStore
    * @param gene ソースコードの編集操作列
    * @return 生成されたソースコード
    *  新規なら GeneratedSourceCode

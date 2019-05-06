@@ -12,9 +12,9 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 public interface SourceCodeGeneration {
 
   /**
-   * 入力されたプロジェクトにを表すバリアントから必要な情報をここで抜き出す
+   * 入力されたプロジェクトにを表す個体から必要な情報をここで抜き出す
    *
-   * @param initialVariant 入力されたプロジェクトを表すバリアント
+   * @param initialVariant 入力されたプロジェクトを表す個体
    */
   public void initialize(Variant initialVariant);
 
