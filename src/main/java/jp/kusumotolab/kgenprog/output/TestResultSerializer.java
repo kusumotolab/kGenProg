@@ -38,9 +38,9 @@ public class TestResultSerializer implements JsonSerializer<TestResult> {
   /**
    * シリアライズを行う<br>
    *
-   * @param testResult シリアライズ対象のオブジェクト
-   * @param type シリアライズ対象のオブジェクトの型
-   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   * @param testResult シリアライズ対象のインスタンス
+   * @param type シリアライズ対象のインスタンスの型
+   * @param context インスタンスをシリアライズするインスタンス
    */
   @Override
   public JsonElement serialize(final TestResult testResult, final Type type,

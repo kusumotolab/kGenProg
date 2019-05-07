@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
 /**
  * Pathをシリアライズするクラス<br>
  * オブジェクトではなく文字列型にシリアライズする．
@@ -17,9 +18,9 @@ public class PathSerializer implements JsonSerializer<Path> {
   /**
    * シリアライズを行う<br>
    *
-   * @param src シリアライズ対象のオブジェクト
-   * @param type シリアライズ対象のオブジェクトの型
-   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   * @param src シリアライズ対象のインスタンス
+   * @param type シリアライズ対象のインスタンスの型
+   * @param context インスタンスをシリアライズするインスタンス
    */
   @Override
   public JsonElement serialize(final Path src, final Type type,

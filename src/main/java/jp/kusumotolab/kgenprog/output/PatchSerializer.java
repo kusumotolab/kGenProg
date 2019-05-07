@@ -16,9 +16,9 @@ public class PatchSerializer implements JsonSerializer<Patch> {
   /**
    * シリアライズを行う<br>
    *
-   * @param patch シリアライズ対象のオブジェクト
-   * @param type シリアライズ対象のオブジェクトの型
-   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   * @param patch シリアライズ対象のインスタンス
+   * @param type シリアライズ対象のインスタンスの型
+   * @param context インスタンスをシリアライズするインスタンス
    */
   @Override
   public JsonElement serialize(final Patch patch, final Type type,

@@ -46,9 +46,9 @@ public class MutationHistoricalElementSerializer implements
   /**
    * シリアライズを行う<br>
    *
-   * @param mutationHistoricalElement シリアライズ対象のオブジェクト
-   * @param type シリアライズ対象のオブジェクトの型
-   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   * @param mutationHistoricalElement シリアライズ対象のインスタンス
+   * @param type シリアライズ対象のインスタンスの型
+   * @param context インスタンスをシリアライズするインスタンス
    */
   @Override
   public JsonElement serialize(final MutationHistoricalElement mutationHistoricalElement,

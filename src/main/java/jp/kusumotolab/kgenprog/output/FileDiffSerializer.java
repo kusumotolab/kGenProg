@@ -38,9 +38,9 @@ public class FileDiffSerializer implements JsonSerializer<FileDiff> {
   /**
    * シリアライズを行う<br>
    *
-   * @param fileDiff シリアライズ対象のオブジェクト
-   * @param type シリアライズ対象のオブジェクトの型
-   * @param context シリアライズ対象以外のオブジェクトをシリアライズするときに使うオブジェクト
+   * @param fileDiff シリアライズ対象のインスタンス
+   * @param type シリアライズ対象のインスタンスの型
+   * @param context インスタンスをシリアライズするインスタンス
    */
   @Override
   public JsonElement serialize(final FileDiff fileDiff, final Type type,
