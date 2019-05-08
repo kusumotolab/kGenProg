@@ -26,8 +26,7 @@ public class TestUtil {
   }
 
   public static GeneratedSourceCode createGeneratedSourceCode(final TargetProject project) {
-    final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(project);
-    return sourceCode;
+    return new JDTASTConstruction().constructAST(project);
   }
 
   private static Strategies createDefaultStrategies(final Configuration config) {
