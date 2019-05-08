@@ -71,8 +71,16 @@ public class GeneratedSourceCode {
     return true;
   }
 
+  public boolean isReproducedSourceCode() {
+    return false;
+  }
+
+  public boolean shouldBeTested() {
+    return isGenerationSuccess() && !isReproducedSourceCode();
+  }
+
   public String getGenerationMessage() {
-    return "";
+    return "Generate Success";
   }
 
   private String createMessageDigest() {
