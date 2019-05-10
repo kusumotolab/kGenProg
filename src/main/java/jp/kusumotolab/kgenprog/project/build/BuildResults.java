@@ -5,13 +5,16 @@ import javax.tools.JavaFileObject;
 
 /**
  * ビルド結果を表すオブジェクト．<br>
- * ビルドの成否やビルド時の診断情報，ビルド結果たるバイナリ格納庫を保持する．<br> 
+ * ビルドの成否やビルド時の診断情報，ビルド結果たるバイナリ格納庫を保持する．<br>
  * 
  * @author shinsuke
  *
  */
 public class BuildResults {
 
+  /**
+   * ビルドの結果得られたバイナリの集合
+   */
   public final BinaryStore binaryStore;
 
   /**
@@ -44,10 +47,6 @@ public class BuildResults {
     this.diagnostics = diagnostics;
     this.buildProgressText = buildProgressText;
     this.isBuildFailed = isBuildFailed;
-  }
-
-  public BinaryStore getBinaryStore() {
-    return binaryStore;
   }
 
 }

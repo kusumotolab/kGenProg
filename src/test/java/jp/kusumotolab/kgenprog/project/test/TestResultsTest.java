@@ -14,8 +14,6 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.build.BuildResults;
-import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
@@ -37,7 +35,6 @@ public class TestResultsTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode generatedSourceCode =
         TestUtil.createGeneratedSourceCode(targetProject);
-    final BuildResults buildResults = new ProjectBuilder(targetProject).build(generatedSourceCode);
 
     final Configuration config =
         new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)
@@ -46,11 +43,6 @@ public class TestResultsTest {
     final Variant variant = mock(Variant.class);
     when(variant.getGeneratedSourceCode()).thenReturn(generatedSourceCode);
     final TestResults result = executor.exec(variant);
-
-    // TODO
-    // buildResultsのセットは本来，TestExcecutorでやるべき．
-    // 一時的な実装．
-    result.setBuildResults(buildResults);
 
     // expected確保の作業
     // まずast生成
@@ -107,7 +99,6 @@ public class TestResultsTest {
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     final GeneratedSourceCode generatedSourceCode =
         TestUtil.createGeneratedSourceCode(targetProject);
-    new ProjectBuilder(targetProject).build(generatedSourceCode);
 
     final Configuration config =
         new Configuration.Builder(targetProject).setTimeLimitSeconds(TIMEOUT_SEC)

@@ -52,7 +52,7 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(source);
 
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    final BinaryStore binaryStore = buildResults.binaryStore;
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
@@ -67,7 +67,8 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(source);
 
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    final BinaryStore binaryStore = buildResults.binaryStore;
+
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO, FOO_TEST, BAR, BAR_TEST);
@@ -81,7 +82,7 @@ public class ProjectBuilderTest {
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = projectBuilder.build(source);
 
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    final BinaryStore binaryStore = buildResults.binaryStore;
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
@@ -100,7 +101,7 @@ public class ProjectBuilderTest {
     final GeneratedSourceCode source = TestUtil.createGeneratedSourceCode(targetProject);
     final BuildResults buildResults = projectBuilder.build(source);
 
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    final BinaryStore binaryStore = buildResults.binaryStore;
 
     assertThat(buildResults.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
@@ -128,7 +129,7 @@ public class ProjectBuilderTest {
         TestUtil.createGeneratedSourceCode(targetProject02);
     final BuildResults buildResults02 = projectBuilder02.build(generatedSourceCode02);
 
-    final BinaryStore binaryStore = buildResults02.getBinaryStore();
+    final BinaryStore binaryStore = buildResults02.binaryStore;
 
     assertThat(buildResults02.isBuildFailed).isFalse();
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
@@ -143,12 +144,11 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(source);
 
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    final BinaryStore binaryStore = buildResults.binaryStore;
     assertThat(binaryStore.getAll()).hasSize(2);
 
     // buildResultsからバイトコードを取り出す
-    final JavaBinaryObject jmo = buildResults.getBinaryStore()
-        .getAll()
+    final JavaBinaryObject jmo = buildResults.binaryStore.getAll()
         .stream()
         .findFirst()
         .orElse(null);
@@ -177,7 +177,7 @@ public class ProjectBuilderTest {
 
     assertThat(buildResults.isBuildFailed).isFalse();
 
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    final BinaryStore binaryStore = buildResults.binaryStore;
     assertThat(binaryStore.getAll()).extracting(jmo -> jmo.getFqn())
         .containsExactlyInAnyOrder(FOO);
   }
@@ -196,7 +196,7 @@ public class ProjectBuilderTest {
     assertThat(buildResults1.buildProgressText).isNotBlank(); // ビルド進捗が書かれているはず
 
     // バイナリが入ってるはず
-    final BinaryStore binaryStore1 = buildResults1.getBinaryStore();
+    final BinaryStore binaryStore1 = buildResults1.binaryStore;
     assertThat(binaryStore1.getAll()).hasSize(2);
 
     // 2回目，成功する
@@ -205,7 +205,7 @@ public class ProjectBuilderTest {
     assertThat(buildResults2.buildProgressText).isBlank(); // ビルド進捗が書かれていないはず
 
     // バイナリが入ってるはず
-    final BinaryStore binaryStore2 = buildResults2.getBinaryStore();
+    final BinaryStore binaryStore2 = buildResults2.binaryStore;
     assertThat(binaryStore2.getAll()).hasSize(2);
   }
 
@@ -219,7 +219,7 @@ public class ProjectBuilderTest {
 
     // まず普通にビルド，成功するはず
     final BuildResults buildResults1 = projectBuilder.build(source);
-    final BinaryStore binaryStore1 = buildResults1.getBinaryStore();
+    final BinaryStore binaryStore1 = buildResults1.binaryStore;
     assertThat(binaryStore1.getAll()).hasSize(3);
 
     // Fooのdigestを書き換えてコンパイル対象に加わるように
@@ -238,7 +238,7 @@ public class ProjectBuilderTest {
 
     // 再度ビルド
     final BuildResults buildResults2 = projectBuilder.build(source);
-    final BinaryStore binaryStore2 = buildResults2.getBinaryStore();
+    final BinaryStore binaryStore2 = buildResults2.binaryStore;
 
     // 2つのビルド結果を比較．まず差分がない場合，キャッシュが効くので同一オブジェクトになるはず
     final JavaBinaryObject bar1 = binaryStore1.get(BAR);
@@ -268,12 +268,11 @@ public class ProjectBuilderTest {
 
     // まず普通にビルド，成功するはず
     final BuildResults buildResults = projectBuilder.build(source);
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
+    final BinaryStore binaryStore = buildResults.binaryStore;
     assertThat(binaryStore.getAll()).hasSize(3);
 
     // buildResultsからBarのバイトコードを取り出す
-    final JavaBinaryObject jmo = buildResults.getBinaryStore()
-        .getAll()
+    final JavaBinaryObject jmo = buildResults.binaryStore.getAll()
         .stream()
         .findFirst()
         .orElse(null);

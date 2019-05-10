@@ -9,6 +9,9 @@ package jp.kusumotolab.kgenprog.project.build;
  */
 public class EmptyBuildResults extends BuildResults {
 
+  /**
+   * シングルトン
+   */
   public static final EmptyBuildResults instance = new EmptyBuildResults();
 
   private EmptyBuildResults() {

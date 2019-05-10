@@ -35,10 +35,23 @@ public interface Coverage {
     PARTLY_COVERED
   }
 
+  /**
+   * 本カバレジに対応する実行テストのFQNを取得
+   * @return 実行テストのFQN
+   */
   FullyQualifiedName getExecutedTargetFQN();
 
+  /**
+   * 行に対するステータスを取得
+   * @param index 行番号
+   * @return ステータス値
+   */
   Status getStatus(final int index);
 
+  /**
+   * ステータスの長さ（トータル行）を取得
+   * @return
+   */
   int getStatusesSize();
 
   String toString(final int indentDepth);

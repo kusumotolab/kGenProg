@@ -40,7 +40,7 @@ public class ProjectBuilder {
   private final BinaryStore binaryStore;
   private final JavaCompiler compiler;
   private final StandardJavaFileManager standardFileManager;
-  private final InMemoryFileManager inMemoryFileManager;
+  // private final InMemoryFileManager inMemoryFileManager;
   private final List<String> compilationOptions;
 
   /**
@@ -55,7 +55,6 @@ public class ProjectBuilder {
     binaryStore = new BinaryStore();
     compiler = ToolProvider.getSystemJavaCompiler();
     standardFileManager = compiler.getStandardFileManager(null, null, null);
-    inMemoryFileManager = new InMemoryFileManager(standardFileManager, binaryStore);
     compilationOptions = createDefaultCompilationOptions();
   }
 
@@ -97,7 +96,8 @@ public class ProjectBuilder {
 
     // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
     final BinaryStore reusableBinaries = extractSubBinaryStore(allAsts);
-    inMemoryFileManager.setClassPathBinaries(reusableBinaries);
+    final InMemoryFileManager inMemoryFileManager =
+        new InMemoryFileManager(standardFileManager, binaryStore, reusableBinaries);
 
     // コンパイルタスクを生成
     final CompilationTask task = compiler.getTask(progress, inMemoryFileManager, diagnostics,

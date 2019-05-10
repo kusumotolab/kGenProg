@@ -22,11 +22,26 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   private final String digest;
   private final boolean isTest;
 
+  /**
+   * constructor<br>
+   * astからJSOを生成する．
+   * 
+   * @param ast 生成元となるast
+   */
   public JavaSourceObject(final GeneratedAST<?> ast) {
     this(ast.getPrimaryClassName(), ast.getSourceCode(), ast.getMessageDigest(),
         ast.getSourcePath());
   }
 
+  /**
+   * constructor<br>
+   * ソースコードファイルからJSOを生成する．
+   * 
+   * @param fqn ソースコードのfqn
+   * @param sourceCode ソースコードのbody
+   * @param digest メッセージダイジェスト
+   * @param sourcePath パス情報
+   */
   private JavaSourceObject(final FullyQualifiedName fqn, final String sourceCode,
       final String digest, final SourcePath sourcePath) {
     super(URI.create("jso:///" + fqn.value.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
@@ -46,6 +61,10 @@ public class JavaSourceObject extends SimpleJavaFileObject {
     return sourcePath;
   }
 
+  public final FullyQualifiedName getFqn() {
+    return fqn;
+  }
+
   public boolean isTest() {
     return isTest;
   }
@@ -58,10 +77,6 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   @Override
   public final String getName() {
     return fqn.value;
-  }
-
-  public final FullyQualifiedName getFqn() {
-    return fqn;
   }
 
   @Override

@@ -27,15 +27,18 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   private final BinaryStore binaryStore;
 
   // クラスパスの解決に用いられるJBOの集合．ビルドごとに書き換えられる．
-  private BinaryStore classPathBinaries;
+  private final BinaryStore classPathBinaries;
 
-  public InMemoryFileManager(final JavaFileManager fileManager, final BinaryStore binaryStore) {
+  /**
+   * コンストラクタ
+   * @param fileManager クラスパス解決に用いるファイルマネージャ
+   * @param binaryStore グローバルキャッシュに用いるバイナリ集合
+   * @param classPathBinaries クラスパスの解決に用いられるバイナリ集合（差分ビルド用）
+   */
+  public InMemoryFileManager(final JavaFileManager fileManager, final BinaryStore binaryStore,
+      final BinaryStore classPathBinaries) {
     super(fileManager);
     this.binaryStore = binaryStore;
-    this.classPathBinaries = new BinaryStore();
-  }
-
-  public void setClassPathBinaries(final BinaryStore classPathBinaries) {
     this.classPathBinaries = classPathBinaries;
   }
 

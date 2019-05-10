@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
@@ -20,10 +19,18 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 public class MemoryClassLoader extends URLClassLoader {
 
 
-  public MemoryClassLoader() throws MalformedURLException {
+  /**
+   * constructor
+   */
+  public MemoryClassLoader() {
     this(new URL[] {});
   }
 
+  /**
+   * constructor
+   * 
+   * @param urls クラスパス
+   */
   public MemoryClassLoader(final URL[] urls) {
     super(urls);
   }
@@ -43,6 +50,14 @@ public class MemoryClassLoader extends URLClassLoader {
     definitions.put(fqn.value, bytes);
   }
 
+  /**
+   * クラスをロードする．<br>
+   * {@link java.lang.ClassLoader#loadClass}のFQNエイリアス
+   * 
+   * @param fqn ロード対象のクラスのFQN
+   * @return ロードされたクラスオブジェクト
+   * @throws ClassNotFoundException
+   */
   public Class<?> loadClass(final FullyQualifiedName fqn) throws ClassNotFoundException {
     return loadClass(fqn.value);
   }

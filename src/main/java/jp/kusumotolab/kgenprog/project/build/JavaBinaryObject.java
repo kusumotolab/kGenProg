@@ -38,7 +38,7 @@ public class JavaBinaryObject implements JavaFileObject {
   private final long lastModified;
 
   /**
-   * コンストラクタ
+   * constructor
    * 
    * @param fqn バイナリ自体のFQN
    * @param originFqn バイナリ生成元のFQN（基本はfqn=originFqnだが内部クラスの場合特殊）

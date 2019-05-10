@@ -27,7 +27,6 @@ import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -44,8 +43,8 @@ class TestThread extends Thread {
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
   private final RuntimeData jacocoRuntimeData;
-  private TestResults testResults; // used for return value in multi thread
-  private BuildResults buildResults;
+  private final BuildResults buildResults;
+  private TestResults testResults; // スレッドの返り値として用いるためにnon-finalフィールド
 
   private final TargetProject targetProject;
   private final List<String> executionTestNames;
@@ -94,19 +93,13 @@ class TestThread extends Thread {
    * 
    */
   public void run() {
-    // 初期処理（プロジェクトのビルドと返り値の生成）
-
-    // XXXXXXXXXXXXXXXXXXX TODO
-    // final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    // buildResults = projectBuilder.build(generatedSourceCode);
-    testResults = new TestResults();
-    testResults.setBuildResults(buildResults); // FLメトリクス算出のためにtestResultsにbuildResultsを登録しておく．
-
     // ビルド失敗時は即座に諦める
     if (buildResults.isBuildFailed) {
       testResults = EmptyTestResults.instance;
       return;
     }
+
+    testResults = new TestResults(buildResults);
 
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
@@ -136,7 +129,7 @@ class TestThread extends Thread {
 
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
-      this.testResults = EmptyTestResults.instance;
+      testResults = EmptyTestResults.instance;
       return;
     } catch (Exception e) {
       // TODO
@@ -157,8 +150,7 @@ class TestThread extends Thread {
    */
   private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
       final List<FullyQualifiedName> fqns) throws IOException {
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
-    for (final JavaBinaryObject jmo : binaryStore.getAll()) {
+    for (final JavaBinaryObject jmo : buildResults.binaryStore.getAll()) {
       final FullyQualifiedName fqn = jmo.getFqn();
       final byte[] rawBytecode = jmo.getByteCode();
       final byte[] bytecode = jmo.isTest() ? rawBytecode : instrumentBytecode(rawBytecode);
@@ -194,9 +186,8 @@ class TestThread extends Thread {
   }
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
-    final BinaryStore binStore = buildResults.getBinaryStore();
     return sourcesPaths.stream()
-        .map(source -> binStore.get(source))
+        .map(source -> buildResults.binaryStore.get(source))
         .flatMap(Collection::stream)
         .map(jmo -> jmo.getFqn())
         .collect(Collectors.toList());
@@ -325,8 +316,7 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        final byte[] bytecode = buildResults.getBinaryStore()
-            .get(measuredClass)
+        final byte[] bytecode = buildResults.binaryStore.get(measuredClass)
             .getByteCode();
         analyzer.analyzeClass(bytecode, measuredClass.value);
       }
