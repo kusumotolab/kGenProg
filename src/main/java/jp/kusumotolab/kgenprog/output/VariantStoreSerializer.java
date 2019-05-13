@@ -11,7 +11,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
- * VariantStoreをシリアライズするクラス<br>
+ * VariantStoreをシリアライズするクラス.<br>
  *
  * <table border="1">
  * <thead>
@@ -48,7 +48,7 @@ public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
   private final Configuration config;
 
   /**
-   * コンストラクタ
+   * コンストラクタ.
    *
    * @param config 実行時の設定
    */
@@ -57,7 +57,7 @@ public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
   }
 
   /**
-   * シリアライズを行う<br>
+   * シリアライズを行う.<br>
    *
    * @param variantStore シリアライズ対象のインスタンス
    * @param type シリアライズ対象のインスタンスの型

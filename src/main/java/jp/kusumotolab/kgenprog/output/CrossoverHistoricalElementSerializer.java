@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 
 
 /**
- * CrossoverHistoricalElementをシリアライズするクラス<br>
+ * CrossoverHistoricalElementをシリアライズするクラス.<br>
  *
  * <table border="1">
  * <thead>
@@ -44,7 +44,7 @@ public class CrossoverHistoricalElementSerializer implements
     JsonSerializer<CrossoverHistoricalElement> {
 
   /**
-   * シリアライズを行う<br>
+   * シリアライズを行う.<br>
    *
    * @param crossoverHistoricalElement シリアライズ対象のインスタンス
    * @param type シリアライズ対象のインスタンスの型

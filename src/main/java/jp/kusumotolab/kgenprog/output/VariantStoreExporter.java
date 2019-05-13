@@ -19,14 +19,14 @@ import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- * バリアントの出力をするクラス
+ * バリアントの出力をするクラス.
  */
 public class VariantStoreExporter {
 
   private final static Logger log = LoggerFactory.getLogger(VariantStoreExporter.class);
 
   /**
-   * JSONを出力する
+   * JSONを出力する.
    *
    * @param config 実行時の設定
    * @param variantStore 生成したバリアントを保持しているオブジェクト

@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 
 /**
- * MutationHistoricalElementをシリアライズするクラス<br>
+ * MutationHistoricalElementをシリアライズするクラス.<br>
  *
  * <table border="1">
  * <thead>
@@ -44,7 +44,7 @@ public class MutationHistoricalElementSerializer implements
     JsonSerializer<MutationHistoricalElement> {
 
   /**
-   * シリアライズを行う<br>
+   * シリアライズを行う.<br>
    *
    * @param mutationHistoricalElement シリアライズ対象のインスタンス
    * @param type シリアライズ対象のインスタンスの型

@@ -7,7 +7,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- * FileDiffをシリアライズするクラス<br>
+ * FileDiffをシリアライズするクラス.<br>
  *
  * <table border="1">
  * <thead>
@@ -36,7 +36,7 @@ public class FileDiffSerializer implements JsonSerializer<FileDiff> {
 
 
   /**
-   * シリアライズを行う<br>
+   * シリアライズを行う.<br>
    *
    * @param fileDiff シリアライズ対象のインスタンス
    * @param type シリアライズ対象のインスタンスの型

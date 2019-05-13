@@ -8,7 +8,7 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
- * Variantをシリアライズするクラス<br>
+ * Variantをシリアライズするクラス.<br>
  *
  * <table border="1">
  * <thead>
@@ -83,7 +83,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
   private final PatchGenerator patchGenerator = new PatchGenerator();
 
   /**
-   * シリアライズを行う<br>
+   * シリアライズを行う.<br>
    *
    * @param variant シリアライズ対象のインスタンス
    * @param type シリアライズ対象のインスタンスの型

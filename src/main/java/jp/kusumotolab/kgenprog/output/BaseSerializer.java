@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 
 /**
- * Baseをシリアライズするクラス<br>
+ * Baseをシリアライズするクラス.<br>
  *
  * <table border="1">
  * <thead>
@@ -47,7 +47,7 @@ import jp.kusumotolab.kgenprog.project.LineNumberRange;
 public class BaseSerializer implements JsonSerializer<Base> {
 
   /**
-   * シリアライズを行う<br>
+   * シリアライズを行う.<br>
    *
    * @param base シリアライズ対象のインスタンス
    * @param type シリアライズ対象のインスタンスの型

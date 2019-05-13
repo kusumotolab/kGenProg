@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- * TestResultsをシリアライズするクラス<br>
+ * TestResultsをシリアライズするクラス.<br>
  *
  * <table border="1">
  * <thead>
@@ -46,7 +46,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 public class TestResultsSerializer implements JsonSerializer<TestResults> {
 
   /**
-   * シリアライズを行う<br>
+   * シリアライズを行う.<br>
    *
    * @param testResults シリアライズ対象のインスタンス
    * @param type シリアライズ対象のインスタンスの型
