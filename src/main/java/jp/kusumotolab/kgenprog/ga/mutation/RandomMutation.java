@@ -35,7 +35,7 @@ public class RandomMutation extends Mutation {
   /**
    * コンストラクタ
    *
-   * @param mutationGeneratingCount 1 世代に変異する数
+   * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
    * @param type 選択する候補のスコープ

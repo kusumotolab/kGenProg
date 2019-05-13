@@ -70,91 +70,91 @@ public class StatementVisitor extends ASTVisitor {
   }
 
   @Override
-  public boolean visit(AssertStatement node) {
+  public boolean visit(final AssertStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(BreakStatement node) {
+  public boolean visit(final BreakStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(ContinueStatement node) {
+  public boolean visit(final ContinueStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(DoStatement node) {
+  public boolean visit(final DoStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(EmptyStatement node) {
+  public boolean visit(final EmptyStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(ExpressionStatement node) {
+  public boolean visit(final ExpressionStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(ForStatement node) {
+  public boolean visit(final ForStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(IfStatement node) {
+  public boolean visit(final IfStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(ReturnStatement node) {
+  public boolean visit(final ReturnStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(SwitchStatement node) {
+  public boolean visit(final SwitchStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(SynchronizedStatement node) {
+  public boolean visit(final SynchronizedStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(ThrowStatement node) {
+  public boolean visit(final ThrowStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(TryStatement node) {
+  public boolean visit(final TryStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(VariableDeclarationStatement node) {
+  public boolean visit(final VariableDeclarationStatement node) {
     addStatement(node);
     return super.visit(node);
   }
 
   @Override
-  public boolean visit(WhileStatement node) {
+  public boolean visit(final WhileStatement node) {
     addStatement(node);
     return super.visit(node);
   }

@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
- * 再利用するステートメントを重みをつけたルーレットでで選択するクラス
+ * 再利用するステートメントを重みをつけたルーレットで選択するクラス
  *
  * @see StatementSelection
  */
@@ -24,7 +24,6 @@ public class RouletteStatementSelection extends StatementSelection {
   /**
    * 各ステートメントの重みを計算するメソッド
    * 引数で与えられたステートメントに含まれるステートメントの数の逆数を返す
-   * (直感的には小さいステートメントほど再利用されやすくなる)
    *
    * @param reuseCandidate 重みを計算したいステートメント
    * @return 重み

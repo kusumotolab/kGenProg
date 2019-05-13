@@ -7,7 +7,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 /**
- * 再利用候補の選択ををするインターフェース
+ * 再利用候補の選択をするインターフェース
  */
 public interface CandidateSelection {
 
@@ -21,7 +21,7 @@ public interface CandidateSelection {
   /**
    * 再利用する AST ノードを取り出す
    *
-   * @param scope 再利用する候補ののスコープ
+   * @param scope 再利用する候補のスコープ
    * @return 再利用する AST ノード
    */
   ASTNode exec(final Scope scope);

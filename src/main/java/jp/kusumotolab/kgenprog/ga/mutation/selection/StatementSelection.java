@@ -40,7 +40,7 @@ public abstract class StatementSelection implements CandidateSelection {
   }
 
   /**
-   * ソースコードにに含まれるステートメントを探索し，見つけたステートメントを保持する
+   * ソースコードに含まれるステートメントを探索し，見つけたステートメントを保持する
    *
    * @param candidates 再利用するソースコードのリスト
    */
@@ -65,7 +65,7 @@ public abstract class StatementSelection implements CandidateSelection {
   /**
    * 再利用するステートメントを重みに基づいて選択し，返すメソッド
    *
-   * @param scope 再利用する候補ののスコープ
+   * @param scope 再利用する候補のスコープ
    * @return 再利用するステートメント
    */
   @Override

@@ -4,7 +4,7 @@ import java.util.Random;
 import org.eclipse.jdt.core.dom.Statement;
 
 /**
- * 再利用するステートメントを乱数にに基づいて選択する
+ * 再利用するステートメントを乱数に基づいて選択する
  * (現在は RouletteStatementSelection を使用しているので使っていない)
  *
  * @see StatementSelection

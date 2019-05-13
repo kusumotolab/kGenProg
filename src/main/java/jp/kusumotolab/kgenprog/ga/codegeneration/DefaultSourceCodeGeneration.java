@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.project.ReproducedSourceCode;
 
 /**
  * Gene の情報を基にソースコードの生成を行うクラス
- * このクラスは重複したソースコードを生成しようとすると，
+ * このクラスはすでに生成済みのソースコードを生成しようとすると，
  * そのソースコードの生成をやめて，ReproducedSourceCode を返す
  *
  * @see SourceCodeGeneration
@@ -38,7 +38,7 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
    * @return 生成されたソースコード
    *  新規なら GeneratedSourceCode
    *  生成に失敗したら GenerationFailedSourceCode
-   *  すでにに生成済みなら ReproducedSourceCode
+   *  すでに生成済みなら ReproducedSourceCode
    *
    * @see GeneratedSourceCode
    * @see jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode

@@ -12,6 +12,11 @@ public class CrossoverHistoricalElement implements HistoricalElement {
   private final Variant parentB;
   private final int crossoverPoint;
 
+  /**
+   * @param parentA 親となる個体 (順序は問わない)
+   * @param parentB 親となる個体 (順序は問わない)
+   * @param crossoverPoint どの世代で交叉しているか
+   */
   public CrossoverHistoricalElement(final Variant parentA, final Variant parentB,
       final int crossoverPoint) {
     this.parentA = parentA;

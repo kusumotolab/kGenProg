@@ -34,7 +34,7 @@ public class VariantStore {
 
   /**
    * @param config 設定
-   * @param strategies 個体のの生成などをするストラテジー群
+   * @param strategies 個体の生成などをするストラテジー群
    */
   public VariantStore(final Configuration config, final Strategies strategies) {
     this.config = config;
@@ -73,7 +73,7 @@ public class VariantStore {
    * 個体を生成する
    *
    * @param gene 遺伝子情報
-   * @param element 生成過程のの記録
+   * @param element 生成過程の記録
    * @return 生成された個体
    */
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
