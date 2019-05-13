@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -57,8 +56,7 @@ public class MemoryClassLoaderTest {
     loader = new MemoryClassLoader();
 
     // クラスローダに全バイナリを設置しておく
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
-    binaryStore.getAll()
+    buildResults.binaryStore.getAll()
         .forEach(jmo -> loader.addDefinition(jmo.getFqn(), jmo.getByteCode()));
   }
 
