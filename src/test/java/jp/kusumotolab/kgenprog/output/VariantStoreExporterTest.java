@@ -19,10 +19,10 @@ public class VariantStoreExporterTest {
   private Path outDir;
 
   @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
+  public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() {
     outDir = tempFolder.getRoot()
         .toPath();
   }
