@@ -25,14 +25,35 @@ import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
+/**
+ * 乱数に基づいて変異処理をするクラス
+ *
+ * @see Mutation
+ */
 public class RandomMutation extends Mutation {
 
+  /**
+   * コンストラクタ
+   *
+   * @param mutationGeneratingCount 各世代で生成する個体数
+   * @param random 乱数生成器
+   * @param candidateSelection 再利用する候補を選択するオブジェクト
+   * @param type 選択する候補のスコープ
+   */
   public RandomMutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection,
       final Type type) {
     super(mutationGeneratingCount, random, candidateSelection, type);
   }
 
+  /**
+   * 乱数に基づいて選択された Variant に対して変異処理をする
+   * Variant の選択は fitness の逆数に基づいて行われる
+   * 変異処理された Variant を mutationGeneratingCount 分だけ返す
+   *
+   * @param variantStore Variant の情報を格納するオブジェクト
+   * @return 変異された Gene を持った Variant のリスト
+   */
   @Override
   public List<Variant> exec(final VariantStore variantStore) {
 

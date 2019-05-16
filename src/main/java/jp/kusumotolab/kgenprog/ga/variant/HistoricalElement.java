@@ -2,6 +2,9 @@ package jp.kusumotolab.kgenprog.ga.variant;
 
 import java.util.List;
 
+/**
+ * Variant が生成される過程を記録するインターフェース
+ */
 public interface HistoricalElement {
 
   /**

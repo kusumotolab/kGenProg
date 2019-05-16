@@ -17,6 +17,9 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ * 　kGenProg が生成する Variant を生成したり保持したりするクラス
+ */
 public class VariantStore {
 
   private final Configuration config;
@@ -29,6 +32,10 @@ public class VariantStore {
   private final OrdinalNumber generation;
   private final AtomicLong variantCounter;
 
+  /**
+   * @param config 設定
+   * @param strategies 個体の生成などをするストラテジー群
+   */
   public VariantStore(final Configuration config, final Strategies strategies) {
     this.config = config;
     this.strategies = strategies;
@@ -46,39 +53,71 @@ public class VariantStore {
     generation.incrementAndGet();
   }
 
+  /**
+   * 個体を生成する
+   *
+   * @param gene 遺伝子情報
+   * @param element 生成過程の記録
+   * @return 生成された個体
+   */
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
     final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
     return createVariant(gene, sourceCode, element);
   }
 
+  /**
+   * @return 初期個体を返す
+   */
   public Variant getInitialVariant() {
     return initialVariant;
   }
 
+  /**
+   * @return 現在の世代数をを返す
+   */
   public OrdinalNumber getGenerationNumber() {
     return generation;
   }
 
+  /**
+   * @return 見つけた解の個数を返す
+   */
   public OrdinalNumber getFoundSolutionsNumber() {
     return new OrdinalNumber(foundSolutions.size());
   }
 
+  /**
+   * @return 現世代の個体のリスト
+   */
   public List<Variant> getCurrentVariants() {
     return currentVariants;
   }
 
+  /**
+   * @return 生成された個体のリスト
+   */
   public List<Variant> getGeneratedVariants() {
     return generatedVariants;
   }
 
+  /**
+   * @return 今まで生成した全ての個体のリスト
+   */
   public List<Variant> getAllVariants() {
     return allVariants;
   }
 
+  /**
+   * @return 見つけた正解個体のリスト
+   */
   public List<Variant> getFoundSolutions() {
     return foundSolutions;
   }
 
+  /**
+   * @param maxNumber 必要な正解個体の数
+   * @return 見つけた正解個体のリスト
+   */
   public List<Variant> getFoundSolutions(final int maxNumber) {
     final int length = Math.min(maxNumber, foundSolutions.size());
     return foundSolutions.subList(0, length);
@@ -88,8 +127,9 @@ public class VariantStore {
    * 引数の要素すべてを次世代のVariantとして追加する
    *
    * @param variants 追加対象
-   * @see addNextGenerationVariant(Variant)
+   * @see #addGeneratedVariants(Collection)
    */
+//   * @see addNextGenerationVariant(Variant)
   public void addGeneratedVariants(final Variant... variants) {
     addGeneratedVariants(Arrays.asList(variants));
   }
@@ -98,7 +138,7 @@ public class VariantStore {
    * リストの要素すべてを次世代のVariantとして追加する
    *
    * @param variants 追加対象
-   * @see addNextGenerationVariant(Variant)
+   * @see #addGeneratedVariant(Variant)
    */
   public void addGeneratedVariants(final Collection<? extends Variant> variants) {
     variants.forEach(this::addGeneratedVariant);

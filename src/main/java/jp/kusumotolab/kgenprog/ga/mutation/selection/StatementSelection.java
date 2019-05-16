@@ -16,6 +16,11 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
+/**
+ * ステートメント単位で再利用候補を選択するクラス
+ *
+ * @see CandidateSelection
+ */
 public abstract class StatementSelection implements CandidateSelection {
 
   private final Random random;
@@ -25,10 +30,20 @@ public abstract class StatementSelection implements CandidateSelection {
   private final Map<String, Roulette<ReuseCandidate<Statement>>> packageNameRouletteMap = new HashMap<>();
   private final Map<FullyQualifiedName, Roulette<ReuseCandidate<Statement>>> fqnRouletteMap = new HashMap<>();
 
+  /**
+   * コンストラクタ
+   *
+   * @param random 乱数生成器
+   */
   public StatementSelection(final Random random) {
     this.random = random;
   }
 
+  /**
+   * ソースコードに含まれるステートメントを探索し，見つけたステートメントを保持する
+   *
+   * @param candidates 再利用するソースコードのリスト
+   */
   @Override
   public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
     final StatementVisitor visitor = new StatementVisitor(candidates);
@@ -39,8 +54,20 @@ public abstract class StatementSelection implements CandidateSelection {
     projectRoulette = createRoulette(reuseCandidates);
   }
 
+  /**
+   * 各ステートメントの重みを計算するメソッド
+   *
+   * @param reuseCandidate 重みを計算したいステートメント
+   * @return 重み
+   */
   public abstract double getStatementWeight(final ReuseCandidate<Statement> reuseCandidate);
 
+  /**
+   * 再利用するステートメントを重みに基づいて選択し，返すメソッド
+   *
+   * @param scope 再利用する候補のスコープ
+   * @return 再利用するステートメント
+   */
   @Override
   public Statement exec(final Scope scope) {
     final Roulette<ReuseCandidate<Statement>> roulette = getRoulette(scope);
@@ -80,7 +107,7 @@ public abstract class StatementSelection implements CandidateSelection {
     return roulette;
   }
 
-  public Roulette<ReuseCandidate<Statement>> getRoulette(final Scope scope) {
+  Roulette<ReuseCandidate<Statement>> getRoulette(final Scope scope) {
     final FullyQualifiedName fqn = scope.getFqn();
     switch (scope.getType()) {
       case PROJECT:
