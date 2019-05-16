@@ -1,11 +1,11 @@
-# kGenProgとは？
+# 1. kGenProgとは？
 遺伝的プログラミングを利用した自動プログラム修正ツールである．
 kGenProgは入力としてバグのあるプログラムとテストケース群を受け取る．
 つまり，入力として与えられたプログラムは，同じく入力として与えられた少なくとも1つのテストケースに失敗する．
 kGenProgは与えられたバグのあるプログラムを，変異と交叉という二種類の変更を加えていくことにより，全てのテストケースを成功するプログラムへと変換する．
 以降，kGenProgで利用されている用語，kGenProgのアーキテクチャ等を説明する．
 
-# 用語
+# 2. 用語
 
 kGenProgでは遺伝的プログラミングを利用しているため，kGenProgでは遺伝的プログラミングに由来する多くの用語が使われている．
 ここでは，それらの用語について説明する．
@@ -52,7 +52,7 @@ kGenProgでは，実行中に生成される個体はその遺伝子により表
 つまり，入力として与えられたプログラムは長さが0の遺伝子を持ち，生成された各個体は，その個体を生成するために必要な操作の数を長さとして持つ遺伝子からなる．
 
 
-## アーキテクチャ
+## 3. アーキテクチャ
 
 遺伝的プログラミングを用いた自動プログラム修正は，その処理を行う上でさまざまな選択肢がある．
 例えば，kGenProgは自動バグ限局手法としてAmple，Jaccard，Ochiai，Tarantula，Zoltarが実装されている．
@@ -133,8 +133,12 @@ KGenProgのデフォルト値はOchiaiである．
 - jp.kusumotolab.kgenprog.ga.validation.SimpleFitness：0から1までの数値として適用度を表現するクラスである．
 
 
-
-
+### 抽象構文木の変更操作を表すインターフェース JDTOperation
+抽象構文木の変更操作を表すインターフェースは jp.kusumotolab.kgenprog.project.jdt.JDTOperation である．
+現在のところ，実装クラスとしては以下のものがある．
+- jp.kusumotolab.kgenprog.project.jdt.DeleteOperation：プログラム文の削除を表す操作
+- jp.kusumotolab.kgenprog.project.jdt.InsertOperation：プログラム文の追加を表す操作
+- jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation：プログラム文の置換を表す操作
 
 
 
