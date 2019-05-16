@@ -6,6 +6,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
+/**
+ * 単一のテスト結果を表すオブジェクト．<br>
+ * テストの成否とカバレッジ情報を持つ．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class TestResult {
 
   final public FullyQualifiedName executedTestFQN;
@@ -26,12 +33,21 @@ public class TestResult {
     this.coverages = coverages;
   }
 
+  /**
+   * 実行されたテストのFQN一覧を取得
+   * @return 実行されたテストのFQN一覧
+   */
   public List<FullyQualifiedName> getExecutedTargetFQNs() {
     return this.coverages.keySet()
         .stream()
         .collect(Collectors.toList());
   }
 
+  /**
+   * 指定テストFQNに対するカバレッジの結果を取得
+   * @param testFQN カバレッジの結果
+   * @return
+   */
   public Coverage getCoverages(final FullyQualifiedName testFQN) {
     return this.coverages.get(testFQN);
   }
@@ -41,6 +57,11 @@ public class TestResult {
     return toString(0);
   }
 
+  /**
+   * jsonシリアライザ
+   * @param indentDepth インデント幅
+   * @return
+   */
   public String toString(final int indentDepth) {
     final StringBuilder sb = new StringBuilder();
     final String indent = StringUtils.repeat(" ", indentDepth);

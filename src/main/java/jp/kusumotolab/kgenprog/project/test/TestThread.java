@@ -27,12 +27,15 @@ import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.build.BinaryStore;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
 /**
+ * Jacoco+JUnitを用いてテストを実行するスレッドオブジェクト．<br>
+ * Threadクラスを継承しており，本テスト実行は別スレッドで処理される．<br>
+ * このスレッド化はテストのタイムアウト処理のためであり，高速化や並列化が目的ではないことに注意．<br>
+ * 
  * @author shinsuke
  */
 class TestThread extends Thread {
@@ -40,16 +43,23 @@ class TestThread extends Thread {
   private final IRuntime jacocoRuntime;
   private final Instrumenter jacocoInstrumenter;
   private final RuntimeData jacocoRuntimeData;
-  private TestResults testResults; // used for return value in multi thread
-  private BuildResults buildResults;
+  private final BuildResults buildResults;
+  private TestResults testResults; // スレッドの返り値として用いるためにnon-finalフィールド
 
-  // private final GeneratedSourceCode generatedSourceCode;
   private final TargetProject targetProject;
   private final List<String> executionTestNames;
 
   private long timeout;
   private TimeUnit timeUnit;
 
+  /**
+   * コンストラクタ．
+   * 
+   * @param buildResults テスト実行対象のバイナリを保持するビルド結果
+   * @param targetProject テスト実行の対象プロジェクト
+   * @param executionTestNames どのテストを実行するか
+   * @param timeout タイムアウト時間（秒）
+   */
   public TestThread(final BuildResults buildResults, final TargetProject targetProject,
       final List<String> executionTestNames, final long timeout) {
 
@@ -66,28 +76,30 @@ class TestThread extends Thread {
     this.timeUnit = TimeUnit.SECONDS; // TODO タイムアウトは秒単位が前提
   }
 
-  // Result extraction point for multi thread
+  /**
+   * テスト結果の取り出しAPI．<br>
+   * スレッド（非同期）実行されるのでrun()の返り値としてではなく，getで結果を取り出す．<br>
+   * 
+   * @return テストの結果
+   */
   public TestResults getTestResults() {
     return this.testResults;
   }
 
   /**
-   * JaCoCo + JUnitの実行． sourceClassesで指定したソースをJaCoCoでinstrumentして，JUnitを実行する．
+   * JaCoCo + JUnitの実行． <br>
+   * コンストラクタで渡されたバイナリに対して，まずJaCoCo計測のためのinstrument処理を施す．<br>
+   * さらに，そのバイナリを用いてJUnitを実行する．<br>
+   * 
    */
   public void run() {
-    // 初期処理（プロジェクトのビルドと返り値の生成）
-
-    // XXXXXXXXXXXXXXXXXXX TODO
-    // final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
-    // buildResults = projectBuilder.build(generatedSourceCode);
-    testResults = new TestResults();
-    testResults.setBuildResults(buildResults); // FLメトリクス算出のためにtestResultsにbuildResultsを登録しておく．
-
     // ビルド失敗時は即座に諦める
     if (buildResults.isBuildFailed) {
       testResults = EmptyTestResults.instance;
       return;
     }
+
+    testResults = new TestResults(buildResults);
 
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
@@ -117,7 +129,7 @@ class TestThread extends Thread {
 
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
-      this.testResults = EmptyTestResults.instance;
+      testResults = EmptyTestResults.instance;
       return;
     } catch (Exception e) {
       // TODO
@@ -138,8 +150,7 @@ class TestThread extends Thread {
    */
   private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
       final List<FullyQualifiedName> fqns) throws IOException {
-    final BinaryStore binaryStore = buildResults.getBinaryStore();
-    for (final JavaBinaryObject jmo : binaryStore.getAll()) {
+    for (final JavaBinaryObject jmo : buildResults.binaryStore.getAll()) {
       final FullyQualifiedName fqn = jmo.getFqn();
       final byte[] rawBytecode = jmo.getByteCode();
       final byte[] bytecode = jmo.isTest() ? rawBytecode : instrumentBytecode(rawBytecode);
@@ -175,9 +186,8 @@ class TestThread extends Thread {
   }
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
-    final BinaryStore binStore = buildResults.getBinaryStore();
     return sourcesPaths.stream()
-        .map(source -> binStore.get(source))
+        .map(source -> buildResults.binaryStore.get(source))
         .flatMap(Collection::stream)
         .map(jmo -> jmo.getFqn())
         .collect(Collectors.toList());
@@ -306,8 +316,7 @@ class TestThread extends Thread {
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
       for (final FullyQualifiedName measuredClass : measuredClasses) {
-        final byte[] bytecode = buildResults.getBinaryStore()
-            .get(measuredClass)
+        final byte[] bytecode = buildResults.binaryStore.get(measuredClass)
             .getByteCode();
         analyzer.analyzeClass(bytecode, measuredClass.value);
       }

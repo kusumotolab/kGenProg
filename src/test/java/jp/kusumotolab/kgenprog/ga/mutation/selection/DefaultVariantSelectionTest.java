@@ -1,30 +1,33 @@
-package jp.kusumotolab.kgenprog.ga.selection;
+package jp.kusumotolab.kgenprog.ga.mutation.selection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
-/**
- * EliteAndOldVariantSelectionに関するテストクラス.
- */
-public class EliteAndOldVariantSelectionTest {
+public class DefaultVariantSelectionTest {
 
-  /**
-   * Variantの算出を正しく行えているかテストする.
-   */
+  private Random random;
+
+  @Before
+  public void setup() {
+    this.random = new Random(0);
+  }
+
   @Test
   public void testExec() {
     final int variantSize = 5;
-    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(
-        variantSize);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize, random);
     final List<Variant> variants = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
@@ -48,28 +51,18 @@ public class EliteAndOldVariantSelectionTest {
         .containsExactly(0.80d, 0.60d, 0.45d, 0.40d, 0.35d);
   }
 
-  /**
-   * 空のリストに対するVariantの算出を正しく行えているかテストする.
-   * <br>
-   * 結果として空のリストを得られることを期待する.
-   */
   @Test
   public void testExecForEmptyVariants() {
-    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10, random);
     final List<Variant> variants1 = Collections.emptyList();
     final List<Variant> variants2 = Collections.emptyList();
     final List<Variant> resultVariants = variantSelection.exec(variants1, variants2);
     assertThat(resultVariants).hasSize(0);
   }
 
-  /**
-   * NaNが含まれるリストに対するVariantの算出を正しく行えているかテストする.
-   * <br>
-   * 結果としてNaNよりも通常の値が優先されることを期待する.
-   */
   @Test
   public void testExecForNan() {
-    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10, random);
     final List<Variant> variants = new ArrayList<>();
 
     final List<Variant> nanVariants = IntStream.range(0, 10)
@@ -90,14 +83,9 @@ public class EliteAndOldVariantSelectionTest {
     assertThat(result2.get(0)).isEqualTo(normalVariant);
   }
 
-  /**
-   * NaNが多数含まれるリストに対するVariantの比較を正しく行えているかテストする.
-   * <br>
-   * 結果として個体数を制限し，NaNよりも通常の値が優先されることを期待する.
-   */
   @Test
   public void testExecForNanCompare() {
-    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(10);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(10, random);
 
     final List<Variant> nanVariants = IntStream.range(0, 100)
         .mapToObj(e -> {
@@ -118,16 +106,14 @@ public class EliteAndOldVariantSelectionTest {
   }
 
   /**
-   * 個体の選択を正しく行えているかテストする.
-   * <br>
-   * Fitnessが同値の個体同士ではより古い個体を優先して残す.<br>
+   * 個体の選択を正しく行えているかテストする.<br>
+   * Fitnessが同値の個体があればその中からランダムに選択する.<br>
    * 各Variantにユニークなidを付加し，それを元にして確認を行う.
    */
   @Test
   public void testOrderOfVariants() {
     final int variantSize = 5;
-    final EliteAndOldVariantSelection variantSelection = new EliteAndOldVariantSelection(
-        variantSize);
+    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize, random);
     final List<Variant> current = new ArrayList<>();
     final List<Variant> generated = new ArrayList<>();
 
@@ -155,14 +141,14 @@ public class EliteAndOldVariantSelectionTest {
 
     assertThat(selectedVariants).hasSize(variantSize)
         .extracting(Variant::getId)
-        .containsSequence(9L, 19L, 7L, 8L, 17L);
+        .doesNotContainSequence(9L, 19L, 7L, 8L, 17L);
   }
 
   /**
-   * Variantを生成するメソッド. Fitnessのみを指定する.
+   * Variantを生成するメソッド.Fitnessのみを指定する.
    *
-   * @param fitness
-   * @return variant
+   * @param fitness Variantの持つFitness
+   * @return variant 生成したVariant
    */
   private Variant createVariant(final Fitness fitness) {
     final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null);
@@ -170,11 +156,11 @@ public class EliteAndOldVariantSelectionTest {
   }
 
   /**
-   * Variantを生成するメソッド. FitnessとIdを指定する.
+   * Variantを生成するメソッド.FitnessとIdを指定する.
    *
-   * @param fitness
-   * @param id
-   * @return variant
+   * @param fitness Variantの持つFitness
+   * @param id Variantに固有の値
+   * @return variant 生成したVariant
    */
   private Variant createVariant(final Fitness fitness, final int id) {
     final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null);

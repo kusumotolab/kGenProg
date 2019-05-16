@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
@@ -10,17 +9,28 @@ import java.util.Map;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
- * A class loader that loads classes from in-memory data.
+ * メモリ上からバイナリを読み込む特殊クラスローダ．<br>
+ * バイナリを格納する配列を抱えており，これを用いてメモリからのクラスロードを試みる．<br>
+ * 
+ * URLClassLoaderを継承しており，メモリロードを行う前に一般的なクラスパス指定の（すなわちファイルシステムからの）クラスロードを試みていることに注意．<br>
  * 
  * @see https://www.jacoco.org/jacoco/trunk/doc/examples/java/CoreTutorial.java
  */
 public class MemoryClassLoader extends URLClassLoader {
 
 
-  public MemoryClassLoader() throws MalformedURLException {
+  /**
+   * constructor
+   */
+  public MemoryClassLoader() {
     this(new URL[] {});
   }
 
+  /**
+   * constructor
+   * 
+   * @param urls クラスパス
+   */
   public MemoryClassLoader(final URL[] urls) {
     super(urls);
   }
@@ -40,22 +50,35 @@ public class MemoryClassLoader extends URLClassLoader {
     definitions.put(fqn.value, bytes);
   }
 
+  /**
+   * クラスをロードする．<br>
+   * {@link java.lang.ClassLoader#loadClass}のFQNエイリアス
+   * 
+   * @param fqn ロード対象のクラスのFQN
+   * @return ロードされたクラスオブジェクト
+   * @throws ClassNotFoundException
+   */
   public Class<?> loadClass(final FullyQualifiedName fqn) throws ClassNotFoundException {
     return loadClass(fqn.value);
   }
 
   /**
-   * メモリ上からクラスを探す． まずURLClassLoaderによるファイルシステム上のクラスのロードを試み，それがなければメモリ上のクラスロードを試す．
+   * メモリ上からクラスを探す． <br>
+   * まずURLClassLoaderによるファイルシステム上のクラスのロードを試み，それがなければメモリ上のクラスロードを試す．
+   * 
    */
   @Override
   protected Class<?> findClass(final String name) throws ClassNotFoundException {
     Class<?> c = null;
+
+    // try to load from classpath
     try {
       c = super.findClass(name);
     } catch (final ClassNotFoundException e1) {
       // ignore
     }
 
+    // if fails, try to load from memory
     if (null == c) {
       final byte[] bytes = definitions.get(name);
       if (bytes != null) {
@@ -66,6 +89,8 @@ public class MemoryClassLoader extends URLClassLoader {
         }
       }
     }
+
+    // otherwise, class not found
     if (null == c) {
       throw new ClassNotFoundException(name);
     }

@@ -14,14 +14,36 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 
+/**
+ * 全テストの結果を表すオブジェクト．<br>
+ * TestResultの集合．<br>
+ * 
+ * FL計算に用いる情報集約APIを持つ．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class TestResults {
+
+  private BuildResults buildResults;
 
   private final Map<FullyQualifiedName, TestResult> value;
 
+  /**
+   * constructor
+   */
   public TestResults() {
     this.value = new HashMap<>();
   }
 
+  /**
+   * constructor
+   */
+  public TestResults(final BuildResults buildResults) {
+    this();
+    this.buildResults = buildResults;
+  }
+  
   /**
    * 新規TestResultの追加
    * 
@@ -58,7 +80,7 @@ public class TestResults {
   /**
    * 実行されたテストメソッドのFQN一覧を返す．
    * 
-   * @return
+   * @return 実行されたテストメソッドのFQN一覧
    */
   public Set<FullyQualifiedName> getExecutedTestFQNs() {
     return this.value.keySet();
@@ -67,7 +89,7 @@ public class TestResults {
   /**
    * 失敗したテストのFQN一覧を取得．
    * 
-   * @return
+   * @return 失敗したテストのFQN一覧
    */
   public List<FullyQualifiedName> getFailedTestFQNs() {
     return this.value.values()
@@ -80,7 +102,7 @@ public class TestResults {
   /**
    * 成功したテストのFQN一覧を取得．
    *
-   * @return
+   * @return 成功したテストのFQN一覧
    */
   public List<FullyQualifiedName> getSuccessedTestFQNs() {
     return this.value.values()
@@ -94,7 +116,7 @@ public class TestResults {
    * 実行された単一テストメソッドの結果を返す．
    * 
    * @param testFQN 対象のテストメソッドFQN
-   * @return
+   * @return 実行された単一テストメソッドの結果
    */
   public TestResult getTestResult(final FullyQualifiedName testFQN) {
     // TODO if null
@@ -224,6 +246,10 @@ public class TestResults {
     return getNumberOfTests(productSourcePath, location, Coverage.Status.NOT_COVERED, true);
   }
 
+  /**
+   * jsonシリアライザ
+   * @return
+   */
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder();
@@ -237,24 +263,8 @@ public class TestResults {
     return sb.toString();
   }
 
-  /*
-   * 以降，翻訳のための一時的な処理
-   */
-
-  // 翻訳用ASTを持つbuildResults
-  private BuildResults buildResults;
-
-  public void setBuildResults(final BuildResults buildResults) {
-    this.buildResults = buildResults;
-  }
-
-  public BuildResults getBuildResults() {
-    return buildResults;
-  }
-
-  public Set<FullyQualifiedName> getCorrespondingFqns(final ProductSourcePath productSourcePath) {
-    return buildResults.getBinaryStore()
-        .get(productSourcePath)
+  private Set<FullyQualifiedName> getCorrespondingFqns(final ProductSourcePath productSourcePath) {
+    return buildResults.binaryStore.get(productSourcePath)
         .stream()
         .map(JavaBinaryObject::getFqn)
         .collect(Collectors.toSet());

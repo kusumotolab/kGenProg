@@ -13,6 +13,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.project.ReproducedSourceCode;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
@@ -27,8 +28,7 @@ public class DefaultSourceCodeGenerationTest {
     final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final Variant initialVariant = TestUtil.createVariant(config);
-    final VariantStore variantStore = getVariantStore(initialVariant);
+    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     final Base base = new Base(null, new NoneOperation());
     final Gene gene = new Gene(Collections.singletonList(base));
     final DefaultSourceCodeGeneration defaultSourceCodeGeneration =
@@ -42,8 +42,9 @@ public class DefaultSourceCodeGenerationTest {
     // 2回目の生成は失敗する
     final GeneratedSourceCode secondGeneratedSourceCode =
         defaultSourceCodeGeneration.exec(variantStore, gene);
-    assertThat(secondGeneratedSourceCode).isInstanceOf(GenerationFailedSourceCode.class);
-    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo("duplicate sourcecode");
+    assertThat(secondGeneratedSourceCode).isInstanceOf(ReproducedSourceCode.class);
+    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo(
+        "(Reproduced Source Code) Generate Success");
   }
 
   @Test
@@ -51,8 +52,9 @@ public class DefaultSourceCodeGenerationTest {
     final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Configuration config = new Configuration.Builder(targetProject).build();
-    final Variant initialVariant = TestUtil.createVariant(config);
-    final VariantStore variantStore = getVariantStore(initialVariant);
+    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
+    final Variant initialVariant = variantStore.getInitialVariant();
+
     final Base base = new Base(null, new NoneOperation());
     final Gene gene = new Gene(Collections.singletonList(base));
     final DefaultSourceCodeGeneration defaultSourceCodeGeneration =
@@ -64,8 +66,9 @@ public class DefaultSourceCodeGenerationTest {
     // NoneOperationではソースコードは変わらないので失敗するはず
     final GeneratedSourceCode secondGeneratedSourceCode =
         defaultSourceCodeGeneration.exec(variantStore, gene);
-    assertThat(secondGeneratedSourceCode).isInstanceOf(GenerationFailedSourceCode.class);
-    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo("duplicate sourcecode");
+    assertThat(secondGeneratedSourceCode).isInstanceOf(ReproducedSourceCode.class);
+    assertThat(secondGeneratedSourceCode.getGenerationMessage()).isEqualTo(
+        "(Reproduced Source Code) Generate Success");
   }
 
   @Test
@@ -74,7 +77,7 @@ public class DefaultSourceCodeGenerationTest {
         TargetProjectFactory.create(Paths.get("example/BuildSuccess01"));
     final Configuration config = new Configuration.Builder(targetProject).build();
     final Variant initialVariant = TestUtil.createVariant(config);
-    final VariantStore variantStore = getVariantStore(initialVariant);
+    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final Gene initialGene = new Gene(new ArrayList<>());
     final Base noneBase = new Base(null, new NoneOperation());
@@ -104,8 +107,4 @@ public class DefaultSourceCodeGenerationTest {
 
   // TODO: None以外のOperationでテストする必要有り
 
-  @SuppressWarnings("deprecation")
-  private VariantStore getVariantStore(final Variant initialVariant) {
-    return new VariantStore(initialVariant);
-  }
 }
