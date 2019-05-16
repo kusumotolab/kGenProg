@@ -8,23 +8,26 @@ This document describes how to setup development environment as a kGenProg contr
 - Gradle
 
 ## Getting setup
+
+### for Eclipse developers
+
 1. Get the repository
 ```shell
 $ git clone https://github.com/kusumotolab/kGenProg
 $ cd kGenProg
 ```
+
 2. Resolve dependencies and build the project
 ```shell
 $ ./gradlew build
 ```
 
-### for Eclipse developers
-1. Create eclipse configuration
+3. Create eclipse configuration
 ```shell
 $ ./gradlew eclipse
 ```
 
-2. Import the project
+4. Import the project
 ```
 (on Eclipse menubar)
 
@@ -36,7 +39,7 @@ File
  -> Finish
 ```
 
-3. Follow the coding style
+5. Follow the coding style
 ```
 (on Eclipse menubar)
 
@@ -51,16 +54,36 @@ Project
 ```
 
 ### for Intellij developers
-1. Create intellij configuration
+
+1. Get the repository
 ```shell
-$ ./gradlew idea
+$ git clone https://github.com/kusumotolab/kGenProg
+$ cd kGenProg
 ```
 
 2. Import the project
 ```
-Import Project
+(on IntelliJ)
 
-PATH_TO_REPO
+Import Project
+  -> Specify "PATH_TO_REPO"
+  -> Check "Import project from external model"
+  -> Select "Gradle"
+  -> Check "Use default Gradle wrapper (recommended)"
+```
+
+3. Follow the coding style
+```
+(on IntelliJ menubar)
+
+File
+  -> Settings
+  -> Editor > Code Style
+  -> Gear icon
+  -> Import Scheme
+  -> IntelliJ IDEA code style XML
+  -> Specify "PATH_TO_REPO/settings/intellij-coding-style.xml"
+
 ```
 
 ## Coding style
