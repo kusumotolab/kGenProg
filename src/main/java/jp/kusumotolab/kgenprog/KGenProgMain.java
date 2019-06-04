@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
@@ -26,9 +27,8 @@ import jp.kusumotolab.kgenprog.project.test.TestExecutor;
  * kGenProgのメインクラス．<br>
  * このクラスのインスタンスを生成し，runメソッドを実行することで，自動プログラム修正を行う．<br>
  * コマンドラインからの実行には{@link CUILauncher}}クラスを用いる．<br>
- * 
- * @author higo
  *
+ * @author higo
  */
 public class KGenProgMain {
 
@@ -47,7 +47,7 @@ public class KGenProgMain {
 
   /**
    * コンストラクタ．自動プログラム修正に必要な全ての情報を渡す必要あり．
-   * 
+   *
    * @param config 設定情報
    * @param faultLocalization 自動バグ限局を行うインスタンス
    * @param mutation 変異を行うインスタンス
@@ -79,7 +79,7 @@ public class KGenProgMain {
   /**
    * 自動プログラム修正を実行する．<br>
    * 得られた解（全てのテストケースを通過するプログラム）を返す．<br>
-   * 
+   *
    * @return 得られた解（全てのテストケースを通過するプログラム）
    */
   public List<Variant> run() {

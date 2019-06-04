@@ -59,6 +59,7 @@ public class Configuration {
       FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
       SecondVariantSelectionStrategy.Strategy.Random;
+  public static final boolean DEFAULT_NEED_HISTORICAL_ELEMENT = true;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -78,6 +79,7 @@ public class Configuration {
   private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
+  private final boolean needHistoricalElement;
   // endregion
 
   // region Constructor
@@ -101,6 +103,7 @@ public class Configuration {
     crossoverType = builder.crossoverType;
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
+    needHistoricalElement = builder.needHistoricalElement;
   }
 
   // endregion
@@ -183,6 +186,10 @@ public class Configuration {
 
   public SecondVariantSelectionStrategy.Strategy getSecondVariantSelectionStrategy() {
     return secondVariantSelectionStrategy;
+  }
+
+  public boolean needHistoricalElement() {
+    return needHistoricalElement;
   }
 
   @Override
@@ -314,6 +321,10 @@ public class Configuration {
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
         DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
+    @Option(name = "--no-historical-element", usage = "Do not generate historical element.", hidden = true)
+    @com.electronwill.nightconfig.core.conversion.Path("no-historical-element")
+    @PreserveNotNull
+    private boolean needHistoricalElement = DEFAULT_NEED_HISTORICAL_ELEMENT;
     // endregion
 
     // region Constructors
@@ -497,6 +508,11 @@ public class Configuration {
     public Builder setSecondVariantSelectionStrategy
         (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
+      return this;
+    }
+
+    public Builder setNeedHistoricalElement(final boolean needHistoricalElement) {
+      this.needHistoricalElement = needHistoricalElement;
       return this;
     }
 

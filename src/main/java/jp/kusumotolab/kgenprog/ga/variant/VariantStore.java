@@ -44,8 +44,12 @@ public class VariantStore {
     generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
-    allVariants = new LinkedList<>();
-    allVariants.add(initialVariant);
+    if (config.needHistoricalElement()) {
+      allVariants = new LinkedList<>();
+      allVariants.add(initialVariant);
+    } else {
+      allVariants = null;
+    }
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
 
@@ -151,7 +155,9 @@ public class VariantStore {
    */
   public void addGeneratedVariant(final Variant variant) {
 
-    allVariants.add(variant);
+    if (config.needHistoricalElement()) {
+      allVariants.add(variant);
+    }
     if (variant.isCompleted()) {
       foundSolutions.add(variant);
     } else {
@@ -179,8 +185,13 @@ public class VariantStore {
   private Variant createInitialVariant() {
     final GeneratedSourceCode sourceCode =
         strategies.execASTConstruction(config.getTargetProject());
-    return createVariant(new Gene(Collections.emptyList()), sourceCode,
-        new OriginalHistoricalElement());
+    final HistoricalElement newElement;
+    if (config.needHistoricalElement()) {
+      newElement = new OriginalHistoricalElement();
+    } else {
+      newElement = null;
+    }
+    return createVariant(new Gene(Collections.emptyList()), sourceCode, newElement);
   }
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,

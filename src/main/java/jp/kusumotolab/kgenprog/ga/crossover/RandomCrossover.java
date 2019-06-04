@@ -15,29 +15,31 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 /**
  * ランダム交叉を行うクラス．
- * 
- * @author higo
  *
+ * @author higo
  */
 public class RandomCrossover extends CrossoverAdaptor {
 
   private final Random random;
+  private final boolean needHistoricalElement;
 
   /**
    * コンストラクタ．ランダム交叉に必要な情報を全て引数として渡す必要あり．
-   * 
+   *
    * @param random 交叉処理の内部でランダム処理を行うためのシード
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
+   * @param needHistoricalElement
    * @return 交叉を行うインスタンス
    */
   public RandomCrossover(final Random random,
       final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-      final int generatingCount) {
+      final int generatingCount, final boolean needHistoricalElement) {
     super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount);
     this.random = random;
+    this.needHistoricalElement = needHistoricalElement;
   }
 
   @Override
@@ -51,7 +53,12 @@ public class RandomCrossover extends CrossoverAdaptor {
     final List<Base> basesB = geneB.getBases();
 
     final Gene newGene = makeGene(basesA, basesB);
-    final HistoricalElement newElement = new RandomCrossoverHistoricalElement(variantA, variantB);
+    final HistoricalElement newElement;
+    if (needHistoricalElement) {
+      newElement = new RandomCrossoverHistoricalElement(variantA, variantB);
+    } else {
+      newElement = null;
+    }
     return Arrays.asList(store.createVariant(newGene, newElement));
   }
 
