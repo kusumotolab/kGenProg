@@ -25,30 +25,31 @@ public class AccessibleVariableSearcherTest {
     final List<ASTLocation> locations = ast.createLocations()
         .getAll();
 
-    final ASTLocation line4 = locations.get(1); // String str_1 = ""
-    final List<Variable> variables = searcher.exec(line4);
-    assertThat(variables).hasSize(1);
-    assertThat(variables.get(0)).returns("String", Variable::getFqn);
-    assertThat(variables.get(0)).returns("str_1", Variable::getName);
+    final ASTLocation line7 = locations.get(1); // String str_1 = ""
+    final List<Variable> variables = searcher.exec(line7);
+    assertThat(variables).hasSize(4);
 
+    assertThat(variables.get(0)).returns("int", v -> v.getFqn()
+        .toString());
+    assertThat(variables.get(0)).returns("int_1", Variable::getName);
 
-    final ASTLocation line6 = locations.get(4); // String str_2_1, str2_2 = "";
-    assertThat(searcher.exec(line6)).hasSize(3);
+    final ASTLocation line9 = locations.get(4); // String str_2_1, str2_2 = "";
+    assertThat(searcher.exec(line9)).hasSize(5);
 
-    final ASTLocation line8 = locations.get(7); // String str_3 = ""
-    assertThat(searcher.exec(line8)).hasSize(4);
+    final ASTLocation line11 = locations.get(7); // String str_3 = ""
+    assertThat(searcher.exec(line11)).hasSize(7);
 
-    final ASTLocation line10 = locations.get(9); // String str_4 = ""
-    assertThat(searcher.exec(line10)).hasSize(4);
+    final ASTLocation line13 = locations.get(9); // String str_4 = ""
+    assertThat(searcher.exec(line13)).hasSize(7);
 
-    final ASTLocation line12 = locations.get(10); // String str_5 = ""
-    assertThat(searcher.exec(line12)).hasSize(4);
+    final ASTLocation line15 = locations.get(10); // String str_5 = ""
+    assertThat(searcher.exec(line15)).hasSize(7);
 
-    final ASTLocation line16 = locations.get(13); // String str_6 = ""
-    assertThat(searcher.exec(line16)).hasSize(2);
+    final ASTLocation line20 = locations.get(14); // String str_6 = ""
+    assertThat(searcher.exec(line20)).hasSize(5);
 
-    final ASTLocation line18 = locations.get(14); // String str_7 = ""
-    assertThat(searcher.exec(line18)).hasSize(2);
+    final ASTLocation line22 = locations.get(15); // String str_7 = ""
+    assertThat(searcher.exec(line22)).hasSize(5);
   }
 
   private List<GeneratedAST<ProductSourcePath>> constructASTs(final String projectCode) {

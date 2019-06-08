@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Statement;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -21,7 +22,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
  *
  * @see CandidateSelection
  */
-public abstract class StatementSelection implements CandidateSelection {
+public abstract class StatementSelection implements CandidateSelection<Scope> {
 
   private final Random random;
   private Roulette<ReuseCandidate<Statement>> projectRoulette;
@@ -69,7 +70,7 @@ public abstract class StatementSelection implements CandidateSelection {
    * @return 再利用するステートメント
    */
   @Override
-  public Statement exec(final Scope scope) {
+  public ASTNode exec(final Scope scope) {
     final Roulette<ReuseCandidate<Statement>> roulette = getRoulette(scope);
     final ReuseCandidate<Statement> candidate = roulette.exec();
     return candidate.getValue();

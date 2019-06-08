@@ -11,12 +11,13 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 /**
  * ソースコードの変異を行うクラス
+ * @param <Q> 再利用候補のコードを検索するクエリ
  */
-public abstract class Mutation {
+public abstract class Mutation<Q> {
 
   protected final Random random;
   protected final int mutationGeneratingCount;
-  protected final CandidateSelection candidateSelection;
+  protected final CandidateSelection<Q> candidateSelection;
   protected final Type type;
 
   /**
@@ -28,7 +29,7 @@ public abstract class Mutation {
    * @param type 選択する候補のスコープ
    */
   public Mutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Type type) {
+      final CandidateSelection<Q> candidateSelection, final Type type) {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;

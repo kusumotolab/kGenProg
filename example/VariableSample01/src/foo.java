@@ -1,5 +1,8 @@
 class Foo {
 
+  double double_1 = 0.0d;
+  double double_2_1, double_2_2 = 0.0d;
+
   public void bar(int int_1) {
     String str_1 = "";
     if (true) {
@@ -10,6 +13,7 @@ class Foo {
         String str_4 = "";
       }
       String str_5 = "";
+      System.out.println(str_1);
     }
 
     if (true) {

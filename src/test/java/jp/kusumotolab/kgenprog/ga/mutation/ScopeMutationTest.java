@@ -42,7 +42,7 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class RandomMutationTest {
+public class ScopeMutationTest {
 
   @SuppressWarnings("serial")
   private class MockRandom extends Random {
@@ -183,8 +183,8 @@ public class RandomMutationTest {
 
   private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode,
       final Random random) {
-    final CandidateSelection statementSelection = new RouletteStatementSelection(random);
-    final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection,
+    final CandidateSelection<Scope> statementSelection = new RouletteStatementSelection(random);
+    final RandomMutation randomMutation = new ScopeMutation(15, random, statementSelection,
         Type.PROJECT);
     randomMutation.setCandidates(sourceCode.getProductAsts());
     return randomMutation;
