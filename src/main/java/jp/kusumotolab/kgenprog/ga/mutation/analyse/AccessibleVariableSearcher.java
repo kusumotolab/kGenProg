@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
@@ -18,9 +19,7 @@ import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 /**
- * アクセスすることができる変数を探すクラス
- * バインディングしないこと前提に作っているため，探索範囲は同じクラスのみ
- * ローカル変数，引数，フィールド変数を探す
+ * アクセスすることができる変数を探すクラス バインディングしないこと前提に作っているため，探索範囲は同じクラスのみ ローカル変数，引数，フィールド変数を探す
  */
 public class AccessibleVariableSearcher {
 
@@ -54,7 +53,7 @@ public class AccessibleVariableSearcher {
     if (parent instanceof MethodDeclaration) {
       final List<Variable> variables = extractFromMethodDeclaration(((MethodDeclaration) parent));
       results.addAll(variables);
-    } else {
+    } else if (parent != null) {
       final List<Variable> parentVariables = recursivelySearch(parent);
       results.addAll(parentVariables);
     }
@@ -80,7 +79,8 @@ public class AccessibleVariableSearcher {
 
       if (statement instanceof VariableDeclarationStatement) {
         final VariableDeclarationStatement vdStatement = (VariableDeclarationStatement) statement;
-        final List<Variable> extractVariables = extractFromVariableDeclarationStatement(vdStatement);
+        final List<Variable> extractVariables = extractFromVariableDeclarationStatement(
+            vdStatement);
         variables.addAll(extractVariables);
       }
     }
@@ -96,7 +96,8 @@ public class AccessibleVariableSearcher {
         final VariableDeclarationFragment vdFragment = (VariableDeclarationFragment) fragment;
         final SimpleName name = vdFragment.getName();
         final FullyQualifiedName fqn = new TargetFullyQualifiedName(type.toString());
-        final Variable variable = new Variable(name.getIdentifier(), fqn);
+        final Variable variable = new Variable(name.getIdentifier(), fqn,
+            Modifier.isFinal(vdStatement.getModifiers()));
         variables.add(variable);
       } else {
         // 基本的にはここには入らないはず
@@ -118,7 +119,8 @@ public class AccessibleVariableSearcher {
       final SimpleName name = vDeclaration.getName();
       final Type type = vDeclaration.getType();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName(type.toString());
-      results.add(new Variable(name.toString(), fqn));
+      results.add(
+          new Variable(name.toString(), fqn, Modifier.isFinal(vDeclaration.getModifiers())));
     }
     final ASTNode parent = node.getParent();
     if (parent instanceof TypeDeclaration) {
@@ -139,7 +141,8 @@ public class AccessibleVariableSearcher {
         }
         final VariableDeclarationFragment fragment = (VariableDeclarationFragment) object;
         final SimpleName name = fragment.getName();
-        results.add(new Variable(name.toString(), fqn));
+        results.add(
+            new Variable(name.toString(), fqn, Modifier.isFinal(fieldDeclaration.getModifiers())));
       }
     }
     return results;

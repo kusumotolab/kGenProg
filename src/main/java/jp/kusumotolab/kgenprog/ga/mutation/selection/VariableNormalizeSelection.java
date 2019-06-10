@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Statement;
@@ -17,8 +18,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 /**
- * 型を考慮してStatementを選ぶ．
- * Statementを選んで返す時に変数名を書き換えて返す
+ * 型を考慮してStatementを選ぶ． Statementを選んで返す時に変数名を書き換えて返す
  */
 public class VariableNormalizeSelection implements CandidateSelection<List<Variable>> {
 
@@ -79,7 +79,6 @@ public class VariableNormalizeSelection implements CandidateSelection<List<Varia
     final Map<String, String> nameToFqnMap = candidate.includingVariables.stream()
         .collect(Collectors.toMap(Variable::getName, e -> e.getFqn()
             .toString()));
-
     final CandidateRewriteVisitor candidateRewriteVisitor = new CandidateRewriteVisitor(
         candidate.reuseCandidate.getValue(), nameToFqnMap, fqnToNamesMap, random);
     return candidateRewriteVisitor.getReplacedStatement();
@@ -158,9 +157,18 @@ public class VariableNormalizeSelection implements CandidateSelection<List<Varia
       if (fqn == null) {
         return true;
       }
-      final List<Variable> variables = fqnToNamesMap.get(fqn);
+
+      List<Variable> variables = fqnToNamesMap.get(fqn);
       if (variables == null) {
         return true;
+      }
+
+      final ASTNode parent = node.getParent();
+      if (parent instanceof Assignment && ((Assignment) parent).getLeftHandSide()
+          .equals(node)) {
+        variables = variables.stream()
+            .filter(e -> !e.isFinal())
+            .collect(Collectors.toList());
       }
 
       final Variable newName = variables.get(random.nextInt(variables.size()));
@@ -168,7 +176,7 @@ public class VariableNormalizeSelection implements CandidateSelection<List<Varia
       return true;
     }
 
-    Statement getReplacedStatement() {
+    public Statement getReplacedStatement() {
       return targetStatement;
     }
   }

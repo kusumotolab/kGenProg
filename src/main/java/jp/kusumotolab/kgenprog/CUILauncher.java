@@ -11,7 +11,6 @@ import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
-import jp.kusumotolab.kgenprog.ga.mutation.Scope;
 import jp.kusumotolab.kgenprog.ga.mutation.ScopeMutation;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.StatementSelection;

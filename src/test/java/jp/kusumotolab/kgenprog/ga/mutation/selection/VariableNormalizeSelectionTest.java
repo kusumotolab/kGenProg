@@ -26,8 +26,8 @@ public class VariableNormalizeSelectionTest {
     final VariableNormalizeSelection selection = new VariableNormalizeSelection(new Random(0));
     selection.setCandidates(generatedASTs);
     final ASTNode node = selection.exec(Arrays.asList(
-        new Variable("text", new TargetFullyQualifiedName("String")),
-        new Variable("number", new TargetFullyQualifiedName("int"))
+        new Variable("text", new TargetFullyQualifiedName("String"), false),
+        new Variable("number", new TargetFullyQualifiedName("int"), false)
     ));
     assertThat(node).returns("System.out.println(text + String.valueOf(number));\n",
         ASTNode::toString);
@@ -39,7 +39,7 @@ public class VariableNormalizeSelectionTest {
     final VariableNormalizeSelection selection = new VariableNormalizeSelection(new Random(0));
     selection.setCandidates(generatedASTs);
     final ASTNode node = selection.exec(Collections.singletonList(
-        new Variable("number", new TargetFullyQualifiedName("bool"))
+        new Variable("number", new TargetFullyQualifiedName("bool"), false)
     ));
     // boolの型はないので，変数宣言のみしか再利用候補にならない
     assertThat(node).returns("int a=0;\n",

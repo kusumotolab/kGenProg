@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -29,9 +30,18 @@ public class AccessibleVariableSearcherTest {
     final List<Variable> variables = searcher.exec(line7);
     assertThat(variables).hasSize(4);
 
-    assertThat(variables.get(0)).returns("int", v -> v.getFqn()
-        .toString());
-    assertThat(variables.get(0)).returns("int_1", Variable::getName);
+    final Optional<Variable> int_1 = extractVariableFromName(variables, "int_1");
+    assertThat(int_1).isPresent()
+        .hasValue(new Variable("int_1", "int", true));
+
+    final Optional<Variable> double_1 = extractVariableFromName(variables, "double_1");
+    assertThat(double_1).isPresent()
+        .hasValue(new Variable("double_1", "double", true));
+
+
+    final Optional<Variable> double_2_1 = extractVariableFromName(variables, "double_2_1");
+    assertThat(double_2_1).isPresent()
+        .hasValue(new Variable("double_2_1", "double", false));
 
     final ASTLocation line9 = locations.get(4); // String str_2_1, str2_2 = "";
     assertThat(searcher.exec(line9)).hasSize(5);
@@ -59,5 +69,13 @@ public class AccessibleVariableSearcherTest {
     final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(
         targetProject);
     return sourceCode.getProductAsts();
+  }
+
+  private Optional<Variable> extractVariableFromName(final List<Variable> variables,
+      final String name) {
+    return variables.stream()
+        .filter(e -> e.getName()
+            .equals(name))
+        .findFirst();
   }
 }

@@ -1,10 +1,10 @@
 class Foo {
 
-  double double_1 = 0.0d;
+  final double double_1 = 0.0d;
   double double_2_1, double_2_2 = 0.0d;
 
-  public void bar(int int_1) {
-    String str_1 = "";
+  public void bar(final int int_1) {
+    final String str_1 = "";
     if (true) {
       String str_2_1, str2_2 = "";
       if (true) {
