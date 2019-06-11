@@ -566,10 +566,10 @@ public class Configuration {
         }
 
         final List<Path> subFiles = Files.walk(builder.outDir)
-            .filter(e -> !builder.outDir.equals(e))
+            .filter(e -> !e.equals(builder.outDir))
             .collect(Collectors.toList());
 
-        if (subFiles.size() == 0 && !builder.isForce) {
+        if (subFiles.isEmpty() && !builder.isForce) {
           final String outDirName = builder.outDir
               .toString();
           log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
