@@ -90,7 +90,7 @@ public class VariableNormalizeSelection implements CandidateSelection<List<Varia
     final ReuseCandidate<Statement> reuseCandidate;
     final List<Variable> includingVariables;
 
-    public Candidate(final ReuseCandidate<Statement> reuseCandidate,
+    Candidate(final ReuseCandidate<Statement> reuseCandidate,
         final List<Variable> includingVariables) {
       this.reuseCandidate = reuseCandidate;
       this.includingVariables = includingVariables;
@@ -102,7 +102,7 @@ public class VariableNormalizeSelection implements CandidateSelection<List<Varia
     private final List<String> names = new ArrayList<>();
     private final List<String> accessVariableNames;
 
-    public CandidateVisitor(final Statement statement, final List<Variable> accessibleVariables) {
+    CandidateVisitor(final Statement statement, final List<Variable> accessibleVariables) {
       this.accessVariableNames = accessibleVariables.stream()
           .map(Variable::getName)
           .collect(Collectors.toList());
@@ -171,8 +171,11 @@ public class VariableNormalizeSelection implements CandidateSelection<List<Varia
             .collect(Collectors.toList());
       }
 
-      final Variable newName = variables.get(random.nextInt(variables.size()));
-      node.setIdentifier(newName.getName());
+      if (!variables.isEmpty()) {
+        final Variable newName = variables.get(random.nextInt(variables.size()));
+        node.setIdentifier(newName.getName());
+      }
+
       return true;
     }
 
