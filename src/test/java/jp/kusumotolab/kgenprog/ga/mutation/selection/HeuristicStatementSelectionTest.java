@@ -26,7 +26,7 @@ public class HeuristicStatementSelectionTest {
 
   @Before
   public void setUp() {
-    final Path path = Paths.get("exampleVariableSample02");
+    final Path path = Paths.get("example/VariableSample02");
     final HeuristicProjectFactory factory = new HeuristicProjectFactory(path);
     final TargetProject targetProject = factory.create();
     final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(
