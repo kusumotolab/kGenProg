@@ -8,7 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.junit.Before;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.ga.mutation.Query;
 import jp.kusumotolab.kgenprog.ga.mutation.analyse.Variable;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -18,40 +20,43 @@ import jp.kusumotolab.kgenprog.project.factory.HeuristicProjectFactory;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
-public class VariableNormalizeSelectionTest {
+public class HeuristicStatementSelectionTest {
+
+  private List<GeneratedAST<ProductSourcePath>> generatedASTs;
+
+  @Before
+  public void setUp() {
+    final Path path = Paths.get("exampleVariableSample02");
+    final HeuristicProjectFactory factory = new HeuristicProjectFactory(path);
+    final TargetProject targetProject = factory.create();
+    final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(
+        targetProject);
+    generatedASTs = sourceCode.getProductAsts();
+  }
 
   @Test
   public void testExec02_1() {
-    final List<GeneratedAST<ProductSourcePath>> generatedASTs = constructASTs("02");
-    final VariableNormalizeSelection selection = new VariableNormalizeSelection(new Random(0));
+    final HeuristicStatementSelection selection = new HeuristicStatementSelection(new Random(0));
     selection.setCandidates(generatedASTs);
-    final ASTNode node = selection.exec(Arrays.asList(
+    final Query query = new Query(Arrays.asList(
         new Variable("text", new TargetFullyQualifiedName("String"), false),
         new Variable("number", new TargetFullyQualifiedName("int"), false)
     ));
-    assertThat(node).returns("System.out.println(text + String.valueOf(number));\n",
+    final ASTNode node = selection.exec(query);
+    assertThat(node).returns("System.out.println(str + String.valueOf(num));\n",
         ASTNode::toString);
   }
 
   @Test
   public void testExec02_2() {
-    final List<GeneratedAST<ProductSourcePath>> generatedASTs = constructASTs("02");
-    final VariableNormalizeSelection selection = new VariableNormalizeSelection(new Random(0));
+    final HeuristicStatementSelection selection = new HeuristicStatementSelection(new Random(0));
     selection.setCandidates(generatedASTs);
-    final ASTNode node = selection.exec(Collections.singletonList(
+    final Query query = new Query(Collections.singletonList(
         new Variable("number", new TargetFullyQualifiedName("bool"), false)
     ));
+    final ASTNode node = selection.exec(query);
     // boolの型はないので，変数宣言のみしか再利用候補にならない
     assertThat(node).returns("int a=0;\n",
         ASTNode::toString);
-  }
-
-  private List<GeneratedAST<ProductSourcePath>> constructASTs(final String projectCode) {
-    final Path path = Paths.get("example", "VariableSample" + projectCode);
-    final HeuristicProjectFactory factory = new HeuristicProjectFactory(path);
-    final TargetProject targetProject = factory.create();
-    final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(
-        targetProject);
-    return sourceCode.getProductAsts();
   }
 }

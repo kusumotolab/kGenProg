@@ -20,14 +20,14 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
-import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -42,7 +42,7 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class ScopeMutationTest {
+public class RandomMutationTest {
 
   @SuppressWarnings("serial")
   private class MockRandom extends Random {
@@ -183,8 +183,8 @@ public class ScopeMutationTest {
 
   private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode,
       final Random random) {
-    final CandidateSelection<Scope> statementSelection = new RouletteStatementSelection(random);
-    final RandomMutation randomMutation = new ScopeMutation(15, random, statementSelection,
+    final CandidateSelection statementSelection = new RouletteStatementSelection(random);
+    final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection,
         Type.PROJECT);
     randomMutation.setCandidates(sourceCode.getProductAsts());
     return randomMutation;

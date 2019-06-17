@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog.ga.mutation;
 
 import java.util.List;
 import java.util.Random;
-import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
@@ -11,14 +10,12 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 /**
  * ソースコードの変異を行うクラス
- * @param <Q> 再利用候補のコードを検索するクエリ
  */
-public abstract class Mutation<Q> {
+public abstract class Mutation {
 
   protected final Random random;
   protected final int mutationGeneratingCount;
-  protected final CandidateSelection<Q> candidateSelection;
-  protected final Type type;
+  protected final CandidateSelection candidateSelection;
 
   /**
    * コンストラクタ
@@ -26,14 +23,12 @@ public abstract class Mutation<Q> {
    * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
-   * @param type 選択する候補のスコープ
    */
   public Mutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection<Q> candidateSelection, final Type type) {
+      final CandidateSelection candidateSelection) {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
-    this.type = type;
   }
 
   /**
