@@ -70,7 +70,7 @@ public class HeuristicStatementSelection extends StatementSelection {
 
   private List<Candidate> searchCandidates(final Query query) {
     final List<Variable> variables = query.getVariables();
-    // queryFQN に含まれない型の変数は再利用しない
+    // queryFQNs に含まれない型の変数は再利用しない
     final List<FullyQualifiedName> queryFQNs = extractFQNs(variables);
 
     return candidates.stream()
@@ -113,11 +113,6 @@ public class HeuristicStatementSelection extends StatementSelection {
           .map(Variable::getName)
           .collect(Collectors.toList());
       statement.accept(this);
-    }
-
-    @Override
-    public boolean visit(final QualifiedName node) {
-      return false;
     }
 
     @Override

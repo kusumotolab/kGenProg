@@ -21,8 +21,7 @@ public class HeuristicMutation extends RandomMutation {
   private final AccessibleVariableSearcher variableSearcher = new AccessibleVariableSearcher();
 
   public HeuristicMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection,
-      final Type type) {
+      final CandidateSelection candidateSelection, final Type type) {
     super(mutationGeneratingCount, random, candidateSelection, type);
   }
 
@@ -65,11 +64,6 @@ public class HeuristicMutation extends RandomMutation {
       this.random = random;
 
       targetNode.accept(this);
-    }
-
-    @Override
-    public boolean visit(final QualifiedName node) {
-      return false;
     }
 
     @Override
