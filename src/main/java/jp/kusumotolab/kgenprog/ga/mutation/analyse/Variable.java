@@ -5,7 +5,7 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
 /**
- * 変数をあらほすクラス
+ * 変数を表すクラス
  */
 public class Variable {
   private final String name;
