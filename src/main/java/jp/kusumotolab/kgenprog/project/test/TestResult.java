@@ -38,8 +38,11 @@ public class TestResult {
    * @return 実行されたテストのFQN一覧
    */
   public List<FullyQualifiedName> getExecutedTargetFQNs() {
-    return this.coverages.keySet()
+    return this.coverages.entrySet()
         .stream()
+        .filter(e -> e.getValue()
+            .includingCovered())
+        .map(e -> e.getKey())
         .collect(Collectors.toList());
   }
 
