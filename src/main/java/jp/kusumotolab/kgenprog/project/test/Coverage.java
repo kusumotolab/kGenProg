@@ -56,9 +56,4 @@ public interface Coverage {
 
   String toString(final int indentDepth);
 
-  /**
-   * このカバレッジ情報で表される対象が，1つでもCOVEREDもしくはPARTLY_COVEREDな行を含むかどうか
-   * @return
-   */
-  boolean includingCovered();
 }

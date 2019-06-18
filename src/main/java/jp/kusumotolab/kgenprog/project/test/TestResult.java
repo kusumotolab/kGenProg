@@ -40,8 +40,6 @@ public class TestResult {
   public List<FullyQualifiedName> getExecutedTargetFQNs() {
     return this.coverages.entrySet()
         .stream()
-        .filter(e -> e.getValue()
-            .includingCovered())
         .map(e -> e.getKey())
         .collect(Collectors.toList());
   }
