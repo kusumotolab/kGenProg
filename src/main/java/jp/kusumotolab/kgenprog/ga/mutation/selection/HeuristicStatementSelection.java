@@ -17,13 +17,14 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 
 /**
- * 型を考慮してStatementを選ぶ． Statementを選んで返す時に変数名を書き換えて返す
+ * 型を考慮してStatementを選ぶ．
  */
 public class HeuristicStatementSelection extends StatementSelection {
 
   private final AccessibleVariableSearcher accessibleVariableSearcher = new AccessibleVariableSearcher();
   private final List<Candidate> candidates = new ArrayList<>();
   private final Random random;
+  private Statement emptyStatement; // 検索結果が空だった場合，emptyStatementを返す
 
   /**
    * @param random 乱数生成器
@@ -33,19 +34,23 @@ public class HeuristicStatementSelection extends StatementSelection {
   }
 
   @Override
-  public void setCandidates(final List<GeneratedAST<ProductSourcePath>> generatedASTS) {
-    for (final GeneratedAST<ProductSourcePath> generatedAST : generatedASTS) {
+  public void setCandidates(final List<GeneratedAST<ProductSourcePath>> generatedASTs) {
+    for (final GeneratedAST<ProductSourcePath> generatedAST : generatedASTs) {
       final GeneratedJDTAST jdtast = (GeneratedJDTAST) generatedAST;
       final List<Statement> statements = new StatementVisitor(
           ((GeneratedJDTAST<ProductSourcePath>) generatedAST).getRoot()).getStatements();
       final FullyQualifiedName fqn = jdtast.getPrimaryClassName();
 
       for (final Statement statement : statements) {
+        // 各ステートメントに対して，その位置からアクセスできる変数の一覧を探索
         final List<Variable> accessibleVariables = accessibleVariableSearcher.exec(statement);
         final AccessibleNameVisitor nameVisitor = new AccessibleNameVisitor(statement,
             accessibleVariables);
+        // そのステートメントに含まれる SimpleName の一覧を取得
         final List<String> names = nameVisitor.names;
 
+        // (アクセスできる変数名) かつ (そのステートメントに含まれる SimpleName)
+        // => そのステートメントに含まれる変数 (と推測)
         final List<Variable> variables = accessibleVariables.stream()
             .filter(e -> names.contains(e.getName()))
             .collect(Collectors.toList());
@@ -53,17 +58,26 @@ public class HeuristicStatementSelection extends StatementSelection {
         candidates.add(candidate);
       }
     }
+
+    // emptyStatement の準備
+    final GeneratedAST<ProductSourcePath> generatedAST = generatedASTs.get(0);
+    if (generatedAST instanceof GeneratedJDTAST) {
+      final GeneratedJDTAST<ProductSourcePath> jdtast = (GeneratedJDTAST<ProductSourcePath>) generatedAST;
+      emptyStatement = jdtast.getRoot()
+          .getAST()
+          .newEmptyStatement();
+    }
   }
 
   @Override
   public Statement exec(final Query query) {
     final List<Candidate> matchedCandidates = searchCandidates(query);
+
     if (matchedCandidates.isEmpty()) {
-      return candidates.get(0)
-          .getValue()
-          .getAST()
-          .newEmptyStatement();
+      // 検索結果が空だった場合，emptyStatementを返す
+      return emptyStatement;
     }
+
     final Candidate candidate = matchedCandidates.get(random.nextInt(matchedCandidates.size()));
     return candidate.getValue();
   }
