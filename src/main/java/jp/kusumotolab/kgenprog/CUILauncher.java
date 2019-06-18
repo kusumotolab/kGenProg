@@ -42,7 +42,7 @@ public class CUILauncher {
     final RouletteStatementSelection rouletteStatementSelection =
         new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
-        rouletteStatementSelection, config.getScope(), config.needHistoricalElement());
+        rouletteStatementSelection, config.getScope(), config.getNeedHistoricalElement());
     final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
         config.getFirstVariantSelectionStrategy()
             .initialize(random);
@@ -52,7 +52,7 @@ public class CUILauncher {
     final Crossover crossover = config.getCrossoverType()
         .initialize(random, firstVariantSelectionStrategy,
             secondVariantSelectionStrategy, config.getCrossoverGeneratingCount(),
-            config.needHistoricalElement());
+            config.getNeedHistoricalElement());
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount(),

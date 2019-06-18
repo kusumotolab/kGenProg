@@ -39,7 +39,7 @@ public interface Crossover {
 
   /**
    * kGenProgが基本実装として持つ交叉種別を表す列挙型．
-   * <p>
+   *
    * TODO ここに定義すべきではないものな気がするので将来移動させる予定．
    *
    * @author higo
@@ -84,7 +84,7 @@ public interface Crossover {
       /**
        * 交叉を行うインスタンスを生成するメソッド．
        *
-       * @see Crossover.Type#initialize(java.util.Random, FirstVariantSelectionStrategy,
+       * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
        *      SecondVariantSelectionStrategy, int, boolean)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
@@ -113,7 +113,7 @@ public interface Crossover {
       /**
        * 交叉を行うインスタンスを生成するメソッド．
        *
-       * @see Crossover.Type#initialize(java.util.Random, FirstVariantSelectionStrategy,
+       * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
        *      SecondVariantSelectionStrategy, int, boolean)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード

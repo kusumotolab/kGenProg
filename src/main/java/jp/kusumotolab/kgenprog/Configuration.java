@@ -188,7 +188,7 @@ public class Configuration {
     return secondVariantSelectionStrategy;
   }
 
-  public boolean needHistoricalElement() {
+  public boolean getNeedHistoricalElement() {
     return needHistoricalElement;
   }
 
