@@ -3,10 +3,8 @@ package jp.kusumotolab.kgenprog.ga.crossover;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-
 import java.util.List;
 import java.util.Random;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;

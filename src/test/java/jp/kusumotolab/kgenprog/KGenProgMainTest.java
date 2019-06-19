@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;

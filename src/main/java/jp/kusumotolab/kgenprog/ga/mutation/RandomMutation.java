@@ -41,7 +41,7 @@ public class RandomMutation extends Mutation {
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
    * @param type 選択する候補のスコープ
-   * @param needHistoricalElement
+   * @param needHistoricalElement 個体が生成される過程を記録するか否か
    */
   public RandomMutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection,
