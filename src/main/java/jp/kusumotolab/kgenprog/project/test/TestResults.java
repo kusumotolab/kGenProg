@@ -13,6 +13,7 @@ import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
+import jp.kusumotolab.kgenprog.project.test.Coverage.Status;
 
 /**
  * 全テストの結果を表すオブジェクト．<br>
@@ -43,7 +44,7 @@ public class TestResults {
     this();
     this.buildResults = buildResults;
   }
-  
+
   /**
    * 新規TestResultの追加
    * 
@@ -145,7 +146,7 @@ public class TestResults {
    * @return
    */
   private long getNumberOfTests(final ProductSourcePath productSourcePath,
-      final ASTLocation location, final Coverage.Status status, final boolean failed) {
+      final ASTLocation location, final boolean failed) {
 
     // 翻訳1: SourcePath → [FQN]
     final Set<FullyQualifiedName> correspondingFqns = getCorrespondingFqns(productSourcePath);
@@ -161,7 +162,7 @@ public class TestResults {
     final int correspondingLineNumber = correspondingRange.start;
 
     return correspondingFqns.stream()
-        .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, status, failed))
+        .map(fqn -> getTestFQNs(fqn, correspondingLineNumber, Status.COVERED, failed))
         .mapToLong(Collection::size)
         .sum();
   }
@@ -207,7 +208,7 @@ public class TestResults {
    */
   public long getNumberOfPassedTestsExecutingTheStatement(final ProductSourcePath productSourcePath,
       final ASTLocation location) {
-    return getNumberOfTests(productSourcePath, location, Coverage.Status.COVERED, false);
+    return getNumberOfTests(productSourcePath, location, false);
   }
 
   /**
@@ -219,7 +220,7 @@ public class TestResults {
    */
   public long getNumberOfFailedTestsExecutingTheStatement(final ProductSourcePath productSourcePath,
       final ASTLocation location) {
-    return getNumberOfTests(productSourcePath, location, Coverage.Status.COVERED, true);
+    return getNumberOfTests(productSourcePath, location, true);
   }
 
   /**
@@ -231,7 +232,8 @@ public class TestResults {
    */
   public long getNumberOfPassedTestsNotExecutingTheStatement(
       final ProductSourcePath productSourcePath, final ASTLocation location) {
-    return getNumberOfTests(productSourcePath, location, Coverage.Status.NOT_COVERED, false);
+    return getSuccessedTestResults().size()
+        - getNumberOfPassedTestsExecutingTheStatement(productSourcePath, location);
   }
 
   /**
@@ -243,7 +245,8 @@ public class TestResults {
    */
   public long getNumberOfFailedTestsNotExecutingTheStatement(
       final ProductSourcePath productSourcePath, final ASTLocation location) {
-    return getNumberOfTests(productSourcePath, location, Coverage.Status.NOT_COVERED, true);
+    return getFailedTestResults().size()
+        - getNumberOfFailedTestsExecutingTheStatement(productSourcePath, location);
   }
 
   /**

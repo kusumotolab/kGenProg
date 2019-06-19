@@ -103,8 +103,4 @@ public class RawCoverage implements Coverage {
     return sb.toString();
   }
 
-  public boolean includingCovered() {
-    return this.statuses.stream()
-        .anyMatch(s -> s == Status.COVERED || s == Status.PARTLY_COVERED);
-  }
 }
