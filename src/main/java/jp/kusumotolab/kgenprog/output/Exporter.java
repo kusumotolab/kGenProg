@@ -1,8 +1,10 @@
 package jp.kusumotolab.kgenprog.output;
 
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -18,69 +20,82 @@ public class Exporter {
   private final static Logger log = LoggerFactory.getLogger(Exporter.class);
 
   private final Configuration config;
-  private final VariantStore variantStore;
-  private final PatchGenerator patchGenerator;
 
   /**
    * コンストラクタ．自動プログラム修正に必要な全ての情報を渡す必要あり．<br>
    *
-   * -fがあるかつout-dirが空でないときはout-dirを削除する
+   * -fがあるかつout-dirが空でないときはout-dirを空にする
    *
    * @param config 設定情報
-   * @param variantStore 生成したVariantを保持するクラス
-   * @param patchGenerator パッチ生成を行うインスタンス
    */
-  public Exporter(final Configuration config, final VariantStore variantStore,
-      final PatchGenerator patchGenerator) {
+  public Exporter(final Configuration config) {
     this.config = config;
-    this.variantStore = variantStore;
-    this.patchGenerator = patchGenerator;
-
-    if (config.isForce() && !isOutDirEmpty()) {
-      deleteFiles(config.getOutDir());
-    }
   }
 
-  private boolean isOutDirEmpty() {
+  private boolean isWritable() {
+    if (config.isForce()) {
+      return true;
+    }
+
     if (Files.notExists(config.getOutDir())) {
       return true;
     }
 
+    final Path outDir = config.getOutDir();
     try {
-      return Files.list(config.getOutDir())
-          .count() > 0;
-    } catch (IOException e) {
+      return Files.walk(outDir, FileVisitOption.FOLLOW_LINKS)
+          .noneMatch(e -> !e.equals(outDir));
+    } catch (final IOException e) {
       log.error(e.getMessage(), e);
       return false;
     }
   }
 
-  private void deleteFiles(final Path file) {
+  private void clearOutDir() {
+    if (Files.notExists(config.getOutDir())) {
+      return;
+    }
+
     try {
+      final Path outDir = config.getOutDir();
+      final List<Path> subFiles = Files.walk(outDir, FileVisitOption.FOLLOW_LINKS)
+          .filter(e -> !e.equals(outDir))
+          .sorted(Comparator.reverseOrder())
+          .collect(Collectors.toList());
 
-      if (Files.isDirectory(file)) {
-        final List<Path> subFiles = Files.list(file)
-            .collect(Collectors.toList());
-
-        for (final Path subFile : subFiles) {
-          if (Files.isDirectory(subFile)) {
-            deleteFiles(subFile);
-          }
-        }
+      for (final Path subFile : subFiles) {
+        Files.deleteIfExists(subFile);
       }
-
-      Files.deleteIfExists(file);
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
     }
   }
 
   /**
-   * パッチの出力を行う
+   * パッチおよびJSONの出力を行う<br>
+   * <table>
+   * <caption>出力の有無</caption>
+   * <tr>
+   * <td></td>
+   * <td>forceオプションあり</td>
+   * <td>forceオプションなし</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>outDirが空</td>
+   * <td>出力する</td>
+   * <td>出力する</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>outDirが空でない</td>
+   * <td>outDirを空にしてから出力する</td>
+   * <td>出力しない</td>
+   * </tr>
+   * </table>
    */
-  public void exportPatches() {
+  public void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
     final PatchStore patchStore = new PatchStore();
-
     variantStore.getFoundSolutions(config.getRequiredSolutionsCount())
         .stream()
         .map(patchGenerator::exec)
@@ -88,15 +103,28 @@ public class Exporter {
 
     patchStore.writeToLogger();
 
-    if (!config.needNotOutput()) {
+    if (isWritable()) {
+
+      if (Files.notExists(config.getOutDir())) {
+        try {
+          Files.createDirectory(config.getOutDir());
+        } catch (final IOException e) {
+          log.error(e.getMessage(), e);
+          return;
+        }
+      } else if (config.isForce()) {
+        clearOutDir();
+      }
+
       patchStore.writeToFile(config.getOutDir());
+      exportJSON(variantStore);
     }
   }
 
   /**
    * JSONの出力を行う
    */
-  public void exportJSON() {
+  private void exportJSON(final VariantStore variantStore) {
     if (config.needNotOutput()) {
       return;
     }
