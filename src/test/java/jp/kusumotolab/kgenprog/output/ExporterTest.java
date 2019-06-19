@@ -96,7 +96,7 @@ public class ExporterTest {
         .setRequiredSolutionsCount(1)
         .build();
   }
-  
+
   /**
    * 以下の条件下でパッチとJSONを出力するか確認する
    * <li>
@@ -106,7 +106,6 @@ public class ExporterTest {
    */
   @Test
   public void testExporterWithForceOptionAndNonEmptyOutdir() throws IOException {
-    // outDir存在しないかつforceOption有効のとき
     final Path outDir = tempDir.resolve("out");
     // outDirを作る
     Files.createDirectory(outDir);
@@ -157,7 +156,6 @@ public class ExporterTest {
    */
   @Test
   public void testExporterWithForceOptionAndEmptyOutdir() throws IOException {
-    // outDir存在しないかつforceOption有効のとき
     final Path outDir = tempDir.resolve("out");
     // outDirを作る
     Files.createDirectory(outDir);
@@ -198,7 +196,6 @@ public class ExporterTest {
    */
   @Test
   public void testExporterWithNonEmptyOutdir() throws IOException {
-    // outDir存在しないかつforceOption有効のとき
     final Path outDir = tempDir.resolve("out");
     // outDirを作る
     Files.createDirectory(outDir);
@@ -250,7 +247,6 @@ public class ExporterTest {
    */
   @Test
   public void testExporterWithEmptyOutdir() throws IOException {
-    // outDir存在しないかつforceOption有効のとき
     final Path outDir = tempDir.resolve("out");
     // outDirを作る
     Files.createDirectory(outDir);
