@@ -32,7 +32,7 @@ public class VariantStoreTest {
   @Test
   public void testCreateVariant() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath);
+    final Configuration config = createMockConfiguration(basePath, true);
 
     final List<Suspiciousness> faultLocalizationResult = new ArrayList<>();
     final GeneratedSourceCode sourceCodeGenerationResult =
@@ -78,7 +78,7 @@ public class VariantStoreTest {
   @Test
   public void testGetGenerationNumber() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath);
+    final Configuration config = createMockConfiguration(basePath, true);
     final Strategies strategies = createMockStrategies(config);
 
     final VariantStore variantStore = new VariantStore(config, strategies);
@@ -101,7 +101,7 @@ public class VariantStoreTest {
   @Test
   public void testGetGeneratedVariants() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath);
+    final Configuration config = createMockConfiguration(basePath, true);
     final Strategies strategies = createMockStrategies(config);
 
     final VariantStore variantStore = new VariantStore(config, strategies);
@@ -134,7 +134,7 @@ public class VariantStoreTest {
   @Test
   public void testGetFoundSolutions() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath);
+    final Configuration config = createMockConfiguration(basePath, true);
     final Strategies strategies = createMockStrategies(config);
 
     final VariantStore variantStore = new VariantStore(config, strategies);
@@ -155,19 +155,38 @@ public class VariantStoreTest {
     assertThat(variantStore.getFoundSolutions(5)).containsExactly(success1, success2, success3);
   }
 
+  @Test
+  public void testNeedNotHistoricalElement() {
+    final Path basePath = Paths.get("example/BuildSuccess01");
+    final Configuration config = createMockConfiguration(basePath, false);
+    final Strategies strategies = createMockStrategies(config);
+
+    final VariantStore variantStore = new VariantStore(config, strategies);
+
+    final Variant success1 = createMockVariant(true);
+    final Variant fail1 = createMockVariant(false);
+
+    variantStore.addGeneratedVariant(success1);
+    variantStore.addGeneratedVariant(fail1);
+
+    assertThat(variantStore.getAllVariants()).isNull();
+  }
+
   private Variant createMockVariant(final boolean isCompleted) {
     final Variant variant = mock(Variant.class);
     when(variant.isCompleted()).thenReturn(isCompleted);
     return variant;
   }
 
-  private Configuration createMockConfiguration(final Path basePath) {
+  private Configuration createMockConfiguration(final Path basePath,
+      final boolean needHistoricalElement) {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Configuration config = mock(Configuration.class);
 
     when(config.getTargetProject()).thenReturn(project);
     when(config.getTimeLimitSeconds())
         .thenReturn(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
+    when(config.getNeedHistoricalElement()).thenReturn(needHistoricalElement);
 
     return config;
   }
