@@ -1,37 +1,27 @@
 package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.testutil.TestUtil;
+import org.junit.rules.TemporaryFolder;
 
 public class PatchStoreTest {
 
   private Path outDir;
 
-  @Before
-  public void setUp() throws IOException {
-    /**
-     * ./tmp/outが存在するときは./tmp/outを削除する
-     * PatchStore.writeToFile()が出力先ディレクトリが存在しないときに
-     * 出力先ディレクトリを作成できているか確認するため
-     */
-    outDir = Paths.get("./tmp/_out-dir-for-test");
-    TestUtil.deleteDirectory(outDir);
-  }
+  @Rule
+  public final TemporaryFolder tempFolder = new TemporaryFolder();
 
-  @After
-  public void tearDown() throws IOException {
-    // 後始末
-    TestUtil.deleteDirectory(outDir);
+  @Before
+  public void setUp() {
+    outDir = tempFolder.getRoot()
+        .toPath();
   }
 
   /**
