@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -10,9 +11,11 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -565,7 +568,7 @@ public class Configuration {
           return;
         }
 
-        final List<Path> subFiles = Files.walk(builder.outDir)
+        final List<Path> subFiles = Files.walk(builder.outDir, FileVisitOption.FOLLOW_LINKS)
             .filter(e -> !e.equals(builder.outDir))
             .collect(Collectors.toList());
 
