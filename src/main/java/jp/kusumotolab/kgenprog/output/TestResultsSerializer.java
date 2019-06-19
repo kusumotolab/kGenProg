@@ -11,8 +11,47 @@ import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ * TestResultsをシリアライズするクラス.<br>
+ *
+ * <table border="1">
+ * <thead>
+ * <tr>
+ * <td>キー</td>
+ * <td>説明</td>
+ * </tr>
+ * </thead>
+ *
+ * <tbody>
+ * <tr>
+ * <td>successRate</td>
+ * <td>テストの通過率</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>executedTestsCount</td>
+ * <td>実行したテストの数</td>
+ * </tr>
+ *
+ * <tr>
+ * <td>testResults</td>
+ * <td>シリアラズされた{@link TestResult}の配列</td>
+ * </tr>
+ * </tbody>
+ * </table>
+ *
+ * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
+ * @see TestResultSerializer
+ */
 public class TestResultsSerializer implements JsonSerializer<TestResults> {
 
+  /**
+   * シリアライズを行う.<br>
+   *
+   * @param testResults シリアライズ対象のインスタンス
+   * @param type シリアライズ対象のインスタンスの型
+   * @param context インスタンスをシリアライズするインスタンス
+   */
   @Override
   public JsonElement serialize(final TestResults testResults, final Type type,
       final JsonSerializationContext context) {

@@ -4,7 +4,9 @@ import java.net.URL;
 
 /**
  * MemoryClassLoaderの拡張．<br>
- * クラスローダの委譲関係をあえて崩すことで，KGP本体のクラスロード（AppClassLoader）の副作用を回避する．<br>
+ * クラスローダの委譲関係をあえて崩すことで，kgp本体のクラスロード（AppClassLoader）の副作用を回避する．<br>
+ * これによりkgp本体に指定されたクラスパス情報に一切影響を受けない形，かつ同一javaプロセス内で対象プロジェクトのテストを実行可能とする．
+ * 
  * 委譲の流れは以下の通り．<br>
  * - SkippingMemoryClassLoader<br>
  * -> AppClassLoader (ここをスキップ)<br>
@@ -22,6 +24,11 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
 
   final private ClassLoader extensionClassLoader;
 
+  /**
+   * コンストラクタ
+   * 
+   * @param urls クラスパス
+   */
   public SkippingMemoryClassLoader(final URL[] urls) {
     super(urls);
     extensionClassLoader = findExtClassLoader(getClass().getClassLoader());
@@ -44,6 +51,11 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
     return cl;
   }
 
+  /**
+   * クラスロードを行う．<br>
+   * ロード対象がjunit関係のものであれば，直接親のAppClassLoaderからロードする．<br>
+   * そうでない場合，AppClassLoaderをスキップしてExtClassLoaderからロードを試み，最後にメモリからロードを試す．<br>
+   */
   @Override
   protected Class<?> loadClass(final String name, final boolean resolve)
       throws ClassNotFoundException {

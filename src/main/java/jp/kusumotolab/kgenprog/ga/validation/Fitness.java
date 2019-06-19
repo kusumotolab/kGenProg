@@ -2,10 +2,19 @@ package jp.kusumotolab.kgenprog.ga.validation;
 
 import static java.lang.Double.isNaN;
 
+/**
+ * 個体の評価値を表現するインターフェース
+ */
 public interface Fitness extends Comparable<Fitness> {
 
+  /**
+   * @return 個体の評価値
+   */
   double getValue();
 
+  /**
+   * @return その評価値が最大値かどうか
+   */
   boolean isMaximum();
 
   /**

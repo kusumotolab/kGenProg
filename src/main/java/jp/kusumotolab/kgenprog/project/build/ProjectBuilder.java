@@ -17,6 +17,19 @@ import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
+/**
+ * javaプロジェクトのビルドを行う．<br>
+ * 基本はjavax.tools.JavaCompilerのラッパー．<br>
+ * 
+ * コンストラクタで与えられた{@link TargetProject}の情報に基づき，<br>
+ * {@link GeneratedSourceCode}に含まれる全ソースコードをバイナリ形式に変換する．<br>
+ * ビルドはファイルシステムを介さず全てメモリ上で実行する（インメモリビルド）．<br>
+ * さらに，本クラスはバイナリキャッシュ{@link BinaryStore}を保持しており，<br>
+ * 過去にコンパイルしたことのあるソースコードのビルドはスキップする（差分ビルド）．<br>
+ * 
+ * @author shinsuke
+ *
+ */
 public class ProjectBuilder {
 
   // TODO デフォルトのコンパイラバージョンは要検討．ひとまず1.8固定．
@@ -27,9 +40,14 @@ public class ProjectBuilder {
   private final BinaryStore binaryStore;
   private final JavaCompiler compiler;
   private final StandardJavaFileManager standardFileManager;
-  private final InMemoryFileManager inMemoryFileManager;
+  // private final InMemoryFileManager inMemoryFileManager;
   private final List<String> compilationOptions;
 
+  /**
+   * コンストラクタ．ビルド対象のプロジェクトを受け取る．
+   * 
+   * @param targetProject ビルド対象のプロジェクト
+   */
   public ProjectBuilder(final TargetProject targetProject) {
     this.targetProject = targetProject;
 
@@ -37,13 +55,15 @@ public class ProjectBuilder {
     binaryStore = new BinaryStore();
     compiler = ToolProvider.getSystemJavaCompiler();
     standardFileManager = compiler.getStandardFileManager(null, null, null);
-    inMemoryFileManager = new InMemoryFileManager(standardFileManager, binaryStore);
     compilationOptions = createDefaultCompilationOptions();
   }
 
   /**
-   * @param generatedSourceCode
-   * @return
+   * 本クラスの主責務たるメソッド．<br>
+   * 与えられた generatedSourceCodeをビルドし，ビルド結果オブジェクトを返す．
+   * 
+   * @param generatedSourceCode ビルド対象のソースコード
+   * @return ビルド結果
    */
   public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
 
@@ -76,7 +96,8 @@ public class ProjectBuilder {
 
     // binaryStoreからコンパイル済みバイナリを取り出してIMFMにセットしておく
     final BinaryStore reusableBinaries = extractSubBinaryStore(allAsts);
-    inMemoryFileManager.setClassPathBinaries(reusableBinaries);
+    final InMemoryFileManager inMemoryFileManager =
+        new InMemoryFileManager(standardFileManager, binaryStore, reusableBinaries);
 
     // コンパイルタスクを生成
     final CompilationTask task = compiler.getTask(progress, inMemoryFileManager, diagnostics,

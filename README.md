@@ -32,8 +32,8 @@ You can download all the bugs from [here](https://github.com/kusumotolab/kGenPro
 ## Usage
 ```
 $ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
-    [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>]
-    [--headcount <num>] [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
+    [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--headcount <num>]
+    [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>] [--fault-localization <name>]
 ```
 
@@ -71,6 +71,7 @@ $ java -jar path/to/kGenProg.jar
 | `-f`, `--force` | Remove the files in the output directory when kGenProg writes patches. | `false` |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
+| `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
 | `--mutation-generating-count` | Specifies how many variants are generated in a generation by a mutation. | 10 |
 | `--crossover-generating-count` | Specifies how many variants are generated in a generation by a crossover. | 10 |
 | `--headcount` | Specifies how many variants survive in a generation. | 100 |
@@ -84,3 +85,8 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
+
+## Awards
+- [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
+kGenProg: A High-Performance, High-Extensibility and High-Portability APR System
+

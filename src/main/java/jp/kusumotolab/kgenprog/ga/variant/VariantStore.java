@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
-import jp.kusumotolab.kgenprog.Counter;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
@@ -17,6 +17,9 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ * 　kGenProg が生成する Variant を生成したり保持したりするクラス
+ */
 public class VariantStore {
 
   private final Configuration config;
@@ -27,13 +30,17 @@ public class VariantStore {
   private List<Variant> generatedVariants;
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
-  private final Counter variantCounter;
+  private final AtomicLong variantCounter;
 
+  /**
+   * @param config 設定
+   * @param strategies 個体の生成などをするストラテジー群
+   */
   public VariantStore(final Configuration config, final Strategies strategies) {
     this.config = config;
     this.strategies = strategies;
 
-    variantCounter = new Counter();
+    variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
@@ -41,60 +48,76 @@ public class VariantStore {
     allVariants.add(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
+
+    // 最後に次の世代番号に進めておく
     generation.incrementAndGet();
   }
 
   /**
-   * テスト用
+   * 個体を生成する
+   *
+   * @param gene 遺伝子情報
+   * @param element 生成過程の記録
+   * @return 生成された個体
    */
-  @Deprecated
-  public VariantStore(final Variant initialVariant) {
-    this.config = null;
-    this.strategies = null;
-    this.initialVariant = initialVariant;
-
-    currentVariants = Collections.singletonList(initialVariant);
-    allVariants = new ArrayList<>();
-    allVariants.add(initialVariant);
-    generatedVariants = new ArrayList<>();
-    foundSolutions = new ArrayList<>();
-    generation = new OrdinalNumber(1);
-    variantCounter = new Counter(1);
-  }
-
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
     final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
     return createVariant(gene, sourceCode, element);
   }
 
+  /**
+   * @return 初期個体を返す
+   */
   public Variant getInitialVariant() {
     return initialVariant;
   }
 
+  /**
+   * @return 現在の世代数をを返す
+   */
   public OrdinalNumber getGenerationNumber() {
     return generation;
   }
 
+  /**
+   * @return 見つけた解の個数を返す
+   */
   public OrdinalNumber getFoundSolutionsNumber() {
     return new OrdinalNumber(foundSolutions.size());
   }
 
+  /**
+   * @return 現世代の個体のリスト
+   */
   public List<Variant> getCurrentVariants() {
     return currentVariants;
   }
 
+  /**
+   * @return 生成された個体のリスト
+   */
   public List<Variant> getGeneratedVariants() {
     return generatedVariants;
   }
 
+  /**
+   * @return 今まで生成した全ての個体のリスト
+   */
   public List<Variant> getAllVariants() {
     return allVariants;
   }
 
+  /**
+   * @return 見つけた正解個体のリスト
+   */
   public List<Variant> getFoundSolutions() {
     return foundSolutions;
   }
 
+  /**
+   * @param maxNumber 必要な正解個体の数
+   * @return 見つけた正解個体のリスト
+   */
   public List<Variant> getFoundSolutions(final int maxNumber) {
     final int length = Math.min(maxNumber, foundSolutions.size());
     return foundSolutions.subList(0, length);
@@ -104,8 +127,9 @@ public class VariantStore {
    * 引数の要素すべてを次世代のVariantとして追加する
    *
    * @param variants 追加対象
-   * @see addNextGenerationVariant(Variant)
+   * @see #addGeneratedVariants(Collection)
    */
+//   * @see addNextGenerationVariant(Variant)
   public void addGeneratedVariants(final Variant... variants) {
     addGeneratedVariants(Arrays.asList(variants));
   }
@@ -114,7 +138,7 @@ public class VariantStore {
    * リストの要素すべてを次世代のVariantとして追加する
    *
    * @param variants 追加対象
-   * @see addNextGenerationVariant(Variant)
+   * @see #addGeneratedVariant(Variant)
    */
   public void addGeneratedVariants(final Collection<? extends Variant> variants) {
     variants.forEach(this::addGeneratedVariant);
@@ -167,7 +191,7 @@ public class VariantStore {
         .cast(Variant.class)
         .cache();
 
-    final Single<TestResults> resultsSingle = sourceCode.isGenerationSuccess()
+    final Single<TestResults> resultsSingle = sourceCode.shouldBeTested()
         ? strategies.execAsyncTestExecutor(variantSingle)
         .cache()
         : Single.just(EmptyTestResults.instance);

@@ -9,6 +9,9 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
+/**
+ * ソースコードの変異を行うクラス
+ */
 public abstract class Mutation {
 
   protected final Random random;
@@ -16,6 +19,14 @@ public abstract class Mutation {
   protected final CandidateSelection candidateSelection;
   protected final Type type;
 
+  /**
+   * コンストラクタ
+   *
+   * @param mutationGeneratingCount 各世代で生成する個体数
+   * @param random 乱数生成器
+   * @param candidateSelection 再利用する候補を選択するオブジェクト
+   * @param type 選択する候補のスコープ
+   */
   public Mutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection, final Type type) {
     this.random = random;
@@ -24,10 +35,19 @@ public abstract class Mutation {
     this.type = type;
   }
 
+  /**
+   * @param candidates 再利用するソースコード群
+   */
   public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
     candidateSelection.setCandidates(candidates);
   }
 
+  /**
+   * 変異処理された Variant を mutationGeneratingCount 分だけ返す
+   *
+   * @param variantStore Variant の情報を格納するオブジェクト
+   * @return 変異された Gene を持った Variant のリスト
+   */
   public abstract List<Variant> exec(VariantStore variantStore);
 
 }

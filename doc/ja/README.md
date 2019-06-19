@@ -22,7 +22,6 @@
 ## 動作条件
 - JDK8
 
-
 ## インストール
 kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/latest)から jar ファイルをダウンロードしてください．
 
@@ -33,8 +32,8 @@ kGenProg は単一の jar ファイルにまとめてあります．[ここ](htt
 ## 使用方法
 ```
 $ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
-    [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--siblings-count <num>]
-    [--headcount <num>] [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
+    [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--headcount <num>]
+    [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>] [--fault-localization <name>]
 ```
 
@@ -72,6 +71,7 @@ $ java -jar path/to/kGenProg.jar
 | `-f`, `--force` | 出力先ディレクトリを空にしてから結果の出力を行う | `false` |
 | `-v`, `--verbose` | 詳細なログを出力する | `false` |
 | `-q`, `--quiet` | エラー出力のみを行う | `false` |
+| `--config` | 設定ファイルへのパス | カレントディレクトリの `kgenprog.toml` を読み込む |
 | `--mutation-generating-count` | 遺伝的アルゴリズムの変異操作によって1つの世代に生成する個体の数 | 10 |
 | `--crossover-generating-count` | 遺伝的アルゴリズムの交叉操作によって1つの世代に生成する個体の数 | 10 |
 | `--headcount` | 遺伝的アルゴリズムの選択操作によって1世代に残される個体の最大数 | 100 |
@@ -85,4 +85,8 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | 交叉種別（`Random`，`Single`，`Uniform`） | `Random` |
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |
+
+## 受賞
+- [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
+kGenProg: A High-Performance, High-Extensibility and High-Portability APR System
 

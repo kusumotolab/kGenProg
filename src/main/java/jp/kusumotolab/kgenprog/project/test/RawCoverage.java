@@ -9,13 +9,21 @@ import org.jacoco.core.analysis.ICounter;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
+/**
+ * 行を単位としたカバレッジ情報を表す．<br>
+ * どのソースコードに対して（FQN），各行がどのような結果（Status）だったのかを保持する．
+ * 
+ * @author shinsuke
+ *
+ */
 public class RawCoverage implements Coverage {
 
   private final FullyQualifiedName executedTargetFQN;
   private final List<Status> statuses;
 
   /**
-   * constructor． jacocoで生成したIClassCoverageから生成．
+   * constructor．<br>
+   * jacocoで生成したIClassCoverageから生成．
    *
    * @param classCoverage Jacocoが出力したCoverageの情報
    */
