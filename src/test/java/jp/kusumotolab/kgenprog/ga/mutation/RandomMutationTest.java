@@ -96,7 +96,8 @@ public class RandomMutationTest {
     final List<Suspiciousness> suspiciousnesses = initialVariant.getSuspiciousnesses();
 
     final VariantStore variantStore = createVariantStore(initialVariant);
-    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode, new Random(0));
+    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode, new Random(0),
+        true);
     final List<Variant> variantList = randomMutation.exec(variantStore);
 
     final Map<String, List<Base>> map = variantList.stream()
@@ -171,6 +172,22 @@ public class RandomMutationTest {
     assertThat(appendedBase).isEqualTo(base);
   }
 
+  @Test
+  public void testNeedNotHistoricalElement() {
+    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
+
+    final Variant initialVariant = createInitialVariant(generatedSourceCode);
+    final VariantStore variantStore = createVariantStore(initialVariant);
+
+    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode, new Random(0),
+        false);
+    final List<Variant> variantList = randomMutation.exec(variantStore);
+
+    final Variant variant = variantList.get(0);
+
+    assertThat(variant.getHistoricalElement()).isNull();
+  }
+
 
   private GeneratedSourceCode createGeneratedSourceCode() {
     final Path basePath = Paths.get("example/BuildSuccess01");
@@ -180,14 +197,14 @@ public class RandomMutationTest {
 
   private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode) {
     final Random random = new MockRandom(0);
-    return createRandomMutation(sourceCode, random);
+    return createRandomMutation(sourceCode, random, true);
   }
 
   private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode,
-      final Random random) {
+      final Random random, final boolean needHistoricalElement) {
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection,
-        Type.PROJECT, true);
+        Type.PROJECT, needHistoricalElement);
     randomMutation.setCandidates(sourceCode.getProductAsts());
     return randomMutation;
   }

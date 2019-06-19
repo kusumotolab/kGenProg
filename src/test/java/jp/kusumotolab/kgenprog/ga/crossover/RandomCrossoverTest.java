@@ -338,4 +338,24 @@ public class RandomCrossoverTest {
     final List<Variant> variantsRT = crossoverRT.exec(singleTestVariant.variantStore);
     assertThat(variantsRT).isEmpty();
   }
+
+  /**
+   * HistoricalElementを必要としない場合のテスト
+   */
+  @Test
+  public void testNeedNotHistoricalElement() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+
+    // バリアントの生成
+    final Crossover crossover = new RandomCrossover(random, new FirstVariantRandomSelection(random),
+        new SecondVariantRandomSelection(random), 1, false);
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
+    final Variant variant = variants.get(0);
+
+    // HistoricalElementはnullのはず
+    assertThat(variant.getHistoricalElement()).isNull();
+  }
 }
