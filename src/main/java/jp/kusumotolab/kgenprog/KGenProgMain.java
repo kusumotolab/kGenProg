@@ -18,12 +18,13 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
+import jp.kusumotolab.kgenprog.output.PatchStore;
+import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
 /**
- * kGenProgのメインクラス．<br>
- * このクラスのインスタンスを生成し，runメソッドを実行することで，自動プログラム修正を行う．<br>
+ * kGenProgのメインクラス．<br> このクラスのインスタンスを生成し，runメソッドを実行することで，自動プログラム修正を行う．<br>
  * コマンドラインからの実行には{@linkCUILauncher}クラスを用いる．<br>
  *
  * @author higo
@@ -75,8 +76,7 @@ public class KGenProgMain {
   }
 
   /**
-   * 自動プログラム修正を実行する．<br>
-   * 得られた解（全てのテストケースを通過するプログラム）を返す．<br>
+   * 自動プログラム修正を実行する．<br> 得られた解（全てのテストケースを通過するプログラム）を返す．<br>
    *
    * @return 得られた解（全てのテストケースを通過するプログラム）
    */
@@ -137,11 +137,11 @@ public class KGenProgMain {
       // 次世代に向けての準備
       variantStore.proceedNextGeneration();
     }
-    stopwatch.unsplit();
 
     // パッチ・JSONを出力
     export(variantStore, patchGenerator);
 
+    stopwatch.unsplit();
     strategies.finish();
     log.info("execution time: " + stopwatch.toString());
 
@@ -157,10 +157,8 @@ public class KGenProgMain {
   }
 
   private void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
-    final Exporter exporter = new Exporter(config, variantStore, patchGenerator);
-
-    exporter.exportPatches();
-    exporter.exportJSON();
+    final Exporter exporter = new Exporter(config);
+    exporter.export(variantStore, patchGenerator);
   }
 
   private void logConfig() {
