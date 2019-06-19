@@ -33,7 +33,7 @@ public class Exporter {
   }
 
   private boolean isWritable() {
-    if (config.isForce()) {
+    if (config.getIsForce()) {
       return true;
     }
 
@@ -112,7 +112,7 @@ public class Exporter {
           log.error(e.getMessage(), e);
           return;
         }
-      } else if (config.isForce()) {
+      } else if (config.getIsForce()) {
         clearOutDir();
       }
 

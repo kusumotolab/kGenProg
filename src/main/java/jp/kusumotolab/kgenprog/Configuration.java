@@ -123,7 +123,7 @@ public class Configuration {
     return outDir;
   }
 
-  public boolean isForce() {
+  public boolean getIsForce() {
     return isForce;
   }
 
