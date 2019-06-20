@@ -14,8 +14,7 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
- * ヒューリティクスを適用してビルドサクセスの数を増やす Mutation
- * 現状，修正対象の行でアクセスできる変数名に書き換えて変異処理を行う
+ * ヒューリティクスを適用してビルドサクセスの数を増やす Mutation 現状，修正対象の行でアクセスできる変数名に書き換えて変異処理を行う
  */
 public class HeuristicMutation extends RandomMutation {
 
@@ -30,13 +29,13 @@ public class HeuristicMutation extends RandomMutation {
    * @param type 再利用するスコープのタイプ
    */
   public HeuristicMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Type type) {
-    super(mutationGeneratingCount, random, candidateSelection, type);
+      final CandidateSelection candidateSelection, final Type type,
+      final boolean needHistoricalElement) {
+    super(mutationGeneratingCount, random, candidateSelection, type, needHistoricalElement);
   }
 
   /**
-   * 再利用候補の ASTNode を返すメソッド
-   * CandidateSelection で選択したステートメントその場で利用できる変数名に書き換えて返す
+   * 再利用候補の ASTNode を返すメソッド CandidateSelection で選択したステートメントその場で利用できる変数名に書き換えて返す
    *
    * @param location 再利用先
    * @return 再利用されるステートメント
@@ -60,7 +59,7 @@ public class HeuristicMutation extends RandomMutation {
     final List<Variable> variablesOfSelectedNode = variableSearcher.exec(selectedNode);
     // 「再利用するノード内にある変数名」を「型」に変換するマップ
     final Map<String, FullyQualifiedName> nameToFqnMap = variablesOfSelectedNode.stream()
-        .collect(Collectors.toMap(Variable::getName, Variable::getFqn));
+        .collect(Collectors.toMap(Variable::getName, Variable::getFqn, (o1, o2) -> o1));
 
     final RewriteVisitor rewriteVisitor = new RewriteVisitor(selectedNode, nameToFqnMap,
         fqnToNamesMap, random);
