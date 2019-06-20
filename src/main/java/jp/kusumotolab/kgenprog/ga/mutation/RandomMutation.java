@@ -32,17 +32,22 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 public class RandomMutation extends Mutation {
 
   protected final Type type;
+  private final boolean needHistoricalElement;
+
   /**
    * コンストラクタ
    *
    * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
+   * @param type 選択する候補のスコープ
+   * @param needHistoricalElement 個体が生成される過程を記録するか否か
    */
   public RandomMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Type type) {
+      final CandidateSelection candidateSelection, final Type type, final boolean needHistoricalElement) {
     super(mutationGeneratingCount, random, candidateSelection);
     this.type = type;
+    this.needHistoricalElement = needHistoricalElement;
   }
 
   /**
@@ -79,7 +84,12 @@ public class RandomMutation extends Mutation {
       final Suspiciousness suspiciousness = roulette.exec();
       final Base base = makeBase(suspiciousness);
       final Gene gene = makeGene(variant.getGene(), base);
-      final HistoricalElement element = new MutationHistoricalElement(variant, base);
+      final HistoricalElement element;
+      if (needHistoricalElement) {
+        element = new MutationHistoricalElement(variant, base);
+      } else {
+        element = null;
+      }
       generatedVariants.add(variantStore.createVariant(gene, element));
     }
 

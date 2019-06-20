@@ -109,7 +109,7 @@ public class LocalTestExecutorTest {
     when(variant.getGeneratedSourceCode()).thenReturn(source);
     final TestResults result = executor.exec(variant);
 
-    // 実行されたテストは10個のはず
+    // 実行されたテストは9個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder( //
         FOO_TEST01, FOO_TEST02, FOO_TEST03, FOO_TEST04, //
         BAR_TEST01, BAR_TEST02, BAR_TEST03, BAR_TEST04, BAR_TEST05);
@@ -126,17 +126,17 @@ public class LocalTestExecutorTest {
     assertThat(result.getTestResult(BAR_TEST05).failed).isFalse();
 
     final TestResult fooTest01result = result.getTestResult(FOO_TEST01);
-    // FooTest.test01()ではFooとBarが実行されたはず
-    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
+    // FooTest.test01()ではFooが実行されたはず
+    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO);
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
     final Coverage fooTest01coverage = fooTest01result.getCoverages(FOO);
     assertThat(extractStatuses(fooTest01coverage)).containsExactly(EMPTY, COVERED, EMPTY, COVERED,
         COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, COVERED);
 
-    // BarTest.test01()ではFooとBarが実行されたはず
+    // BarTest.test01()ではBarが実行されたはず
     final TestResult barTest01r = result.getTestResult(BAR_TEST01);
-    assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
+    assertThat(barTest01r.getExecutedTargetFQNs()).containsExactlyInAnyOrder(BAR);
 
     // BarTest.test01()で実行されたBarのカバレッジはこうなるはず
     final Coverage barTest01rCoverage = barTest01r.getCoverages(BAR);
@@ -245,8 +245,8 @@ public class LocalTestExecutorTest {
 
     final TestResult fooTest01result = result.getTestResult(FOO_TEST01);
 
-    // FooTest.test01()ではFooとBarが実行されたはず
-    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO, BAR);
+    // FooTest.test01()ではFooが実行されたはず
+    assertThat(fooTest01result.getExecutedTargetFQNs()).containsExactlyInAnyOrder(FOO);
 
     // FooTest.test01()で実行されたFooのカバレッジはこうなるはず
     final Coverage coverage = fooTest01result.getCoverages(FOO);

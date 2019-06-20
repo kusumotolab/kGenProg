@@ -54,10 +54,10 @@ public class KGenProgMainTest {
     final Random random = new Random(config.getRandomSeed());
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final Mutation mutation = new RandomMutation(config.getMutationGeneratingCount(), random,
-        statementSelection, config.getScope());
+        statementSelection, config.getScope(), true);
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
+            new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount(), true);
     final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
     final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
     final VariantSelection variantSelection =
