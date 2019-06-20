@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.ga.mutation.AccessibleVariableSearcher;
+import jp.kusumotolab.kgenprog.ga.mutation.Variable;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;

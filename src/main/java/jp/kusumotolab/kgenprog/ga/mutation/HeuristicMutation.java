@@ -9,8 +9,6 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.SimpleName;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
-import jp.kusumotolab.kgenprog.ga.mutation.analyse.AccessibleVariableSearcher;
-import jp.kusumotolab.kgenprog.ga.mutation.analyse.Variable;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;

@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.mutation.Query;
-import jp.kusumotolab.kgenprog.ga.mutation.analyse.Variable;
+import jp.kusumotolab.kgenprog.ga.mutation.Variable;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;

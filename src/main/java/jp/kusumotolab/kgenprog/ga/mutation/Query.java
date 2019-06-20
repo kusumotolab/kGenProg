@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.ga.mutation;
 import java.util.Collections;
 import java.util.List;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
-import jp.kusumotolab.kgenprog.ga.mutation.analyse.Variable;
 
 /**
  * 再利用するコードを検索するためのクエリ

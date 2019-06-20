@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.mutation.analyse;
+package jp.kusumotolab.kgenprog.ga.mutation;
 
 import java.util.ArrayList;
 import java.util.List;
