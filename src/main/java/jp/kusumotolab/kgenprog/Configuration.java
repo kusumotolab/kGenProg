@@ -357,6 +357,12 @@ public class Configuration {
 
     public static Configuration buildFromCmdLineArgs(final String[] args)
         throws IllegalArgumentException {
+      final Builder builder = createFromCmdLineArgs(args);
+      return builder.build();
+    }
+
+    public static Builder createFromCmdLineArgs(final String[] args)
+        throws IllegalArgumentException {
 
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
@@ -387,7 +393,7 @@ public class Configuration {
         throw new IllegalArgumentException(e.getMessage());
       }
 
-      return builder.build();
+      return builder;
     }
 
     public Configuration build() {
