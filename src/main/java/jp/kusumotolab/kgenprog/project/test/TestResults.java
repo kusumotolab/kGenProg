@@ -266,7 +266,19 @@ public class TestResults {
     return sb.toString();
   }
 
-  private Set<FullyQualifiedName> getCorrespondingFqns(final ProductSourcePath productSourcePath) {
+  /**
+   * ビルドの結果 (分散に使用)
+   * @return
+   */
+  public BuildResults getBuildResults() {
+    return buildResults;
+  }
+
+  /**
+   * Pathに対応するFQNを返す (分散に使用するため，privateにはしない)
+   * @return
+   */
+  protected Set<FullyQualifiedName> getCorrespondingFqns(final ProductSourcePath productSourcePath) {
     return buildResults.binaryStore.get(productSourcePath)
         .stream()
         .map(JavaBinaryObject::getFqn)
