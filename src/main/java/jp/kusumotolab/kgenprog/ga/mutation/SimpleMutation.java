@@ -29,7 +29,7 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
  *
  * @see Mutation
  */
-public class RandomMutation extends Mutation {
+public class SimpleMutation extends Mutation {
 
   protected final Type type;
   private final boolean needHistoricalElement;
@@ -43,7 +43,7 @@ public class RandomMutation extends Mutation {
    * @param type 選択する候補のスコープ
    * @param needHistoricalElement 個体が生成される過程を記録するか否か
    */
-  public RandomMutation(final int mutationGeneratingCount, final Random random,
+  public SimpleMutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection, final Type type, final boolean needHistoricalElement) {
     super(mutationGeneratingCount, random, candidateSelection);
     this.type = type;

@@ -16,7 +16,7 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 /**
  * ヒューリティクスを適用してビルドサクセスの数を増やす Mutation 現状，修正対象の行でアクセスできる変数名に書き換えて変異処理を行う
  */
-public class HeuristicMutation extends RandomMutation {
+public class HeuristicMutation extends SimpleMutation {
 
   private final AccessibleVariableSearcher variableSearcher = new AccessibleVariableSearcher();
 

@@ -42,7 +42,7 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class RandomMutationTest {
+public class SimpleMutationTest {
 
   @SuppressWarnings("serial")
   private class MockRandom extends Random {
@@ -80,8 +80,8 @@ public class RandomMutationTest {
     final Variant initialVariant = createInitialVariant(generatedSourceCode);
     final VariantStore variantStore = createVariantStore(initialVariant);
 
-    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode);
-    final List<Variant> variantList = randomMutation.exec(variantStore);
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+    final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     assertThat(variantList).hasSize(15);
   }
@@ -94,9 +94,9 @@ public class RandomMutationTest {
     final List<Suspiciousness> suspiciousnesses = initialVariant.getSuspiciousnesses();
 
     final VariantStore variantStore = createVariantStore(initialVariant);
-    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode, new Random(0),
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode, new Random(0),
         true);
-    final List<Variant> variantList = randomMutation.exec(variantStore);
+    final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     final Map<String, List<Base>> map = variantList.stream()
         .map(this::getLastBase)
@@ -122,8 +122,8 @@ public class RandomMutationTest {
     final Variant initialVariant = createInitialVariant(generatedSourceCode);
     final VariantStore variantStore = createVariantStore(initialVariant);
 
-    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode);
-    final List<Variant> variantList = randomMutation.exec(variantStore);
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+    final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     final Variant variant = variantList.get(0);
     final Gene gene = variant.getGene();
@@ -152,8 +152,8 @@ public class RandomMutationTest {
     final Variant initialVariant = createInitialVariant(generatedSourceCode);
     final VariantStore variantStore = createVariantStore(initialVariant);
 
-    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode);
-    final List<Variant> variantList = randomMutation.exec(variantStore);
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+    final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     final Variant variant = variantList.get(0);
     final Base base = getLastBase(variant);
@@ -177,9 +177,9 @@ public class RandomMutationTest {
     final Variant initialVariant = createInitialVariant(generatedSourceCode);
     final VariantStore variantStore = createVariantStore(initialVariant);
 
-    final RandomMutation randomMutation = createRandomMutation(generatedSourceCode, new Random(0),
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode, new Random(0),
         false);
-    final List<Variant> variantList = randomMutation.exec(variantStore);
+    final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     final Variant variant = variantList.get(0);
 
@@ -193,18 +193,18 @@ public class RandomMutationTest {
     return TestUtil.createGeneratedSourceCode(targetProject);
   }
 
-  private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode) {
+  private SimpleMutation createSimpleMutation(final GeneratedSourceCode sourceCode) {
     final Random random = new MockRandom(0);
-    return createRandomMutation(sourceCode, random, true);
+    return createSimpleMutation(sourceCode, random, true);
   }
 
-  private RandomMutation createRandomMutation(final GeneratedSourceCode sourceCode,
+  private SimpleMutation createSimpleMutation(final GeneratedSourceCode sourceCode,
       final Random random, final boolean needHistoricalElement) {
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
-    final RandomMutation randomMutation = new RandomMutation(15, random, statementSelection,
+    final SimpleMutation simpleMutation = new SimpleMutation(15, random, statementSelection,
         Type.PROJECT, needHistoricalElement);
-    randomMutation.setCandidates(sourceCode.getProductAsts());
-    return randomMutation;
+    simpleMutation.setCandidates(sourceCode.getProductAsts());
+    return simpleMutation;
   }
 
   private GeneratedJDTAST<ProductSourcePath> createGeneratedAST(

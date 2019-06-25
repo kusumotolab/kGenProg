@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.mutation.analyse;
+package jp.kusumotolab.kgenprog.ga.mutation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
