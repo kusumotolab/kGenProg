@@ -19,7 +19,9 @@ import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 /**
- * アクセスすることができる変数を探すクラス バインディングしないこと前提に作っているため，探索範囲は同じクラスのみ ローカル変数，引数，フィールド変数を探す
+ * アクセスすることができる変数を探すクラス
+ * バインディングしないこと前提に作っているため，探索範囲は同じクラスのみ
+ * ローカル変数，引数，フィールド変数を探す
  */
 public class AccessibleVariableSearcher {
 

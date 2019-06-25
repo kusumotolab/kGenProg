@@ -14,7 +14,8 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
- * ヒューリティクスを適用してビルドサクセスの数を増やす Mutation 現状，修正対象の行でアクセスできる変数名に書き換えて変異処理を行う
+ * ヒューリティクスを適用してビルドサクセスの数を増やす Mutation
+ * 現状，修正対象の行でアクセスできる変数名に書き換えて変異処理を行う
  */
 public class HeuristicMutation extends SimpleMutation {
 
@@ -35,7 +36,8 @@ public class HeuristicMutation extends SimpleMutation {
   }
 
   /**
-   * 再利用候補の ASTNode を返すメソッド CandidateSelection で選択したステートメントその場で利用できる変数名に書き換えて返す
+   * 再利用候補の ASTNode を返すメソッド
+   * CandidateSelection で選択したステートメントその場で利用できる変数名に書き換えて返す
    *
    * @param location 再利用先
    * @return 再利用されるステートメント
