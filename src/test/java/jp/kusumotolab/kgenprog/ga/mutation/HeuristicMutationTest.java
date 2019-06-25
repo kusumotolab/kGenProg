@@ -27,7 +27,8 @@ public class HeuristicMutationTest {
     final List<GeneratedAST<ProductSourcePath>> generatedASTs = sourceCode.getProductAsts();
     final Random random = new Random(0);
     final HeuristicStatementSelection selection = new HeuristicStatementSelection(random);
-    final HeuristicMutation mutation = new HeuristicMutation(0, random, selection, Type.PACKAGE);
+    final HeuristicMutation mutation = new HeuristicMutation(0, random, selection, Type.PACKAGE,
+        false);
     mutation.setCandidates(generatedASTs);
 
     final ASTLocation location = generatedASTs.get(0)
