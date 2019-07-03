@@ -43,7 +43,7 @@ public class AccessibleVariableSearcher {
    */
   public List<Variable> exec(final ASTLocation location) {
     if (!(location instanceof JDTASTLocation)) {
-      throw new IllegalArgumentException("location must be implemented JDTASTLocation");
+      throw new IllegalArgumentException("location must be JDTASTLocation");
     }
     final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
     return exec(jdtastLocation.getNode());
