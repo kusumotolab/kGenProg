@@ -32,7 +32,7 @@ public class AccessibleVariableSearcher {
    * @return アクセスできる変数のリスト
    */
   public List<Variable> exec(final ASTNode node) {
-    return recursivelySearch(node);
+    return searchRecursively(node);
   }
 
   /**
@@ -49,14 +49,14 @@ public class AccessibleVariableSearcher {
     return exec(jdtastLocation.getNode());
   }
 
-  private List<Variable> recursivelySearch(final ASTNode node) {
+  private List<Variable> searchRecursively(final ASTNode node) {
     final ASTNode parent = node.getParent();
     final List<Variable> results = new ArrayList<>();
     if (parent instanceof MethodDeclaration) {
       final List<Variable> variables = extractFromMethodDeclaration(((MethodDeclaration) parent));
       results.addAll(variables);
     } else if (parent != null) {
-      final List<Variable> parentVariables = recursivelySearch(parent);
+      final List<Variable> parentVariables = searchRecursively(parent);
       results.addAll(parentVariables);
     }
     final List<Variable> variables = search(node);
