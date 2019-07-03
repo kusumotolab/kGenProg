@@ -154,6 +154,16 @@ APR用の題材．
 Apache Commons Mathの開発過程で生じたバグ．
 [Defects4J](https://github.com/rjust/defects4j)から取得．
 
+# variable01
+変数名を探索するめたの題材．
+複数パターンでの変数宣言を行なっている．
+
+# variable02
+使える変数の型に応じて再利用する文を選択する題材．
+
+# variable03
+使える変数名に応じて再利用する文の変数名を書き換える題材．
+
 ### Math02
 Developer's patch:
 ```diff

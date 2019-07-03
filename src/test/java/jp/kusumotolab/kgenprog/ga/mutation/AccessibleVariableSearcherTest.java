@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -16,9 +17,20 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 
 public class AccessibleVariableSearcherTest {
 
+  private List<GeneratedAST<ProductSourcePath>> asts;
+
+  @Before
+  public void setUp() {
+    final Path path = Paths.get("example", "Variable01");
+    final HeuristicProjectFactory factory = new HeuristicProjectFactory(path);
+    final TargetProject targetProject = factory.create();
+    final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(
+        targetProject);
+    this.asts = sourceCode.getProductAsts();
+  }
+
   @Test
   public void test01() {
-    final List<GeneratedAST<ProductSourcePath>> asts = constructASTs("01");
     assertThat(asts).isNotEmpty();
 
     final AccessibleVariableSearcher searcher = new AccessibleVariableSearcher();
@@ -63,7 +75,6 @@ public class AccessibleVariableSearcherTest {
 
   @Test
   public void testForForStatement() {
-    final List<GeneratedAST<ProductSourcePath>> asts = constructASTs("01");
     final GeneratedAST<ProductSourcePath> ast = asts.get(0);
     final List<ASTLocation> locations = ast.createLocations()
         .getAll();
@@ -80,7 +91,6 @@ public class AccessibleVariableSearcherTest {
 
   @Test
   public void testForEnhancedForStatement() {
-    final List<GeneratedAST<ProductSourcePath>> asts = constructASTs("01");
     final GeneratedAST<ProductSourcePath> ast = asts.get(0);
     final List<ASTLocation> locations = ast.createLocations()
         .getAll();
@@ -93,15 +103,6 @@ public class AccessibleVariableSearcherTest {
     final Optional<Variable> variable = extractVariableFromName(variables, "string");
     assertThat(variable).isPresent()
         .hasValue(new Variable("string", "String", true));
-  }
-
-  private List<GeneratedAST<ProductSourcePath>> constructASTs(final String projectCode) {
-    final Path path = Paths.get("example", "VariableSample" + projectCode);
-    final HeuristicProjectFactory factory = new HeuristicProjectFactory(path);
-    final TargetProject targetProject = factory.create();
-    final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(
-        targetProject);
-    return sourceCode.getProductAsts();
   }
 
   private Optional<Variable> extractVariableFromName(final List<Variable> variables,

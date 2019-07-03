@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.mutation;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -20,7 +20,7 @@ public class HeuristicMutationTest {
 
   @Test
   public void testChooseNodeForReuse() {
-    final Path path = Paths.get("example/VariableSample03");
+    final Path path = Paths.get("example/Variable03");
     final HeuristicProjectFactory factory = new HeuristicProjectFactory(path);
     final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(factory.create());
 
@@ -38,6 +38,6 @@ public class HeuristicMutationTest {
 
     final ASTNode node = mutation.chooseNodeForReuse(location);
     final String expected = "System.out.println(text + String.valueOf(number));\n"; // このノードは存在しない
-    assertThat(node.toString()).isEqualTo(expected);
+    assertThat(node).isSameSourceCodeAs(expected);
   }
 }

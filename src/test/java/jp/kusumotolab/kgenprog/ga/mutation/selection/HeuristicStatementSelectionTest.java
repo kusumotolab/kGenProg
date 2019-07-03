@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.mutation.selection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class HeuristicStatementSelectionTest {
 
   @Before
   public void setUp() {
-    final Path path = Paths.get("example/VariableSample02");
+    final Path path = Paths.get("example/Variable02");
     final HeuristicProjectFactory factory = new HeuristicProjectFactory(path);
     final TargetProject targetProject = factory.create();
     final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(
@@ -35,7 +35,7 @@ public class HeuristicStatementSelectionTest {
   }
 
   @Test
-  public void testExec02_1() {
+  public void testExec() {
     final HeuristicStatementSelection selection = new HeuristicStatementSelection(new Random(0));
     selection.setCandidates(generatedASTs);
     final Query query = new Query(Arrays.asList(
@@ -43,12 +43,12 @@ public class HeuristicStatementSelectionTest {
         new Variable("number", new TargetFullyQualifiedName("int"), false)
     ));
     final ASTNode node = selection.exec(query);
-    assertThat(node).returns("System.out.println(str + String.valueOf(num));\n",
-        ASTNode::toString);
+
+    assertThat(node).isSameSourceCodeAs("System.out.println(str + String.valueOf(num));\n");
   }
 
   @Test
-  public void testExec02_2() {
+  public void testExecForFilter() {
     final HeuristicStatementSelection selection = new HeuristicStatementSelection(new Random(0));
     selection.setCandidates(generatedASTs);
     final Query query = new Query(Collections.singletonList(
@@ -56,7 +56,6 @@ public class HeuristicStatementSelectionTest {
     ));
     final ASTNode node = selection.exec(query);
     // boolの型はないので，変数宣言のみしか再利用候補にならない
-    assertThat(node).returns("int a=0;\n",
-        ASTNode::toString);
+    assertThat(node).isSameSourceCodeAs("int a=0;\n");
   }
 }
