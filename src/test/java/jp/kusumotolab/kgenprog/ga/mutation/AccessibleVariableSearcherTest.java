@@ -38,7 +38,6 @@ public class AccessibleVariableSearcherTest {
     assertThat(double_1).isPresent()
         .hasValue(new Variable("double_1", "double", true));
 
-
     final Optional<Variable> double_2_1 = extractVariableFromName(variables, "double_2_1");
     assertThat(double_2_1).isPresent()
         .hasValue(new Variable("double_2_1", "double", false));
@@ -60,6 +59,40 @@ public class AccessibleVariableSearcherTest {
 
     final ASTLocation line22 = locations.get(15); // String str_7 = ""
     assertThat(searcher.exec(line22)).hasSize(5);
+  }
+
+  @Test
+  public void testForForStatement() {
+    final List<GeneratedAST<ProductSourcePath>> asts = constructASTs("01");
+    final GeneratedAST<ProductSourcePath> ast = asts.get(0);
+    final List<ASTLocation> locations = ast.createLocations()
+        .getAll();
+    final AccessibleVariableSearcher searcher = new AccessibleVariableSearcher();
+
+    final ASTLocation location = locations.get(19); // System.out.println(i);
+    final List<Variable> variables = searcher.exec(location);
+    assertThat(variables).hasSize(4);
+
+    final Optional<Variable> variable = extractVariableFromName(variables, "i");
+    assertThat(variable).isPresent()
+        .hasValue(new Variable("i", "int", false));
+  }
+
+  @Test
+  public void testForEnhancedForStatement() {
+    final List<GeneratedAST<ProductSourcePath>> asts = constructASTs("01");
+    final GeneratedAST<ProductSourcePath> ast = asts.get(0);
+    final List<ASTLocation> locations = ast.createLocations()
+        .getAll();
+    final AccessibleVariableSearcher searcher = new AccessibleVariableSearcher();
+
+    final ASTLocation location = locations.get(23); // System.out.println(string);
+    final List<Variable> variables = searcher.exec(location);
+    assertThat(variables).hasSize(5);
+
+    final Optional<Variable> variable = extractVariableFromName(variables, "string");
+    assertThat(variable).isPresent()
+        .hasValue(new Variable("string", "String", true));
   }
 
   private List<GeneratedAST<ProductSourcePath>> constructASTs(final String projectCode) {

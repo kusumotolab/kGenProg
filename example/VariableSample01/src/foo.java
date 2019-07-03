@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Foo {
 
   final double double_1 = 0.0d;
@@ -20,5 +23,15 @@ class Foo {
       String str_6 = "";
     }
     String str_7 = "";
+  }
+
+  private void piyo() {
+    for (int i = 0; i < 10; i++) {
+      System.out.println(i);
+    }
+    final List<String> list = new ArrayList<>();
+    for (final String string : list) {
+      System.out.println(string);
+    }
   }
 }

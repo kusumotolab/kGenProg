@@ -2,15 +2,19 @@ package jp.kusumotolab.kgenprog.ga.mutation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -55,6 +59,15 @@ public class AccessibleVariableSearcher {
     if (parent instanceof MethodDeclaration) {
       final List<Variable> variables = extractFromMethodDeclaration(((MethodDeclaration) parent));
       results.addAll(variables);
+    } else if (parent instanceof ForStatement) {
+      final List<Variable> variables = extractFromForStatement(((ForStatement) parent));
+      results.addAll(variables);
+      results.addAll(searchRecursively(parent));
+    } else if (parent instanceof EnhancedForStatement) {
+      final List<Variable> variables = extractFromEnhancedForStatement(
+          ((EnhancedForStatement) parent));
+      results.addAll(variables);
+      results.addAll(searchRecursively(parent));
     } else if (parent != null) {
       final List<Variable> parentVariables = searchRecursively(parent);
       results.addAll(parentVariables);
@@ -91,23 +104,61 @@ public class AccessibleVariableSearcher {
 
   private List<Variable> extractFromVariableDeclarationStatement(
       final VariableDeclarationStatement vdStatement) {
-    final List<Variable> variables = new ArrayList<>();
     final Type type = vdStatement.getType();
-    for (final Object fragment : vdStatement.fragments()) {
-      if (fragment instanceof VariableDeclarationFragment) {
-        final VariableDeclarationFragment vdFragment = (VariableDeclarationFragment) fragment;
-        final SimpleName name = vdFragment.getName();
-        final FullyQualifiedName fqn = new TargetFullyQualifiedName(type.toString());
-        final Variable variable = new Variable(name.getIdentifier(), fqn,
-            Modifier.isFinal(vdStatement.getModifiers()));
-        variables.add(variable);
-      } else {
+    final FullyQualifiedName fqn = new TargetFullyQualifiedName(type.toString());
+    final boolean isFinal = Modifier.isFinal(vdStatement.getModifiers());
+    final List<Variable> variables = extractNameFromVariableDeclarationFragments(
+        vdStatement.fragments()).stream()
+        .map(e -> new Variable(e, fqn, isFinal))
+        .collect(Collectors.toList());
+    return variables;
+  }
+
+  private List<Variable> extractFromForStatement(final ForStatement node) {
+    final List<Variable> results = new ArrayList<>();
+    final List initializers = node.initializers();
+    for (final Object initializer : initializers) {
+      if (!(initializer instanceof VariableDeclarationExpression)) {
+        throw new RuntimeException("Not Implemented");
+      }
+      final VariableDeclarationExpression vdExpression = (VariableDeclarationExpression) initializer;
+      final Type type = vdExpression.getType();
+      final FullyQualifiedName fqn = new TargetFullyQualifiedName(type.toString());
+      final boolean isFinal = Modifier.isFinal(vdExpression.getModifiers());
+      extractNameFromVariableDeclarationFragments(vdExpression.fragments()).stream()
+          .map(e -> new Variable(e, fqn, isFinal))
+          .forEach(results::add);
+    }
+    return results;
+  }
+
+  private List<Variable> extractFromEnhancedForStatement(final EnhancedForStatement node) {
+    final List<Variable> results = new ArrayList<>();
+    final SingleVariableDeclaration variableDeclaration = node.getParameter();
+    final String name = variableDeclaration.getName()
+        .toString();
+    final Type type = variableDeclaration.getType();
+    final FullyQualifiedName fqn = new TargetFullyQualifiedName(type.toString());
+    final boolean isFinal = Modifier.isFinal(variableDeclaration.getModifiers());
+    results.add(new Variable(name, fqn, isFinal));
+    return results;
+  }
+
+
+  private List<String> extractNameFromVariableDeclarationFragments(final List fragments) {
+    final List<String> names = new ArrayList<>();
+    for (final Object fragment : fragments) {
+      if (!(fragment instanceof VariableDeclarationFragment)) {
         // 基本的にはここには入らないはず
         // 入った場合はその型に応じた処理を書く
         throw new RuntimeException("Not Implemented");
       }
+
+      final VariableDeclarationFragment vdFragment = (VariableDeclarationFragment) fragment;
+      final SimpleName name = vdFragment.getName();
+      names.add(name.getIdentifier());
     }
-    return variables;
+    return names;
   }
 
   private List<Variable> extractFromMethodDeclaration(final MethodDeclaration node) {
