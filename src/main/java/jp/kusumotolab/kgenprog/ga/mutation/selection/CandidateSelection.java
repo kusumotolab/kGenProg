@@ -2,7 +2,7 @@ package jp.kusumotolab.kgenprog.ga.mutation.selection;
 
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
-import jp.kusumotolab.kgenprog.ga.mutation.Scope;
+import jp.kusumotolab.kgenprog.ga.mutation.Query;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
@@ -21,8 +21,8 @@ public interface CandidateSelection {
   /**
    * 再利用する AST ノードを取り出す
    *
-   * @param scope 再利用する候補のスコープ
+   * @param query 再利用する候補のクエリ
    * @return 再利用する AST ノード
    */
-  ASTNode exec(final Scope scope);
+  ASTNode exec(final Query query);
 }

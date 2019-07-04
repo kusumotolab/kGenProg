@@ -28,6 +28,18 @@ public class ReuseCandidate<T> {
   }
 
   /**
+   * コンストラクタ
+   *
+   * @param value 再利用するオブジェクト
+   * @param fqn 再利用するオブジェクトの FQN
+   */
+  public ReuseCandidate(final T value, final FullyQualifiedName fqn) {
+    this.value = value;
+    this.packageName = fqn.getPackageName();
+    this.fqn = fqn;
+  }
+
+  /**
    * @return 再利用するオブジェクト
    */
   public T getValue() {

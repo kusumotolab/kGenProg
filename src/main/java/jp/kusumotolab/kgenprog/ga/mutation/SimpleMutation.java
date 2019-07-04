@@ -7,18 +7,17 @@ import java.util.function.Function;
 import org.eclipse.jdt.core.dom.ASTNode;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Roulette;
-import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -30,8 +29,9 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
  *
  * @see Mutation
  */
-public class RandomMutation extends Mutation {
+public class SimpleMutation extends Mutation {
 
+  protected final Type type;
   private final boolean needHistoricalElement;
 
   /**
@@ -43,17 +43,16 @@ public class RandomMutation extends Mutation {
    * @param type 選択する候補のスコープ
    * @param needHistoricalElement 個体が生成される過程を記録するか否か
    */
-  public RandomMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection,
-      final Type type, final boolean needHistoricalElement) {
-    super(mutationGeneratingCount, random, candidateSelection, type);
+  public SimpleMutation(final int mutationGeneratingCount, final Random random,
+      final CandidateSelection candidateSelection, final Type type, final boolean needHistoricalElement) {
+    super(mutationGeneratingCount, random, candidateSelection);
+    this.type = type;
     this.needHistoricalElement = needHistoricalElement;
   }
 
   /**
-   * 乱数に基づいて選択された Variant に対して変異処理をする
-   * Variant の選択は fitness の逆数に基づいて行われる
-   * 変異処理された Variant を mutationGeneratingCount 分だけ返す
+   * 乱数に基づいて選択された Variant に対して変異処理をする Variant の選択は fitness の逆数に基づいて行われる 変異処理された Variant を
+   * mutationGeneratingCount 分だけ返す
    *
    * @param variantStore Variant の情報を格納するオブジェクト
    * @return 変異された Gene を持った Variant のリスト
@@ -97,32 +96,33 @@ public class RandomMutation extends Mutation {
     return generatedVariants;
   }
 
-  private Base makeBase(final Suspiciousness suspiciousness) {
+  protected Base makeBase(final Suspiciousness suspiciousness) {
     final ASTLocation location = suspiciousness.getLocation();
-    final GeneratedAST<?> generatedAST = location.getGeneratedAST();
-    final FullyQualifiedName fqn = generatedAST.getPrimaryClassName();
-    return new Base(location, makeOperationAtRandom(fqn));
+    return new Base(location, makeOperation(location));
   }
 
-  private Operation makeOperationAtRandom(final FullyQualifiedName fqn) {
+  protected Operation makeOperation(final ASTLocation location) {
     final int randomNumber = random.nextInt(3);
     switch (randomNumber) {
       case 0:
         return new DeleteOperation();
       case 1:
-        return new InsertOperation(chooseNodeAtRandom(fqn));
+        return new InsertOperation(chooseNodeForReuse(location));
       case 2:
-        return new ReplaceOperation(chooseNodeAtRandom(fqn));
+        return new ReplaceOperation(chooseNodeForReuse(location));
     }
     return new NoneOperation();
   }
 
-  private ASTNode chooseNodeAtRandom(final FullyQualifiedName fqn) {
+  protected ASTNode chooseNodeForReuse(final ASTLocation location) {
+    final FullyQualifiedName fqn = location.getGeneratedAST()
+        .getPrimaryClassName();
     final Scope scope = new Scope(type, fqn);
-    return candidateSelection.exec(scope);
+    final Query query = new Query(scope);
+    return candidateSelection.exec(query);
   }
 
-  private Gene makeGene(final Gene parent, final Base base) {
+  protected Gene makeGene(final Gene parent, final Base base) {
     final List<Base> bases = new ArrayList<>(parent.getBases());
     bases.add(base);
     return new Gene(bases);
