@@ -563,11 +563,11 @@ public class Configuration {
 
     private static void validateOutDir(final Builder builder) {
 
-      try {
-        if (Files.notExists(builder.outDir)) {
-          return;
-        }
+      if (Files.notExists(builder.outDir)) {
+        return;
+      }
 
+      try {
         final List<Path> subFiles = Files.walk(builder.outDir, FileVisitOption.FOLLOW_LINKS)
             .filter(e -> !e.equals(builder.outDir))
             .collect(Collectors.toList());
