@@ -49,7 +49,7 @@ public class PatchesTest {
     final Path folderPath = folder.toPath();
     patch.writeToFile(folderPath);
 
-    final List<String> actual = Files.readAllLines(folderPath.resolve("test.patch"));
+    final List<String> actual = Files.readAllLines(folderPath.resolve("test.diff"));
 
     assertThat(actual).isEqualTo(diff);
   }

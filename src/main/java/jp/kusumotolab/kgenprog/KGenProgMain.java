@@ -16,9 +16,8 @@ import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
-import jp.kusumotolab.kgenprog.output.PatchStore;
-import jp.kusumotolab.kgenprog.output.VariantStoreExporter;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -139,11 +138,8 @@ public class KGenProgMain {
       variantStore.proceedNextGeneration();
     }
 
-    // 生成されたバリアントのパッチ出力
-    logPatch(variantStore);
-
-    // jsonの出力
-    writeJson(variantStore);
+    // パッチ・JSONを出力
+    export(variantStore, patchGenerator);
 
     stopwatch.unsplit();
     strategies.finish();
@@ -160,28 +156,9 @@ public class KGenProgMain {
     return config.getRequiredSolutionsCount() <= completedVariants.size();
   }
 
-  private void logPatch(final VariantStore variantStore) {
-    final PatchStore patchStore = new PatchStore();
-    final List<Variant> completedVariants =
-        variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
-
-    for (final Variant completedVariant : completedVariants) {
-      patchStore.add(patchGenerator.exec(completedVariant));
-    }
-
-    patchStore.writeToLogger();
-
-    if (!config.needNotOutput()) {
-      patchStore.writeToFile(config.getOutDir());
-    }
-  }
-
-  private void writeJson(final VariantStore variantStore) {
-    final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
-
-    if (!config.needNotOutput()) {
-      variantStoreExporter.writeToFile(config, variantStore);
-    }
+  private void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
+    final Exporter exporter = new Exporter(config);
+    exporter.export(variantStore, patchGenerator);
   }
 
   private void logConfig() {
