@@ -80,7 +80,7 @@ KGenProgのデフォルト値はOchiaiである．
 
 変異のインターフェースはjp.kusumotolab.kgenprog.ga.mutation.Mutationである．
 現在のところ，実装クラスとしては以下のものがある．
-- jp.kusumotolab.kgenprog.ga.mutation.RandomMutation：変異により変更する箇所，変異の操作，操作が挿入と置換の場合に利用するプログラム文の取得を，ランダム選択により決定するクラスである．
+- jp.kusumotolab.kgenprog.ga.mutation.SimpleMutation：変異により変更する箇所，変異の操作，操作が挿入と置換の場合に利用するプログラム文の取得を，ランダム選択により決定するクラスである．
 
 
 ## 交叉のインターフェース Crossover

@@ -102,4 +102,5 @@ public class RawCoverage implements Coverage {
     sb.append("]}");
     return sb.toString();
   }
+
 }

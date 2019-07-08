@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.instr.Instrumenter;
@@ -26,6 +27,7 @@ import com.google.common.base.Functions;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
@@ -66,6 +68,12 @@ class TestThread extends Thread {
     this.jacocoRuntime = new LoggerRuntime();
     this.jacocoInstrumenter = new Instrumenter(jacocoRuntime);
     this.jacocoRuntimeData = new RuntimeData();
+    try {
+      jacocoRuntime.startup(jacocoRuntimeData);
+    } catch (final Exception e) {
+      // TODO should be described to log
+      e.printStackTrace();
+    }
 
     this.buildResults = buildResults;
     this.targetProject = targetProject;
@@ -118,7 +126,7 @@ class TestThread extends Thread {
       // JUnitカスタムによる強制タイムアウトの指定
       junitCore.setTimeout(timeout, timeUnit);
 
-      final RunListener listener = new CoverageMeasurementListener(productFQNs, testResults);
+      final RunListener listener = new CoverageMeasurementListener(testResults);
       junitCore.addListener(listener);
 
       // JUnit実行対象の題材テストはMemClassLoaderでロードされているので，
@@ -235,7 +243,6 @@ class TestThread extends Thread {
   }
 
 
-
   /**
    * JUnit実行のイベントリスナー．内部クラス． JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
    *
@@ -246,21 +253,16 @@ class TestThread extends Thread {
   class CoverageMeasurementListener extends RunListener {
 
     final private TestResults testResults;
-    final private List<FullyQualifiedName> measuredClasses;
     private boolean wasFailed;
 
     /**
      * constructor
      *
-     * @param measuredFQNs 計測対象のクラス名一覧
      * @param storedTestResults テスト実行結果の保存先
      * @throws Exception
      */
-    public CoverageMeasurementListener(List<FullyQualifiedName> measuredFQNs,
-        final TestResults storedTestResults) throws Exception {
-      jacocoRuntime.startup(jacocoRuntimeData);
+    public CoverageMeasurementListener(final TestResults storedTestResults) {
       testResults = storedTestResults;
-      measuredClasses = measuredFQNs;
     }
 
     @Override
@@ -315,10 +317,21 @@ class TestThread extends Thread {
       // jacocoRuntime.shutdown(); // Don't shutdown (This statement is a cause for bug #290)
 
       final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
-      for (final FullyQualifiedName measuredClass : measuredClasses) {
-        final byte[] bytecode = buildResults.binaryStore.get(measuredClass)
+
+      // 一度でもカバレッジ計測されたクラスのみに対してカバレッジ情報を探索
+      for (final ExecutionData data : executionData.getContents()) {
+
+        // 当該テスト実行でprobeが反応しない＝実行されていない場合はskip
+        if (!data.hasHits()) {
+          continue;
+        }
+
+        final String strFqn = data.getName()
+            .replace("/", ".");
+        final FullyQualifiedName fqn = new TargetFullyQualifiedName(strFqn);
+        final byte[] bytecode = buildResults.binaryStore.get(fqn)
             .getByteCode();
-        analyzer.analyzeClass(bytecode, measuredClass.value);
+        analyzer.analyzeClass(bytecode, "");
       }
     }
 
