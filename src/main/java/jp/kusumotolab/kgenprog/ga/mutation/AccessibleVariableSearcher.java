@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -118,6 +119,9 @@ public class AccessibleVariableSearcher {
     final List<Variable> results = new ArrayList<>();
     final List initializers = node.initializers();
     for (final Object initializer : initializers) {
+      if (initializer instanceof Assignment) {
+        continue;
+      }
       if (!(initializer instanceof VariableDeclarationExpression)) {
         throw new RuntimeException("Not Implemented");
       }
