@@ -7,11 +7,21 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.BreakStatement;
+import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.ThrowStatement;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.NoneOperation;
+import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertBeforeOperation;
+import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
+import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 /**
  * ヒューリティクスを適用してビルドサクセスの数を増やす Mutation
@@ -33,6 +43,37 @@ public class HeuristicMutation extends SimpleMutation {
       final CandidateSelection candidateSelection, final Type type,
       final boolean needHistoricalElement) {
     super(mutationGeneratingCount, random, candidateSelection, type, needHistoricalElement);
+  }
+
+  @Override
+  protected Operation makeOperation(final ASTLocation location) {
+    final int randomNumber = random.nextInt(3);
+    switch (randomNumber) {
+      case 0:
+        return new DeleteOperation();
+      case 1:
+        return makeInsert(location);
+      case 2:
+        return new ReplaceOperation(chooseNodeForReuse(location));
+    }
+    return new NoneOperation();
+  }
+
+  private Operation makeInsert(final ASTLocation location) {
+    if (!(location instanceof JDTASTLocation)) {
+      throw new IllegalArgumentException("location must be JDTASTLocation");
+    }
+    final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
+    final ASTNode node = jdtastLocation.getNode();
+    final ASTNode nodeForReuse = chooseNodeForReuse(location);
+
+    if (node instanceof ReturnStatement
+        || node instanceof BreakStatement
+        || node instanceof ThrowStatement) {
+      return new InsertBeforeOperation(nodeForReuse);
+    }
+    return random.nextBoolean() ? new InsertBeforeOperation(nodeForReuse)
+        : new InsertAfterOperation(nodeForReuse);
   }
 
   /**
