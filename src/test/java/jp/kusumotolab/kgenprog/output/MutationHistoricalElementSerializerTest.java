@@ -28,9 +28,9 @@ import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
@@ -93,7 +93,7 @@ public class MutationHistoricalElementSerializerTest {
 
     // 差分はいらないのでNullやNullObjectにする
     // Baseのシリアライズに関するテストはここではしないのでASTLocationはモックにする
-    final Operation operation = new InsertOperation(createASTNode(project));
+    final Operation operation = new InsertAfterOperation(createASTNode(project));
     final ASTLocation targetLocation = mockASTLocation(project);
     final Base appendBase = new Base(targetLocation, operation);
     final HistoricalElement historicalElement = new MutationHistoricalElement(initialVariant,
@@ -121,7 +121,7 @@ public class MutationHistoricalElementSerializerTest {
     final String operationName = serializedHistoricalElement.get(
         JsonKeyAlias.MutationHistoricalElement.NAME)
         .getAsString();
-    assertThat(operationName).isEqualTo("insert");
+    assertThat(operationName).isEqualTo("insert_after");
   }
 
   /**

@@ -13,7 +13,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
-public class InsertOperationTest {
+public class InsertAfterOperationTest {
 
   @Test
   public void testInsertStatement() {
@@ -47,7 +47,7 @@ public class InsertOperationTest {
 
     // 挿入対象生成
     final Statement insertStatement = createInsertionTarget();
-    final InsertOperation operation = new InsertOperation(insertStatement);
+    final InsertAfterOperation operation = new InsertAfterOperation(insertStatement);
 
     final GeneratedSourceCode code = operation.apply(generatedSourceCode, location);
     final GeneratedJDTAST<ProductSourcePath> newAST =

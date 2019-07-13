@@ -28,8 +28,8 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
@@ -95,7 +95,7 @@ public class PatchSerializerTest {
     final MethodInvocation invocation = jdtAST.newMethodInvocation();
     invocation.setName(jdtAST.newSimpleName("json"));
     final Statement insertStatement = jdtAST.newExpressionStatement(invocation);
-    final InsertOperation operation = new InsertOperation(insertStatement);
+    final InsertAfterOperation operation = new InsertAfterOperation(insertStatement);
     final Base appendBase = new Base(location, operation);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
     final HistoricalElement historicalElement =

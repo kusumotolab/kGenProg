@@ -13,7 +13,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 // 1つの疑似バリアントからなるテストデータ．
@@ -36,7 +36,7 @@ public class CrossoverSingleTestVariant {
             new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test9")));
 
     noneBase = new Base(null, new NoneOperation());
-    insertBase = new Base(null, new InsertOperation(null));
+    insertBase = new Base(null, new InsertAfterOperation(null));
     final Gene geneA = new Gene(Arrays.asList(noneBase, noneBase, insertBase, insertBase));
 
     final Fitness fitnessA = new SimpleFitness(0.5d);

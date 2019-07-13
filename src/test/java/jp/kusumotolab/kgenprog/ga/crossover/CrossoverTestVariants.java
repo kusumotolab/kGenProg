@@ -14,7 +14,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
@@ -176,7 +176,7 @@ public class CrossoverTestVariants {
         .thenReturn(failedTestResult);
 
     noneBase = new Base(null, new NoneOperation());
-    insertBase = new Base(null, new InsertOperation(null));
+    insertBase = new Base(null, new InsertAfterOperation(null));
     final Gene geneA = new Gene(Arrays.asList(noneBase, noneBase, noneBase, noneBase));
     final Gene geneB = new Gene(Arrays.asList(noneBase, noneBase, noneBase, insertBase));
     final Gene geneC = new Gene(Arrays.asList(noneBase, insertBase, insertBase, insertBase));

@@ -24,7 +24,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
@@ -75,12 +75,12 @@ public class CrossoverHistoricalElementSerializerTest {
     // 親1
     final Variant parentA = createVariant(1L, 1, new SimpleFitness(0.0d),
         new GenerationFailedSourceCode(""),
-        new MutationHistoricalElement(initialVariant, new Base(null, new InsertOperation(null))));
+        new MutationHistoricalElement(initialVariant, new Base(null, new InsertAfterOperation(null))));
 
     // 親2
     final Variant parentB = createVariant(2L, 1, new SimpleFitness(0.0d),
         new GenerationFailedSourceCode(""),
-        new MutationHistoricalElement(initialVariant, new Base(null, new InsertOperation(null))));
+        new MutationHistoricalElement(initialVariant, new Base(null, new InsertAfterOperation(null))));
 
     // 子供
     final HistoricalElement historicalElement = new CrossoverHistoricalElement(parentA, parentB, 1);

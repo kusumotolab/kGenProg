@@ -6,11 +6,11 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
-public class InsertOperation extends JDTOperation {
+public class InsertAfterOperation extends JDTOperation {
 
   private final ASTNode astNode;
 
-  public InsertOperation(final ASTNode astNode) {
+  public InsertAfterOperation(final ASTNode astNode) {
     this.astNode = astNode;
   }
 
@@ -26,7 +26,7 @@ public class InsertOperation extends JDTOperation {
 
   @Override
   public String getName(){
-    return "insert";
+    return "insert_after";
   }
 
   @Override

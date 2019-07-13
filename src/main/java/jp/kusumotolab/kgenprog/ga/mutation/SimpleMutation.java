@@ -20,8 +20,8 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 /**
@@ -107,7 +107,7 @@ public class SimpleMutation extends Mutation {
       case 0:
         return new DeleteOperation();
       case 1:
-        return new InsertOperation(chooseNodeForReuse(location));
+        return new InsertAfterOperation(chooseNodeForReuse(location));
       case 2:
         return new ReplaceOperation(chooseNodeForReuse(location));
     }
