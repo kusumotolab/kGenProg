@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.BreakStatement;
+import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.ThrowStatement;
@@ -69,6 +70,7 @@ public class HeuristicMutation extends SimpleMutation {
 
     if (node instanceof ReturnStatement
         || node instanceof BreakStatement
+        || node instanceof ContinueStatement
         || node instanceof ThrowStatement) {
       return new InsertBeforeOperation(nodeForReuse);
     }
