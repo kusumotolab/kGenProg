@@ -248,7 +248,7 @@ public class GeneratedJDTASTTest {
     final MethodInvocation methodInvocation = ast.newMethodInvocation();
     methodInvocation.setName(ast.newSimpleName("a"));
     final Statement insertStatement = ast.newExpressionStatement(methodInvocation);
-    final InsertOperation operation = new InsertOperation(insertStatement);
+    final InsertAfterOperation operation = new InsertAfterOperation(insertStatement);
 
     final GeneratedJDTAST<ProductSourcePath> newJdtAst =
         (GeneratedJDTAST<ProductSourcePath>) operation.apply(generatedSourceCode, location)

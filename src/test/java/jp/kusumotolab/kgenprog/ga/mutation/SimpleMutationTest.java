@@ -37,8 +37,8 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
@@ -134,9 +134,9 @@ public class SimpleMutationTest {
     assertThat(targetLocation.node).isSameSourceCodeAs("return n;");
 
     final Operation operation = base.getOperation();
-    assertThat(operation).isInstanceOf(InsertOperation.class);
+    assertThat(operation).isInstanceOf(InsertAfterOperation.class);
 
-    final InsertOperation insertOperation = (InsertOperation) operation;
+    final InsertAfterOperation insertOperation = (InsertAfterOperation) operation;
     final Field field = insertOperation.getClass()
         .getDeclaredField("astNode");
     field.setAccessible(true);

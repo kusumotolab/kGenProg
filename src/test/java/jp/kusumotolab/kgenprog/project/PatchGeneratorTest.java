@@ -20,7 +20,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
@@ -164,7 +164,7 @@ public class PatchGeneratorTest {
     invocation.setName(jdtAST.newSimpleName("a"));
     final Statement insertStatement = jdtAST.newExpressionStatement(invocation);
 
-    final InsertOperation operation = new InsertOperation(insertStatement);
+    final InsertAfterOperation operation = new InsertAfterOperation(insertStatement);
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
     final Variant modifiedVariant = new Variant(0, 0,
         new Gene(Arrays.asList(new Base(location, operation))), code, null, null, null, null);

@@ -20,8 +20,9 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
-import jp.kusumotolab.kgenprog.project.jdt.InsertOperation;
+import jp.kusumotolab.kgenprog.project.jdt.InsertBeforeOperation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 
 /**
@@ -44,7 +45,8 @@ public class SimpleMutation extends Mutation {
    * @param needHistoricalElement 個体が生成される過程を記録するか否か
    */
   public SimpleMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Type type, final boolean needHistoricalElement) {
+      final CandidateSelection candidateSelection, final Type type,
+      final boolean needHistoricalElement) {
     super(mutationGeneratingCount, random, candidateSelection);
     this.type = type;
     this.needHistoricalElement = needHistoricalElement;
@@ -107,7 +109,9 @@ public class SimpleMutation extends Mutation {
       case 0:
         return new DeleteOperation();
       case 1:
-        return new InsertOperation(chooseNodeForReuse(location));
+        final ASTNode astNode = chooseNodeForReuse(location);
+        return random.nextBoolean() ? new InsertAfterOperation(astNode)
+            : new InsertBeforeOperation(astNode);
       case 2:
         return new ReplaceOperation(chooseNodeForReuse(location));
     }

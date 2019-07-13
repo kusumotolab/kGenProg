@@ -136,9 +136,10 @@ KGenProgのデフォルト値はOchiaiである．
 ## 抽象構文木の変更操作を表すインターフェース JDTOperation
 抽象構文木の変更操作を表すインターフェースは jp.kusumotolab.kgenprog.project.jdt.JDTOperation である．
 現在のところ，実装クラスとしては以下のものがある．
-- jp.kusumotolab.kgenprog.project.jdt.DeleteOperation：プログラム文の削除を表す操作
-- jp.kusumotolab.kgenprog.project.jdt.InsertOperation：プログラム文の追加を表す操作
-- jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation：プログラム文の置換を表す操作
+- jp.kusumotolab.kgenprog.project.jdt.DeleteOperation：プログラム文を削除する
+- jp.kusumotolab.kgenprog.project.jdt.InsertBeforeOperation：対象のプログラム文の前にプログラム文を挿入する
+- jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation：対象のプログラム文の後ろにプログラム文を挿入する
+- jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation：プログラム文を置換する
 
 
 

@@ -6,11 +6,11 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
-public class InsertOperation extends JDTOperation {
+public class InsertBeforeOperation extends JDTOperation {
 
   private final ASTNode astNode;
 
-  public InsertOperation(final ASTNode astNode) {
+  public InsertBeforeOperation(final ASTNode astNode) {
     this.astNode = astNode;
   }
 
@@ -21,16 +21,17 @@ public class InsertOperation extends JDTOperation {
     final ListRewrite listRewrite = astRewrite.getListRewrite(target.getParent(),
         (ChildListPropertyDescriptor) target.getLocationInParent());
     final ASTNode copiedNode = ASTNode.copySubtree(astRewrite.getAST(), this.astNode);
-    listRewrite.insertAfter(copiedNode, target, null);
+    listRewrite.insertBefore(copiedNode, target, null);
   }
 
   @Override
   public String getName(){
-    return "insert";
+    return "insert_before";
   }
 
   @Override
   public String getTargetSnippet() {
     return astNode.toString();
   }
+
 }
