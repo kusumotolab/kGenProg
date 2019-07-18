@@ -1,23 +1,36 @@
 package jp.kusumotolab.kgenprog.ga.mutation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BreakStatement;
-import org.eclipse.jdt.core.dom.ContinueStatement;
+import org.eclipse.jdt.core.dom.EnhancedForStatement;
+import org.eclipse.jdt.core.dom.ForStatement;
+import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.LambdaExpression;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.SwitchCase;
+import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
+import org.eclipse.jdt.core.dom.TryStatement;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+import org.eclipse.jdt.core.dom.WhileStatement;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.Operation;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.InsertBeforeOperation;
@@ -31,6 +44,7 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 public class HeuristicMutation extends SimpleMutation {
 
   private final AccessibleVariableSearcher variableSearcher = new AccessibleVariableSearcher();
+  private final List<OperationSet> operationSets = new ArrayList<>();
 
   /**
    * コンストラクタ
@@ -44,38 +58,184 @@ public class HeuristicMutation extends SimpleMutation {
       final CandidateSelection candidateSelection, final Type type,
       final boolean needHistoricalElement) {
     super(mutationGeneratingCount, random, candidateSelection, type, needHistoricalElement);
+
+    final OperationSet delete = new OperationSet(random, e -> new DeleteOperation(),
+        this::canAcceptDeleteOperation);
+    final OperationSet insert = new OperationSet(random, this::makeInsert,
+        this::canAcceptInsertOperation);
+    final OperationSet replace = new OperationSet(random, this::makeReplace,
+        this::canAcceptReplaceOperation);
+
+    operationSets.add(delete);
+    operationSets.add(insert);
+    operationSets.add(replace);
   }
 
   @Override
   protected Operation makeOperation(final ASTLocation location) {
-    final int randomNumber = random.nextInt(3);
-    switch (randomNumber) {
-      case 0:
-        return new DeleteOperation();
-      case 1:
-        return makeInsert(location);
-      case 2:
-        return new ReplaceOperation(chooseNodeForReuse(location));
-    }
-    return new NoneOperation();
-  }
-
-  private Operation makeInsert(final ASTLocation location) {
     if (!(location instanceof JDTASTLocation)) {
       throw new IllegalArgumentException("location must be JDTASTLocation");
     }
+
+    final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
+    final List<OperationSet> operationSets = this.operationSets.stream()
+        .filter(e -> e.accept(jdtastLocation))
+        .collect(Collectors.toList());
+
+    final int randomNumber = random.nextInt(operationSets.size());
+    return operationSets.get(randomNumber)
+        .generate(jdtastLocation);
+  }
+
+  private boolean canAcceptDeleteOperation(final JDTASTLocation location) {
+    final ASTNode node = location.getNode();
+    if (!(node instanceof Statement)) {
+      return false;
+    }
+    final Statement statement = (Statement) node;
+    final ASTNode parent = statement.getParent();
+    return !isEndStatement(statement)
+        && !(statement instanceof VariableDeclarationStatement)
+        && !(statement instanceof Block)
+        && !(parent instanceof TryStatement)
+        && !((parent instanceof IfStatement) && ((IfStatement) parent).getThenStatement()
+        .equals(statement))
+        && !(parent instanceof ForStatement)
+        && !(parent instanceof EnhancedForStatement)
+        && !(parent instanceof WhileStatement);
+  }
+
+  private Operation makeInsert(final ASTLocation location) {
     final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
     final ASTNode node = jdtastLocation.getNode();
-    final ASTNode nodeForReuse = chooseNodeForReuse(location);
+    final Statement statement = (Statement) node;
 
-    if (node instanceof ReturnStatement
-        || node instanceof BreakStatement
-        || node instanceof ContinueStatement
-        || node instanceof ThrowStatement) {
+    if (!canReachAfter(statement)
+        || random.nextBoolean()) {
+      final ASTNode nodeForReuse = chooseNodeForReuse(location, InsertBeforeOperation.class);
       return new InsertBeforeOperation(nodeForReuse);
     }
-    return random.nextBoolean() ? new InsertBeforeOperation(nodeForReuse)
-        : new InsertAfterOperation(nodeForReuse);
+
+    final ASTNode nodeForReuse = chooseNodeForReuse(location, InsertAfterOperation.class);
+    return new InsertAfterOperation(nodeForReuse);
+  }
+
+  private boolean canAcceptInsertOperation(final JDTASTLocation location) {
+    final ASTNode node = location.getNode();
+    return node.getParent() instanceof Block;
+  }
+
+  private Operation makeReplace(final JDTASTLocation location) {
+    return new ReplaceOperation(chooseNodeForReuse(location, ReplaceOperation.class));
+  }
+
+  private boolean canAcceptReplaceOperation(final JDTASTLocation location) {
+    final ASTNode node = location.getNode();
+    if (!(node instanceof Statement)) {
+      return false;
+    }
+    final Statement statement = (Statement) node;
+    return !(statement instanceof VariableDeclarationStatement);
+  }
+
+  // 引数の文の下にreturnを置けるか
+  private boolean canReachAfter(final Statement statement) {
+    if (statement instanceof IfStatement) {
+      final IfStatement ifStatement = (IfStatement) statement;
+      final Statement thenStatement = ifStatement.getThenStatement();
+      if (canReachAfter(thenStatement)) {
+        return true;
+      }
+      final Statement elseStatement = ifStatement.getElseStatement();
+      return canReachAfter(elseStatement);
+    } else if (statement instanceof SwitchStatement) {
+      final SwitchStatement switchStatement = (SwitchStatement) statement;
+      final List<Object> statements = switchStatement.statements();
+      final boolean noDefault = statements.stream()
+          .filter(e -> e instanceof SwitchCase)
+          .noneMatch(e -> ((SwitchCase) e).isDefault());
+      if (noDefault) {
+        return true;
+      }
+      for (int i = 0; i < statements.size(); i++) {
+        if (statements.get(i) instanceof BreakStatement) {
+          return true;
+        }
+      }
+      final Object lastStatement = statements.get(statements.size() - 1);
+      if (lastStatement instanceof Statement) {
+        return canReachAfter(((Statement) lastStatement));
+      }
+      throw new RuntimeException(lastStatement.getClass() + " is not supported.");
+    } else if (statement instanceof TryStatement) {
+      final TryStatement tryStatement = (TryStatement) statement;
+      final boolean tryStatementResult = canReachAfter(tryStatement);
+      final boolean catchResult = tryStatement.catchClauses()
+          .stream()
+          .anyMatch(e -> canReachAfter(((Statement) e)));
+      if (!tryStatementResult && !catchResult) {
+        return false;
+      }
+      return canReachAfter(tryStatement.getFinally());
+    } else if (statement instanceof Block) {
+      final List statements = ((Block) statement).statements();
+      if (statements.isEmpty()) {
+        return true;
+      }
+      return canReachAfter(((Statement) statements.get(statements.size() - 1)));
+    } else {
+      return !(statement instanceof ReturnStatement) && !(statement instanceof ThrowStatement);
+    }
+  }
+
+  private boolean isEndStatement(final Statement statement) {
+    if (isVoidMethod(statement)) {
+      return false;
+    }
+
+    ASTNode node = statement;
+    while (!(node instanceof MethodDeclaration) && !(node instanceof LambdaExpression)) {
+      final ASTNode parent = node.getParent();
+      if (parent instanceof Block) {
+        final Block block = (Block) parent;
+        final List statements = block.statements();
+        final Object lastObject = statements.get(statements.size() - 1);
+        if (!lastObject.equals(node)) {
+          return false;
+        }
+      }
+      node = parent;
+    }
+    return true;
+  }
+
+  private boolean isVoidMethod(final ASTNode node) {
+    final FullyQualifiedName returnType = getReturnType(node);
+    if (returnType == null) {
+      return false;
+    }
+    return returnType
+        .toString()
+        .toLowerCase()
+        .equals("void");
+  }
+
+  private FullyQualifiedName getReturnType(final ASTNode node) {
+    ASTNode n = node;
+    while (!(n instanceof MethodDeclaration) && !(n instanceof LambdaExpression)) {
+      n = n.getParent();
+    }
+    if (n instanceof LambdaExpression) {
+      return null;
+    }
+    final MethodDeclaration methodDeclaration = (MethodDeclaration) n;
+    if (methodDeclaration.isConstructor()) {
+      return null;
+    }
+    final String type = methodDeclaration.getReturnType2()
+        .toString();
+    return new TargetFullyQualifiedName(type);
+
   }
 
   /**
@@ -86,14 +246,124 @@ public class HeuristicMutation extends SimpleMutation {
    * @return 再利用されるステートメント
    */
   @Override
-  protected ASTNode chooseNodeForReuse(final ASTLocation location) {
+  protected ASTNode chooseNodeForReuse(final ASTLocation location,
+      final Class<? extends Operation> operationClass) {
+    final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
     final Scope scope = new Scope(type, fqn);
     final List<Variable> variables = variableSearcher.exec(location);
-    final Query query = new Query(variables, scope);
+    final Statement statement = (Statement) jdtastLocation.getNode();
+
+    final Query query = new Query(variables, scope,
+        canNormal(jdtastLocation, operationClass), // canNormal
+        canBreak(jdtastLocation), // canBreak
+        canReturn(jdtastLocation, operationClass), // canReturn
+        getReturnType(statement),
+        canContinue(jdtastLocation)); // canContinue
     final ASTNode selectedNode = candidateSelection.exec(query);
     return rewrite(selectedNode, variables);
+  }
+
+  private boolean canNormal(final JDTASTLocation location,
+      final Class<? extends Operation> operationClass) {
+    final Statement statement = (Statement) location.getNode();
+    if (operationClass.equals(InsertBeforeOperation.class)) {
+      return true;
+    } else if (operationClass.equals(InsertAfterOperation.class)) {
+      return canReachAfter(statement);
+    } else if (operationClass.equals(ReplaceOperation.class)) {
+      return isVoidMethod(statement) || !isEndStatement(statement);
+    }
+    throw new RuntimeException();
+  }
+
+  private boolean canReturn(final JDTASTLocation location,
+      final Class<? extends Operation> operationClass) {
+    final Statement statement = (Statement) location.getNode();
+    if (operationClass.equals(InsertBeforeOperation.class)) {
+      return false;
+    } else if (operationClass.equals(InsertAfterOperation.class)) {
+      final ASTNode parent = statement.getParent();
+      if (!(parent instanceof Block)) {
+        return false;
+      }
+      final List statements = ((Block) parent).statements();
+      if (statements.isEmpty()) {
+        return false;
+      }
+      return canReachAfter(statement) && statement.equals(statements.get(statements.size() - 1));
+    } else if (operationClass.equals(ReplaceOperation.class)) {
+      final ASTNode parent = statement.getParent();
+      if (!(parent instanceof Block)) {
+        return true;
+      }
+      final List statements = ((Block) parent).statements();
+      return statements.get(statements.size() - 1)
+          .equals(statement);
+    }
+    throw new RuntimeException();
+  }
+
+  private boolean canBreak(final JDTASTLocation location) {
+    if (!isInLoopOrSWitch(location)) {
+      return false;
+    }
+    final ASTNode node = location.getNode();
+    final ASTNode parent = node.getParent();
+
+    if (!(parent instanceof Block)) {
+      return false;
+    }
+    final Block block = (Block) parent;
+    final List statements = block.statements();
+    final Object last = statements.get(statements.size() - 1);
+    return last.equals(node);
+  }
+
+  private boolean isInLoopOrSWitch(final JDTASTLocation location) {
+    final ASTNode node = location.getNode();
+    ASTNode parent = node.getParent();
+    while (!(parent instanceof MethodDeclaration) && !(parent instanceof LambdaExpression)) {
+      if (parent instanceof SwitchStatement
+          || parent instanceof ForStatement
+          || parent instanceof EnhancedForStatement
+          || parent instanceof WhileStatement) {
+        return true;
+      }
+      parent = parent.getParent();
+    }
+    return false;
+  }
+
+  private boolean canContinue(final JDTASTLocation location) {
+    if (!isInLoop(location)) {
+      return false;
+    }
+    final ASTNode node = location.getNode();
+    final ASTNode parent = node.getParent();
+
+    if (!(parent instanceof Block)) {
+      return false;
+    }
+    final Block block = (Block) parent;
+    final List statements = block.statements();
+    final Object last = statements.get(statements.size() - 1);
+    return last.equals(node);
+  }
+
+  private boolean isInLoop(final JDTASTLocation location) {
+    final ASTNode node = location.getNode();
+    ASTNode parent = node.getParent();
+    while (!(parent instanceof MethodDeclaration) && !(parent instanceof LambdaExpression)) {
+      if (parent instanceof ForStatement
+          || parent instanceof EnhancedForStatement
+          || parent instanceof WhileStatement) {
+        return true;
+      }
+      parent = parent.getParent();
+    }
+    return false;
   }
 
   private ASTNode rewrite(final ASTNode selectedNode, final List<Variable> queryVariables) {
@@ -110,6 +380,8 @@ public class HeuristicMutation extends SimpleMutation {
         fqnToNamesMap, random);
     return rewriteVisitor.getRewritedNode();
   }
+
+  // ================================ inner class ================================
 
   private class RewriteVisitor extends ASTVisitor {
 
@@ -173,6 +445,28 @@ public class HeuristicMutation extends SimpleMutation {
 
     public ASTNode getRewritedNode() {
       return targetNode;
+    }
+  }
+
+  private class OperationSet {
+
+    private final Random random;
+    private final Function<JDTASTLocation, Operation> generator;
+    private final Function<JDTASTLocation, Boolean> judge;
+
+    public OperationSet(final Random random, final Function<JDTASTLocation, Operation> generator,
+        final Function<JDTASTLocation, Boolean> judge) {
+      this.random = random;
+      this.generator = generator;
+      this.judge = judge;
+    }
+
+    public Operation generate(final JDTASTLocation location) {
+      return generator.apply(location);
+    }
+
+    public boolean accept(final JDTASTLocation location) {
+      return judge.apply(location);
     }
   }
 }

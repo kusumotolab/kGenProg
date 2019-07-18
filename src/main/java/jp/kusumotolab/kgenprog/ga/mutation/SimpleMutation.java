@@ -109,16 +109,18 @@ public class SimpleMutation extends Mutation {
       case 0:
         return new DeleteOperation();
       case 1:
-        final ASTNode astNode = chooseNodeForReuse(location);
-        return random.nextBoolean() ? new InsertAfterOperation(astNode)
-            : new InsertBeforeOperation(astNode);
+        return random.nextBoolean() ?
+            new InsertAfterOperation(chooseNodeForReuse(location, InsertAfterOperation.class))
+            : new InsertBeforeOperation(chooseNodeForReuse(location, InsertBeforeOperation.class));
       case 2:
-        return new ReplaceOperation(chooseNodeForReuse(location));
+        final ASTNode node = chooseNodeForReuse(location, ReplaceOperation.class);
+        return new ReplaceOperation(node);
     }
     return new NoneOperation();
   }
 
-  protected ASTNode chooseNodeForReuse(final ASTLocation location) {
+  protected ASTNode chooseNodeForReuse(final ASTLocation location,
+      final Class<? extends Operation> operationClass) {
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
     final Scope scope = new Scope(type, fqn);
