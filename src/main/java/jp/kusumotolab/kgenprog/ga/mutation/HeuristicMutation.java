@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.ga.mutation;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -25,6 +24,7 @@ import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
+import com.google.common.collect.Lists;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -41,10 +41,15 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
  * ヒューリティクスを適用してビルドサクセスの数を増やす Mutation
  * 現状，修正対象の行でアクセスできる変数名に書き換えて変異処理を行う
  */
-public class HeuristicMutation extends SimpleMutation {
+public class HeuristicMutation extends Mutation {
 
+  protected final Type type;
   private final AccessibleVariableSearcher variableSearcher = new AccessibleVariableSearcher();
-  private final List<OperationSet> operationSets = new ArrayList<>();
+  private final List<OperationSet> operationSets = Lists.newArrayList(
+      new OperationSet(e -> new DeleteOperation(), this::canAcceptDeleteOperation),
+      new OperationSet(this::makeInsert, this::canAcceptInsertOperation),
+      new OperationSet(this::makeReplace, this::canAcceptReplaceOperation)
+  );
 
   /**
    * コンストラクタ
@@ -57,18 +62,8 @@ public class HeuristicMutation extends SimpleMutation {
   public HeuristicMutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection, final Type type,
       final boolean needHistoricalElement) {
-    super(mutationGeneratingCount, random, candidateSelection, type, needHistoricalElement);
-
-    final OperationSet delete = new OperationSet(random, e -> new DeleteOperation(),
-        this::canAcceptDeleteOperation);
-    final OperationSet insert = new OperationSet(random, this::makeInsert,
-        this::canAcceptInsertOperation);
-    final OperationSet replace = new OperationSet(random, this::makeReplace,
-        this::canAcceptReplaceOperation);
-
-    operationSets.add(delete);
-    operationSets.add(insert);
-    operationSets.add(replace);
+    super(mutationGeneratingCount, random, candidateSelection, needHistoricalElement);
+    this.type = type;
   }
 
   @Override
@@ -139,6 +134,7 @@ public class HeuristicMutation extends SimpleMutation {
   }
 
   // 引数の文の下にreturnを置けるか
+  @SuppressWarnings("uncked")
   private boolean canReachAfter(final Statement statement) {
     if (statement instanceof IfStatement) {
       final IfStatement ifStatement = (IfStatement) statement;
@@ -245,7 +241,6 @@ public class HeuristicMutation extends SimpleMutation {
    * @param location 再利用先
    * @return 再利用されるステートメント
    */
-  @Override
   protected ASTNode chooseNodeForReuse(final ASTLocation location,
       final Class<? extends Operation> operationClass) {
     final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
@@ -309,16 +304,7 @@ public class HeuristicMutation extends SimpleMutation {
     if (!isInLoopOrSWitch(location)) {
       return false;
     }
-    final ASTNode node = location.getNode();
-    final ASTNode parent = node.getParent();
-
-    if (!(parent instanceof Block)) {
-      return false;
-    }
-    final Block block = (Block) parent;
-    final List statements = block.statements();
-    final Object last = statements.get(statements.size() - 1);
-    return last.equals(node);
+    return isLastStatement(location);
   }
 
   private boolean isInLoopOrSWitch(final JDTASTLocation location) {
@@ -340,6 +326,10 @@ public class HeuristicMutation extends SimpleMutation {
     if (!isInLoop(location)) {
       return false;
     }
+    return isLastStatement(location);
+  }
+
+  private boolean isLastStatement(final JDTASTLocation location) {
     final ASTNode node = location.getNode();
     final ASTNode parent = node.getParent();
 
@@ -449,14 +439,11 @@ public class HeuristicMutation extends SimpleMutation {
   }
 
   private class OperationSet {
-
-    private final Random random;
     private final Function<JDTASTLocation, Operation> generator;
     private final Function<JDTASTLocation, Boolean> judge;
 
-    public OperationSet(final Random random, final Function<JDTASTLocation, Operation> generator,
+    public OperationSet(final Function<JDTASTLocation, Operation> generator,
         final Function<JDTASTLocation, Boolean> judge) {
-      this.random = random;
       this.generator = generator;
       this.judge = judge;
     }
