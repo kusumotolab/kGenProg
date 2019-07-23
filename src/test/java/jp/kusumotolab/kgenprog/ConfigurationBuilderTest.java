@@ -39,7 +39,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -109,11 +109,11 @@ public class ConfigurationBuilderTest {
 
   @Test
   public void testBuildWithForce() {
-    final Builder builder = new Builder(rootDir, productPaths, testPaths).setIsForce(true);
+    final Builder builder = new Builder(rootDir, productPaths, testPaths).setIsForceWrite(true);
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isTrue();
+    assertThat(config.getIsForceWrite()).isTrue();
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -153,7 +153,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
@@ -191,7 +191,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(crossoverGeneratingCount);
@@ -228,7 +228,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -267,7 +267,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -305,7 +305,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -343,7 +343,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -381,7 +381,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -418,7 +418,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -455,7 +455,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -493,7 +493,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -531,7 +531,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -569,7 +569,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -608,7 +608,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -647,7 +647,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -686,7 +686,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -726,7 +726,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -763,7 +763,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -801,7 +801,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -841,7 +841,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(outDir);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -874,13 +874,13 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromCmdLineArgsWithForce() {
+  public void testBuildFromCmdLineArgsWithForceWrite() {
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
         testPath.toString(), "-f"};
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isTrue();
+    assertThat(config.getIsForceWrite()).isTrue();
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -921,7 +921,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_CROSSOVER_GENERATING_COUNT);
@@ -961,7 +961,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(crossoverGeneratingCount);
@@ -1000,7 +1000,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1040,7 +1040,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1080,7 +1080,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1120,7 +1120,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1158,7 +1158,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1197,7 +1197,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1237,7 +1237,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1277,7 +1277,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1317,7 +1317,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1422,7 +1422,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1504,7 +1504,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1583,7 +1583,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
 
     final int mutationGeneratingCount = 50;
     assertThat(config.getMutationGeneratingCount()).isEqualTo(mutationGeneratingCount);
@@ -1624,7 +1624,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
 
@@ -1665,7 +1665,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1707,7 +1707,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1749,7 +1749,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1790,7 +1790,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1831,7 +1831,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1872,7 +1872,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1914,7 +1914,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1954,7 +1954,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -1996,7 +1996,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2038,7 +2038,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2081,7 +2081,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2159,15 +2159,15 @@ public class ConfigurationBuilderTest {
 
   @Test
   public void testBuildFromConfigFileWithIsForceOverwrittenFromCmdLineArgs() {
-    final Path configPath = rootDir.resolve("withForceFalse.toml");
+    final Path configPath = rootDir.resolve("withForceWriteFalse.toml");
     final String[] args = {"--config", configPath.toString(), "-f"};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
 
     final boolean isForceFromConfigFile = false;
-    assertThat(config.getIsForce()).isNotEqualTo(isForceFromConfigFile);
-    assertThat(config.getIsForce()).isTrue();
+    assertThat(config.getIsForceWrite()).isNotEqualTo(isForceFromConfigFile);
+    assertThat(config.getIsForceWrite()).isTrue();
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2208,7 +2208,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
 
     final int mutationGeneratingCountFromConfigFile = 50;
     assertThat(config.getMutationGeneratingCount()).isNotEqualTo(
@@ -2254,7 +2254,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
 
@@ -2300,7 +2300,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2345,7 +2345,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2391,7 +2391,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2436,7 +2436,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2483,7 +2483,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2527,7 +2527,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2572,7 +2572,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2619,7 +2619,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2664,7 +2664,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2708,7 +2708,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2753,7 +2753,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2797,7 +2797,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2841,7 +2841,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2886,7 +2886,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2933,7 +2933,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(
@@ -2986,7 +2986,7 @@ public class ConfigurationBuilderTest {
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
-    assertThat(config.getIsForce()).isEqualTo(Configuration.DEFAULT_IS_FORCE);
+    assertThat(config.getIsForceWrite()).isEqualTo(Configuration.DEFAULT_IS_FORCE_WRITE);
     assertThat(config.getMutationGeneratingCount()).isEqualTo(
         Configuration.DEFAULT_MUTATION_GENERATING_COUNT);
     assertThat(config.getCrossoverGeneratingCount()).isEqualTo(

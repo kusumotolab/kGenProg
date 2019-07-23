@@ -83,14 +83,14 @@ public class ExporterTest {
     return new Variant(0, 0, gene, code, testResults, fitness, null, historicalElement);
   }
 
-  private Configuration buildConfiguration(final Path outDir, final boolean isForce) {
+  private Configuration buildConfiguration(final Path outDir, final boolean isForceWrite) {
     final Path rootPath = Paths.get("example/CloseToZero01");
     final List<Path> productPaths = Collections.singletonList(rootPath.resolve(PRODUCT_NAME));
     final List<Path> testPaths = Collections.singletonList(rootPath.resolve(TEST_NAME));
 
     return new Configuration.Builder(rootPath, productPaths, testPaths)
         .setOutDir(outDir)
-        .setIsForce(isForce)
+        .setIsForceWrite(isForceWrite)
         .setTestTimeLimitSeconds(1)
         .setMaxGeneration(1)
         .setRequiredSolutionsCount(1)

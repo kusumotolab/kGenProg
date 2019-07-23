@@ -1,5 +1,5 @@
 root-dir = "./"
 src = ["src/"]
 test = ["test/"]
-is-force = false
+is-force-write = false
 

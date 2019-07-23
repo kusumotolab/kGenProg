@@ -51,7 +51,7 @@ public class Configuration {
   public static final Duration DEFAULT_TEST_TIME_LIMIT = Duration.ofSeconds(10);
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
-  public static final boolean DEFAULT_IS_FORCE = false;
+  public static final boolean DEFAULT_IS_FORCE_WRITE = false;
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
@@ -66,7 +66,7 @@ public class Configuration {
   private final TargetProject targetProject;
   private final List<String> executionTests;
   private final Path outDir;
-  private final boolean isForce;
+  private final boolean isForceWrite;
   private final int mutationGeneratingCount;
   private final int crossoverGeneratingCount;
   private final int headcount;
@@ -91,7 +91,7 @@ public class Configuration {
     targetProject = builder.targetProject;
     executionTests = builder.executionTests;
     outDir = builder.outDir;
-    isForce = builder.isForce;
+    isForceWrite = builder.isForceWrite;
     mutationGeneratingCount = builder.mutationGeneratingCount;
     crossoverGeneratingCount = builder.crossoverGeneratingCount;
     headcount = builder.headcount;
@@ -124,8 +124,8 @@ public class Configuration {
     return outDir;
   }
 
-  public boolean getIsForce() {
-    return isForce;
+  public boolean getIsForceWrite() {
+    return isForceWrite;
   }
 
   public int getMutationGeneratingCount() {
@@ -259,9 +259,9 @@ public class Configuration {
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
 
-    @com.electronwill.nightconfig.core.conversion.Path("is-force")
+    @com.electronwill.nightconfig.core.conversion.Path("is-force-write")
     @PreserveNotNull
-    private boolean isForce = DEFAULT_IS_FORCE;
+    private boolean isForceWrite = DEFAULT_IS_FORCE_WRITE;
 
     @com.electronwill.nightconfig.core.conversion.Path("mutation-generating-count")
     @PreserveNotNull
@@ -433,8 +433,8 @@ public class Configuration {
       return this;
     }
 
-    public Builder setIsForce(final boolean isForce) {
-      this.isForce = isForce;
+    public Builder setIsForceWrite(final boolean isForceWrite) {
+      this.isForceWrite = isForceWrite;
       return this;
     }
 
@@ -592,7 +592,7 @@ public class Configuration {
             .filter(e -> !e.equals(builder.outDir))
             .collect(Collectors.toList());
 
-        if (subFiles.isEmpty() && !builder.isForce) {
+        if (subFiles.isEmpty() && !builder.isForceWrite) {
           final String outDirName = builder.outDir
               .toString();
           log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
@@ -716,10 +716,10 @@ public class Configuration {
       this.outDir = Paths.get(outDir);
     }
 
-    @Option(name = "-f", aliases = "--force",
+    @Option(name = "-f", aliases = "--force-write",
         usage = "Remove file in output directory when write patches.")
-    private void setIsForceFromCmdLineParser(final boolean isForce) {
-      this.isForce = isForce;
+    private void setIsForceFromCmdLineParser(final boolean isForceWrite) {
+      this.isForceWrite = isForceWrite;
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",
