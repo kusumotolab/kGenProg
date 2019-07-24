@@ -83,14 +83,13 @@ public class ExporterTest {
     return new Variant(0, 0, gene, code, testResults, fitness, null, historicalElement);
   }
 
-  private Configuration buildConfiguration(final Path outDir, final boolean isForce) {
+  private Configuration buildConfiguration(final Path outDir) {
     final Path rootPath = Paths.get("example/CloseToZero01");
     final List<Path> productPaths = Collections.singletonList(rootPath.resolve(PRODUCT_NAME));
     final List<Path> testPaths = Collections.singletonList(rootPath.resolve(TEST_NAME));
 
     return new Configuration.Builder(rootPath, productPaths, testPaths)
         .setOutDir(outDir)
-        .setIsForce(isForce)
         .setTestTimeLimitSeconds(1)
         .setMaxGeneration(1)
         .setRequiredSolutionsCount(1)
@@ -117,7 +116,7 @@ public class ExporterTest {
     Files.createFile(childFile);
     Files.createFile(grandChildFile);
 
-    final Configuration config = buildConfiguration(outDir, true);
+    final Configuration config = buildConfiguration(outDir);
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
@@ -160,7 +159,7 @@ public class ExporterTest {
     // outDirを作る
     Files.createDirectory(outDir);
 
-    final Configuration config = buildConfiguration(outDir, true);
+    final Configuration config = buildConfiguration(outDir);
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
@@ -207,7 +206,7 @@ public class ExporterTest {
     Files.createFile(childFile);
     Files.createFile(grandChildFile);
 
-    final Configuration config = buildConfiguration(outDir, false);
+    final Configuration config = buildConfiguration(outDir);
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
@@ -251,7 +250,7 @@ public class ExporterTest {
     // outDirを作る
     Files.createDirectory(outDir);
 
-    final Configuration config = buildConfiguration(outDir, false);
+    final Configuration config = buildConfiguration(outDir);
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
@@ -287,7 +286,7 @@ public class ExporterTest {
   @Test
   public void testExporterWithForceOptionAndNonExistentOutdir() {
     final Path outDir = tempDir.resolve("out");
-    final Configuration config = buildConfiguration(outDir, true);
+    final Configuration config = buildConfiguration(outDir);
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
@@ -324,7 +323,7 @@ public class ExporterTest {
   @Test
   public void testExporterWithNonExistentOutDir() {
     final Path outDir = tempDir.resolve("out");
-    final Configuration config = buildConfiguration(outDir, false);
+    final Configuration config = buildConfiguration(outDir);
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));

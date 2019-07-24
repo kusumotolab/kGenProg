@@ -68,7 +68,6 @@ $ java -jar path/to/kGenProg.jar
 | `-x`, `--exec-test` | Specifies fully qualified names of test classes executed during evaluation of variants (i.e. fix-candidates). It is recommended to specify test classes detecting a bug. Class names are separated with spaces. | All test classes |
 | `-c`, `--cp` | Specifies class paths needed to build the target project. Paths are separated with spaces. | Nothing |
 | `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
-| `-f`, `--force` | Remove the files in the output directory when kGenProg writes patches. | `false` |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
 | `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |

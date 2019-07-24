@@ -33,9 +33,6 @@ public class Exporter {
   }
 
   private boolean isWritable() {
-    if (config.getIsForce()) {
-      return true;
-    }
 
     if (Files.notExists(config.getOutDir())) {
       return true;
@@ -112,8 +109,6 @@ public class Exporter {
           log.error(e.getMessage(), e);
           return;
         }
-      } else if (config.getIsForce()) {
-        clearOutDir();
       }
 
       patchStore.writeToFile(config.getOutDir());
