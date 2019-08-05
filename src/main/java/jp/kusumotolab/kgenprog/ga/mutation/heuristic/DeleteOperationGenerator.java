@@ -43,7 +43,7 @@ public class DeleteOperationGenerator extends OperationGenerator {
     }
     final Statement statement = (Statement) node;
     final ASTNode parent = statement.getParent();
-    return !astAnalyzer.isEndStatement(statement)
+    return !(astAnalyzer.isEndStatement(statement) && !astAnalyzer.isVoidMethod(node))
         && !(statement instanceof VariableDeclarationStatement)
         && !(statement instanceof Block)
         && !(parent instanceof TryStatement)
