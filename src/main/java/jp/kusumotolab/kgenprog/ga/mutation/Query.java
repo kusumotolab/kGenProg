@@ -12,11 +12,11 @@ public class Query {
 
   private final List<Variable> variables;
   private final Scope scope;
-  private final boolean canNormal;
-  private final boolean canBreak;
-  private final boolean canReturn;
+  private final boolean canReuseNonControlStatement;
+  private final boolean canReuseBreakStatement;
+  private final boolean canReuseReturnStatement;
   private final FullyQualifiedName returnFQN;
-  private final boolean canContinue;
+  private final boolean canReuseContinueStatement;
 
   /**
    * コンストラクタ
@@ -41,19 +41,21 @@ public class Query {
    *
    * @param variables 変数の一覧
    * @param scope 再利用するノードのスコープ
-   * @param canBreak break 文を再利用可能か
-   * @param canReturn return 文を再利用可能か
-   * @param canContinue continue 文を再利用可能か
+   * @param canReuseBreakStatement break 文を再利用可能か
+   * @param canReuseReturnStatement return 文を再利用可能か
+   * @param canReuseContinueStatement continue 文を再利用可能か
    */
-  public Query(final List<Variable> variables, final Scope scope, final boolean canNormal, final boolean canBreak,
-      final boolean canReturn, final FullyQualifiedName returnFQN, final boolean canContinue) {
-    this.canNormal = canNormal;
+  public Query(final List<Variable> variables, final Scope scope,
+      final boolean canReuseNonControlStatement, final boolean canReuseBreakStatement,
+      final boolean canReuseReturnStatement, final FullyQualifiedName returnFQN,
+      final boolean canReuseContinueStatement) {
+    this.canReuseNonControlStatement = canReuseNonControlStatement;
     this.variables = variables;
     this.scope = scope;
-    this.canBreak = canBreak;
-    this.canReturn = canReturn;
+    this.canReuseBreakStatement = canReuseBreakStatement;
+    this.canReuseReturnStatement = canReuseReturnStatement;
     this.returnFQN = returnFQN;
-    this.canContinue = canContinue;
+    this.canReuseContinueStatement = canReuseContinueStatement;
   }
 
   /**
@@ -70,23 +72,23 @@ public class Query {
     return scope;
   }
 
-  public boolean canNormal() {
-    return canNormal;
+  public boolean isCanReuseNonControlStatement() {
+    return canReuseNonControlStatement;
   }
 
-  public boolean canBreak() {
-    return canBreak;
+  public boolean isCanReuseBreakStatement() {
+    return canReuseBreakStatement;
   }
 
-  public boolean canReturn() {
-    return canReturn;
+  public boolean isCanReuseReturnStatement() {
+    return canReuseReturnStatement;
   }
 
   public FullyQualifiedName getReturnFQN() {
     return returnFQN;
   }
 
-  public boolean canContinue() {
-    return canContinue;
+  public boolean isCanReuseContinueStatement() {
+    return canReuseContinueStatement;
   }
 }

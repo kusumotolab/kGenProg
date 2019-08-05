@@ -7,22 +7,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.BreakStatement;
 import org.eclipse.jdt.core.dom.ContinueStatement;
-import org.eclipse.jdt.core.dom.LambdaExpression;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
-import org.eclipse.jdt.core.dom.Type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import jp.kusumotolab.kgenprog.ga.mutation.AccessibleVariableSearcher;
 import jp.kusumotolab.kgenprog.ga.mutation.Query;
 import jp.kusumotolab.kgenprog.ga.mutation.Variable;
+import jp.kusumotolab.kgenprog.ga.mutation.heristic.ASTAnalyzer;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -35,7 +32,8 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 public class HeuristicStatementSelection extends StatementSelection {
 
   private final AccessibleVariableSearcher accessibleVariableSearcher = new AccessibleVariableSearcher();
-  private final List<Candidate> continueCandidates = new ArrayList<>();
+  private final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+  private final List<Candidate> nonControlCandidates = new ArrayList<>();
   private final List<Candidate> returnCandidates = new ArrayList<>();
   private final Multimap<FullyQualifiedName, Candidate> returnStatementMultimap = HashMultimap.create();
   private final Random random;
@@ -73,7 +71,7 @@ public class HeuristicStatementSelection extends StatementSelection {
 
         if (statement instanceof ReturnStatement) {
           returnCandidates.add(candidate);
-          final FullyQualifiedName returnType = extractReturnType(((ReturnStatement) statement));
+          final FullyQualifiedName returnType = astAnalyzer.getReturnType(statement);
           if (returnType != null) {
             returnStatementMultimap.put(returnType, candidate);
           }
@@ -81,8 +79,9 @@ public class HeuristicStatementSelection extends StatementSelection {
             || statement instanceof BreakStatement
             || statement instanceof ThrowStatement) {
           // 特に何もしない
+          // TODO: - Throwは再利用したほうがよさそうだが、breakとcontinueは再利用するべきか...？
         } else {
-          continueCandidates.add(candidate);
+          nonControlCandidates.add(candidate);
         }
       }
     }
@@ -95,25 +94,6 @@ public class HeuristicStatementSelection extends StatementSelection {
           .getAST()
           .newEmptyStatement();
     }
-  }
-
-  private FullyQualifiedName extractReturnType(final ReturnStatement statement) {
-    ASTNode node = statement;
-    while (!(node instanceof LambdaExpression) && !(node instanceof MethodDeclaration)) {
-      node = node.getParent();
-    }
-    if (node instanceof LambdaExpression) {
-      return null;
-    }
-    final MethodDeclaration methodDeclaration = (MethodDeclaration) node;
-    if (methodDeclaration.isConstructor()) {
-      return null;
-    }
-    final Type type = methodDeclaration.getReturnType2();
-    if (type == null) {
-      return null;
-    }
-    return new TargetFullyQualifiedName(type.toString());
   }
 
   @Override
@@ -147,10 +127,10 @@ public class HeuristicStatementSelection extends StatementSelection {
   private List<Candidate> createCandidates(final Query query) {
     final List<Candidate> candidates = new ArrayList<>();
 
-    if (query.canNormal()) {
-      candidates.addAll(continueCandidates);
+    if (query.isCanReuseNonControlStatement()) {
+      candidates.addAll(nonControlCandidates);
     }
-    if (query.canReturn()) {
+    if (query.isCanReuseReturnStatement()) {
       final FullyQualifiedName fqn = query.getReturnFQN();
       if (fqn == null) {
         candidates.addAll(returnCandidates);
@@ -168,13 +148,13 @@ public class HeuristicStatementSelection extends StatementSelection {
         .getValue()
         .getAST();
 
-    if (query.canBreak()) {
+    if (query.isCanReuseBreakStatement()) {
       final BreakStatement statement = ast.newBreakStatement();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName("");
       candidates.add(new Candidate(statement, fqn, Collections.emptyList()));
     }
 
-    if (query.canContinue()) {
+    if (query.isCanReuseContinueStatement()) {
       final ContinueStatement statement = ast.newContinueStatement();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName("");
       candidates.add(new Candidate(statement, fqn, Collections.emptyList()));
