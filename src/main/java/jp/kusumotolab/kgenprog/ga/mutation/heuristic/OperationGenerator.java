@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.mutation.heristic;
+package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -73,18 +73,34 @@ public abstract class OperationGenerator {
     return candidateSelection.exec(query);
   }
 
+  /**
+   * @param location 対象のノードの位置
+   * @return その場所で制御フローに影響を及ばさないステートメントを再利用できるかどうか
+   */
   protected boolean canReuseNonControlStatement(final JDTASTLocation location) {
     return true;
   }
 
+  /**
+   * @param location 対象のノードの位置
+   * @return その場所でbreak文を再利用できるかどうか
+   */
   protected boolean canReuseBreakStatement(final JDTASTLocation location) {
     return true;
   }
 
+  /**
+   * @param location 対象のノードの位置
+   * @return その場所でreturn文を再利用できるかどうか
+   */
   protected boolean canReuseReturnStatement(final JDTASTLocation location) {
     return true;
   }
 
+  /**
+   * @param location 対象のノードの位置
+   * @return その場所でcontinue文を再利用できるかどうか
+   */
   protected boolean canReuseContinueStatement(final JDTASTLocation location) {
     return true;
   }

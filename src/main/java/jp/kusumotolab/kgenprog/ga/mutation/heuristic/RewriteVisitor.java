@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.mutation.heristic;
+package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 
 import java.util.List;
 import java.util.Map;

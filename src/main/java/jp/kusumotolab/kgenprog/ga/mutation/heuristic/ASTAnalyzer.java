@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.mutation.heristic;
+package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -22,7 +22,7 @@ import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 /**
- * ASTの構造解析するクラス
+ * ASTの構造を解析するクラス
  */
 public class ASTAnalyzer {
 

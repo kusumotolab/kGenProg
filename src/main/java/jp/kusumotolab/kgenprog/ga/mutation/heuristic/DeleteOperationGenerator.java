@@ -1,4 +1,4 @@
-package jp.kusumotolab.kgenprog.ga.mutation.heristic;
+package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;

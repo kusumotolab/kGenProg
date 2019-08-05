@@ -19,7 +19,7 @@ import com.google.common.collect.Multimap;
 import jp.kusumotolab.kgenprog.ga.mutation.AccessibleVariableSearcher;
 import jp.kusumotolab.kgenprog.ga.mutation.Query;
 import jp.kusumotolab.kgenprog.ga.mutation.Variable;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.ASTAnalyzer;
+import jp.kusumotolab.kgenprog.ga.mutation.heuristic.ASTAnalyzer;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;

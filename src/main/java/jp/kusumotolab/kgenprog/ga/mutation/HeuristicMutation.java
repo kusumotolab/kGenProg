@@ -6,14 +6,14 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import com.google.common.collect.Lists;
+import jp.kusumotolab.kgenprog.ga.Roulette;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.ASTAnalyzer;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.DeleteOperationGenerator;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.InsertAfterOperationGenerator;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.InsertBeforeOperationGenerator;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.OperationGenerator;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.ReplaceOperationGenerator;
-import jp.kusumotolab.kgenprog.ga.mutation.heristic.RewriteVisitor;
+import jp.kusumotolab.kgenprog.ga.mutation.heuristic.DeleteOperationGenerator;
+import jp.kusumotolab.kgenprog.ga.mutation.heuristic.InsertAfterOperationGenerator;
+import jp.kusumotolab.kgenprog.ga.mutation.heuristic.InsertBeforeOperationGenerator;
+import jp.kusumotolab.kgenprog.ga.mutation.heuristic.OperationGenerator;
+import jp.kusumotolab.kgenprog.ga.mutation.heuristic.ReplaceOperationGenerator;
+import jp.kusumotolab.kgenprog.ga.mutation.heuristic.RewriteVisitor;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
@@ -28,13 +28,7 @@ public class HeuristicMutation extends Mutation {
 
   protected final Type type;
   private final AccessibleVariableSearcher variableSearcher = new AccessibleVariableSearcher();
-  private final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
-  private final List<OperationGenerator> operationGenerators = Lists.newArrayList(
-      new DeleteOperationGenerator(1.0d),
-      new InsertBeforeOperationGenerator(0.5d),
-      new InsertAfterOperationGenerator(0.5d),
-      new ReplaceOperationGenerator(1.0d)
-  );
+  private final List<OperationGenerator> operationGenerators;
 
   /**
    * コンストラクタ
@@ -49,6 +43,13 @@ public class HeuristicMutation extends Mutation {
       final boolean needHistoricalElement) {
     super(mutationGeneratingCount, random, candidateSelection, needHistoricalElement);
     this.type = type;
+
+    operationGenerators = Lists.newArrayList(
+        new DeleteOperationGenerator(1.0d),
+        new InsertBeforeOperationGenerator(0.5d),
+        new InsertAfterOperationGenerator(0.5d),
+        new ReplaceOperationGenerator(1.0d)
+    );
   }
 
   @Override
@@ -58,16 +59,20 @@ public class HeuristicMutation extends Mutation {
     }
 
     final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
+    // その場で使える操作だけを取り出す
     final List<OperationGenerator> operationGenerators = this.operationGenerators.stream()
         .filter(e -> e.enable(jdtastLocation))
         .collect(Collectors.toList());
 
-    final int randomNumber = random.nextInt(operationGenerators.size());
-    final OperationGenerator operationGenerator = operationGenerators.get(randomNumber);
+    // 使える操作に対して重みをつけてルーレット選択
+    final Roulette<OperationGenerator> roulette = new Roulette<>(operationGenerators,
+        OperationGenerator::getWeight, random);
+    final OperationGenerator operationGenerator = roulette.exec();
+
     final ASTNode nodeForReuse = operationGenerator.chooseNodeForReuse(candidateSelection, location,
-        type);
-    final ASTNode rewritedNode = rewrite(nodeForReuse, variableSearcher.exec(location));
-    return operationGenerator.generate(jdtastLocation, rewritedNode);
+        type); // 再利用するノードの選択
+    final ASTNode rewritedNode = rewrite(nodeForReuse, variableSearcher.exec(location)); // 再利用するノードを書き換え
+    return operationGenerator.generate(jdtastLocation, rewritedNode); // 操作の生成
   }
 
   private ASTNode rewrite(final ASTNode selectedNode, final List<Variable> queryVariables) {
