@@ -38,7 +38,7 @@ public class ReplaceOperationGenerator extends OperationGenerator {
 
   @Override
   protected boolean canReuseBreakStatement(final JDTASTLocation location) {
-    return astAnalyzer.canBreak(location);
+    return astAnalyzer.canBreak(location.getNode());
   }
 
   @Override
@@ -55,6 +55,6 @@ public class ReplaceOperationGenerator extends OperationGenerator {
 
   @Override
   protected boolean canReuseContinueStatement(final JDTASTLocation location) {
-    return astAnalyzer.canContinue(location);
+    return astAnalyzer.canContinue(location.getNode());
   }
 }

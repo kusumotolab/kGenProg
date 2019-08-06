@@ -32,18 +32,18 @@ public class InsertAfterOperationGenerator extends OperationGenerator {
 
   @Override
   protected boolean canReuseBreakStatement(final JDTASTLocation location) {
-    return astAnalyzer.canBreak(location);
+    return astAnalyzer.canBreak(location.getNode());
   }
 
   @Override
   protected boolean canReuseReturnStatement(final JDTASTLocation location) {
     final Statement statement = (Statement) location.getNode();
     return astAnalyzer.canInsertAfter(statement)
-        && astAnalyzer.isLastStatement(location);
+        && astAnalyzer.isLastStatement(location.getNode());
   }
 
   @Override
   protected boolean canReuseContinueStatement(final JDTASTLocation location) {
-    return astAnalyzer.canContinue(location);
+    return astAnalyzer.canContinue(location.getNode());
   }
 }

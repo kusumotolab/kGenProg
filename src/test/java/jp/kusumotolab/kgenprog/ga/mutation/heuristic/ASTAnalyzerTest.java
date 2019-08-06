@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.extractProperty;
+import static org.assertj.core.api.AssertionsForClassTypes.not;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -9,7 +11,9 @@ import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.WhileStatement;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.HeuristicProjectFactory;
@@ -23,10 +27,8 @@ public class ASTAnalyzerTest {
   public void testIsEndStatement() {
     final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
     final Path path = Paths.get("example", "CloseToZero03", "src", "example", "CloseToZero.java");
-    final GeneratedJDTAST<ProductSourcePath> ast = creatAST(path);
-    final TypeDeclaration typeDeclaration = (TypeDeclaration) ast.getRoot()
-        .types()
-        .get(0);
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+
     final MethodDeclaration methodDeclaration = typeDeclaration.getMethods()[1]; // int reuse_me1(int n)
     final Block body = methodDeclaration.getBody();
     final List statements = body.statements();
@@ -40,42 +42,259 @@ public class ASTAnalyzerTest {
     final IfStatement ifStatement = (IfStatement) statements.get(0);
     final Statement statement = (Statement) ((Block) ifStatement.getThenStatement()).statements()
         .get(0);
-    assertThat(astAnalyzer.isEndStatement(statement)).isTrue();
+    assertThat(astAnalyzer.isEndStatement(statement)).isFalse();
   }
 
   @Test
   public void testIsVoidMethod() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "CloseToZero03", "src", "example", "CloseToZero.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+
+    // public int close_to_zero(int n)
+    {
+      final MethodDeclaration method = typeDeclaration.getMethods()[0];
+      final Statement statement = (Statement) method.getBody()
+          .statements()
+          .get(0);
+      final boolean isVoidMethod = astAnalyzer.isVoidMethod(statement);
+      assertThat(isVoidMethod).isFalse();
+    }
+
+    // public void reuse_me2(int n)
+    {
+      final MethodDeclaration method = typeDeclaration.getMethods()[2];
+      final Statement statement = (Statement) method.getBody()
+          .statements()
+          .get(0);
+      final boolean isVoidMethod = astAnalyzer.isVoidMethod(statement);
+      assertThat(isVoidMethod).isTrue();
+    }
   }
 
   @Test
   public void testGetReturnType() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "CloseToZero03", "src", "example", "CloseToZero.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+
+    // public int close_to_zero(int n)
+    {
+      final MethodDeclaration method = typeDeclaration.getMethods()[0];
+      final Statement statement = (Statement) method.getBody()
+          .statements()
+          .get(0);
+      final FullyQualifiedName type = astAnalyzer.getReturnType(statement);
+      assertThat(type).isEqualTo("int");
+    }
+
+    // public void reuse_me2(int n)
+    {
+      final MethodDeclaration method = typeDeclaration.getMethods()[2];
+      final Statement statement = (Statement) method.getBody()
+          .statements()
+          .get(0);
+      final FullyQualifiedName type = astAnalyzer.getReturnType(statement);
+      assertThat(type).isEqualTo("void");
+    }
   }
 
   @Test
   public void testCanInsertAfter() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "CloseToZero03", "src", "example", "CloseToZero.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+    final MethodDeclaration method = typeDeclaration.getMethods()[0];
+    final List statements = method.getBody()
+        .statements();
+
+    /*
+     *  if (n == 0) {
+     *    return n;
+     *  }
+     *  //  <- ここが実行される可能性があるかどうか
+     */
+    {
+      final Statement statement = (Statement) statements.get(0);
+      final boolean canInsertAfter = astAnalyzer.canInsertAfter(statement);
+      assertThat(canInsertAfter).isTrue();
+    }
+
+
+    /*
+     *  if (n == 0) {
+     *    return n;
+     *    //  <- ここが実行される可能性があるかどうか
+     *  }
+     */
+    {
+      final Statement statement = (Statement) statements.get(1);
+      final boolean canInsertAfter = astAnalyzer.canInsertAfter(statement);
+      assertThat(canInsertAfter).isFalse();
+    }
+  }
+
+
+  @Test
+  public void testCanInsertAfterForIfStatement() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "GCD01", "src", "example", "GreatestCommonDivider.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+    final MethodDeclaration method = typeDeclaration.getMethods()[1];
+    final List statements = method.getBody()
+        .statements();
+
+    /*
+     *  if (a > b) {
+     *    return a;
+     *  } else if (a < b) {
+     *    return b;
+     *  } else {
+     *    return 0;
+     *  }
+     *    <- ここにStatementを挿入できるかどうか(できない)
+     */
+    final Statement statement = (Statement) statements.get(0);
+    final boolean canInsertAfter = astAnalyzer.canInsertAfter(statement);
+    assertThat(canInsertAfter).isFalse();
   }
 
   @Test
   public void testCanBreak() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "QuickSort01", "src", "example", "QuickSort.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+    final MethodDeclaration method = typeDeclaration.getMethods()[1];
+    final List statements = method.getBody()
+        .statements();
+
+    // if (j + 1 < right) quicksort(value, j + 1, right);
+    {
+      final Statement statement = (Statement) statements.get(5);
+      final boolean canBreak = astAnalyzer.canBreak(statement);
+      assertThat(canBreak).isFalse();
+    }
+
+    final WhileStatement whileStatement = (WhileStatement) statements.get(3);
+    final Block block = (Block) whileStatement.getBody();
+    final List statementsInWhile = block.statements();
+
+    // j--;
+    {
+      final Statement lastStatement = (Statement) statementsInWhile.get(5);
+      assertThat(astAnalyzer.canBreak(lastStatement)).isTrue();
+    }
+
+    // i++;
+    {
+      final Statement statement = (Statement) statementsInWhile.get(4);
+      assertThat(astAnalyzer.canBreak(statement)).isFalse();
+    }
   }
 
   @Test
   public void testIsInLoopOrSWitch() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "GCD01", "src", "example", "GreatestCommonDivider.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+    final MethodDeclaration method = typeDeclaration.getMethods()[0];
+    final List statements = method.getBody()
+        .statements();
+
+    // if (a == 0) { return 0; } <- ここがルーブの中かどうか
+    {
+      final Statement statement = (Statement) statements.get(0);
+      final boolean inLoopOrSWitch = astAnalyzer.isInLoopOrSWitch(statement);
+      assertThat(inLoopOrSWitch).isFalse();
+    }
+
+    /*
+     * while(b != 0) {
+     *   if (a > b) { *** } <- ここがルーブの中かとどうか
+     *   else { *** }
+     * }
+     */
+    {
+      final WhileStatement whileStatement = (WhileStatement) statements.get(1);
+      final Block body = (Block) whileStatement.getBody();
+      final List statementsInLoop = body.statements();
+      final boolean inLoop = astAnalyzer.isInLoopOrSWitch(((Statement) statementsInLoop.get(0)));
+      assertThat(inLoop).isTrue();
+    }
   }
 
   @Test
   public void testCanContinue() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "GCD01", "src", "example", "GreatestCommonDivider.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+    final MethodDeclaration method = typeDeclaration.getMethods()[0];
+    final List statements = method.getBody()
+        .statements();
+
+    /*
+     *  public int gcd(int a, int b) {
+     *    if (a == 0) { *** }
+     *    //  <- ここにcontinueを挿入できるか
+     *    return a;
+     *  }
+     */
+    {
+      final Statement statement = (Statement) statements.get(0);
+      final boolean canContinue = astAnalyzer.canContinue(statement);
+      assertThat(canContinue).isFalse();
+    }
+
+    /*
+     *  public int gcd(int a, int b) {
+     *    if (a == 0) { *** }
+     *    while (b != 0) {
+     *      if (a > b) { *** }
+     *      else { *** }
+     *      //  <- ここにcontinueを挿入できるか
+     *    }
+     *    return a;
+     *  }
+     */
+    {
+      final WhileStatement whileStatement = (WhileStatement) statements.get(1);
+      final Block body = (Block) whileStatement.getBody();
+      final List statementsInLoop = body.statements();
+      final boolean canContinue = astAnalyzer.canContinue(((Statement) statementsInLoop.get(0)));
+      assertThat(canContinue).isTrue();
+    }
   }
 
   @Test
   public void testIsLastStatement() {
+    final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
+    final Path path = Paths.get("example", "GCD01", "src", "example", "GreatestCommonDivider.java");
+    final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
+    final MethodDeclaration method = typeDeclaration.getMethods()[0];
+    final List statements = method.getBody()
+        .statements();
+
+    {
+      final Statement statement = (Statement) statements.get(1);
+      final boolean isLastStatement = astAnalyzer.isLastStatement(statement);
+      assertThat(isLastStatement).isFalse();
+    }
+
+    {
+      final Statement statement = (Statement) statements.get(statements.size() - 1);
+      final boolean isLastStatement = astAnalyzer.isLastStatement(statement);
+      assertThat(isLastStatement).isTrue();
+    }
   }
 
-  private GeneratedJDTAST<ProductSourcePath> creatAST(final Path path) {
+  private TypeDeclaration creatTypeDeclaration(final Path path) {
     final HeuristicProjectFactory projectFactory = new HeuristicProjectFactory(path);
     final TargetProject targetProject = projectFactory.create();
     final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(targetProject);
-    return (GeneratedJDTAST<ProductSourcePath>) sourceCode.getProductAsts()
+    final GeneratedJDTAST<ProductSourcePath> jdtast = (GeneratedJDTAST<ProductSourcePath>) sourceCode.getProductAsts()
+        .get(0);
+    return (TypeDeclaration) jdtast.getRoot()
+        .types()
         .get(0);
   }
 }

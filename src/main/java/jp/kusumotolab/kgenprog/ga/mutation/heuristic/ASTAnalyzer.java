@@ -161,22 +161,21 @@ public class ASTAnalyzer {
   }
 
   /**
-   * @param location 対象のノードの位置
+   * @param node 対象のノード
    * @return Break文を挿入できるかどうか
    */
-  public boolean canBreak(final JDTASTLocation location) {
-    if (!isInLoopOrSWitch(location)) {
+  public boolean canBreak(final ASTNode node) {
+    if (!isInLoopOrSWitch(node)) {
       return false;
     }
-    return isLastStatement(location);
+    return isLastStatement(node);
   }
 
   /**
-   * @param location 対象のノードの位置
+   * @param node 対象のノード
    * @return 対象のノードがループかSwitch文の中にいるかどうか
    */
-  public boolean isInLoopOrSWitch(final JDTASTLocation location) {
-    final ASTNode node = location.getNode();
+  public boolean isInLoopOrSWitch(final ASTNode node) {
     ASTNode parent = node.getParent();
     while (!(parent instanceof MethodDeclaration) && !(parent instanceof LambdaExpression)) {
       if (parent instanceof SwitchStatement
@@ -191,22 +190,21 @@ public class ASTAnalyzer {
   }
 
   /**
-   * @param location 対象のノードの位置
+   * @param node 対象のノード
    * @return continueを挿入できるかどうか
    */
-  public boolean canContinue(final JDTASTLocation location) {
-    if (!isInLoop(location)) {
+  public boolean canContinue(final ASTNode node) {
+    if (!isInLoop(node)) {
       return false;
     }
-    return isLastStatement(location);
+    return isLastStatement(node);
   }
 
   /**
-   * @param location 対象のノードの位置
+   * @param node 対象のノード
    * @return 対象のノードが親ノードであるBlockの中で一番最後かどうか
    */
-  public boolean isLastStatement(final JDTASTLocation location) {
-    final ASTNode node = location.getNode();
+  public boolean isLastStatement(final ASTNode node) {
     final ASTNode parent = node.getParent();
 
     if (!(parent instanceof Block)) {
@@ -219,11 +217,10 @@ public class ASTAnalyzer {
   }
 
   /**
-   * @param location 対象のノードの位置
+   * @param node 対象のノード
    * @return 対象のノードがループの中にあるかどうか
    */
-  private boolean isInLoop(final JDTASTLocation location) {
-    final ASTNode node = location.getNode();
+  private boolean isInLoop(final ASTNode node) {
     ASTNode parent = node.getParent();
     while (!(parent instanceof MethodDeclaration) && !(parent instanceof LambdaExpression)) {
       if (parent instanceof ForStatement
