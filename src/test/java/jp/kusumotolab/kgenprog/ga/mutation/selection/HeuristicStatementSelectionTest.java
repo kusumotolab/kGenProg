@@ -11,6 +11,8 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.junit.Before;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.mutation.Query;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope;
+import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.Variable;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -41,7 +43,13 @@ public class HeuristicStatementSelectionTest {
     final Query query = new Query(Arrays.asList(
         new Variable("text", new TargetFullyQualifiedName("String"), false),
         new Variable("number", new TargetFullyQualifiedName("int"), false)
-    ));
+    ),
+        new Scope(Type.PROJECT, null),
+        true,
+        false,
+        false,
+        null,
+        false);
     final ASTNode node = selection.exec(query);
 
     assertThat(node).isSameSourceCodeAs("System.out.println(str + String.valueOf(num));\n");
