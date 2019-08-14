@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import jp.kusumotolab.kgenprog.project.Operation;
@@ -24,6 +25,9 @@ public class ReplaceOperationGenerator extends OperationGenerator {
   public boolean enable(final JDTASTLocation location) {
     final ASTNode node = location.getNode();
     if (!(node instanceof Statement)) {
+      return false;
+    }
+    if (node.getParent() instanceof MethodDeclaration) {
       return false;
     }
     final Statement statement = (Statement) node;
