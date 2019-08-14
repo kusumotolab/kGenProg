@@ -164,7 +164,7 @@ public class ASTAnalyzer {
    * @param node 対象のノード
    * @return Break文を挿入できるかどうか
    */
-  public boolean canBreak(final ASTNode node) {
+  public boolean canInsertBreak(final ASTNode node) {
     if (!isInLoopOrSWitch(node)) {
       return false;
     }
@@ -193,7 +193,7 @@ public class ASTAnalyzer {
    * @param node 対象のノード
    * @return continueを挿入できるかどうか
    */
-  public boolean canContinue(final ASTNode node) {
+  public boolean canInsertContinue(final ASTNode node) {
     if (!isInLoop(node)) {
       return false;
     }

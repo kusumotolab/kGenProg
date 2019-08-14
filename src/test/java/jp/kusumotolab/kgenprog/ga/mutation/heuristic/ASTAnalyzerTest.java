@@ -160,7 +160,7 @@ public class ASTAnalyzerTest {
   }
 
   @Test
-  public void testCanBreak() {
+  public void testCanInsertBreak() {
     final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
     final Path path = Paths.get("example", "QuickSort01", "src", "example", "QuickSort.java");
     final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
@@ -171,7 +171,7 @@ public class ASTAnalyzerTest {
     // if (j + 1 < right) quicksort(value, j + 1, right);
     {
       final Statement statement = (Statement) statements.get(5);
-      final boolean canBreak = astAnalyzer.canBreak(statement);
+      final boolean canBreak = astAnalyzer.canInsertBreak(statement);
       assertThat(canBreak).isFalse();
     }
 
@@ -182,13 +182,13 @@ public class ASTAnalyzerTest {
     // j--;
     {
       final Statement lastStatement = (Statement) statementsInWhile.get(5);
-      assertThat(astAnalyzer.canBreak(lastStatement)).isTrue();
+      assertThat(astAnalyzer.canInsertBreak(lastStatement)).isTrue();
     }
 
     // i++;
     {
       final Statement statement = (Statement) statementsInWhile.get(4);
-      assertThat(astAnalyzer.canBreak(statement)).isFalse();
+      assertThat(astAnalyzer.canInsertBreak(statement)).isFalse();
     }
   }
 
@@ -224,7 +224,7 @@ public class ASTAnalyzerTest {
   }
 
   @Test
-  public void testCanContinue() {
+  public void testCanInsertContinue() {
     final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
     final Path path = Paths.get("example", "GCD01", "src", "example", "GreatestCommonDivider.java");
     final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
@@ -241,7 +241,7 @@ public class ASTAnalyzerTest {
      */
     {
       final Statement statement = (Statement) statements.get(0);
-      final boolean canContinue = astAnalyzer.canContinue(statement);
+      final boolean canContinue = astAnalyzer.canInsertContinue(statement);
       assertThat(canContinue).isFalse();
     }
 
@@ -260,7 +260,7 @@ public class ASTAnalyzerTest {
       final WhileStatement whileStatement = (WhileStatement) statements.get(1);
       final Block body = (Block) whileStatement.getBody();
       final List statementsInLoop = body.statements();
-      final boolean canContinue = astAnalyzer.canContinue(((Statement) statementsInLoop.get(0)));
+      final boolean canContinue = astAnalyzer.canInsertContinue(((Statement) statementsInLoop.get(0)));
       assertThat(canContinue).isTrue();
     }
   }
