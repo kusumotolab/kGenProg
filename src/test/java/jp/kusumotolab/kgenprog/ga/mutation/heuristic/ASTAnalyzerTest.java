@@ -22,7 +22,7 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 public class ASTAnalyzerTest {
 
   @Test
-  public void testIsEndStatement() {
+  public void testIsLastStatement() {
     final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
     final Path path = Paths.get("example", "CloseToZero03", "src", "example", "CloseToZero.java");
     final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
@@ -264,7 +264,7 @@ public class ASTAnalyzerTest {
   }
 
   @Test
-  public void testIsLastStatement() {
+  public void testIsLastStatementInParent() {
     final ASTAnalyzer astAnalyzer = new ASTAnalyzer();
     final Path path = Paths.get("example", "GCD01", "src", "example", "GreatestCommonDivider.java");
     final TypeDeclaration typeDeclaration = creatTypeDeclaration(path);
