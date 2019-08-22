@@ -127,10 +127,10 @@ public class HeuristicStatementSelection extends StatementSelection {
   private List<Candidate> createCandidates(final Query query) {
     final List<Candidate> candidates = new ArrayList<>();
 
-    if (query.isCanReuseNonControlStatement()) {
+    if (query.canReuseNonControlStatement()) {
       candidates.addAll(nonControlCandidates);
     }
-    if (query.isCanReuseReturnStatement()) {
+    if (query.canReuseReturnStatement()) {
       final FullyQualifiedName fqn = query.getReturnFQN();
       if (fqn == null) {
         candidates.addAll(returnCandidates);
@@ -148,13 +148,13 @@ public class HeuristicStatementSelection extends StatementSelection {
         .getValue()
         .getAST();
 
-    if (query.isCanReuseBreakStatement()) {
+    if (query.canReuseBreakStatement()) {
       final BreakStatement statement = ast.newBreakStatement();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName("");
       candidates.add(new Candidate(statement, fqn, Collections.emptyList()));
     }
 
-    if (query.isCanReuseContinueStatement()) {
+    if (query.canReuseContinueStatement()) {
       final ContinueStatement statement = ast.newContinueStatement();
       final TargetFullyQualifiedName fqn = new TargetFullyQualifiedName("");
       candidates.add(new Candidate(statement, fqn, Collections.emptyList()));

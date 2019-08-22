@@ -49,9 +49,9 @@ public class Query {
       final boolean canReuseNonControlStatement, final boolean canReuseBreakStatement,
       final boolean canReuseReturnStatement, final FullyQualifiedName returnFQN,
       final boolean canReuseContinueStatement) {
-    this.canReuseNonControlStatement = canReuseNonControlStatement;
     this.variables = variables;
     this.scope = scope;
+    this.canReuseNonControlStatement = canReuseNonControlStatement;
     this.canReuseBreakStatement = canReuseBreakStatement;
     this.canReuseReturnStatement = canReuseReturnStatement;
     this.returnFQN = returnFQN;
@@ -72,15 +72,15 @@ public class Query {
     return scope;
   }
 
-  public boolean isCanReuseNonControlStatement() {
+  public boolean canReuseNonControlStatement() {
     return canReuseNonControlStatement;
   }
 
-  public boolean isCanReuseBreakStatement() {
+  public boolean canReuseBreakStatement() {
     return canReuseBreakStatement;
   }
 
-  public boolean isCanReuseReturnStatement() {
+  public boolean canReuseReturnStatement() {
     return canReuseReturnStatement;
   }
 
@@ -88,7 +88,7 @@ public class Query {
     return returnFQN;
   }
 
-  public boolean isCanReuseContinueStatement() {
+  public boolean canReuseContinueStatement() {
     return canReuseContinueStatement;
   }
 }

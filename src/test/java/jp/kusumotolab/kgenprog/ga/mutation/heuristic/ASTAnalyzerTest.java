@@ -1,8 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.extractProperty;
-import static org.assertj.core.api.AssertionsForClassTypes.not;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -34,15 +32,15 @@ public class ASTAnalyzerTest {
     final List statements = body.statements();
 
     // "if (n == 0) { return n; }"
-    assertThat(astAnalyzer.isEndStatement(((Statement) statements.get(0)))).isFalse();
+    assertThat(astAnalyzer.isLastStatement(((Statement) statements.get(0)))).isFalse();
     // ""return 0;"
-    assertThat(astAnalyzer.isEndStatement(((Statement) statements.get(1)))).isTrue();
+    assertThat(astAnalyzer.isLastStatement(((Statement) statements.get(1)))).isTrue();
 
     // "return n;"
     final IfStatement ifStatement = (IfStatement) statements.get(0);
     final Statement statement = (Statement) ((Block) ifStatement.getThenStatement()).statements()
         .get(0);
-    assertThat(astAnalyzer.isEndStatement(statement)).isFalse();
+    assertThat(astAnalyzer.isLastStatement(statement)).isFalse();
   }
 
   @Test
@@ -276,13 +274,13 @@ public class ASTAnalyzerTest {
 
     {
       final Statement statement = (Statement) statements.get(1);
-      final boolean isLastStatement = astAnalyzer.isLastStatement(statement);
+      final boolean isLastStatement = astAnalyzer.isLastStatementInParent(statement);
       assertThat(isLastStatement).isFalse();
     }
 
     {
       final Statement statement = (Statement) statements.get(statements.size() - 1);
-      final boolean isLastStatement = astAnalyzer.isLastStatement(statement);
+      final boolean isLastStatement = astAnalyzer.isLastStatementInParent(statement);
       assertThat(isLastStatement).isTrue();
     }
   }

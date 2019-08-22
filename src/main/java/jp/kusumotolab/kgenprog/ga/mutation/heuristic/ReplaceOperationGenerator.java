@@ -37,7 +37,7 @@ public class ReplaceOperationGenerator extends OperationGenerator {
   @Override
   protected boolean canReuseNonControlStatement(final JDTASTLocation location) {
     final Statement statement = ((Statement) location.getNode());
-    return astAnalyzer.isVoidMethod(statement) || !astAnalyzer.isEndStatement(statement);
+    return astAnalyzer.isVoidMethod(statement) || !astAnalyzer.isLastStatement(statement);
   }
 
   @Override

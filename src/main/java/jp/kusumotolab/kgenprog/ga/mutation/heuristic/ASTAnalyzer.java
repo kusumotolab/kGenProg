@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.Initializer;
 import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ReturnStatement;
@@ -19,7 +20,6 @@ import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
-import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 /**
  * ASTの構造を解析するクラス
@@ -28,12 +28,14 @@ public class ASTAnalyzer {
 
   /**
    * 対象のノードがメソッドの中で一番最後に実行されるステートメントかどうか
+   *
    * @param statement 対象のステートメント
    * @return ステートメントがメソッドの中で最後かどうか
    */
-  public boolean isEndStatement(final Statement statement) {
+  public boolean isLastStatement(final Statement statement) {
     ASTNode node = statement;
-    while (!(node instanceof MethodDeclaration) && !(node instanceof LambdaExpression)) {
+    while (!(node instanceof MethodDeclaration) && !(node instanceof LambdaExpression)
+        && !(node instanceof Initializer)) {
       final ASTNode parent = node.getParent();
       if (parent instanceof Block) {
         final Block block = (Block) parent;
@@ -50,7 +52,7 @@ public class ASTAnalyzer {
 
   /**
    * @param node ノード
-   * @return ノードが含まれているメソッドが返り値を返すかどうか
+   * @return ノードが含まれているメソッドがの返り値がvoidかどうか
    */
   public boolean isVoidMethod(final ASTNode node) {
     final FullyQualifiedName returnType = getReturnType(node);
@@ -65,17 +67,18 @@ public class ASTAnalyzer {
 
   /**
    * @param node ノード
-   * @return 引数のノードが含まれているメソッドの返り値
+   * @return 引数のノードが含まれているメソッドの返り値の型
    */
   public FullyQualifiedName getReturnType(final ASTNode node) {
     ASTNode n = node;
-    while (!(n instanceof MethodDeclaration) && !(n instanceof LambdaExpression)) {
+    while (!(n instanceof MethodDeclaration) && !(n instanceof LambdaExpression)
+        && !(node instanceof Initializer)) {
       n = n.getParent();
     }
-    if (n instanceof LambdaExpression) {
+    if (n instanceof LambdaExpression || n instanceof Initializer) {
       return null;
     }
-    final MethodDeclaration methodDeclaration = ((MethodDeclaration) n);
+    final MethodDeclaration methodDeclaration = (MethodDeclaration) n;
     if (methodDeclaration.isConstructor()) {
       return null;
     }
@@ -88,7 +91,6 @@ public class ASTAnalyzer {
    * @param statement 対象のステートメント
    * @return 対象のステートメントの後ろに挿入可能かどうか
    */
-  @SuppressWarnings("uncked")
   public boolean canInsertAfter(final Statement statement) {
     if (statement instanceof IfStatement) {
       return canInsertAfterIfStatement(((IfStatement) statement));
@@ -168,7 +170,7 @@ public class ASTAnalyzer {
     if (!isInLoopOrSWitch(node)) {
       return false;
     }
-    return isLastStatement(node);
+    return isLastStatementInParent(node);
   }
 
   /**
@@ -197,14 +199,14 @@ public class ASTAnalyzer {
     if (!isInLoop(node)) {
       return false;
     }
-    return isLastStatement(node);
+    return isLastStatementInParent(node);
   }
 
   /**
    * @param node 対象のノード
    * @return 対象のノードが親ノードであるBlockの中で一番最後かどうか
    */
-  public boolean isLastStatement(final ASTNode node) {
+  public boolean isLastStatementInParent(final ASTNode node) {
     final ASTNode parent = node.getParent();
 
     if (!(parent instanceof Block)) {

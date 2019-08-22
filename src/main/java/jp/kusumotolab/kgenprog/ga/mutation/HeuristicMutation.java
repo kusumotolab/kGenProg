@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import com.google.common.collect.Lists;
 import jp.kusumotolab.kgenprog.ga.Roulette;
-import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.heuristic.DeleteOperationGenerator;
 import jp.kusumotolab.kgenprog.ga.mutation.heuristic.InsertAfterOperationGenerator;
 import jp.kusumotolab.kgenprog.ga.mutation.heuristic.InsertBeforeOperationGenerator;
@@ -26,7 +25,7 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
  */
 public class HeuristicMutation extends Mutation {
 
-  protected final Type type;
+  protected final Scope.Type scopeType;
   private final AccessibleVariableSearcher variableSearcher = new AccessibleVariableSearcher();
   private final List<OperationGenerator> operationGenerators;
 
@@ -36,13 +35,13 @@ public class HeuristicMutation extends Mutation {
    * @param mutationGeneratingCount 各世代で生成する Variant の数
    * @param random 乱数生成器
    * @param candidateSelection 再利用候補の行を選択するクラス
-   * @param type 再利用するスコープのタイプ
+   * @param scopeType 再利用するスコープのタイプ
    */
   public HeuristicMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Type type,
+      final CandidateSelection candidateSelection, final Scope.Type scopeType,
       final boolean needHistoricalElement) {
     super(mutationGeneratingCount, random, candidateSelection, needHistoricalElement);
-    this.type = type;
+    this.scopeType = scopeType;
 
     operationGenerators = Lists.newArrayList(
         new DeleteOperationGenerator(1.0d),
@@ -70,7 +69,7 @@ public class HeuristicMutation extends Mutation {
     final OperationGenerator operationGenerator = roulette.exec();
 
     final ASTNode nodeForReuse = operationGenerator.chooseNodeForReuse(candidateSelection, location,
-        type); // 再利用するノードの選択
+        scopeType); // 再利用するノードの選択
     final ASTNode rewritedNode = rewrite(nodeForReuse, variableSearcher.exec(location)); // 再利用するノードを書き換え
     return operationGenerator.generate(jdtastLocation, rewritedNode); // 操作の生成
   }

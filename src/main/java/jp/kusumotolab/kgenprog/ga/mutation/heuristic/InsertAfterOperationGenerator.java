@@ -39,7 +39,7 @@ public class InsertAfterOperationGenerator extends OperationGenerator {
   protected boolean canReuseReturnStatement(final JDTASTLocation location) {
     final Statement statement = (Statement) location.getNode();
     return astAnalyzer.canInsertAfter(statement)
-        && astAnalyzer.isLastStatement(location.getNode());
+        && astAnalyzer.isLastStatementInParent(location.getNode());
   }
 
   @Override
