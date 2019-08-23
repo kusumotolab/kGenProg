@@ -15,7 +15,7 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 public class InsertBeforeOperationGeneratorTest extends OperationGeneratorTest {
 
   @Test
-  public void testEnable() {
+  public void testCanBeApply() {
     final List<GeneratedAST<ProductSourcePath>> asts = createASTs(
         Paths.get("example", "CloseToZero01", "src", "example", "CloseToZero.java"));
     final InsertBeforeOperationGenerator operationGenerator = new InsertBeforeOperationGenerator(1.0);
@@ -24,7 +24,7 @@ public class InsertBeforeOperationGeneratorTest extends OperationGeneratorTest {
         .getAll()
         .stream()
         .map(e -> ((JDTASTLocation) e))
-        .filter(e -> !operationGenerator.enable(e)) // 対象のノードの後ろに挿入できないノードのみ抽出
+        .filter(e -> !operationGenerator.canBeApply(e)) // 対象のノードの後ろに挿入できないノードのみ抽出
         .collect(Collectors.toList());
 
     // block文が4つ

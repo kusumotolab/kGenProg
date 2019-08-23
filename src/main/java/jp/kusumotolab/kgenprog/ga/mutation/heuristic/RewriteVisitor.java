@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -53,10 +54,7 @@ public class RewriteVisitor extends ASTVisitor {
     }
 
     // 再利用先でアクセスできる変数名の一覧に変換
-    List<Variable> variables = fqnToNamesMap.get(fqn);
-    if (variables == null) {
-      return true;
-    }
+    List<Variable> variables = fqnToNamesMap.getOrDefault(fqn, Collections.emptyList());
 
     if (isLeftHandSideInAssignment(node)) {
       // 代入文の左辺なので final 修飾子がついてない変数をフィルターする

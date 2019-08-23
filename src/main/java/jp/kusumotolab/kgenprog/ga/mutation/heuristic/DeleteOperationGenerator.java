@@ -36,7 +36,7 @@ public class DeleteOperationGenerator extends OperationGenerator {
   }
 
   @Override
-  public boolean enable(final JDTASTLocation location) {
+  public boolean canBeApply(final JDTASTLocation location) {
     final ASTNode node = location.getNode();
     if (!(node instanceof Statement)) {
       return false;

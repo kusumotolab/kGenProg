@@ -58,7 +58,7 @@ public abstract class Mutation {
    * @param variantStore Variant の情報を格納するオブジェクト
    * @return 変異された Gene を持った Variant のリスト
    */
-  public List<Variant> exec(VariantStore variantStore) {
+  public List<Variant> exec(final VariantStore variantStore) {
 
     final List<Variant> generatedVariants = new ArrayList<>();
 

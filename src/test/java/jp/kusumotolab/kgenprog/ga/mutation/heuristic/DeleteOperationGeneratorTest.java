@@ -14,7 +14,7 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 public class DeleteOperationGeneratorTest extends OperationGeneratorTest {
 
   @Test
-  public void testEnable() {
+  public void testCanBeApply() {
     final List<GeneratedAST<ProductSourcePath>> asts = createASTs(
         Paths.get("example", "CloseToZero01", "src", "example", "CloseToZero.java"));
     final DeleteOperationGenerator deleteOperationGenerator = new DeleteOperationGenerator(1.0);
@@ -23,7 +23,7 @@ public class DeleteOperationGeneratorTest extends OperationGeneratorTest {
         .getAll()
         .stream()
         .map(e -> ((JDTASTLocation) e))
-        .filter(e -> !deleteOperationGenerator.enable(e)) // 削除することのできないASTLocationのみ抽出
+        .filter(e -> !deleteOperationGenerator.canBeApply(e)) // 削除することのできないASTLocationのみ抽出
         .collect(Collectors.toList());
 
     // CTZ01で削除できないのはBlock文とReturn文のみ

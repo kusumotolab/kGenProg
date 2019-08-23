@@ -18,7 +18,7 @@ public class InsertBeforeOperationGenerator extends OperationGenerator {
   }
 
   @Override
-  public boolean enable(final JDTASTLocation location) {
+  public boolean canBeApply(final JDTASTLocation location) {
     final ASTNode node = location.getNode();
     return node.getParent() instanceof Block;
   }

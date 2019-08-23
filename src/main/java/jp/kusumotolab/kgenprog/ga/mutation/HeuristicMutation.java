@@ -60,7 +60,7 @@ public class HeuristicMutation extends Mutation {
     final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
     // その場で使える操作だけを取り出す
     final List<OperationGenerator> operationGenerators = this.operationGenerators.stream()
-        .filter(e -> e.enable(jdtastLocation))
+        .filter(e -> e.canBeApply(jdtastLocation))
         .collect(Collectors.toList());
 
     // 使える操作に対して重みをつけてルーレット選択

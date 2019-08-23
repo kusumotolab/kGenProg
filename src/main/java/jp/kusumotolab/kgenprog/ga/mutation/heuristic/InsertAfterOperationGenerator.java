@@ -19,7 +19,7 @@ public class InsertAfterOperationGenerator extends OperationGenerator {
   }
 
   @Override
-  public boolean enable(final JDTASTLocation location) {
+  public boolean canBeApply(final JDTASTLocation location) {
     final Statement node = (Statement) location.getNode();
     return node.getParent() instanceof Block && astAnalyzer.canInsertAfter(node);
   }

@@ -47,7 +47,7 @@ public abstract class OperationGenerator {
    * @param location 操作の対象となる位置
    * @return その位置で操作を適用して問題ないか
    */
-  public abstract boolean enable(final JDTASTLocation location);
+  public abstract boolean canBeApply(final JDTASTLocation location);
 
   /**
    * 引数で与えた位置で再利用するノードを返す
