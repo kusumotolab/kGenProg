@@ -41,6 +41,7 @@ public class KGenProgMain {
   private final VariantSelection variantSelection;
   private final TestExecutor testExecutor;
   private final PatchGenerator patchGenerator;
+  private final Exporter exporter;
   private final JDTASTConstruction astConstruction;
 
   /**
@@ -60,7 +61,8 @@ public class KGenProgMain {
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor, final PatchGenerator patchGenerator) {
+      final TestExecutor testExecutor, final PatchGenerator patchGenerator,
+      final Exporter exporter) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -72,6 +74,7 @@ public class KGenProgMain {
     this.testExecutor = testExecutor;
     this.astConstruction = new JDTASTConstruction();
     this.patchGenerator = patchGenerator;
+    this.exporter = exporter;
   }
 
   /**
@@ -139,7 +142,7 @@ public class KGenProgMain {
     }
 
     // パッチ・JSONを出力
-    export(variantStore, patchGenerator);
+    exporter.export(variantStore, patchGenerator);
 
     stopwatch.unsplit();
     strategies.finish();
@@ -154,11 +157,6 @@ public class KGenProgMain {
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     return config.getRequiredSolutionsCount() <= completedVariants.size();
-  }
-
-  private void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
-    final Exporter exporter = new Exporter(config);
-    exporter.export(variantStore, patchGenerator);
   }
 
   private void logConfig() {

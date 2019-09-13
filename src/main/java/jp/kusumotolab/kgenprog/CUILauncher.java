@@ -18,6 +18,7 @@ import jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
@@ -34,7 +35,7 @@ public class CUILauncher {
     }
   }
 
-  public void launch(final Configuration config) {
+  public void launch(final Configuration config) throws IllegalArgumentException {
     setLogLevel(config.getLogLevel());
 
     final FaultLocalization faultLocalization = config.getFaultLocalization()
@@ -60,10 +61,11 @@ public class CUILauncher {
         random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
     final PatchGenerator patchGenerator = new PatchGenerator();
+    final Exporter exporter = new Exporter(config);
 
     final KGenProgMain kGenProgMain =
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-            sourceCodeValidation, variantSelection, testExecutor, patchGenerator);
+            sourceCodeValidation, variantSelection, testExecutor, patchGenerator, exporter);
 
     kGenProgMain.run();
   }
