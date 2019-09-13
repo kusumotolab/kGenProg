@@ -22,41 +22,27 @@ public class Exporter {
   private final Configuration config;
 
   /**
-   * コンストラクタ．自動プログラム修正に必要な全ての情報を渡す必要あり．<br>
+   * コンストラクタ．<br>
    *
-   * -fがあるかつout-dirが空でないときはout-dirを空にする
-   *
-   * @param config 設定情報
+   * @param config 出力に必要な設定情報
    */
-  public Exporter(final Configuration config) {
+  public Exporter(final Configuration config) throws IllegalArgumentException {
     this.config = config;
+    this.clearOutDir();
   }
 
-  private boolean isWritable() {
-
-    if (Files.notExists(config.getOutDir())) {
-      return true;
-    }
-
-    final Path outDir = config.getOutDir();
-    try {
-      return Files.walk(outDir, FileVisitOption.FOLLOW_LINKS)
-          .noneMatch(e -> !e.equals(outDir));
-    } catch (final IOException e) {
-      log.error(e.getMessage(), e);
-      return false;
-    }
-  }
-
-  private void clearOutDir() {
+  /**
+   * 出力先のディレクトリが空でないときは出力先のディレクトリを空にする<br>
+   * 出力先のディレクトリが存在しないときは何もしない
+   */
+  private void clearOutDir() throws IllegalArgumentException {
     if (Files.notExists(config.getOutDir())) {
       return;
     }
 
     try {
-      final Path outDir = config.getOutDir();
-      final List<Path> subFiles = Files.walk(outDir, FileVisitOption.FOLLOW_LINKS)
-          .filter(e -> !e.equals(outDir))
+      final List<Path> subFiles = Files.walk(config.getOutDir(), FileVisitOption.FOLLOW_LINKS)
+          .filter(e -> !e.equals(config.getOutDir()))
           .sorted(Comparator.reverseOrder())
           .collect(Collectors.toList());
 
@@ -64,44 +50,25 @@ public class Exporter {
         Files.deleteIfExists(subFile);
       }
     } catch (final IOException e) {
-      log.error(e.getMessage(), e);
+      final String message = "Cannot clear directory " + config.getOutDir();
+      log.error(message);
+      throw new IllegalArgumentException(message);
     }
   }
 
   /**
-   * パッチおよびJSONの出力を行う<br>
-   * <table>
-   * <caption>出力の有無</caption>
-   * <tr>
-   * <td></td>
-   * <td>forceオプションあり</td>
-   * <td>forceオプションなし</td>
-   * </tr>
-   *
-   * <tr>
-   * <td>outDirが空</td>
-   * <td>出力する</td>
-   * <td>出力する</td>
-   * </tr>
-   *
-   * <tr>
-   * <td>outDirが空でない</td>
-   * <td>outDirを空にしてから出力する</td>
-   * <td>出力しない</td>
-   * </tr>
-   * </table>
+   * パッチおよびJSONの出力を行う
    */
   public void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
     final PatchStore patchStore = new PatchStore();
+
     variantStore.getFoundSolutions(config.getRequiredSolutionsCount())
         .stream()
         .map(patchGenerator::exec)
         .forEach(patchStore::add);
-
     patchStore.writeToLogger();
 
-    if (isWritable()) {
-
+    if (!config.needNotOutput()) {
       if (Files.notExists(config.getOutDir())) {
         try {
           Files.createDirectory(config.getOutDir());
@@ -110,7 +77,6 @@ public class Exporter {
           return;
         }
       }
-
       patchStore.writeToFile(config.getOutDir());
       exportJSON(variantStore);
     }
@@ -120,10 +86,6 @@ public class Exporter {
    * JSONの出力を行う
    */
   private void exportJSON(final VariantStore variantStore) {
-    if (config.needNotOutput()) {
-      return;
-    }
-
     final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
     variantStoreExporter.writeToFile(config, variantStore);
   }
