@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-KGenProg uses the following libraries without any modifications.
+KGenProg uses the following libraries WITHOUT any modifications.
 
 SLF4J: MIT license, 
 https://www.slf4j.org/
@@ -33,9 +33,6 @@ https://projects.eclipse.org/projects/eclipse.jdt/
 
 JaCoCo: Eclipse Public License 1.0, 
 https://www.jacoco.org/
-
-JUnit: Eclipse Public License 1.0, 
-https://junit.org/junit4/
 
 Apache Commons Lang: APACHE Lisence 2.0, 
 https://commons.apache.org/proper/commons-lang/
@@ -57,3 +54,34 @@ https://logback.qos.ch/
 
 Google Gson: Apache License 2.0,
 https://sites.google.com/site/gson/
+
+NightConfig: LGPL,
+https://github.com/TheElectronWill/night-config
+
+Google Guava: Apache License 2.0,
+https://github.com/google/guava
+
+ReactiveX RxJava: Apache License 2.0,
+https://github.com/ReactiveX/RxJava
+
+Apache Maven: Apache License 2.0,
+https://maven.apache.org/
+
+Codehaus Plexus: Apache License 2.0,
+https://codehaus-plexus.github.io/
+
+Eclipse Equinox: Eclipse Public License 1.0,
+https://www.eclipse.org/equinox/
+
+Eclipse Platform Text: Eclipse Public License 2.0,
+https://www.eclipse.org/eclipse/platform-text/index.php
+
+mockito: MIT license
+https://site.mockito.org/
+
+KGenProg uses the following libraries WITH modifications.
+
+JUnit: Eclipse Public License 1.0, 
+https://junit.org/junit4/
+
+
