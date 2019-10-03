@@ -345,7 +345,7 @@ public class SinglePointCrossoverTest {
    * HistoricalElementを必要としない場合のテスト.
    */
   @Test
-  public void testNeedNotHistoricalElement() {
+  public void testNoHistoryRecord() {
 
     // 生成するバリアントを制御するための疑似乱数
     final Random random = Mockito.mock(Random.class);

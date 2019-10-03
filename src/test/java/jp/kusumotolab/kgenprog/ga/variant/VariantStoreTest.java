@@ -156,7 +156,7 @@ public class VariantStoreTest {
   }
 
   @Test
-  public void testNeedNotHistoricalElement() {
+  public void testNoHistoryRecord() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final Configuration config = createMockConfiguration(basePath, false);
     final Strategies strategies = createMockStrategies(config);
@@ -179,14 +179,14 @@ public class VariantStoreTest {
   }
 
   private Configuration createMockConfiguration(final Path basePath,
-      final boolean needHistoricalElement) {
+      final boolean noHistoryRecord) {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Configuration config = mock(Configuration.class);
 
     when(config.getTargetProject()).thenReturn(project);
     when(config.getTimeLimitSeconds())
         .thenReturn(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
-    when(config.getNeedHistoricalElement()).thenReturn(needHistoricalElement);
+    when(config.getNoHistoryRecord()).thenReturn(noHistoryRecord);
 
     return config;
   }

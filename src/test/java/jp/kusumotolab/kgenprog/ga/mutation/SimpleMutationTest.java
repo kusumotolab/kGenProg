@@ -171,7 +171,7 @@ public class SimpleMutationTest {
   }
 
   @Test
-  public void testNeedNotHistoricalElement() {
+  public void testNoHistoryRecord() {
     final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
 
     final Variant initialVariant = createInitialVariant(generatedSourceCode);
@@ -199,10 +199,10 @@ public class SimpleMutationTest {
   }
 
   private SimpleMutation createSimpleMutation(final GeneratedSourceCode sourceCode,
-      final Random random, final boolean needHistoricalElement) {
+      final Random random, final boolean noHistoryRecord) {
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final SimpleMutation simpleMutation = new SimpleMutation(15, random, statementSelection,
-        Type.PROJECT, needHistoricalElement);
+        Type.PROJECT, noHistoryRecord);
     simpleMutation.setCandidates(sourceCode.getProductAsts());
     return simpleMutation;
   }

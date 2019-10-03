@@ -44,7 +44,7 @@ public class VariantStore {
     generation = new OrdinalNumber(0);
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
-    if (config.getNeedHistoricalElement()) {
+    if (config.getNoHistoryRecord()) {
       allVariants = new LinkedList<>();
       allVariants.add(initialVariant);
     } else {
@@ -155,7 +155,7 @@ public class VariantStore {
    */
   public void addGeneratedVariant(final Variant variant) {
 
-    if (config.getNeedHistoricalElement()) {
+    if (config.getNoHistoryRecord()) {
       allVariants.add(variant);
     }
     if (variant.isCompleted()) {
@@ -186,7 +186,7 @@ public class VariantStore {
     final GeneratedSourceCode sourceCode =
         strategies.execASTConstruction(config.getTargetProject());
     final HistoricalElement newElement;
-    if (config.getNeedHistoricalElement()) {
+    if (config.getNoHistoryRecord()) {
       newElement = new OriginalHistoricalElement();
     } else {
       newElement = null;

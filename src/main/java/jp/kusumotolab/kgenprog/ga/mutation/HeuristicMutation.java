@@ -39,8 +39,8 @@ public class HeuristicMutation extends Mutation {
    */
   public HeuristicMutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection, final Scope.Type scopeType,
-      final boolean needHistoricalElement) {
-    super(mutationGeneratingCount, random, candidateSelection, needHistoricalElement);
+      final boolean noHistoryRecord) {
+    super(mutationGeneratingCount, random, candidateSelection, noHistoryRecord);
     this.scopeType = scopeType;
 
     operationGenerators = Lists.newArrayList(

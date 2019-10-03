@@ -29,12 +29,12 @@ public class SimpleMutation extends Mutation {
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
    * @param type 選択する候補のスコープ
-   * @param needHistoricalElement 個体が生成される過程を記録するか否か
+   * @param noHistoryRecord 個体が生成される過程を記録するか否か
    */
   public SimpleMutation(final int mutationGeneratingCount, final Random random,
       final CandidateSelection candidateSelection, final Type type,
-      final boolean needHistoricalElement) {
-    super(mutationGeneratingCount, random, candidateSelection, needHistoricalElement);
+      final boolean noHistoryRecord) {
+    super(mutationGeneratingCount, random, candidateSelection, noHistoryRecord);
     this.type = type;
   }
 

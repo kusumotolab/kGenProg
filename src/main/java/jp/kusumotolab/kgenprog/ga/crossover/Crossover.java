@@ -61,16 +61,16 @@ public interface Crossover {
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
        * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
        * @param generatingCount 一世代の交叉処理で生成する個体の数
-       * @param needHistoricalElement 個体が生成される過程を記録するか否か
+       * @param noHistoryRecord 個体が生成される過程を記録するか否か
        * @return 交叉を行うインスタンス
        */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
           final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-          final int generatingCount, boolean needHistoricalElement) {
+          final int generatingCount, boolean noHistoryRecord) {
         return new RandomCrossover(random, firstVariantSelectionStrategy,
-            secondVariantSelectionStrategy, generatingCount, needHistoricalElement);
+            secondVariantSelectionStrategy, generatingCount, noHistoryRecord);
       }
     },
 
@@ -90,16 +90,16 @@ public interface Crossover {
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
        * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
        * @param generatingCount 一世代の交叉処理で生成する個体の数
-       * @param needHistoricalElement 個体が生成される過程を記録するか否か
+       * @param noHistoryRecord 個体が生成される過程を記録するか否か
        * @return 交叉を行うインスタンス
        */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
           final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-          final int generatingCount, boolean needHistoricalElement) {
+          final int generatingCount, boolean noHistoryRecord) {
         return new SinglePointCrossover(random, firstVariantSelectionStrategy,
-            secondVariantSelectionStrategy, generatingCount, needHistoricalElement);
+            secondVariantSelectionStrategy, generatingCount, noHistoryRecord);
       }
     },
 
@@ -119,16 +119,16 @@ public interface Crossover {
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
        * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
        * @param generatingCount 一世代の交叉処理で生成する個体の数
-       * @param needHistoricalElement 個体が生成される過程を記録するか否か
+       * @param noHistoryRecord 個体が生成される過程を記録するか否か
        * @return 交叉を行うインスタンス
        */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
           final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-          final int generatingCount, boolean needHistoricalElement) {
+          final int generatingCount, boolean noHistoryRecord) {
         return new UniformCrossover(random, firstVariantSelectionStrategy,
-            secondVariantSelectionStrategy, generatingCount, needHistoricalElement);
+            secondVariantSelectionStrategy, generatingCount, noHistoryRecord);
       }
     };
 
@@ -139,12 +139,12 @@ public interface Crossover {
      * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
      * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
      * @param generatingCount 一世代の交叉処理で生成する個体の数
-     * @param needHistoricalElement 個体が生成される過程を記録するか否か
+     * @param noHistoryRecord 個体が生成される過程を記録するか否か
      * @return 交叉を行うインスタンス
      */
     public abstract Crossover initialize(final Random random,
         final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
         final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-        final int generatingCount, final boolean needHistoricalElement);
+        final int generatingCount, final boolean noHistoryRecord);
   }
 }
