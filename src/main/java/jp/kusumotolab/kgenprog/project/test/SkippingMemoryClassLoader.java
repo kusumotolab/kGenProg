@@ -22,7 +22,7 @@ import java.net.URL;
  */
 public class SkippingMemoryClassLoader extends MemoryClassLoader {
 
-  final private ClassLoader extensionClassLoader;
+  final private ClassLoader delegationClassLoader;
 
   /**
    * コンストラクタ
@@ -31,24 +31,28 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
    */
   public SkippingMemoryClassLoader(final URL[] urls) {
     super(urls);
-    extensionClassLoader = findExtClassLoader(getClass().getClassLoader());
+    delegationClassLoader = findDelegationClassLoader(getClass().getClassLoader());
   }
 
   /**
-   * クラスローダの親子関係を探索して，委譲先となるextensionClassLoaderを探す．
+   * クラスローダの親子関係を探索して，委譲先となるExtension/PlatformClassLoaderを探す．
    * 
    * @param cl
    * @return
    */
-  private ClassLoader findExtClassLoader(final ClassLoader cl) {
+  private ClassLoader findDelegationClassLoader(final ClassLoader cl) {
     if (null == cl) {
       throw new RuntimeException("Cannot find extension class loader.");
     }
-    if (!cl.toString()
-        .contains("$ExtClassLoader@")) { // clが取り出したいExtClassLoaderではない場合，
-      return findExtClassLoader(cl.getParent()); // 再帰的に親を探す
+    // (#600) patch for greater than jdk9
+    // 対象の名前が ExtensionClassLoader (jdk8) or PlatformClassLoader(>jdk9) ならOK．
+    final String name = cl.toString();
+    if (name.contains("$ExtClassLoader@") || //
+        name.contains("$PlatformClassLoader@")) {
+      return cl;
     }
-    return cl;
+    // さもなくば再帰的に親を探す
+    return findDelegationClassLoader(cl.getParent());
   }
 
   /**
@@ -73,7 +77,7 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
       if (null == c) {
         try {
           // Second, try to load using extension class loader
-          c = extensionClassLoader.loadClass(name);
+          c = delegationClassLoader.loadClass(name);
 
           // Don't delegate to the parent.
           // c = parent.loadClass(name);
