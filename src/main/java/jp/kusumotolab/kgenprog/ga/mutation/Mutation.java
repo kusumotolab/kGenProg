@@ -27,7 +27,7 @@ public abstract class Mutation {
   protected final Random random;
   protected final int mutationGeneratingCount;
   protected final CandidateSelection candidateSelection;
-  private final boolean noHistoryRecord;
+  protected final VariantCreator variantCreator;
 
   /**
    * コンストラクタ
@@ -42,7 +42,7 @@ public abstract class Mutation {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
-    this.noHistoryRecord = noHistoryRecord;
+    this.variantCreator = newVariantCreator(noHistoryRecord);
   }
 
   /**
@@ -84,13 +84,7 @@ public abstract class Mutation {
       final Suspiciousness suspiciousness = roulette.exec();
       final Base base = makeBase(suspiciousness);
       final Gene gene = makeGene(variant.getGene(), base);
-      final HistoricalElement element;
-      if (noHistoryRecord) {
-        element = new MutationHistoricalElement(variant, base);
-      } else {
-        element = null;
-      }
-      generatedVariants.add(variantStore.createVariant(gene, element));
+      generatedVariants.add(variantCreator.createVariant(variantStore, variant, base, gene));
     }
 
     return generatedVariants;
@@ -107,6 +101,22 @@ public abstract class Mutation {
     final List<Base> bases = new ArrayList<>(parent.getBases());
     bases.add(base);
     return new Gene(bases);
+  }
+
+  private VariantCreator newVariantCreator(boolean noHistoryRecord) {
+    if (noHistoryRecord) {
+      return (variantStore, variant, base, gene) -> variantStore.createVariant(gene, null);
+    } else {
+      return (variantStore, variant, base, gene) -> {
+        final HistoricalElement element = new MutationHistoricalElement(variant, base);
+        return variantStore.createVariant(gene, element);
+      };
+    }
+  }
+
+  interface VariantCreator {
+
+    Variant createVariant(VariantStore variantStore, Variant variant, Base base, Gene gene);
   }
 
 }
