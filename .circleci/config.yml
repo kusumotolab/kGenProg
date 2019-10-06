@@ -9,7 +9,7 @@ jobs:
   #   Execute `gradle test` to run unit tests on the target commit.
   run-unit-tests:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:11-jdk
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx3200m
@@ -58,7 +58,7 @@ jobs:
   #   Execute `gradle assemble` to generate a jar file on the target commit.
   build-artifacts:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:11-jdk
     steps:
       # ===== Initialize the environment
       - checkout
