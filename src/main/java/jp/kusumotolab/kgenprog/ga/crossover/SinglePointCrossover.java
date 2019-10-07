@@ -20,7 +20,6 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 public class SinglePointCrossover extends CrossoverAdaptor {
 
   private final Random random;
-  private final boolean noHistoryRecord;
 
   /**
    * コンストラクタ．一点交叉に必要な情報を全て引数として渡す必要あり．
@@ -29,16 +28,14 @@ public class SinglePointCrossover extends CrossoverAdaptor {
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
-   * @param noHistoryRecord 個体が生成される過程を記録するか否か
    * @return 交叉を行うインスタンス
    */
   public SinglePointCrossover(final Random random,
       final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-      final int generatingCount, final boolean noHistoryRecord) {
+      final int generatingCount) {
     super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount);
     this.random = random;
-    this.noHistoryRecord = noHistoryRecord;
   }
 
   @Override
@@ -54,15 +51,8 @@ public class SinglePointCrossover extends CrossoverAdaptor {
     final int index = getPointAtRandom(basesA.size(), basesB.size());
     final Gene newGeneA = makeGene(basesA.subList(0, index), basesB.subList(index, basesB.size()));
     final Gene newGeneB = makeGene(basesB.subList(0, index), basesA.subList(index, basesA.size()));
-    final HistoricalElement elementA;
-    final HistoricalElement elementB;
-    if (noHistoryRecord) {
-      elementA = new CrossoverHistoricalElement(variantA, variantB, index);
-      elementB = new CrossoverHistoricalElement(variantB, variantA, index);
-    } else {
-      elementA = null;
-      elementB = null;
-    }
+    final HistoricalElement elementA = new CrossoverHistoricalElement(variantA, variantB, index);
+    final HistoricalElement elementB = new CrossoverHistoricalElement(variantB, variantA, index);
     return Arrays.asList(store.createVariant(newGeneA, elementA),
         store.createVariant(newGeneB, elementB));
   }

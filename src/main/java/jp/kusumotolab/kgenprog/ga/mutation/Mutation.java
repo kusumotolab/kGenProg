@@ -27,7 +27,6 @@ public abstract class Mutation {
   protected final Random random;
   protected final int mutationGeneratingCount;
   protected final CandidateSelection candidateSelection;
-  protected final boolean noHistoryRecord;
 
   /**
    * コンストラクタ
@@ -35,15 +34,14 @@ public abstract class Mutation {
    * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
-   * @param noHistoryRecord 個体が生成される過程を記録するか否か
    */
   public Mutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final boolean noHistoryRecord) {
+      final CandidateSelection candidateSelection) {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
-    this.noHistoryRecord = noHistoryRecord;
   }
+
   /**
    * @param candidates 再利用するソースコード群
    */
@@ -83,12 +81,7 @@ public abstract class Mutation {
       final Suspiciousness suspiciousness = roulette.exec();
       final Base base = makeBase(suspiciousness);
       final Gene gene = makeGene(variant.getGene(), base);
-      final HistoricalElement element;
-      if (noHistoryRecord) {
-        element = new MutationHistoricalElement(variant, base);
-      } else {
-        element = null;
-      }
+      final HistoricalElement element = new MutationHistoricalElement(variant, base);
       generatedVariants.add(variantStore.createVariant(gene, element));
     }
 

@@ -38,9 +38,8 @@ public class HeuristicMutation extends Mutation {
    * @param scopeType 再利用するスコープのタイプ
    */
   public HeuristicMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Scope.Type scopeType,
-      final boolean noHistoryRecord) {
-    super(mutationGeneratingCount, random, candidateSelection, noHistoryRecord);
+      final CandidateSelection candidateSelection, final Scope.Type scopeType) {
+    super(mutationGeneratingCount, random, candidateSelection);
     this.scopeType = scopeType;
 
     operationGenerators = Lists.newArrayList(
