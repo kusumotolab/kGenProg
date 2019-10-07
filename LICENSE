@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2018-2019 the KGenProg team in Kusumoto Lab (Yoshiki Higo, Shinsuke Matsumoto, Ryo Arima, Akito Tanikado, Keigo Naitou, Hiroyuki Matsuo, Junnosuke Matsumoto, Yuya Tomida, Kaisei Hanayama, Tetsushi Kuma, and Ryoko Izuta)
+Copyright (c) 2018-2019 the kGenProg team in Kusumoto Lab (Yoshiki Higo, Shinsuke Matsumoto, Ryo Arima, Akito Tanikado, Keigo Naitou, Hiroyuki Matsuo, Junnosuke Matsumoto, Yuya Tomida, Kaisei Hanayama, Tetsushi Kuma, and Ryoko Izuta)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-KGenProg uses the following libraries WITHOUT any modifications.
+kGenProg uses the following libraries WITHOUT any modifications.
 
 Apache Commons Lang: APACHE Lisence 2.0, 
 https://commons.apache.org/proper/commons-lang/
@@ -80,7 +80,7 @@ SLF4J: MIT license,
 https://www.slf4j.org/
 
 
-KGenProg uses the following libraries WITH modifications.
+kGenProg uses the following libraries WITH modifications.
 
 JUnit: Eclipse Public License 1.0, 
 https://junit.org/junit4/
