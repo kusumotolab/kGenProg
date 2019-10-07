@@ -45,15 +45,14 @@ public class VariantStore {
 
     variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
+    variantCreator = newVariantCreator(config.getNoHistoryRecord());
+    variantRecorder = newVariantRecorder(config.getNoHistoryRecord());
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     allVariants = new LinkedList<>();
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
-    variantCreator = newVariantCreator(config.getNoHistoryRecord());
-    variantRecorder = newVariantRecorder(config.getNoHistoryRecord());
     variantRecorder.accept(initialVariant);
-
     // 最後に次の世代番号に進めておく
     generation.incrementAndGet();
   }
