@@ -30,12 +30,12 @@ public class CUILauncher {
       final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
       final CUILauncher launcher = new CUILauncher();
       launcher.launch(config);
-    } catch (IllegalArgumentException e) {
+    } catch (final RuntimeException e) {
       System.exit(1);
     }
   }
 
-  public void launch(final Configuration config) throws IllegalArgumentException {
+  public void launch(final Configuration config) throws RuntimeException {
     setLogLevel(config.getLogLevel());
 
     final FaultLocalization faultLocalization = config.getFaultLocalization()

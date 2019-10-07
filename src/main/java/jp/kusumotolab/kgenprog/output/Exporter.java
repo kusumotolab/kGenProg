@@ -26,7 +26,7 @@ public class Exporter {
    *
    * @param config 出力に必要な設定情報
    */
-  public Exporter(final Configuration config) throws IllegalArgumentException {
+  public Exporter(final Configuration config) throws RuntimeException {
     this.config = config;
     this.clearOutDir();
   }
@@ -35,7 +35,7 @@ public class Exporter {
    * 出力先のディレクトリが空でないときは出力先のディレクトリを空にする<br>
    * 出力先のディレクトリが存在しないときは何もしない
    */
-  private void clearOutDir() throws IllegalArgumentException {
+  private void clearOutDir() throws RuntimeException {
     if (Files.notExists(config.getOutDir())) {
       return;
     }
@@ -52,7 +52,7 @@ public class Exporter {
     } catch (final IOException e) {
       final String message = "Cannot clear directory " + config.getOutDir();
       log.error(message);
-      throw new IllegalArgumentException(message);
+      throw new RuntimeException(message);
     }
   }
 
