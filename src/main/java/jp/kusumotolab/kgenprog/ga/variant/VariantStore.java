@@ -46,10 +46,10 @@ public class VariantStore {
     variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
     variantCreator = newVariantCreator(config.getNoHistoryRecord());
-    variantRecorder = newVariantRecorder(config.getNoHistoryRecord());
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     allVariants = new LinkedList<>();
+    variantRecorder = newVariantRecorder(config.getNoHistoryRecord());
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
     variantRecorder.accept(initialVariant);
