@@ -530,7 +530,6 @@ public class Configuration {
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
       validateExistences(builder);
       validateCurrentDir(builder);
-      validateOutDir(builder);
     }
 
     private static void validateExistences(final Builder builder) throws IllegalArgumentException {
@@ -562,28 +561,6 @@ public class Configuration {
         }
       } catch (final IOException e) {
         throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible");
-      }
-    }
-
-    private static void validateOutDir(final Builder builder) {
-
-      if (Files.notExists(builder.outDir)) {
-        return;
-      }
-
-      try {
-        final List<Path> subFiles = Files.walk(builder.outDir, FileVisitOption.FOLLOW_LINKS)
-            .filter(e -> !e.equals(builder.outDir))
-            .collect(Collectors.toList());
-
-        if (subFiles.isEmpty()) {
-          final String outDirName = builder.outDir
-              .toString();
-          log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
-          log.warn("If you want patches, please run with -f or empty {}", outDirName);
-        }
-      } catch (final IOException e) {
-        throw new IllegalArgumentException("directory " + builder.outDir + " is not accessible");
       }
     }
 
