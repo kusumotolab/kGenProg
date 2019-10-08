@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
@@ -32,7 +33,7 @@ public class VariantStore {
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
   private final AtomicLong variantCounter;
-  private final VariantCreator variantCreator;
+  private final Function<HistoricalElement, HistoricalElement> elementJudge;
   private final Consumer<Variant> variantRecorder;
 
   /**
@@ -45,7 +46,7 @@ public class VariantStore {
 
     variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
-    variantCreator = newVariantCreator(config.getHistoryRecord());
+    elementJudge = newElementJudge(config.getHistoryRecord());
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     allVariants = new LinkedList<>();
@@ -66,7 +67,7 @@ public class VariantStore {
    */
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
     final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
-    return variantCreator.createVariant(gene, sourceCode, element);
+    return createVariant(gene, sourceCode, elementJudge.apply(element));
   }
 
   /**
@@ -183,7 +184,8 @@ public class VariantStore {
     final GeneratedSourceCode sourceCode =
         strategies.execASTConstruction(config.getTargetProject());
     final HistoricalElement newElement = new OriginalHistoricalElement();
-    return variantCreator.createVariant(new Gene(Collections.emptyList()), sourceCode, newElement);
+    return createVariant(new Gene(Collections.emptyList()), sourceCode,
+        elementJudge.apply(newElement));
   }
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
@@ -217,27 +219,14 @@ public class VariantStore {
     return variant;
   }
 
-  private VariantCreator newVariantCreator(final boolean historyRecord) {
-    if (historyRecord) {
-      return this::createVariant;
-    } else {
-      return (gene, sourcecode, element) -> this.createVariant(gene, sourcecode, null);
-    }
+  private Function<HistoricalElement, HistoricalElement> newElementJudge(
+      final boolean historyRecord) {
+    return historyRecord ? element -> element : element -> null;
   }
 
   private Consumer<Variant> newVariantRecorder(final boolean historyRecord) {
-    if (historyRecord) {
-      return allVariants::add;
-    } else {
-      return variant -> {
-      };
-    }
-  }
-
-  @FunctionalInterface
-  private interface VariantCreator {
-
-    Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode, final HistoricalElement element);
+    return historyRecord ? allVariants::add : variant -> {
+    };
   }
 
 }
