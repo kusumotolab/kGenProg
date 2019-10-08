@@ -45,14 +45,14 @@ public class VariantStore {
 
     variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
-    variantCreator = newVariantCreator(config.getNoHistoryRecord());
+    variantCreator = newVariantCreator(config.getHistoryRecord());
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     allVariants = new LinkedList<>();
-    variantRecorder = newVariantRecorder(config.getNoHistoryRecord());
+    variantRecorder = newVariantRecorder(config.getHistoryRecord());
+    variantRecorder.accept(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
-    variantRecorder.accept(initialVariant);
     // 最後に次の世代番号に進めておく
     generation.incrementAndGet();
   }
@@ -217,27 +217,27 @@ public class VariantStore {
     return variant;
   }
 
-  private VariantCreator newVariantCreator(final boolean noHistoryRecord) {
-    if (noHistoryRecord) {
-      return (gene, sourcecode, element) -> this.createVariant(gene, sourcecode, null);
-    } else {
+  private VariantCreator newVariantCreator(final boolean historyRecord) {
+    if (historyRecord) {
       return this::createVariant;
+    } else {
+      return (gene, sourcecode, element) -> this.createVariant(gene, sourcecode, null);
     }
   }
 
-  private Consumer<Variant> newVariantRecorder(final boolean noHistoryRecord) {
-    if (noHistoryRecord) {
+  private Consumer<Variant> newVariantRecorder(final boolean historyRecord) {
+    if (historyRecord) {
+      return allVariants::add;
+    } else {
       return variant -> {
       };
-    } else {
-      return allVariants::add;
     }
   }
 
   @FunctionalInterface
   private interface VariantCreator {
 
-    Variant createVariant(Gene gene, GeneratedSourceCode sourceCode, HistoricalElement element);
+    Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode, final HistoricalElement element);
   }
 
 }

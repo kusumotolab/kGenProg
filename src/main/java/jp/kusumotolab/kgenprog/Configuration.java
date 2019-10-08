@@ -61,7 +61,7 @@ public class Configuration {
       FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
       SecondVariantSelectionStrategy.Strategy.Random;
-  public static final boolean DEFAULT_NO_HISTORY_RECORD = false;
+  public static final boolean DEFAULT_HISTORY_RECORD = true;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -82,7 +82,7 @@ public class Configuration {
   private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
-  private final boolean noHistoryRecord;
+  private final boolean historyRecord;
   // endregion
 
   // region Constructor
@@ -107,7 +107,7 @@ public class Configuration {
     crossoverType = builder.crossoverType;
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
-    noHistoryRecord = builder.noHistoryRecord;
+    historyRecord = builder.historyRecord;
   }
 
   // endregion
@@ -196,8 +196,8 @@ public class Configuration {
     return secondVariantSelectionStrategy;
   }
 
-  public boolean getNoHistoryRecord() {
-    return noHistoryRecord;
+  public boolean getHistoryRecord() {
+    return historyRecord;
   }
 
   @Override
@@ -333,10 +333,10 @@ public class Configuration {
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
         DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
-    @Option(name = "--no-history-record", usage = "Do not generate historical element.", hidden = true)
-    @com.electronwill.nightconfig.core.conversion.Path("no-history-record")
+    @Option(name = "--history-record", usage = "Generate historical element.", hidden = true)
+    @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
-    private boolean noHistoryRecord = DEFAULT_NO_HISTORY_RECORD;
+    private boolean historyRecord = DEFAULT_HISTORY_RECORD;
     // endregion
 
     // region Constructors
@@ -534,8 +534,8 @@ public class Configuration {
       return this;
     }
 
-    public Builder setNoHistoryRecord(final boolean noHistoryRecord) {
-      this.noHistoryRecord = noHistoryRecord;
+    public Builder setHistoryRecord(final boolean historyRecord) {
+      this.historyRecord = historyRecord;
       return this;
     }
 
