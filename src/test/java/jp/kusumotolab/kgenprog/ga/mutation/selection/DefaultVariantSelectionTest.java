@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Before;
@@ -14,6 +15,8 @@ import jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public class DefaultVariantSelectionTest {
 
@@ -27,7 +30,8 @@ public class DefaultVariantSelectionTest {
   @Test
   public void testExec() {
     final int variantSize = 5;
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize, random);
+    final DefaultVariantSelection variantSelection =
+        new DefaultVariantSelection(variantSize, random);
     final List<Variant> variants = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
@@ -113,17 +117,12 @@ public class DefaultVariantSelectionTest {
   @Test
   public void testOrderOfVariants() {
     final int variantSize = 5;
-    final DefaultVariantSelection variantSelection = new DefaultVariantSelection(variantSize, random);
+    final DefaultVariantSelection variantSelection =
+        new DefaultVariantSelection(variantSize, random);
     final List<Variant> current = new ArrayList<>();
     final List<Variant> generated = new ArrayList<>();
 
-    for (int i = 0; i < 10; i++) {
-      final double divider = 10;
-      final double value = (1.0d * (i + (i % 2))) / divider;
-      final SimpleFitness fitness = new SimpleFitness(value);
-      current.add(createVariant(fitness, i));
-      generated.add(createVariant(fitness, i + 10));
-    }
+    setupLists(current, generated, 10, e -> new TestResults());
 
     final List<Variant> selectedVariants = variantSelection.exec(current, generated);
 
@@ -145,25 +144,68 @@ public class DefaultVariantSelectionTest {
   }
 
   /**
+   * BulidFailedの個体が選択されるかどうかをテストする.
+   */
+  @Test
+  public void testBuildFailed() {
+    final int variantSize = 12;
+    final DefaultVariantSelection variantSelection =
+        new DefaultVariantSelection(variantSize, random);
+    final List<Variant> current = new ArrayList<>();
+    final List<Variant> generated = new ArrayList<>();
+
+    // 2個に1個はbuildFailedの個体にする
+    setupLists(current, generated, 10,
+        e -> e % 2 == 0 ? EmptyTestResults.instance : new TestResults());
+
+    final List<Variant> selectedVariants = variantSelection.exec(current, generated);
+
+    // 12個選択するが，buildSuccessが10個しかないため10個しか返ってこない
+    assertThat(selectedVariants).hasSize(10)
+        .allMatch(Variant::isBuildSucceeded);
+  }
+
+  /**
    * Variantを生成するメソッド.Fitnessのみを指定する.
    *
    * @param fitness Variantの持つFitness
    * @return variant 生成したVariant
    */
   private Variant createVariant(final Fitness fitness) {
-    final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null);
+    final TestResults testResults = new TestResults();
+    return createVariant(fitness, 0, testResults);
+  }
+
+  /**
+   * Variantを生成するメソッド.Fitness, Id, TestResultsを指定する.
+   *
+   * @param fitness Variantの持つFitness
+   * @param id Variantに固有の値
+   * @param testResults Variantのテスト情報
+   * @return variant 生成したVariant
+   */
+  private Variant createVariant(final Fitness fitness, final int id,
+      final TestResults testResults) {
+    final Variant variant = new Variant(id, 0, null, null, testResults, fitness, null, null);
     return variant;
   }
 
   /**
-   * Variantを生成するメソッド.FitnessとIdを指定する.
+   * テスト用のリストを設定するメソッド.
    *
-   * @param fitness Variantの持つFitness
-   * @param id Variantに固有の値
-   * @return variant 生成したVariant
+   * @param current variantSelectionに渡すcurrentリスト
+   * @param generated variantSelectionに渡すgeneratedリスト
+   * @param num リストに追加する要素の数
+   * @param testResultsCreator testResultsの渡し方を指定するFuntionオブジェクト（intを受け取りTestResultsを返す）
    */
-  private Variant createVariant(final Fitness fitness, final int id) {
-    final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null);
-    return variant;
+  private void setupLists(final List<Variant> current, final List<Variant> generated, final int num,
+      final Function<Integer, TestResults> testResultsCreator) {
+    for (int i = 0; i < num; i++) {
+      final double divider = num;
+      final double value = (1.0d * (i + (i % 2))) / divider;
+      final SimpleFitness fitness = new SimpleFitness(value);
+      current.add(createVariant(fitness, i, testResultsCreator.apply(i)));
+      generated.add(createVariant(fitness, i + num, testResultsCreator.apply(i)));
+    }
   }
 }
