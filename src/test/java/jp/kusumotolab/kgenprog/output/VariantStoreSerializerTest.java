@@ -18,6 +18,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.Configuration.Builder;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
@@ -64,8 +65,8 @@ public class VariantStoreSerializerTest {
   public void testVariantStoreSerializer() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
-    final Configuration config = new Configuration.Builder(project)
-        .build();
+    final Builder builder = new Builder(project).setHistoryRecord(true);
+    final Configuration config = builder.build();
     // gsonのセットアップ
     final Gson gson = createGson(config);
 
