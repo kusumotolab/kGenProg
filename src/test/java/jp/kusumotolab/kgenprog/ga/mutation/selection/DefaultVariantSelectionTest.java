@@ -186,8 +186,7 @@ public class DefaultVariantSelectionTest {
    */
   private Variant createVariant(final Fitness fitness, final int id,
       final TestResults testResults) {
-    final Variant variant = new Variant(id, 0, null, null, testResults, fitness, null, null);
-    return variant;
+    return new Variant(id, 0, null, null, testResults, fitness, null, null);
   }
 
   /**
@@ -201,8 +200,7 @@ public class DefaultVariantSelectionTest {
   private void setupLists(final List<Variant> current, final List<Variant> generated, final int num,
       final Function<Integer, TestResults> testResultsCreator) {
     for (int i = 0; i < num; i++) {
-      final double divider = num;
-      final double value = (1.0d * (i + (i % 2))) / divider;
+      final double value = (1.0d * (i + (i % 2))) / (double) num;
       final SimpleFitness fitness = new SimpleFitness(value);
       current.add(createVariant(fitness, i, testResultsCreator.apply(i)));
       generated.add(createVariant(fitness, i + num, testResultsCreator.apply(i)));
