@@ -42,6 +42,7 @@ public class DefaultVariantSelection implements VariantSelection {
     final List<Variant> list = variants.stream()
         .sorted(Comparator.comparing(Variant::getFitness)
             .reversed())
+        .filter(Variant::isBuildSucceeded)
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
     return list;
