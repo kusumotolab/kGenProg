@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation.Input;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -20,7 +21,8 @@ public class DefaultCodeValidationTest {
     final Variant initialVariant = TestUtil.createVariant(config);
 
     final DefaultCodeValidation defaultCodeValidation = new DefaultCodeValidation();
-    final Fitness fitness = defaultCodeValidation.exec(null, initialVariant.getTestResults());
+    final Input input = new Input(null, initialVariant.getTestResults());
+    final Fitness fitness = defaultCodeValidation.exec(input);
 
     final double expected = (double) 3 / 4; // 4 tests executed and 3 tests passed.
     assertThat(fitness.getValue()).isEqualTo(expected);
@@ -34,7 +36,8 @@ public class DefaultCodeValidationTest {
     final Variant initialVariant = TestUtil.createVariant(config);
 
     final DefaultCodeValidation defaultCodeValidation = new DefaultCodeValidation();
-    final Fitness fitness = defaultCodeValidation.exec(null, initialVariant.getTestResults());
+    final Input input = new Input(null, initialVariant.getTestResults());
+    final Fitness fitness = defaultCodeValidation.exec(input);
 
     assertThat(fitness.getValue()).isNaN();
   }

@@ -22,6 +22,7 @@ import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation.Input;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
@@ -81,7 +82,7 @@ public class VariantStoreSerializerTest {
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);
     when(strategies.execTestExecutor(any())).thenReturn(testExecutorResult);
-    when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
+    when(strategies.execSourceCodeValidation(new Input(any(), any()))).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).then(v -> {
