@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 public interface SourceCodeValidation {
 
   /**
-   * SourceCOdeValidation#exec用のパラメータオブジェクト
+   * SourceCodeValidation#exec用のパラメータオブジェクト
    *
    */
   public class Input {
