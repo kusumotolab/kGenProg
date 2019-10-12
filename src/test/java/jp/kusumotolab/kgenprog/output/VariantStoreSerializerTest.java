@@ -22,7 +22,6 @@ import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
-import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation.Input;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
@@ -44,8 +43,8 @@ import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.CrossoverHistoricalElement;
 public class VariantStoreSerializerTest {
 
   private Gson createGson(final Configuration config) {
-    return new GsonBuilder().registerTypeAdapter(VariantStore.class,
-        new VariantStoreSerializer(config))
+    return new GsonBuilder()
+        .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer(config))
         .registerTypeAdapter(Variant.class, new VariantSerializer())
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeAdapter(TestResult.class, new TestResultSerializer())
@@ -65,8 +64,7 @@ public class VariantStoreSerializerTest {
   public void testVariantStoreSerializer() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
-    final Configuration config = new Configuration.Builder(project)
-        .build();
+    final Configuration config = new Configuration.Builder(project).build();
     // gsonのセットアップ
     final Gson gson = createGson(config);
 
@@ -82,7 +80,7 @@ public class VariantStoreSerializerTest {
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);
     when(strategies.execTestExecutor(any())).thenReturn(testExecutorResult);
-    when(strategies.execSourceCodeValidation(new Input(any(), any()))).thenReturn(sourceCodeValidationResult);
+    when(strategies.execSourceCodeValidation(any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).then(v -> {
@@ -111,19 +109,17 @@ public class VariantStoreSerializerTest {
     final JsonObject serializedVariantStore = gson.toJsonTree(variantStore)
         .getAsJsonObject();
     // キーのチェック
-    assertThat(serializedVariantStore.keySet()).containsOnly(
-        JsonKeyAlias.VariantStore.PROJECT_NAME,
-        JsonKeyAlias.VariantStore.VARIANTS,
-        JsonKeyAlias.VariantStore.CONFIGURATION);
+    assertThat(serializedVariantStore.keySet()).containsOnly(JsonKeyAlias.VariantStore.PROJECT_NAME,
+        JsonKeyAlias.VariantStore.VARIANTS, JsonKeyAlias.VariantStore.CONFIGURATION);
 
     // 値のチェック
     final String projectName = serializedVariantStore.get(JsonKeyAlias.VariantStore.PROJECT_NAME)
         .getAsString();
     assertThat(projectName).isEqualTo("BuildSuccess01");
 
-    final JsonArray serializedVariants = serializedVariantStore.get(
-        JsonKeyAlias.VariantStore.VARIANTS)
-        .getAsJsonArray();
+    final JsonArray serializedVariants =
+        serializedVariantStore.get(JsonKeyAlias.VariantStore.VARIANTS)
+            .getAsJsonArray();
     assertThat(serializedVariants).hasSize(11);
   }
 
@@ -131,8 +127,7 @@ public class VariantStoreSerializerTest {
   public void testConfigurationSerialization() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
-    final Configuration config = new Configuration.Builder(project)
-        .build();
+    final Configuration config = new Configuration.Builder(project).build();
     // gsonのセットアップ
     final Gson gson = createGson(config);
 
