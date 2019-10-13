@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.validation;
 
+import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
@@ -14,17 +15,29 @@ public interface SourceCodeValidation {
    */
   public class Input {
 
+    private final Gene gene;
     private final GeneratedSourceCode sourceCode;
     private final TestResults testResults;
 
     /**
      * 
+     * @param gene 評価対象の遺伝子
      * @param sourceCode 評価対象のソースコード
      * @param testResults 評価対象のテスト結果
      */
-    public Input(final GeneratedSourceCode sourceCode, final TestResults testResults) {
+    public Input(final Gene gene, final GeneratedSourceCode sourceCode,
+        final TestResults testResults) {
+      this.gene = gene;
       this.sourceCode = sourceCode;
       this.testResults = testResults;
+    }
+
+    /**
+     * 
+     * @return 評価対象の遺伝子
+     */
+    public Gene getGene() {
+      return gene;
     }
 
     /**

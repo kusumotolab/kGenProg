@@ -21,7 +21,7 @@ public class DefaultCodeValidationTest {
     final Variant initialVariant = TestUtil.createVariant(config);
 
     final DefaultCodeValidation defaultCodeValidation = new DefaultCodeValidation();
-    final Input input = new Input(null, initialVariant.getTestResults());
+    final Input input = new Input(null, null, initialVariant.getTestResults());
     final Fitness fitness = defaultCodeValidation.exec(input);
 
     final double expected = (double) 3 / 4; // 4 tests executed and 3 tests passed.
@@ -36,7 +36,7 @@ public class DefaultCodeValidationTest {
     final Variant initialVariant = TestUtil.createVariant(config);
 
     final DefaultCodeValidation defaultCodeValidation = new DefaultCodeValidation();
-    final Input input = new Input(null, initialVariant.getTestResults());
+    final Input input = new Input(null, null, initialVariant.getTestResults());
     final Fitness fitness = defaultCodeValidation.exec(input);
 
     assertThat(fitness.getValue()).isNaN();
