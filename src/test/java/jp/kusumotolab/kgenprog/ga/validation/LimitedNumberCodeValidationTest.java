@@ -72,7 +72,9 @@ public class LimitedNumberCodeValidationTest {
     assertThat(parentFitness.getValue()).isEqualTo(0.0d);
 
     // 無関係のバリアントが来ても，その評価値は0にならないはず
-    final Gene anotherGene = new Gene(Arrays.asList(new Base(null, new DeleteOperation())));
+    final Gene anotherGene = new Gene(Arrays.asList(//
+        new Base(null, new DeleteOperation()), //
+        new Base(null, new DeleteOperation())));
     final TestResults anotherTestResults = mock(TestResults.class);
     when(anotherTestResults.getSuccessRate()).thenReturn(0.6d);
     final Input anotherInput = mock(Input.class);
