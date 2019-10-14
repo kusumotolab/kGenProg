@@ -3,7 +3,7 @@ package jp.kusumotolab.kgenprog.ga.validation;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 指定された回数(期間)の評価後に評価値を0にするクラス
+ * 指定された回数の評価後に評価値を0にするクラス
  *
  */
 public class LimitedNumberSimpleFitness extends SimpleFitness {
@@ -13,7 +13,7 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
   /**
    * 
    * @param value 保持する評価値
-   * @param capacity 与えられた評価値を保持する期間
+   * @param capacity 与えられた評価値を保持する評価の回数
    */
   public LimitedNumberSimpleFitness(final double value, final int capacity) {
     super(value);
@@ -34,21 +34,21 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
    */
   @Override
   public boolean isMaximum() {
-    return isCapacityAvailable() ? super.isMaximum() : false;
+    return isCapacityAvailable() && super.isMaximum();
   }
 
   /**
    * 
-   * @return 残りの期間
+   * @return 与えられた評価値を保持する評価の残りの回数
    */
   public int getCapacity() {
     return availableCapacity.get();
   }
 
   /*
-   * 期間を1つ減らす
+   * 評価値を保持する評価の回数を1つ減らす
    * 
-   * @return 減ったあとの期間
+   * @return 減らしたあとの評価の残り回数
    */
   public int reduceCapacity() {
     return isCapacityAvailable() ? availableCapacity.decrementAndGet() : availableCapacity.get();
@@ -56,7 +56,7 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
 
   /**
    * 
-   * @return 期間が残っているか
+   * @return 評価値を保持する評価の回数が残っているか
    */
   public boolean isCapacityAvailable() {
     return 0 < availableCapacity.get();

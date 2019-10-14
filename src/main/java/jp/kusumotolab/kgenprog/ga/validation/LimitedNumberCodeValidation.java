@@ -9,7 +9,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- * テスト通過率をそのまま評価値とする評価方法．ただし期間を過ぎると評価値を0にする．
+ * テスト通過率をそのまま評価値とする評価方法．ただし評価の残り回数を過ぎると評価値を0にする．
  *
  */
 public class LimitedNumberCodeValidation implements SourceCodeValidation {
@@ -19,16 +19,16 @@ public class LimitedNumberCodeValidation implements SourceCodeValidation {
   private final Map<List<Base>, LimitedNumberSimpleFitness> basesFitnessMap;
 
   /**
-   * デフォルトの期間値(100)で初期化
+   * デフォルトの評価回数(100)で初期化
    */
   public LimitedNumberCodeValidation() {
     this(DEFAULT_CAPACITY);
   }
 
   /**
-   * 与えられた期間値で初期化
+   * 与えられた評価回数で初期化
    * 
-   * @param capacity 期間値
+   * @param capacity 評価回数
    */
   public LimitedNumberCodeValidation(final int capacity) {
     this.capacity = capacity;
@@ -41,7 +41,6 @@ public class LimitedNumberCodeValidation implements SourceCodeValidation {
    */
   @Override
   public Fitness exec(final Input input) {
-
     final Gene targetGene = input.getGene();
     final List<Base> targetBases = targetGene.getBases();
 

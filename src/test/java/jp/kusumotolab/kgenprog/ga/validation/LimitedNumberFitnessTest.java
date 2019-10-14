@@ -6,7 +6,7 @@ import org.junit.Test;
 public class LimitedNumberFitnessTest {
 
   @Test
-  public void testCompareTo01() {
+  public void testFitness() {
 
     // capacityが2のとき
     final LimitedNumberSimpleFitness fitness = new LimitedNumberSimpleFitness(1.0d, 2);

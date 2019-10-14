@@ -19,7 +19,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 public class LimitedNumberCodeValidationTest {
 
   @Test
-  public void test01() {
+  public void testExec() {
 
     // 親バリアントの準備
     final Gene parentGene = new Gene(Arrays.asList(new Base(null, new NoneOperation())));
