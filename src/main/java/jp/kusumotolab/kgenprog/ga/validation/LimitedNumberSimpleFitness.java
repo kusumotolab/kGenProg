@@ -13,14 +13,23 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
 
   @Override
   public double getValue() {
-    return isCapacityAvailable() ? 0d : super.getValue();
+    return isCapacityAvailable() ? super.getValue() : 0d;
   }
 
-  int reduceCapacity() {
-    return availableCapacity.decrementAndGet();
+  @Override
+  public boolean isMaximum() {
+    return isCapacityAvailable() ? super.isMaximum() : false;
+  }
+
+  public int getCapacity() {
+    return availableCapacity.get();
+  }
+
+  public int reduceCapacity() {
+    return isCapacityAvailable() ? availableCapacity.decrementAndGet() : availableCapacity.get();
   }
 
   public boolean isCapacityAvailable() {
-    return availableCapacity.get() <= 0;
+    return 0 < availableCapacity.get();
   }
 }
