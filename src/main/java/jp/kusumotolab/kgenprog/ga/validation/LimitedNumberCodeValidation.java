@@ -8,21 +8,37 @@ import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
+/**
+ * テスト通過率をそのまま評価値とする評価方法．ただし期間を過ぎると評価値を0にする．
+ *
+ */
 public class LimitedNumberCodeValidation implements SourceCodeValidation {
 
   private static final int DEFAULT_CAPACITY = 100;
   private final int capacity;
   private final Map<List<Base>, LimitedNumberSimpleFitness> basesFitnessMap;
 
+  /**
+   * デフォルトの期間値(100)で初期化
+   */
   public LimitedNumberCodeValidation() {
     this(DEFAULT_CAPACITY);
   }
 
+  /**
+   * 与えられた期間値で初期化
+   * 
+   * @param capacity 期間値
+   */
   public LimitedNumberCodeValidation(final int capacity) {
     this.capacity = capacity;
     this.basesFitnessMap = new HashMap<>();
   }
 
+  /**
+   * @param input 評価値計算に利用する情報
+   * @return 評価値
+   */
   @Override
   public Fitness exec(final Input input) {
 
@@ -49,7 +65,8 @@ public class LimitedNumberCodeValidation implements SourceCodeValidation {
       }
     }
 
-    final LimitedNumberSimpleFitness fitness = new LimitedNumberSimpleFitness(successRate, capacity);
+    final LimitedNumberSimpleFitness fitness =
+        new LimitedNumberSimpleFitness(successRate, capacity);
     basesFitnessMap.put(targetBases, fitness);
 
     return fitness;
