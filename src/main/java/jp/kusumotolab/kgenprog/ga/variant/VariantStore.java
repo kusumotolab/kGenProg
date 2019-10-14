@@ -211,7 +211,7 @@ public class VariantStore {
 
     final Single<Fitness> fitnessSingle = Single
         .zip(variantSingle, resultsSingle,
-            (v, r) -> strategies.execSourceCodeValidation(new Input(sourceCode, r)))
+            (v, r) -> strategies.execSourceCodeValidation(new Input(gene, sourceCode, r)))
         .cache();
     variant.setFitnessSingle(fitnessSingle);
 
