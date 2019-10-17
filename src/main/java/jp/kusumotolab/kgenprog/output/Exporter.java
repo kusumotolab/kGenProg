@@ -50,7 +50,7 @@ public class Exporter {
         Files.deleteIfExists(subFile);
       }
     } catch (final IOException e) {
-      final String message = "Cannot clear directory " + config.getOutDir();
+      final String message = String.format("Cannot clear directory %s", config.getOutDir());
       log.error(message);
       throw new RuntimeException(message);
     }
