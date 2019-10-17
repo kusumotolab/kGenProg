@@ -61,6 +61,7 @@ public class CUILauncher {
         random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
     final Exporter exporter = new Exporter(config, new PatchGenerator());
+    exporter.clearPreviousResults();
 
     final KGenProgMain kGenProgMain =
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,

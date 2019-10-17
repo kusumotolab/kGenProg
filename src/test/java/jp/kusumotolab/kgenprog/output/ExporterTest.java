@@ -118,6 +118,7 @@ public class ExporterTest {
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
 
     final Exporter exporter = new Exporter(config, patchGenerator);
+    exporter.clearPreviousResults();
     exporter.export(variantStore);
 
     final Path variantDir = outDir.resolve("variant1");
@@ -157,6 +158,7 @@ public class ExporterTest {
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
 
     final Exporter exporter = new Exporter(config, patchGenerator);
+    exporter.clearPreviousResults();
     exporter.export(variantStore);
 
     final Path variantDir = outDir.resolve("variant1");

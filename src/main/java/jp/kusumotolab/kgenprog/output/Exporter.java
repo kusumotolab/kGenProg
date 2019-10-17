@@ -31,14 +31,13 @@ public class Exporter {
       throws RuntimeException {
     this.config = config;
     this.patchGenerator = patchGenerator;
-    this.clearOutDir();
   }
 
   /**
    * 出力先のディレクトリが空でないときは出力先のディレクトリを空にする<br>
    * 出力先のディレクトリが存在しないときは何もしない
    */
-  private void clearOutDir() throws RuntimeException {
+  public void clearPreviousResults() throws RuntimeException {
     if (Files.notExists(config.getOutDir())) {
       return;
     }
