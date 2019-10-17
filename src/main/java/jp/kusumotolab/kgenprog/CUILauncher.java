@@ -60,12 +60,11 @@ public class CUILauncher {
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount(),
         random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
-    final PatchGenerator patchGenerator = new PatchGenerator();
-    final Exporter exporter = new Exporter(config);
+    final Exporter exporter = new Exporter(config, new PatchGenerator());
 
     final KGenProgMain kGenProgMain =
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-            sourceCodeValidation, variantSelection, testExecutor, patchGenerator, exporter);
+            sourceCodeValidation, variantSelection, testExecutor, exporter);
 
     kGenProgMain.run();
   }

@@ -17,7 +17,6 @@ import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.Exporter;
-import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -40,7 +39,6 @@ public class KGenProgMain {
   private final SourceCodeValidation sourceCodeValidation;
   private final VariantSelection variantSelection;
   private final TestExecutor testExecutor;
-  private final PatchGenerator patchGenerator;
   private final Exporter exporter;
   private final JDTASTConstruction astConstruction;
 
@@ -55,14 +53,13 @@ public class KGenProgMain {
    * @param sourceCodeValidation コード評価を行うインスタンス
    * @param variantSelection 個体の選択を行うインスタンス
    * @param testExecutor テスト実行を行うインスタンス
-   * @param patchGenerator パッチ生成を行うインスタンス
+   * @param
    */
   public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor, final PatchGenerator patchGenerator,
-      final Exporter exporter) {
+      final TestExecutor testExecutor, final Exporter exporter) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -73,7 +70,6 @@ public class KGenProgMain {
     this.variantSelection = variantSelection;
     this.testExecutor = testExecutor;
     this.astConstruction = new JDTASTConstruction();
-    this.patchGenerator = patchGenerator;
     this.exporter = exporter;
   }
 
@@ -142,7 +138,7 @@ public class KGenProgMain {
     }
 
     // パッチ・JSONを出力
-    exporter.export(variantStore, patchGenerator);
+    exporter.export(variantStore);
 
     stopwatch.unsplit();
     strategies.finish();

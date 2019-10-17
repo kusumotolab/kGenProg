@@ -117,8 +117,8 @@ public class ExporterTest {
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
 
-    final Exporter exporter = new Exporter(config);
-    exporter.export(variantStore, patchGenerator);
+    final Exporter exporter = new Exporter(config, patchGenerator);
+    exporter.export(variantStore);
 
     final Path variantDir = outDir.resolve("variant1");
     final Path fooPatch = outDir.resolve("variant1.patch");
@@ -156,8 +156,8 @@ public class ExporterTest {
     // variantを1個作る = パッチは1つ生成される
     variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
 
-    final Exporter exporter = new Exporter(config);
-    exporter.export(variantStore, patchGenerator);
+    final Exporter exporter = new Exporter(config, patchGenerator);
+    exporter.export(variantStore);
 
     final Path variantDir = outDir.resolve("variant1");
     final Path fooPatch = outDir.resolve("variant1.patch");

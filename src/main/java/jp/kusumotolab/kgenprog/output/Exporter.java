@@ -20,14 +20,17 @@ public class Exporter {
   private final static Logger log = LoggerFactory.getLogger(Exporter.class);
 
   private final Configuration config;
+  private final PatchGenerator patchGenerator;
 
   /**
    * コンストラクタ．<br>
    *
    * @param config 出力に必要な設定情報
    */
-  public Exporter(final Configuration config) throws RuntimeException {
+  public Exporter(final Configuration config, final PatchGenerator patchGenerator)
+      throws RuntimeException {
     this.config = config;
+    this.patchGenerator = patchGenerator;
     this.clearOutDir();
   }
 
@@ -59,7 +62,7 @@ public class Exporter {
   /**
    * パッチおよびJSONの出力を行う
    */
-  public void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
+  public void export(final VariantStore variantStore) {
     final PatchStore patchStore = new PatchStore();
 
     variantStore.getFoundSolutions(config.getRequiredSolutionsCount())
