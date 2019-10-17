@@ -68,18 +68,20 @@ public class Exporter {
         .forEach(patchStore::add);
     patchStore.writeToLogger();
 
-    if (!config.needNotOutput()) {
-      if (Files.notExists(config.getOutDir())) {
-        try {
-          Files.createDirectory(config.getOutDir());
-        } catch (final IOException e) {
-          log.error(e.getMessage(), e);
-          return;
-        }
-      }
-      patchStore.writeToFile(config.getOutDir());
-      exportJSON(variantStore);
+    if (config.needNotOutput()) {
+      return;
     }
+
+    if (Files.notExists(config.getOutDir())) {
+      try {
+        Files.createDirectory(config.getOutDir());
+      } catch (final IOException e) {
+        log.error(e.getMessage(), e);
+        return;
+      }
+    }
+    patchStore.writeToFile(config.getOutDir());
+    exportJSON(variantStore);
   }
 
   /**
