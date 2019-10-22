@@ -39,7 +39,7 @@ public class KGenProgMain {
   private final SourceCodeValidation sourceCodeValidation;
   private final VariantSelection variantSelection;
   private final TestExecutor testExecutor;
-  private final Exporter exporter;
+  private final List<Exporter> exporters;
   private final JDTASTConstruction astConstruction;
 
   /**
@@ -53,13 +53,13 @@ public class KGenProgMain {
    * @param sourceCodeValidation コード評価を行うインスタンス
    * @param variantSelection 個体の選択を行うインスタンス
    * @param testExecutor テスト実行を行うインスタンス
-   * @param
+   * @param exporters 出力処理を行うインスタンス
    */
   public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor, final Exporter exporter) {
+      final TestExecutor testExecutor, final List<Exporter> exporters) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -70,7 +70,7 @@ public class KGenProgMain {
     this.variantSelection = variantSelection;
     this.testExecutor = testExecutor;
     this.astConstruction = new JDTASTConstruction();
-    this.exporter = exporter;
+    this.exporters = exporters;
   }
 
   /**
@@ -137,8 +137,8 @@ public class KGenProgMain {
       variantStore.proceedNextGeneration();
     }
 
-    // パッチ・JSONを出力
-    exporter.export(variantStore);
+    // 出力処理を行う
+    exporters.forEach(e -> e.export(variantStore));
 
     stopwatch.unsplit();
     strategies.finish();
