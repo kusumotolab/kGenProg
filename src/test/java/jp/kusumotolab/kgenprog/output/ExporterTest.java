@@ -2,11 +2,13 @@ package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -97,10 +99,10 @@ public class ExporterTest {
   }
 
   /**
-   * 出力先ディレクトリが空でないときにパッチとJSONを出力するか確認する
+   * 出力先ディレクトリが空でないときに，出力先ディレクトリの初期化ができているか確認する
    */
   @Test
-  public void testExporterWithNonEmptyOutdir() throws IOException {
+  public void testClearPreviousResultsOnNonEmptyOutdir() throws IOException {
     final Path outDir = tempDir.resolve("out");
     // outDirを作る
     Files.createDirectory(outDir);
@@ -113,69 +115,72 @@ public class ExporterTest {
     Files.createFile(grandChildFile);
 
     final Configuration config = buildConfiguration(outDir);
-    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
-    // variantを1個作る = パッチは1つ生成される
-    variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
+    final Exporter exporter = createExporter(config);
 
-    final Exporter exporter = new Exporter(config, patchGenerator);
+    // 初期化を行う
     exporter.clearPreviousResults();
-    exporter.export(variantStore);
 
-    final Path variantDir = outDir.resolve("variant1");
-    final Path fooPatch = outDir.resolve("variant1.patch");
-    final Path historyJson = outDir.resolve("history.json");
-    final Path fooJava = variantDir.resolve("example.Foo.java");
-    final Path fooDiff = variantDir.resolve("example.Foo.diff");
+    // サブファイルを集める
+    final List<Path> subFiles = Files.walk(config.getOutDir(), FileVisitOption.FOLLOW_LINKS)
+        .filter(e -> !e.equals(config.getOutDir()))
+        .collect(Collectors.toList());
 
-    // 以前に作成したファイル群が存在しないことを確認
-    assertThat(childDir).doesNotExist();
-    assertThat(childFile).doesNotExist();
-    assertThat(grandChildFile).doesNotExist();
     // outDirの存在を確認
     assertThat(outDir).exists();
-    // .patchと.jsonの存在を確認
-    assertThat(fooPatch).exists();
-    assertThat(historyJson).exists();
-    // variant1の存在を確認
-    assertThat(variantDir).exists();
-    // .diffと.javaの存在を確認
-    assertThat(fooJava).exists();
-    assertThat(fooDiff).exists();
+    // outDirが空であることを確認
+    assertThat(subFiles).isEmpty();
   }
 
   /**
-   * 出力先ディレクトリが空のときにパッチとJSONを出力するか確認する
+   * 出力先ディレクトリが空のときに，初期化ができているか確認する
    */
   @Test
-  public void testExporterWithEmptyOutdir() throws IOException {
+  public void testClearPreviousResultsOnEmptyOutdir() throws IOException {
     final Path outDir = tempDir.resolve("out");
     // outDirを作る
     Files.createDirectory(outDir);
 
     final Configuration config = buildConfiguration(outDir);
-    final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
-    // variantを1個作る = パッチは1つ生成される
-    variantStore.addGeneratedVariant(createModifiedVariant(variantStore.getInitialVariant()));
+    final Exporter exporter = createExporter(config);
 
-    final Exporter exporter = new Exporter(config, patchGenerator);
+    // 初期化を行う
     exporter.clearPreviousResults();
-    exporter.export(variantStore);
 
-    final Path variantDir = outDir.resolve("variant1");
-    final Path fooPatch = outDir.resolve("variant1.patch");
-    final Path historyJson = outDir.resolve("history.json");
-    final Path fooJava = variantDir.resolve("example.Foo.java");
-    final Path fooDiff = variantDir.resolve("example.Foo.diff");
+    // サブファイルを集める
+    final List<Path> subFiles = Files.walk(config.getOutDir(), FileVisitOption.FOLLOW_LINKS)
+        .filter(e -> !e.equals(config.getOutDir()))
+        .collect(Collectors.toList());
 
     // outDirの存在を確認
     assertThat(outDir).exists();
-    // .patchと.jsonの存在を確認
-    assertThat(fooPatch).exists();
-    assertThat(historyJson).exists();
-    // variant1の存在を確認
-    assertThat(variantDir).exists();
-    // .diffと.javaの存在を確認
-    assertThat(fooJava).exists();
-    assertThat(fooDiff).exists();
+    // outDirが空であることを確認
+    assertThat(subFiles).isEmpty();
+  }
+
+  /**
+   * 出力先ディレクトリが存在しないときに，初期化ができているか確認する
+   */
+  @Test
+  public void testClearPreviousResultsOnNonExistentOutdir() throws IOException {
+    final Path outDir = tempDir.resolve("out");
+    final Configuration config = buildConfiguration(outDir);
+    final Exporter exporter = createExporter(config);
+
+    // 初期化を行う
+    exporter.clearPreviousResults();
+
+    // outDirが存在しないことを確認
+    assertThat(outDir).doesNotExist();
+  }
+
+  /**
+   * テスト用の何もしないExporterを作る
+   */
+  private Exporter createExporter(final Configuration config) {
+    return new Exporter(config) {
+      @Override
+      public void export(final VariantStore variantStore) {
+      }
+    };
   }
 }
