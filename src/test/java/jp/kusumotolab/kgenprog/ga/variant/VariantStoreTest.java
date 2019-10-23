@@ -46,7 +46,7 @@ public class VariantStoreTest {
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);
     when(strategies.execTestExecutor(any())).thenReturn(testExecutorResult);
-    when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
+    when(strategies.execSourceCodeValidation(any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).thenReturn(Single.just(testExecutorResult));
@@ -207,11 +207,11 @@ public class VariantStoreTest {
     final JDTASTConstruction jdtastConstruction = new JDTASTConstruction();
     final Strategies strategies = mock(Strategies.class);
 
-    when(strategies.execASTConstruction(any())).then(
-        v -> jdtastConstruction.constructAST(config.getTargetProject()));
+    when(strategies.execASTConstruction(any()))
+        .then(v -> jdtastConstruction.constructAST(config.getTargetProject()));
     when(strategies.execVariantSelection(any(), any())).then(v -> v.getArgument(1));
     when(strategies.execTestExecutor(any())).then(v -> EmptyTestResults.instance);
-    when(strategies.execSourceCodeValidation(any(), any())).then(v -> new SimpleFitness(1.0d));
+    when(strategies.execSourceCodeValidation(any())).then(v -> new SimpleFitness(1.0d));
     when(strategies.execFaultLocalization(any(), any())).then(v -> Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).then(v -> {
       final Single<Variant> variantSingle = v.getArgument(0);

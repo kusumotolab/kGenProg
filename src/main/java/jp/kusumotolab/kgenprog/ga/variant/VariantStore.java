@@ -15,12 +15,13 @@ import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.Strategies;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation.Input;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- * 　kGenProg が生成する Variant を生成したり保持したりするクラス
+ * kGenProg が生成する Variant を生成したり保持したりするクラス
  */
 public class VariantStore {
 
@@ -134,7 +135,7 @@ public class VariantStore {
    * @param variants 追加対象
    * @see #addGeneratedVariants(Collection)
    */
-//   * @see addNextGenerationVariant(Variant)
+  // * @see addNextGenerationVariant(Variant)
   public void addGeneratedVariants(final Variant... variants) {
     addGeneratedVariants(Arrays.asList(variants));
   }
@@ -150,7 +151,8 @@ public class VariantStore {
   }
 
   /**
-   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true} の場合，foundSolutionとして追加され次世代のVariantには追加されない
+   * 引数を次世代のVariantとして追加する {@code variant.isCompleted() == true}
+   * の場合，foundSolutionとして追加され次世代のVariantには追加されない
    *
    * @param variant
    */
@@ -196,15 +198,14 @@ public class VariantStore {
         .cast(Variant.class)
         .cache();
 
-    final Single<TestResults> resultsSingle = sourceCode.shouldBeTested()
-        ? strategies.execAsyncTestExecutor(variantSingle)
-        .cache()
-        : Single.just(EmptyTestResults.instance);
+    final Single<TestResults> resultsSingle =
+        sourceCode.shouldBeTested() ? strategies.execAsyncTestExecutor(variantSingle)
+            .cache() : Single.just(EmptyTestResults.instance);
     variant.setTestResultsSingle(resultsSingle);
 
     final Single<Fitness> fitnessSingle = Single
         .zip(variantSingle, resultsSingle,
-            (v, r) -> strategies.execSourceCodeValidation(sourceCode, r))
+            (v, r) -> strategies.execSourceCodeValidation(new Input(gene, sourceCode, r)))
         .cache();
     variant.setFitnessSingle(fitnessSingle);
 
