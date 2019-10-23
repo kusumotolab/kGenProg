@@ -167,7 +167,7 @@ public class VariantStoreTest {
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(
         new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList()));
     when(strategies.execTestExecutor(any())).thenReturn(testExecutorResult);
-    when(strategies.execSourceCodeValidation(any(), any())).thenReturn(
+    when(strategies.execSourceCodeValidation(any())).thenReturn(
         new SimpleFitness(Double.NaN));
     when(strategies.execASTConstruction(any())).thenReturn(
         new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList()));
