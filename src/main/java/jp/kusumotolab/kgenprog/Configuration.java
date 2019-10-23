@@ -333,7 +333,6 @@ public class Configuration {
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
         DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
-    @Option(name = "--history-record", usage = "Generate historical element.", hidden = true)
     @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
     private boolean historyRecord = DEFAULT_HISTORY_RECORD;
@@ -809,6 +808,11 @@ public class Configuration {
     private void setSecondVariantSelectionStrategyFromCmdLineParser
         (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
+    }
+
+    @Option(name = "--history-record", usage = "Record historical element.")
+    private void setHistoryRecordFromCmdLineParser(final boolean historyRecord) {
+      this.historyRecord = historyRecord;
     }
 
     // endregion

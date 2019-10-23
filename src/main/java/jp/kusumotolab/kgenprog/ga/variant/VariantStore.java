@@ -33,7 +33,7 @@ public class VariantStore {
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
   private final AtomicLong variantCounter;
-  private final Function<HistoricalElement, HistoricalElement> elementJudge;
+  private final Function<HistoricalElement, HistoricalElement> elementReplacer;
   private final Consumer<Variant> variantRecorder;
 
   /**
@@ -46,7 +46,7 @@ public class VariantStore {
 
     variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
-    elementJudge = newElementJudge(config.getHistoryRecord());
+    elementReplacer = newElementReplacer(config.getHistoryRecord());
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     allVariants = new LinkedList<>();
@@ -67,7 +67,7 @@ public class VariantStore {
    */
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
     final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
-    return createVariant(gene, sourceCode, elementJudge.apply(element));
+    return createVariant(gene, sourceCode, elementReplacer.apply(element));
   }
 
   /**
@@ -185,7 +185,7 @@ public class VariantStore {
         strategies.execASTConstruction(config.getTargetProject());
     final HistoricalElement newElement = new OriginalHistoricalElement();
     return createVariant(new Gene(Collections.emptyList()), sourceCode,
-        elementJudge.apply(newElement));
+        elementReplacer.apply(newElement));
   }
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
@@ -219,9 +219,9 @@ public class VariantStore {
     return variant;
   }
 
-  private Function<HistoricalElement, HistoricalElement> newElementJudge(
+  private Function<HistoricalElement, HistoricalElement> newElementReplacer(
       final boolean historyRecord) {
-    return historyRecord ? element -> element : element -> null;
+    return historyRecord ? element -> element : element -> EmptyHistoricalElement.instance;
   }
 
   private Consumer<Variant> newVariantRecorder(final boolean historyRecord) {

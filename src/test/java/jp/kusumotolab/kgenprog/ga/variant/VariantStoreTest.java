@@ -181,7 +181,7 @@ public class VariantStoreTest {
     final Variant variant = variantStore.createVariant(gene, element);
     variantStore.addGeneratedVariant(variant);
 
-    assertThat(variant.getHistoricalElement()).isNull();
+    assertThat(variant.getHistoricalElement()).isInstanceOf(EmptyHistoricalElement.class);
     assertThat(variantStore.getAllVariants()).isEmpty();
   }
 
