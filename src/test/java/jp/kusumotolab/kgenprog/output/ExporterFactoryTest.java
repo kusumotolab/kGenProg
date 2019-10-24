@@ -61,7 +61,7 @@ public class ExporterFactoryTest {
         .toPath();
 
     return new Configuration.Builder(rootPath, Collections.emptyList(), Collections.emptyList())
-        .setNeedHistoricalElement(needHistoricalElement)
+        .setHistoryRecord(needHistoricalElement)
         .build();
   }
 

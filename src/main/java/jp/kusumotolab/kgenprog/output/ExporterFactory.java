@@ -19,7 +19,7 @@ public class ExporterFactory {
     final List<Exporter> exporters = new ArrayList<>();
     exporters.add(new PatchExporter(config, patchGenerator));
 
-    if (config.getNeedHistoricalElement()) {
+    if (config.getHistoryRecord()) {
       exporters.add(new JSONExporter(config, patchGenerator));
     }
 
