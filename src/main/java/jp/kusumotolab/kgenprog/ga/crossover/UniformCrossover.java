@@ -19,7 +19,6 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 public class UniformCrossover extends CrossoverAdaptor {
 
   private final Random random;
-  private final boolean needHistoricalElement;
 
   /**
    * コンストラクタ．一様交叉に必要な情報を全て引数として渡す必要あり．
@@ -28,16 +27,14 @@ public class UniformCrossover extends CrossoverAdaptor {
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
-   * @param needHistoricalElement 個体が生成される過程を記録するか否か
    * @return 交叉を行うインスタンス
    */
   public UniformCrossover(final Random random,
       final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-      final int generatingCount, final boolean needHistoricalElement) {
+      final int generatingCount) {
     super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount);
     this.random = random;
-    this.needHistoricalElement = needHistoricalElement;
   }
 
   @Override
@@ -51,12 +48,7 @@ public class UniformCrossover extends CrossoverAdaptor {
     final List<Base> basesB = geneB.getBases();
 
     final Gene newGene = makeGene(basesA, basesB);
-    final HistoricalElement newElement;
-    if (needHistoricalElement) {
-      newElement = new UniformCrossoverHistoricalElement(variantA, variantB);
-    } else {
-      newElement = null;
-    }
+    final HistoricalElement newElement = new UniformCrossoverHistoricalElement(variantA, variantB);
     return Arrays.asList(store.createVariant(newGene, newElement));
   }
 

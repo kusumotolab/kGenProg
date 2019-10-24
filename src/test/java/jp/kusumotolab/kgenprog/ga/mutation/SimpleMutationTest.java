@@ -94,8 +94,7 @@ public class SimpleMutationTest {
     final List<Suspiciousness> suspiciousnesses = initialVariant.getSuspiciousnesses();
 
     final VariantStore variantStore = createVariantStore(initialVariant);
-    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode, new Random(0),
-        true);
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode, new Random(0));
     final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     final Map<String, List<Base>> map = variantList.stream()
@@ -170,23 +169,6 @@ public class SimpleMutationTest {
     assertThat(appendedBase).isEqualTo(base);
   }
 
-  @Test
-  public void testNeedNotHistoricalElement() {
-    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
-
-    final Variant initialVariant = createInitialVariant(generatedSourceCode);
-    final VariantStore variantStore = createVariantStore(initialVariant);
-
-    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode, new Random(0),
-        false);
-    final List<Variant> variantList = simpleMutation.exec(variantStore);
-
-    final Variant variant = variantList.get(0);
-
-    assertThat(variant.getHistoricalElement()).isNull();
-  }
-
-
   private GeneratedSourceCode createGeneratedSourceCode() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
@@ -195,14 +177,14 @@ public class SimpleMutationTest {
 
   private SimpleMutation createSimpleMutation(final GeneratedSourceCode sourceCode) {
     final Random random = new MockRandom(0);
-    return createSimpleMutation(sourceCode, random, true);
+    return createSimpleMutation(sourceCode, random);
   }
 
   private SimpleMutation createSimpleMutation(final GeneratedSourceCode sourceCode,
-      final Random random, final boolean needHistoricalElement) {
+      final Random random) {
     final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final SimpleMutation simpleMutation = new SimpleMutation(15, random, statementSelection,
-        Type.PROJECT, needHistoricalElement);
+        Type.PROJECT);
     simpleMutation.setCandidates(sourceCode.getProductAsts());
     return simpleMutation;
   }

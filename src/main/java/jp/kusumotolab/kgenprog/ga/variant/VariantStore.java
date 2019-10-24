@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
@@ -32,6 +34,8 @@ public class VariantStore {
   private final List<Variant> foundSolutions;
   private final OrdinalNumber generation;
   private final AtomicLong variantCounter;
+  private final Function<HistoricalElement, HistoricalElement> elementReplacer;
+  private final Consumer<Variant> variantRecorder;
 
   /**
    * @param config 設定
@@ -43,17 +47,14 @@ public class VariantStore {
 
     variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
+    elementReplacer = newElementReplacer(config.getHistoryRecord());
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
-    if (config.getNeedHistoricalElement()) {
-      allVariants = new LinkedList<>();
-      allVariants.add(initialVariant);
-    } else {
-      allVariants = null;
-    }
+    allVariants = new LinkedList<>();
+    variantRecorder = newVariantRecorder(config.getHistoryRecord());
+    variantRecorder.accept(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
-
     // 最後に次の世代番号に進めておく
     generation.incrementAndGet();
   }
@@ -67,7 +68,7 @@ public class VariantStore {
    */
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
     final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
-    return createVariant(gene, sourceCode, element);
+    return createVariant(gene, sourceCode, elementReplacer.apply(element));
   }
 
   /**
@@ -156,10 +157,7 @@ public class VariantStore {
    * @param variant
    */
   public void addGeneratedVariant(final Variant variant) {
-
-    if (config.getNeedHistoricalElement()) {
-      allVariants.add(variant);
-    }
+    variantRecorder.accept(variant);
     if (variant.isCompleted()) {
       foundSolutions.add(variant);
     } else {
@@ -187,13 +185,9 @@ public class VariantStore {
   private Variant createInitialVariant() {
     final GeneratedSourceCode sourceCode =
         strategies.execASTConstruction(config.getTargetProject());
-    final HistoricalElement newElement;
-    if (config.getNeedHistoricalElement()) {
-      newElement = new OriginalHistoricalElement();
-    } else {
-      newElement = null;
-    }
-    return createVariant(new Gene(Collections.emptyList()), sourceCode, newElement);
+    final HistoricalElement newElement = new OriginalHistoricalElement();
+    return createVariant(new Gene(Collections.emptyList()), sourceCode,
+        elementReplacer.apply(newElement));
   }
 
   private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
@@ -225,4 +219,15 @@ public class VariantStore {
 
     return variant;
   }
+
+  private Function<HistoricalElement, HistoricalElement> newElementReplacer(
+      final boolean historyRecord) {
+    return historyRecord ? element -> element : element -> EmptyHistoricalElement.instance;
+  }
+
+  private Consumer<Variant> newVariantRecorder(final boolean historyRecord) {
+    return historyRecord ? allVariants::add : variant -> {
+    };
+  }
+
 }
