@@ -19,7 +19,7 @@
 ---
 
 ## Requirements
-- JDK8
+- JDK8+
 
 
 ## Installation

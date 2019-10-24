@@ -59,7 +59,7 @@ public class Configuration {
       FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
       SecondVariantSelectionStrategy.Strategy.Random;
-  public static final boolean DEFAULT_NEED_HISTORICAL_ELEMENT = true;
+  public static final boolean DEFAULT_HISTORY_RECORD = false;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -79,7 +79,7 @@ public class Configuration {
   private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
-  private final boolean needHistoricalElement;
+  private final boolean historyRecord;
   // endregion
 
   // region Constructor
@@ -103,7 +103,7 @@ public class Configuration {
     crossoverType = builder.crossoverType;
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
-    needHistoricalElement = builder.needHistoricalElement;
+    historyRecord = builder.historyRecord;
   }
 
   // endregion
@@ -188,8 +188,8 @@ public class Configuration {
     return secondVariantSelectionStrategy;
   }
 
-  public boolean getNeedHistoricalElement() {
-    return needHistoricalElement;
+  public boolean getHistoryRecord() {
+    return historyRecord;
   }
 
   @Override
@@ -321,10 +321,9 @@ public class Configuration {
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
         DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
-    @Option(name = "--no-historical-element", usage = "Do not generate historical element.", hidden = true)
-    @com.electronwill.nightconfig.core.conversion.Path("no-historical-element")
+    @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
-    private boolean needHistoricalElement = DEFAULT_NEED_HISTORICAL_ELEMENT;
+    private boolean historyRecord = DEFAULT_HISTORY_RECORD;
     // endregion
 
     // region Constructors
@@ -517,8 +516,8 @@ public class Configuration {
       return this;
     }
 
-    public Builder setNeedHistoricalElement(final boolean needHistoricalElement) {
-      this.needHistoricalElement = needHistoricalElement;
+    public Builder setHistoryRecord(final boolean historyRecord) {
+      this.historyRecord = historyRecord;
       return this;
     }
 
@@ -763,6 +762,11 @@ public class Configuration {
     private void setSecondVariantSelectionStrategyFromCmdLineParser
         (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
+    }
+
+    @Option(name = "--history-record", usage = "Record historical element.")
+    private void setHistoryRecordFromCmdLineParser(final boolean historyRecord) {
+      this.historyRecord = historyRecord;
     }
 
     // endregion
