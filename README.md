@@ -85,6 +85,7 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
+| `--history-record` | Record generation process of each variant and all generated variants. | `false` |
 
 ## Awards
 - [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
