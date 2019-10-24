@@ -61,14 +61,12 @@ public class CUILauncher {
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount(),
         random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
-    final List<Exporter> exporters = ExporterFactory.create(config);
-    exporters.stream()
-        .findFirst()
-        .ifPresent(Exporter::clearPreviousResults);
+    final Exporter exporter = ExporterFactory.create(config);
+    exporter.clearPreviousResults();
 
     final KGenProgMain kGenProgMain =
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-            sourceCodeValidation, variantSelection, testExecutor, exporters);
+            sourceCodeValidation, variantSelection, testExecutor, exporter);
 
     kGenProgMain.run();
   }

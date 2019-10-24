@@ -14,7 +14,7 @@ public class ExporterFactory {
    *
    * @param config 設定情報
    */
-  public static List<Exporter> create(final Configuration config) {
+  public static Exporter create(final Configuration config) {
     final PatchGenerator patchGenerator = new PatchGenerator();
     final List<Exporter> exporters = new ArrayList<>();
     exporters.add(new PatchExporter(config, patchGenerator));
@@ -23,6 +23,6 @@ public class ExporterFactory {
       exporters.add(new JSONExporter(config, patchGenerator));
     }
 
-    return exporters;
+    return new Exporters(config, exporters);
   }
 }
