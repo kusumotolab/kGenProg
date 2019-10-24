@@ -20,7 +20,7 @@ import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.output.Exporter;
-import jp.kusumotolab.kgenprog.output.ExportersFactory;
+import jp.kusumotolab.kgenprog.output.ExporterFactory;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -61,7 +61,7 @@ public class CUILauncher {
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount(),
         random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
-    final List<Exporter> exporters = ExportersFactory.create(config);
+    final List<Exporter> exporters = ExporterFactory.create(config);
     exporters.stream()
         .findFirst()
         .ifPresent(Exporter::clearPreviousResults);

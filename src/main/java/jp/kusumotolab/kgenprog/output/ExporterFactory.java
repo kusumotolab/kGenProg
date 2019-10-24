@@ -7,7 +7,7 @@ import jp.kusumotolab.kgenprog.Configuration;
 /**
  * Exporterインスタンスを生成するクラス
  */
-public class ExportersFactory {
+public class ExporterFactory {
 
   /**
    * 設定情報に応じたExporterを生成する

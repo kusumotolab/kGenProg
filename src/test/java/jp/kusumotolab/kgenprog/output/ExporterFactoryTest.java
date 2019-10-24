@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import jp.kusumotolab.kgenprog.Configuration;
 
-public class ExportersFactoryTest {
+public class ExporterFactoryTest {
 
   @Rule
   public final TemporaryFolder tempFolder = new TemporaryFolder();
@@ -21,7 +21,7 @@ public class ExportersFactoryTest {
   @Test
   public void testCreateWithNeedHistoricalElement() {
     final Configuration config = buildConfiguration(true);
-    final List<Exporter> exporters = ExportersFactory.create(config);
+    final List<Exporter> exporters = ExporterFactory.create(config);
     final Optional<Exporter> patchExporter = exporters.stream()
         .filter(e -> e instanceof PatchExporter)
         .findFirst();
@@ -40,7 +40,7 @@ public class ExportersFactoryTest {
   @Test
   public void testCreateWithoutNeedHistoricalElement() {
     final Configuration config = buildConfiguration(false);
-    final List<Exporter> exporters = ExportersFactory.create(config);
+    final List<Exporter> exporters = ExporterFactory.create(config);
     final Optional<Exporter> patchExporter = exporters.stream()
         .filter(e -> e instanceof PatchExporter)
         .findFirst();
