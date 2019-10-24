@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -19,9 +20,12 @@ public class ExporterFactoryTest {
    * needHistoricalElementオプションが有効なときに，PatchExporterとJSONExporterの生成ができているか確認する
    */
   @Test
-  public void testCreateWithNeedHistoricalElement() {
+  public void testCreateWithNeedHistoricalElement()
+      throws NoSuchFieldException, IllegalAccessException {
     final Configuration config = buildConfiguration(true);
-    final List<Exporter> exporters = ExporterFactory.create(config);
+    final Exporter exporter = ExporterFactory.create(config);
+
+    final List<Exporter> exporters = getExporters(exporter);
     final Optional<Exporter> patchExporter = exporters.stream()
         .filter(e -> e instanceof PatchExporter)
         .findFirst();
@@ -38,9 +42,12 @@ public class ExporterFactoryTest {
    * needHistoricalElementオプションが無効なときに，PatchExporterの生成ができているか確認する
    */
   @Test
-  public void testCreateWithoutNeedHistoricalElement() {
+  public void testCreateWithoutNeedHistoricalElement()
+      throws NoSuchFieldException, IllegalAccessException {
     final Configuration config = buildConfiguration(false);
-    final List<Exporter> exporters = ExporterFactory.create(config);
+    final Exporter exporter = ExporterFactory.create(config);
+
+    final List<Exporter> exporters = getExporters(exporter);
     final Optional<Exporter> patchExporter = exporters.stream()
         .filter(e -> e instanceof PatchExporter)
         .findFirst();
@@ -56,5 +63,15 @@ public class ExporterFactoryTest {
     return new Configuration.Builder(rootPath, Collections.emptyList(), Collections.emptyList())
         .setNeedHistoricalElement(needHistoricalElement)
         .build();
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<Exporter> getExporters(final Exporter exporter)
+      throws NoSuchFieldException, IllegalAccessException {
+    // リフレクションで private フィールドを取得する
+    final Class<? extends Exporter> clazz = exporter.getClass();
+    final Field field = clazz.getDeclaredField("exporters");
+    field.setAccessible(true);
+    return (List<Exporter>) field.get(exporter);
   }
 }
