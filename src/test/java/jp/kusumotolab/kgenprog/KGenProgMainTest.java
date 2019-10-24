@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.junit.Rule;
@@ -27,6 +26,8 @@ import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 
 public class KGenProgMainTest {
@@ -70,9 +71,14 @@ public class KGenProgMainTest {
     final VariantSelection variantSelection =
         new GenerationalVariantSelection(config.getHeadcount(), random);
     final LocalTestExecutor testExecutor = new LocalTestExecutor(config);
+    final Exporter exporter = new Exporter(config) {
+      @Override
+      public void export(final VariantStore variantStore) {
+      }
+    };
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, testExecutor, Collections.emptyList());
+        sourceCodeValidation, variantSelection, testExecutor, exporter);
   }
 
   @Test
