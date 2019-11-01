@@ -7,12 +7,8 @@ package jp.kusumotolab.kgenprog.fl;
 public class Tarantula extends SpectrumBasedFaultLocalization {
 
   @Override
-  protected double formula(double ef, double nf, double ep, double np) {
+  protected double formula(final double ef, final double nf, final double ep, final double np) {
     return (ef / (double) (ef + nf)) / (ef / (double) (ef + nf) + ep / (double) (ep + np));
   }
 
-  @Override
-  protected boolean isSkippablePassedTests() {
-    return true;
-  }
 }

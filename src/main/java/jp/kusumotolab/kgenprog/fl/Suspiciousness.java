@@ -8,7 +8,7 @@ public class Suspiciousness {
   final private ASTLocation location;
   final private double value;
 
-  public Suspiciousness(ASTLocation location, double value) {
+  public Suspiciousness(final ASTLocation location, final double value) {
     this.location = location;
     this.value = value;
   }

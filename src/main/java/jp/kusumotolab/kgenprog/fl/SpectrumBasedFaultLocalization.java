@@ -19,6 +19,24 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
  */
 public abstract class SpectrumBasedFaultLocalization implements FaultLocalization {
 
+  private boolean skippableFormula;
+
+  public SpectrumBasedFaultLocalization() {
+    skippableFormula = isSkippableFormula();
+  }
+
+  /**
+   * 与えられた数式が以下条件を満たすかを確認する．満たす場合，計算手順をある程度省略可能．<br>
+   * 条件：ef=0 の場合に常に計算結果が 0 になる．<br>
+   * @see <a href="https://github.com/kusumotolab/kGenProg/pull/658">issue#658</a>
+   */
+  private boolean isSkippableFormula() {
+    // 3つの条件でテスト (efは常に0)
+    return formula(0, 10, 20, 30) == 0d && //
+        formula(0, 99, 300, 0) == 0d && //
+        formula(0, 33, 55, 66) == 0d;
+  }
+
   /**
    * 疑惑値を計算する.
    * 
@@ -41,8 +59,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
     for (final GeneratedAST<ProductSourcePath> ast : generatedSourceCode.getProductAsts()) {
 
       // do nothing if none of failed target fqns contain the ast
-      if (isSkippablePassedTests()
-          && !execuetdFailedTargetFQNs.contains(ast.getPrimaryClassName())) {
+      if (skippableFormula && !execuetdFailedTargetFQNs.contains(ast.getPrimaryClassName())) {
         continue;
       }
 
@@ -82,16 +99,10 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
    * FLメトリクスの計算式<br>
    * {@code ef}:該当する文を実行した失敗テストの個数<br>
    * {@code nf}:該当する文を実行しなかった失敗テストの個数<br>
-   * {@code ep}:該当する文を実行した通過テストの個数
+   * {@code ep}:該当する文を実行した通過テストの個数<br>
    * {@code np}:該当する文を実行しなかった通過テストの個数<br>
    */
-  abstract protected double formula(double ef, double nf, double ep, double np);
-
-  /**
-   * {@link SpectrumBasedFaultLocalization#formula}の計算において，通過テストのみを対象としてよいかどうか．
-   * 高速化のためのパラメタであり不明な際はtrueでも正しく動作する．
-   * @return
-   */
-  abstract protected boolean isSkippablePassedTests();
+  abstract protected double formula(final double ef, final double nf, final double ep,
+      final double np);
 
 }
