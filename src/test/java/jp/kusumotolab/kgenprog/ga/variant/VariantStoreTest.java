@@ -32,7 +32,8 @@ public class VariantStoreTest {
   @Test
   public void testCreateVariant() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath, true);
+    final Configuration config = createMockConfiguration(basePath);
+    when(config.getHistoryRecord()).thenReturn(true);
 
     final List<Suspiciousness> faultLocalizationResult = new ArrayList<>();
     final GeneratedSourceCode sourceCodeGenerationResult =
@@ -45,7 +46,7 @@ public class VariantStoreTest {
     when(strategies.execFaultLocalization(any(), any())).thenReturn(faultLocalizationResult);
     when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(sourceCodeGenerationResult);
     when(strategies.execTestExecutor(any())).thenReturn(testExecutorResult);
-    when(strategies.execSourceCodeValidation(any(), any())).thenReturn(sourceCodeValidationResult);
+    when(strategies.execSourceCodeValidation(any())).thenReturn(sourceCodeValidationResult);
     when(strategies.execASTConstruction(any())).thenReturn(astConstructionResult);
     when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).thenReturn(Single.just(testExecutorResult));
@@ -78,7 +79,7 @@ public class VariantStoreTest {
   @Test
   public void testGetGenerationNumber() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath, true);
+    final Configuration config = createMockConfiguration(basePath);
     final Strategies strategies = createMockStrategies(config);
 
     final VariantStore variantStore = new VariantStore(config, strategies);
@@ -101,7 +102,7 @@ public class VariantStoreTest {
   @Test
   public void testGetGeneratedVariants() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath, true);
+    final Configuration config = createMockConfiguration(basePath);
     final Strategies strategies = createMockStrategies(config);
 
     final VariantStore variantStore = new VariantStore(config, strategies);
@@ -134,7 +135,7 @@ public class VariantStoreTest {
   @Test
   public void testGetFoundSolutions() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath, true);
+    final Configuration config = createMockConfiguration(basePath);
     final Strategies strategies = createMockStrategies(config);
 
     final VariantStore variantStore = new VariantStore(config, strategies);
@@ -156,20 +157,32 @@ public class VariantStoreTest {
   }
 
   @Test
-  public void testNeedNotHistoricalElement() {
+  public void testHistoryRecord() {
     final Path basePath = Paths.get("example/BuildSuccess01");
-    final Configuration config = createMockConfiguration(basePath, false);
-    final Strategies strategies = createMockStrategies(config);
+    final Configuration config = createMockConfiguration(basePath);
+    when(config.getHistoryRecord()).thenReturn(false);
+    final TestResults testExecutorResult = mock(TestResults.class);
+    final Strategies strategies = mock(Strategies.class);
+    when(strategies.execFaultLocalization(any(), any())).thenReturn(new ArrayList<>());
+    when(strategies.execSourceCodeGeneration(any(), any())).thenReturn(
+        new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList()));
+    when(strategies.execTestExecutor(any())).thenReturn(testExecutorResult);
+    when(strategies.execSourceCodeValidation(any())).thenReturn(
+        new SimpleFitness(Double.NaN));
+    when(strategies.execASTConstruction(any())).thenReturn(
+        new GeneratedSourceCode(Collections.emptyList(), Collections.emptyList()));
+    when(strategies.execVariantSelection(any(), any())).thenReturn(Collections.emptyList());
+    when(strategies.execAsyncTestExecutor(any())).thenReturn(Single.just(testExecutorResult));
 
     final VariantStore variantStore = new VariantStore(config, strategies);
 
-    final Variant success1 = createMockVariant(true);
-    final Variant fail1 = createMockVariant(false);
+    final Gene gene = new Gene(Collections.emptyList());
+    final HistoricalElement element = mock(HistoricalElement.class);
+    final Variant variant = variantStore.createVariant(gene, element);
+    variantStore.addGeneratedVariant(variant);
 
-    variantStore.addGeneratedVariant(success1);
-    variantStore.addGeneratedVariant(fail1);
-
-    assertThat(variantStore.getAllVariants()).isNull();
+    assertThat(variant.getHistoricalElement()).isInstanceOf(EmptyHistoricalElement.class);
+    assertThat(variantStore.getAllVariants()).isEmpty();
   }
 
   private Variant createMockVariant(final boolean isCompleted) {
@@ -178,15 +191,13 @@ public class VariantStoreTest {
     return variant;
   }
 
-  private Configuration createMockConfiguration(final Path basePath,
-      final boolean needHistoricalElement) {
+  private Configuration createMockConfiguration(final Path basePath) {
     final TargetProject project = TargetProjectFactory.create(basePath);
     final Configuration config = mock(Configuration.class);
 
     when(config.getTargetProject()).thenReturn(project);
     when(config.getTimeLimitSeconds())
         .thenReturn(Configuration.DEFAULT_TEST_TIME_LIMIT.getSeconds());
-    when(config.getNeedHistoricalElement()).thenReturn(needHistoricalElement);
 
     return config;
   }
@@ -196,10 +207,11 @@ public class VariantStoreTest {
     final JDTASTConstruction jdtastConstruction = new JDTASTConstruction();
     final Strategies strategies = mock(Strategies.class);
 
-    when(strategies.execASTConstruction(any())).then(v -> jdtastConstruction.constructAST(config.getTargetProject()));
+    when(strategies.execASTConstruction(any()))
+        .then(v -> jdtastConstruction.constructAST(config.getTargetProject()));
     when(strategies.execVariantSelection(any(), any())).then(v -> v.getArgument(1));
     when(strategies.execTestExecutor(any())).then(v -> EmptyTestResults.instance);
-    when(strategies.execSourceCodeValidation(any(), any())).then(v -> new SimpleFitness(1.0d));
+    when(strategies.execSourceCodeValidation(any())).then(v -> new SimpleFitness(1.0d));
     when(strategies.execFaultLocalization(any(), any())).then(v -> Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).then(v -> {
       final Single<Variant> variantSingle = v.getArgument(0);

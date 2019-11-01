@@ -8,6 +8,7 @@ import jp.kusumotolab.kgenprog.ga.codegeneration.SourceCodeGeneration;
 import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation.Input;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
@@ -112,15 +113,13 @@ public class Strategies {
 
   /**
    * ソースコードの評価を行うメソッド．<br>
-   * 評価対象ソースコードと評価に利用するテスト実行結果を渡し，評価結果を返す．<br>
+   * ソースコードの評価に用いる情報を渡し，評価結果を返す．<br>
    * 
-   * @param sourceCode 評価対象ソースコード
-   * @param testResults 評価に利用するテスト実行結果
+   * @param input ソースコードの評価に用いる情報
    * @return 評価結果
    */
-  public Fitness execSourceCodeValidation(final GeneratedSourceCode sourceCode,
-      final TestResults testResults) {
-    return sourceCodeValidation.exec(sourceCode, testResults);
+  public Fitness execSourceCodeValidation(final Input input) {
+    return sourceCodeValidation.exec(input);
   }
 
   /**
