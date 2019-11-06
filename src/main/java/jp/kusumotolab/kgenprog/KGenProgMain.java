@@ -83,6 +83,8 @@ public class KGenProgMain {
 
     logConfig();
 
+    // outDirを空にする
+    exporter.clearPreviousResults();
     testExecutor.initialize();
 
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,

@@ -60,8 +60,6 @@ public class CUILauncher {
         random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
     final Exporter exporter = ExporterFactory.create(config);
-    exporter.clearPreviousResults();
-
     final KGenProgMain kGenProgMain =
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
             sourceCodeValidation, variantSelection, testExecutor, exporter);
