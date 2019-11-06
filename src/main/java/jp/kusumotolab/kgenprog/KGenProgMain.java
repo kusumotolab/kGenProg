@@ -79,8 +79,7 @@ public class KGenProgMain {
    *
    * @return 得られた解（全てのテストケースを通過するプログラム）
    */
-  public List<Variant> run() {
-
+  public List<Variant> run() throws RuntimeException {
     logConfig();
 
     // outDirを空にする
