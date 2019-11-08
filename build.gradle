@@ -20,8 +20,8 @@ apply plugin: 'jacoco'
 apply plugin: 'maven'
 
 // Set compiler version
-sourceCompatibility = '1.11'
-targetCompatibility = '1.11'
+//sourceCompatibility = '1.11'
+//targetCompatibility = '1.11'
 
 // Set default encoding
 compileJava.options.encoding = 'UTF-8'
