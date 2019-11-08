@@ -16,6 +16,9 @@ apply plugin: 'idea'
 // Apply JaCoCo plugin to measure KGP's coverage but not to calculate fault localization metric
 apply plugin: 'jacoco'
 
+// Apply Maven plugin to use JitPack
+apply plugin: 'maven'
+
 // Set compiler version
 sourceCompatibility = '1.11'
 targetCompatibility = '1.11'
@@ -28,6 +31,9 @@ compileTestJava.options.encoding = 'UTF-8'
 apply plugin: 'nebula.lint'
 gradleLint.rules = ['all-dependency'] // include all rules
 gradleLint.alwaysRun = false
+
+// Set group to use JitPack
+group = 'com.github.kusumotolab'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
