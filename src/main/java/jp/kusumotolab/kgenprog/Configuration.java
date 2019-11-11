@@ -86,8 +86,8 @@ public class Configuration {
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
   private final boolean historyRecord;
-
   private final Builder builder;
+
   // endregion
 
   // region Constructor
@@ -113,7 +113,6 @@ public class Configuration {
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
     historyRecord = builder.historyRecord;
-
     this.builder = builder;
   }
 
@@ -330,8 +329,8 @@ public class Configuration {
     @PreserveNotNull
     private boolean historyRecord = DEFAULT_HISTORY_RECORD;
 
-    transient final Set<String> optionsSetByCmdLineArgs = new HashSet<>();
-    transient final Set<String> optionsSetByConfigFile = new HashSet<>();
+    private transient final Set<String> optionsSetByCmdLineArgs = new HashSet<>();
+    private transient final Set<String> optionsSetByConfigFile = new HashSet<>();
 
     // endregion
 
@@ -570,12 +569,12 @@ public class Configuration {
           log.warn(
               "The directory where kGenProg is running is different from the root directory of the given target project.");
           log.warn(
-              "If the target project include test cases with file I/O, such test cases won't run correctly.");
+              "If the target project includes test cases with file I/O, such test cases won't run correctly.");
           log.warn(
-              "We recommend that you run kGenProg with the root directory of the target project as the current directory.");
+              "We recommend you running kGenProg with the root directory of the target project as the current directory.");
         }
       } catch (final IOException e) {
-        throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible");
+        throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible.");
       }
     }
 
@@ -593,10 +592,10 @@ public class Configuration {
         if (subFiles.isEmpty() && !builder.isForce) {
           final String outDirName = builder.outDir.toString();
           log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
-          log.warn("If you want patches, please run with -f or empty {}", outDirName);
+          log.warn("If you want patches, please run with -f or empty {}.", outDirName);
         }
       } catch (final IOException e) {
-        throw new IllegalArgumentException("directory " + builder.outDir + " is not accessible");
+        throw new IllegalArgumentException("directory " + builder.outDir + " is not accessible.");
       }
     }
 
@@ -610,14 +609,7 @@ public class Configuration {
     }
 
     private void parseConfigFile() throws InvalidValueException, NoSuchFileException {
-      if (Files.notExists(configPath)) {
-        throw new NoSuchFileException("config file \"" + configPath.toAbsolutePath()
-            .toString() + "\" is not found.");
-      }
-
-      try (final FileConfig config = FileConfig.of(configPath)) {
-        config.load();
-
+      try (final FileConfig config = loadConfig()) {
         final ObjectConverter converter = new ObjectConverter();
         converter.toObject(config, this);
         resolvePaths();
@@ -625,30 +617,42 @@ public class Configuration {
     }
 
     private void findOptionsSetByConfigFile() throws NoSuchFileException {
+      try (final FileConfig config = loadConfig()) {
 
+        // 設定ファイルに記述されているオプション一覧を取得
+        final Set<String> optionNames = config.entrySet()
+            .stream()
+            .map(o -> o.getKey())
+            .collect(Collectors.toSet());
+
+        final Class<?> clazz = this.getClass();
+        for (final Field field : clazz.getDeclaredFields()) {
+
+          // Builderオブジェクトの各フィールドに対して，
+          // Pathアノテーションが有る場合はその値を取得
+          field.setAccessible(true);
+          final String name = field.getName();
+          final com.electronwill.nightconfig.core.conversion.Path[] annotations =
+              field.getDeclaredAnnotationsByType(
+                  com.electronwill.nightconfig.core.conversion.Path.class);
+
+          // Pathアノテーションが有り，その値が設定ファイルに現れている場合は，
+          // そのフィールドの値は設定ファイルから読み込まれたとみなす
+          if (0 < annotations.length && optionNames.contains(annotations[0].value())) {
+            optionsSetByConfigFile.add(name);
+          }
+        }
+      }
+    }
+
+    private FileConfig loadConfig() throws NoSuchFileException {
       if (Files.notExists(configPath)) {
         throw new NoSuchFileException("config file \"" + configPath.toAbsolutePath()
             .toString() + "\" is not found.");
       }
       final FileConfig config = FileConfig.of(configPath);
       config.load();
-      final Set<String> optionNames = config.entrySet()
-          .stream()
-          .map(o -> o.getKey())
-          .collect(Collectors.toSet());
-
-      final Class<?> clazz = this.getClass();
-      for (final Field field : clazz.getDeclaredFields()) {
-
-        field.setAccessible(true);
-        final String name = field.getName();
-        final com.electronwill.nightconfig.core.conversion.Path[] annotations = field
-            .getDeclaredAnnotationsByType(com.electronwill.nightconfig.core.conversion.Path.class);
-
-        if (0 < annotations.length && optionNames.contains(annotations[0].value())) {
-          optionsSetByConfigFile.add(name);
-        }
-      }
+      return config;
     }
 
     private void resolvePaths() {
