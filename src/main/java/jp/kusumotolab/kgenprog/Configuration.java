@@ -11,8 +11,10 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -55,7 +57,8 @@ public class Configuration {
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
-  public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION = FaultLocalization.Technique.Ochiai;
+  public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION =
+      FaultLocalization.Technique.Ochiai;
   public static final Crossover.Type DEFAULT_CROSSOVER_TYPE = Crossover.Type.Random;
   public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
       FirstVariantSelectionStrategy.Strategy.Random;
@@ -83,6 +86,8 @@ public class Configuration {
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
   private final boolean historyRecord;
+
+  private final Builder builder;
   // endregion
 
   // region Constructor
@@ -108,6 +113,8 @@ public class Configuration {
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
     historyRecord = builder.historyRecord;
+
+    this.builder = builder;
   }
 
   // endregion
@@ -202,21 +209,7 @@ public class Configuration {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
-    final Class<?> clazz = this.getClass();
-    for (final Field field : clazz.getDeclaredFields()) {
-      try {
-        field.setAccessible(true);
-        final String name = field.getName();
-        if (name.startsWith("DEFAULT_")) {
-          continue;
-        }
-        sb.append(name + " = " + field.get(this) + System.lineSeparator());
-      } catch (final IllegalAccessException e) {
-        sb.append(field.getName() + " = " + "access denied" + System.lineSeparator());
-      }
-    }
-    return sb.toString();
+    return builder.toString();
   }
 
   public static class Builder {
@@ -336,6 +329,10 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
     private boolean historyRecord = DEFAULT_HISTORY_RECORD;
+
+    transient final Set<String> optionsSetByCmdLineArgs = new HashSet<>();
+    transient final Set<String> optionsSetByConfigFile = new HashSet<>();
+
     // endregion
 
     // region Constructors
@@ -385,6 +382,7 @@ public class Configuration {
 
         if (needsParseConfigFile(args)) {
           builder.parseConfigFile();
+          builder.findOptionsSetByConfigFile();
 
           // Overwrite config values with ones from CLI
           parser.parseArgument(args);
@@ -483,6 +481,7 @@ public class Configuration {
     }
 
     public Builder setLogLevel(final String logLevel) {
+      this.optionsSetByConfigFile.add("logLevel");
       return setLogLevel(Level.toLevel(logLevel.toUpperCase(Locale.ROOT)));
     }
 
@@ -521,14 +520,14 @@ public class Configuration {
       return this;
     }
 
-    public Builder setFirstVariantSelectionStrategy
-        (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+    public Builder setFirstVariantSelectionStrategy(
+        final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
       this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
       return this;
     }
 
-    public Builder setSecondVariantSelectionStrategy
-        (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+    public Builder setSecondVariantSelectionStrategy(
+        final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
       return this;
     }
@@ -592,8 +591,7 @@ public class Configuration {
             .collect(Collectors.toList());
 
         if (subFiles.isEmpty() && !builder.isForce) {
-          final String outDirName = builder.outDir
-              .toString();
+          final String outDirName = builder.outDir.toString();
           log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
           log.warn("If you want patches, please run with -f or empty {}", outDirName);
         }
@@ -623,6 +621,33 @@ public class Configuration {
         final ObjectConverter converter = new ObjectConverter();
         converter.toObject(config, this);
         resolvePaths();
+      }
+    }
+
+    private void findOptionsSetByConfigFile() throws NoSuchFileException {
+
+      if (Files.notExists(configPath)) {
+        throw new NoSuchFileException("config file \"" + configPath.toAbsolutePath()
+            .toString() + "\" is not found.");
+      }
+      final FileConfig config = FileConfig.of(configPath);
+      config.load();
+      final Set<String> optionNames = config.entrySet()
+          .stream()
+          .map(o -> o.getKey())
+          .collect(Collectors.toSet());
+
+      final Class<?> clazz = this.getClass();
+      for (final Field field : clazz.getDeclaredFields()) {
+
+        field.setAccessible(true);
+        final String name = field.getName();
+        final com.electronwill.nightconfig.core.conversion.Path[] annotations = field
+            .getDeclaredAnnotationsByType(com.electronwill.nightconfig.core.conversion.Path.class);
+
+        if (0 < annotations.length && optionNames.contains(annotations[0].value())) {
+          optionsSetByConfigFile.add(name);
+        }
       }
     }
 
@@ -667,9 +692,37 @@ public class Configuration {
 
     // region Methods for CmdLineParser
 
+    @Override
+    public String toString() {
+      final StringBuilder sb = new StringBuilder();
+      final Class<?> clazz = this.getClass();
+      for (final Field field : clazz.getDeclaredFields()) {
+        try {
+          field.setAccessible(true);
+          final String name = field.getName();
+          sb.append(name)
+              .append(" = ")
+              .append(field.get(this));
+          if (optionsSetByCmdLineArgs.contains(name)) {
+            sb.append(" (set by command line)");
+          } else if (optionsSetByConfigFile.contains(name)) {
+            sb.append(" (set by config file)");
+          }
+          sb.append(System.lineSeparator());
+        } catch (final IllegalAccessException e) {
+          sb.append(field.getName())
+              .append(" = ")
+              .append("access denied")
+              .append(System.lineSeparator());
+        }
+      }
+      return sb.toString();
+    }
+
     @Option(name = "--config", metaVar = "<path>", usage = "Specifies the path to the config file.")
     private void setConfigPathFromCmdLineParser(final String configPath) {
       this.configPath = Paths.get(configPath);
+      this.optionsSetByCmdLineArgs.add("configPath");
     }
 
     @Option(name = "-r", aliases = "--root-dir", metaVar = "<path>",
@@ -677,14 +730,16 @@ public class Configuration {
         depends = {"-s", "-t"}, forbids = {"--config"})
     private void setRootDirFromCmdLineParser(final String rootDir) {
       this.rootDir = Paths.get(rootDir);
+      this.optionsSetByCmdLineArgs.add("rootDir");
     }
 
     @Option(name = "-s", aliases = "--src", metaVar = "<path> ...",
         usage = " Specifies paths to \"product\" source code (i.e. main, non-test code),"
             + " or to directories containing them.",
         depends = {"-r", "-t"}, forbids = {"--config"}, handler = StringArrayOptionHandler.class)
-    private void addProductPathFromCmdLineParser(final String sourcePath) {
-      this.productPaths.add(Paths.get(sourcePath));
+    private void addProductPathFromCmdLineParser(final String productPath) {
+      this.productPaths.add(Paths.get(productPath));
+      this.optionsSetByCmdLineArgs.add("productPaths");
     }
 
     @Option(name = "-t", aliases = "--test", metaVar = "<path> ...",
@@ -692,6 +747,7 @@ public class Configuration {
         depends = {"-r", "-s"}, forbids = {"--config"}, handler = StringArrayOptionHandler.class)
     private void addTestPathFromCmdLineParser(final String testPath) {
       this.testPaths.add(Paths.get(testPath));
+      this.optionsSetByCmdLineArgs.add("testPaths");
     }
 
     @Option(name = "-c", aliases = "--cp", metaVar = "<class path> ...",
@@ -699,6 +755,7 @@ public class Configuration {
         handler = StringArrayOptionHandler.class)
     private void addClassPathFromCmdLineParser(final String classPath) {
       this.classPaths.add(Paths.get(classPath));
+      this.optionsSetByCmdLineArgs.add("classPaths");
     }
 
     @Option(name = "-x", aliases = "--exec-test", metaVar = "<fqn> ...",
@@ -707,48 +764,56 @@ public class Configuration {
         handler = StringArrayOptionHandler.class)
     private void addExecutionTestFromCmdLineParser(final String executionTest) {
       this.executionTests.add(executionTest);
+      this.optionsSetByCmdLineArgs.add("executionTests");
     }
 
     @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
         usage = "Writes patches kGenProg generated to the specified directory.")
     private void setOutDirFromCmdLineParser(final String outDir) {
       this.outDir = Paths.get(outDir);
+      this.optionsSetByCmdLineArgs.add("outDir");
     }
 
     @Option(name = "-f", aliases = "--force",
         usage = "Remove file in output directory when write patches.")
     private void setIsForceFromCmdLineParser(final boolean isForce) {
       this.isForce = isForce;
+      this.optionsSetByCmdLineArgs.add("isForce");
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",
         usage = "Specifies how many variants are generated in a generation by a mutation.")
     private void setMutationGeneratingCountFromCmdLineParser(final int mutationGeneratingCount) {
       this.mutationGeneratingCount = mutationGeneratingCount;
+      this.optionsSetByCmdLineArgs.add("mutationGeneratingCount");
     }
 
     @Option(name = "--crossover-generating-count", metaVar = "<num>",
         usage = "Specifies how many variants are generated in a generation by a crossover.")
     private void setCrossOverGeneratingCountFromCmdLineParser(final int crossoverGeneratingCount) {
       this.crossoverGeneratingCount = crossoverGeneratingCount;
+      this.optionsSetByCmdLineArgs.add("crossoverGenetingCount");
     }
 
     @Option(name = "--headcount", metaVar = "<num>",
         usage = "Specifies how many variants survive in a generation.")
     private void setHeadcountFromCmdLineParser(final int headcount) {
       this.headcount = headcount;
+      this.optionsSetByCmdLineArgs.add("headcount");
     }
 
     @Option(name = "--max-generation", metaVar = "<num>",
         usage = "Terminates searching solutions when the specified number of generations reached.")
     private void setMaxGenerationFromCmdLineParser(final int maxGeneration) {
       this.maxGeneration = maxGeneration;
+      this.optionsSetByCmdLineArgs.add("maxGeneration");
     }
 
     @Option(name = "--time-limit", metaVar = "<sec>",
         usage = "Terminates searching solutions when the specified time has passed.")
     private void setTimeLimitFromCmdLineParser(final long timeLimit) {
       this.timeLimit = Duration.ofSeconds(timeLimit);
+      this.optionsSetByCmdLineArgs.add("timeLimit");
     }
 
     // todo update usage
@@ -756,63 +821,76 @@ public class Configuration {
         usage = "Specifies time limit to build and test for each variant in second")
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
       this.testTimeLimit = Duration.ofSeconds(testTimeLimit);
+      this.optionsSetByCmdLineArgs.add("testTimeLimit");
     }
 
     @Option(name = "--required-solutions", metaVar = "<num>",
         usage = "Terminates searching solutions when the specified number of solutions are found.")
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       this.requiredSolutionsCount = requiredSolutionsCount;
+      this.optionsSetByCmdLineArgs.add("requiredSolutionsCount");
     }
 
     @Option(name = "-v", aliases = "--verbose",
         usage = "Be more verbose, printing DEBUG level logs.")
     private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
       logLevel = Level.DEBUG;
+      this.optionsSetByCmdLineArgs.add("logLevel");
     }
 
     @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.")
     private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
       logLevel = Level.ERROR;
+      this.optionsSetByCmdLineArgs.add("logLevel");
     }
 
     @Option(name = "--random-seed", metaVar = "<num>",
         usage = "Specifies random seed used by random number generator.")
     private void setRandomSeedFromCmdLineParser(final long randomSeed) {
       this.randomSeed = randomSeed;
+      this.optionsSetByCmdLineArgs.add("randomSeed");
     }
 
-    @Option(name = "--scope", usage = "Specify the scope from which source code to be reused is selected.")
+    @Option(name = "--scope",
+        usage = "Specify the scope from which source code to be reused is selected.")
     private void setScopeFromCmdLineParser(final Scope.Type scope) {
       this.scope = scope;
+      this.optionsSetByCmdLineArgs.add("scope");
     }
 
     @Option(name = "--fault-localization", usage = "Specifies technique of fault localization.")
     private void setFaultLocalizationFromCmdLineParser(
         final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
+      this.optionsSetByCmdLineArgs.add("faultLocalization");
     }
 
     @Option(name = "--crossover-type", usage = "Specifies crossover type.")
-    private void setCrossoverTypeFromCmdLineParser
-        (final Crossover.Type crossoverType) {
+    private void setCrossoverTypeFromCmdLineParser(final Crossover.Type crossoverType) {
       this.crossoverType = crossoverType;
+      this.optionsSetByCmdLineArgs.add("crossoverType");
     }
 
-    @Option(name = "--crossover-first-variant", usage = "Specifies first variant selection strategy for crossover.")
-    private void setFirstVariantSelectionStrategyFromCmdLineParser
-        (final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
+    @Option(name = "--crossover-first-variant",
+        usage = "Specifies first variant selection strategy for crossover.")
+    private void setFirstVariantSelectionStrategyFromCmdLineParser(
+        final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy) {
       this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
+      this.optionsSetByCmdLineArgs.add("firstVariantSelectionStrategy");
     }
 
-    @Option(name = "--crossover-second-variant", usage = "Specifies second variant selection strategy for crossover.")
-    private void setSecondVariantSelectionStrategyFromCmdLineParser
-        (final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
+    @Option(name = "--crossover-second-variant",
+        usage = "Specifies second variant selection strategy for crossover.")
+    private void setSecondVariantSelectionStrategyFromCmdLineParser(
+        final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy) {
       this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
+      this.optionsSetByCmdLineArgs.add("secondVariantSelectionStrategy");
     }
 
     @Option(name = "--history-record", usage = "Record historical element.")
     private void setHistoryRecordFromCmdLineParser(final boolean historyRecord) {
       this.historyRecord = historyRecord;
+      this.optionsSetByCmdLineArgs.add("historyRecord");
     }
 
     // endregion
@@ -925,8 +1003,8 @@ public class Configuration {
       }
     }
 
-    private static class FaultLocalizationTechniqueToString implements
-        Converter<FaultLocalization.Technique, String> {
+    private static class FaultLocalizationTechniqueToString
+        implements Converter<FaultLocalization.Technique, String> {
 
       @Override
       public Technique convertToField(final String value) {
@@ -964,8 +1042,8 @@ public class Configuration {
       }
     }
 
-    private static class FirstVariantSelectionStrategyToString implements
-        Converter<FirstVariantSelectionStrategy.Strategy, String> {
+    private static class FirstVariantSelectionStrategyToString
+        implements Converter<FirstVariantSelectionStrategy.Strategy, String> {
 
       @Override
       public FirstVariantSelectionStrategy.Strategy convertToField(final String value) {
@@ -984,8 +1062,8 @@ public class Configuration {
       }
     }
 
-    private static class SecondVariantSelectionStrategyToString implements
-        Converter<SecondVariantSelectionStrategy.Strategy, String> {
+    private static class SecondVariantSelectionStrategyToString
+        implements Converter<SecondVariantSelectionStrategy.Strategy, String> {
 
       @Override
       public SecondVariantSelectionStrategy.Strategy convertToField(final String value) {
