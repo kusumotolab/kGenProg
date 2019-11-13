@@ -710,7 +710,7 @@ public class Configuration {
           if (optionsSetByCmdLineArgs.contains(name)) {
             sb.append(" (set by command line)");
           } else if (optionsSetByConfigFile.contains(name)) {
-            sb.append(" (set by config file)");
+            sb.append(" (set in config file)");
           }
           sb.append(System.lineSeparator());
         } catch (final IllegalAccessException e) {
