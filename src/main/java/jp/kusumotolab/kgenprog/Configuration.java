@@ -93,26 +93,26 @@ public class Configuration {
   // region Constructor
 
   private Configuration(final Builder builder) {
-    targetProject = builder.targetProject;
-    executionTests = builder.executionTests;
-    outDir = builder.outDir;
-    isForce = builder.isForce;
-    mutationGeneratingCount = builder.mutationGeneratingCount;
-    crossoverGeneratingCount = builder.crossoverGeneratingCount;
-    headcount = builder.headcount;
-    maxGeneration = builder.maxGeneration;
-    timeLimit = builder.timeLimit;
-    testTimeLimit = builder.testTimeLimit;
-    requiredSolutionsCount = builder.requiredSolutionsCount;
-    logLevel = builder.logLevel;
-    randomSeed = builder.randomSeed;
-    scope = builder.scope;
-    needNotOutput = builder.needNotOutput;
-    faultLocalization = builder.faultLocalization;
-    crossoverType = builder.crossoverType;
-    firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
-    secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
-    historyRecord = builder.historyRecord;
+    this.targetProject = builder.targetProject;
+    this.executionTests = builder.executionTests;
+    this.outDir = builder.outDir;
+    this.isForce = builder.isForce;
+    this.mutationGeneratingCount = builder.mutationGeneratingCount;
+    this.crossoverGeneratingCount = builder.crossoverGeneratingCount;
+    this.headcount = builder.headcount;
+    this.maxGeneration = builder.maxGeneration;
+    this.timeLimit = builder.timeLimit;
+    this.testTimeLimit = builder.testTimeLimit;
+    this.requiredSolutionsCount = builder.requiredSolutionsCount;
+    this.logLevel = builder.logLevel;
+    this.randomSeed = builder.randomSeed;
+    this.scope = builder.scope;
+    this.needNotOutput = builder.needNotOutput;
+    this.faultLocalization = builder.faultLocalization;
+    this.crossoverType = builder.crossoverType;
+    this.firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
+    this.secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
+    this.historyRecord = builder.historyRecord;
     this.builder = builder;
   }
 
