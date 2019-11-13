@@ -381,7 +381,7 @@ public class Configuration {
 
         if (needsParseConfigFile(args)) {
           builder.parseConfigFile();
-          builder.findOptionsSetByConfigFile();
+          builder.findOptionsSetInConfigFile();
 
           // Overwrite config values with ones from CLI
           parser.parseArgument(args);
@@ -616,7 +616,7 @@ public class Configuration {
       }
     }
 
-    private void findOptionsSetByConfigFile() throws NoSuchFileException {
+    private void findOptionsSetInConfigFile() throws NoSuchFileException {
       try (final FileConfig config = loadConfig()) {
 
         // 設定ファイルに記述されているオプション一覧を取得
