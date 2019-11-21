@@ -85,6 +85,7 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | 交叉種別（`Random`，`Single`，`Uniform`） | `Random` |
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |
+| `--history-record` | 個体の生成過程および生成された全個体を記録する | `false` |
 
 ## 受賞
 - [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
