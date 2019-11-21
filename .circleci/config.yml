@@ -73,8 +73,6 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
       # ===== Assemble jar file
       - run: ./gradlew assemble
-      # ===== Save current version
-      - run: ./gradlew -q printCurrentVersion > current-version.txt
       # ===== Collect and persist the built artifacts
       - run:
           name: Collect artifacts to be released
