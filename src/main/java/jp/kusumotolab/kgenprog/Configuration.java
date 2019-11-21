@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -703,6 +704,9 @@ public class Configuration {
       for (final Field field : clazz.getDeclaredFields()) {
         try {
           field.setAccessible(true);
+          if (Modifier.isTransient(field.getModifiers())) {
+            continue;
+          }
           final String name = field.getName();
           sb.append(name)
               .append(" = ")
