@@ -79,7 +79,6 @@ jobs:
           command: |
             mkdir -p workspace/artifacts
             cp ./build/libs/* ./workspace/artifacts/
-            cp current-version.txt ./workspace/
       - persist_to_workspace:
           root: ./workspace
           paths:
