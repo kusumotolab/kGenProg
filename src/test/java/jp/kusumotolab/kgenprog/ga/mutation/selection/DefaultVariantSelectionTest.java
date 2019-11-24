@@ -156,7 +156,7 @@ public class DefaultVariantSelectionTest {
 
     // 2個に1個はbuildFailedの個体にする
     setupLists(current, generated, 10,
-        e -> e % 2 == 0 ? new EmptyTestResults() : new TestResults());
+        e -> e % 2 == 0 ? new EmptyTestResults("build failed.") : new TestResults());
 
     final List<Variant> selectedVariants = variantSelection.exec(current, generated);
 

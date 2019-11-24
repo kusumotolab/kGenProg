@@ -12,7 +12,16 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
  */
 public class EmptyTestResults extends TestResults {
 
-  public EmptyTestResults() {}
+  final private String reason;
+
+  @Deprecated
+  public EmptyTestResults() {
+    this("");
+  }
+
+  public EmptyTestResults(final String reason) {
+    this.reason = reason;
+  }
 
   /**
    * {@inheritDoc}<br>
@@ -63,4 +72,12 @@ public class EmptyTestResults extends TestResults {
     return 0;
   }
 
+  /**
+   * テスト結果が得られなかった理由を返す．
+   * 
+   * @return テスト結果が得られなかった理由
+   */
+  public String getReason() {
+    return reason;
+  }
 }

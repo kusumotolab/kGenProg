@@ -38,7 +38,7 @@ public class LocalTestExecutor implements TestExecutor {
   public TestResults exec(final Variant variant) {
     final GeneratedSourceCode generatedSourceCode = variant.getGeneratedSourceCode();
     if (!generatedSourceCode.isGenerationSuccess()) {
-      final EmptyTestResults testResults = new EmptyTestResults();
+      final EmptyTestResults testResults = new EmptyTestResults("build failed.");
       return testResults;
     }
 

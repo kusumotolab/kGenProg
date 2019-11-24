@@ -209,7 +209,7 @@ public class VariantStoreTest {
     when(strategies.execASTConstruction(any()))
         .then(v -> jdtastConstruction.constructAST(config.getTargetProject()));
     when(strategies.execVariantSelection(any(), any())).then(v -> v.getArgument(1));
-    when(strategies.execTestExecutor(any())).then(v -> new EmptyTestResults());
+    when(strategies.execTestExecutor(any())).then(v -> new EmptyTestResults("for testing."));
     when(strategies.execSourceCodeValidation(any())).then(v -> new SimpleFitness(1.0d));
     when(strategies.execFaultLocalization(any(), any())).then(v -> Collections.emptyList());
     when(strategies.execAsyncTestExecutor(any())).then(v -> {

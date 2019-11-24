@@ -47,14 +47,14 @@ public class CrossoverHistoricalElementSerializerTest {
   private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 
     return new Variant(0, 0, new Gene(Collections.emptyList()),
-        astConstruction.constructAST(targetProject), new EmptyTestResults(), fitness,
+        astConstruction.constructAST(targetProject), new EmptyTestResults("for testing."), fitness,
         Collections.emptyList(), new OriginalHistoricalElement());
   }
 
   private Variant createVariant(final long id, final int generationNumber, final Fitness fitness,
       final GeneratedSourceCode code, final HistoricalElement historicalElement) {
     return new Variant(id, generationNumber, new Gene(Collections.emptyList()), code,
-        new EmptyTestResults(), fitness, Collections.emptyList(), historicalElement);
+        new EmptyTestResults("for testing."), fitness, Collections.emptyList(), historicalElement);
   }
 
 

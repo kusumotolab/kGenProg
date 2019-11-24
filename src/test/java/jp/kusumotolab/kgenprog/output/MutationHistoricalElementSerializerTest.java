@@ -74,7 +74,7 @@ public class MutationHistoricalElementSerializerTest {
   private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 
     return new Variant(0, 0, new Gene(Collections.emptyList()),
-        astConstruction.constructAST(targetProject), new EmptyTestResults(), fitness,
+        astConstruction.constructAST(targetProject), new EmptyTestResults("for testing."), fitness,
         Collections.emptyList(), new OriginalHistoricalElement());
   }
 
