@@ -12,12 +12,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
  */
 public class EmptyTestResults extends TestResults {
 
-  /**
-   * singleton
-   */
-  public static final EmptyTestResults instance = new EmptyTestResults();
-
-  private EmptyTestResults() {}
+  public EmptyTestResults() {}
 
   /**
    * {@inheritDoc}<br>

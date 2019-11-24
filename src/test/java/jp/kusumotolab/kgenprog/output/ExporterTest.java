@@ -74,7 +74,7 @@ public class ExporterTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final TestResults testResults = EmptyTestResults.instance;
+    final TestResults testResults = new EmptyTestResults();
     final Base base = new Base(location, operation);
     final Gene gene = new Gene(Collections.singletonList(base));
     final Fitness fitness = new SimpleFitness(1.0d);
@@ -88,8 +88,7 @@ public class ExporterTest {
     final List<Path> productPaths = Collections.singletonList(rootPath.resolve(PRODUCT_NAME));
     final List<Path> testPaths = Collections.singletonList(rootPath.resolve(TEST_NAME));
 
-    return new Configuration.Builder(rootPath, productPaths, testPaths)
-        .setOutDir(outDir)
+    return new Configuration.Builder(rootPath, productPaths, testPaths).setOutDir(outDir)
         .setIsForce(isForce)
         .setTestTimeLimitSeconds(1)
         .setMaxGeneration(1)
@@ -100,8 +99,12 @@ public class ExporterTest {
   /**
    * 以下の条件下でパッチとJSONを出力するか確認する
    * <li>
-   * <ul>forceオプションが有効</ul>
-   * <ul>outDirが空でないディレクトリ</ul>
+   * <ul>
+   * forceオプションが有効
+   * </ul>
+   * <ul>
+   * outDirが空でないディレクトリ
+   * </ul>
    * </li>
    */
   @Test
@@ -150,8 +153,12 @@ public class ExporterTest {
   /**
    * 以下の条件下でパッチとJSONを出力するか確認する
    * <li>
-   * <ul>forceオプションが有効</ul>
-   * <ul>outDirが空のディレクトリ</ul>
+   * <ul>
+   * forceオプションが有効
+   * </ul>
+   * <ul>
+   * outDirが空のディレクトリ
+   * </ul>
    * </li>
    */
   @Test
@@ -190,8 +197,12 @@ public class ExporterTest {
   /**
    * 以下の条件下でパッチとJSONを出力するか確認する
    * <li>
-   * <ul>forceオプションが無効</ul>
-   * <ul>outDirが空でないディレクトリ</ul>
+   * <ul>
+   * forceオプションが無効
+   * </ul>
+   * <ul>
+   * outDirが空でないディレクトリ
+   * </ul>
    * </li>
    */
   @Test
@@ -241,8 +252,12 @@ public class ExporterTest {
   /**
    * 以下の条件下でパッチとJSONを出力するか確認する
    * <li>
-   * <ul>forceオプションが無効</ul>
-   * <ul>outDirが空のディレクトリ</ul>
+   * <ul>
+   * forceオプションが無効
+   * </ul>
+   * <ul>
+   * outDirが空のディレクトリ
+   * </ul>
    * </li>
    */
   @Test
@@ -280,8 +295,12 @@ public class ExporterTest {
   /**
    * 以下の条件下でパッチとJSONを出力するか確認する
    * <li>
-   * <ul>forceオプションが有効</ul>
-   * <ul>outDirが存在しない</ul>
+   * <ul>
+   * forceオプションが有効
+   * </ul>
+   * <ul>
+   * outDirが存在しない
+   * </ul>
    * </li>
    */
   @Test
@@ -317,8 +336,12 @@ public class ExporterTest {
   /**
    * 以下の条件下でパッチとJSONを出力するか確認する
    * <li>
-   * <ul>forceオプションが無効</ul>
-   * <ul>outDirが存在しない</ul>
+   * <ul>
+   * forceオプションが無効
+   * </ul>
+   * <ul>
+   * outDirが存在しない
+   * </ul>
    * </li>
    */
   @Test

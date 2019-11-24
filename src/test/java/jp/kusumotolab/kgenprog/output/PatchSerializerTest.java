@@ -28,8 +28,8 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
-import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
+import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
@@ -52,14 +52,14 @@ public class PatchSerializerTest {
   private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 
     return new Variant(0, 0, new Gene(Collections.emptyList()),
-        astConstruction.constructAST(targetProject), EmptyTestResults.instance, fitness,
+        astConstruction.constructAST(targetProject), new EmptyTestResults(), fitness,
         Collections.emptyList(), new OriginalHistoricalElement());
   }
 
   private Variant createVariant(final long id, final int generationNumber, final Fitness fitness,
       final GeneratedSourceCode code, final HistoricalElement historicalElement) {
     return new Variant(id, generationNumber, new Gene(Collections.emptyList()), code,
-        EmptyTestResults.instance, fitness, Collections.emptyList(), historicalElement);
+        new EmptyTestResults(), fitness, Collections.emptyList(), historicalElement);
   }
 
   /**

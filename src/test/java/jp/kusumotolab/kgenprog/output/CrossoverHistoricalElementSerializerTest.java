@@ -44,19 +44,17 @@ public class CrossoverHistoricalElementSerializerTest {
         .create();
   }
 
-  private Variant createVariant(final Fitness fitness,
-      final TargetProject targetProject) {
+  private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 
     return new Variant(0, 0, new Gene(Collections.emptyList()),
-        astConstruction.constructAST(targetProject),
-        EmptyTestResults.instance, fitness, Collections.emptyList(),
-        new OriginalHistoricalElement());
+        astConstruction.constructAST(targetProject), new EmptyTestResults(), fitness,
+        Collections.emptyList(), new OriginalHistoricalElement());
   }
 
   private Variant createVariant(final long id, final int generationNumber, final Fitness fitness,
       final GeneratedSourceCode code, final HistoricalElement historicalElement) {
     return new Variant(id, generationNumber, new Gene(Collections.emptyList()), code,
-        EmptyTestResults.instance, fitness, Collections.emptyList(), historicalElement);
+        new EmptyTestResults(), fitness, Collections.emptyList(), historicalElement);
   }
 
 
@@ -74,13 +72,13 @@ public class CrossoverHistoricalElementSerializerTest {
 
     // 親1
     final Variant parentA = createVariant(1L, 1, new SimpleFitness(0.0d),
-        new GenerationFailedSourceCode(""),
-        new MutationHistoricalElement(initialVariant, new Base(null, new InsertAfterOperation(null))));
+        new GenerationFailedSourceCode(""), new MutationHistoricalElement(initialVariant,
+            new Base(null, new InsertAfterOperation(null))));
 
     // 親2
     final Variant parentB = createVariant(2L, 1, new SimpleFitness(0.0d),
-        new GenerationFailedSourceCode(""),
-        new MutationHistoricalElement(initialVariant, new Base(null, new InsertAfterOperation(null))));
+        new GenerationFailedSourceCode(""), new MutationHistoricalElement(initialVariant,
+            new Base(null, new InsertAfterOperation(null))));
 
     // 子供
     final HistoricalElement historicalElement = new CrossoverHistoricalElement(parentA, parentB, 1);
@@ -96,17 +94,17 @@ public class CrossoverHistoricalElementSerializerTest {
         JsonKeyAlias.CrossoverHistoricalElement.CROSSOVER_POINT);
 
     // 親IDのチェック
-    final JsonArray serializedParentIds = serializedHistoricalElement.get(
-        JsonKeyAlias.CrossoverHistoricalElement.PARENT_IDS)
-        .getAsJsonArray();
+    final JsonArray serializedParentIds =
+        serializedHistoricalElement.get(JsonKeyAlias.CrossoverHistoricalElement.PARENT_IDS)
+            .getAsJsonArray();
     final String[] parentIds = gson.fromJson(serializedParentIds, String[].class);
     assertThat(parentIds).hasSize(2);
     assertThat(parentIds).containsOnly(String.valueOf(1L), String.valueOf(2L));
 
     // 操作名のチェック
-    final String operationName = serializedHistoricalElement.get(
-        JsonKeyAlias.CrossoverHistoricalElement.NAME)
-        .getAsString();
+    final String operationName =
+        serializedHistoricalElement.get(JsonKeyAlias.CrossoverHistoricalElement.NAME)
+            .getAsString();
     assertThat(operationName).isEqualTo("crossover");
   }
 }

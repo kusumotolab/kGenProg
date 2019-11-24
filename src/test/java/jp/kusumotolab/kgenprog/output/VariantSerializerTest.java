@@ -52,7 +52,7 @@ public class VariantSerializerTest {
   private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 
     return new Variant(0, 0, new Gene(Collections.emptyList()),
-        astConstruction.constructAST(targetProject), EmptyTestResults.instance, fitness,
+        astConstruction.constructAST(targetProject), new EmptyTestResults(), fitness,
         Collections.emptyList(), new OriginalHistoricalElement());
   }
 
