@@ -54,8 +54,6 @@ Please replace `Tag` with the version ID that you want to use.
 You can find more detailed descriptions [here](https://jitpack.io/#kusumotolab/kGenProg/).
 
 
-
-
 ## Usage
 ```
 $ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
