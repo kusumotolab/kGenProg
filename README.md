@@ -7,6 +7,7 @@
 
 <p align=center>
     <a href="https://github.com/kusumotolab/kGenProg/releases/latest" alt="release"><img src="https://img.shields.io/github/release/kusumotolab/kGenProg.svg"></a>
+    <a href="https://jitpack.io/#kusumotolab/kGenProg" alt="jitpack"><img src="https://jitpack.io/v/kusumotolab/kGenProg.svg"></a>
     <a href="https://circleci.com/gh/kusumotolab/kGenProg/tree/master" alt="CircleCI"><img src="https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=shield"></a>
     <a href="https://codecov.io/gh/kusumotolab/kGenProg" alt="Codecov"><img src="https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg"></a>
     <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="license"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
@@ -27,6 +28,30 @@ Just [download](https://github.com/kusumotolab/kGenProg/releases/latest) a jar f
 
 There are sample bugs in [kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example).
 You can download all the bugs from [here](https://github.com/kusumotolab/kGenProg-example/archive/master.zip).
+
+
+## Gradle
+kGenProg is also available for Gradle environments.
+Currently, kGenProg is distributed on JitPack.
+To add JitPack repository to your build file, append it in your build.gradle at the end of repositories.
+
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+Then, please add the dependency to kGenProg.
+
+```
+dependencies {
+    implementation 'com.github.kusumotolab:kGenProg:Tag'
+```
+Please replace `Tag` with the version ID that you want to use.
+You can find more detailed descriptions [here](https://jitpack.io/#kusumotolab/kGenProg/).
 
 
 ## Usage
