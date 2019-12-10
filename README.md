@@ -1,4 +1,4 @@
-<h1 align="center">kGenProg</h1>
+![logo](assets/logo.png)
 
 <p align="center">
     <strong>kGenProg is an Automated Program Repair tool written in Java for Java.</strong><br>
