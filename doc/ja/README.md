@@ -1,4 +1,6 @@
-<h1 align="center">kGenProg</h1>
+<div align="center">
+    <img src="../../assets/logo.png" width="40%">
+</div>
 
 <p align="center">
     <strong>kGenProg は Java プログラム向けの自動プログラム修正ツールです．</strong><br>
