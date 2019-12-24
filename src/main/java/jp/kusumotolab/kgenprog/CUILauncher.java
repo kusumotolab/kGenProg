@@ -35,7 +35,7 @@ public class CUILauncher {
     }
   }
 
-  public void launch(final Configuration config) throws RuntimeException {
+  public void launch(final Configuration config) {
     setLogLevel(config.getLogLevel());
 
     final FaultLocalization faultLocalization = config.getFaultLocalization()
