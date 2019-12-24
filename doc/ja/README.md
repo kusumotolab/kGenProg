@@ -1,4 +1,6 @@
-<h1 align="center">kGenProg</h1>
+<div align="center">
+    <img src="../../assets/logo.png" width="40%">
+</div>
 
 <p align="center">
     <strong>kGenProg は Java プログラム向けの自動プログラム修正ツールです．</strong><br>
@@ -27,6 +29,30 @@ kGenProg は単一の jar ファイルにまとめてあります．[ここ](htt
 
 [kusumotolab/kGenProg-example](https://github.com/kusumotolab/kGenProg-example) リポジトリに kGenProg の動作確認用のバグをまとめてあります．
 [ここ](https://github.com/kusumotolab/kGenProg-example/archive/master.zip)からすべてのバグをまとめた zip ファイルをダウンロードできます．
+
+
+## Gradle
+kGenProgはGradleの環境でも使いやすいように公開されています．
+現在，Gradle用にはJitPackを利用しています．
+GradleのビルドファイルでJitPackリポジトリを参照するには，build.gradleのrepositoriesに以下の'`maven {... `'で始まる行を追加してください．
+
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+次に，kGenProgへの依存を追加してください．
+
+```
+dependencies {
+    implementation 'com.github.kusumotolab:kGenProg:Tag'
+```
+上記の`Tag`は利用したいkGenProgのバージョンIDで置換してください．
+より詳細な説明は[ここ](https://jitpack.io/#kusumotolab/kGenProg/)に英語で書かれています．
 
 
 ## 使用方法
@@ -84,6 +110,7 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | 交叉種別（`Random`，`Single`，`Uniform`） | `Random` |
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |
+| `--history-record` | 個体の生成過程および生成された全個体を記録する | `false` |
 
 ## 受賞
 - [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
