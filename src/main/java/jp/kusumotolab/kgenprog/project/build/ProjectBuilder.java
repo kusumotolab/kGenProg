@@ -80,7 +80,7 @@ public class ProjectBuilder {
       final boolean successs = build(allAsts, javaSourceObjects, diagnostics, progress);
 
       if (!successs) {
-        return EmptyBuildResults.instance;
+        return new EmptyBuildResults(diagnostics, progress.toString());
       }
     }
 
