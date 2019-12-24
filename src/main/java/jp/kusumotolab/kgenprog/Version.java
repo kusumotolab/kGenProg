@@ -22,31 +22,31 @@ public class Version {
       if (isRunningFromJar()) {
         final ClassLoader cl = getClass().getClassLoader();
         final InputStream is = cl.getResourceAsStream("gradle.properties");
-        return loadVersionInfo(is);
+        final Properties properties = getProperty(is);
+        String id = properties.getProperty("currentVersion");
+        if (properties.containsKey("ci") && properties.getProperty("ci")
+            .equals("true")) {
+          return id;
+        }
+        return id += "+"; // mark as "under development"
       }
 
       // load properties file as just a file located on the current dir.
-      String id = loadVersionInfo(new FileInputStream("./gradle.properties"));
-      id += "+"; // mark as "under development"
-      return id;
+      final InputStream is = new FileInputStream("./gradle.properties");
+      final Properties properties = getProperty(is);
+      String id = properties.getProperty("currentVersion");
+      return id += "+"; // mark as "under development"
 
-    } catch (IOException e) {
+    } catch (final IOException | NullPointerException e) {
       return "unresolved";
     }
   }
 
-  /**
-   * Load version info from the given inputstream
-   * @param is
-   * @return
-   * @throws IOException
-   */
-  private String loadVersionInfo(final InputStream is) throws IOException {
+  private Properties getProperty(final InputStream is) throws IOException {
     final Properties properties = new Properties();
     properties.load(is);
-    return properties.getProperty("currentVersion");
+    return properties;
   }
-
   /**
    * Determine whether the runtime environment is jar or not.
    * @return

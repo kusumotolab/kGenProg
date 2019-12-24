@@ -66,8 +66,6 @@ public class Configuration {
       SecondVariantSelectionStrategy.Strategy.Random;
   public static final boolean DEFAULT_HISTORY_RECORD = false;
 
-  @SuppressWarnings("unused") // Unused attribute but necessary to be accessed by reflection.
-  private final String currentDirectory;
   private final TargetProject targetProject;
   private final List<String> executionTests;
   private final Path outDir;
@@ -88,12 +86,9 @@ public class Configuration {
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
   private final boolean historyRecord;
-  @SuppressWarnings("unused") // Unused attribute but necessary to be accessed by reflection.
-  private final String version;
   private final Builder builder;
 
   private Configuration(final Builder builder) {
-    this.currentDirectory = System.getProperty("user.dir");
     this.targetProject = builder.targetProject;
     this.executionTests = builder.executionTests;
     this.outDir = builder.outDir;
@@ -115,7 +110,6 @@ public class Configuration {
     this.secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
     this.historyRecord = builder.historyRecord;
     this.builder = builder;
-    this.version = Version.instance.id;
   }
 
   public TargetProject getTargetProject() {
@@ -326,7 +320,7 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
     private boolean historyRecord = DEFAULT_HISTORY_RECORD;
-    
+
     private transient final Set<String> optionsSetByCmdLineArgs = new HashSet<>();
     private transient final Set<String> optionsSetByConfigFile = new HashSet<>();
 
@@ -705,6 +699,13 @@ public class Configuration {
               .append(System.lineSeparator());
         }
       }
+
+      // Add dir and version as configuration field.
+      sb.append("currentDirectory = " + System.getProperty("user.dir"))
+          .append(System.lineSeparator())
+          .append("version = " + Version.instance.id)
+          .append(System.lineSeparator());
+
       return sb.toString();
     }
 
