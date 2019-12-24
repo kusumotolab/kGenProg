@@ -41,7 +41,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class Configuration {
 
-  // region Fields
   public static final int DEFAULT_MAX_GENERATION = 10;
   public static final int DEFAULT_MUTATION_GENERATING_COUNT = 10;
   public static final int DEFAULT_CROSSOVER_GENERATING_COUNT = 10;
@@ -63,6 +62,8 @@ public class Configuration {
       SecondVariantSelectionStrategy.Strategy.Random;
   public static final boolean DEFAULT_HISTORY_RECORD = false;
 
+  @SuppressWarnings("unused") // Unused attribute but necessary to be accessed by reflection.
+  private final String currentDirectory;
   private final TargetProject targetProject;
   private final List<String> executionTests;
   private final Path outDir;
@@ -83,11 +84,11 @@ public class Configuration {
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
   private final boolean historyRecord;
-  // endregion
-
-  // region Constructor
+  @SuppressWarnings("unused") // Unused attribute but necessary to be accessed by reflection.
+  private final String version;
 
   private Configuration(final Builder builder) {
+    currentDirectory = System.getProperty("user.dir");
     targetProject = builder.targetProject;
     executionTests = builder.executionTests;
     outDir = builder.outDir;
@@ -108,9 +109,8 @@ public class Configuration {
     firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
     historyRecord = builder.historyRecord;
+    version = Version.instance.id;
   }
-
-  // endregion
 
   public TargetProject getTargetProject() {
     return targetProject;
@@ -220,8 +220,6 @@ public class Configuration {
   }
 
   public static class Builder {
-
-    // region Fields
 
     private static transient final Logger log = LoggerFactory.getLogger(Builder.class);
 
@@ -336,9 +334,6 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
     private boolean historyRecord = DEFAULT_HISTORY_RECORD;
-    // endregion
-
-    // region Constructors
 
     public Builder(final Path rootDir, final Path productPath, final Path testPath) {
       this(rootDir, ImmutableList.of(productPath), ImmutableList.of(testPath));
@@ -361,10 +356,6 @@ public class Configuration {
       productPaths = new ArrayList<>();
       testPaths = new ArrayList<>();
     }
-
-    // endregion
-
-    // region Methods
 
     public static Configuration buildFromCmdLineArgs(final String[] args)
         throws IllegalArgumentException {
@@ -538,10 +529,6 @@ public class Configuration {
       return this;
     }
 
-    // endregion
-
-    // region Private methods
-
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
       validateExistences(builder);
       validateCurrentDir(builder);
@@ -662,10 +649,6 @@ public class Configuration {
 
       return path;
     }
-
-    // endregion
-
-    // region Methods for CmdLineParser
 
     @Option(name = "--config", metaVar = "<path>", usage = "Specifies the path to the config file.")
     private void setConfigPathFromCmdLineParser(final String configPath) {
@@ -815,7 +798,11 @@ public class Configuration {
       this.historyRecord = historyRecord;
     }
 
-    // endregion
+    @Option(name = "--version", usage = "Print version.")
+    private void printVersion(final boolean dummy) {
+      System.out.println("kGenProg version: " + Version.instance.id);
+      System.exit(0); // Immediately quit because version info is a read-only attribute
+    }
 
     private static class PathToString implements Converter<Path, String> {
 
