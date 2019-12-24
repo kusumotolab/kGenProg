@@ -42,6 +42,7 @@ public class ProjectBuilderTest {
 
     assertThat(buildResults).isInstanceOf(EmptyBuildResults.class);
     assertThat(buildResults.isBuildFailed).isTrue();
+    assertThat(buildResults.diagnostics.getDiagnostics()).isNotEmpty();
   }
 
   @Test

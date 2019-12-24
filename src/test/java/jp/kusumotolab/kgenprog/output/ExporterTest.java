@@ -76,7 +76,7 @@ public class ExporterTest {
 
     final DeleteOperation operation = new DeleteOperation();
     final GeneratedSourceCode code = operation.apply(originalSourceCode, location);
-    final TestResults testResults = EmptyTestResults.instance;
+    final TestResults testResults = new EmptyTestResults("for testing.");
     final Base base = new Base(location, operation);
     final Gene gene = new Gene(Collections.singletonList(base));
     final Fitness fitness = new SimpleFitness(1.0d);
