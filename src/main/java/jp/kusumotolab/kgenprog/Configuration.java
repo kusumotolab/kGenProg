@@ -44,7 +44,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 
 public class Configuration {
 
-  // region Fields
   public static final int DEFAULT_MAX_GENERATION = 10;
   public static final int DEFAULT_MUTATION_GENERATING_COUNT = 10;
   public static final int DEFAULT_CROSSOVER_GENERATING_COUNT = 10;
@@ -89,10 +88,6 @@ public class Configuration {
   private final boolean historyRecord;
   private final Builder builder;
 
-  // endregion
-
-  // region Constructor
-
   private Configuration(final Builder builder) {
     this.targetProject = builder.targetProject;
     this.executionTests = builder.executionTests;
@@ -116,8 +111,6 @@ public class Configuration {
     this.historyRecord = builder.historyRecord;
     this.builder = builder;
   }
-
-  // endregion
 
   public TargetProject getTargetProject() {
     return targetProject;
@@ -213,8 +206,6 @@ public class Configuration {
   }
 
   public static class Builder {
-
-    // region Fields
 
     private static transient final Logger log = LoggerFactory.getLogger(Builder.class);
 
@@ -333,10 +324,6 @@ public class Configuration {
     private transient final Set<String> optionsSetByCmdLineArgs = new HashSet<>();
     private transient final Set<String> optionsSetByConfigFile = new HashSet<>();
 
-    // endregion
-
-    // region Constructors
-
     public Builder(final Path rootDir, final Path productPath, final Path testPath) {
       this(rootDir, ImmutableList.of(productPath), ImmutableList.of(testPath));
     }
@@ -358,10 +345,6 @@ public class Configuration {
       productPaths = new ArrayList<>();
       testPaths = new ArrayList<>();
     }
-
-    // endregion
-
-    // region Methods
 
     public static Configuration buildFromCmdLineArgs(final String[] args)
         throws IllegalArgumentException {
@@ -537,10 +520,6 @@ public class Configuration {
       return this;
     }
 
-    // endregion
-
-    // region Private methods
-
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
       validateExistences(builder);
       validateCurrentDir(builder);
@@ -693,10 +672,6 @@ public class Configuration {
       return path;
     }
 
-    // endregion
-
-    // region Methods for CmdLineParser
-
     @Override
     public String toString() {
       final StringBuilder sb = new StringBuilder();
@@ -724,6 +699,13 @@ public class Configuration {
               .append(System.lineSeparator());
         }
       }
+
+      // Add dir and version as configuration field.
+      sb.append("currentDirectory = " + System.getProperty("user.dir"))
+          .append(System.lineSeparator())
+          .append("version = " + Version.instance.id)
+          .append(System.lineSeparator());
+
       return sb.toString();
     }
 
@@ -901,7 +883,11 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("historyRecord");
     }
 
-    // endregion
+    @Option(name = "--version", usage = "Print version.")
+    private void printVersion(final boolean dummy) {
+      System.out.println("kGenProg version: " + Version.instance.id);
+      System.exit(0); // Immediately quit because version info is a read-only attribute
+    }
 
     private static class PathToString implements Converter<Path, String> {
 

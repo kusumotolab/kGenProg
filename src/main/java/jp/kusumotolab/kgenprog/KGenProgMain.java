@@ -168,9 +168,6 @@ public class KGenProgMain {
         .append("==================== kGenProg Configuration ====================")
         .append(System.lineSeparator())
         .append(config.toString())
-        .append("currentDirectory = ")
-        .append(System.getProperty("user.dir"))
-        .append(System.lineSeparator())
         .append("================================================================");
     log.info(sb.toString());
   }

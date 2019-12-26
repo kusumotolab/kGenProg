@@ -87,9 +87,21 @@ jar {
   manifest {
     attributes "Main-Class": "jp.kusumotolab.kgenprog.CUILauncher"
   }
+
+  // exclude jar signatures for jar compression
   from { (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) } } {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
   }
+
+  // copy gradle.properties to resolve version info
+  copy {
+    from 'gradle.properties'
+    into buildDir.name + '/resources/main/'
+  }
+  // annotate whether this task was executed on CI or not
+  def isCi = System.getenv('CI') ? 'true' : 'false'
+  File prop = new File(buildDir.name + '/resources/main/gradle.properties')
+  prop.append('ci = ' + isCi + '\n')
 }
 
 // Define App's version
