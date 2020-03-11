@@ -337,7 +337,6 @@ public class GeneratedJDTASTTest {
         .get(0);
     final JDTASTLocation location = new JDTASTLocation(path, statement, ast);
 
-
     // 置換対象の生成
     final AST ast = jdtAst.getRoot()
         .getAST();

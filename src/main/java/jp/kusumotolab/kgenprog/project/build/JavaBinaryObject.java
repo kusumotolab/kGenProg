@@ -12,18 +12,17 @@ import java.net.URI;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
-import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 
 /**
  * コンパイル後の単一Javaバイナリを表すオブジェクト．<br>
  * バイナリ自体のFQNやバイナリ生成元となったファイルのPath等，翻訳に必要な情報全てを内包する．<br>
  * 差分コンパイル時の重複回避のために，fqnと生成元のastから得られるdigest情報をキーとして保持する．<br>
- * 
- * javax.tools.JavaFileObjectの継承オブジェクトであり，java.tools.JavaFileManagerが呼び出す様々なメソッドを持つ．
- * 
- * @author shinsuke
  *
+ * javax.tools.JavaFileObjectの継承オブジェクトであり，java.tools.JavaFileManagerが呼び出す様々なメソッドを持つ．
+ *
+ * @author shinsuke
  */
 public class JavaBinaryObject implements JavaFileObject {
 
@@ -39,7 +38,7 @@ public class JavaBinaryObject implements JavaFileObject {
 
   /**
    * constructor
-   * 
+   *
    * @param fqn バイナリ自体のFQN
    * @param originFqn バイナリ生成元のFQN（基本はfqn=originFqnだが内部クラスの場合特殊）
    * @param originDigest バイナリ生成元のダイジェスト

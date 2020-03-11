@@ -37,7 +37,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
  * Jacoco+JUnitを用いてテストを実行するスレッドオブジェクト．<br>
  * Threadクラスを継承しており，本テスト実行は別スレッドで処理される．<br>
  * このスレッド化はテストのタイムアウト処理のためであり，高速化や並列化が目的ではないことに注意．<br>
- * 
+ *
  * @author shinsuke
  */
 class TestThread extends Thread {
@@ -56,7 +56,7 @@ class TestThread extends Thread {
 
   /**
    * コンストラクタ．
-   * 
+   *
    * @param buildResults テスト実行対象のバイナリを保持するビルド結果
    * @param targetProject テスト実行の対象プロジェクト
    * @param executionTestNames どのテストを実行するか
@@ -87,7 +87,7 @@ class TestThread extends Thread {
   /**
    * テスト結果の取り出しAPI．<br>
    * スレッド（非同期）実行されるのでrun()の返り値としてではなく，getで結果を取り出す．<br>
-   * 
+   *
    * @return テストの結果
    */
   public TestResults getTestResults() {
@@ -98,7 +98,6 @@ class TestThread extends Thread {
    * JaCoCo + JUnitの実行． <br>
    * コンストラクタで渡されたバイナリに対して，まずJaCoCo計測のためのinstrument処理を施す．<br>
    * さらに，そのバイナリを用いてJUnitを実行する．<br>
-   * 
    */
   public void run() {
     // ビルド失敗時は即座に諦める
@@ -150,7 +149,7 @@ class TestThread extends Thread {
   /**
    * MemoryClassLoaderに対して全てのバイトコード定義を追加する（ロードはせず）．<br>
    * プロダクト系ソースコードのみJaCoCoインストルメントを適用する．
-   * 
+   *
    * @param memoryClassLoader
    * @param fqns
    * @param isInstrument
@@ -227,7 +226,7 @@ class TestThread extends Thread {
 
   /**
    * 全クラスを定義内からロードしてクラスオブジェクトの集合を返す．
-   * 
+   *
    * @param memoryClassLoader
    * @param fqns
    * @return

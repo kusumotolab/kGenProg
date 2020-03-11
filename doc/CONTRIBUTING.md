@@ -4,10 +4,45 @@ Thank you for interest in contributing to **kGenProg**.
 This document describes how to setup development environment as a kGenProg contributor.
 
 ## Requirements
-- JDK 1.8
+- JDK >=1.8
 - Gradle
 
 ## Getting setup
+We strongly recommend to use IntelliJ instead of Eclipse due to the difference of code formatter.
+
+### for IntelliJ developers
+
+1. Get the repository
+```shell
+$ git clone https://github.com/kusumotolab/kGenProg
+$ cd kGenProg
+```
+
+2. Import the project
+```
+(on IntelliJ)
+
+Import Project
+  -> Specify "PATH_TO_REPO"
+  -> Check "Import project from external model"
+  -> Select "Gradle"
+  -> Check "Use default Gradle wrapper (recommended)"
+```
+
+3. Follow the coding style
+```
+(on IntelliJ menubar)
+
+File
+  -> Settings
+  -> Editor > Code Style
+  -> Gear icon
+  -> Import Scheme
+  -> IntelliJ IDEA code style XML
+  -> Specify "PATH_TO_REPO/settings/intellij-coding-style.xml"
+
+```
+
 
 ### for Eclipse developers
 
@@ -51,39 +86,6 @@ Project
  -> Import
  -> Specify "PATH_TO_REPO/settings/eclipse-coding-style.xml"
  -> Apply
-```
-
-### for Intellij developers
-
-1. Get the repository
-```shell
-$ git clone https://github.com/kusumotolab/kGenProg
-$ cd kGenProg
-```
-
-2. Import the project
-```
-(on IntelliJ)
-
-Import Project
-  -> Specify "PATH_TO_REPO"
-  -> Check "Import project from external model"
-  -> Select "Gradle"
-  -> Check "Use default Gradle wrapper (recommended)"
-```
-
-3. Follow the coding style
-```
-(on IntelliJ menubar)
-
-File
-  -> Settings
-  -> Editor > Code Style
-  -> Gear icon
-  -> Import Scheme
-  -> IntelliJ IDEA code style XML
-  -> Specify "PATH_TO_REPO/settings/intellij-coding-style.xml"
-
 ```
 
 ## Coding style

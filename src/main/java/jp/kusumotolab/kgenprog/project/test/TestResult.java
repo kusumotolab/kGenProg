@@ -9,9 +9,8 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 /**
  * 単一のテスト結果を表すオブジェクト．<br>
  * テストの成否とカバレッジ情報を持つ．<br>
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class TestResult {
 
@@ -21,7 +20,7 @@ public class TestResult {
 
   /**
    * constructor
-   * 
+   *
    * @param executedTestFQN 実行したテストメソッドの名前
    * @param failed テストの結果
    * @param coverages テスト対象それぞれの行ごとのCoverage計測結果
@@ -35,6 +34,7 @@ public class TestResult {
 
   /**
    * 実行されたテストのFQN一覧を取得
+   *
    * @return 実行されたテストのFQN一覧
    */
   public List<FullyQualifiedName> getExecutedTargetFQNs() {
@@ -46,6 +46,7 @@ public class TestResult {
 
   /**
    * 指定テストFQNに対するカバレッジの結果を取得
+   *
    * @param testFQN カバレッジの結果
    * @return
    */
@@ -60,6 +61,7 @@ public class TestResult {
 
   /**
    * jsonシリアライザ
+   *
    * @param indentDepth インデント幅
    * @return
    */

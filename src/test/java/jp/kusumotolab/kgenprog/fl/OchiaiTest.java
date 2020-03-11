@@ -35,7 +35,8 @@ public class OchiaiTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 1.0)); // 0.707107 (the most suspicious stmt)
+    final double susp1 =
+        1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 1.0)); // 0.707107 (the most suspicious stmt)
     final double susp2 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
     final double susp3 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
     final double susp4 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
@@ -59,7 +60,8 @@ public class OchiaiTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 1.0)); // 0.707107 (the most suspicious stmt)
+    final double susp1 =
+        1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 1.0)); // 0.707107 (the most suspicious stmt)
     final double susp2 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
     final double susp3 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
     final double susp4 = 1.0 / Math.sqrt((1.0 + 0.0) * (1.0 + 3.0)); // 0.50
@@ -68,9 +70,9 @@ public class OchiaiTest {
   }
 
   /**
-   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
-   *  <br>
-   *  疑惑値のリストが空になることを期待する.
+   * ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
+   * <br>
+   * 疑惑値のリストが空になることを期待する.
    */
   @Test
   public void testForFailedProject() throws IOException {

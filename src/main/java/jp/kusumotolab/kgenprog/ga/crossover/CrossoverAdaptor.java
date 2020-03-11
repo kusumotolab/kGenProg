@@ -13,9 +13,8 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
  * 交叉のアダプタークラス．<br>
  * 交叉アルゴリズムを実装するクラスはインターフェースCrossoverを直接実装する代わりにこのクラスを継承してもよい．<br>
  * このクラスを継承した方が，コードの記述量が少なくなるはず．<br>
- * 
- * @author higo
  *
+ * @author higo
  */
 public abstract class CrossoverAdaptor implements Crossover {
 
@@ -27,7 +26,7 @@ public abstract class CrossoverAdaptor implements Crossover {
 
   /**
    * コンストラクタ．交叉に必要な情報を全て引数として渡す必要あり．
-   * 
+   *
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
@@ -43,10 +42,9 @@ public abstract class CrossoverAdaptor implements Crossover {
 
   /**
    * 1つ目の親を返す．
-   * 
-   * @see jp.kusumotolab.kgenprog.ga.crossover.Crossover#getFirstVariantSelectionStrategy()
-   * 
+   *
    * @return 1つ目の親
+   * @see jp.kusumotolab.kgenprog.ga.crossover.Crossover#getFirstVariantSelectionStrategy()
    */
   @Override
   public FirstVariantSelectionStrategy getFirstVariantSelectionStrategy() {
@@ -55,10 +53,9 @@ public abstract class CrossoverAdaptor implements Crossover {
 
   /**
    * 2つ目の親を返す．
-   * 
-   * @see jp.kusumotolab.kgenprog.ga.crossover.Crossover#getSecondVariantSelectionStrategy()
-   * 
+   *
    * @return 2つ目の親
+   * @see jp.kusumotolab.kgenprog.ga.crossover.Crossover#getSecondVariantSelectionStrategy()
    */
   @Override
   public SecondVariantSelectionStrategy getSecondVariantSelectionStrategy() {
@@ -67,7 +64,7 @@ public abstract class CrossoverAdaptor implements Crossover {
 
   /**
    * 交叉処理を行うメソッド．交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．
-   * 
+   *
    * @param variantStore 交叉対象の個体群
    * @return 交叉により生成された個体群
    */

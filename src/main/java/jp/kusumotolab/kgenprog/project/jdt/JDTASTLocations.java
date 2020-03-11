@@ -16,7 +16,8 @@ public class JDTASTLocations<T extends SourcePath> implements ASTLocations {
   private final T sourcePath;
   private final GeneratedJDTAST<?> generatedAST;
 
-  public JDTASTLocations(final GeneratedJDTAST<?> generatedAST, final CompilationUnit root, final T sourcePath) {
+  public JDTASTLocations(final GeneratedJDTAST<?> generatedAST, final CompilationUnit root,
+      final T sourcePath) {
     this.generatedAST = generatedAST;
     this.sourcePath = sourcePath;
     final StatementListVisitor visitor = new StatementListVisitor();

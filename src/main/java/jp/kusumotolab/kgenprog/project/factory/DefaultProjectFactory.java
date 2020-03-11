@@ -54,7 +54,7 @@ public class DefaultProjectFactory implements ProjectFactory {
 
   /**
    * ディレクトリを含みうるList<Path>から，JavaファイルのみのList<Path>を返す
-   * 
+   *
    * @param paths
    * @return
    */

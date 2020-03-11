@@ -68,9 +68,9 @@ public class JaccardTest {
   }
 
   /**
-   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
-   *  <br>
-   *  疑惑値のリストが空になることを期待する.
+   * ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
+   * <br>
+   * 疑惑値のリストが空になることを期待する.
    */
   @Test
   public void testForFailedProject() throws IOException {

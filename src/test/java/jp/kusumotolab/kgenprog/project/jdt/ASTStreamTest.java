@@ -34,7 +34,8 @@ public class ASTStreamTest {
         .containsExactly("CompilationUnit", "TypeDeclaration", "SimpleName", "MethodDeclaration",
             "Modifier", "PrimitiveType", "SimpleName", "Block", "VariableDeclarationStatement",
             "PrimitiveType", "VariableDeclarationFragment", "SimpleName", "ReturnStatement",
-            "InfixExpression", "SimpleName", "NumberLiteral");;
+            "InfixExpression", "SimpleName", "NumberLiteral");
+    ;
   }
 
 }

@@ -4,14 +4,13 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
  * カバレッジ情報を表すインタフェース．<br>
- * 
+ *
  * 当該カバレッジ情報に対する以下のようなクエリを受け付ける，<br>
  * - どのソースコードの情報なのか<br>
  * - どの位置（≒行）がどのステータス（実行されたか否か等）なのか<br>
  * - ステータスの総数（≒行数）<br>
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public interface Coverage {
 
@@ -37,12 +36,14 @@ public interface Coverage {
 
   /**
    * 本カバレジに対応する実行テストのFQNを取得
+   *
    * @return 実行テストのFQN
    */
   FullyQualifiedName getExecutedTargetFQN();
 
   /**
    * 行に対するステータスを取得
+   *
    * @param index 行番号
    * @return ステータス値
    */
@@ -50,6 +51,7 @@ public interface Coverage {
 
   /**
    * ステータスの長さ（トータル行）を取得
+   *
    * @return
    */
   int getStatusesSize();

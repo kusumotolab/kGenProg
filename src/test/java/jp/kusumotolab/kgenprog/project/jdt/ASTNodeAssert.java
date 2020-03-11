@@ -27,7 +27,7 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
 
   /**
    * コーディングスタイルを正規化した上でASTの中身が同じソースコードかを判定する． 正規化にはある程度限界があるので注意 （空行が2つ以上連続するケースなど）
-   * 
+   *
    * @param sourceCode
    * @return
    */
@@ -46,7 +46,7 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
 
   /**
    * コーディングスタイルを正規化した上でASTの中身が同じソースコードかを判定する．
-   * 
+   *
    * @param sourceCode
    * @return
    */
@@ -56,7 +56,7 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
 
   /**
    * eclipse.jdt.coreを使ったフォーマッタ．
-   * 
+   *
    * @param source
    * @return
    */

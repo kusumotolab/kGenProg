@@ -12,7 +12,7 @@ public class DeleteOperation extends JDTOperation {
   }
 
   @Override
-  public String getName(){
+  public String getName() {
     return "delete";
   }
 

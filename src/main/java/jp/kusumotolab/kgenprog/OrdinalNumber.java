@@ -4,9 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 序数を生成するためのクラス
- * 
- * @author higo
  *
+ * @author higo
  */
 public class OrdinalNumber extends AtomicInteger {
 
@@ -21,7 +20,7 @@ public class OrdinalNumber extends AtomicInteger {
 
   /**
    * コンストラクタ．初期値を与えてインスタンスを生成する．
-   * 
+   *
    * @param initialValue 初期値
    */
   public OrdinalNumber(final int initialValue) {
@@ -30,7 +29,7 @@ public class OrdinalNumber extends AtomicInteger {
 
   /**
    * 序数の文字列表現を返す．
-   * 
+   *
    * @return 序数の文字列表現
    */
   @Override

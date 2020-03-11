@@ -35,7 +35,8 @@ public class AmpleTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = Math.abs(1.0 / (1.0 + 0.0) - 1.0 / (1.0 + 2.0)); // 0.666667 (the most suspicious stmt)
+    final double susp1 = Math.abs(
+        1.0 / (1.0 + 0.0) - 1.0 / (1.0 + 2.0)); // 0.666667 (the most suspicious stmt)
     final double susp2 = Math.abs(0.0 / (0.0 + 1.0) - 2.0 / (2.0 + 1.0)); // 0.666666
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
         .containsExactly(susp1, susp2);
@@ -57,7 +58,8 @@ public class AmpleTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = Math.abs(1.0 / (1.0 + 0.0) - 1.0 / (1.0 + 7.0)); // 0.875 (the most suspicious stmt)
+    final double susp1 = Math.abs(
+        1.0 / (1.0 + 0.0) - 1.0 / (1.0 + 7.0)); // 0.875 (the most suspicious stmt)
     final double susp2 = Math.abs(1.0 / (1.0 + 0.0) - 3.0 / (3.0 + 5.0)); // 0.625
     final double susp3 = Math.abs(1.0 / (1.0 + 0.0) - 3.0 / (3.0 + 5.0)); // 0.625
     final double susp4 = Math.abs(1.0 / (1.0 + 0.0) - 3.0 / (3.0 + 5.0)); // 0.625
@@ -70,9 +72,9 @@ public class AmpleTest {
   }
 
   /**
-   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
-   *  <br>
-   *  疑惑値のリストが空になることを期待する.
+   * ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
+   * <br>
+   * 疑惑値のリストが空になることを期待する.
    */
   @Test
   public void testForFailedProject() throws IOException {

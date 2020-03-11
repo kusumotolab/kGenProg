@@ -12,9 +12,8 @@ import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 /**
  * 行を単位としたカバレッジ情報を表す．<br>
  * どのソースコードに対して（FQN），各行がどのような結果（Status）だったのかを保持する．
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class RawCoverage implements Coverage {
 

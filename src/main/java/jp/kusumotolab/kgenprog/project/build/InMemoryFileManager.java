@@ -17,9 +17,8 @@ import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
  * メモリ上でファイルシステムを模倣するファイルマネージャ．<br>
  * KGP高速化のためのインメモリビルドが責務．<br>
  * {@link javax.tools.JavaCompiler}が本クラスを操作し，ビルド結果の書き出しや依存クラスの解決を行う．<br>
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
@@ -31,6 +30,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
 
   /**
    * コンストラクタ
+   *
    * @param fileManager クラスパス解決に用いるファイルマネージャ
    * @param binaryStore グローバルキャッシュに用いるバイナリ集合
    * @param classPathBinaries クラスパスの解決に用いられるバイナリ集合（差分ビルド用）
@@ -80,9 +80,9 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   /**
    * FMの保持する各種ファイルを探し出すメソッド．ビルド中に呼ばれる．<br>
    * ソースコードファイルの探索や依存解決等に利用される．
-   * 
+   *
    * @see javax.tools.ForwardingJavaFileManager#list(javax.tools.JavaFileManager.Location,
-   *      java.lang.String, java.util.Set, boolean)
+   * java.lang.String, java.util.Set, boolean)
    */
   @Override
   public Iterable<JavaFileObject> list(final Location location, final String packageName,
@@ -103,10 +103,10 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
   /**
    * バイナリの名前解決を行う．<br>
    * KGPで利用するJavaMemoryObjectが対象の場合に限り，特殊処理を加えている．<br>
-   * 
-   * @see javax.tools.ForwardingJavaFileManager#inferBinaryName(javax.tools.JavaFileManager.Location,
-   *      javax.tools.JavaFileObject)
+   *
    * @throws IllegalStateException {@inheritDoc}
+   * @see javax.tools.ForwardingJavaFileManager#inferBinaryName(javax.tools.JavaFileManager.Location,
+   * javax.tools.JavaFileObject)
    */
   @Override
   public String inferBinaryName(final Location location, final JavaFileObject file) {
@@ -120,7 +120,7 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
 
   /**
    * 指定ファイルが同一オブジェクトを確認する．<br>
-   * 
+   *
    * TODO 現在利用されていないので無条件で例外を吐かせておく．必要なら実装する．
    */
   @Override

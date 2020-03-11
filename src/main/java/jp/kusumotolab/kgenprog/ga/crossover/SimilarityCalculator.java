@@ -7,15 +7,14 @@ import java.util.function.Function;
 
 /**
  * 2つのインスタンスの類似度を計算するクラス．
- * 
- * @author higo
  *
+ * @author higo
  */
 public class SimilarityCalculator {
 
   /**
    * 2つのインスタンスの類似度を計算する．
-   * 
+   *
    * @param t1 1つ目のインスタンス
    * @param t2 2つ目のインスタンス
    * @param function インスタンスが持つデータ（類似度の計算対象）を取得する関数．

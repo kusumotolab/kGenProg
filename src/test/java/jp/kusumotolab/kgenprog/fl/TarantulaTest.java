@@ -35,7 +35,8 @@ public class TarantulaTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 1.0 / (1.0 + 2.0)); // 0.75 (the most suspicious stmt)
+    final double susp1 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 1.0 / (1.0
+        + 2.0)); // 0.75 (the most suspicious stmt)
     final double susp2 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 0.0)); // 0.5
     final double susp3 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 0.0)); // 0.5
     final double susp4 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 0.0)); // 0.5
@@ -59,7 +60,8 @@ public class TarantulaTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 1.0 / (1.0 + 7.0)); // 0.888889 (the most suspicious stmt)
+    final double susp1 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 1.0 / (1.0
+        + 7.0)); // 0.888889 (the most suspicious stmt)
     final double susp2 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 5.0)); // 0.727272
     final double susp3 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 5.0)); // 0.727272
     final double susp4 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 5.0)); // 0.727272
@@ -68,9 +70,9 @@ public class TarantulaTest {
   }
 
   /**
-   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
-   *  <br>
-   *  疑惑値のリストが空になることを期待する.
+   * ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
+   * <br>
+   * 疑惑値のリストが空になることを期待する.
    */
   @Test
   public void testForFailedProject() throws IOException {

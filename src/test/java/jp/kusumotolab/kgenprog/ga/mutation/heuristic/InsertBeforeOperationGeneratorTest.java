@@ -18,7 +18,8 @@ public class InsertBeforeOperationGeneratorTest extends OperationGeneratorTest {
   public void testCanBeApply() {
     final List<GeneratedAST<ProductSourcePath>> asts = createASTs(
         Paths.get("example", "CloseToZero01", "src", "example", "CloseToZero.java"));
-    final InsertBeforeOperationGenerator operationGenerator = new InsertBeforeOperationGenerator(1.0);
+    final InsertBeforeOperationGenerator operationGenerator = new InsertBeforeOperationGenerator(
+        1.0);
     final List<JDTASTLocation> nonInsertableLocations = asts.get(0)
         .createLocations()
         .getAll()

@@ -36,10 +36,9 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
    * @param variantStore これまでの個体の情報を保持している VariantStore
    * @param gene ソースコードの編集操作列
    * @return 生成されたソースコード
-   *  新規なら GeneratedSourceCode
-   *  生成に失敗したら GenerationFailedSourceCode
-   *  すでに生成済みなら ReproducedSourceCode
-   *
+   * 新規なら GeneratedSourceCode
+   * 生成に失敗したら GenerationFailedSourceCode
+   * すでに生成済みなら ReproducedSourceCode
    * @see GeneratedSourceCode
    * @see jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode
    * @see ReproducedSourceCode

@@ -258,7 +258,8 @@ public class ASTAnalyzerTest {
       final WhileStatement whileStatement = (WhileStatement) statements.get(1);
       final Block body = (Block) whileStatement.getBody();
       final List statementsInLoop = body.statements();
-      final boolean canContinue = astAnalyzer.canInsertContinue(((Statement) statementsInLoop.get(0)));
+      final boolean canContinue = astAnalyzer.canInsertContinue(
+          ((Statement) statementsInLoop.get(0)));
       assertThat(canContinue).isTrue();
     }
   }

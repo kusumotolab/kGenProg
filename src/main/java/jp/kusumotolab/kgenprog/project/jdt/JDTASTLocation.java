@@ -14,9 +14,8 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 /**
  * JDT AST の単一ノードを示すオブジェクト Operation のターゲットに利用する
  *
- * @see jp.kusumotolab.kgenprog.JDTOperaion
  * @author r-arima
- *
+ * @see jp.kusumotolab.kgenprog.JDTOperaion
  */
 public class JDTASTLocation implements ASTLocation {
 
@@ -25,7 +24,8 @@ public class JDTASTLocation implements ASTLocation {
   private final SourcePath sourcePath;
   private final GeneratedJDTAST<?> generatedAST;
 
-  public JDTASTLocation(final SourcePath sourcePath, final ASTNode node, final GeneratedJDTAST<?> generatedAST) {
+  public JDTASTLocation(final SourcePath sourcePath, final ASTNode node,
+      final GeneratedJDTAST<?> generatedAST) {
     this.node = node;
     this.sourcePath = sourcePath;
     this.generatedAST = generatedAST;

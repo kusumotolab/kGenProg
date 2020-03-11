@@ -9,11 +9,10 @@ import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
 /**
  * junitテストをローカルマシン上で実行する．<br>
  * コンストラクタで指定されたConfiguration情報に基づき，指定Variantのテストを実行する．<br>
- * 
- * TestThreadクラスのラッパークラスである．<br>
- * 
- * @author shinsuke
  *
+ * TestThreadクラスのラッパークラスである．<br>
+ *
+ * @author shinsuke
  */
 public class LocalTestExecutor implements TestExecutor {
 
@@ -22,7 +21,7 @@ public class LocalTestExecutor implements TestExecutor {
 
   /**
    * コンストラクタ．<br>
-   * 
+   *
    * @param config テスト実行に必要なプロジェクト設定情報
    */
   public LocalTestExecutor(final Configuration config) {

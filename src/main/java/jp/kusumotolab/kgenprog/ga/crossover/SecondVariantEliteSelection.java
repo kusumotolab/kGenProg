@@ -6,9 +6,8 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
  * 交叉において，2つ目の親を評価関数に基づいて選択するアルゴリズムを実装したクラス．
- * 
- * @author higo
  *
+ * @author higo
  */
 public class SecondVariantEliteSelection implements SecondVariantSelectionStrategy {
 
@@ -16,11 +15,10 @@ public class SecondVariantEliteSelection implements SecondVariantSelectionStrate
    * 選択を行うメソッド．<br>
    * 選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．<br>
    *
-   * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
-   * 
    * @param variants 選択対象の個体群
    * @param firstVariant 1つ目の親として選択された個体
    * @return 選択された個体
+   * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
    */
   @Override
   public Variant exec(final List<Variant> variants, final Variant firstVariant)

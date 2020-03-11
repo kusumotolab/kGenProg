@@ -7,9 +7,8 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
  * 交叉において，2つ目の親をランダムに選択するアルゴリズムを実装したクラス．
- * 
- * @author higo
  *
+ * @author higo
  */
 public class SecondVariantRandomSelection implements SecondVariantSelectionStrategy {
 
@@ -17,7 +16,7 @@ public class SecondVariantRandomSelection implements SecondVariantSelectionStrat
 
   /**
    * コンストラクタ．ランダム選択を行うためのシードを引数として渡す必要あり．．
-   * 
+   *
    * @param random ランダム選択を行うためのシード
    */
   public SecondVariantRandomSelection(final Random random) {
@@ -28,11 +27,10 @@ public class SecondVariantRandomSelection implements SecondVariantSelectionStrat
    * 選択を行うメソッド．<br>
    * 選択対象の個体群および1つ目の親として選択された個体をを引数として与える必要あり．<br>
    *
-   * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
-   * 
    * @param variants 選択対象の個体群
    * @param firstVariant 1つ目の親として選択された個体
    * @return 選択された個体
+   * @see jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy#exec(List, Variant)
    */
   @Override
   public Variant exec(final List<Variant> variants, final Variant firstVariant)

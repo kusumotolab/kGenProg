@@ -11,7 +11,6 @@ public interface SourceCodeValidation {
 
   /**
    * SourceCodeValidation#exec用のパラメータオブジェクト
-   *
    */
   public class Input {
 
@@ -20,7 +19,6 @@ public interface SourceCodeValidation {
     private final TestResults testResults;
 
     /**
-     * 
      * @param gene 評価対象の遺伝子
      * @param sourceCode 評価対象のソースコード
      * @param testResults 評価対象のテスト結果
@@ -33,7 +31,6 @@ public interface SourceCodeValidation {
     }
 
     /**
-     * 
      * @return 評価対象の遺伝子
      */
     public Gene getGene() {
@@ -41,7 +38,6 @@ public interface SourceCodeValidation {
     }
 
     /**
-     * 
      * @return 評価対象のソースコード
      */
     public GeneratedSourceCode getSourceCode() {
@@ -49,7 +45,6 @@ public interface SourceCodeValidation {
     }
 
     /**
-     * 
      * @return 評価対象のテスト結果
      */
     public TestResults getTestResults() {

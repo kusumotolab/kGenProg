@@ -9,7 +9,6 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 /**
- *
  * @deprecated #507 の修正により不要になったため，本クラスは廃止 & Ignore
  */
 @Ignore

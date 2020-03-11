@@ -43,14 +43,19 @@ public class ASTNodeAssertTest {
 
     // @formatter:off
     final CompilationUnit compilationUnit = createCompilationUnit(source);
-    final TypeDeclaration typeDecralation = (TypeDeclaration) compilationUnit.types().get(0);
-    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations().get(0);
+    final TypeDeclaration typeDecralation = (TypeDeclaration) compilationUnit.types()
+        .get(0);
+    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations()
+        .get(0);
     final Block block = (Block) methodDecralation.getBody();
-    final Statement statement1 = (Statement) block.statements().get(0);       // "int n = 0;"
-    final IfStatement ifStatement = (IfStatement) block.statements().get(1);  // "if (n == 1) {...}"
+    final Statement statement1 = (Statement) block.statements()
+        .get(0);       // "int n = 0;"
+    final IfStatement ifStatement = (IfStatement) block.statements()
+        .get(1);  // "if (n == 1) {...}"
     final Expression expression = (Expression) ifStatement.getExpression();   // "n == 1"
     final Block block2 = (Block) ifStatement.getThenStatement();
-    final Statement statement2 = (Statement) block2.statements().get(0);      // "System.out.println(n);"
+    final Statement statement2 = (Statement) block2.statements()
+        .get(0);      // "System.out.println(n);"
     // @formatter:on
 
     // 抜き出した要素をセット
@@ -86,7 +91,8 @@ public class ASTNodeAssertTest {
     assertThat(statement1).isSameSourceCodeAs("int   n   =   0  ;");
     assertThat(statement1).isSameSourceCodeAs("  int n = 0;");
     assertThat(statement1).isSameSourceCodeAs("  int n = 0;  ");
-    assertThat(statement1).isSameSourceCodeAs("\n  int n = 0;");;
+    assertThat(statement1).isSameSourceCodeAs("\n  int n = 0;");
+    ;
     assertThat(statement1).isSameSourceCodeAs("\nint\nn\n=\n0\n;\n");
   }
 

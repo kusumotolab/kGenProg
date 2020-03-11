@@ -6,9 +6,8 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 /**
  * テスト失敗時のテスト結果．<br>
  * いわゆるNullオブジェクト．<br>
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class EmptyTestResults extends TestResults {
 
@@ -74,7 +73,7 @@ public class EmptyTestResults extends TestResults {
 
   /**
    * テスト結果が得られなかった理由を返す．
-   * 
+   *
    * @return テスト結果が得られなかった理由
    */
   public String getCause() {

@@ -20,6 +20,7 @@ public class EliteAndOldVariantSelection implements VariantSelection {
 
   /**
    * Variantの算出を行う.結果はVariantのリストとして返す.
+   *
    * @param current 現在の世代に引き継がれた個体群
    * @param generated 現在の世代で新しく生成された個体群
    * @return list Variantの算出結果
