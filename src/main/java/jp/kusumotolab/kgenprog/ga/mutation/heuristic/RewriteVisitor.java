@@ -24,6 +24,7 @@ public class RewriteVisitor extends ASTVisitor {
 
   /**
    * コンストラクタ
+   *
    * @param node 書き換える対象のノード
    * @param nameToFqnMap 変数名と型のマッピング
    * @param fqnToNamesMap 書き換える場所で使える型と変数名のマッピング

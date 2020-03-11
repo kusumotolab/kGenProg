@@ -8,12 +8,14 @@ import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
  * 変数を表すクラス
  */
 public class Variable {
+
   private final String name;
   private final FullyQualifiedName fqn;
   private final boolean isFinal;
 
   /**
    * コンストラクタ
+   *
    * @param name 変数名
    * @param type 変数の型の文字列
    * @param isFinal final 修飾子がついているかどうか
@@ -24,6 +26,7 @@ public class Variable {
 
   /**
    * コンストラクタ
+   *
    * @param name 変数名
    * @param fqn 変数の型
    * @param isFinal final 修飾子がついているかどうか

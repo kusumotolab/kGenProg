@@ -28,6 +28,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
   /**
    * 与えられた数式が以下条件を満たすかを確認する．満たす場合，計算手順をある程度省略可能．<br>
    * 条件：ef=0 の場合に常に計算結果が 0 になる．<br>
+   *
    * @see <a href="https://github.com/kusumotolab/kGenProg/pull/658">issue#658</a>
    */
   private boolean isSkippableFormula() {
@@ -39,7 +40,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
 
   /**
    * 疑惑値を計算する.
-   * 
+   *
    * @param generatedSourceCode 自動バグ限局の対象ソースコード
    * @param testResults テストの実行結果
    * @return suspiciousnesses 疑惑値

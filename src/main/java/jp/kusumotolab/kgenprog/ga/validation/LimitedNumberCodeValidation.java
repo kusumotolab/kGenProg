@@ -10,7 +10,6 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
  * テスト通過率をそのまま評価値とする評価方法．ただし評価の残り回数を過ぎると評価値を0にする．
- *
  */
 public class LimitedNumberCodeValidation implements SourceCodeValidation {
 
@@ -27,7 +26,7 @@ public class LimitedNumberCodeValidation implements SourceCodeValidation {
 
   /**
    * 与えられた評価回数で初期化
-   * 
+   *
    * @param capacity 評価回数
    */
   public LimitedNumberCodeValidation(final int capacity) {

@@ -69,7 +69,8 @@ public class HeuristicMutation extends Mutation {
 
     final ASTNode nodeForReuse = operationGenerator.chooseNodeForReuse(candidateSelection, location,
         scopeType); // 再利用するノードの選択
-    final ASTNode rewritedNode = rewrite(nodeForReuse, variableSearcher.exec(location)); // 再利用するノードを書き換え
+    final ASTNode rewritedNode = rewrite(nodeForReuse,
+        variableSearcher.exec(location)); // 再利用するノードを書き換え
     return operationGenerator.generate(jdtastLocation, rewritedNode); // 操作の生成
   }
 

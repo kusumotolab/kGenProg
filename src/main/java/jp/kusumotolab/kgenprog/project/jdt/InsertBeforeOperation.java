@@ -25,7 +25,7 @@ public class InsertBeforeOperation extends JDTOperation {
   }
 
   @Override
-  public String getName(){
+  public String getName() {
     return "insert_before";
   }
 

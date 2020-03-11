@@ -10,9 +10,8 @@ import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 /**
  * example/BuildSuccess01-03に対応するクラス名等のエイリアス． <br>
  * テストのためのユーティリティクラス．
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class ExampleAlias {
 

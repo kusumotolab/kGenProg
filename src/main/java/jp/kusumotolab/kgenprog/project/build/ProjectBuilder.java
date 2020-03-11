@@ -20,15 +20,14 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 /**
  * javaプロジェクトのビルドを行う．<br>
  * 基本はjavax.tools.JavaCompilerのラッパー．<br>
- * 
+ *
  * コンストラクタで与えられた{@link TargetProject}の情報に基づき，<br>
  * {@link GeneratedSourceCode}に含まれる全ソースコードをバイナリ形式に変換する．<br>
  * ビルドはファイルシステムを介さず全てメモリ上で実行する（インメモリビルド）．<br>
  * さらに，本クラスはバイナリキャッシュ{@link BinaryStore}を保持しており，<br>
  * 過去にコンパイルしたことのあるソースコードのビルドはスキップする（差分ビルド）．<br>
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class ProjectBuilder {
 
@@ -45,7 +44,7 @@ public class ProjectBuilder {
 
   /**
    * コンストラクタ．ビルド対象のプロジェクトを受け取る．
-   * 
+   *
    * @param targetProject ビルド対象のプロジェクト
    */
   public ProjectBuilder(final TargetProject targetProject) {
@@ -61,7 +60,7 @@ public class ProjectBuilder {
   /**
    * 本クラスの主責務たるメソッド．<br>
    * 与えられた generatedSourceCodeをビルドし，ビルド結果オブジェクトを返す．
-   * 
+   *
    * @param generatedSourceCode ビルド対象のソースコード
    * @return ビルド結果
    */
@@ -109,7 +108,7 @@ public class ProjectBuilder {
 
   /**
    * binaryStoreから指定astに対応するJavaBinaryObjectの部分集合を取り出す．
-   * 
+   *
    * @param asts
    * @return
    */
@@ -128,7 +127,7 @@ public class ProjectBuilder {
   /**
    * 指定astからコンパイル元となるJavaSourceObjectを生成する．<br>
    * ただしbinaryStoreに保持されているキャッシュがある場合はスキップ．
-   * 
+   *
    * @param asts
    * @return
    */
@@ -141,7 +140,7 @@ public class ProjectBuilder {
 
   /**
    * デフォルトのコンパイルオプションを生成する．
-   * 
+   *
    * @return
    */
   private List<String> createDefaultCompilationOptions() {

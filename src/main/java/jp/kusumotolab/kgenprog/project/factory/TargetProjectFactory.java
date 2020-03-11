@@ -12,7 +12,7 @@ public class TargetProjectFactory {
   /**
    * TargetProjectを生成するファクトリメソッド． 各種ビルドツールの設定ファイルが存在すればそこから，
    * 存在しなければヒューリスティックにフォルダを探索してTargetProjectを生成する．
-   * 
+   *
    * @param rootPath 対象のルートパス
    * @return TargetProject
    */
@@ -41,7 +41,7 @@ public class TargetProjectFactory {
 
   /**
    * TargetProjectを生成するファクトリメソッド． 全パラメータを指定する必要あり．
-   * 
+   *
    * @param rootPath 対象のルートパス
    * @param pathsForProductSource
    * @param pathsForTestSource
@@ -52,19 +52,20 @@ public class TargetProjectFactory {
   public static TargetProject create(final Path rootPath, final List<Path> pathsForProductSource,
       final List<Path> pathsForTestSource, final List<Path> pathsForClass,
       final JUnitVersion junitVersion) {
-    
+
     // TODO ビルドツールの設定ファイルを参照するように変えたが，そのファイルの中身は一切反映されていない．
     // いったんunusedで逃げておく．
     @SuppressWarnings("unused")
-    final List<Path> pathsForBuildConfig = getBuildConfigPaths(rootPath);
-    
+    final List<Path> pathsForBuildConfig = getBuildConfigPaths(
+        rootPath);
+
     return new DefaultProjectFactory(rootPath, pathsForProductSource, pathsForTestSource,
         pathsForClass, junitVersion).create();
   }
 
   /**
    * ファクトリ一覧の生成
-   * 
+   *
    * @param rootPath
    * @return
    */

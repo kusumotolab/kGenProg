@@ -18,11 +18,10 @@ import jp.kusumotolab.kgenprog.project.test.Coverage.Status;
 /**
  * 全テストの結果を表すオブジェクト．<br>
  * TestResultの集合．<br>
- * 
- * FL計算に用いる情報集約APIを持つ．<br>
- * 
- * @author shinsuke
  *
+ * FL計算に用いる情報集約APIを持つ．<br>
+ *
+ * @author shinsuke
  */
 public class TestResults {
 
@@ -47,7 +46,7 @@ public class TestResults {
 
   /**
    * 新規TestResultの追加
-   * 
+   *
    * @param testResult
    */
   public void add(final TestResult testResult) {
@@ -56,7 +55,7 @@ public class TestResults {
 
   /**
    * 失敗したテストのFQN一覧を取得．
-   * 
+   *
    * @return 失敗したテスト結果s
    */
   public List<TestResult> getFailedTestResults() {
@@ -68,7 +67,7 @@ public class TestResults {
 
   /**
    * 成功したテストのFQN一覧を取得．
-   * 
+   *
    * @return 成功したテスト結果s
    */
   public List<TestResult> getSuccessedTestResults() {
@@ -80,7 +79,7 @@ public class TestResults {
 
   /**
    * 実行されたテストメソッドのFQN一覧を返す．
-   * 
+   *
    * @return 実行されたテストメソッドのFQN一覧
    */
   public Set<FullyQualifiedName> getExecutedTestFQNs() {
@@ -89,7 +88,7 @@ public class TestResults {
 
   /**
    * 失敗したテストのFQN一覧を取得．
-   * 
+   *
    * @return 失敗したテストのFQN一覧
    */
   public List<FullyQualifiedName> getFailedTestFQNs() {
@@ -115,7 +114,7 @@ public class TestResults {
 
   /**
    * 実行された単一テストメソッドの結果を返す．
-   * 
+   *
    * @param testFQN 対象のテストメソッドFQN
    * @return 実行された単一テストメソッドの結果
    */
@@ -126,7 +125,7 @@ public class TestResults {
 
   /**
    * テスト成功率を取得（全成功テストメソッド / 全実行テストメソッド）
-   * 
+   *
    * @return テスト成功率
    */
   public double getSuccessRate() {
@@ -138,7 +137,7 @@ public class TestResults {
 
   /**
    * FLで用いる4メトリクスのprivateなParameterized-Method
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @param status
@@ -169,7 +168,7 @@ public class TestResults {
 
   /**
    * FLで用いる4メトリクスのprivateなParameterized-Method
-   * 
+   *
    * @param targetFQN 計算対象クラスのFQN
    * @param lineNumber 計算対象クラスの行番号
    * @param status 実行されたか否か
@@ -201,7 +200,7 @@ public class TestResults {
 
   /**
    * a_ep
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -213,7 +212,7 @@ public class TestResults {
 
   /**
    * a_ef
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -225,7 +224,7 @@ public class TestResults {
 
   /**
    * a_np
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -238,7 +237,7 @@ public class TestResults {
 
   /**
    * a_nf
-   * 
+   *
    * @param productSourcePath
    * @param location
    * @return
@@ -251,6 +250,7 @@ public class TestResults {
 
   /**
    * jsonシリアライザ
+   *
    * @return
    */
   @Override
@@ -268,6 +268,7 @@ public class TestResults {
 
   /**
    * ビルドの結果 (分散に使用)
+   *
    * @return
    */
   public BuildResults getBuildResults() {
@@ -276,9 +277,11 @@ public class TestResults {
 
   /**
    * Pathに対応するFQNを返す (分散に使用するため，privateにはしない)
+   *
    * @return
    */
-  protected Set<FullyQualifiedName> getCorrespondingFqns(final ProductSourcePath productSourcePath) {
+  protected Set<FullyQualifiedName> getCorrespondingFqns(
+      final ProductSourcePath productSourcePath) {
     return buildResults.binaryStore.get(productSourcePath)
         .stream()
         .map(JavaBinaryObject::getFqn)

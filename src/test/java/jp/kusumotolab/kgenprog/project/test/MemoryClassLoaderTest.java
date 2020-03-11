@@ -26,7 +26,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 /**
- * 
  * @author shinsuke
  * @see http://www.nminoru.jp/~nminoru/java/class_unloading.html
  */
@@ -251,7 +250,7 @@ public class MemoryClassLoaderTest {
 
   /**
    * 指定クラスローダによってロードされたクラス名一覧の取得
-   * 
+   *
    * @param classLoader
    * @return
    */
@@ -262,7 +261,8 @@ public class MemoryClassLoaderTest {
     classesField.setAccessible(true);
 
     @SuppressWarnings("unchecked")
-    final Vector<Class<?>> classes = (Vector<Class<?>>) classesField.get(classLoader);
+    final Vector<Class<?>> classes = (Vector<Class<?>>) classesField.get(
+        classLoader);
 
     return classes.stream()
         .map(Class::getName)

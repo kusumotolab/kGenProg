@@ -47,6 +47,7 @@ public class Roulette<T> {
 
   /**
    * 重みに基づいてルーレット選択をする
+   *
    * @return 選択された要素
    */
   public T exec() {

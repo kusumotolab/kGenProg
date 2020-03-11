@@ -10,9 +10,8 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 /**
  * コンパイル元となるJavaのソースコードを表すオブジェクト．<br>
  * 差分コンパイル時の重複回避のために，fqnとastから得られるdigest情報をキーとして保持する．<br>
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class JavaSourceObject extends SimpleJavaFileObject {
 
@@ -25,7 +24,7 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   /**
    * constructor<br>
    * astからJSOを生成する．
-   * 
+   *
    * @param ast 生成元となるast
    */
   public JavaSourceObject(final GeneratedAST<?> ast) {
@@ -36,7 +35,7 @@ public class JavaSourceObject extends SimpleJavaFileObject {
   /**
    * constructor<br>
    * ソースコードファイルからJSOを生成する．
-   * 
+   *
    * @param fqn ソースコードのfqn
    * @param sourceCode ソースコードのbody
    * @param digest メッセージダイジェスト

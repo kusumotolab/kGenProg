@@ -6,9 +6,8 @@ import javax.tools.JavaFileObject;
 /**
  * ビルド失敗時を表すBuildResultsオブジェクト．<br>
  * いわゆるNullオブジェクト．
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class EmptyBuildResults extends BuildResults {
 

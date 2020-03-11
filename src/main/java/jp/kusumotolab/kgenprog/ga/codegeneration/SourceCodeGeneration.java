@@ -7,6 +7,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 
 /**
  * Gene の情報を基にソースコードの生成を行うインターフェース
+ *
  * @see DefaultSourceCodeGeneration kGenProg のデフォルト実装
  */
 public interface SourceCodeGeneration {

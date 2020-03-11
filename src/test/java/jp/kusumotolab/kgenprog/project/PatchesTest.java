@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.project;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +23,8 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines,
+        modifiedSourceCodeLines);
     final Patch patch = new Patch();
     patch.add(fileDiff);
 
@@ -41,7 +42,8 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines,
+        modifiedSourceCodeLines);
     final Patch patch = new Patch();
     patch.add(fileDiff);
 
@@ -59,7 +61,8 @@ public class PatchesTest {
     final List<String> diff = Arrays.asList("-    a", "+    b");
     final List<String> originalSourceCodeLines = Arrays.asList("a");
     final List<String> modifiedSourceCodeLines = Arrays.asList("b");
-    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines, modifiedSourceCodeLines);
+    final FileDiff fileDiff = new FileDiff(diff, "test", originalSourceCodeLines,
+        modifiedSourceCodeLines);
     final Patch patch = new Patch();
     patch.add(fileDiff);
 

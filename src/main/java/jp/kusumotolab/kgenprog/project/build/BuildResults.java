@@ -6,9 +6,8 @@ import javax.tools.JavaFileObject;
 /**
  * ビルド結果を表すオブジェクト．<br>
  * ビルドの成否やビルド時の診断情報，ビルド結果たるバイナリ格納庫を保持する．<br>
- * 
- * @author shinsuke
  *
+ * @author shinsuke
  */
 public class BuildResults {
 
@@ -34,7 +33,7 @@ public class BuildResults {
 
   /**
    * コンストラクタ．各種ビルド結果を保持する．
-   * 
+   *
    * @param binaryStore ビルドの結果得られたバイナリの格納庫
    * @param diagnostics ビルド時の診断情報
    * @param buildProgressText ビルド実行時のテキスト出力

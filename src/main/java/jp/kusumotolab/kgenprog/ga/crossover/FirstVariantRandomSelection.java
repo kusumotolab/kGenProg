@@ -6,9 +6,8 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 /**
  * 交叉において，1つ目の親をランダムに選択するアルゴリズムを実装したクラス．
- * 
- * @author higo
  *
+ * @author higo
  */
 public class FirstVariantRandomSelection implements FirstVariantSelectionStrategy {
 
@@ -16,7 +15,7 @@ public class FirstVariantRandomSelection implements FirstVariantSelectionStrateg
 
   /**
    * コンストラクタ．選択においてランダム処理を行うためのシード値を引数として渡す必要あり．
-   * 
+   *
    * @param random ランダム処理を行うためのシード
    */
   public FirstVariantRandomSelection(final Random random) {
@@ -25,11 +24,10 @@ public class FirstVariantRandomSelection implements FirstVariantSelectionStrateg
 
   /**
    * 選択を行うメソッド．選択対象の個体群を引数として与える必要あり．
-   * 
-   * @see jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy#exec(List)
-   * 
+   *
    * @param variants 選択対象の個体群
    * @return 選択された個体
+   * @see jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy#exec(List)
    */
   @Override
   public Variant exec(final List<Variant> variants) {

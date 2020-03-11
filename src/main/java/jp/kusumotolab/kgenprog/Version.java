@@ -47,8 +47,10 @@ public class Version {
     properties.load(is);
     return properties;
   }
+
   /**
    * Determine whether the runtime environment is jar or not.
+   *
    * @return
    */
   private boolean isRunningFromJar() {

@@ -6,7 +6,7 @@ public class TestSourcePath extends SourcePath {
 
   /**
    * pathをrootPathからの相対パスに変換してからTestSourcePathを生成します
-   * 
+   *
    * @param rootPath プロジェクトルートディレクトリへのパス
    * @param path ソースコードへのパス（絶対パスもしくはカレントディレクトリからの相対パス）
    * @return TestSourcePath

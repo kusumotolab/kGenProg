@@ -30,7 +30,8 @@ public class DeleteOperationTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
     @SuppressWarnings("unchecked")
-    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(GeneratedJDTAST.class);
+    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
+        GeneratedJDTAST.class);
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast), Collections.singletonList(mockAst));
 

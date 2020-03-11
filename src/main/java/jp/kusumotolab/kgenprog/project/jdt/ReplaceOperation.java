@@ -20,7 +20,7 @@ public class ReplaceOperation extends JDTOperation {
   }
 
   @Override
-  public String getName(){
+  public String getName() {
     return "replace";
   }
 

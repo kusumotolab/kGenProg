@@ -7,13 +7,12 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
  * テスト実行インタフェース．<br>
  *
  * @author shinsuke
- *
  */
 public interface TestExecutor {
 
   /**
    * テスト実行を行う．<br>
-   * 
+   *
    * @param variant 実行対象のソースコードを保持するVariant
    * @return テスト結果
    */
@@ -23,7 +22,9 @@ public interface TestExecutor {
     return variantSingle.map(this::exec);
   }
 
-  default void initialize() {}
+  default void initialize() {
+  }
 
-  default void finish() {}
+  default void finish() {
+  }
 }

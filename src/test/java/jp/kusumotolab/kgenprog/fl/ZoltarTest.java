@@ -35,7 +35,8 @@ public class ZoltarTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = 1.0 / (1.0 + 0.0 + 1.0 + 10000d * 0.0 * 1.0 / 1.0); // 0.5  (the most suspicious stmt)
+    final double susp1 =
+        1.0 / (1.0 + 0.0 + 1.0 + 10000d * 0.0 * 1.0 / 1.0); // 0.5  (the most suspicious stmt)
     final double susp2 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     final double susp3 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     final double susp4 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
@@ -59,7 +60,8 @@ public class ZoltarTest {
 
     suspiciousnesses.sort(comparing(Suspiciousness::getValue, reverseOrder()));
 
-    final double susp1 = 1.0 / (1.0 + 0.0 + 1.0 + 10000d * 0.0 * 1.0 / 1.0); // 0.5  (the most suspicious stmt)
+    final double susp1 =
+        1.0 / (1.0 + 0.0 + 1.0 + 10000d * 0.0 * 1.0 / 1.0); // 0.5  (the most suspicious stmt)
     final double susp2 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     final double susp3 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     final double susp4 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
@@ -68,9 +70,9 @@ public class ZoltarTest {
   }
 
   /**
-   *  ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
-   *  <br>
-   *  疑惑値のリストが空になることを期待する.
+   * ビルドに失敗する題材(BuildFailure01)によるテストを実行する.
+   * <br>
+   * 疑惑値のリストが空になることを期待する.
    */
   @Test
   public void testForFailedProject() throws IOException {

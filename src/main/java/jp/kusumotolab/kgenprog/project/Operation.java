@@ -4,7 +4,7 @@ public interface Operation {
 
   public GeneratedSourceCode apply(GeneratedSourceCode generatedSourceCode, ASTLocation location);
 
-  default String getName(){
+  default String getName() {
     return "";
   }
 

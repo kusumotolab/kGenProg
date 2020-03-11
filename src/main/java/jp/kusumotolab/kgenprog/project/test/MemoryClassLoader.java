@@ -11,9 +11,9 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 /**
  * メモリ上からバイナリを読み込む特殊クラスローダ．<br>
  * バイナリを格納する配列を抱えており，これを用いてメモリからのクラスロードを試みる．<br>
- * 
+ *
  * URLClassLoaderを継承しており，メモリロードを行う前に一般的なクラスパス指定の（すなわちファイルシステムからの）クラスロードを試みていることに注意．<br>
- * 
+ *
  * @see https://www.jacoco.org/jacoco/trunk/doc/examples/java/CoreTutorial.java
  */
 public class MemoryClassLoader extends URLClassLoader {
@@ -28,7 +28,7 @@ public class MemoryClassLoader extends URLClassLoader {
 
   /**
    * constructor
-   * 
+   *
    * @param urls クラスパス
    */
   public MemoryClassLoader(final URL[] urls) {
@@ -42,7 +42,7 @@ public class MemoryClassLoader extends URLClassLoader {
 
   /**
    * メモリ上のバイト配列をクラス定義に追加する．
-   * 
+   *
    * @param name 定義するクラス名
    * @param bytes 追加するクラス定義
    */
@@ -53,7 +53,7 @@ public class MemoryClassLoader extends URLClassLoader {
   /**
    * クラスをロードする．<br>
    * {@link java.lang.ClassLoader#loadClass}のFQNエイリアス
-   * 
+   *
    * @param fqn ロード対象のクラスのFQN
    * @return ロードされたクラスオブジェクト
    * @throws ClassNotFoundException
@@ -65,7 +65,6 @@ public class MemoryClassLoader extends URLClassLoader {
   /**
    * メモリ上からクラスを探す． <br>
    * まずURLClassLoaderによるファイルシステム上のクラスのロードを試み，それがなければメモリ上のクラスロードを試す．
-   * 
    */
   @Override
   protected Class<?> findClass(final String name) throws ClassNotFoundException {
