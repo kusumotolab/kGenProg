@@ -57,6 +57,15 @@ public class StatementListVisitor extends ASTVisitor {
   }
 
   private void consumeStatement(Statement s) {
+
+    if (s instanceof Block) {
+      final Block block = (Block) s;
+      final List statements = block.statements();
+      if (statements.size() < 2) {
+        return;
+      }
+    }
+
     statements.add(s);
 
     int begin = unit.getLineNumber(s.getStartPosition());
