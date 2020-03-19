@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.LabeledStatement;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
@@ -61,9 +62,17 @@ public class StatementListVisitor extends ASTVisitor {
     if (s instanceof Block) {
       final Block block = (Block) s;
       final List statements = block.statements();
+
+      // 内包する文が2つ以上でないときは，BlockはFLの対象としない
       if (statements.size() < 2) {
         return;
       }
+
+      // メソッドのBlockである場合は，FLの対象としない
+      // TODO やっていいのか不明なのでとりあえずコメントアウト
+      // if(block.getParent() instanceof MethodDeclaration){
+      //  return;
+      //}
     }
 
     statements.add(s);
