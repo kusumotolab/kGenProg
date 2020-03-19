@@ -116,4 +116,20 @@ public class JDTASTLocation implements ASTLocation {
   public ASTNode getNode() {
     return node;
   }
+
+  @Override
+  public int hashCode(){
+    return node.hashCode();
+  }
+
+  @Override
+  public boolean equals(final Object o){
+
+    if(!(o instanceof JDTASTLocation)){
+      return false;
+    }
+
+    final JDTASTLocation target = (JDTASTLocation)o;
+    return node.equals(target.node);
+  }
 }
