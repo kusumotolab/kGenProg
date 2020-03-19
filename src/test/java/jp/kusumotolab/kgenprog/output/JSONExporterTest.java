@@ -13,7 +13,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class VariantStoreExporterTest {
+public class JSONExporterTest {
 
   private Path outDir;
 
@@ -26,8 +26,11 @@ public class VariantStoreExporterTest {
         .toPath();
   }
 
+  /**
+   * JSONの出力ができているか確認する．
+   */
   @Test
-  public void testWriteToFile() {
+  public void testExport() {
     // 適当なTargetProjectを作る
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
@@ -35,8 +38,10 @@ public class VariantStoreExporterTest {
         .build();
 
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
-    final VariantStoreExporter variantStoreExporter = new VariantStoreExporter();
-    variantStoreExporter.writeToFile(config, variantStore);
+    final Exporter jsonExporter = new JSONExporter(config, new PatchGenerator());
+    // 念のため出力ディレクトリを空する
+    jsonExporter.clearPreviousResults();
+    jsonExporter.export(variantStore);
 
     // 出力ファイルの存在をチェック
     final Path exportedJsonFile = outDir.resolve("history.json");

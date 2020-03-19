@@ -2,7 +2,6 @@ package jp.kusumotolab.kgenprog;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -53,7 +52,6 @@ public class Configuration {
   public static final Duration DEFAULT_TEST_TIME_LIMIT = Duration.ofSeconds(10);
   public static final Level DEFAULT_LOG_LEVEL = Level.INFO;
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
-  public static final boolean DEFAULT_IS_FORCE = false;
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
@@ -69,7 +67,6 @@ public class Configuration {
   private final TargetProject targetProject;
   private final List<String> executionTests;
   private final Path outDir;
-  private final boolean isForce;
   private final int mutationGeneratingCount;
   private final int crossoverGeneratingCount;
   private final int headcount;
@@ -92,7 +89,6 @@ public class Configuration {
     this.targetProject = builder.targetProject;
     this.executionTests = builder.executionTests;
     this.outDir = builder.outDir;
-    this.isForce = builder.isForce;
     this.mutationGeneratingCount = builder.mutationGeneratingCount;
     this.crossoverGeneratingCount = builder.crossoverGeneratingCount;
     this.headcount = builder.headcount;
@@ -122,10 +118,6 @@ public class Configuration {
 
   public Path getOutDir() {
     return outDir;
-  }
-
-  public boolean getIsForce() {
-    return isForce;
   }
 
   public int getMutationGeneratingCount() {
@@ -242,10 +234,6 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
-
-    @com.electronwill.nightconfig.core.conversion.Path("is-force")
-    @PreserveNotNull
-    private boolean isForce = DEFAULT_IS_FORCE;
 
     @com.electronwill.nightconfig.core.conversion.Path("mutation-generating-count")
     @PreserveNotNull
@@ -413,11 +401,6 @@ public class Configuration {
       return this;
     }
 
-    public Builder setIsForce(final boolean isForce) {
-      this.isForce = isForce;
-      return this;
-    }
-
     public Builder setMutationGeneratingCount(final int mutationGeneratingCount) {
       this.mutationGeneratingCount = mutationGeneratingCount;
       return this;
@@ -523,7 +506,6 @@ public class Configuration {
     private static void validateArgument(final Builder builder) throws IllegalArgumentException {
       validateExistences(builder);
       validateCurrentDir(builder);
-      validateOutDir(builder);
     }
 
     private static void validateExistences(final Builder builder) throws IllegalArgumentException {
@@ -555,27 +537,6 @@ public class Configuration {
         }
       } catch (final IOException e) {
         throw new IllegalArgumentException("directory " + projectRootDir + " is not accessible.");
-      }
-    }
-
-    private static void validateOutDir(final Builder builder) {
-
-      if (Files.notExists(builder.outDir)) {
-        return;
-      }
-
-      try {
-        final List<Path> subFiles = Files.walk(builder.outDir, FileVisitOption.FOLLOW_LINKS)
-            .filter(e -> !e.equals(builder.outDir))
-            .collect(Collectors.toList());
-
-        if (subFiles.isEmpty() && !builder.isForce) {
-          final String outDirName = builder.outDir.toString();
-          log.warn("Cannot write patches, because directory {} is not empty.", outDirName);
-          log.warn("If you want patches, please run with -f or empty {}.", outDirName);
-        }
-      } catch (final IOException e) {
-        throw new IllegalArgumentException("directory " + builder.outDir + " is not accessible.");
       }
     }
 
@@ -762,13 +723,6 @@ public class Configuration {
     private void setOutDirFromCmdLineParser(final String outDir) {
       this.outDir = Paths.get(outDir);
       this.optionsSetByCmdLineArgs.add("outDir");
-    }
-
-    @Option(name = "-f", aliases = "--force",
-        usage = "Remove file in output directory when write patches.")
-    private void setIsForceFromCmdLineParser(final boolean isForce) {
-      this.isForce = isForce;
-      this.optionsSetByCmdLineArgs.add("isForce");
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",

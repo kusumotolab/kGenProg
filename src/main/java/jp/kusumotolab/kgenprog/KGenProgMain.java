@@ -17,7 +17,6 @@ import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.Exporter;
-import jp.kusumotolab.kgenprog.output.PatchGenerator;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -40,7 +39,7 @@ public class KGenProgMain {
   private final SourceCodeValidation sourceCodeValidation;
   private final VariantSelection variantSelection;
   private final TestExecutor testExecutor;
-  private final PatchGenerator patchGenerator;
+  private final Exporter exporter;
   private final JDTASTConstruction astConstruction;
 
   /**
@@ -54,13 +53,13 @@ public class KGenProgMain {
    * @param sourceCodeValidation コード評価を行うインスタンス
    * @param variantSelection 個体の選択を行うインスタンス
    * @param testExecutor テスト実行を行うインスタンス
-   * @param patchGenerator パッチ生成を行うインスタンス
+   * @param exporter 出力処理を行うインスタンス
    */
   public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor, final PatchGenerator patchGenerator) {
+      final TestExecutor testExecutor, final Exporter exporter) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -71,7 +70,7 @@ public class KGenProgMain {
     this.variantSelection = variantSelection;
     this.testExecutor = testExecutor;
     this.astConstruction = new JDTASTConstruction();
-    this.patchGenerator = patchGenerator;
+    this.exporter = exporter;
   }
 
   /**
@@ -80,10 +79,11 @@ public class KGenProgMain {
    *
    * @return 得られた解（全てのテストケースを通過するプログラム）
    */
-  public List<Variant> run() {
-
+  public List<Variant> run() throws RuntimeException {
     logConfig();
 
+    // outDirを空にする
+    exporter.clearPreviousResults();
     testExecutor.initialize();
 
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
@@ -138,8 +138,8 @@ public class KGenProgMain {
       variantStore.proceedNextGeneration();
     }
 
-    // パッチ・JSONを出力
-    export(variantStore, patchGenerator);
+    // 出力処理を行う
+    exporter.export(variantStore);
 
     stopwatch.unsplit();
     strategies.finish();
@@ -154,11 +154,6 @@ public class KGenProgMain {
 
   private boolean areEnoughCompletedVariants(final List<Variant> completedVariants) {
     return config.getRequiredSolutionsCount() <= completedVariants.size();
-  }
-
-  private void export(final VariantStore variantStore, final PatchGenerator patchGenerator) {
-    final Exporter exporter = new Exporter(config);
-    exporter.export(variantStore, patchGenerator);
   }
 
   private void logConfig() {

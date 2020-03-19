@@ -6,7 +6,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
 import jp.kusumotolab.kgenprog.fl.Ochiai;
 import jp.kusumotolab.kgenprog.ga.codegeneration.DefaultSourceCodeGeneration;
@@ -24,13 +26,17 @@ import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
-import jp.kusumotolab.kgenprog.output.PatchGenerator;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 
 public class KGenProgMainTest {
 
   private final static String PRODUCT_NAME = "src/example/CloseToZero.java";
   private final static String TEST_NAME = "src/example/CloseToZeroTest.java";
+
+  @Rule
+  public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   /*
    * KGenProgMainオブジェクトを生成するヘルパーメソッド
@@ -40,12 +46,15 @@ public class KGenProgMainTest {
 
     final List<Path> productPaths = Arrays.asList(productPath);
     final List<Path> testPaths = Arrays.asList(testPath);
+    final Path outDir = tempFolder.getRoot()
+        .toPath();
 
     final Configuration config =
         new Configuration.Builder(rootPath, productPaths, testPaths).setTimeLimitSeconds(600)
             .setTestTimeLimitSeconds(1)
             .setMaxGeneration(100)
             .setRequiredSolutionsCount(1)
+            .setOutDir(outDir)
             .setNeedNotOutput(true)
             .build();
 
@@ -62,10 +71,14 @@ public class KGenProgMainTest {
     final VariantSelection variantSelection =
         new GenerationalVariantSelection(config.getHeadcount(), random);
     final LocalTestExecutor testExecutor = new LocalTestExecutor(config);
-    final PatchGenerator patchGenerator = new PatchGenerator();
+    final Exporter exporter = new Exporter(config) {
+      @Override
+      public void export(final VariantStore variantStore) {
+      }
+    };
 
     return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, testExecutor, patchGenerator);
+        sourceCodeValidation, variantSelection, testExecutor, exporter);
   }
 
   @Test
