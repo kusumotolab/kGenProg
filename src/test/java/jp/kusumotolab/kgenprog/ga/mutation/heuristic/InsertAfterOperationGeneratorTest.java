@@ -31,8 +31,8 @@ public class InsertAfterOperationGeneratorTest extends OperationGeneratorTest {
     // block文が4つ，return文が1つ．
     // また，if (A) { B } else if (C) { D } else { E } の
     // if (C) { D } else { E } の親はif文なので，このノードの後ろにも挿入不可
-    // よって計6つ
-    assertThat(nonInsertableLocations).hasSize(6);
+    // よって計2つ
+    assertThat(nonInsertableLocations).hasSize(3);
 
     assertThat(nonInsertableLocations).allMatch(e -> {
       final ASTNode node = e.getNode();
