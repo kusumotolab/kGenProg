@@ -8,7 +8,7 @@ public class Ample extends SpectrumBasedFaultLocalization {
 
   @Override
   protected double formula(final double ef, final double nf, final double ep, final double np) {
-    return Math.abs(ef / (double) (ef + nf) - ep / (double) (ep + np));
+    return Math.abs(ef / (ef + nf) - ep / (ep + np));
   }
 
 }

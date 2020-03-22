@@ -17,12 +17,12 @@ public interface SourceCodeGeneration {
    *
    * @param initialVariant 入力されたプロジェクトを表す個体
    */
-  public void initialize(Variant initialVariant);
+  void initialize(Variant initialVariant);
 
   /**
    * @param variantStore これまでのバリアントの情報を保持している VariantStore
    * @param gene ソースコードの編集操作列
    * @return 生成されたソースコード
    */
-  public GeneratedSourceCode exec(VariantStore variantStore, Gene gene);
+  GeneratedSourceCode exec(VariantStore variantStore, Gene gene);
 }
