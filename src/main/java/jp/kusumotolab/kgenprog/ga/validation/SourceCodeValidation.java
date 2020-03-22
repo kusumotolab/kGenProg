@@ -12,7 +12,7 @@ public interface SourceCodeValidation {
   /**
    * SourceCodeValidation#exec用のパラメータオブジェクト
    */
-  public class Input {
+  class Input {
 
     private final Gene gene;
     private final GeneratedSourceCode sourceCode;
