@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.eclipse.jdt.core.dom.ASTNode;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
@@ -81,11 +80,10 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
         }
 
         final ASTLocation location = locations.get(locations.size() - 1);
-        if(registeredLocations.contains(location)){
+        if (registeredLocations.contains(location)) {
           continue;
-        }else{
-          registeredLocations.add(location);
         }
+        registeredLocations.add(location);
         final long ef = testResults.getNumberOfFailedTestsExecutingTheStatement(path, location);
         final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, location);
         final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, location);
