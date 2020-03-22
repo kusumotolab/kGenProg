@@ -31,7 +31,7 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class GeneratedJDTASTTest {
 
   private static final String FILE_NAME = "A.java";
-  private static final String SOURCE = new StringBuilder().append("")
+  private static final String SOURCE = new StringBuilder()
       // Line breaks must be included to execute GeneratedJDTAST#inferLocation.
       .append("class A {\n")
       .append("  public void a() {\n")

@@ -33,7 +33,7 @@ public class PatchGeneratorTest {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("package example;\n")
         .append("public class Foo {\n")
         .append("  public int foo(  int n){\n")
@@ -75,7 +75,7 @@ public class PatchGeneratorTest {
     final Path basePath = Paths.get("example/BuildSuccess02");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("package example;\n")
         .append("public class Bar {\n")
         .append("  public static int bar1(  int n){\n")
@@ -124,7 +124,7 @@ public class PatchGeneratorTest {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("package example;\n")
         .append("public class Foo {\n")
         .append("  public int foo(  int n){\n")
@@ -182,7 +182,7 @@ public class PatchGeneratorTest {
     final Path basePath = Paths.get("example/BuildSuccess01/");
     final PatchGenerator patchGenerator = new PatchGenerator();
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("package example;\n")
         .append("public class Foo {\n")
         .append("  public int foo(  int n){\n")
@@ -239,7 +239,7 @@ public class PatchGeneratorTest {
     final PatchGenerator patchGenerator = new PatchGenerator();
 
     final String delimiter = System.lineSeparator();
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("--- example.Foo" + delimiter)
         .append("+++ example.Foo" + delimiter)
         .append("@@ -3,11 +3,6 @@" + delimiter)

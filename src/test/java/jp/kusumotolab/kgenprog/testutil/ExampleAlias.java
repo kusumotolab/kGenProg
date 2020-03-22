@@ -99,7 +99,7 @@ public class ExampleAlias {
   }
 
   private static String getExtension(final String fileName) {
-    return fileName.substring(fileName.lastIndexOf("."), fileName.length());
+    return fileName.substring(fileName.lastIndexOf("."));
   }
 
   private static FullyQualifiedName pathToFqn(final Path path) {

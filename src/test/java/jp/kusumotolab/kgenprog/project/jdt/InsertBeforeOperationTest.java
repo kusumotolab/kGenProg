@@ -17,7 +17,7 @@ public class InsertBeforeOperationTest {
 
   @Test
   public void testInsertStatement() {
-    final String source = new StringBuilder().append("")
+    final String source = new StringBuilder()
         .append("class A {")
         .append("  public void a() {")
         .append("    int i = 0;")
@@ -55,7 +55,7 @@ public class InsertBeforeOperationTest {
         (GeneratedJDTAST<ProductSourcePath>) code.getProductAsts()
             .get(0);
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("class A {")
         .append("  public void a() {")
         .append("    int i = 0;")
@@ -74,7 +74,7 @@ public class InsertBeforeOperationTest {
   }
 
   private Statement createInsertionTarget() {
-    final String source = new StringBuilder().append("")
+    final String source = new StringBuilder()
         .append("class B {")
         .append("  public void b() {")
         .append("    xxx();")
