@@ -15,7 +15,7 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class DeleteOperationTest {
 
-  final String source = new StringBuilder().append("")
+  final String source = new StringBuilder()
       .append("class A {")
       .append("  public void a() {")
       .append("    int i = 0;")
@@ -50,7 +50,7 @@ public class DeleteOperationTest {
         (GeneratedJDTAST<ProductSourcePath>) code.getProductAsts()
             .get(0);
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("class A {")
         .append("  public void a() {")
         .append("    int i = 0;")

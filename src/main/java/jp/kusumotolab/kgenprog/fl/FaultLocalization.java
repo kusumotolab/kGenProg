@@ -6,10 +6,10 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 public interface FaultLocalization {
 
-  public List<Suspiciousness> exec(GeneratedSourceCode generatedSourceCode,
+  List<Suspiciousness> exec(GeneratedSourceCode generatedSourceCode,
       TestResults testResults);
 
-  public enum Technique {
+  enum Technique {
     Ample {
       @Override
       public FaultLocalization initialize() {

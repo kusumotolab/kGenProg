@@ -18,7 +18,7 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class ReplaceOperationTest {
 
-  private final String source = new StringBuilder().append("")
+  private final String source = new StringBuilder()
       .append("class A {")
       .append("  public void a() {")
       .append("    int i = 0;")
@@ -57,7 +57,7 @@ public class ReplaceOperationTest {
         (GeneratedJDTAST<ProductSourcePath>) code.getProductAsts()
             .get(0);
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("class A {")
         .append("  public void a() {")
         // .append(" int i = 0;") // this block is expected to be replaced
@@ -109,7 +109,7 @@ public class ReplaceOperationTest {
         (GeneratedJDTAST<ProductSourcePath>) code.getProductAsts()
             .get(0);
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("class A {")
         .append("  public void a() {")
         .append(" int i = 0;")
@@ -128,7 +128,7 @@ public class ReplaceOperationTest {
   }
 
   private Block createReplacementBlockTarget() {
-    final String source = new StringBuilder().append("")
+    final String source = new StringBuilder()
         .append("class B {")
         .append("  public void b() {")
         .append("    xxx();")

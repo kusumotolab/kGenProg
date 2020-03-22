@@ -41,10 +41,7 @@ public class LineNumberRange {
     if (end != other.end) {
       return false;
     }
-    if (start != other.start) {
-      return false;
-    }
-    return true;
+    return start == other.start;
   }
 
   @Override

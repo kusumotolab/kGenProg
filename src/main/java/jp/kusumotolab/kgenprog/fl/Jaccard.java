@@ -8,7 +8,7 @@ public class Jaccard extends SpectrumBasedFaultLocalization {
 
   @Override
   protected double formula(final double ef, final double nf, final double ep, final double np) {
-    return ef / (double) (ef + nf + ep);
+    return ef / (ef + nf + ep);
   }
 
 }

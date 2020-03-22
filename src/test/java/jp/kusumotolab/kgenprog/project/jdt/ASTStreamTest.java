@@ -13,7 +13,7 @@ public class ASTStreamTest {
 
   @Test
   public void test() {
-    final String source = new StringBuilder().append("")
+    final String source = new StringBuilder()
         .append("class A {\n")
         .append("  public int a() {\n")
         .append("    int v;\n")
@@ -35,7 +35,6 @@ public class ASTStreamTest {
             "Modifier", "PrimitiveType", "SimpleName", "Block", "VariableDeclarationStatement",
             "PrimitiveType", "VariableDeclarationFragment", "SimpleName", "ReturnStatement",
             "InfixExpression", "SimpleName", "NumberLiteral");
-    ;
   }
 
 }

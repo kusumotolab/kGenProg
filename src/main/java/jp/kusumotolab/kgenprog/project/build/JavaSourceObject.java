@@ -49,7 +49,7 @@ public class JavaSourceObject extends SimpleJavaFileObject {
     this.sourceCode = sourceCode;
     this.digest = digest;
     this.sourcePath = sourcePath;
-    this.isTest = sourcePath.getClass() == TestSourcePath.class ? true : false;
+    this.isTest = sourcePath.getClass() == TestSourcePath.class;
   }
 
   public String getMessageDigest() {
