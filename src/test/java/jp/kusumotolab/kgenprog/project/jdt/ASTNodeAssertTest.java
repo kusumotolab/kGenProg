@@ -19,7 +19,7 @@ import org.junit.Test;
 public class ASTNodeAssertTest {
 
   // テスト対象のソースコード本文
-  private final String source = new StringBuilder().append("")
+  private final String source = new StringBuilder()
       .append("class A {")
       .append("  public void a() {")
       .append("    int n = 0;")
@@ -47,12 +47,12 @@ public class ASTNodeAssertTest {
         .get(0);
     final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations()
         .get(0);
-    final Block block = (Block) methodDecralation.getBody();
+    final Block block = methodDecralation.getBody();
     final Statement statement1 = (Statement) block.statements()
         .get(0);       // "int n = 0;"
     final IfStatement ifStatement = (IfStatement) block.statements()
         .get(1);  // "if (n == 1) {...}"
-    final Expression expression = (Expression) ifStatement.getExpression();   // "n == 1"
+    final Expression expression = ifStatement.getExpression();   // "n == 1"
     final Block block2 = (Block) ifStatement.getThenStatement();
     final Statement statement2 = (Statement) block2.statements()
         .get(0);      // "System.out.println(n);"
@@ -78,8 +78,8 @@ public class ASTNodeAssertTest {
 
   @Test
   public void testAssertForStatement() {
-    assertThat(statement1).isSameSourceCodeAs((Statement) statement1);
-    assertThat((Statement) statement1).isSameSourceCodeAs(statement1);
+    assertThat(statement1).isSameSourceCodeAs(statement1);
+    assertThat(statement1).isSameSourceCodeAs(statement1);
     assertThat(statement1).isSameSourceCodeAs(statement1);
     assertThat(statement1).isSameSourceCodeAs(statement1.toString());
     assertThat(statement1).isSameSourceCodeAs("int n=0;");
@@ -92,7 +92,6 @@ public class ASTNodeAssertTest {
     assertThat(statement1).isSameSourceCodeAs("  int n = 0;");
     assertThat(statement1).isSameSourceCodeAs("  int n = 0;  ");
     assertThat(statement1).isSameSourceCodeAs("\n  int n = 0;");
-    ;
     assertThat(statement1).isSameSourceCodeAs("\nint\nn\n=\n0\n;\n");
   }
 
