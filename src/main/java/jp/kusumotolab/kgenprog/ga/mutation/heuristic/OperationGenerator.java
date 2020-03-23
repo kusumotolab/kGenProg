@@ -69,7 +69,8 @@ public abstract class OperationGenerator {
         canReuseBreakStatement(jdtastLocation),
         canReuseReturnStatement(jdtastLocation),
         astAnalyzer.getReturnType(statement),
-        canReuseContinueStatement(jdtastLocation));
+        canReuseContinueStatement(jdtastLocation),
+        canReuseCondition(jdtastLocation));
     return candidateSelection.exec(query);
   }
 
@@ -102,6 +103,14 @@ public abstract class OperationGenerator {
    * @return その場所でcontinue文を再利用できるかどうか
    */
   protected boolean canReuseContinueStatement(final JDTASTLocation location) {
+    return true;
+  }
+
+  /**
+   * @param location 対象のノードの位置
+   * @return その場所で条件式を再利用できるかどうか
+   */
+  protected boolean canReuseCondition(final JDTASTLocation location) {
     return true;
   }
 

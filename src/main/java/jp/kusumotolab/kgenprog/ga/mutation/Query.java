@@ -17,6 +17,7 @@ public class Query {
   private final boolean canReuseReturnStatement;
   private final FullyQualifiedName returnFQN;
   private final boolean canReuseContinueStatement;
+  private final boolean canReuseCondition;
 
   /**
    * コンストラクタ
@@ -24,7 +25,7 @@ public class Query {
    * @param variables 変数の一覧
    */
   public Query(final List<Variable> variables) {
-    this(variables, new Scope(Type.PROJECT, null), true, true, true, null, true);
+    this(variables, new Scope(Type.PROJECT, null), true, true, true, null, true, true);
   }
 
   /**
@@ -33,7 +34,7 @@ public class Query {
    * @param scope 再利用するノードのスコープ
    */
   public Query(final Scope scope) {
-    this(Collections.emptyList(), scope, true, true, true, null, true);
+    this(Collections.emptyList(), scope, true, true, true, null, true, true);
   }
 
   /**
@@ -48,7 +49,7 @@ public class Query {
   public Query(final List<Variable> variables, final Scope scope,
       final boolean canReuseNonControlStatement, final boolean canReuseBreakStatement,
       final boolean canReuseReturnStatement, final FullyQualifiedName returnFQN,
-      final boolean canReuseContinueStatement) {
+      final boolean canReuseContinueStatement, final boolean canReuseCondition) {
     this.variables = variables;
     this.scope = scope;
     this.canReuseNonControlStatement = canReuseNonControlStatement;
@@ -56,6 +57,7 @@ public class Query {
     this.canReuseReturnStatement = canReuseReturnStatement;
     this.returnFQN = returnFQN;
     this.canReuseContinueStatement = canReuseContinueStatement;
+    this.canReuseCondition = canReuseCondition;
   }
 
   /**
@@ -90,5 +92,9 @@ public class Query {
 
   public boolean canReuseContinueStatement() {
     return canReuseContinueStatement;
+  }
+
+  public boolean canReuseCondition(){
+    return canReuseCondition;
   }
 }
