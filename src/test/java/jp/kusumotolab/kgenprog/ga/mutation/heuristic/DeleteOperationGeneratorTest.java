@@ -30,7 +30,7 @@ public class DeleteOperationGeneratorTest extends OperationGeneratorTest {
     assertThat(nonDeletableASTs).allMatch(
         e -> e.getNode() instanceof ReturnStatement || e.getNode() instanceof Block);
 
-    // その数は5つ
-    assertThat(nonDeletableASTs).hasSize(5);
+    // その数は2つ
+    assertThat(nonDeletableASTs).hasSize(2);
   }
 }

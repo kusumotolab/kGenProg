@@ -62,13 +62,12 @@ public class AmpleTest {
         1.0 / (1.0 + 0.0) - 1.0 / (1.0 + 7.0)); // 0.875 (the most suspicious stmt)
     final double susp2 = Math.abs(1.0 / (1.0 + 0.0) - 3.0 / (3.0 + 5.0)); // 0.625
     final double susp3 = Math.abs(1.0 / (1.0 + 0.0) - 3.0 / (3.0 + 5.0)); // 0.625
-    final double susp4 = Math.abs(1.0 / (1.0 + 0.0) - 3.0 / (3.0 + 5.0)); // 0.625
+    final double susp4 = Math.abs(0.0 / (0.0 + 1.0) - 2.0 / (2.0 + 6.0)); // 0.25
     final double susp5 = Math.abs(0.0 / (0.0 + 1.0) - 2.0 / (2.0 + 6.0)); // 0.25
     final double susp6 = Math.abs(0.0 / (0.0 + 1.0) - 2.0 / (2.0 + 6.0)); // 0.25
-    final double susp7 = Math.abs(0.0 / (0.0 + 1.0) - 2.0 / (2.0 + 6.0)); // 0.25
-    final double susp8 = Math.abs(0.0 / (0.0 + 1.0) - 1.0 / (1.0 + 7.0)); // 0.125
+    final double susp7 = Math.abs(0.0 / (0.0 + 1.0) - 1.0 / (1.0 + 7.0)); // 0.125
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
-        .containsExactly(susp1, susp2, susp3, susp4, susp5, susp6, susp7, susp8);
+        .containsExactly(susp1, susp2, susp3, susp4, susp5, susp6, susp7);
   }
 
   /**

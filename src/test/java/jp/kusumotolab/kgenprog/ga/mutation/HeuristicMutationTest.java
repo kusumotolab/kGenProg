@@ -38,7 +38,7 @@ public class HeuristicMutationTest {
     final ASTLocation location = generatedASTs.get(0)
         .createLocations()
         .getAll()
-        .get(1); // return number;
+        .get(0); // return number;
 
     // ここで使える操作はReplaceかInsertBeforeのみであり，モックによってInsertBefore選択される
     final Operation operation = mutation.makeOperation(location);
