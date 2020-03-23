@@ -30,7 +30,7 @@ import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
-public class StatementListVisitor extends ProgramElementVisitor<Statement> {
+public class StatementListVisitor extends ProgramElementVisitor {
 
   @Override
   public boolean visit(AssertStatement node) {

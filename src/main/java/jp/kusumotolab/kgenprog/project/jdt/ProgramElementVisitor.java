@@ -8,10 +8,10 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-abstract public class ProgramElementVisitor<T extends ASTNode> extends ASTVisitor {
+abstract public class ProgramElementVisitor extends ASTVisitor {
 
-  protected List<T> elements;
-  protected List<List<T>> lineToElements;
+  protected List<ASTNode> elements;
+  protected List<List<ASTNode>> lineToElements;
   private CompilationUnit unit;
 
   public void analyzeElements(final CompilationUnit unit) {
@@ -19,21 +19,21 @@ abstract public class ProgramElementVisitor<T extends ASTNode> extends ASTVisito
     this.unit = unit;
     int lineNumberLength = unit.getLineNumber(unit.getLength() - 1);
     this.lineToElements = IntStream.rangeClosed(0, lineNumberLength)
-        .mapToObj(v -> new ArrayList<T>(0))
+        .mapToObj(v -> new ArrayList<ASTNode>(0))
         .collect(Collectors.toList());
 
     unit.accept(this);
   }
 
-  public List<T> getElements() {
+  public List<ASTNode> getElements() {
     return elements;
   }
 
-  public List<List<T>> getLineToElements() {
+  public List<List<ASTNode>> getLineToElements() {
     return lineToElements;
   }
 
-  protected void consumeElement(T s) {
+  protected void consumeElement(ASTNode s) {
     elements.add(s);
 
     int begin = unit.getLineNumber(s.getStartPosition());
