@@ -21,9 +21,9 @@ public class JDTASTLocations<T extends SourcePath> implements ASTLocations {
     this.generatedAST = generatedAST;
     this.sourcePath = sourcePath;
     final StatementListVisitor visitor = new StatementListVisitor();
-    visitor.analyzeStatement(root);
-    this.lineNumberToStatements = visitor.getLineToStatements();
-    this.allLocations = visitor.getStatements()
+    visitor.analyzeElements(root);
+    this.lineNumberToStatements = visitor.getLineToElements();
+    this.allLocations = visitor.getElements()
         .stream()
         .map(v -> new JDTASTLocation(sourcePath, v, generatedAST))
         .collect(Collectors.toList());

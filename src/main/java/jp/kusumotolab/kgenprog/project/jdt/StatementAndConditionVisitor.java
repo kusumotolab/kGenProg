@@ -1,14 +1,9 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BreakStatement;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.DoStatement;
@@ -19,7 +14,6 @@ import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.LabeledStatement;
 import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.SwitchStatement;
@@ -30,7 +24,7 @@ import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
-public class StatementListVisitor extends ProgramElementVisitor<Statement> {
+public class StatementAndConditionVisitor extends ProgramElementVisitor<ASTNode> {
 
   @Override
   public boolean visit(AssertStatement node) {
@@ -64,7 +58,7 @@ public class StatementListVisitor extends ProgramElementVisitor<Statement> {
 
   @Override
   public boolean visit(DoStatement node) {
-    consumeElement(node);
+    consumeElement(node.getExpression());
     return true;
   }
 
@@ -88,13 +82,13 @@ public class StatementListVisitor extends ProgramElementVisitor<Statement> {
 
   @Override
   public boolean visit(ForStatement node) {
-    consumeElement(node);
+    consumeElement(node.getExpression());
     return true;
   }
 
   @Override
   public boolean visit(IfStatement node) {
-    consumeElement(node);
+    consumeElement(node.getExpression());
     return true;
   }
 
@@ -160,7 +154,7 @@ public class StatementListVisitor extends ProgramElementVisitor<Statement> {
 
   @Override
   public boolean visit(WhileStatement node) {
-    consumeElement(node);
+    consumeElement(node.getExpression());
     return true;
   }
 }
