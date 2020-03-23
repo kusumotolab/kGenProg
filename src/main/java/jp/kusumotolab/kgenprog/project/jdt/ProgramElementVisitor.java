@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 abstract public class ProgramElementVisitor extends ASTVisitor {
@@ -34,6 +35,23 @@ abstract public class ProgramElementVisitor extends ASTVisitor {
   }
 
   protected void consumeElement(ASTNode s) {
+
+    if (s instanceof Block) {
+      final Block block = (Block) s;
+      final List<?> statements = block.statements();
+
+      // 内包する文が2つ以上でないときは，BlockはFLの対象としない
+      if (statements.size() < 2) {
+        return;
+      }
+
+      // メソッドのBlockである場合は，FLの対象としない
+      // TODO やっていいのか不明なのでとりあえずコメントアウト
+      // if(block.getParent() instanceof MethodDeclaration){
+      //  return;
+      //}
+    }
+
     elements.add(s);
 
     int begin = unit.getLineNumber(s.getStartPosition());

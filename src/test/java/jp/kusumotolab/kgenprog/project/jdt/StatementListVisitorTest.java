@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Paths;
 import java.util.List;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.Statement;
 import org.junit.Test;
@@ -49,8 +50,8 @@ public class StatementListVisitorTest {
     // assuming that any instance of Block is not included in statements
     // Blockが含まれていないはず
     final StatementListVisitor visitor = new StatementListVisitor();
-    visitor.analyzeStatement(ast.getRoot());
-    final List<Statement> statements = visitor.getStatements();
+    visitor.analyzeElements(ast.getRoot());
+    final List<ASTNode> statements = visitor.getElements();
     assertThat(statements).noneMatch(s -> Block.class == s.getClass());
   }
 
@@ -68,8 +69,8 @@ public class StatementListVisitorTest {
     // assuming that any instance of Block is included in statements
     // Blockが含まれているはず
     final StatementListVisitor visitor = new StatementListVisitor();
-    visitor.analyzeStatement(ast.getRoot());
-    final List<Statement> statements = visitor.getStatements();
+    visitor.analyzeElements(ast.getRoot());
+    final List<ASTNode> statements = visitor.getElements();
     assertThat(statements).anyMatch(s -> Block.class == s.getClass());
   }
 }
