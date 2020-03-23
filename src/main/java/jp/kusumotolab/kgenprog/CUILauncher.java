@@ -12,8 +12,8 @@ import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.SimpleMutation;
-import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
-import jp.kusumotolab.kgenprog.ga.mutation.selection.StatementSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementAndConditionSelection;
 import jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
@@ -41,10 +41,10 @@ public class CUILauncher {
     final FaultLocalization faultLocalization = config.getFaultLocalization()
         .initialize();
     final Random random = new Random(config.getRandomSeed());
-    final StatementSelection rouletteStatementSelection =
-        new RouletteStatementSelection(random);
+    final CandidateSelection candidateSelection =
+        new RouletteStatementAndConditionSelection(random);
     final Mutation mutation = new SimpleMutation(config.getMutationGeneratingCount(), random,
-        rouletteStatementSelection, config.getScope());
+        candidateSelection, config.getScope());
     final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
         config.getFirstVariantSelectionStrategy()
             .initialize(random);
