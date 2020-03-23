@@ -58,8 +58,13 @@ public class StatementAndConditionVisitor extends ProgramElementVisitor {
 
   @Override
   public boolean visit(DoStatement node) {
-    consumeElement(node.getExpression());
     return true;
+  }
+
+  @Override
+  public void endVisit(final DoStatement node) {
+    consumeElement(node.getExpression()); // Blockよりも後に入れるためにendVisitで行う
+    super.endVisit(node);
   }
 
   @Override
@@ -82,14 +87,24 @@ public class StatementAndConditionVisitor extends ProgramElementVisitor {
 
   @Override
   public boolean visit(ForStatement node) {
-    consumeElement(node.getExpression());
     return true;
   }
 
   @Override
+  public void endVisit(final ForStatement node) {
+    consumeElement(node.getExpression()); // Blockよりも後に入れるためにendVisitで行う
+    super.endVisit(node);
+  }
+
+  @Override
   public boolean visit(IfStatement node) {
-    consumeElement(node.getExpression());
     return true;
+  }
+
+  @Override
+  public void endVisit(final IfStatement node) {
+    consumeElement(node.getExpression()); // Blockよりも後に入れるためにendVisitで行う
+    super.endVisit(node);
   }
 
   @Override
@@ -154,7 +169,12 @@ public class StatementAndConditionVisitor extends ProgramElementVisitor {
 
   @Override
   public boolean visit(WhileStatement node) {
-    consumeElement(node.getExpression());
     return true;
+  }
+
+  @Override
+  public void endVisit(final WhileStatement node) {
+    consumeElement(node.getExpression()); // Blockよりも後に入れるためにendVisitで行う
+    super.endVisit(node);
   }
 }
