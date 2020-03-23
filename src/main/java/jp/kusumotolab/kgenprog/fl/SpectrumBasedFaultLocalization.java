@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.fl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,6 +58,8 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
         .flatMap(Collection::stream)
         .collect(Collectors.toSet());
 
+    final Set<ASTLocation> registeredLocations = new HashSet<>();
+
     for (final GeneratedAST<ProductSourcePath> ast : generatedSourceCode.getProductAsts()) {
 
       // do nothing if none of failed target fqns contain the ast
@@ -76,11 +79,15 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
           continue;
         }
 
-        final ASTLocation loc = locations.get(locations.size() - 1);
-        final long ef = testResults.getNumberOfFailedTestsExecutingTheStatement(path, loc);
-        final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, loc);
-        final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, loc);
-        final long np = testResults.getNumberOfPassedTestsNotExecutingTheStatement(path, loc);
+        final ASTLocation location = locations.get(locations.size() - 1);
+        if (registeredLocations.contains(location)) {
+          continue;
+        }
+        registeredLocations.add(location);
+        final long ef = testResults.getNumberOfFailedTestsExecutingTheStatement(path, location);
+        final long nf = testResults.getNumberOfFailedTestsNotExecutingTheStatement(path, location);
+        final long ep = testResults.getNumberOfPassedTestsExecutingTheStatement(path, location);
+        final long np = testResults.getNumberOfPassedTestsNotExecutingTheStatement(path, location);
 
         final double value = formula(ef, nf, ep, np);
 
@@ -89,7 +96,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
           continue;
         }
 
-        final Suspiciousness s = new Suspiciousness(loc, value);
+        final Suspiciousness s = new Suspiciousness(location, value);
         suspiciousnesses.add(s);
       }
     }
@@ -105,5 +112,4 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
    */
   abstract protected double formula(final double ef, final double nf, final double ep,
       final double np);
-
 }

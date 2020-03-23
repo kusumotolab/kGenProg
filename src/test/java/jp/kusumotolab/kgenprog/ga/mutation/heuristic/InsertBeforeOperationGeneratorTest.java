@@ -28,11 +28,11 @@ public class InsertBeforeOperationGeneratorTest extends OperationGeneratorTest {
         .filter(e -> !operationGenerator.canBeApply(e)) // 対象のノードの後ろに挿入できないノードのみ抽出
         .collect(Collectors.toList());
 
-    // block文が4つ
+    // block文が1つ
     // また，if (A) { B } else if (C) { D } else { E } の
     // if (C) { D } else { E } の親はif文なので，このノードの後ろにも挿入不可
-    // よって計5つ
-    assertThat(nonInsertableLocations).hasSize(5);
+    // よって計2つ
+    assertThat(nonInsertableLocations).hasSize(2);
 
     assertThat(nonInsertableLocations).allMatch(e -> {
       final ASTNode node = e.getNode();

@@ -39,9 +39,8 @@ public class TarantulaTest {
         + 2.0)); // 0.75 (the most suspicious stmt)
     final double susp2 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 0.0)); // 0.5
     final double susp3 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 0.0)); // 0.5
-    final double susp4 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 0.0)); // 0.5
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
-        .containsExactly(susp1, susp2, susp3, susp4);
+        .containsExactly(susp1, susp2, susp3);
   }
 
   /**
@@ -64,9 +63,8 @@ public class TarantulaTest {
         + 7.0)); // 0.888889 (the most suspicious stmt)
     final double susp2 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 5.0)); // 0.727272
     final double susp3 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 5.0)); // 0.727272
-    final double susp4 = (1.0 / (1.0 + 0.0)) / (1.0 / (1.0 + 0.0) + 3.0 / (3.0 + 5.0)); // 0.727272
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
-        .containsExactly(susp1, susp2, susp3, susp4);
+        .containsExactly(susp1, susp2, susp3);
   }
 
   /**
