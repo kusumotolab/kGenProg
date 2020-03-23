@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.InfixExpression;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -28,18 +28,14 @@ public class InsertBeforeOperationGeneratorTest extends OperationGeneratorTest {
         .filter(e -> !operationGenerator.canBeApply(e)) // 対象のノードの後ろに挿入できないノードのみ抽出
         .collect(Collectors.toList());
 
-    // block文が1つ
-    // また，if (A) { B } else if (C) { D } else { E } の
-    // if (C) { D } else { E } の親はif文なので，このノードの後ろにも挿入不可
-    // よって計2つ
-    assertThat(nonInsertableLocations).hasSize(2);
+    // メソッドのブロック
+    // 2つの条件式
+    // 上記の計3つになるはず
+    assertThat(nonInsertableLocations).hasSize(3);
 
     assertThat(nonInsertableLocations).allMatch(e -> {
       final ASTNode node = e.getNode();
-      if (node instanceof Block) {
-        return true;
-      }
-      return node instanceof IfStatement && node.getParent() instanceof IfStatement;
+      return node instanceof Block || node instanceof InfixExpression;
     });
   }
 }

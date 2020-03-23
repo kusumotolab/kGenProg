@@ -125,7 +125,7 @@ public class JDTASTLocation implements ASTLocation {
   @Override
   public boolean equals(final Object o) {
 
-    if(null == o){
+    if (null == o) {
       return false;
     }
 

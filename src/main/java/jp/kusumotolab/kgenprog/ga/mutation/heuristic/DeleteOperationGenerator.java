@@ -38,6 +38,9 @@ public class DeleteOperationGenerator extends OperationGenerator {
   @Override
   public boolean canBeApply(final JDTASTLocation location) {
     final ASTNode node = location.getNode();
+
+    // conditions of conditional blocks can't be deleted
+    // 条件式の場合は削除不可
     if (!(node instanceof Statement)) {
       return false;
     }

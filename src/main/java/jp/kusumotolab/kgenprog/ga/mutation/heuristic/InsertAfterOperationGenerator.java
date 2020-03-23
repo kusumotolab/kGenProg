@@ -21,7 +21,7 @@ public class InsertAfterOperationGenerator extends OperationGenerator {
   @Override
   public boolean canBeApply(final JDTASTLocation location) {
     final ASTNode node = location.getNode();
-    if(!(node instanceof Statement)){
+    if (!(node instanceof Statement)) {
       return false;
     }
     final Statement statement = (Statement) location.getNode();

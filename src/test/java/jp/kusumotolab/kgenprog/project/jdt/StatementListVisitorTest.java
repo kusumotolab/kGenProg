@@ -5,14 +5,13 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.Statement;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class StatementListVisitorTest {
 
   private static final String FILE_NAME_A = "A.java";
-  private static final String SOURCE_A = new StringBuilder().append("")
+  private static final String SOURCE_A = new StringBuilder()
       // Line breaks must be included to execute GeneratedJDTAST#inferLocation.
       .append("class A {\n")
       .append("  public void a() {\n")
@@ -24,7 +23,7 @@ public class StatementListVisitorTest {
       .toString();
 
   private static final String FILE_NAME_B = "B.java";
-  private static final String SOURCE_B = new StringBuilder().append("")
+  private static final String SOURCE_B = new StringBuilder()
       // Line breaks must be included to execute GeneratedJDTAST#inferLocation.
       .append("class B {\n")
       .append("  public void a() {\n")

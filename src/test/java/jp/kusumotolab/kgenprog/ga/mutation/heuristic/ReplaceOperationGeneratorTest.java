@@ -24,7 +24,7 @@ public class ReplaceOperationGeneratorTest extends OperationGeneratorTest {
         .getAll()
         .stream()
         .map(e -> ((JDTASTLocation) e))
-        .filter(e -> !operationGenerator.canBeApply(e)) // 対象のノードの後ろに挿入できないノードのみ抽出
+        .filter(e -> !operationGenerator.canBeApply(e)) // 対象のノードと置換できないノードのみ抽出
         .collect(Collectors.toList());
 
     // メソッド宣言のBlockのみ

@@ -78,15 +78,13 @@ public class GeneratedJDTASTTest {
     final List<ASTLocation> locations = astLocations.infer(5);
     final List<String> expects = new ArrayList<>();
     expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
-    expects.add("if (n == 1) { System.out.println(n); }");
     expects.add("System.out.println(n);");
 
-    assertThat(locations).hasSize(3)
+    assertThat(locations).hasSize(2)
         .allMatch(loc -> loc instanceof JDTASTLocation)
         .extracting(loc -> ((JDTASTLocation) loc).node)
         .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(0)), atIndex(0))
-        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1))
-        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(2)), atIndex(2));
+        .satisfies(j -> assertThat(j).isSameSourceCodeAs(expects.get(1)), atIndex(1));
   }
 
   @Test
@@ -103,8 +101,8 @@ public class GeneratedJDTASTTest {
     final List<ASTLocation> locations = astLocations.infer(9);
     final List<String> expects = new ArrayList<>();
     expects.add("{ if (n < 0) { return -n; } return n;}");
-    expects.add("if (n < 0) { return -n;}");
     expects.add("return -n;");
+    expects.add("n < 0");
 
     assertThat(locations).hasSize(3)
         .allMatch(loc -> loc instanceof JDTASTLocation)
@@ -186,11 +184,11 @@ public class GeneratedJDTASTTest {
     final List<String> expects = new ArrayList<>();
     expects.add("{ int n = 0; if (n == 1) { System.out.println(n); }}");
     expects.add("int n = 0;");
-    expects.add("if (n == 1) { System.out.println(n); }");
     expects.add("System.out.println(n);");
+    expects.add("n == 1");
     expects.add("{ if (n < 0) { return -n; } return n;}");
-    expects.add("if (n < 0) { return -n;}");
     expects.add("return -n;");
+    expects.add("n < 0");
     expects.add("return n;");
 
     assertThat(locations).hasSize(8)

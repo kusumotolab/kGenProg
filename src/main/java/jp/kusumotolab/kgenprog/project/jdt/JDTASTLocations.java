@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.SourcePath;

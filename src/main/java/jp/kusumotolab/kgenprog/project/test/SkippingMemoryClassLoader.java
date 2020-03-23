@@ -64,7 +64,8 @@ public class SkippingMemoryClassLoader extends MemoryClassLoader {
       throws ClassNotFoundException {
 
     // JUnit関係のクラスのみロードを通常の委譲関係に任す．これがないとJUnitが期待通りに動かない．
-    if (name.startsWith("org.junit.") || name.startsWith("junit.") || name.startsWith("org.hamcrest.")) {
+    if (name.startsWith("org.junit.") || name.startsWith("junit.") || name.startsWith(
+        "org.hamcrest.")) {
       return getParent().loadClass(name);
     }
 

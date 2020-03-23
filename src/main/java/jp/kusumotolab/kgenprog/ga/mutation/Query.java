@@ -94,7 +94,7 @@ public class Query {
     return canReuseContinueStatement;
   }
 
-  public boolean canReuseCondition(){
+  public boolean canReuseCondition() {
     return canReuseCondition;
   }
 }

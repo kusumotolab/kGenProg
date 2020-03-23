@@ -1,6 +1,5 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BreakStatement;
