@@ -9,6 +9,10 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+/**
+ * An abstract class for retrieving program elements with visitor pattern.
+ * プログラム要素を取得するためビジターパターンのための抽象クラス．
+ */
 abstract public class ProgramElementVisitor extends ASTVisitor {
 
   protected List<ASTNode> elements;
@@ -26,10 +30,22 @@ abstract public class ProgramElementVisitor extends ASTVisitor {
     unit.accept(this);
   }
 
+  /**
+   * return retrieved program elements.
+   * 取得した要素を返す．
+   *
+   * @return 取得したプログラム要素
+   */
   public List<ASTNode> getElements() {
     return elements;
   }
 
+  /**
+   * return program elements in each program line.
+   * 各行に存在するプログラム要素を返す．
+   *
+   * @return 各行におけるプログラム要素
+   */
   public List<List<ASTNode>> getLineToElements() {
     return lineToElements;
   }

@@ -94,6 +94,12 @@ public class Query {
     return canReuseContinueStatement;
   }
 
+  /**
+   * Check whether conditions of conditional blocks can be reused.
+   * 条件式が再利用できるかどうか．
+   *
+   * @return 条件式が再利用できる場合は true
+   */
   public boolean canReuseCondition() {
     return canReuseCondition;
   }

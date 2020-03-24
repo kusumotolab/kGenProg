@@ -23,6 +23,7 @@ import jp.kusumotolab.kgenprog.project.jdt.ProgramElementVisitor;
 import jp.kusumotolab.kgenprog.project.jdt.StatementAndConditionVisitor;
 
 /**
+ * Implementing a roulette selection for reuse of statements and conditions
  * 再利用する文もしくは条件式を重みをつけたルーレットで選択するクラス
  *
  * @see StatementAndConditionSelection

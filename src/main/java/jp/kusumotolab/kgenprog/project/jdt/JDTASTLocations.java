@@ -9,6 +9,12 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
+/**
+ * An helper class for retrieving or searching a location on JDT's AST.
+ * JDTのAST上の位置情報の取得･検索のためのヘルパークラス．
+ *
+ * @param <T>
+ */
 public class JDTASTLocations<T extends SourcePath> implements ASTLocations {
 
   private final List<List<ASTNode>> lineNumberToStatements;

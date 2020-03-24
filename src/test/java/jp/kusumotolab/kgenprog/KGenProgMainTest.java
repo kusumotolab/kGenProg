@@ -104,6 +104,7 @@ public class KGenProgMainTest {
 
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random(config.getRandomSeed());
+    // createMain との違いは条件式も再利用対象にしていること，
     final CandidateSelection elementSelection = new RouletteStatementAndConditionSelection(random);
     final Mutation mutation = new SimpleMutation(config.getMutationGeneratingCount(), random,
         elementSelection, config.getScope());
