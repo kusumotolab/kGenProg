@@ -179,10 +179,10 @@ public class KGenProgMainTest {
   }
 
   @Test
-  public void testCloseToZero05() {
-    final Path rootPath = Paths.get("example/CloseToZero05");
-    final Path productPath = rootPath.resolve(PRODUCT_NAME);
-    final Path testPath = rootPath.resolve(TEST_NAME);
+  public void testCountDown01() {
+    final Path rootPath = Paths.get("example/CountDown01");
+    final Path productPath = rootPath.resolve("src/example/CountDown.java");
+    final Path testPath = rootPath.resolve("src/example/CountDownTest.java");
 
     final KGenProgMain kGenProgMain = createMain2(rootPath, productPath, testPath);
     final List<Variant> variants = kGenProgMain.run();

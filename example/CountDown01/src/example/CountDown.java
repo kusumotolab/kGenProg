@@ -1,6 +1,6 @@
 package example;
 
-public class CloseToZero {
+public class CountDown {
 
   /**
    * 整数をゼロに一つ近づけるメソッド
@@ -10,7 +10,7 @@ public class CloseToZero {
    * @param n
    * @return
    */
-  public int close_to_zero(int n) {
+  public int countDown(int n) {
     if (0 <= n) { // bug here
       n--;
     }
@@ -18,7 +18,7 @@ public class CloseToZero {
   }
 
   // 再利用されるべきメソッド1
-  public int do_nothing(int n) {
+  public int doNothing(int n) {
     while (0 < n) {
     }
     return n;

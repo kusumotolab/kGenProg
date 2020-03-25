@@ -3,10 +3,10 @@ root-dir = "./"
 
 # Specifies paths to "product" source code (i.e. main, non-test code),
 # or to directories containing them.
-src = ["src/example/CloseToZero.java"]
+src = ["src/example/CountDown.java"]
 
 # Specifies paths to test source code, or to directories containing them.
-test = ["src/example/CloseToZeroTest.java"]
+test = ["src/example/CountDownTest.java"]
 
 # Specifies class paths needed to build the target project.
 #cp = [<class-path>, ...]
