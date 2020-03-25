@@ -43,7 +43,7 @@ public class KGenProgMainTest {
    * KGenProgMainオブジェクトを生成するヘルパーメソッド
    */
   private KGenProgMain createMain(final Path rootPath, final Path productPath,
-      final Path testPath) {
+      final Path testPath, final CandidateSelection selection) {
 
     final List<Path> productPaths = Arrays.asList(productPath);
     final List<Path> testPaths = Arrays.asList(testPath);
@@ -61,53 +61,8 @@ public class KGenProgMainTest {
 
     final FaultLocalization faultLocalization = new Ochiai();
     final Random random = new Random(config.getRandomSeed());
-    final CandidateSelection statementSelection = new RouletteStatementSelection(random);
     final Mutation mutation = new SimpleMutation(config.getMutationGeneratingCount(), random,
-        statementSelection, config.getScope());
-    final Crossover crossover =
-        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
-    final SourceCodeGeneration sourceCodeGeneration = new DefaultSourceCodeGeneration();
-    final SourceCodeValidation sourceCodeValidation = new DefaultCodeValidation();
-    final VariantSelection variantSelection =
-        new GenerationalVariantSelection(config.getHeadcount(), random);
-    final LocalTestExecutor testExecutor = new LocalTestExecutor(config);
-    final Exporter exporter = new Exporter(config) {
-      @Override
-      public void export(final VariantStore variantStore) {
-      }
-    };
-
-    return new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-        sourceCodeValidation, variantSelection, testExecutor, exporter);
-  }
-
-  /*
-   * KGenProgMainオブジェクトを生成するヘルパーメソッド
-   */
-  private KGenProgMain createMain2(final Path rootPath, final Path productPath,
-      final Path testPath) {
-
-    final List<Path> productPaths = Arrays.asList(productPath);
-    final List<Path> testPaths = Arrays.asList(testPath);
-    final Path outDir = tempFolder.getRoot()
-        .toPath();
-
-    final Configuration config =
-        new Configuration.Builder(rootPath, productPaths, testPaths).setTimeLimitSeconds(600)
-            .setTestTimeLimitSeconds(1)
-            .setMaxGeneration(100)
-            .setRequiredSolutionsCount(1)
-            .setOutDir(outDir)
-            .setNeedNotOutput(true)
-            .build();
-
-    final FaultLocalization faultLocalization = new Ochiai();
-    final Random random = new Random(config.getRandomSeed());
-    // createMain との違いは条件式も再利用対象にしていること，
-    final CandidateSelection elementSelection = new RouletteStatementAndConditionSelection(random);
-    final Mutation mutation = new SimpleMutation(config.getMutationGeneratingCount(), random,
-        elementSelection, config.getScope());
+        selection, config.getScope());
     final Crossover crossover =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
             new SecondVariantRandomSelection(random), config.getCrossoverGeneratingCount());
@@ -132,7 +87,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
+    final CandidateSelection selection = new RouletteStatementSelection(new Random(0));
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
@@ -145,7 +101,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
+    final CandidateSelection selection = new RouletteStatementSelection(new Random(0));
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
@@ -158,7 +115,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
+    final CandidateSelection selection = new RouletteStatementSelection(new Random(0));
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
@@ -171,7 +129,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
+    final CandidateSelection selection = new RouletteStatementSelection(new Random(0));
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
@@ -184,7 +143,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve("src/example/CountDown.java");
     final Path testPath = rootPath.resolve("src/example/CountDownTest.java");
 
-    final KGenProgMain kGenProgMain = createMain2(rootPath, productPath, testPath);
+    final CandidateSelection selection = new RouletteStatementAndConditionSelection(new Random(0));
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
     assertThat(variants).hasSize(1)
@@ -199,7 +159,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
+    final CandidateSelection selection = new RouletteStatementSelection(new Random(0));
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
     // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
@@ -215,7 +176,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath);
+    final CandidateSelection selection = new RouletteStatementSelection(new Random(0));
+    final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
     // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
