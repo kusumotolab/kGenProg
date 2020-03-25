@@ -381,7 +381,7 @@ public class LocalTestExecutorTest {
     // バグ箇所を取り出す（7行目のはず）
     final ASTLocation location = ast.createLocations()
         .getAll()
-        .get(2);
+        .get(1);
     assertThat(location.inferLineNumbers().start).isSameAs(7);
 
     // バグ箇所を削除

@@ -55,7 +55,7 @@ public class AccessibleVariableSearcherTest {
         .hasValue(new Variable("double_2_1", "double", false));
 
     final ASTLocation line9 = locations.get(4); // String str_2_1, str2_2 = "";
-    assertThat(searcher.exec(line9)).hasSize(5);
+    assertThat(searcher.exec(line9)).hasSize(7);
 
     final ASTLocation line11 = locations.get(6); // String str_3 = ""
     assertThat(searcher.exec(line11)).hasSize(7);
@@ -64,7 +64,7 @@ public class AccessibleVariableSearcherTest {
     assertThat(searcher.exec(line13)).hasSize(7);
 
     final ASTLocation line15 = locations.get(8); // String str_5 = ""
-    assertThat(searcher.exec(line15)).hasSize(7);
+    assertThat(searcher.exec(line15)).hasSize(8);
 
     final ASTLocation line20 = locations.get(11); // String str_6 = ""
     assertThat(searcher.exec(line20)).hasSize(5);

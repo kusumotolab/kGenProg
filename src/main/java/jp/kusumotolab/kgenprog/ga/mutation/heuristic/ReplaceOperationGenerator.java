@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.ga.mutation.heuristic;
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -24,6 +25,13 @@ public class ReplaceOperationGenerator extends OperationGenerator {
   @Override
   public boolean canBeApply(final JDTASTLocation location) {
     final ASTNode node = location.getNode();
+
+    // conditions of conditional blocks can be replaced
+    // 条件式は置換可能
+    if (node instanceof InfixExpression) {
+      return true;
+    }
+
     if (!(node instanceof Statement)) {
       return false;
     }
