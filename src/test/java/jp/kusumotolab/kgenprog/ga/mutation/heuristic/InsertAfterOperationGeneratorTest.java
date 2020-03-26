@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.junit.Test;
@@ -28,16 +27,14 @@ public class InsertAfterOperationGeneratorTest extends OperationGeneratorTest {
         .filter(e -> !operationGenerator.canBeApply(e)) // 対象のノードの後ろに挿入できないノードのみ抽出
         .collect(Collectors.toList());
 
-    // メソッドのブロック，
     // 2つの条件式
     // return 文
-    // 上記の計4つになるはず
-    assertThat(nonInsertableLocations).hasSize(4);
+    // 上記の計3つになるはず
+    assertThat(nonInsertableLocations).hasSize(3);
 
     assertThat(nonInsertableLocations).allMatch(e -> {
       final ASTNode node = e.getNode();
-      return node instanceof Block || node instanceof InfixExpression
-          || node instanceof ReturnStatement;
+      return node instanceof InfixExpression || node instanceof ReturnStatement;
     });
   }
 }

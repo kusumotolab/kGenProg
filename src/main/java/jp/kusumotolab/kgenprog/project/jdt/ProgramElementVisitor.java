@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 /**
  * An abstract class for retrieving program elements with visitor pattern.
@@ -62,10 +63,9 @@ abstract public class ProgramElementVisitor extends ASTVisitor {
       }
 
       // メソッドのBlockである場合は，FLの対象としない
-      // TODO やっていいのか不明なのでとりあえずコメントアウト
-      // if(block.getParent() instanceof MethodDeclaration){
-      //  return;
-      //}
+      if (block.getParent() instanceof MethodDeclaration) {
+        return;
+      }
     }
 
     elements.add(s);
