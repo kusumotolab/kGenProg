@@ -113,6 +113,23 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
 | `--history-record` | Stores generation process of each variant and all generated variants. | `false` |
 
+
+## Use in your research
+
+If you are using kGenProg in your research, please cite the following paper:
+
+Y. Higo, S. Matsumoto, R. Arima, A. Tanikado, K. Naitou, J. Matsumoto, Y. Tomida, and S. Kusumoto, "kGenProg: A High-Performance, High-Extensibility and High-Portability APR System," 2018 25th Asia-Pacific Software Engineering Conference (APSEC), Nara, Japan, 2018, pp. 697-698. [[available online](https://doi.org/10.1109/APSEC.2018.00094)]
+```
+@Inproceedings{8719559,
+ author={Y. {Higo} and S. {Matsumoto} and R. {Arima} and A. {Tanikado} and K. {Naitou} and J. {Matsumoto} and Y. {Tomida} and S. {Kusumoto}},
+ booktitle={2018 25th Asia-Pacific Software Engineering Conference (APSEC)},
+ title={kGenProg: A High-Performance, High-Extensibility and High-Portability APR System},
+ year={2018},
+ pages={697-698},
+}
+```
+
+
 ## Awards
 - [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
 kGenProg: A High-Performance, High-Extensibility and High-Portability APR System
