@@ -12,10 +12,10 @@ public interface HistoricalElement {
    *
    * @return 親の遺伝子のList
    */
-  public List<Variant> getParents();
+  List<Variant> getParents();
 
   /**
    * @return 適用した操作の名前
    */
-  public String getOperationName();
+  String getOperationName();
 }

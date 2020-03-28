@@ -12,13 +12,14 @@ import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.SimpleMutation;
-import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
-import jp.kusumotolab.kgenprog.ga.mutation.selection.StatementSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementAndConditionSelection;
 import jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
-import jp.kusumotolab.kgenprog.output.PatchGenerator;
+import jp.kusumotolab.kgenprog.output.Exporter;
+import jp.kusumotolab.kgenprog.output.ExporterFactory;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 
@@ -29,7 +30,7 @@ public class CUILauncher {
       final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
       final CUILauncher launcher = new CUILauncher();
       launcher.launch(config);
-    } catch (IllegalArgumentException e) {
+    } catch (final RuntimeException e) {
       System.exit(1);
     }
   }
@@ -40,10 +41,10 @@ public class CUILauncher {
     final FaultLocalization faultLocalization = config.getFaultLocalization()
         .initialize();
     final Random random = new Random(config.getRandomSeed());
-    final StatementSelection rouletteStatementSelection =
-        new RouletteStatementSelection(random);
+    final CandidateSelection candidateSelection =
+        new RouletteStatementAndConditionSelection(random);
     final Mutation mutation = new SimpleMutation(config.getMutationGeneratingCount(), random,
-        rouletteStatementSelection, config.getScope());
+        candidateSelection, config.getScope());
     final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
         config.getFirstVariantSelectionStrategy()
             .initialize(random);
@@ -58,11 +59,10 @@ public class CUILauncher {
     final VariantSelection variantSelection = new DefaultVariantSelection(config.getHeadcount(),
         random);
     final TestExecutor testExecutor = new LocalTestExecutor(config);
-    final PatchGenerator patchGenerator = new PatchGenerator();
-
+    final Exporter exporter = ExporterFactory.create(config);
     final KGenProgMain kGenProgMain =
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
-            sourceCodeValidation, variantSelection, testExecutor, patchGenerator);
+            sourceCodeValidation, variantSelection, testExecutor, exporter);
 
     kGenProgMain.run();
   }

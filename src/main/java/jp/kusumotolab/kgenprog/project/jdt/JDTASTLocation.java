@@ -15,7 +15,7 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
  * JDT AST の単一ノードを示すオブジェクト Operation のターゲットに利用する
  *
  * @author r-arima
- * @see jp.kusumotolab.kgenprog.JDTOperaion
+ * @see jp.kusumotolab.kgenprog.project.jdt.JDTOperation
  */
 public class JDTASTLocation implements ASTLocation {
 
@@ -115,5 +115,25 @@ public class JDTASTLocation implements ASTLocation {
 
   public ASTNode getNode() {
     return node;
+  }
+
+  @Override
+  public int hashCode() {
+    return node.hashCode();
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+
+    if (null == o) {
+      return false;
+    }
+
+    if (!(o instanceof JDTASTLocation)) {
+      return false;
+    }
+
+    final JDTASTLocation target = (JDTASTLocation) o;
+    return node.equals(target.node);
   }
 }

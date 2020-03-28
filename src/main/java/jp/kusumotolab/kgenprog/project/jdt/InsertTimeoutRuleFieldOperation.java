@@ -126,7 +126,7 @@ public class InsertTimeoutRuleFieldOperation implements Operation {
    * @return 生成されたFieldDeclaration
    */
   private FieldDeclaration createInsertField(final String fieldName) {
-    final char[] insertSourceCode = new StringBuilder().append("")
+    final char[] insertSourceCode = new StringBuilder()
         .append("@org.junit.Rule\n")
         .append("public final org.junit.rules.Timeout ")
         .append(fieldName)

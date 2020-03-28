@@ -39,9 +39,8 @@ public class ZoltarTest {
         1.0 / (1.0 + 0.0 + 1.0 + 10000d * 0.0 * 1.0 / 1.0); // 0.5  (the most suspicious stmt)
     final double susp2 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     final double susp3 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
-    final double susp4 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
-        .containsExactly(susp1, susp2, susp3, susp4);
+        .containsExactly(susp1, susp2, susp3);
   }
 
   /**
@@ -64,9 +63,8 @@ public class ZoltarTest {
         1.0 / (1.0 + 0.0 + 1.0 + 10000d * 0.0 * 1.0 / 1.0); // 0.5  (the most suspicious stmt)
     final double susp2 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     final double susp3 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
-    final double susp4 = 1.0 / (1.0 + 0.0 + 3.0 + 10000d * 0.0 * 3.0 / 1.0); // 0.25
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
-        .containsExactly(susp1, susp2, susp3, susp4);
+        .containsExactly(susp1, susp2, susp3);
   }
 
   /**

@@ -38,9 +38,8 @@ public class DStarTest {
     final double susp1 = Math.pow(1.0, 2) / (1.0 + 0.0); // 1.0 (the most suspicious stmt)
     final double susp2 = Math.pow(1.0, 2) / (3.0 + 0.0); // 0.3333
     final double susp3 = Math.pow(1.0, 2) / (3.0 + 0.0); // 0.3333
-    final double susp4 = Math.pow(1.0, 2) / (3.0 + 0.0); // 0.3333
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
-        .containsExactly(susp1, susp2, susp3, susp4);
+        .containsExactly(susp1, susp2, susp3);
   }
 
   /**
@@ -62,9 +61,8 @@ public class DStarTest {
     final double susp1 = Math.pow(1.0, 2) / (1.0 + 0.0); // 1.0 (the most suspicious stmt)
     final double susp2 = Math.pow(1.0, 2) / (3.0 + 0.0); // 0.3333
     final double susp3 = Math.pow(1.0, 2) / (3.0 + 0.0); // 0.3333
-    final double susp4 = Math.pow(1.0, 2) / (3.0 + 0.0); // 0.3333
     assertThat(suspiciousnesses).extracting(Suspiciousness::getValue)
-        .containsExactly(susp1, susp2, susp3, susp4);
+        .containsExactly(susp1, susp2, susp3);
   }
 
   /**

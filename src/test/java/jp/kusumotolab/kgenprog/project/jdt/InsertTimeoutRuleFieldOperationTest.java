@@ -16,7 +16,7 @@ public class InsertTimeoutRuleFieldOperationTest {
 
   @Test
   public void testInsert() {
-    final String source = new StringBuilder().append("")
+    final String source = new StringBuilder()
         .append("class A {")
         .append("  public void a() {")
         .append("  }")
@@ -31,7 +31,7 @@ public class InsertTimeoutRuleFieldOperationTest {
     final InsertTimeoutRuleFieldOperation operation = new InsertTimeoutRuleFieldOperation(10);
     final GeneratedSourceCode applyiedSourceCode = operation.apply(sourceCode, null);
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("class A {")
         .append("  @org.junit.Rule")
         .append(
@@ -50,7 +50,7 @@ public class InsertTimeoutRuleFieldOperationTest {
 
   @Test
   public void testInsertDuplicateName() {
-    final String source = new StringBuilder().append("")
+    final String source = new StringBuilder()
         .append("class A {")
         .append("  private int globalTimeout;")
         .append("  public void a() {")
@@ -66,7 +66,7 @@ public class InsertTimeoutRuleFieldOperationTest {
     final InsertTimeoutRuleFieldOperation operation = new InsertTimeoutRuleFieldOperation(10);
     final GeneratedSourceCode applyiedSourceCode = operation.apply(sourceCode, null);
 
-    final String expected = new StringBuilder().append("")
+    final String expected = new StringBuilder()
         .append("class A {")
         .append("  @org.junit.Rule")
         .append(

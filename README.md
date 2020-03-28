@@ -95,7 +95,6 @@ $ java -jar path/to/kGenProg.jar
 | `-x`, `--exec-test` | Specifies fully qualified names of test classes executed during evaluation of variants (i.e. fix-candidates). It is recommended to specify test classes detecting a bug. Class names are separated with spaces. | All test classes |
 | `-c`, `--cp` | Specifies class paths needed to build the target project. Paths are separated with spaces. | Nothing |
 | `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
-| `-f`, `--force` | Remove the files in the output directory when kGenProg writes patches. | `false` |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
 | `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
@@ -113,6 +112,23 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
 | `--history-record` | Stores generation process of each variant and all generated variants. | `false` |
+
+
+## Use in your research
+
+If you are using kGenProg in your research, please cite the following paper:
+
+Y. Higo, S. Matsumoto, R. Arima, A. Tanikado, K. Naitou, J. Matsumoto, Y. Tomida, and S. Kusumoto, "kGenProg: A High-Performance, High-Extensibility and High-Portability APR System," 2018 25th Asia-Pacific Software Engineering Conference (APSEC), Nara, Japan, 2018, pp. 697-698. [[available online](https://doi.org/10.1109/APSEC.2018.00094)]
+```
+@Inproceedings{8719559,
+ author={Y. {Higo} and S. {Matsumoto} and R. {Arima} and A. {Tanikado} and K. {Naitou} and J. {Matsumoto} and Y. {Tomida} and S. {Kusumoto}},
+ booktitle={2018 25th Asia-Pacific Software Engineering Conference (APSEC)},
+ title={kGenProg: A High-Performance, High-Extensibility and High-Portability APR System},
+ year={2018},
+ pages={697-698},
+}
+```
+
 
 ## Awards
 - [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  

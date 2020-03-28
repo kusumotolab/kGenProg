@@ -3,15 +3,21 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
+/**
+ * An helper class for retrieving or searching a location on JDT's AST.
+ * JDTのAST上の位置情報の取得･検索のためのヘルパークラス．
+ *
+ * @param <T>
+ */
 public class JDTASTLocations<T extends SourcePath> implements ASTLocations {
 
-  private final List<List<Statement>> lineNumberToStatements;
+  private final List<List<ASTNode>> lineNumberToStatements;
   private final List<ASTLocation> allLocations;
   private final T sourcePath;
   private final GeneratedJDTAST<?> generatedAST;
@@ -20,10 +26,10 @@ public class JDTASTLocations<T extends SourcePath> implements ASTLocations {
       final T sourcePath) {
     this.generatedAST = generatedAST;
     this.sourcePath = sourcePath;
-    final StatementListVisitor visitor = new StatementListVisitor();
-    visitor.analyzeStatement(root);
-    this.lineNumberToStatements = visitor.getLineToStatements();
-    this.allLocations = visitor.getStatements()
+    final ProgramElementVisitor visitor = new StatementAndConditionVisitor();
+    visitor.analyzeElements(root);
+    this.lineNumberToStatements = visitor.getLineToElements();
+    this.allLocations = visitor.getElements()
         .stream()
         .map(v -> new JDTASTLocation(sourcePath, v, generatedAST))
         .collect(Collectors.toList());

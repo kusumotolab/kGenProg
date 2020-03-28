@@ -3,15 +3,15 @@ package jp.kusumotolab.kgenprog.project;
 // TODO: クラス名を再検討
 public interface GeneratedAST<T extends SourcePath> {
 
-  public String getSourceCode();
+  String getSourceCode();
 
-  public FullyQualifiedName getPrimaryClassName();
+  FullyQualifiedName getPrimaryClassName();
 
-  public T getSourcePath();
+  T getSourcePath();
 
-  public ASTLocations createLocations();
+  ASTLocations createLocations();
 
-  public String getMessageDigest();
+  String getMessageDigest();
 
-  public int getNumberOfLines();
+  int getNumberOfLines();
 }

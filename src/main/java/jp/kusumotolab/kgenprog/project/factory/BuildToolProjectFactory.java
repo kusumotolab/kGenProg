@@ -22,7 +22,7 @@ public abstract class BuildToolProjectFactory implements ProjectFactory {
               .endsWith(getConfigFileName()))
           .collect(Collectors.toList());
     } catch (IOException e) {
-      ; // do nothing
+      // do nothing
     }
     return Collections.emptyList();
   }

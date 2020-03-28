@@ -55,21 +55,21 @@ public class AccessibleVariableSearcherTest {
         .hasValue(new Variable("double_2_1", "double", false));
 
     final ASTLocation line9 = locations.get(4); // String str_2_1, str2_2 = "";
-    assertThat(searcher.exec(line9)).hasSize(5);
+    assertThat(searcher.exec(line9)).hasSize(7);
 
-    final ASTLocation line11 = locations.get(7); // String str_3 = ""
+    final ASTLocation line11 = locations.get(6); // String str_3 = ""
     assertThat(searcher.exec(line11)).hasSize(7);
 
-    final ASTLocation line13 = locations.get(9); // String str_4 = ""
+    final ASTLocation line13 = locations.get(7); // String str_4 = ""
     assertThat(searcher.exec(line13)).hasSize(7);
 
-    final ASTLocation line15 = locations.get(10); // String str_5 = ""
-    assertThat(searcher.exec(line15)).hasSize(7);
+    final ASTLocation line15 = locations.get(8); // String str_5 = ""
+    assertThat(searcher.exec(line15)).hasSize(8);
 
-    final ASTLocation line20 = locations.get(14); // String str_6 = ""
+    final ASTLocation line20 = locations.get(11); // String str_6 = ""
     assertThat(searcher.exec(line20)).hasSize(5);
 
-    final ASTLocation line22 = locations.get(15); // String str_7 = ""
+    final ASTLocation line22 = locations.get(12); // String str_7 = ""
     assertThat(searcher.exec(line22)).hasSize(5);
   }
 
@@ -80,7 +80,7 @@ public class AccessibleVariableSearcherTest {
         .getAll();
     final AccessibleVariableSearcher searcher = new AccessibleVariableSearcher();
 
-    final ASTLocation location = locations.get(19); // System.out.println(i);
+    final ASTLocation location = locations.get(15); // System.out.println(i);
     final List<Variable> variables = searcher.exec(location);
     assertThat(variables).hasSize(4);
 
@@ -96,7 +96,7 @@ public class AccessibleVariableSearcherTest {
         .getAll();
     final AccessibleVariableSearcher searcher = new AccessibleVariableSearcher();
 
-    final ASTLocation location = locations.get(23); // System.out.println(string);
+    final ASTLocation location = locations.get(18); // System.out.println(string);
     final List<Variable> variables = searcher.exec(location);
     assertThat(variables).hasSize(5);
 

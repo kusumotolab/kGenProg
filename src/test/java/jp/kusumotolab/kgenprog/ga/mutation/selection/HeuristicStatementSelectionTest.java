@@ -49,6 +49,7 @@ public class HeuristicStatementSelectionTest {
         false,
         false,
         null,
+        false,
         false);
     final ASTNode node = selection.exec(query);
 

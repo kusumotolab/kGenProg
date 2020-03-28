@@ -19,7 +19,7 @@ public interface ASTLocations {
    * @param lineNumber 行番号
    * @return 指定された行にあるASTノードを表すLocationのList
    */
-  public List<ASTLocation> infer(int lineNumber);
+  List<ASTLocation> infer(int lineNumber);
 
-  public List<ASTLocation> getAll();
+  List<ASTLocation> getAll();
 }

@@ -26,7 +26,7 @@ public interface FirstVariantSelectionStrategy {
    *
    * @author higo
    */
-  public enum Strategy {
+  enum Strategy {
 
     /**
      * 1つ目の親を評価関数に基づいて選択するアルゴリズムを表す型

@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
-import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.ga.Roulette;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
@@ -24,7 +24,7 @@ public class RouletteStatementSelectionTest {
   public void testProjectScope() {
     final RouletteStatementSelection statementSelection = createStatementSelection();
     final Scope scope = new Scope(Type.PROJECT, null);
-    final Roulette<ReuseCandidate<Statement>> roulette = statementSelection.getRoulette(scope);
+    final Roulette<ReuseCandidate<ASTNode>> roulette = statementSelection.getRoulette(scope);
     assertThat(roulette.getCandidateList()).hasSize(3);
   }
 
@@ -32,7 +32,7 @@ public class RouletteStatementSelectionTest {
   public void testPackageScope() {
     final RouletteStatementSelection statementSelection = createStatementSelection();
     final Scope scope = new Scope(Type.PACKAGE, ExampleAlias.Fqn.FOO);
-    final Roulette<ReuseCandidate<Statement>> roulette = statementSelection.getRoulette(scope);
+    final Roulette<ReuseCandidate<ASTNode>> roulette = statementSelection.getRoulette(scope);
     assertThat(roulette.getCandidateList()).hasSize(2);
   }
 
@@ -40,7 +40,7 @@ public class RouletteStatementSelectionTest {
   public void testFileScope() {
     final RouletteStatementSelection statementSelection = createStatementSelection();
     final Scope scope = new Scope(Type.FILE, ExampleAlias.Fqn.FOO);
-    final Roulette<ReuseCandidate<Statement>> roulette = statementSelection.getRoulette(scope);
+    final Roulette<ReuseCandidate<ASTNode>> roulette = statementSelection.getRoulette(scope);
     assertThat(roulette.getCandidateList()).hasSize(1);
   }
 

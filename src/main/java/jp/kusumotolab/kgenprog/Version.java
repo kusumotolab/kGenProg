@@ -57,10 +57,7 @@ public class Version {
     final String protocol = this.getClass()
         .getResource("")
         .getProtocol();
-    if (Objects.equals(protocol, "jar")) {
-      return true;
-    }
-    return false;
+    return Objects.equals(protocol, "jar");
   }
 
 }
