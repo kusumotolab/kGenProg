@@ -12,6 +12,7 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
  * @deprecated #507 の修正により不要になったため，本クラスは廃止 & Ignore
  */
 @Ignore
+@Deprecated
 public class InsertTimeoutRuleFieldOperationTest {
 
   @Test
