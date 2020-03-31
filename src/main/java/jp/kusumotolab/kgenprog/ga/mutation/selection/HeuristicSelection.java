@@ -166,8 +166,7 @@ abstract public class HeuristicSelection implements CandidateSelection {
       if (fqn == null) {
         candidates.addAll(returnCandidates);
       } else {
-        final Collection<Candidate> returnCandidates = returnStatementMultimap.get(fqn);
-        candidates.addAll(returnCandidates);
+        candidates.addAll(returnStatementMultimap.get(fqn));
       }
     }
 
