@@ -14,7 +14,7 @@ import jp.kusumotolab.kgenprog.project.jdt.StatementListVisitor;
 /**
  * 再利用するステートメントを重みをつけたルーレットで選択するクラス
  *
- * @see StatementSelection
+ * @see RouletteSelection
  */
 public class RouletteStatementSelection extends RouletteSelection {
 

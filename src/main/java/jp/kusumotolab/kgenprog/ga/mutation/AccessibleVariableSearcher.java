@@ -72,7 +72,7 @@ public class AccessibleVariableSearcher {
     } else if (parent != null) {
       final List<Variable> parentVariables = searchRecursively(parent);
       results.addAll(parentVariables);
-    }
+    } // TODO 条件式の場合を付け加える必要あり
     final List<Variable> variables = search(node);
     results.addAll(variables);
     return results;
