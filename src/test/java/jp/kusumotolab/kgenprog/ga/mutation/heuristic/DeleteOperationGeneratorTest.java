@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.junit.Test;
@@ -29,10 +28,9 @@ public class DeleteOperationGeneratorTest extends OperationGeneratorTest {
 
     // CTZ01で削除できないのはBlock文とReturn文のみ
     assertThat(nonDeletableASTs).allMatch(
-        e -> e.getNode() instanceof ReturnStatement || e.getNode() instanceof Block
-            || e.getNode() instanceof InfixExpression);
+        e -> e.getNode() instanceof ReturnStatement || e.getNode() instanceof InfixExpression);
 
-    // その数は2つ
-    assertThat(nonDeletableASTs).hasSize(4);
+    // その数は3つ
+    assertThat(nonDeletableASTs).hasSize(3);
   }
 }

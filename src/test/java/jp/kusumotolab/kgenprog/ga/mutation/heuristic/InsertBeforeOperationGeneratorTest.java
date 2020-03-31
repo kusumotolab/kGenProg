@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -28,14 +27,13 @@ public class InsertBeforeOperationGeneratorTest extends OperationGeneratorTest {
         .filter(e -> !operationGenerator.canBeApply(e)) // 対象のノードの後ろに挿入できないノードのみ抽出
         .collect(Collectors.toList());
 
-    // メソッドのブロック
     // 2つの条件式
-    // 上記の計3つになるはず
-    assertThat(nonInsertableLocations).hasSize(3);
+    // 上記の計2つになるはず
+    assertThat(nonInsertableLocations).hasSize(2);
 
     assertThat(nonInsertableLocations).allMatch(e -> {
       final ASTNode node = e.getNode();
-      return node instanceof Block || node instanceof InfixExpression;
+      return node instanceof InfixExpression;
     });
   }
 }

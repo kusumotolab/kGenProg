@@ -182,7 +182,7 @@ public class LocalTestExecutorTest {
     final ASTLocation loc1 = source.getProductAst(baz)
         .createLocations()
         .getAll()
-        .get(17); // L66 in OuterClass. "new String()" statement;
+        .get(16); // L66 in OuterClass. "new String()" statement;
 
     // 一応確認．66行目のはず
     assertThat(loc1.inferLineNumbers()).isEqualTo(new LineNumberRange(66, 66));
@@ -200,7 +200,7 @@ public class LocalTestExecutorTest {
     final ASTLocation loc2 = source.getProductAst(baz)
         .createLocations()
         .getAll()
-        .get(15); // L49 in OuterClass. "new String()" statement;
+        .get(14); // L49 in OuterClass. "new String()" statement;
 
     // 一応確認．49行目のはず
     assertThat(loc2.inferLineNumbers()).isEqualTo(new LineNumberRange(49, 49));
@@ -381,7 +381,7 @@ public class LocalTestExecutorTest {
     // バグ箇所を取り出す（7行目のはず）
     final ASTLocation location = ast.createLocations()
         .getAll()
-        .get(1);
+        .get(0);
     assertThat(location.inferLineNumbers().start).isSameAs(7);
 
     // バグ箇所を削除
