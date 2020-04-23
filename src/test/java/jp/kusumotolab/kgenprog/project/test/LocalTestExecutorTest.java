@@ -19,8 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -31,6 +33,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -477,18 +480,10 @@ public class LocalTestExecutorTest {
     final Variant variant = mock(Variant.class);
     when(variant.getGeneratedSourceCode()).thenReturn(source);
 
-    // 現在のworking-dirを擬似的に対象プロジェクトに移動する．別プロセス切り出しが難しいため
-    final String userDir = System.getProperty("user.dir");
-    System.setProperty("user.dir", rootPath.toAbsolutePath()
-        .toString());
-
     final TestResults result = executor.exec(variant);
 
     // 実行されたテストは1個のはず
     assertThat(result.getExecutedTestFQNs()).containsExactlyInAnyOrder(FOO_TEST01);
-
-    // user.dir を戻しておく（副作用回避）
-    System.setProperty("user.dir", userDir);
 
     // テストは成功するはず
     assertThat(result.getTestResult(FOO_TEST01).failed).isFalse();
