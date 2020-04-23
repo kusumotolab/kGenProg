@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.factory;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -21,7 +20,6 @@ public class JUnitLibraryResolver {
   private static final String JUNIT4_DIR = "junit4/";
   private static final String JUNIT3_JUNIT = "junit-3.8.2.jar";
   private static final String JUNIT4_JUNIT = "junit-4.12-kgp-custom.jar";
-  private static final String SYSTEM_TEMP_DIR = System.getProperty("java.io.tmpdir");
 
   public final static EnumMap<JUnitVersion, List<ClassPath>> libraries =
       new EnumMap<>(JUnitVersion.class);
@@ -35,7 +33,7 @@ public class JUnitLibraryResolver {
       final InputStream junit4JInputStream =
           classLoader.getResourceAsStream(JUNIT4_DIR + JUNIT4_JUNIT);
 
-      final Path systemTempPath = Paths.get(SYSTEM_TEMP_DIR);
+      final Path systemTempPath = Files.createTempDirectory("kgp-");
       final Path junit3JPath = systemTempPath.resolve(JUNIT3_JUNIT);
       final Path junit4JPath = systemTempPath.resolve(JUNIT4_JUNIT);
 
