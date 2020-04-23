@@ -53,7 +53,6 @@ public class JUnitLibraryResolver {
     try {
       if (null == tempDir) {
         tempDir = Files.createTempDirectory("kgp-");
-        return tempDir;
       }
     } catch (Exception e) {
       e.printStackTrace();
