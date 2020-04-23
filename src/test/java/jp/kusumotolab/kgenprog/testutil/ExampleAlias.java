@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver;
 
 /**
  * example/BuildSuccess01-03に対応するクラス名等のエイリアス． <br>
@@ -79,8 +80,7 @@ public class ExampleAlias {
 
   // ライブラリへのエイリアス
   public final static class Lib {
-
-    private final static Path TEMP = Paths.get(System.getProperty("java.io.tmpdir"));
+    private final static Path TEMP = JUnitLibraryResolver.getTempDirectory();
     public final static Path JUNIT = TEMP.resolve("junit-4.12-kgp-custom.jar");
     public final static Path HAMCREST = TEMP.resolve("hamcrest-core-1.3.jar");
   }
