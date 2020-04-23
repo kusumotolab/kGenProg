@@ -93,15 +93,17 @@ jar {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
   }
 
-  // copy gradle.properties to resolve version info
-  copy {
-    from 'gradle.properties'
-    into buildDir.name + '/resources/main/'
+  doFirst {
+    // copy gradle.properties to resolve version info
+    copy {
+      from 'gradle.properties'
+      into buildDir.name + '/resources/main/'
+    }
+    // annotate whether this task was executed on CI or not
+    def isCi = System.getenv('CI') ? 'true' : 'false'
+    File prop = new File(buildDir.name + '/resources/main/gradle.properties')
+    prop.append('ci = ' + isCi + '\n')
   }
-  // annotate whether this task was executed on CI or not
-  def isCi = System.getenv('CI') ? 'true' : 'false'
-  File prop = new File(buildDir.name + '/resources/main/gradle.properties')
-  prop.append('ci = ' + isCi + '\n')
 }
 
 // Define App's version
