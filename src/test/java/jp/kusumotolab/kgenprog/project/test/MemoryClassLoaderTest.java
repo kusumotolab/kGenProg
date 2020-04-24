@@ -19,6 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import com.google.gson.internal.JavaVersion;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.ProjectBuilder;
@@ -212,10 +213,8 @@ public class MemoryClassLoaderTest {
   @Test
   public void testJUnitWithMemoryLoader02() throws Exception {
     // skip this test if jdk ver is grater than 12
-    final boolean JDK12_OR_LATER =
-        System.getProperty("java.version")
-            .compareTo("12") >= 0;
-    Assume.assumeFalse(JDK12_OR_LATER);
+    final boolean JDK11_OR_EARLIER = JavaVersion.getMajorJavaVersion() <= 11;
+    Assume.assumeTrue(JDK11_OR_EARLIER);
 
     // まず何もロードされていないはず
     assertThat(listLoadedClasses(loader)).isEmpty();
@@ -259,8 +258,8 @@ public class MemoryClassLoaderTest {
    * 指定クラスローダによってロードされたクラス名一覧の取得
    *
    * todo
-   *  this method cannot be executed on jdk12 or later due to the reflection CSR
-   *  https://bugs.openjdk.java.net/browse/JDK-8210522
+   * this method cannot be executed on jdk12 or later due to the reflection CSR
+   * https://bugs.openjdk.java.net/browse/JDK-8210522
    *
    * @param classLoader
    * @return
