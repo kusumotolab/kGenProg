@@ -217,7 +217,7 @@ public class MemoryClassLoaderTest {
     final Class<?> clazz = loader.loadClass(FOO_TEST);
 
     // BCTestがロードされているはず
-    assertThat(listLoadedClasses(loader)).contains(FOO_TEST.toString());
+    assertThat(listLoadedClasses(loader)).containsOnly(FOO_TEST.toString());
 
     // テストを実行
     // * ここでBCTestのClassLoaderには上記MemoryClassLoaderが紐づく（自身をロードしたローダーが指定される）
@@ -226,7 +226,7 @@ public class MemoryClassLoaderTest {
     junitCore.run(clazz);
 
     // 上記テストの実行により，BCTestに加えBCもロードされているはず
-    assertThat(listLoadedClasses(loader)).contains(FOO_TEST.toString(), FOO.toString());
+    assertThat(listLoadedClasses(loader)).containsOnly(FOO_TEST.toString(), FOO.toString());
   }
 
   @Test(expected = ClassFormatError.class)

@@ -13,10 +13,8 @@ public class FooTest {
 
   @Test
   public void test01() throws IOException {
-
-    // working-dirからの相対パスでPathを取り出す．
-    // KGPテスト実行時に別プロセス切り出しが難しいので，擬似的に題材ルートからの相対パスを用いる．
-    final Path path = Paths.get(System.getProperty("user.dir"), "tmp/out.txt");
+    // 一時ファイルへの書き込みをテストする
+    final Path path = Files.createTempFile("kgp-", Long.toString(System.nanoTime()));
 
     final List<String> contents = Arrays.asList(Double.toString(Math.random()));
 
