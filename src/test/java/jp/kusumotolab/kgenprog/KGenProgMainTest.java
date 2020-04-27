@@ -163,7 +163,6 @@ public class KGenProgMainTest {
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
-    // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
     assertThat(variants).hasSize(1)
         .allMatch(Variant::isCompleted);
   }
@@ -180,7 +179,6 @@ public class KGenProgMainTest {
     final KGenProgMain kGenProgMain = createMain(rootPath, productPath, testPath, selection);
     final List<Variant> variants = kGenProgMain.run();
 
-    // アサートは適当．現在無限ループにより修正がそもそもできていないので，要検討
     assertThat(variants).hasSize(1)
         .allMatch(Variant::isCompleted);
   }
