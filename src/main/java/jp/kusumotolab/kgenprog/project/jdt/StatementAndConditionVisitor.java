@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.DoStatement;
 import org.eclipse.jdt.core.dom.EmptyStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
@@ -91,7 +92,10 @@ public class StatementAndConditionVisitor extends ProgramElementVisitor {
 
   @Override
   public void endVisit(final ForStatement node) {
-    consumeElement(node.getExpression()); // Blockよりも後に入れるためにendVisitで行う
+    final Expression expression = node.getExpression();
+    if(null != expression) {
+      consumeElement(expression); // Blockよりも後に入れるためにendVisitで行う
+    }
     super.endVisit(node);
   }
 
