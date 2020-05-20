@@ -93,7 +93,7 @@ public class StatementAndConditionVisitor extends ProgramElementVisitor {
   @Override
   public void endVisit(final ForStatement node) {
     final Expression expression = node.getExpression();
-    if(null != expression) {
+    if (null != expression) {
       consumeElement(expression); // Blockよりも後に入れるためにendVisitで行う
     }
     super.endVisit(node);
