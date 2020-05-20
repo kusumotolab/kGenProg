@@ -13,7 +13,7 @@ public class StatementAndConditionVisitorTest {
   private static final String FILE_NAME_FOR = "For.java";
   private static final String SOURCE_FOR = new StringBuilder()
       // Line breaks must be included to execute GeneratedJDTAST#inferLocation.
-      .append("public class ExampleFor {\n")
+      .append("public class For {\n")
       .append("  public int method() {\n")
       .append("    for (int i = 0; ; i++) {\n")
       .append("      if(i == 10) {\n")
