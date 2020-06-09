@@ -19,6 +19,8 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
  * kGenProgのメインクラス．<br>
@@ -90,6 +92,8 @@ public class KGenProgMain {
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
+
+    logInitialFailedTests(initialVariant.getTestResults());
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getProductAsts());
@@ -164,6 +168,26 @@ public class KGenProgMain {
         .append(System.lineSeparator())
         .append(config.toString())
         .append("================================================================");
+    log.info(sb.toString());
+  }
+
+  private void logInitialFailedTests(final TestResults testResults) {
+    final StringBuilder sb = new StringBuilder();
+    final List<TestResult> successedTestResults = testResults.getSuccessedTestResults();
+    final List<TestResult> failedTestResults = testResults.getFailedTestResults();
+    sb//
+        .append("initial failed tests (")
+        .append(failedTestResults.size())
+        .append("/")
+        .append(successedTestResults.size() + failedTestResults.size())
+        .append(")")
+        .append(System.lineSeparator());
+
+    testResults.getFailedTestResults()
+        .forEach(testResult ->
+            sb//
+                .append(testResult.executedTestFQN)
+                .append(System.lineSeparator()));
     log.info(sb.toString());
   }
 
