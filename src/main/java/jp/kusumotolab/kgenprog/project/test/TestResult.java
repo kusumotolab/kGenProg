@@ -86,4 +86,34 @@ public class TestResult {
     sb.append(indent + "}");
     return sb.toString();
   }
+
+  /**
+   * failedReasonをパースしテストで期待していた値を取得．
+   *
+   * @return
+   */
+  public String getExpectedValue() {
+    Pattern p = Pattern.compile(".*expected:\\<(.*)\\>.*but was:\\<(.*)\\>.*");
+    Matcher m = p.matcher(this.failedReason);
+    if (m.matches()) {
+      return m.group(1);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * failedReasonをパースし実際に得た値を取得．
+   *
+   * @return
+   */
+  public String getActualValue() {
+    Pattern p = Pattern.compile(".*expected:\\<(.*)\\>.*but was:\\<(.*)\\>.*");
+    Matcher m = p.matcher(this.failedReason);
+    if (m.matches()) {
+      return m.group(2);
+    } else {
+      return null;
+    }
+  }
 }
