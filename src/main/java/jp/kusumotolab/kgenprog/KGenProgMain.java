@@ -187,6 +187,10 @@ public class KGenProgMain {
         .forEach(testResult ->
             sb//
                 .append(testResult.executedTestFQN)
+                .append(": expected ")
+                .append(testResult.getExpectedValue())
+                .append(", actual ")
+                .append(testResult.getActualValue())
                 .append(System.lineSeparator()));
     log.info(sb.toString());
   }
