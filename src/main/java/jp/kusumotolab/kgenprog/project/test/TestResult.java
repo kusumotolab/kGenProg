@@ -2,6 +2,8 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
@@ -16,6 +18,7 @@ public class TestResult {
 
   final public FullyQualifiedName executedTestFQN;
   final public boolean failed;
+  final public String failedReason;
   final private Map<FullyQualifiedName, Coverage> coverages;
 
   /**
@@ -23,12 +26,14 @@ public class TestResult {
    *
    * @param executedTestFQN 実行したテストメソッドの名前
    * @param failed テストの結果
+   * @param failedReason テストに落ちた場合はその理由
    * @param coverages テスト対象それぞれの行ごとのCoverage計測結果
    */
   public TestResult(final FullyQualifiedName executedTestFQN, final boolean failed,
-      final Map<FullyQualifiedName, Coverage> coverages) {
+      final String failedReason, final Map<FullyQualifiedName, Coverage> coverages) {
     this.executedTestFQN = executedTestFQN;
     this.failed = failed;
+    this.failedReason = failedReason;
     this.coverages = coverages;
   }
 
