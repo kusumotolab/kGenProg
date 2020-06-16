@@ -52,7 +52,6 @@ public class InsertTimeoutRuleFieldOperation implements Operation {
       return new GeneratedSourceCode(generatedSourceCode.getProductAsts(), newTestAsts);
     } catch (final Exception e) {
       log.warn("Inserting timeout rule is failed: {}", e.getMessage());
-      log.trace("Trace:", e);
       return generatedSourceCode;
     }
   }
