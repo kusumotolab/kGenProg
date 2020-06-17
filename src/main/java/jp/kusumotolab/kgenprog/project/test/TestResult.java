@@ -18,7 +18,7 @@ public class TestResult {
 
   final public FullyQualifiedName executedTestFQN;
   final public boolean failed;
-  final public String failedReason;
+  final private String failedReason;
   final private Map<FullyQualifiedName, Coverage> coverages;
 
   /**
@@ -57,6 +57,15 @@ public class TestResult {
    */
   public Coverage getCoverages(final FullyQualifiedName testFQN) {
     return this.coverages.get(testFQN);
+  }
+
+  /**
+   * failedReasonを取得
+   *
+   * @return
+   */
+  public String getFailedReason() {
+    return this.failedReason;
   }
 
   @Override

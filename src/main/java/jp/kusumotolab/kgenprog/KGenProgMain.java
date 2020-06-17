@@ -187,7 +187,7 @@ public class KGenProgMain {
       sb//
           .append(testResult.executedTestFQN)
           .append(": ")
-          .append(testResult.failedReason)
+          .append(testResult.getFailedReason())
           .append(System.lineSeparator());
     }
     log.info(sb.toString());
