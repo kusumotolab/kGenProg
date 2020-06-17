@@ -183,15 +183,23 @@ public class KGenProgMain {
         .append(")")
         .append(System.lineSeparator());
 
-    testResults.getFailedTestResults()
-        .forEach(testResult ->
-            sb//
-                .append(testResult.executedTestFQN)
-                .append(": expected ")
-                .append(testResult.getExpectedValue())
-                .append(", actual ")
-                .append(testResult.getActualValue())
-                .append(System.lineSeparator()));
+    for (TestResult testResult : testResults.getFailedTestResults()) {
+      sb//
+          .append(testResult.executedTestFQN)
+          .append(": ");
+      if (testResult.getExpectedValue() != null && testResult.getActualValue() != null) {
+        sb//
+            .append("expected ")
+            .append(testResult.getExpectedValue())
+            .append(", actual ")
+            .append(testResult.getActualValue());
+      } else {
+        sb//
+            .append(testResult.failedReason);
+      }
+      sb//
+          .append(System.lineSeparator());
+    }
     log.info(sb.toString());
   }
 
