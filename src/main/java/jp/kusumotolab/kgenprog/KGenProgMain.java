@@ -186,18 +186,8 @@ public class KGenProgMain {
     for (TestResult testResult : testResults.getFailedTestResults()) {
       sb//
           .append(testResult.executedTestFQN)
-          .append(": ");
-      if (testResult.getExpectedValue() != null && testResult.getActualValue() != null) {
-        sb//
-            .append("expected ")
-            .append(testResult.getExpectedValue())
-            .append(", actual ")
-            .append(testResult.getActualValue());
-      } else {
-        sb//
-            .append(testResult.failedReason);
-      }
-      sb//
+          .append(": ")
+          .append(testResult.failedReason)
           .append(System.lineSeparator());
     }
     log.info(sb.toString());
