@@ -253,6 +253,7 @@ class TestThread extends Thread {
 
     final private TestResults testResults;
     private boolean wasFailed;
+    private String failedReason;
 
     /**
      * constructor
@@ -268,11 +269,14 @@ class TestThread extends Thread {
     public void testStarted(Description description) {
       jacocoRuntimeData.reset();
       wasFailed = false;
+      failedReason = null;
     }
 
     @Override
     public void testFailure(Failure failure) {
       wasFailed = true;
+      failedReason = failure.getException()
+          .getMessage();
     }
 
     @Override
@@ -349,7 +353,8 @@ class TestThread extends Thread {
           .map(RawCoverage::new)
           .collect(Collectors.toMap(Coverage::getExecutedTargetFQN, Functions.identity()));
 
-      final TestResult testResult = new TestResult(testMethodFQN, wasFailed, coverages);
+      final TestResult testResult = new TestResult(testMethodFQN, wasFailed, failedReason,
+          coverages);
       testResults.add(testResult);
     }
   }
