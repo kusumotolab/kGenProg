@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog;
 
+import java.util.List;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection;
 import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.DefaultCodeValidation;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.output.Exporter;
 import jp.kusumotolab.kgenprog.output.ExporterFactory;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
@@ -35,7 +37,7 @@ public class CUILauncher {
     }
   }
 
-  public void launch(final Configuration config) {
+  public List<Variant> launch(final Configuration config) {
     setLogLevel(config.getLogLevel());
 
     final FaultLocalization faultLocalization = config.getFaultLocalization()
@@ -64,7 +66,7 @@ public class CUILauncher {
         new KGenProgMain(config, faultLocalization, mutation, crossover, sourceCodeGeneration,
             sourceCodeValidation, variantSelection, testExecutor, exporter);
 
-    kGenProgMain.run();
+    return kGenProgMain.run();
   }
 
   private void setLogLevel(final Level logLevel) {

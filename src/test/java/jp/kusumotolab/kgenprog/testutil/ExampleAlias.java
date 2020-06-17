@@ -80,6 +80,7 @@ public class ExampleAlias {
 
   // ライブラリへのエイリアス
   public final static class Lib {
+
     private final static Path TEMP = JUnitLibraryResolver.getTempDirectory();
     public final static Path JUNIT = TEMP.resolve("junit-4.12-kgp-custom.jar");
     public final static Path HAMCREST = TEMP.resolve("hamcrest-core-1.3.jar");
