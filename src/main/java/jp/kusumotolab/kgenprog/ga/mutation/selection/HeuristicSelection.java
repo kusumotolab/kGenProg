@@ -39,7 +39,7 @@ import jp.kusumotolab.kgenprog.project.jdt.ProgramElementVisitor;
  * - 再利用先の位置に基づいて再利用可能なプログラム要素を考慮
  * - 再利用するプログラム要素に含まれる変数を再利用先で利用可能な変数に変換
  */
-abstract public class HeuristicSelection implements CandidateSelection {
+public abstract class HeuristicSelection implements CandidateSelection {
 
 
   private final AccessibleVariableSearcher accessibleVariableSearcher = new AccessibleVariableSearcher();
