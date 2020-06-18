@@ -21,7 +21,7 @@ public class JUnitLibraryResolver {
   private static final String JUNIT3_JUNIT = "junit-3.8.2.jar";
   private static final String JUNIT4_JUNIT = "junit-4.12-kgp-custom.jar";
 
-  public static final EnumMap<JUnitVersion, List<ClassPath>> libraries =
+  protected static final EnumMap<JUnitVersion, List<ClassPath>> libraries =
       new EnumMap<>(JUnitVersion.class);
 
   static {
