@@ -23,8 +23,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
  */
 public class JSONExporter extends Exporter {
 
-  private static final Logger log = LoggerFactory.getLogger(PatchExporter.class);
-  private final PatchGenerator patchGenerator;
+  private static final Logger log = LoggerFactory.getLogger(JSONExporter.class);
 
   public JSONExporter(final Configuration config) {
     super(config);
