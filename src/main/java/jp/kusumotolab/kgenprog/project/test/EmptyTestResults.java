@@ -13,6 +13,9 @@ public class EmptyTestResults extends TestResults {
 
   private final String cause;
 
+  /**
+   * @deprecated
+   */
   @Deprecated
   public EmptyTestResults() {
     this("");
