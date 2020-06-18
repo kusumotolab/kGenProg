@@ -10,7 +10,7 @@ public abstract class FullyQualifiedName {
   }
 
   public String getPackageName() {
-    final int lastIndexOf = value.lastIndexOf(".");
+    final int lastIndexOf = value.lastIndexOf('.');
     if (lastIndexOf == -1) {
       return "";
     }
