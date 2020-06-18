@@ -39,12 +39,11 @@ public class DefaultVariantSelection implements VariantSelection {
     final ArrayList<Variant> variants = new ArrayList<>(current);
     variants.addAll(generated);
     Collections.shuffle(variants, random);
-    final List<Variant> list = variants.stream()
+    return variants.stream()
         .sorted(Comparator.comparing(Variant::getFitness)
             .reversed())
         .filter(Variant::isBuildSucceeded)
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
-    return list;
   }
 }
