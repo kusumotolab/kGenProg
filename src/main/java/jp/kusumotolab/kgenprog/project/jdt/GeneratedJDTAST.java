@@ -89,7 +89,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
           .getName()
           .getIdentifier();
 
-    } else if (types.size() > 0) {
+    } else if (!types.isEmpty()) {
       typeName = types.get(0)
           .getName()
           .getIdentifier();
