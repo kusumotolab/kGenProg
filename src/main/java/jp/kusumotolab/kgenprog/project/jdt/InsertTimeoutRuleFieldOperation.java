@@ -47,7 +47,7 @@ public class InsertTimeoutRuleFieldOperation implements Operation {
     try {
       final List<GeneratedAST<TestSourcePath>> newTestAsts = generatedSourceCode.getTestAsts()
           .stream()
-          .map(ast -> applyEachAST(ast))
+          .map(this::applyEachAST)
           .collect(Collectors.toList());
       return new GeneratedSourceCode(generatedSourceCode.getProductAsts(), newTestAsts);
     } catch (final Exception e) {

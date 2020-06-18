@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
@@ -43,7 +44,7 @@ public class TestResult {
   public List<FullyQualifiedName> getExecutedTargetFQNs() {
     return this.coverages.entrySet()
         .stream()
-        .map(e -> e.getKey())
+        .map(Entry::getKey)
         .collect(Collectors.toList());
   }
 

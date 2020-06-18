@@ -12,6 +12,7 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
@@ -54,7 +55,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
 
     final Set<FullyQualifiedName> execuetdFailedTargetFQNs = testResults.getFailedTestResults()
         .stream()
-        .map(tr -> tr.getExecutedTargetFQNs())
+        .map(TestResult::getExecutedTargetFQNs)
         .flatMap(Collection::stream)
         .collect(Collectors.toSet());
 

@@ -194,16 +194,16 @@ class TestThread extends Thread {
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
     return sourcesPaths.stream()
-        .map(source -> buildResults.binaryStore.get(source))
+        .map(buildResults.binaryStore::get)
         .flatMap(Collection::stream)
-        .map(jmo -> jmo.getFqn())
+        .map(JavaBinaryObject::getFqn)
         .collect(Collectors.toList());
   }
 
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
     return classpaths.stream()
         .map(cp -> cp.path.toUri())
-        .map(uri -> toURL(uri))
+        .map(this::toURL)
         .toArray(URL[]::new);
   }
 
