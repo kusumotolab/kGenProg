@@ -251,7 +251,7 @@ class TestThread extends Thread {
    */
   class CoverageMeasurementListener extends RunListener {
 
-    final private TestResults testResults;
+    private final TestResults testResults;
     private boolean wasFailed;
     private String failedReason;
 

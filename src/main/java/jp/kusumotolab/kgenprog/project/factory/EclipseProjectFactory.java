@@ -22,8 +22,8 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class EclipseProjectFactory extends BuildToolProjectFactory {
 
-  private final static Logger log = LoggerFactory.getLogger(EclipseProjectFactory.class);
-  private final static String CONFIG_FILE_NAME = ".classpath";
+  private static final Logger log = LoggerFactory.getLogger(EclipseProjectFactory.class);
+  private static final String CONFIG_FILE_NAME = ".classpath";
 
   public EclipseProjectFactory(final Path rootPath) {
     super(rootPath);

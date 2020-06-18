@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
  * An abstract class for retrieving program elements with visitor pattern.
  * プログラム要素を取得するためビジターパターンのための抽象クラス．
  */
-abstract public class ProgramElementVisitor extends ASTVisitor {
+public abstract class ProgramElementVisitor extends ASTVisitor {
 
   protected List<ASTNode> elements;
   protected List<List<ASTNode>> lineToElements;

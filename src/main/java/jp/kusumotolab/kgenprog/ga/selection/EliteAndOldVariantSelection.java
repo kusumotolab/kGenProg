@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class EliteAndOldVariantSelection implements VariantSelection {
 
-  final private int maxVariantsPerGeneration;
+  private final int maxVariantsPerGeneration;
 
   public EliteAndOldVariantSelection(final int maxVariantPerGeneration) {
     this.maxVariantsPerGeneration = maxVariantPerGeneration;

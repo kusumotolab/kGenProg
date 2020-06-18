@@ -11,7 +11,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
  */
 public class EmptyTestResults extends TestResults {
 
-  final private String cause;
+  private final String cause;
 
   @Deprecated
   public EmptyTestResults() {

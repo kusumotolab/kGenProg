@@ -15,8 +15,8 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
  */
 public class DefaultVariantSelection implements VariantSelection {
 
-  final private int maxVariantsPerGeneration;
-  final private Random random;
+  private final int maxVariantsPerGeneration;
+  private final Random random;
 
   /**
    * コンストラクタ

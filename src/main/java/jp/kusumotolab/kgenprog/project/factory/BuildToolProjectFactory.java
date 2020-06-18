@@ -15,7 +15,7 @@ public abstract class BuildToolProjectFactory implements ProjectFactory {
     this.rootPath = rootPath;
   }
 
-  final protected Collection<Path> getConfigPath() {
+  protected final Collection<Path> getConfigPath() {
     try {
       return Files.walk(rootPath)
           .filter(p -> p.toString()
@@ -27,5 +27,5 @@ public abstract class BuildToolProjectFactory implements ProjectFactory {
     return Collections.emptyList();
   }
 
-  abstract protected String getConfigFileName();
+  protected abstract String getConfigFileName();
 }

@@ -5,8 +5,8 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 public class Suspiciousness {
 
   // 疑惑値とその場所のリスト
-  final private ASTLocation location;
-  final private double value;
+  private final ASTLocation location;
+  private final double value;
 
   public Suspiciousness(final ASTLocation location, final double value) {
     this.location = location;

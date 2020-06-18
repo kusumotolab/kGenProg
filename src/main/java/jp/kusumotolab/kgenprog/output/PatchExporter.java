@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
  */
 public class PatchExporter extends Exporter {
 
-  private final static Logger log = LoggerFactory.getLogger(PatchExporter.class);
+  private static final Logger log = LoggerFactory.getLogger(PatchExporter.class);
   private final PatchGenerator patchGenerator;
 
   /**

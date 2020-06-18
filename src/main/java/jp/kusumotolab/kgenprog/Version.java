@@ -9,7 +9,7 @@ import java.util.Properties;
 public class Version {
 
   public final String id;
-  public final static Version instance = new Version();
+  public static final Version instance = new Version();
 
   private Version() {
     id = resolveVersionInfo();

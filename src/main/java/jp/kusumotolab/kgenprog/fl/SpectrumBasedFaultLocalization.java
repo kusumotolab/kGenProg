@@ -110,6 +110,6 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
    * {@code ep}:該当する文を実行した通過テストの個数<br>
    * {@code np}:該当する文を実行しなかった通過テストの個数<br>
    */
-  abstract protected double formula(final double ef, final double nf, final double ep,
+  protected abstract double formula(final double ef, final double nf, final double ep,
       final double np);
 }

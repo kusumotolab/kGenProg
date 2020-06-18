@@ -14,10 +14,10 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
  */
 public class TestResult {
 
-  final public FullyQualifiedName executedTestFQN;
-  final public boolean failed;
-  final private String failedReason;
-  final private Map<FullyQualifiedName, Coverage> coverages;
+  public final FullyQualifiedName executedTestFQN;
+  public final boolean failed;
+  private final String failedReason;
+  private final Map<FullyQualifiedName, Coverage> coverages;
 
   /**
    * constructor

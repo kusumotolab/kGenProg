@@ -199,7 +199,7 @@ public class Configuration {
 
   public static class Builder {
 
-    private static transient final Logger log = LoggerFactory.getLogger(Builder.class);
+    private static final transient Logger log = LoggerFactory.getLogger(Builder.class);
 
     @PreserveNotNull
     private Path configPath = Paths.get("kgenprog.toml");
@@ -309,8 +309,8 @@ public class Configuration {
     @PreserveNotNull
     private boolean historyRecord = DEFAULT_HISTORY_RECORD;
 
-    private transient final Set<String> optionsSetByCmdLineArgs = new HashSet<>();
-    private transient final Set<String> optionsSetByConfigFile = new HashSet<>();
+    private final transient Set<String> optionsSetByCmdLineArgs = new HashSet<>();
+    private final transient Set<String> optionsSetByConfigFile = new HashSet<>();
 
     public Builder(final Path rootDir, final Path productPath, final Path testPath) {
       this(rootDir, ImmutableList.of(productPath), ImmutableList.of(testPath));
