@@ -20,7 +20,7 @@ public class ExporterFactory {
     exporters.add(new PatchExporter(config, patchGenerator));
 
     if (config.getHistoryRecord()) {
-      exporters.add(new JSONExporter(config, patchGenerator));
+      exporters.add(new JSONExporter(config));
     }
 
     return new Exporters(config, exporters);

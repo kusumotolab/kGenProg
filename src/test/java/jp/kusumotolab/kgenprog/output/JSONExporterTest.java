@@ -38,7 +38,7 @@ public class JSONExporterTest {
         .build();
 
     final VariantStore variantStore = TestUtil.createVariantStoreWithDefaultStrategies(config);
-    final Exporter jsonExporter = new JSONExporter(config, new PatchGenerator());
+    final Exporter jsonExporter = new JSONExporter(config);
     // 念のため出力ディレクトリを空する
     jsonExporter.clearPreviousResults();
     jsonExporter.export(variantStore);
