@@ -76,7 +76,6 @@ public class DefaultProjectFactory implements ProjectFactory {
         } catch (final IOException e) {
           log.error("failed to read a directory \"{}\"", path.toString());
         }
-        continue;
       }
     }
 
