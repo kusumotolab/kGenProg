@@ -53,8 +53,7 @@ public class SimpleMutation extends Mutation {
     }
   }
 
-  protected ASTNode chooseNodeForReuse(final ASTLocation location,
-      final Class<? extends Operation> operationClass) {
+  protected ASTNode chooseNodeForReuse(final ASTLocation location) {
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
     final Scope scope = new Scope(type, fqn);
