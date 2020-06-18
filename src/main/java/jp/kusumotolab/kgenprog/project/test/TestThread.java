@@ -137,7 +137,6 @@ class TestThread extends Thread {
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
       testResults = new EmptyTestResults("failed to load classes.");
-      return;
     } catch (Exception e) {
       // TODO
       // Should handle safely
