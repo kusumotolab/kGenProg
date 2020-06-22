@@ -62,6 +62,7 @@ dependencies {
   compile 'org.eclipse.platform:org.eclipse.text:3.8.0'
   compile 'org.jacoco:org.jacoco.core:0.8.1'
   compile 'org.slf4j:slf4j-api:1.7.25'
+  compile 'com.github.albfernandez:juniversalchardet:2.0.0'
 
   testCompile 'org.assertj:assertj-core:3.10.0'
   testCompile 'org.mockito:mockito-core:2.+'
