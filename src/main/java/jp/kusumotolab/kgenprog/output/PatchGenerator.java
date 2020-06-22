@@ -1,12 +1,16 @@
 package jp.kusumotolab.kgenprog.output;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.jface.text.Document;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
@@ -52,9 +56,6 @@ public class PatchGenerator {
    * @throws DiffException
    */
   private FileDiff makeFileDiff(final GeneratedAST<?> ast) throws IOException, DiffException {
-    final Path originPath = ast.getSourcePath()
-        .getResolvedPath();
-
     final String modifiedSourceCodeText = ast.getSourceCode();
     final Document document = new Document(modifiedSourceCodeText);
 
@@ -62,7 +63,7 @@ public class PatchGenerator {
     final String delimiter = document.getDefaultLineDelimiter();
     final List<String> modifiedSourceCodeLines =
         Arrays.asList(modifiedSourceCodeText.split(delimiter));
-    final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
+    final List<String> originalSourceCodeLines = readOriginalSourceCode(ast);
     final List<String> noBlankLineOriginalSourceCodeLines =
         removeEndDelimiter(originalSourceCodeLines);
     final List<String> diffLines =
@@ -96,5 +97,29 @@ public class PatchGenerator {
     }
 
     return Collections.emptyList();
+  }
+
+  private List<String> convertToDefaultEncoding(final List<String> sourceCodeLines,
+      final Charset fileEncoding) {
+    final Charset defaultCharset = Charset.defaultCharset();
+    return sourceCodeLines.stream()
+        .map(e -> e.getBytes(fileEncoding))
+        .map(e -> new String(e, defaultCharset))
+        .collect(Collectors.toList());
+  }
+
+  private List<String> readOriginalSourceCode(final GeneratedAST<?> ast) throws IOException {
+    final Path originalCodePath = ast.getSourcePath()
+        .getResolvedPath();
+    final Charset fileEncoding = inferFileEncoding(originalCodePath);
+
+    return convertToDefaultEncoding(Files.readAllLines(originalCodePath), fileEncoding);
+  }
+
+  private Charset inferFileEncoding(final Path path) throws IOException {
+    final File file = path.toFile();
+    final String encoding = UniversalDetector.detectCharset(file);
+
+    return encoding != null ? Charset.forName(encoding) : Charset.defaultCharset();
   }
 }
