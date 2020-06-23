@@ -151,7 +151,7 @@ public class PatchGeneratorTest {
   }
 
   private GeneratedSourceCode createGeneratedSourceCode() {
-    // setup original source from BS01
+    // setup original source from BS03
     final Path rootPath = Paths.get("example/BuildSuccess03");
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);
     return TestUtil.createGeneratedSourceCode(targetProject);
@@ -171,10 +171,7 @@ public class PatchGeneratorTest {
             .toString()
             .endsWith(replacedFile))
         .findFirst()
-        .orElse(null);
-    if (null == targetAst) {
-      throw new RuntimeException("test method failure");
-    }
+        .orElseThrow(RuntimeException::new);
 
     // modify the target ast with string replacement
     final JDTASTConstruction constructor = new JDTASTConstruction();
@@ -193,7 +190,7 @@ public class PatchGeneratorTest {
     return variant;
   }
 
-  private VariantStore createMockedVariantStore(Variant... variants) {
+  private VariantStore createMockedVariantStore(final Variant... variants) {
     final VariantStore vs = mock(VariantStore.class);
     when(vs.getFoundSolutions()).thenReturn(List.of(variants));
     return vs;

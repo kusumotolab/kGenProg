@@ -66,7 +66,7 @@ class PatchExporter implements Exporter {
 
   private void writePatch(final Patch patch) {
     final long id = patch.getVariantId();
-    final Path subdir = outdir.resolve(DIR_PREFIX + Long.toString(id));
+    final Path subdir = outdir.resolve(DIR_PREFIX + id);
 
     try {
       Files.createDirectories(subdir);
