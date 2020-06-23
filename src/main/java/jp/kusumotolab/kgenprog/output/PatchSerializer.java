@@ -24,6 +24,6 @@ public class PatchSerializer implements JsonSerializer<Patch> {
   public JsonElement serialize(final Patch patch, final Type type,
       final JsonSerializationContext context) {
 
-    return context.serialize(patch.getAll());
+    return context.serialize(patch.getFileDiffs());
   }
 }

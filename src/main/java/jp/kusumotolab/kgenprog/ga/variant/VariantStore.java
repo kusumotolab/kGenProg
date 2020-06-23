@@ -47,11 +47,11 @@ public class VariantStore {
 
     variantCounter = new AtomicLong();
     generation = new OrdinalNumber(0);
-    elementReplacer = newElementReplacer(config.getHistoryRecord());
+    elementReplacer = newElementReplacer(config.isHistoryRecord());
     initialVariant = createInitialVariant();
     currentVariants = Collections.singletonList(initialVariant);
     allVariants = new LinkedList<>();
-    variantRecorder = newVariantRecorder(config.getHistoryRecord());
+    variantRecorder = newVariantRecorder(config.isHistoryRecord());
     variantRecorder.accept(initialVariant);
     generatedVariants = new ArrayList<>();
     foundSolutions = new ArrayList<>();
@@ -230,4 +230,7 @@ public class VariantStore {
     };
   }
 
+  public Configuration getConfiguration() {
+    return config;
+  }
 }

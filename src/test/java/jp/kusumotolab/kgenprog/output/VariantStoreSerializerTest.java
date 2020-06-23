@@ -43,9 +43,9 @@ import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.CrossoverHistoricalElement;
 
 public class VariantStoreSerializerTest {
 
-  private Gson createGson(final Configuration config) {
+  private Gson createGson() {
     return new GsonBuilder()
-        .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer(config))
+        .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
         .registerTypeAdapter(Variant.class, new VariantSerializer())
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeAdapter(TestResult.class, new TestResultSerializer())
@@ -68,7 +68,7 @@ public class VariantStoreSerializerTest {
     final Builder builder = new Builder(project).setHistoryRecord(true);
     final Configuration config = builder.build();
     // gsonのセットアップ
-    final Gson gson = createGson(config);
+    final Gson gson = createGson();
 
     final List<Suspiciousness> faultLocalizationResult = new ArrayList<>();
     final GeneratedSourceCode sourceCodeGenerationResult =
@@ -131,7 +131,7 @@ public class VariantStoreSerializerTest {
     final TargetProject project = TargetProjectFactory.create(rootPath);
     final Configuration config = new Configuration.Builder(project).build();
     // gsonのセットアップ
-    final Gson gson = createGson(config);
+    final Gson gson = createGson();
 
     final JsonObject serializedConfiguration = gson.toJsonTree(config)
         .getAsJsonObject();
