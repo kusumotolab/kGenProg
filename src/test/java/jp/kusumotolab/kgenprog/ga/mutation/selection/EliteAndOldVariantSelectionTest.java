@@ -38,13 +38,13 @@ public class EliteAndOldVariantSelectionTest {
 
     assertThat(variants).hasSize(10)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::getSingularValue)
         .hasSize(10)
         .containsExactly(0.00d, 0.05d, 0.20d, 0.15d, 0.40d, 0.25d, 0.60d, 0.35d, 0.80d, 0.45d);
 
     assertThat(selectedVariants).hasSize(variantSize)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::getSingularValue)
         .hasSize(5)
         .containsExactly(0.80d, 0.60d, 0.45d, 0.40d, 0.35d);
   }
@@ -144,13 +144,13 @@ public class EliteAndOldVariantSelectionTest {
 
     assertThat(current).hasSize(10)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::getSingularValue)
         .hasSize(10)
         .containsExactly(0.00d, 0.20d, 0.20d, 0.40d, 0.40d, 0.60d, 0.60d, 0.80d, 0.80d, 1.00d);
 
     assertThat(generated).hasSize(10)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::getSingularValue)
         .hasSize(10)
         .containsExactly(0.00d, 0.20d, 0.20d, 0.40d, 0.40d, 0.60d, 0.60d, 0.80d, 0.80d, 1.00d);
 

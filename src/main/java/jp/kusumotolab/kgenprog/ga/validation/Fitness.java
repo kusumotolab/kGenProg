@@ -8,9 +8,9 @@ import static java.lang.Double.isNaN;
 public interface Fitness extends Comparable<Fitness> {
 
   /**
-   * @return 個体の評価値
+   * @return 個体の評価値を単一の数値で返す．
    */
-  double getValue();
+  double getSingularValue();
 
   /**
    * @return その評価値が最大値かどうか
@@ -19,7 +19,7 @@ public interface Fitness extends Comparable<Fitness> {
 
   /**
    * Compares two {@code Fitness} objects. Basically, this comparison is performed in the same way
-   * as the numerical comparison with the {@code double} values returned from {@link #getValue()}
+   * as the numerical comparison with the {@code double} values returned from {@link #getSingularValue()}
    * method. However, the value {@code NaN} is regarded as less than any other value.
    *
    * @param anotherFitness the {@code Fitness} to be compared.
@@ -29,15 +29,15 @@ public interface Fitness extends Comparable<Fitness> {
    */
   @Override
   default int compareTo(final Fitness anotherFitness) {
-    if (isNaN(getValue()) && isNaN(anotherFitness.getValue())) {
+    if (isNaN(getSingularValue()) && isNaN(anotherFitness.getSingularValue())) {
       return 0;
     }
-    if (isNaN(getValue())) {
+    if (isNaN(getSingularValue())) {
       return -1;
     }
-    if (isNaN(anotherFitness.getValue())) {
+    if (isNaN(anotherFitness.getSingularValue())) {
       return 1;
     }
-    return Double.compare(getValue(), anotherFitness.getValue());
+    return Double.compare(getSingularValue(), anotherFitness.getSingularValue());
   }
 }

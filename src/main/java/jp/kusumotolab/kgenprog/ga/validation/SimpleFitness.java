@@ -19,7 +19,7 @@ public class SimpleFitness implements Fitness {
    * @return 評価値
    */
   @Override
-  public double getValue() {
+  public double getSingularValue() {
     return value;
   }
 

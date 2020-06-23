@@ -22,8 +22,8 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
    * return 評価値，ただし，期限切れの場合は0
    */
   @Override
-  public double getValue() {
-    return isCapacityAvailable() ? super.getValue() : 0d;
+  public double getSingularValue() {
+    return isCapacityAvailable() ? super.getSingularValue() : 0d;
   }
 
   /**

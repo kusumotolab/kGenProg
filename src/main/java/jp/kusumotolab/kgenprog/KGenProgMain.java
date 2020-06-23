@@ -280,7 +280,7 @@ public class KGenProgMain {
 
   private double getFitnessValue(final Variant variant) {
     return variant.getFitness()
-        .getValue();
+        .getSingularValue();
   }
 
   private void logGAStopped(final OrdinalNumber generation) {

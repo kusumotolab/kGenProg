@@ -25,7 +25,7 @@ public class DefaultCodeValidationTest {
     final Fitness fitness = defaultCodeValidation.exec(input);
 
     final double expected = (double) 3 / 4; // 4 tests executed and 3 tests passed.
-    assertThat(fitness.getValue()).isEqualTo(expected);
+    assertThat(fitness.getSingularValue()).isEqualTo(expected);
   }
 
   @Test
@@ -39,6 +39,6 @@ public class DefaultCodeValidationTest {
     final Input input = new Input(null, null, initialVariant.getTestResults());
     final Fitness fitness = defaultCodeValidation.exec(input);
 
-    assertThat(fitness.getValue()).isNaN();
+    assertThat(fitness.getSingularValue()).isNaN();
   }
 }

@@ -96,7 +96,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     final int generationNumber = variant.getGenerationNumber()
         .get();
     final double fitness = variant.getFitness()
-        .getValue();
+        .getSingularValue();
     final Patch patch = patchGenerator.exec(variant);
 
     final JsonObject serializedVariant = new JsonObject();
