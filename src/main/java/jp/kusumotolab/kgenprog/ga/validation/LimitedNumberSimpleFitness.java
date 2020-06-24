@@ -38,8 +38,8 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
    * @return 評価値の文字列表現を返す
    */
   @Override
-  public String toString(){
-    return isCapacityAvailable()? super.toString():Double.toString(0d);
+  public String toString() {
+    return isCapacityAvailable() ? super.toString() : Double.toString(0d);
   }
 
   /**

@@ -35,7 +35,7 @@ public class SimpleFitness implements Fitness {
    * @return 評価値の文字列表現を返す
    */
   @Override
-  public String toString(){
+  public String toString() {
     return Double.toString(value);
   }
 

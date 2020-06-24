@@ -49,6 +49,7 @@ public class JUnitLibraryResolver {
 
   // TODO 一時dirの責務をひとまずこのクラスに任せたが，巨大になるなら別クラスに切った方がよさそう．
   private static Path tempDir;
+
   public static Path getTempDirectory() {
     try {
       if (null == tempDir) {
