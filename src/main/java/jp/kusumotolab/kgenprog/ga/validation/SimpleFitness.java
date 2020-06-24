@@ -30,4 +30,24 @@ public class SimpleFitness implements Fitness {
   public boolean isMaximum() {
     return 0 == Double.compare(value, MAXIMUM_VALUE);
   }
+
+  @Override
+  public int compareTo(final Fitness anotherFitness) {
+
+    if (SimpleFitness.class != anotherFitness.getClass()) {
+      throw new IllegalStateException("anotherFitness must be an instance of SimpleFitness.");
+    }
+
+    final SimpleFitness anotherSimpleFitness = (SimpleFitness) anotherFitness;
+    if (Double.isNaN(value) && Double.isNaN(anotherSimpleFitness.value)) {
+      return 0;
+    }
+    if (Double.isNaN(value)) {
+      return -1;
+    }
+    if (Double.isNaN(anotherSimpleFitness.value)) {
+      return 1;
+    }
+    return Double.compare(value, anotherSimpleFitness.value);
+  }
 }
