@@ -35,6 +35,14 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
   }
 
   /**
+   * @return 評価値の文字列表現を返す
+   */
+  @Override
+  public String toString(){
+    return isCapacityAvailable()? super.toString():Double.toString(0d);
+  }
+
+  /**
    * @return 与えられた評価値を保持する評価の残りの回数
    */
   public int getCapacity() {

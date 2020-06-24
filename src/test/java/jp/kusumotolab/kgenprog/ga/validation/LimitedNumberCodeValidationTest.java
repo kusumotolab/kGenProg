@@ -34,7 +34,7 @@ public class LimitedNumberCodeValidationTest {
 
     // 親バリアントの評価（一回目）
     final Fitness parentFitness = validation.exec(parentInput);
-    assertThat(parentFitness.getSingularValue()).isEqualTo(0.8d);
+    assertThat(parentFitness.toString()).isEqualTo("0.8");
 
     // 子バリアントを4つ生成
     final List<Gene> childGenes = parentGene.generateNextGenerationGenes(Arrays.asList(//
@@ -53,23 +53,23 @@ public class LimitedNumberCodeValidationTest {
 
     // バカ息子0の評価後，親の評価はまだ高いはず
     final Fitness childFitness0 = validation.exec(childInputs[0]);
-    assertThat(childFitness0.getSingularValue()).isEqualTo(0.3d);
-    assertThat(parentFitness.getSingularValue()).isEqualTo(0.8d);
+    assertThat(childFitness0.toString()).isEqualTo("0.3");
+    assertThat(parentFitness.toString()).isEqualTo("0.8");
 
     // バカ息子1の評価後，親の評価はまだ高いはず
     final Fitness childFitness1 = validation.exec(childInputs[1]);
-    assertThat(childFitness1.getSingularValue()).isEqualTo(0.3d);
-    assertThat(parentFitness.getSingularValue()).isEqualTo(0.8d);
+    assertThat(childFitness1.toString()).isEqualTo("0.3");
+    assertThat(parentFitness.toString()).isEqualTo("0.8");
 
     // バカ息子2の評価後，親の評価は低くなっているはず
     final Fitness childFitness2 = validation.exec(childInputs[2]);
-    assertThat(childFitness2.getSingularValue()).isEqualTo(0.3d);
-    assertThat(parentFitness.getSingularValue()).isEqualTo(0.0d);
+    assertThat(childFitness2.toString()).isEqualTo("0.3");
+    assertThat(parentFitness.toString()).isEqualTo("0.0");
 
     // バカ息子3の評価後，親の評価は相変わらず低いはず
     final Fitness childFitness3 = validation.exec(childInputs[3]);
-    assertThat(childFitness3.getSingularValue()).isEqualTo(0.3d);
-    assertThat(parentFitness.getSingularValue()).isEqualTo(0.0d);
+    assertThat(childFitness3.toString()).isEqualTo("0.3");
+    assertThat(parentFitness.toString()).isEqualTo("0.0");
 
     // 無関係のバリアントが来ても，その評価値は0にならないはず
     final Gene anotherGene = new Gene(Arrays.asList(//
@@ -81,6 +81,6 @@ public class LimitedNumberCodeValidationTest {
     when(anotherInput.getGene()).thenReturn(anotherGene);
     when(anotherInput.getTestResults()).thenReturn(anotherTestResults);
     final Fitness anotherFitness = validation.exec(anotherInput);
-    assertThat(anotherFitness.getSingularValue()).isEqualTo(0.6d);
+    assertThat(anotherFitness.toString()).isEqualTo("0.6");
   }
 }

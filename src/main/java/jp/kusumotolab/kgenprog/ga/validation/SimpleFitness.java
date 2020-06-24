@@ -31,6 +31,14 @@ public class SimpleFitness implements Fitness {
     return 0 == Double.compare(value, MAXIMUM_VALUE);
   }
 
+  /**
+   * @return 評価値の文字列表現を返す
+   */
+  @Override
+  public String toString(){
+    return Double.toString(value);
+  }
+
   @Override
   public int compareTo(final Fitness anotherFitness) {
 

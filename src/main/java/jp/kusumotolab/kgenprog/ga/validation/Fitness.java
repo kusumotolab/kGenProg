@@ -14,4 +14,9 @@ public interface Fitness extends Comparable<Fitness> {
    * @return その評価値が最大値かどうか
    */
   boolean isMaximum();
+
+  /**
+   * @return 評価値の文字列表現を返す．
+   */
+  String toString();
 }
