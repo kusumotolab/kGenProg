@@ -9,8 +9,8 @@ import jp.kusumotolab.kgenprog.project.Operation;
  */
 public class Base {
 
-  final private ASTLocation targetLocation;
-  final private Operation operation;
+  private final ASTLocation targetLocation;
+  private final Operation operation;
 
   public Base(ASTLocation targetLocation, Operation operation) {
     this.targetLocation = targetLocation;

@@ -21,7 +21,7 @@ import java.net.URL;
  */
 public class SkippingMemoryClassLoader extends MemoryClassLoader {
 
-  final private ClassLoader delegationClassLoader;
+  private final ClassLoader delegationClassLoader;
 
   /**
    * コンストラクタ

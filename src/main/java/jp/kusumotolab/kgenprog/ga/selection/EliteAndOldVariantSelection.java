@@ -12,7 +12,7 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class EliteAndOldVariantSelection implements VariantSelection {
 
-  final private int maxVariantsPerGeneration;
+  private final int maxVariantsPerGeneration;
 
   public EliteAndOldVariantSelection(final int maxVariantPerGeneration) {
     this.maxVariantsPerGeneration = maxVariantPerGeneration;
@@ -27,11 +27,10 @@ public class EliteAndOldVariantSelection implements VariantSelection {
    */
   @Override
   public List<Variant> exec(final List<Variant> current, final List<Variant> generated) {
-    final List<Variant> list = Stream.concat(current.stream(), generated.stream())
+    return Stream.concat(current.stream(), generated.stream())
         .sorted(Comparator.comparing(Variant::getFitness)
             .reversed())
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
-    return list;
   }
 }

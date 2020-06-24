@@ -32,7 +32,7 @@ public class JDTASTLocation implements ASTLocation {
   }
 
   public ASTNode locate(final ASTNode otherASTRoot) {
-    final List<TreePathElement> treePaths = new ArrayList<TreePathElement>();
+    final List<TreePathElement> treePaths = new ArrayList<>();
     ASTNode currentNode = node;
     while (true) {
       final StructuralPropertyDescriptor locationInParent = currentNode.getLocationInParent();

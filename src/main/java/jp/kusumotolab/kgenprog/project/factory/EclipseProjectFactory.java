@@ -22,8 +22,8 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class EclipseProjectFactory extends BuildToolProjectFactory {
 
-  private final static Logger log = LoggerFactory.getLogger(EclipseProjectFactory.class);
-  private final static String CONFIG_FILE_NAME = ".classpath";
+  private static final Logger log = LoggerFactory.getLogger(EclipseProjectFactory.class);
+  private static final String CONFIG_FILE_NAME = ".classpath";
 
   public EclipseProjectFactory(final Path rootPath) {
     super(rootPath);
@@ -50,7 +50,7 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
 
   @Override
   public boolean isApplicable() {
-    return getConfigPath().size() > 0;
+    return !getConfigPath().isEmpty();
   }
 
   @Override
@@ -72,28 +72,27 @@ public class EclipseProjectFactory extends BuildToolProjectFactory {
         return;
       }
 
-      switch (attributes.getValue("kind")) {
-        case "src":
-          final Path sourceRootPath = rootPath.resolve(Paths.get(attributes.getValue("path")));
-          for (final Path javaSourcePath : collectJavaSourcePath(sourceRootPath)) {
-            if (javaSourcePath.toString()
-                .endsWith("Test.java")) {
-              testSourcePaths.add(TestSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
-            } else {
-              productSourcePaths.add(
-                  ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
-            }
-          }
-          break;
-        case "lib":
-          final Path classpath = Paths.get(attributes.getValue("path"));
-          // 絶対パスか調べる
-          if (classpath.isAbsolute()) {
-            classPaths.add(new ClassPath(classpath));
+      if (attributes.getValue("kind")
+          .equals("src")) {
+        final Path sourceRootPath = rootPath.resolve(Paths.get(attributes.getValue("path")));
+        for (final Path javaSourcePath : collectJavaSourcePath(sourceRootPath)) {
+          if (javaSourcePath.toString()
+              .endsWith("Test.java")) {
+            testSourcePaths.add(TestSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
           } else {
-            classPaths.add(new ClassPath(rootPath.resolve(classpath)));
+            productSourcePaths.add(
+                ProductSourcePath.relativizeAndCreate(rootPath, javaSourcePath));
           }
-          break;
+        }
+      } else if (attributes.getValue("kind")
+          .equals("lib")) {
+        final Path classpath = Paths.get(attributes.getValue("path"));
+        // 絶対パスか調べる
+        if (classpath.isAbsolute()) {
+          classPaths.add(new ClassPath(classpath));
+        } else {
+          classPaths.add(new ClassPath(rootPath.resolve(classpath)));
+        }
       }
     }
 

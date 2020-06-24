@@ -108,11 +108,9 @@ public class AccessibleVariableSearcher {
     final Type type = vdStatement.getType();
     final FullyQualifiedName fqn = new TargetFullyQualifiedName(type.toString());
     final boolean isFinal = Modifier.isFinal(vdStatement.getModifiers());
-    final List<Variable> variables = extractNameFromVariableDeclarationFragments(
-        vdStatement.fragments()).stream()
+    return extractNameFromVariableDeclarationFragments(vdStatement.fragments()).stream()
         .map(e -> new Variable(e, fqn, isFinal))
         .collect(Collectors.toList());
-    return variables;
   }
 
   private List<Variable> extractFromForStatement(final ForStatement node) {

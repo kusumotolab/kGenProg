@@ -11,6 +11,9 @@ import javax.tools.JavaFileObject;
  */
 public class EmptyBuildResults extends BuildResults {
 
+  /**
+   * @deprecated
+   */
   @Deprecated
   public EmptyBuildResults() {
     super(null, null, null, true);

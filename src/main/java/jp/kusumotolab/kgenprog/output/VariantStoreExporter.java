@@ -23,7 +23,7 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
  */
 public class VariantStoreExporter {
 
-  private final static Logger log = LoggerFactory.getLogger(VariantStoreExporter.class);
+  private static final Logger log = LoggerFactory.getLogger(VariantStoreExporter.class);
 
   /**
    * JSONを出力する.

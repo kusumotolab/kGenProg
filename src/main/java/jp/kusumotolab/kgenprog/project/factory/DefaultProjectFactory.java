@@ -76,7 +76,6 @@ public class DefaultProjectFactory implements ProjectFactory {
         } catch (final IOException e) {
           log.error("failed to read a directory \"{}\"", path.toString());
         }
-        continue;
       }
     }
 
@@ -86,6 +85,6 @@ public class DefaultProjectFactory implements ProjectFactory {
   private static boolean endsWith(final Path path, final String... suffixes) {
     final String pathName = path.toString();
     return Stream.of(suffixes)
-        .anyMatch(s -> pathName.endsWith(s));
+        .anyMatch(pathName::endsWith);
   }
 }

@@ -35,12 +35,12 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 public class BinaryStore {
 
   // 全要素
-  final private Set<JavaBinaryObject> cache;
+  private final Set<JavaBinaryObject> cache;
 
   // 各要素へのアクセス高速化用map
-  final private Map<FullyQualifiedName, JavaBinaryObject> fqnMap; // 1対1
-  final private Multimap<SourcePath, JavaBinaryObject> pathMap; // 1対多
-  final private Multimap<String, JavaBinaryObject> originMap; // 1対多
+  private final Map<FullyQualifiedName, JavaBinaryObject> fqnMap; // 1対1
+  private final Multimap<SourcePath, JavaBinaryObject> pathMap; // 1対多
+  private final Multimap<String, JavaBinaryObject> originMap; // 1対多
 
   /**
    * コンストラクタ

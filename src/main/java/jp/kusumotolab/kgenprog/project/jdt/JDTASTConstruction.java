@@ -41,9 +41,9 @@ public class JDTASTConstruction {
     final ASTParser parser = createNewParser();
 
     final Map<Path, ProductSourcePath> pathToProductSourcePath = productSourcePaths.stream()
-        .collect(Collectors.toMap(path -> path.getResolvedPath(), path -> path));
+        .collect(Collectors.toMap(SourcePath::getResolvedPath, path -> path));
     final Map<Path, TestSourcePath> pathToTestSourcePath = testSourcePaths.stream()
-        .collect(Collectors.toMap(path -> path.getResolvedPath(), path -> path));
+        .collect(Collectors.toMap(SourcePath::getResolvedPath, path -> path));
 
     final List<GeneratedAST<ProductSourcePath>> productAsts = new ArrayList<>();
     final List<GeneratedAST<TestSourcePath>> testAsts = new ArrayList<>();

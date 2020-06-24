@@ -17,7 +17,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
  */
 public abstract class Exporter {
 
-  private final static Logger log = LoggerFactory.getLogger(Exporter.class);
+  private static final Logger log = LoggerFactory.getLogger(Exporter.class);
   protected final Configuration config;
 
   public Exporter(final Configuration config) {

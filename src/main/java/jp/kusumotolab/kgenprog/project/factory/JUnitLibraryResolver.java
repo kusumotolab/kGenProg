@@ -21,7 +21,7 @@ public class JUnitLibraryResolver {
   private static final String JUNIT3_JUNIT = "junit-3.8.2.jar";
   private static final String JUNIT4_JUNIT = "junit-4.12-kgp-custom.jar";
 
-  public final static EnumMap<JUnitVersion, List<ClassPath>> libraries =
+  protected static final EnumMap<JUnitVersion, List<ClassPath>> libraries =
       new EnumMap<>(JUnitVersion.class);
 
   static {
@@ -49,6 +49,7 @@ public class JUnitLibraryResolver {
 
   // TODO 一時dirの責務をひとまずこのクラスに任せたが，巨大になるなら別クラスに切った方がよさそう．
   private static Path tempDir;
+
   public static Path getTempDirectory() {
     try {
       if (null == tempDir) {
