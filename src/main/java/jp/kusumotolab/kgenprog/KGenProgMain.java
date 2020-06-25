@@ -267,7 +267,7 @@ public class KGenProgMain {
   private double getAverage(final List<Variant> variants) {
     return variants.stream()
         .filter(Variant::isBuildSucceeded)
-        .mapToDouble(this::getFitnessSingularValue)
+        .mapToDouble(this::getNormalizedFitnessValue)
         .average()
         .orElse(Double.NaN);
   }
@@ -275,10 +275,10 @@ public class KGenProgMain {
   private Map<Double, Long> getFrequencies(final List<Variant> variants) {
     return variants.stream()
         .filter(Variant::isBuildSucceeded)
-        .collect(Collectors.groupingBy(this::getFitnessSingularValue, Collectors.counting()));
+        .collect(Collectors.groupingBy(this::getNormalizedFitnessValue, Collectors.counting()));
   }
 
-  private double getFitnessSingularValue(final Variant variant) {
+  private double getNormalizedFitnessValue(final Variant variant) {
     return variant.getFitness()
         .getNormalizedValue();
   }
