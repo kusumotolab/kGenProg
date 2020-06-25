@@ -63,7 +63,7 @@ public abstract class Mutation {
 
     final Roulette<Variant> variantRoulette = new Roulette<>(currentVariants, e -> {
       final Fitness fitness = e.getFitness();
-      final double value = fitness.getSingularValue();
+      final double value = fitness.getNormalizedValue();
       return Double.isNaN(value) ? 0 : value;
     }, random);
 

@@ -6,9 +6,13 @@ package jp.kusumotolab.kgenprog.ga.validation;
 public interface Fitness extends Comparable<Fitness> {
 
   /**
-   * @return 個体の評価値を単一の数値で返す．
+   * 個体の評価値を0〜1の範囲のdouble型で返す．
+   *
+   * The fitness value is returned as double in the range of 0 to 1.
+   *
+   * @return 個体の評価値
    */
-  double getSingularValue();
+  double getNormalizedValue();
 
   /**
    * @return その評価値が最大値かどうか
