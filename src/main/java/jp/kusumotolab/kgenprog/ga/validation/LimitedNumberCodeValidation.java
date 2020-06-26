@@ -58,7 +58,7 @@ public class LimitedNumberCodeValidation implements SourceCodeValidation {
     // TODO 交叉により生成された変異プログラムへの対応
     if (basesFitnessMap.containsKey(parentBases)) {
       final LimitedNumberSimpleFitness parentFitness = basesFitnessMap.get(parentBases);
-      if (successRate <= parentFitness.getValue()) {
+      if (successRate <= parentFitness.getNormalizedValue()) {
         parentFitness.reduceCapacity();
       }
     }

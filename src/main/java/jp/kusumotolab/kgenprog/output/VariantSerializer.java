@@ -95,8 +95,8 @@ public class VariantSerializer implements JsonSerializer<Variant> {
 
     final int generationNumber = variant.getGenerationNumber()
         .get();
-    final double fitness = variant.getFitness()
-        .getValue();
+    final String fitness = variant.getFitness()
+        .toString();
     final Patch patch = patchGenerator.exec(variant);
 
     final JsonObject serializedVariant = new JsonObject();
@@ -104,7 +104,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     serializedVariant.addProperty("id", variant.getId());
     serializedVariant.addProperty("generationNumber", generationNumber);
     serializedVariant.addProperty("selectionCount", variant.getSelectionCount());
-    serializedVariant.addProperty("fitness", !Double.isNaN(fitness) ? fitness : -1.0d);
+    serializedVariant.addProperty("fitness", fitness);
     serializedVariant.addProperty("isBuildSuccess", variant.isBuildSucceeded());
     serializedVariant.addProperty("isSyntaxValid", variant.isSyntaxValid());
     serializedVariant.add("bases", context.serialize(variant.getGene()
