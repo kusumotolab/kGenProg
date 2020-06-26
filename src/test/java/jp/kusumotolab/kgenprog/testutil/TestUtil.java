@@ -5,7 +5,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.google.common.jimfs.Jimfs;
 import jp.kusumotolab.kgenprog.Configuration;
