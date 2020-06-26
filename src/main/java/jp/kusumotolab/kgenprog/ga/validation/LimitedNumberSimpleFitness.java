@@ -45,7 +45,7 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
    */
   @Override
   public String toString() {
-    return isCapacityAvailable() ? super.toString() : Double.toString(0d);
+    return Double.toString(getNormalizedValue());
   }
 
   /**

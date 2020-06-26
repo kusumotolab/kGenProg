@@ -47,7 +47,7 @@ public class SimpleFitness implements Fitness {
   public int compareTo(final Fitness anotherFitness) {
 
     if (SimpleFitness.class != anotherFitness.getClass()) {
-      throw new IllegalStateException("anotherFitness must be an instance of SimpleFitness.");
+      throw new ClassCastException("anotherFitness must be an instance of SimpleFitness.");
     }
 
     final SimpleFitness anotherSimpleFitness = (SimpleFitness) anotherFitness;
