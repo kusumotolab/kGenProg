@@ -58,12 +58,12 @@ public class HeuristicMutation extends Mutation {
 
     final JDTASTLocation jdtastLocation = (JDTASTLocation) location;
     // その場で使える操作だけを取り出す
-    final List<OperationGenerator> operationGenerators = this.operationGenerators.stream()
+    final List<OperationGenerator> usableOperationGenerators = this.operationGenerators.stream()
         .filter(e -> e.canBeApply(jdtastLocation))
         .collect(Collectors.toList());
 
     // 使える操作に対して重みをつけてルーレット選択
-    final Roulette<OperationGenerator> roulette = new Roulette<>(operationGenerators,
+    final Roulette<OperationGenerator> roulette = new Roulette<>(usableOperationGenerators,
         OperationGenerator::getWeight, random);
     final OperationGenerator operationGenerator = roulette.exec();
 

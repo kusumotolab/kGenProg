@@ -15,8 +15,8 @@ import jp.kusumotolab.kgenprog.ga.variant.Variant;
  */
 public class DefaultVariantSelection implements VariantSelection {
 
-  final private int maxVariantsPerGeneration;
-  final private Random random;
+  private final int maxVariantsPerGeneration;
+  private final Random random;
 
   /**
    * コンストラクタ
@@ -39,12 +39,11 @@ public class DefaultVariantSelection implements VariantSelection {
     final ArrayList<Variant> variants = new ArrayList<>(current);
     variants.addAll(generated);
     Collections.shuffle(variants, random);
-    final List<Variant> list = variants.stream()
+    return variants.stream()
         .sorted(Comparator.comparing(Variant::getFitness)
             .reversed())
         .filter(Variant::isBuildSucceeded)
         .limit(maxVariantsPerGeneration)
         .collect(Collectors.toList());
-    return list;
   }
 }

@@ -137,7 +137,6 @@ class TestThread extends Thread {
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
       testResults = new EmptyTestResults("failed to load classes.");
-      return;
     } catch (Exception e) {
       // TODO
       // Should handle safely
@@ -194,16 +193,16 @@ class TestThread extends Thread {
 
   private List<FullyQualifiedName> getFQNs(final List<? extends SourcePath> sourcesPaths) {
     return sourcesPaths.stream()
-        .map(source -> buildResults.binaryStore.get(source))
+        .map(buildResults.binaryStore::get)
         .flatMap(Collection::stream)
-        .map(jmo -> jmo.getFqn())
+        .map(JavaBinaryObject::getFqn)
         .collect(Collectors.toList());
   }
 
   private URL[] convertClasspathsToURLs(final List<ClassPath> classpaths) {
     return classpaths.stream()
         .map(cp -> cp.path.toUri())
-        .map(uri -> toURL(uri))
+        .map(this::toURL)
         .toArray(URL[]::new);
   }
 
@@ -251,8 +250,9 @@ class TestThread extends Thread {
    */
   class CoverageMeasurementListener extends RunListener {
 
-    final private TestResults testResults;
+    private final TestResults testResults;
     private boolean wasFailed;
+    private String failedReason;
 
     /**
      * constructor
@@ -268,11 +268,14 @@ class TestThread extends Thread {
     public void testStarted(Description description) {
       jacocoRuntimeData.reset();
       wasFailed = false;
+      failedReason = null;
     }
 
     @Override
     public void testFailure(Failure failure) {
       wasFailed = true;
+      failedReason = failure.getException()
+          .getMessage();
     }
 
     @Override
@@ -349,7 +352,8 @@ class TestThread extends Thread {
           .map(RawCoverage::new)
           .collect(Collectors.toMap(Coverage::getExecutedTargetFQN, Functions.identity()));
 
-      final TestResult testResult = new TestResult(testMethodFQN, wasFailed, coverages);
+      final TestResult testResult = new TestResult(testMethodFQN, wasFailed, failedReason,
+          coverages);
       testResults.add(testResult);
     }
   }

@@ -17,8 +17,10 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 class PatchExporter implements Exporter {
 
   private static final Logger log = LoggerFactory.getLogger(PatchExporter.class);
+
   public static final String DIR_PREFIX = "patch-v";
   private final Path outdir;
+
   private final PatchGenerator patchGenerator;
 
   PatchExporter(final Path outdir) {

@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project.test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
@@ -14,21 +15,24 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
  */
 public class TestResult {
 
-  final public FullyQualifiedName executedTestFQN;
-  final public boolean failed;
-  final private Map<FullyQualifiedName, Coverage> coverages;
+  public final FullyQualifiedName executedTestFQN;
+  public final boolean failed;
+  private final String failedReason;
+  private final Map<FullyQualifiedName, Coverage> coverages;
 
   /**
    * constructor
    *
    * @param executedTestFQN 実行したテストメソッドの名前
    * @param failed テストの結果
+   * @param failedReason テストに落ちた場合はその理由
    * @param coverages テスト対象それぞれの行ごとのCoverage計測結果
    */
   public TestResult(final FullyQualifiedName executedTestFQN, final boolean failed,
-      final Map<FullyQualifiedName, Coverage> coverages) {
+      final String failedReason, final Map<FullyQualifiedName, Coverage> coverages) {
     this.executedTestFQN = executedTestFQN;
     this.failed = failed;
+    this.failedReason = failedReason;
     this.coverages = coverages;
   }
 
@@ -40,7 +44,7 @@ public class TestResult {
   public List<FullyQualifiedName> getExecutedTargetFQNs() {
     return this.coverages.entrySet()
         .stream()
-        .map(e -> e.getKey())
+        .map(Entry::getKey)
         .collect(Collectors.toList());
   }
 
@@ -52,6 +56,15 @@ public class TestResult {
    */
   public Coverage getCoverages(final FullyQualifiedName testFQN) {
     return this.coverages.get(testFQN);
+  }
+
+  /**
+   * failedReasonを取得
+   *
+   * @return
+   */
+  public String getFailedReason() {
+    return this.failedReason;
   }
 
   @Override

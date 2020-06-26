@@ -19,6 +19,8 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.Exporters;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
+import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
  * kGenProgのメインクラス．<br>
@@ -88,6 +90,8 @@ public class KGenProgMain {
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
+
+    logInitialFailedTests(initialVariant.getTestResults());
 
     mutation.setCandidates(initialVariant.getGeneratedSourceCode()
         .getProductAsts());
@@ -165,6 +169,28 @@ public class KGenProgMain {
     log.info(sb.toString());
   }
 
+  private void logInitialFailedTests(final TestResults testResults) {
+    final StringBuilder sb = new StringBuilder();
+    final List<TestResult> successedTestResults = testResults.getSuccessedTestResults();
+    final List<TestResult> failedTestResults = testResults.getFailedTestResults();
+    sb//
+        .append("initial failed tests (")
+        .append(failedTestResults.size())
+        .append("/")
+        .append(successedTestResults.size() + failedTestResults.size())
+        .append(")")
+        .append(System.lineSeparator());
+
+    for (TestResult testResult : testResults.getFailedTestResults()) {
+      sb//
+          .append(testResult.executedTestFQN)
+          .append(": ")
+          .append(testResult.getFailedReason())
+          .append(System.lineSeparator());
+    }
+    log.info(sb.toString());
+  }
+
   private void logGeneration(final OrdinalNumber generation) {
     final StringBuilder sb = new StringBuilder();
     sb//
@@ -239,7 +265,7 @@ public class KGenProgMain {
   private double getAverage(final List<Variant> variants) {
     return variants.stream()
         .filter(Variant::isBuildSucceeded)
-        .mapToDouble(this::getFitnessValue)
+        .mapToDouble(this::getNormalizedFitnessValue)
         .average()
         .orElse(Double.NaN);
   }
@@ -247,12 +273,12 @@ public class KGenProgMain {
   private Map<Double, Long> getFrequencies(final List<Variant> variants) {
     return variants.stream()
         .filter(Variant::isBuildSucceeded)
-        .collect(Collectors.groupingBy(this::getFitnessValue, Collectors.counting()));
+        .collect(Collectors.groupingBy(this::getNormalizedFitnessValue, Collectors.counting()));
   }
 
-  private double getFitnessValue(final Variant variant) {
+  private double getNormalizedFitnessValue(final Variant variant) {
     return variant.getFitness()
-        .getValue();
+        .getNormalizedValue();
   }
 
   private void logGAStopped(final OrdinalNumber generation) {

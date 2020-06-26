@@ -69,7 +69,7 @@ public abstract class CrossoverAdaptor implements Crossover {
    * @return 交叉により生成された個体群
    */
   @Override
-  final public List<Variant> exec(final VariantStore variantStore) {
+  public final List<Variant> exec(final VariantStore variantStore) {
 
     final List<Variant> filteredVariants = variantStore.getCurrentVariants()
         .stream()

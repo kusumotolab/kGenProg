@@ -19,11 +19,17 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
   }
 
   /**
-   * return 評価値，ただし，期限切れの場合は0
+   * 個体の評価値を0〜1の範囲のdouble型で返す．
+   * ただし，期限切れの場合は0になる．
+   *
+   * The fitness value is returned as double in the range of 0 to 1.
+   * In the case of expiration, 0 is returned.
+   *
+   * @return 個体の評価値
    */
   @Override
-  public double getValue() {
-    return isCapacityAvailable() ? super.getValue() : 0d;
+  public double getNormalizedValue() {
+    return isCapacityAvailable() ? super.getNormalizedValue() : 0d;
   }
 
   /**
@@ -32,6 +38,14 @@ public class LimitedNumberSimpleFitness extends SimpleFitness {
   @Override
   public boolean isMaximum() {
     return isCapacityAvailable() && super.isMaximum();
+  }
+
+  /**
+   * @return 評価値の文字列表現を返す
+   */
+  @Override
+  public String toString() {
+    return Double.toString(getNormalizedValue());
   }
 
   /**

@@ -2,7 +2,7 @@ package jp.kusumotolab.kgenprog.project;
 
 public abstract class FullyQualifiedName {
 
-  final public String value;
+  public final String value;
 
   protected FullyQualifiedName(final String value) {
     // TODO check validation
@@ -10,7 +10,7 @@ public abstract class FullyQualifiedName {
   }
 
   public String getPackageName() {
-    final int lastIndexOf = value.lastIndexOf(".");
+    final int lastIndexOf = value.lastIndexOf('.');
     if (lastIndexOf == -1) {
       return "";
     }
