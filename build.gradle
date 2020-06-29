@@ -74,7 +74,7 @@ dependencies {
 
     // Declare by `runtime` cuz hamcrest is necessary to execute junit-test dynamically,
     // but it doesn't seem to be loaded on compile task.
-    runtime 'org.hamcrest:hamcrest-core:1.3'
+    runtimeOnly 'org.hamcrest:hamcrest-core:1.3'
 }
 
 jar {
