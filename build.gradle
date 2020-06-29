@@ -44,27 +44,27 @@ repositories {
 dependencies {
 
     // Use custom junit jar to terminate timed out process during apr loop
-    compile files('src/main/resources/junit4/junit-4.12-kgp-custom.jar')
+    implementation files('src/main/resources/junit4/junit-4.12-kgp-custom.jar')
 
-    compile 'args4j:args4j:2.33'
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'com.electronwill.night-config:core:3.4.0'
-    compile 'com.github.wumpz:diffutils:2.2'
-    compile 'com.google.code.gson:gson:2.8.5'
-    compile 'com.google.guava:guava:26.0-jre'
-    compile 'commons-codec:commons-codec:1.11'
-    compile 'io.reactivex.rxjava2:rxjava:2.2.4'
-    compile 'org.apache.commons:commons-lang3:3.7'
-    compile 'org.apache.maven:maven-model:3.5.4'
-    compile 'org.codehaus.plexus:plexus-utils:3.1.0'
-    compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.102'
-    compile 'org.eclipse.platform:org.eclipse.equinox.common:3.10.200'
-    compile 'org.eclipse.platform:org.eclipse.text:3.8.0'
-    compile 'org.jacoco:org.jacoco.core:0.8.1'
-    compile 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'args4j:args4j:2.33'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'com.electronwill.night-config:core:3.4.0'
+    implementation 'com.github.wumpz:diffutils:2.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.guava:guava:26.0-jre'
+    implementation 'commons-codec:commons-codec:1.11'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
+    implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation 'org.apache.maven:maven-model:3.5.4'
+    implementation 'org.codehaus.plexus:plexus-utils:3.1.0'
+    implementation 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.102'
+    implementation 'org.eclipse.platform:org.eclipse.equinox.common:3.10.200'
+    implementation 'org.eclipse.platform:org.eclipse.text:3.8.0'
+    implementation 'org.jacoco:org.jacoco.core:0.8.1'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
 
-    testCompile 'org.assertj:assertj-core:3.10.0'
-    testCompile 'org.mockito:mockito-core:2.+'
+    testImplementation 'org.assertj:assertj-core:3.10.0'
+    testImplementation 'org.mockito:mockito-core:2.+'
 
     // Patch for gradle lint
     gradleLint.ignore {
@@ -74,11 +74,11 @@ dependencies {
 
         // Both dependencies of "core" and "toml" are necessary for night-config to suppress
         // lint warnings because of its dynamic class loading
-        compile 'com.electronwill.night-config:toml:3.4.0'
+        implementation 'com.electronwill.night-config:toml:3.4.0'
 
         // hamcrest is necessary to execute junit-test dynamically, but it doesn't seem to be
         // loaded on compile task. Ignore it.
-        compile 'org.hamcrest:hamcrest-core:1.3'
+        implementation 'org.hamcrest:hamcrest-core:1.3'
     }
 }
 
