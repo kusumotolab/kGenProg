@@ -54,7 +54,6 @@ dependencies {
 
     implementation 'args4j:args4j:2.33'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'com.electronwill.night-config:toml:3.4.0'
     implementation 'com.github.wumpz:diffutils:2.2'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.guava:guava:26.0-jre'
@@ -72,9 +71,13 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.10.0'
     testImplementation 'org.mockito:mockito-core:2.+'
 
-    // Declare by `runtime` cuz hamcrest is necessary to execute junit-test dynamically,
+    // Declare by "runtimeOnly" cuz hamcrest is necessary to execute junit-test dynamically,
     // but it doesn't seem to be loaded on compile task.
     runtimeOnly 'org.hamcrest:hamcrest-core:1.3'
+
+    // night-config:core is necessary to compile, and "toml" is necessary for runtime only.
+    implementation 'com.electronwill.night-config:core:3.4.0'
+    runtimeOnly 'com.electronwill.night-config:toml:3.4.0'
 }
 
 jar {
