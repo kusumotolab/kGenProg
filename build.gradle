@@ -6,18 +6,22 @@ buildscript {
     }
 }
 
-// Apply java plugin
-apply plugin: 'java'
+plugins {
+    id 'java'
 
-// Apply IDE plugins
-apply plugin: 'eclipse'
-apply plugin: 'idea'
+    // IDE plugins
+    id 'eclipse'
+    id 'idea'
 
-// Apply JaCoCo plugin to measure KGP's coverage but not to calculate fault localization metric
-apply plugin: 'jacoco'
+    // JaCoCo plugin to measure KGP's coverage but not to calculate fault localization metric
+    id 'jacoco'
 
-// Apply Maven plugin to use JitPack
-apply plugin: 'maven'
+    // Maven plugin to use JitPack
+    id 'maven-publish'
+
+    // Gradle lint
+    id "nebula.lint" version "16.9.0"
+}
 
 // Set compiler version
 //sourceCompatibility = '1.11'
@@ -75,11 +79,6 @@ jar {
     // Specify App's entry point
     manifest {
         attributes "Main-Class": "jp.kusumotolab.kgenprog.CUILauncher"
-    }
-
-    // exclude jar signatures for jar compression
-    from { (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) } } {
-        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     }
 
     doFirst {
