@@ -1,9 +1,9 @@
 buildscript {
-  repositories { jcenter() }
-  dependencies {
-    // Gradle linter
-    classpath 'com.netflix.nebula:gradle-lint-plugin:latest.release'
-  }
+    repositories { jcenter() }
+    dependencies {
+        // Gradle linter
+        classpath 'com.netflix.nebula:gradle-lint-plugin:latest.release'
+    }
 }
 
 // Apply java plugin
@@ -37,97 +37,97 @@ group = 'com.github.kusumotolab'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-  jcenter()
+    jcenter()
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
 
-  // Use custom junit jar to terminate timed out process during apr loop
-  compile files('src/main/resources/junit4/junit-4.12-kgp-custom.jar')
+    // Use custom junit jar to terminate timed out process during apr loop
+    compile files('src/main/resources/junit4/junit-4.12-kgp-custom.jar')
 
-  compile 'args4j:args4j:2.33'
-  compile 'ch.qos.logback:logback-classic:1.2.3'
-  compile 'com.electronwill.night-config:core:3.4.0'
-  compile 'com.github.wumpz:diffutils:2.2'
-  compile 'com.google.code.gson:gson:2.8.5'
-  compile 'com.google.guava:guava:26.0-jre'
-  compile 'commons-codec:commons-codec:1.11'
-  compile 'io.reactivex.rxjava2:rxjava:2.2.4'
-  compile 'org.apache.commons:commons-lang3:3.7'
-  compile 'org.apache.maven:maven-model:3.5.4'
-  compile 'org.codehaus.plexus:plexus-utils:3.1.0'
-  compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.102'
-  compile 'org.eclipse.platform:org.eclipse.equinox.common:3.10.200'
-  compile 'org.eclipse.platform:org.eclipse.text:3.8.0'
-  compile 'org.jacoco:org.jacoco.core:0.8.1'
-  compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'args4j:args4j:2.33'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'com.electronwill.night-config:core:3.4.0'
+    compile 'com.github.wumpz:diffutils:2.2'
+    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.google.guava:guava:26.0-jre'
+    compile 'commons-codec:commons-codec:1.11'
+    compile 'io.reactivex.rxjava2:rxjava:2.2.4'
+    compile 'org.apache.commons:commons-lang3:3.7'
+    compile 'org.apache.maven:maven-model:3.5.4'
+    compile 'org.codehaus.plexus:plexus-utils:3.1.0'
+    compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.102'
+    compile 'org.eclipse.platform:org.eclipse.equinox.common:3.10.200'
+    compile 'org.eclipse.platform:org.eclipse.text:3.8.0'
+    compile 'org.jacoco:org.jacoco.core:0.8.1'
+    compile 'org.slf4j:slf4j-api:1.7.25'
 
-  testCompile 'org.assertj:assertj-core:3.10.0'
-  testCompile 'org.mockito:mockito-core:2.+'
+    testCompile 'org.assertj:assertj-core:3.10.0'
+    testCompile 'org.mockito:mockito-core:2.+'
 
-  // Patch for gradle lint
-  gradleLint.ignore {
-    // As of 2019-01-17, gradle lint alerts "transitive-duplicate-dependency-class" warning
-    // to "net.bytebuggy" which is used by "org.mockito".
-    testCompile 'net.bytebuddy:byte-buddy:1.9.3'
+    // Patch for gradle lint
+    gradleLint.ignore {
+        // As of 2019-01-17, gradle lint alerts "transitive-duplicate-dependency-class" warning
+        // to "net.bytebuggy" which is used by "org.mockito".
+        testCompile 'net.bytebuddy:byte-buddy:1.9.3'
 
-    // Both dependencies of "core" and "toml" are necessary for night-config to suppress
-    // lint warnings because of its dynamic class loading
-    compile 'com.electronwill.night-config:toml:3.4.0'
+        // Both dependencies of "core" and "toml" are necessary for night-config to suppress
+        // lint warnings because of its dynamic class loading
+        compile 'com.electronwill.night-config:toml:3.4.0'
 
-    // hamcrest is necessary to execute junit-test dynamically, but it doesn't seem to be
-    // loaded on compile task. Ignore it.
-    compile 'org.hamcrest:hamcrest-core:1.3'
-  }
+        // hamcrest is necessary to execute junit-test dynamically, but it doesn't seem to be
+        // loaded on compile task. Ignore it.
+        compile 'org.hamcrest:hamcrest-core:1.3'
+    }
 }
 
 jar {
-  // Specify App's entry point
-  manifest {
-    attributes "Main-Class": "jp.kusumotolab.kgenprog.CUILauncher"
-  }
-
-  // exclude jar signatures for jar compression
-  from { (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) } } {
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-  }
-
-  doFirst {
-    // copy gradle.properties to resolve version info
-    copy {
-      from 'gradle.properties'
-      into buildDir.name + '/resources/main/'
+    // Specify App's entry point
+    manifest {
+        attributes "Main-Class": "jp.kusumotolab.kgenprog.CUILauncher"
     }
-    // annotate whether this task was executed on CI or not
-    def isCi = System.getenv('CI') ? 'true' : 'false'
-    File prop = new File(buildDir.name + '/resources/main/gradle.properties')
-    prop.append('ci = ' + isCi + '\n')
-  }
+
+    // exclude jar signatures for jar compression
+    from { (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) } } {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
+
+    doFirst {
+        // copy gradle.properties to resolve version info
+        copy {
+            from 'gradle.properties'
+            into buildDir.name + '/resources/main/'
+        }
+        // annotate whether this task was executed on CI or not
+        def isCi = System.getenv('CI') ? 'true' : 'false'
+        File prop = new File(buildDir.name + '/resources/main/gradle.properties')
+        prop.append('ci = ' + isCi + '\n')
+    }
 }
 
 // Define App's version
 version = currentVersion
 
 task printCurrentVersion {
-  description 'Prints the current kGenProg version.'
-  doLast {
-    println version
-  }
+    description 'Prints the current kGenProg version.'
+    doLast {
+        println version
+    }
 }
 
 jacocoTestReport {
-  dependsOn test
-  reports {
-    xml.enabled true
-    html.enabled false
-  }
-  // Exclude jUnit classes to avoid exceptions when creating jacoco report
-  afterEvaluate {
-    classDirectories = files(classDirectories.files.collect {
-      fileTree(dir: it, exclude: [
-        '**/*junit**'
-      ])
-    })
-  }
+    dependsOn test
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+    // Exclude jUnit classes to avoid exceptions when creating jacoco report
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/*junit**'
+            ])
+        })
+    }
 }
