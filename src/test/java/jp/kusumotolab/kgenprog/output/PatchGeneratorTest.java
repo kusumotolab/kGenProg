@@ -148,7 +148,6 @@ public class PatchGeneratorTest {
     final Exporter patchExporter = new PatchExporter(outdir);
     patchExporter.export(variantStore);
 
-    assertThatCode();
     assertThat(true).isTrue(); // to prevent smoke test in sonarlint
   }
 
