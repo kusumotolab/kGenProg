@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -133,7 +134,7 @@ public class PatchGeneratorTest {
   }
 
   @Test
-  public void testExportWitnPreviousResults() throws IOException {
+  public void testExportWithPreviousResults() throws IOException {
     final Path outdir = TestUtil.createVirtualDir();
 
     // setup prev results
@@ -147,6 +148,7 @@ public class PatchGeneratorTest {
     final Exporter patchExporter = new PatchExporter(outdir);
     patchExporter.export(variantStore);
 
+    assertThatCode();
     assertThat(true).isTrue(); // to prevent smoke test in sonarlint
   }
 

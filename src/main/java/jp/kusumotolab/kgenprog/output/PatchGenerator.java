@@ -59,7 +59,7 @@ public class PatchGenerator {
         .getResolvedPath();
     try {
       return Files.readAllLines(originalPath);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       log.error(e.getMessage(), e);
       return Collections.emptyList();
     }
