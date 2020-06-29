@@ -114,3 +114,8 @@ jacocoTestReport {
         html.enabled false
     }
 }
+
+// Minimize generating fat jar
+shadowJar {
+    minimize()
+}
