@@ -47,17 +47,17 @@ public class SecondVariantTestComplementaryBasedSelection
       throw new CrossoverInfeasibleException("no variant for second parent");
     }
 
-    // firstVariantにおいて，失敗したテスト一覧(failedTestFQNs)と成功したテスト一覧(successedTestFQNs)を取得
+    // firstVariantにおいて，失敗したテスト一覧(failedTestFQNs)と成功したテスト一覧(succeededTestFQNs)を取得
     final TestResults testResults = firstVariant.getTestResults();
     final List<FullyQualifiedName> failedTestFQNs = testResults.getFailedTestFQNs();
-    final List<FullyQualifiedName> successedTestFQNs = testResults.getSuccessedTestFQNs();
+    final List<FullyQualifiedName> succeededTestFQNs = testResults.getSucceededTestFQNs();
 
-    // secondVariantCandidatesを，successedTestFQNsにおいて成功したテストが多い順にソートし，
+    // secondVariantCandidatesを，succeededTestFQNsにおいて成功したテストが多い順にソートし，
     // そのあとにfailedTestFQNsにおいて成功したテストが多い順にソート
     final Comparator<Variant> comparator = Comparator
-        .<Variant>comparingLong(v -> getSuccessedNumber(v.getTestResults(), successedTestFQNs))
+        .<Variant>comparingLong(v -> getSucceededNumber(v.getTestResults(), succeededTestFQNs))
         .reversed()
-        .thenComparingLong(v -> getSuccessedNumber(v.getTestResults(), failedTestFQNs))
+        .thenComparingLong(v -> getSucceededNumber(v.getTestResults(), failedTestFQNs))
         .reversed();
     Collections.sort(secondVariantCandidates, comparator);
 
@@ -65,8 +65,8 @@ public class SecondVariantTestComplementaryBasedSelection
     return secondVariantCandidates.get(0);
   }
 
-  private Long getSuccessedNumber(final TestResults testResults,
-      final Collection<FullyQualifiedName> targetFQNs) {
+  private Long getSucceededNumber(final TestResults testResults,
+                                  final Collection<FullyQualifiedName> targetFQNs) {
     return targetFQNs.stream()
         .filter(fqn -> !testResults.getTestResult(fqn).failed)
         .count();
