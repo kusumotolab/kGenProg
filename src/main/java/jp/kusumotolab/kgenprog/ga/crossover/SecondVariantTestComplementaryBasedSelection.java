@@ -66,7 +66,7 @@ public class SecondVariantTestComplementaryBasedSelection
   }
 
   private Long getSucceededNumber(final TestResults testResults,
-                                  final Collection<FullyQualifiedName> targetFQNs) {
+      final Collection<FullyQualifiedName> targetFQNs) {
     return targetFQNs.stream()
         .filter(fqn -> !testResults.getTestResult(fqn).failed)
         .count();
