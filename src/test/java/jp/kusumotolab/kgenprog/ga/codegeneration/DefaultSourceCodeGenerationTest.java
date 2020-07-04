@@ -48,7 +48,7 @@ public class DefaultSourceCodeGenerationTest {
   }
 
   @Test
-  public void testExecDupicateInitialVariant() {
+  public void testExecDuplicatedInitialVariant() {
     final Path rootDir = Paths.get("example/BuildSuccess01");
     final TargetProject targetProject = TargetProjectFactory.create(rootDir);
     final Configuration config = new Configuration.Builder(targetProject).build();

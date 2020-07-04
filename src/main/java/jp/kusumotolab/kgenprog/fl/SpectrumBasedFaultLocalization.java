@@ -53,7 +53,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
 
     final List<Suspiciousness> suspiciousnesses = new ArrayList<>();
 
-    final Set<FullyQualifiedName> execuetdFailedTargetFQNs = testResults.getFailedTestResults()
+    final Set<FullyQualifiedName> executedFailedTargetFQNs = testResults.getFailedTestResults()
         .stream()
         .map(TestResult::getExecutedTargetFQNs)
         .flatMap(Collection::stream)
@@ -64,7 +64,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
     for (final GeneratedAST<ProductSourcePath> ast : generatedSourceCode.getProductAsts()) {
 
       // do nothing if none of failed target fqns contain the ast
-      if (skippableFormula && !execuetdFailedTargetFQNs.contains(ast.getPrimaryClassName())) {
+      if (skippableFormula && !executedFailedTargetFQNs.contains(ast.getPrimaryClassName())) {
         continue;
       }
 

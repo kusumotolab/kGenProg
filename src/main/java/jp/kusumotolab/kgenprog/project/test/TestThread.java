@@ -207,7 +207,7 @@ class TestThread extends Thread {
   }
 
   /**
-   * To avoid Malform uri in lambda expression
+   * To avoid Malformed uri in lambda expression
    *
    * @param uri
    * @return
