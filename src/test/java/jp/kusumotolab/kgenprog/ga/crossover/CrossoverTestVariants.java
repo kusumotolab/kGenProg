@@ -43,14 +43,14 @@ public class CrossoverTestVariants {
 
   public CrossoverTestVariants() {
 
-    final TestResult successedTestResult = Mockito.mock(TestResult.class);
+    final TestResult succeededTestResult = Mockito.mock(TestResult.class);
     final TestResult failedTestResult = Mockito.mock(TestResult.class);
 
     try {
       Class<?> c = Class.forName("jp.kusumotolab.kgenprog.project.test.TestResult");
       Field f = c.getDeclaredField("failed");
       f.setAccessible(true);
-      f.set(successedTestResult, false);
+      f.set(succeededTestResult, false);
       f.set(failedTestResult, true);
     } catch (ClassNotFoundException | NoSuchFieldException | SecurityException
         | IllegalArgumentException | IllegalAccessException e) {
@@ -58,7 +58,7 @@ public class CrossoverTestVariants {
     }
 
     final TestResults testResultsA = Mockito.mock(TestResults.class);
-    when(testResultsA.getSuccessedTestFQNs())
+    when(testResultsA.getSucceededTestFQNs())
         .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test2"),
             new TestFullyQualifiedName("Test4"), new TestFullyQualifiedName("Test6"),
             new TestFullyQualifiedName("Test8"), new TestFullyQualifiedName("Test10")));
@@ -69,26 +69,26 @@ public class CrossoverTestVariants {
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test1")))
         .thenReturn(failedTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test2")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test3")))
         .thenReturn(failedTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test4")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test5")))
         .thenReturn(failedTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test6")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test7")))
         .thenReturn(failedTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test8")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test9")))
         .thenReturn(failedTestResult);
     when(testResultsA.getTestResult(new TestFullyQualifiedName("Test10")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
 
     final TestResults testResultsB = Mockito.mock(TestResults.class);
-    when(testResultsB.getSuccessedTestFQNs())
+    when(testResultsB.getSucceededTestFQNs())
         .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test1"),
             new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test5"),
             new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test9")));
@@ -97,28 +97,28 @@ public class CrossoverTestVariants {
             new TestFullyQualifiedName("Test4"), new TestFullyQualifiedName("Test6"),
             new TestFullyQualifiedName("Test8"), new TestFullyQualifiedName("Test10")));
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test1")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test2")))
         .thenReturn(failedTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test3")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test4")))
         .thenReturn(failedTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test5")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test6")))
         .thenReturn(failedTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test7")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test8")))
         .thenReturn(failedTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test9")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsB.getTestResult(new TestFullyQualifiedName("Test10")))
         .thenReturn(failedTestResult);
 
     final TestResults testResultsC = Mockito.mock(TestResults.class);
-    when(testResultsC.getSuccessedTestFQNs()).thenReturn(
+    when(testResultsC.getSucceededTestFQNs()).thenReturn(
         Arrays.asList(new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test8"),
             new TestFullyQualifiedName("Test9"), new TestFullyQualifiedName("Test10")));
     when(testResultsC.getFailedTestFQNs()).thenReturn(
@@ -138,16 +138,16 @@ public class CrossoverTestVariants {
     when(testResultsC.getTestResult(new TestFullyQualifiedName("Test6")))
         .thenReturn(failedTestResult);
     when(testResultsC.getTestResult(new TestFullyQualifiedName("Test7")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsC.getTestResult(new TestFullyQualifiedName("Test8")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsC.getTestResult(new TestFullyQualifiedName("Test9")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsC.getTestResult(new TestFullyQualifiedName("Test10")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
 
     final TestResults testResultsD = Mockito.mock(TestResults.class);
-    when(testResultsD.getSuccessedTestFQNs()).thenReturn(
+    when(testResultsD.getSucceededTestFQNs()).thenReturn(
         Arrays.asList(new TestFullyQualifiedName("Test1"), new TestFullyQualifiedName("Test2"),
             new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test4")));
     when(testResultsD.getFailedTestFQNs()).thenReturn(
@@ -155,13 +155,13 @@ public class CrossoverTestVariants {
             new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test8"),
             new TestFullyQualifiedName("Test9"), new TestFullyQualifiedName("Test10")));
     when(testResultsD.getTestResult(new TestFullyQualifiedName("Test1")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsD.getTestResult(new TestFullyQualifiedName("Test2")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsD.getTestResult(new TestFullyQualifiedName("Test3")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsD.getTestResult(new TestFullyQualifiedName("Test4")))
-        .thenReturn(successedTestResult);
+        .thenReturn(succeededTestResult);
     when(testResultsD.getTestResult(new TestFullyQualifiedName("Test5")))
         .thenReturn(failedTestResult);
     when(testResultsD.getTestResult(new TestFullyQualifiedName("Test6")))

@@ -43,11 +43,11 @@ public class ASTNodeAssertTest {
 
     // @formatter:off
     final CompilationUnit compilationUnit = createCompilationUnit(source);
-    final TypeDeclaration typeDecralation = (TypeDeclaration) compilationUnit.types()
+    final TypeDeclaration typeDeclaration = (TypeDeclaration) compilationUnit.types()
         .get(0);
-    final MethodDeclaration methodDecralation = (MethodDeclaration) typeDecralation.bodyDeclarations()
+    final MethodDeclaration methodDeclaration = (MethodDeclaration) typeDeclaration.bodyDeclarations()
         .get(0);
-    final Block block = methodDecralation.getBody();
+    final Block block = methodDeclaration.getBody();
     final Statement statement1 = (Statement) block.statements()
         .get(0);       // "int n = 0;"
     final IfStatement ifStatement = (IfStatement) block.statements()

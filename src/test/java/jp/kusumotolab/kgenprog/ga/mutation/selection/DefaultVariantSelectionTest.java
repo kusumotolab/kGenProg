@@ -144,7 +144,7 @@ public class DefaultVariantSelectionTest {
   }
 
   /**
-   * BulidFailedの個体が選択されるかどうかをテストする.
+   * BuildFailedの個体が選択されるかどうかをテストする.
    */
   @Test
   public void testBuildFailed() {
@@ -195,7 +195,7 @@ public class DefaultVariantSelectionTest {
    * @param current variantSelectionに渡すcurrentリスト
    * @param generated variantSelectionに渡すgeneratedリスト
    * @param num リストに追加する要素の数
-   * @param testResultsCreator testResultsの渡し方を指定するFuntionオブジェクト（intを受け取りTestResultsを返す）
+   * @param testResultsCreator testResultsの渡し方を指定するFunctionオブジェクト（intを受け取りTestResultsを返す）
    */
   private void setupLists(final List<Variant> current, final List<Variant> generated, final int num,
       final Function<Integer, TestResults> testResultsCreator) {

@@ -736,7 +736,7 @@ public class Configuration {
         usage = "Specifies how many variants are generated in a generation by a crossover.")
     private void setCrossOverGeneratingCountFromCmdLineParser(final int crossoverGeneratingCount) {
       this.crossoverGeneratingCount = crossoverGeneratingCount;
-      this.optionsSetByCmdLineArgs.add("crossoverGenetingCount");
+      this.optionsSetByCmdLineArgs.add("crossoverGeneratingCount");
     }
 
     @Option(name = "--headcount", metaVar = "<num>",

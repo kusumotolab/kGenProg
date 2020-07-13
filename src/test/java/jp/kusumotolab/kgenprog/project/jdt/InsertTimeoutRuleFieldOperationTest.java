@@ -30,7 +30,7 @@ public class InsertTimeoutRuleFieldOperationTest {
     final GeneratedSourceCode sourceCode =
         new GeneratedSourceCode(Collections.emptyList(), Collections.singletonList(ast));
     final InsertTimeoutRuleFieldOperation operation = new InsertTimeoutRuleFieldOperation(10);
-    final GeneratedSourceCode applyiedSourceCode = operation.apply(sourceCode, null);
+    final GeneratedSourceCode appliedSourceCode = operation.apply(sourceCode, null);
 
     final String expected = new StringBuilder()
         .append("class A {")
@@ -43,7 +43,7 @@ public class InsertTimeoutRuleFieldOperationTest {
         .toString();
 
     final GeneratedJDTAST<TestSourcePath> newAST =
-        (GeneratedJDTAST<TestSourcePath>) applyiedSourceCode.getTestAsts()
+        (GeneratedJDTAST<TestSourcePath>) appliedSourceCode.getTestAsts()
             .get(0);
 
     assertThat(newAST.getRoot()).isSameSourceCodeAs(expected);
@@ -65,7 +65,7 @@ public class InsertTimeoutRuleFieldOperationTest {
     final GeneratedSourceCode sourceCode =
         new GeneratedSourceCode(Collections.emptyList(), Collections.singletonList(ast));
     final InsertTimeoutRuleFieldOperation operation = new InsertTimeoutRuleFieldOperation(10);
-    final GeneratedSourceCode applyiedSourceCode = operation.apply(sourceCode, null);
+    final GeneratedSourceCode appliedSourceCode = operation.apply(sourceCode, null);
 
     final String expected = new StringBuilder()
         .append("class A {")
@@ -79,7 +79,7 @@ public class InsertTimeoutRuleFieldOperationTest {
         .toString();
 
     final GeneratedJDTAST<TestSourcePath> newAST =
-        (GeneratedJDTAST<TestSourcePath>) applyiedSourceCode.getTestAsts()
+        (GeneratedJDTAST<TestSourcePath>) appliedSourceCode.getTestAsts()
             .get(0);
 
     assertThat(newAST.getRoot()).isSameSourceCodeAs(expected);

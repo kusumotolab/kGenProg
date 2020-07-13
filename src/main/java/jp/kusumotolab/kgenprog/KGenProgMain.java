@@ -171,13 +171,13 @@ public class KGenProgMain {
 
   private void logInitialFailedTests(final TestResults testResults) {
     final StringBuilder sb = new StringBuilder();
-    final List<TestResult> successedTestResults = testResults.getSuccessedTestResults();
+    final List<TestResult> succeededTestResults = testResults.getSucceededTestResults();
     final List<TestResult> failedTestResults = testResults.getFailedTestResults();
     sb//
         .append("initial failed tests (")
         .append(failedTestResults.size())
         .append("/")
-        .append(successedTestResults.size() + failedTestResults.size())
+        .append(succeededTestResults.size() + failedTestResults.size())
         .append(")")
         .append(System.lineSeparator());
 
