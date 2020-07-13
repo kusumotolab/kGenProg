@@ -45,17 +45,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
  */
 public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
 
-  private final Configuration config;
-
-  /**
-   * コンストラクタ.
-   *
-   * @param config 実行時の設定
-   */
-  public VariantStoreSerializer(final Configuration config) {
-    this.config = config;
-  }
-
   /**
    * シリアライズを行う.<br>
    *
@@ -63,18 +52,20 @@ public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
    * @param type シリアライズ対象のインスタンスの型
    * @param context インスタンスをシリアライズするインスタンス
    */
+
   @Override
   public JsonElement serialize(final VariantStore variantStore, final Type type,
       final JsonSerializationContext context) {
 
     final JsonObject serializedVariantStore = new JsonObject();
-    final TargetProject targetProject = config.getTargetProject();
+    final TargetProject targetProject = variantStore.getConfiguration()
+        .getTargetProject();
     final String projectName = (targetProject != null) ? targetProject.rootPath.getFileName()
         .toString() : "";
 
     serializedVariantStore.addProperty("projectName", projectName);
     serializedVariantStore.add("variants", context.serialize(variantStore.getAllVariants()));
-    serializedVariantStore.add("configuration", context.serialize(config));
+    serializedVariantStore.add("configuration", context.serialize(variantStore.getConfiguration()));
 
     return serializedVariantStore;
   }

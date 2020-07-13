@@ -188,7 +188,7 @@ public class Configuration {
     return secondVariantSelectionStrategy;
   }
 
-  public boolean getHistoryRecord() {
+  public boolean isHistoryRecord() {
     return historyRecord;
   }
 

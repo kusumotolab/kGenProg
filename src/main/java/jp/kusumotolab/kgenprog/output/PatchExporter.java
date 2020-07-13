@@ -1,29 +1,31 @@
 package jp.kusumotolab.kgenprog.output;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 /**
- * 解のパッチを出力するクラス．
+ * 解のパッチをログとファイルに出力するクラス．
  */
-public class PatchExporter extends Exporter {
+class PatchExporter implements Exporter {
 
   private static final Logger log = LoggerFactory.getLogger(PatchExporter.class);
+
+  public static final String DIR_PREFIX = "patch-v";
+  private final Path outdir;
+
   private final PatchGenerator patchGenerator;
 
-  /**
-   * コンストラクタ
-   *
-   * @param config 設定情報
-   * @param patchGenerator パッチを生成するクラス
-   */
-  public PatchExporter(final Configuration config, final PatchGenerator patchGenerator) {
-    super(config);
-    this.patchGenerator = patchGenerator;
+  PatchExporter(final Path outdir) {
+    this.outdir = outdir;
+    this.patchGenerator = new PatchGenerator();
   }
 
   /**
@@ -33,47 +35,58 @@ public class PatchExporter extends Exporter {
    */
   @Override
   public void export(final VariantStore variantStore) {
-    final PatchStore patchStore = new PatchStore();
+    createDir(outdir);
 
-    // 解のパッチを生成する
-    variantStore.getFoundSolutions(config.getRequiredSolutionsCount())
-        .stream()
-        .map(patchGenerator::exec)
-        .forEach(patchStore::add);
-
-    // ログに出力する
-    exportToLog(patchStore);
-
-    if (!config.needNotOutput()) {
-      // ファイルに出力する
-      exportToFile(patchStore);
-    }
-  }
-
-  /**
-   * パッチをログに出力する
-   *
-   * @param patchStore 生成したパッチを保持するクラス
-   */
-  private void exportToLog(final PatchStore patchStore) {
-    patchStore.writeToLogger();
-  }
-
-  /**
-   * パッチをファイルに出力する
-   *
-   * @param patchStore 生成したパッチを保持するクラス
-   */
-  private void exportToFile(final PatchStore patchStore) {
-    if (Files.notExists(config.getOutDir())) {
-      try {
-        Files.createDirectory(config.getOutDir());
-      } catch (final IOException e) {
-        log.error("Failed to write patches!");
-        log.error(e.getMessage(), e);
-        return;
+    // Warn if previous patch folder exists
+    try (final Stream<Path> walk = Files.walk(outdir)) {
+      if (walk.filter(Files::isDirectory)
+          .map(Path::getFileName)
+          .map(Path::toString)
+          .anyMatch(p -> p.startsWith(DIR_PREFIX))) {
+        log.warn("warning: previous patch folders exist in out dir.");
       }
+    } catch (final IOException e) {
+      log.warn(e.getMessage());
     }
-    patchStore.writeToFile(config.getOutDir());
+
+    final List<Variant> solutions = variantStore.getFoundSolutions();
+
+    solutions.stream()
+        .map(patchGenerator::exec)
+        .forEach(p -> {
+          writeLog(p);
+          writePatch(p);
+        });
+  }
+
+  private void writeLog(final Patch patch) {
+    patch.getFileDiffs()
+        .forEach(fd -> log.info(String.format("patch (v%d)%s%s",
+            patch.getVariantId(), System.lineSeparator(), fd))
+        );
+  }
+
+  private void writePatch(final Patch patch) {
+    final long id = patch.getVariantId();
+    final Path subdir = outdir.resolve(DIR_PREFIX + id);
+
+    try {
+      Files.createDirectories(subdir);
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e); // cannot handle this exception
+    }
+
+    patch.getFileDiffs()
+        .forEach(fd -> this.writeFileDiff(fd, subdir));
+  }
+
+  private void writeFileDiff(final FileDiff diff, final Path subdir) {
+    final String filename = diff.getFileName();
+    try {
+      Files.write(subdir.resolve(filename + ".java"), diff.getModifiedSourceCodeLines());
+      Files.write(subdir.resolve(filename + ".diff"), diff.getDiff());
+    } catch (final IOException e) {
+      log.error(e.getMessage(), e);
+    }
   }
 }

@@ -3,10 +3,18 @@ package jp.kusumotolab.kgenprog.output;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.ToolFactory;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.text.edits.MalformedTreeException;
+import org.eclipse.text.edits.TextEdit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
@@ -14,87 +22,79 @@ import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
-import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
-import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 
 public class PatchGenerator {
 
   private static final Logger log = LoggerFactory.getLogger(PatchGenerator.class);
 
   public Patch exec(final Variant modifiedVariant) {
-
-    final Patch patch = new Patch();
-    final GeneratedSourceCode modifiedSourceCode = modifiedVariant.getGeneratedSourceCode();
-    final List<GeneratedAST<ProductSourcePath>> modifiedAsts = modifiedSourceCode.getProductAsts();
-
-    for (final GeneratedAST<ProductSourcePath> ast : modifiedAsts) {
-      try {
-        final FileDiff fileDiff = makeFileDiff(ast);
-        final String diff = fileDiff.getDiff();
-        if (diff.isEmpty()) {
-          continue;
-        }
-        patch.add(fileDiff);
-      } catch (final IOException | DiffException e) {
-        log.error(e.getMessage());
-        return new Patch();
-      }
-    }
-    return patch;
+    final List<FileDiff> filediffs = modifiedVariant.getGeneratedSourceCode()
+        .getProductAsts()
+        .stream()
+        .map(this::createFileDiff)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+    return new Patch(filediffs, modifiedVariant.getId());
   }
 
-  /***
-   * FileDiff オブジェクトの生成を行う
-   *
-   * @param ast
-   * @return
-   * @throws IOException
-   * @throws DiffException
-   */
-  private FileDiff makeFileDiff(final GeneratedAST<?> ast) throws IOException, DiffException {
-    final Path originPath = ast.getSourcePath()
-        .getResolvedPath();
-
-    final String modifiedSourceCodeText = ast.getSourceCode();
-    final Document document = new Document(modifiedSourceCodeText);
-
+  private FileDiff createFileDiff(final GeneratedAST<?> ast) {
     final String fileName = ast.getPrimaryClassName().value;
-    final String delimiter = document.getDefaultLineDelimiter();
-    final List<String> modifiedSourceCodeLines =
-        Arrays.asList(modifiedSourceCodeText.split(delimiter));
-    final List<String> originalSourceCodeLines = Files.readAllLines(originPath);
-    final List<String> noBlankLineOriginalSourceCodeLines =
-        removeEndDelimiter(originalSourceCodeLines);
-    final List<String> diffLines =
-        makeDiff(fileName, noBlankLineOriginalSourceCodeLines, modifiedSourceCodeLines);
-
-    return new FileDiff(diffLines, fileName, originalSourceCodeLines, modifiedSourceCodeLines);
-  }
-
-  /***
-   * UnifiedDiff 形式の diff を返す．
-   *
-   * @param fileName
-   * @param originalSourceCodeLines
-   * @param modifiedSourceCodeLines
-   * @return
-   */
-  private List<String> makeDiff(final String fileName, final List<String> originalSourceCodeLines,
-      final List<String> modifiedSourceCodeLines) throws DiffException {
-    final com.github.difflib.patch.Patch<String> diff =
-        DiffUtils.diff(originalSourceCodeLines, modifiedSourceCodeLines);
-    return UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, originalSourceCodeLines, diff,
-        3);
-  }
-
-  private List<String> removeEndDelimiter(final List<String> sourceCodeLines) {
-    for (int index = sourceCodeLines.size() - 1; index >= 0; index--) {
-      final String sourceCodeLine = sourceCodeLines.get(index);
-      if (!sourceCodeLine.equals("")) {
-        return sourceCodeLines.subList(0, index + 1);
-      }
+    final List<String> original = readOriginalSource(ast);
+    final List<String> modified = parseModifiedSource(ast);
+    final List<String> diffLines = calcUnifiedDiff(fileName, original, modified);
+    if (diffLines.isEmpty()) {
+      return null;
     }
+    return new FileDiff(fileName, diffLines, original, modified);
+  }
 
-    return Collections.emptyList();
+  private List<String> parseModifiedSource(final GeneratedAST<?> ast) {
+    final String source = ast.getSourceCode();
+    final String delimiter = new Document(source).getDefaultLineDelimiter();
+    return List.of(source.split(delimiter));
+  }
+
+  private List<String> readOriginalSource(final GeneratedAST<?> ast) {
+    final Path originalPath = ast.getSourcePath()
+        .getResolvedPath();
+    try {
+      return Files.readAllLines(originalPath);
+    } catch (final IOException e) {
+      log.error(e.getMessage(), e);
+      return Collections.emptyList();
+    }
+  }
+
+  private List<String> calcUnifiedDiff(final String fileName, final List<String> original,
+      final List<String> modified) {
+    try {
+      final com.github.difflib.patch.Patch<String> diff = DiffUtils.diff(original, modified);
+      return UnifiedDiffUtils.generateUnifiedDiff(fileName, fileName, original, diff, 3);
+    } catch (final DiffException e) {
+      log.error(String.format("cannot calculate diff: %s", fileName));
+      return Collections.emptyList();
+    }
+  }
+
+  // TODO: format all source code by this method
+  private String format(final String source) {
+    final int kind = CodeFormatter.K_UNKNOWN; // necessary to compile partial source code (eg, n++;)
+    final int indent = 0;
+    final String sep = "\n";
+
+    final CodeFormatter formatter =
+        ToolFactory.createCodeFormatter(JavaCore.getDefaultOptions());
+    final TextEdit textEdit = formatter.format(kind, source, 0, source.length(), indent, sep);
+
+    final IDocument document = new Document(source);
+
+    try {
+      textEdit.apply(document);
+    } catch (final MalformedTreeException | BadLocationException | NullPointerException e) {
+      log.error(String.format("Source code <%s> cannot be formatted", source), e);
+      return "";
+    }
+    final String formatted = document.get();
+    return formatted.trim();
   }
 }

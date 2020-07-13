@@ -62,7 +62,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -100,7 +100,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -139,7 +139,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -177,7 +177,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -215,7 +215,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -254,7 +254,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -291,7 +291,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -329,7 +329,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -367,7 +367,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -405,7 +405,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -442,7 +442,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -480,7 +480,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, classPaths, JUnitVersion.JUNIT4);
@@ -518,7 +518,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -556,7 +556,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -595,7 +595,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -634,7 +634,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -673,7 +673,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -710,7 +710,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
     assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(firstVariantSelectionStrategy);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -750,7 +750,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         secondVariantSelectionStrategy);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -788,7 +788,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -828,7 +828,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -868,7 +868,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -908,7 +908,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -948,7 +948,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -988,7 +988,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1028,7 +1028,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1067,7 +1067,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1106,7 +1106,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1145,7 +1145,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1185,7 +1185,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1225,7 +1225,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1265,7 +1265,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1370,7 +1370,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -1452,7 +1452,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1493,7 +1493,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1534,7 +1534,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1575,7 +1575,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1617,7 +1617,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1659,7 +1659,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1700,7 +1700,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1741,7 +1741,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1782,7 +1782,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1824,7 +1824,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1863,7 +1863,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final Path classPath = rootDir.resolve("lib");
     final TargetProject expectedProject =
@@ -1906,7 +1906,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1948,7 +1948,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1987,7 +1987,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final String executionTest1 = "example.FooTest";
     final String executionTest2 = "example.BarTest";
@@ -2029,7 +2029,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final boolean needNotOutput = true;
     assertThat(config.needNotOutput()).isEqualTo(needNotOutput);
@@ -2075,7 +2075,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2121,7 +2121,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2167,7 +2167,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2212,7 +2212,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2257,7 +2257,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2303,7 +2303,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2350,7 +2350,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2395,7 +2395,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2439,7 +2439,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2480,7 +2480,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final Path classPathFromConfigFile = rootDir.resolve("lib");
     final TargetProject projectWithClassPathFromConfigFile =
@@ -2531,7 +2531,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2576,7 +2576,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2616,7 +2616,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final String executionTestFromConfigFile1 = "example.FooTest";
     final String executionTestFromConfigFile2 = "example.BarTest";
@@ -2664,7 +2664,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2708,7 +2708,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2752,7 +2752,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2799,7 +2799,7 @@ public class ConfigurationBuilderTest {
         firstVariantSelectionStrategyFromCmdLine);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2839,7 +2839,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
     assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategyFromConfigFile =
         SecondVariantSelectionStrategy.Strategy.Random;
@@ -2894,7 +2894,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir,
         ImmutableList.of(link), testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -2937,7 +2937,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.getHistoryRecord()).isEqualTo(historyRecord);
+    assertThat(config.isHistoryRecord()).isEqualTo(historyRecord);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
