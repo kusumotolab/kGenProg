@@ -100,7 +100,7 @@ public class JDTASTConstruction {
     // TODO: Bindingが必要か検討
     parser.setResolveBindings(false);
     parser.setBindingsRecovery(false);
-    parser.setEnvironment(null, null, null, true);
+    parser.setEnvironment(null, new String[] {""}, new String[] {"UTF-8"}, true);
 
     return parser;
   }
