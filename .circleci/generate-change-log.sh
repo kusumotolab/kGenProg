@@ -4,10 +4,10 @@ set -eo pipefail
 
 echo 'Checking version...'
 
-VERSION_GIT_TAG="v$(./.circleci/check-version.sh)"
+VERSION=$(./.circleci/check-version.sh)
 
-if [[ $? -ne 0 ]]; then
-  exit 0 # exit as success for circleci
+if [[ $VERSION == "" ]]; then
+  exit 0 # exit as status 0 to finish circleci as success
 fi
 
 
