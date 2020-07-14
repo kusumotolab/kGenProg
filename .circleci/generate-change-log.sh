@@ -2,11 +2,12 @@
 
 set -eo pipefail
 
-WANTED_VERSION="$(./.circleci/check-version.sh)"
+echo 'Checking version...'
 
-if [[ $WANTED_VERSION = "EXISTING" ]]; then
-  echo "This version has been already released. Abort."
-  exit 0
+VERSION_GIT_TAG="v$(./.circleci/check-version.sh)"
+
+if [[ $? -ne 0 ]]; then
+  exit 0 # exit as success for circleci
 fi
 
 

@@ -7,7 +7,7 @@ echo 'Checking version...'
 VERSION_GIT_TAG="v$(./.circleci/check-version.sh)"
 
 if [[ $? -ne 0 ]]; then
-  exit 1
+  exit 0 # exit as success for circleci
 fi
 
 
