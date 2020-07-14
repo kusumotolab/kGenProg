@@ -53,7 +53,7 @@ public class FileDiff {
   /**
    * デフォルトエンコーディングに変換したdiffを返す
    */
-  public String toStingWithDefaultEncoding() {
+  public String toStringWithDefaultEncoding() {
     final Charset defaultEncoding = Charset.defaultCharset();
     if (defaultEncoding.equals(StandardCharsets.UTF_8)) {
       return toString();
