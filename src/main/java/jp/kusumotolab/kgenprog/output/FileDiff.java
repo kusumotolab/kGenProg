@@ -1,7 +1,10 @@
 package jp.kusumotolab.kgenprog.output;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.CharSet;
 
 /***
  * 1ファイルの変更内容．
@@ -45,5 +48,20 @@ public class FileDiff {
   public String toString() {
     return diff.stream()
         .collect(Collectors.joining(System.lineSeparator()));
+  }
+
+  /**
+   * デフォルトエンコーディングに変換したdiffを返す
+   */
+  public String toStingWithDefaultEncoding() {
+    final Charset defaultEncoding = Charset.defaultCharset();
+    if (defaultEncoding.equals(StandardCharsets.UTF_8)) {
+      return toString();
+    } else {
+      return diff.stream()
+          .map(e -> e.getBytes(defaultEncoding))
+          .map(e -> new String(e, defaultEncoding))
+          .collect(Collectors.joining(System.lineSeparator()));
+    }
   }
 }
