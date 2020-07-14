@@ -4,7 +4,6 @@ set -eo pipefail
 
 GITHUB_TAG_URL_BASE="https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag"
 
-
 # Analyze target version to be release
 
 WANTED_VERSION="$(cat ./gradle.properties | grep currentVersion | cut -d'=' -f2)"
@@ -15,7 +14,7 @@ VERSION_GIT_TAG="v${WANTED_VERSION}"
 
 # Ensure version name follows semantic versioning
 
-VERSION_REGEX='^[0-9](\.[0-9]){2}$'
+VERSION_REGEX='^[0-9]+(\.[0-9]+){2}$'
 if [[ ! $WANTED_VERSION =~ $VERSION_REGEX ]]; then
   echo "[ERROR] Version number $WANTED_VERSION is not valid." >&2
   echo "Please follow 3-number semantic versioning system." >&2
@@ -31,8 +30,8 @@ if [[ $HTTP_STATUS = '400' ]]; then
   echo "[ERROR] Version number $WANTED_VERSION cannot be used as a tag." >&2
   exit 1
 elif [[ $HTTP_STATUS = '200' ]]; then
-  echo "EXISTING"
-  exit 0
+  echo "[ERROR] This version has been already released. Abort." >&2
+  exit 1
 fi
 
 echo $WANTED_VERSION
