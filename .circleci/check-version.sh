@@ -18,7 +18,7 @@ VERSION_REGEX='^[0-9]+(\.[0-9]+){2}$'
 if [[ ! $WANTED_VERSION =~ $VERSION_REGEX ]]; then
   echo "[ERROR] Version number $WANTED_VERSION is not valid." >&2
   echo "Please follow 3-number semantic versioning system." >&2
-  exit 1
+  exit
 fi
 
 
@@ -28,10 +28,10 @@ HTTP_STATUS=$(curl -LI "${GITHUB_TAG_URL_BASE}/${VERSION_GIT_TAG}" -o /dev/null 
 
 if [[ $HTTP_STATUS = '400' ]]; then
   echo "[ERROR] Version number $WANTED_VERSION cannot be used as a tag." >&2
-  exit 1
+  exit
 elif [[ $HTTP_STATUS = '200' ]]; then
   echo "[ERROR] This version has been already released. Abort." >&2
-  exit 1
+  exit
 fi
 
 echo $WANTED_VERSION
