@@ -90,6 +90,7 @@ public class KGenProgMainTest {
 
     assertThat(variants).hasSize(1)
         .allMatch(Variant::isCompleted);
+
   }
 
   @Test

@@ -41,7 +41,7 @@ public class JDTASTConstructionTest {
   }
 
   @Test
-  public void testConstrutASTWithFailedSourceCode() {
+  public void testConstructASTWithFailedSourceCode() {
     final Path basePath = Paths.get("example/BuildFailure02");
     final TargetProject targetProject = TargetProjectFactory.create(basePath);
     final JDTASTConstruction construction = new JDTASTConstruction();

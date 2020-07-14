@@ -35,12 +35,12 @@ public class Roulette<T> {
     final List<Double> weightList = candidateList.stream()
         .map(weightFunction)
         .collect(Collectors.toList());
-    double total = 0.0d;
+    double tmpTotal = 0.0d;
     for (Double weight : weightList) {
-      total += weight;
-      separateList.add(total);
+      tmpTotal += weight;
+      separateList.add(tmpTotal);
     }
-    this.total = total;
+    this.total = tmpTotal;
     this.candidateList.addAll(candidateList);
     this.random = random;
   }

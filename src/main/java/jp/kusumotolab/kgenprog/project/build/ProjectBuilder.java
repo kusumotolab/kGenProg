@@ -76,9 +76,9 @@ public class ProjectBuilder {
 
     // コンパイル対象が存在する（≒全コンパイル対象がキャッシュ済みでない）場合はコンパイル
     if (!javaSourceObjects.isEmpty()) {
-      final boolean successs = build(allAsts, javaSourceObjects, diagnostics, progress);
+      final boolean success = build(allAsts, javaSourceObjects, diagnostics, progress);
 
-      if (!successs) {
+      if (!success) {
         return new EmptyBuildResults(diagnostics, progress.toString());
       }
     }

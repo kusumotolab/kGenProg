@@ -23,8 +23,8 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
 public class MavenProjectFactory extends BuildToolProjectFactory {
 
-  private final static String CONFIG_FILE_NAME = "pom.xml";
-  private final static Logger log = LoggerFactory.getLogger(MavenProjectFactory.class);
+  private static final String CONFIG_FILE_NAME = "pom.xml";
+  private static final Logger log = LoggerFactory.getLogger(MavenProjectFactory.class);
 
   private final Path rootPath;
 

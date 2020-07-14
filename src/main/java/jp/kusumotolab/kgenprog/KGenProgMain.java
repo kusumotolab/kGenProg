@@ -16,7 +16,7 @@ import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.output.Exporter;
+import jp.kusumotolab.kgenprog.output.Exporters;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
@@ -41,7 +41,7 @@ public class KGenProgMain {
   private final SourceCodeValidation sourceCodeValidation;
   private final VariantSelection variantSelection;
   private final TestExecutor testExecutor;
-  private final Exporter exporter;
+  private final Exporters exporters;
   private final JDTASTConstruction astConstruction;
 
   /**
@@ -55,13 +55,13 @@ public class KGenProgMain {
    * @param sourceCodeValidation コード評価を行うインスタンス
    * @param variantSelection 個体の選択を行うインスタンス
    * @param testExecutor テスト実行を行うインスタンス
-   * @param exporter 出力処理を行うインスタンス
+   * @param exporters 出力処理を行うインスタンス
    */
   public KGenProgMain(final Configuration config, final FaultLocalization faultLocalization,
       final Mutation mutation, final Crossover crossover,
       final SourceCodeGeneration sourceCodeGeneration,
       final SourceCodeValidation sourceCodeValidation, final VariantSelection variantSelection,
-      final TestExecutor testExecutor, final Exporter exporter) {
+      final TestExecutor testExecutor, final Exporters exporters) {
 
     this.config = config;
     this.faultLocalization = faultLocalization;
@@ -72,7 +72,7 @@ public class KGenProgMain {
     this.variantSelection = variantSelection;
     this.testExecutor = testExecutor;
     this.astConstruction = new JDTASTConstruction();
-    this.exporter = exporter;
+    this.exporters = exporters;
   }
 
   /**
@@ -84,8 +84,6 @@ public class KGenProgMain {
   public List<Variant> run() throws RuntimeException {
     logConfig();
 
-    // outDirを空にする
-    exporter.clearPreviousResults();
     testExecutor.initialize();
 
     final Strategies strategies = new Strategies(faultLocalization, astConstruction,
@@ -143,7 +141,7 @@ public class KGenProgMain {
     }
 
     // 出力処理を行う
-    exporter.export(variantStore);
+    exporters.exportAll(variantStore);
 
     stopwatch.unsplit();
     strategies.finish();
@@ -173,13 +171,13 @@ public class KGenProgMain {
 
   private void logInitialFailedTests(final TestResults testResults) {
     final StringBuilder sb = new StringBuilder();
-    final List<TestResult> successedTestResults = testResults.getSuccessedTestResults();
+    final List<TestResult> succeededTestResults = testResults.getSucceededTestResults();
     final List<TestResult> failedTestResults = testResults.getFailedTestResults();
     sb//
         .append("initial failed tests (")
         .append(failedTestResults.size())
         .append("/")
-        .append(successedTestResults.size() + failedTestResults.size())
+        .append(succeededTestResults.size() + failedTestResults.size())
         .append(")")
         .append(System.lineSeparator());
 
@@ -267,7 +265,7 @@ public class KGenProgMain {
   private double getAverage(final List<Variant> variants) {
     return variants.stream()
         .filter(Variant::isBuildSucceeded)
-        .mapToDouble(this::getFitnessValue)
+        .mapToDouble(this::getNormalizedFitnessValue)
         .average()
         .orElse(Double.NaN);
   }
@@ -275,12 +273,12 @@ public class KGenProgMain {
   private Map<Double, Long> getFrequencies(final List<Variant> variants) {
     return variants.stream()
         .filter(Variant::isBuildSucceeded)
-        .collect(Collectors.groupingBy(this::getFitnessValue, Collectors.counting()));
+        .collect(Collectors.groupingBy(this::getNormalizedFitnessValue, Collectors.counting()));
   }
 
-  private double getFitnessValue(final Variant variant) {
+  private double getNormalizedFitnessValue(final Variant variant) {
     return variant.getFitness()
-        .getValue();
+        .getNormalizedValue();
   }
 
   private void logGAStopped(final OrdinalNumber generation) {

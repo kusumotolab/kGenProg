@@ -188,7 +188,7 @@ public class Configuration {
     return secondVariantSelectionStrategy;
   }
 
-  public boolean getHistoryRecord() {
+  public boolean isHistoryRecord() {
     return historyRecord;
   }
 
@@ -199,7 +199,7 @@ public class Configuration {
 
   public static class Builder {
 
-    private static transient final Logger log = LoggerFactory.getLogger(Builder.class);
+    private static final transient Logger log = LoggerFactory.getLogger(Builder.class);
 
     @PreserveNotNull
     private Path configPath = Paths.get("kgenprog.toml");
@@ -309,8 +309,8 @@ public class Configuration {
     @PreserveNotNull
     private boolean historyRecord = DEFAULT_HISTORY_RECORD;
 
-    private transient final Set<String> optionsSetByCmdLineArgs = new HashSet<>();
-    private transient final Set<String> optionsSetByConfigFile = new HashSet<>();
+    private final transient Set<String> optionsSetByCmdLineArgs = new HashSet<>();
+    private final transient Set<String> optionsSetByConfigFile = new HashSet<>();
 
     public Builder(final Path rootDir, final Path productPath, final Path testPath) {
       this(rootDir, ImmutableList.of(productPath), ImmutableList.of(testPath));
@@ -736,7 +736,7 @@ public class Configuration {
         usage = "Specifies how many variants are generated in a generation by a crossover.")
     private void setCrossOverGeneratingCountFromCmdLineParser(final int crossoverGeneratingCount) {
       this.crossoverGeneratingCount = crossoverGeneratingCount;
-      this.optionsSetByCmdLineArgs.add("crossoverGenetingCount");
+      this.optionsSetByCmdLineArgs.add("crossoverGeneratingCount");
     }
 
     @Option(name = "--headcount", metaVar = "<num>",

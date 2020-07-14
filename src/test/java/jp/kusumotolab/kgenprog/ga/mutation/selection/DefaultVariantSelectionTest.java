@@ -44,15 +44,15 @@ public class DefaultVariantSelectionTest {
 
     assertThat(variants).hasSize(10)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::toString)
         .hasSize(10)
-        .containsExactly(0.00d, 0.05d, 0.20d, 0.15d, 0.40d, 0.25d, 0.60d, 0.35d, 0.80d, 0.45d);
+        .containsExactly("0.0", "0.05", "0.2", "0.15", "0.4", "0.25", "0.6", "0.35", "0.8", "0.45");
 
     assertThat(selectedVariants).hasSize(variantSize)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::toString)
         .hasSize(5)
-        .containsExactly(0.80d, 0.60d, 0.45d, 0.40d, 0.35d);
+        .containsExactly("0.8", "0.6", "0.45", "0.4", "0.35");
   }
 
   @Test
@@ -128,15 +128,15 @@ public class DefaultVariantSelectionTest {
 
     assertThat(current).hasSize(10)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::toString)
         .hasSize(10)
-        .containsExactly(0.00d, 0.20d, 0.20d, 0.40d, 0.40d, 0.60d, 0.60d, 0.80d, 0.80d, 1.00d);
+        .containsExactly("0.0", "0.2", "0.2", "0.4", "0.4", "0.6", "0.6", "0.8", "0.8", "1.0");
 
     assertThat(generated).hasSize(10)
         .extracting(Variant::getFitness)
-        .extracting(Fitness::getValue)
+        .extracting(Fitness::toString)
         .hasSize(10)
-        .containsExactly(0.00d, 0.20d, 0.20d, 0.40d, 0.40d, 0.60d, 0.60d, 0.80d, 0.80d, 1.00d);
+        .containsExactly("0.0", "0.2", "0.2", "0.4", "0.4", "0.6", "0.6", "0.8", "0.8", "1.0");
 
     assertThat(selectedVariants).hasSize(variantSize)
         .extracting(Variant::getId)
@@ -144,7 +144,7 @@ public class DefaultVariantSelectionTest {
   }
 
   /**
-   * BulidFailedの個体が選択されるかどうかをテストする.
+   * BuildFailedの個体が選択されるかどうかをテストする.
    */
   @Test
   public void testBuildFailed() {
@@ -195,7 +195,7 @@ public class DefaultVariantSelectionTest {
    * @param current variantSelectionに渡すcurrentリスト
    * @param generated variantSelectionに渡すgeneratedリスト
    * @param num リストに追加する要素の数
-   * @param testResultsCreator testResultsの渡し方を指定するFuntionオブジェクト（intを受け取りTestResultsを返す）
+   * @param testResultsCreator testResultsの渡し方を指定するFunctionオブジェクト（intを受け取りTestResultsを返す）
    */
   private void setupLists(final List<Variant> current, final List<Variant> generated, final int num,
       final Function<Integer, TestResults> testResultsCreator) {

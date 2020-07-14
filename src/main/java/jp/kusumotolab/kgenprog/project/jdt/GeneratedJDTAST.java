@@ -89,7 +89,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
           .getName()
           .getIdentifier();
 
-    } else if (types.size() > 0) {
+    } else if (!types.isEmpty()) {
       typeName = types.get(0)
           .getName()
           .getIdentifier();
@@ -97,7 +97,7 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
     } else {
       typeName = sourcePath.path.getFileName()
           .toString();
-      final int idx = typeName.indexOf(".");
+      final int idx = typeName.indexOf('.');
       if (idx > 0) {
         typeName = typeName.substring(0, idx);
       }

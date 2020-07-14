@@ -143,7 +143,7 @@ public class LocalTestExecutorTest {
     assertThat(extractStatuses(barTest01rCoverage)).containsExactly(EMPTY, NOT_COVERED, EMPTY,
         COVERED, EMPTY, EMPTY, NOT_COVERED, EMPTY, EMPTY, NOT_COVERED, NOT_COVERED);
 
-    // TODO 最後のNOT_COVERDだけ理解できない．謎．
+    // TODO 最後のNOT_COVEREDだけ理解できない．謎．
   }
 
   @Test
@@ -666,7 +666,7 @@ public class LocalTestExecutorTest {
 
   @Test
   // クラスローダが抱えるバイナリ形式のresourcesにアクセスする題材の確認
-  public void testExecForResourceAcessFromClassLoader() {
+  public void testExecForResourceAccessFromClassLoader() {
     final Path rootPath = Paths.get("example/BuildSuccess22");
 
     final TargetProject targetProject = TargetProjectFactory.create(rootPath);

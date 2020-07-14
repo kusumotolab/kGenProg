@@ -21,7 +21,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.ProgramElementVisitor;
 
-abstract public class RouletteSelection implements CandidateSelection {
+public abstract class RouletteSelection implements CandidateSelection {
 
   private final Random random;
   private Roulette<ReuseCandidate<ASTNode>> projectRoulette;
@@ -69,7 +69,7 @@ abstract public class RouletteSelection implements CandidateSelection {
    * @param reuseCandidate 重みを計算したいステートメント
    * @return 重み
    */
-  abstract public double getElementWeight(final ReuseCandidate<ASTNode> reuseCandidate);
+  public abstract double getElementWeight(final ReuseCandidate<ASTNode> reuseCandidate);
 
   /**
    * 再利用するステートメントを重みに基づいて選択し，返すメソッド

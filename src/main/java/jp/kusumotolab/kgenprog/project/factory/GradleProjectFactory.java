@@ -4,7 +4,7 @@ import java.nio.file.Path;
 
 public class GradleProjectFactory extends BuildToolProjectFactory {
 
-  private final static String CONFIG_FILE_NAME = "build.gradle";
+  private static final String CONFIG_FILE_NAME = "build.gradle";
 
   public GradleProjectFactory(final Path rootPath) {
     super(rootPath);
@@ -12,7 +12,7 @@ public class GradleProjectFactory extends BuildToolProjectFactory {
 
   @Override
   public boolean isApplicable() {
-    return getConfigPath().size() > 0;
+    return !getConfigPath().isEmpty();
   }
 
   @Override

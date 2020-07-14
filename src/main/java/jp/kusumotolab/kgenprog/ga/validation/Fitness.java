@@ -1,16 +1,18 @@
 package jp.kusumotolab.kgenprog.ga.validation;
 
-import static java.lang.Double.isNaN;
-
 /**
  * 個体の評価値を表現するインターフェース
  */
 public interface Fitness extends Comparable<Fitness> {
 
   /**
+   * 個体の評価値を0〜1の範囲のdouble型で返す．
+   *
+   * The fitness value is returned as double in the range of 0 to 1.
+   *
    * @return 個体の評価値
    */
-  double getValue();
+  double getNormalizedValue();
 
   /**
    * @return その評価値が最大値かどうか
@@ -18,26 +20,7 @@ public interface Fitness extends Comparable<Fitness> {
   boolean isMaximum();
 
   /**
-   * Compares two {@code Fitness} objects. Basically, this comparison is performed in the same way
-   * as the numerical comparison with the {@code double} values returned from {@link #getValue()}
-   * method. However, the value {@code NaN} is regarded as less than any other value.
-   *
-   * @param anotherFitness the {@code Fitness} to be compared.
-   * @return the value {@code 0} if {@code anotherDouble} is equal to this {@code Fitness}; a value
-   * less than {@code 0} if this {@code Fitness} is less than {@code anotherFitness}; and a value
-   * greater than {@code 0} if this {@code Fitness} is greater than {@code anotherDouble}.
+   * @return 評価値の文字列表現を返す．
    */
-  @Override
-  default int compareTo(final Fitness anotherFitness) {
-    if (isNaN(getValue()) && isNaN(anotherFitness.getValue())) {
-      return 0;
-    }
-    if (isNaN(getValue())) {
-      return -1;
-    }
-    if (isNaN(anotherFitness.getValue())) {
-      return 1;
-    }
-    return Double.compare(getValue(), anotherFitness.getValue());
-  }
+  String toString();
 }

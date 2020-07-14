@@ -186,7 +186,7 @@ public class TargetProjectFactoryTest {
   }
 
   @Test
-  public void testCreateBySpecifingPathsForProductAndTest() {
+  public void testCreateBySpecifyingPathsForProductAndTest() {
     final Path rootPath = Paths.get("example/BuildSuccess07");
     final List<Path> srcPaths = Arrays.asList(rootPath.resolve("src"));
     final List<Path> testPaths = Arrays.asList(rootPath.resolve("test"));

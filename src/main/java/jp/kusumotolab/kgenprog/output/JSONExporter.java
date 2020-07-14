@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
@@ -19,16 +18,17 @@ import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
- * 個体の履歴をJSONに出力するクラス
+ * 個体の履歴をJSONファイルに出力するクラス
  */
-public class JSONExporter extends Exporter {
+class JSONExporter implements Exporter {
 
-  private final static Logger log = LoggerFactory.getLogger(PatchExporter.class);
-  private final PatchGenerator patchGenerator;
+  private static final Logger log = LoggerFactory.getLogger(JSONExporter.class);
 
-  public JSONExporter(final Configuration config, final PatchGenerator patchGenerator) {
-    super(config);
-    this.patchGenerator = patchGenerator;
+  private final Path outdir;
+  public static final String JSON_FILENAME = "history.json";
+
+  JSONExporter(final Path outdir) {
+    this.outdir = outdir;
   }
 
   /**
@@ -36,22 +36,12 @@ public class JSONExporter extends Exporter {
    */
   @Override
   public void export(final VariantStore variantStore) {
-    if (config.needNotOutput()) {
-      return;
-    }
+    createDir(outdir);
 
-    final Path outputFile = config.getOutDir()
-        .resolve("history.json");
-    final Gson gson = createGson(config);
-
-    try {
-      if (Files.notExists(config.getOutDir())) {
-        Files.createDirectories(config.getOutDir());
-      }
-
-      final BufferedWriter out = Files.newBufferedWriter(outputFile);
-      gson.toJson(variantStore, out);
-      out.close();
+    final Path outputFile = outdir.resolve(JSON_FILENAME);
+    try (final BufferedWriter writer = Files.newBufferedWriter(outputFile)) {
+      final Gson gson = setupGson();
+      gson.toJson(variantStore, writer);
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
     }
@@ -60,9 +50,9 @@ public class JSONExporter extends Exporter {
   /**
    * 各クラスのシリアライザを登録する．
    */
-  private Gson createGson(final Configuration config) {
+  private Gson setupGson() {
     final GsonBuilder gsonBuilder = new GsonBuilder();
-    return gsonBuilder.registerTypeAdapter(VariantStore.class, new VariantStoreSerializer(config))
+    return gsonBuilder.registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
         .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
         .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
         .registerTypeHierarchyAdapter(TestResult.class, new TestResultSerializer())

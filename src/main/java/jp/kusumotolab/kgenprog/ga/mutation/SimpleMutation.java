@@ -43,17 +43,17 @@ public class SimpleMutation extends Mutation {
         return new DeleteOperation();
       case 1:
         return random.nextBoolean() ?
-            new InsertAfterOperation(chooseNodeForReuse(location, InsertAfterOperation.class))
-            : new InsertBeforeOperation(chooseNodeForReuse(location, InsertBeforeOperation.class));
+            new InsertAfterOperation(chooseNodeForReuse(location))
+            : new InsertBeforeOperation(chooseNodeForReuse(location));
       case 2:
-        final ASTNode node = chooseNodeForReuse(location, ReplaceOperation.class);
+        final ASTNode node = chooseNodeForReuse(location);
         return new ReplaceOperation(node);
+      default:
+        return new NoneOperation();
     }
-    return new NoneOperation();
   }
 
-  protected ASTNode chooseNodeForReuse(final ASTLocation location,
-      final Class<? extends Operation> operationClass) {
+  protected ASTNode chooseNodeForReuse(final ASTLocation location) {
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
     final Scope scope = new Scope(type, fqn);

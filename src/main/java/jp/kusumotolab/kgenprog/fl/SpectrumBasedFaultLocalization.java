@@ -12,6 +12,7 @@ import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
 /**
@@ -52,9 +53,9 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
 
     final List<Suspiciousness> suspiciousnesses = new ArrayList<>();
 
-    final Set<FullyQualifiedName> execuetdFailedTargetFQNs = testResults.getFailedTestResults()
+    final Set<FullyQualifiedName> executedFailedTargetFQNs = testResults.getFailedTestResults()
         .stream()
-        .map(tr -> tr.getExecutedTargetFQNs())
+        .map(TestResult::getExecutedTargetFQNs)
         .flatMap(Collection::stream)
         .collect(Collectors.toSet());
 
@@ -63,7 +64,7 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
     for (final GeneratedAST<ProductSourcePath> ast : generatedSourceCode.getProductAsts()) {
 
       // do nothing if none of failed target fqns contain the ast
-      if (skippableFormula && !execuetdFailedTargetFQNs.contains(ast.getPrimaryClassName())) {
+      if (skippableFormula && !executedFailedTargetFQNs.contains(ast.getPrimaryClassName())) {
         continue;
       }
 
@@ -110,6 +111,6 @@ public abstract class SpectrumBasedFaultLocalization implements FaultLocalizatio
    * {@code ep}:該当する文を実行した通過テストの個数<br>
    * {@code np}:該当する文を実行しなかった通過テストの個数<br>
    */
-  abstract protected double formula(final double ef, final double nf, final double ep,
+  protected abstract double formula(final double ef, final double nf, final double ep,
       final double np);
 }

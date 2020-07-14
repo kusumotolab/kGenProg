@@ -33,7 +33,7 @@ public class VariantStoreTest {
   public void testCreateVariant() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final Configuration config = createMockConfiguration(basePath);
-    when(config.getHistoryRecord()).thenReturn(true);
+    when(config.isHistoryRecord()).thenReturn(true);
 
     final List<Suspiciousness> faultLocalizationResult = new ArrayList<>();
     final GeneratedSourceCode sourceCodeGenerationResult =
@@ -160,7 +160,7 @@ public class VariantStoreTest {
   public void testHistoryRecord() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final Configuration config = createMockConfiguration(basePath);
-    when(config.getHistoryRecord()).thenReturn(false);
+    when(config.isHistoryRecord()).thenReturn(false);
     final TestResults testExecutorResult = mock(TestResults.class);
     final Strategies strategies = mock(Strategies.class);
     when(strategies.execFaultLocalization(any(), any())).thenReturn(new ArrayList<>());

@@ -59,10 +59,8 @@ public class ASTAnalyzer {
     if (returnType == null) {
       return false;
     }
-    return returnType
-        .toString()
-        .toLowerCase()
-        .equals("void");
+    return returnType.toString()
+        .equalsIgnoreCase("void");
   }
 
   /**

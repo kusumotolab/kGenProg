@@ -70,7 +70,7 @@ public class TestResults {
    *
    * @return 成功したテスト結果s
    */
-  public List<TestResult> getSuccessedTestResults() {
+  public List<TestResult> getSucceededTestResults() {
     return this.value.values()
         .stream()
         .filter(r -> !r.failed)
@@ -104,7 +104,7 @@ public class TestResults {
    *
    * @return 成功したテストのFQN一覧
    */
-  public List<FullyQualifiedName> getSuccessedTestFQNs() {
+  public List<FullyQualifiedName> getSucceededTestFQNs() {
     return this.value.values()
         .stream()
         .filter(r -> !r.failed)
@@ -130,7 +130,7 @@ public class TestResults {
    */
   public double getSuccessRate() {
     final int fail = getFailedTestResults().size();
-    final int success = getSuccessedTestResults().size();
+    final int success = getSucceededTestResults().size();
 
     return 1.0 * success / (success + fail);
   }
@@ -231,7 +231,7 @@ public class TestResults {
    */
   public long getNumberOfPassedTestsNotExecutingTheStatement(
       final ProductSourcePath productSourcePath, final ASTLocation location) {
-    return getSuccessedTestResults().size()
+    return getSucceededTestResults().size()
         - getNumberOfPassedTestsExecutingTheStatement(productSourcePath, location);
   }
 
