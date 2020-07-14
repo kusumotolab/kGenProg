@@ -1,8 +1,8 @@
 package jp.kusumotolab.kgenprog.output;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -63,26 +63,23 @@ public class PatchGenerator {
 
     try {
       final Charset fileEncoding = inferFileEncoding(originalPath);
-      return convertToDefaultEncoding(Files.readAllLines(originalPath), fileEncoding);
+      if (fileEncoding.equals(StandardCharsets.UTF_8)) {
+        return Files.readAllLines(originalPath);
+      } else {
+        return Files.readAllLines(originalPath, fileEncoding)
+            .stream()
+            .map(e -> e.getBytes(StandardCharsets.UTF_8))
+            .map(e -> new String(e, StandardCharsets.UTF_8))
+            .collect(Collectors.toList());
+      }
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
       return Collections.emptyList();
     }
   }
 
-  private List<String> convertToDefaultEncoding(final List<String> sourceCodeLines,
-      final Charset fileEncoding) {
-    final Charset defaultCharset = Charset.defaultCharset();
-    return sourceCodeLines.stream()
-        .map(e -> e.getBytes(fileEncoding))
-        .map(e -> new String(e, defaultCharset))
-        .collect(Collectors.toList());
-  }
-
   private Charset inferFileEncoding(final Path path) throws IOException {
-    final File file = path.toFile();
-    final String encoding = UniversalDetector.detectCharset(file);
-
+    final String encoding = UniversalDetector.detectCharset(path);
     return encoding != null ? Charset.forName(encoding) : Charset.defaultCharset();
   }
 
