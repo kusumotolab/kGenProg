@@ -18,6 +18,11 @@ go get -u github.com/tcnksm/ghr
 
 echo "Starting to publish a new release as the version: ${WANTED_VERSION} ..."
 
+# trim suffix "-all" of fat jar
+jar=$(ls ./workspace/artifacts/*.jar)
+mv $jar ${jar/-all/}
+
+# generate change log
 CHANGELOG="## Change Log
 
 $(cat ./workspace/CHANGELOG.md)"
