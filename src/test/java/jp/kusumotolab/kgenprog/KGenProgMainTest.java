@@ -48,8 +48,18 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    assertThatCode(
-        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
+  }
+
+  @Test
+  public void testCloseToZero02() {
+    final Path rootPath = Paths.get("example/CloseToZero02");
+    final Path productPath = rootPath.resolve(PRODUCT_NAME);
+    final Path testPath = rootPath.resolve(TEST_NAME);
+
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -58,8 +68,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    assertThatCode(
-        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -68,8 +78,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    assertThatCode(
-        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -78,8 +88,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve("src/example/CountDown.java");
     final Path testPath = rootPath.resolve("src/example/CountDownTest.java");
 
-    assertThatCode(
-        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -90,8 +100,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    assertThatCode(
-        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -102,7 +112,7 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    assertThatCode(
-        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 }
