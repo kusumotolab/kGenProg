@@ -1,12 +1,10 @@
 package jp.kusumotolab.kgenprog;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -50,18 +48,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final Throwable thrown = catchThrowable(() -> runKGenProgMain(rootPath, productPath, testPath));
-    assertThat(thrown).isNull();
-  }
-
-  @Test
-  public void testCloseToZero02() {
-    final Path rootPath = Paths.get("example/CloseToZero02");
-    final Path productPath = rootPath.resolve(PRODUCT_NAME);
-    final Path testPath = rootPath.resolve(TEST_NAME);
-
-    final Throwable thrown = catchThrowable(() -> runKGenProgMain(rootPath, productPath, testPath));
-    assertThat(thrown).isNull();
+    assertThatCode(
+        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
   }
 
   @Test
@@ -70,8 +58,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final Throwable thrown = catchThrowable(() -> runKGenProgMain(rootPath, productPath, testPath));
-    assertThat(thrown).isNull();
+    assertThatCode(
+        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
   }
 
   @Test
@@ -80,8 +68,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final Throwable thrown = catchThrowable(() -> runKGenProgMain(rootPath, productPath, testPath));
-    assertThat(thrown).isNull();
+    assertThatCode(
+        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
   }
 
   @Test
@@ -90,8 +78,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve("src/example/CountDown.java");
     final Path testPath = rootPath.resolve("src/example/CountDownTest.java");
 
-    final Throwable thrown = catchThrowable(() -> runKGenProgMain(rootPath, productPath, testPath));
-    assertThat(thrown).isNull();
+    assertThatCode(
+        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
   }
 
   @Test
@@ -102,8 +90,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    final Throwable thrown = catchThrowable(() -> runKGenProgMain(rootPath, productPath, testPath));
-    assertThat(thrown).isNull();
+    assertThatCode(
+        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
   }
 
   @Test
@@ -114,7 +102,7 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    final Throwable thrown = catchThrowable(() -> runKGenProgMain(rootPath, productPath, testPath));
-    assertThat(thrown).isNull();
+    assertThatCode(
+        () -> runKGenProgMain(rootPath, productPath, testPath)).doesNotThrowAnyException();
   }
 }
