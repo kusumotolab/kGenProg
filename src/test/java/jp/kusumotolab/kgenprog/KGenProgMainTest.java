@@ -1,11 +1,10 @@
 package jp.kusumotolab.kgenprog;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -49,10 +48,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final List<Variant> variants = runKGenProgMain(rootPath, productPath, testPath);
-
-    assertThat(variants).hasSize(1)
-        .allMatch(Variant::isCompleted);
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -61,23 +58,18 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final List<Variant> variants = runKGenProgMain(rootPath, productPath, testPath);
-
-    assertThat(variants).hasSize(1)
-        .allMatch(Variant::isCompleted);
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
-  @Ignore
   public void testCloseToZero03() {
     final Path rootPath = Paths.get("example/CloseToZero03");
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final List<Variant> variants = runKGenProgMain(rootPath, productPath, testPath);
-
-    assertThat(variants).hasSize(1)
-        .allMatch(Variant::isCompleted);
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -86,11 +78,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
-    final List<Variant> variants = runKGenProgMain(rootPath, productPath, testPath);
-
-    assertThat(variants).hasSize(1)
-        .allMatch(Variant::isCompleted);
-
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -99,10 +88,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve("src/example/CountDown.java");
     final Path testPath = rootPath.resolve("src/example/CountDownTest.java");
 
-    final List<Variant> variants = runKGenProgMain(rootPath, productPath, testPath);
-
-    assertThat(variants).hasSize(1)
-        .allMatch(Variant::isCompleted);
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -113,10 +100,8 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    final List<Variant> variants = runKGenProgMain(rootPath, productPath, testPath);
-
-    assertThat(variants).hasSize(1)
-        .allMatch(Variant::isCompleted);
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 
   @Test
@@ -127,9 +112,7 @@ public class KGenProgMainTest {
     final Path productPath = rootPath.resolve(productName);
     final Path testPath = rootPath.resolve(testName);
 
-    final List<Variant> variants = runKGenProgMain(rootPath, productPath, testPath);
-
-    assertThat(variants).hasSize(1)
-        .allMatch(Variant::isCompleted);
+    assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
+        doesNotThrowAnyException();
   }
 }
