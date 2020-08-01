@@ -32,6 +32,8 @@ public class CUILauncher {
       final CUILauncher launcher = new CUILauncher();
       launcher.launch(config);
     } catch (final RuntimeException e) {
+      Logger log = LoggerFactory.getLogger(CUILauncher.class);
+      log.error(e.getMessage(), e);
       System.exit(1);
     }
   }
