@@ -71,6 +71,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.10.0'
     testImplementation 'org.mockito:mockito-core:2.+'
     testImplementation 'com.google.jimfs:jimfs:1.1'
+    testImplementation 'com.github.stefanbirkner:system-rules:1.19.0'
 
     // Declare by "runtimeOnly" cuz hamcrest is necessary to execute junit-test dynamically,
     // but it doesn't seem to be loaded on compile task.
