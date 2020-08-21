@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
+import jp.kusumotolab.kgenprog.CharsetDetector;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
@@ -62,11 +63,12 @@ public class PatchGenerator {
         .getResolvedPath();
 
     try {
-      final Charset fileEncoding = inferFileEncoding(originalPath);
-      if (fileEncoding.equals(StandardCharsets.UTF_8)) {
-        return Files.readAllLines(originalPath);
+      final CharsetDetector detector = new CharsetDetector();
+      final Charset charset = detector.detect(originalPath);
+      if (charset.equals(StandardCharsets.UTF_8)) {
+        return Files.readAllLines(originalPath, StandardCharsets.UTF_8);
       } else {
-        return Files.readAllLines(originalPath, fileEncoding)
+        return Files.readAllLines(originalPath, charset)
             .stream()
             .map(e -> e.getBytes(StandardCharsets.UTF_8))
             .map(e -> new String(e, StandardCharsets.UTF_8))
@@ -76,11 +78,6 @@ public class PatchGenerator {
       log.error(e.getMessage(), e);
       return Collections.emptyList();
     }
-  }
-
-  private Charset inferFileEncoding(final Path path) throws IOException {
-    final String encoding = UniversalDetector.detectCharset(path);
-    return encoding != null ? Charset.forName(encoding) : Charset.defaultCharset();
   }
 
   private List<String> calcUnifiedDiff(final String fileName, final List<String> original,
