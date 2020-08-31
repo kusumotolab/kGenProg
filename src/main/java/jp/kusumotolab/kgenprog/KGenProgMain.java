@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -206,6 +207,7 @@ public class KGenProgMain {
     variants.addAll(variantsByMutation);
     variants.addAll(variantsByCrossover);
     final StringBuilder sb = new StringBuilder();
+    final DecimalFormat df = createDecimalFormat();
     sb//
         .append(System.lineSeparator())
         .append("----------------------------------------------------------------")
@@ -229,7 +231,7 @@ public class KGenProgMain {
         .append(", min ")
         .append(getMinText(variants))
         .append(", ave ")
-        .append(getAverage(variants))
+        .append(df.format(getAverage(variants)))
         .append(System.lineSeparator())
         .append("----------------------------------------------------------------")
         .append(System.lineSeparator());
@@ -249,7 +251,8 @@ public class KGenProgMain {
     }
     final Map.Entry<Double, Long> max =
         Collections.max(frequencies.entrySet(), Map.Entry.comparingByKey());
-    return max.getKey() + "(" + max.getValue() + ")";
+    final DecimalFormat df = createDecimalFormat();
+    return df.format(max.getKey()) + "(" + max.getValue() + ")"; // ここのmax.getKey()
   }
 
   private String getMinText(final List<Variant> variants) {
@@ -259,7 +262,8 @@ public class KGenProgMain {
     }
     final Map.Entry<Double, Long> min =
         Collections.min(frequencies.entrySet(), Map.Entry.comparingByKey());
-    return min.getKey() + "(" + min.getValue() + ")";
+    final DecimalFormat df = createDecimalFormat();
+    return df.format(min.getKey()) + "(" + min.getValue() + ")"; // ここのmin.getKey()
   }
 
   private double getAverage(final List<Variant> variants) {
@@ -267,6 +271,7 @@ public class KGenProgMain {
         .filter(Variant::isBuildSucceeded)
         .mapToDouble(this::getNormalizedFitnessValue)
         .average()
+        // ここの.average() NaNの時フォーマッタ大丈夫か？
         .orElse(Double.NaN);
   }
 
@@ -279,6 +284,10 @@ public class KGenProgMain {
   private double getNormalizedFitnessValue(final Variant variant) {
     return variant.getFitness()
         .getNormalizedValue();
+  }
+
+  private DecimalFormat createDecimalFormat(){
+    return new DecimalFormat("#.###");
   }
 
   private void logGAStopped(final OrdinalNumber generation) {
