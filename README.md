@@ -22,7 +22,7 @@
 ---
 
 ## Requirements
-- JDK8+
+- JDK11+
 
 
 ## Installation
