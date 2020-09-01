@@ -254,7 +254,7 @@ public class KGenProgMain {
     final Map.Entry<Double, Long> max =
         Collections.max(frequencies.entrySet(), Map.Entry.comparingByKey());
     final DecimalFormat df = createDecimalFormat();
-    return df.format(max.getKey()) + "(" + max.getValue() + ")"; // ここのmax.getKey()
+    return df.format(max.getKey()) + "(" + max.getValue() + ")";
   }
 
   private String getMinText(final List<Variant> variants) {
@@ -265,7 +265,7 @@ public class KGenProgMain {
     final Map.Entry<Double, Long> min =
         Collections.min(frequencies.entrySet(), Map.Entry.comparingByKey());
     final DecimalFormat df = createDecimalFormat();
-    return df.format(min.getKey()) + "(" + min.getValue() + ")"; // ここのmin.getKey()
+    return df.format(min.getKey()) + "(" + min.getValue() + ")";
   }
 
   private double getAverage(final List<Variant> variants) {
@@ -273,7 +273,6 @@ public class KGenProgMain {
         .filter(Variant::isBuildSucceeded)
         .mapToDouble(this::getNormalizedFitnessValue)
         .average()
-        // ここの.average() NaNの時フォーマッタ大丈夫か？
         .orElse(Double.NaN);
   }
 
