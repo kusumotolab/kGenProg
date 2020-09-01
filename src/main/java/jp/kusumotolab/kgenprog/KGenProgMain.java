@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
@@ -117,6 +118,9 @@ public class KGenProgMain {
       // 世代別サマリの出力
       logGenerationSummary(stopwatch.toString(), variantsByMutation, variantsByCrossover);
       stopwatch.split();
+      variantStore.updateVariantCounts(
+          Stream.concat(variantsByMutation.stream(), variantsByCrossover.stream())
+              .collect(Collectors.toList()));
 
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
@@ -146,7 +150,9 @@ public class KGenProgMain {
 
     stopwatch.unsplit();
     strategies.finish();
-    logGAStopped(variantStore.getGenerationNumber(), stopwatch.toString(), exitStatus);
+    logGAStopped(variantStore.getGenerationNumber(), variantStore.getVariantCount(),
+        variantStore.getSyntaxValidVariantCount(), variantStore.getBuildSuccessVariantCount(),
+        stopwatch.toString(), exitStatus);
 
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
@@ -289,7 +295,8 @@ public class KGenProgMain {
     return new DecimalFormat("#.###");
   }
 
-  private void logGAStopped(final OrdinalNumber generation, final String time,
+  private void logGAStopped(final OrdinalNumber generation, final int variantCount,
+      final int syntaxValidCount, final int buildSuccessCount, final String time,
       final ExitStatus exitStatus) {
     final StringBuilder sb = new StringBuilder();
     sb//
@@ -297,6 +304,15 @@ public class KGenProgMain {
         .append(System.lineSeparator())
         .append("Reached generation = ")
         .append(generation.intValue())
+        .append(System.lineSeparator())
+        .append("Generated variants = ")
+        .append(variantCount)
+        .append(System.lineSeparator())
+        .append("Syntax valid variants = ")
+        .append(syntaxValidCount)
+        .append(System.lineSeparator())
+        .append("Build succeeded variants = ")
+        .append(buildSuccessCount)
         .append(System.lineSeparator())
         .append("Time elapsed = ")
         .append(time)
