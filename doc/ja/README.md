@@ -64,8 +64,8 @@ $ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --conf
 ```
 
 ### 使用例
-[kGenProg/example](example) には kGenProg のテストに用いているバグが置いてあります．
-[kGenProg/example/CloseToZero01](example/CloseToZero01) に対して kGenProg を実行するには次のコマンドを実行してください．
+[kGenProg/example](../../example) には kGenProg のテストに用いているバグが置いてあります．
+[kGenProg/example/CloseToZero01](../../example/CloseToZero01) に対して kGenProg を実行するには次のコマンドを実行してください．
 
 ```sh
 $ cd kGenProg/example/CloseToZero01
