@@ -101,6 +101,8 @@ public class KGenProgMain {
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
 
+    ExitStatus exitStatus;
+
     while (true) {
 
       // 新しい世代に入ったことをログ出力
@@ -118,22 +120,22 @@ public class KGenProgMain {
 
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
-        log.info("enough solutions have been found.");
-        logGAStopped(variantStore.getGenerationNumber());
+        exitStatus = ExitStatus.SUCCESS;
+        log.info("GA stopped.");
         break;
       }
 
       // 制限時間に達した場合には GA を抜ける
       if (stopwatch.isTimeout()) {
-        log.info("GA reached the time limit.");
-        logGAStopped(variantStore.getGenerationNumber());
+        exitStatus = ExitStatus.FAIL_TIME;
+        log.info("GA stopped.");
         break;
       }
 
       // 最大世代数に到達した場合には GA を抜ける
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
-        log.info("GA reached the maximum generation.");
-        logGAStopped(variantStore.getGenerationNumber());
+        exitStatus = ExitStatus.FAIL_GEN;
+        log.info("GA stopped.");
         break;
       }
 
@@ -146,7 +148,7 @@ public class KGenProgMain {
 
     stopwatch.unsplit();
     strategies.finish();
-    log.info("execution time: " + stopwatch.toString());
+    logGAStopped(variantStore.getGenerationNumber(), stopwatch.toString(), exitStatus);
 
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
@@ -290,12 +292,33 @@ public class KGenProgMain {
     return new DecimalFormat("#.###");
   }
 
-  private void logGAStopped(final OrdinalNumber generation) {
+  private void logGAStopped(final OrdinalNumber generation, final String time,
+      final ExitStatus exitStatus) {
     final StringBuilder sb = new StringBuilder();
     sb//
-        .append("GA stopped at the era of ")
-        .append(generation.toString())
-        .append(" generation.");
+        .append("Overall")
+        .append(System.lineSeparator())
+        .append("Reached generation = ")
+        .append(generation.intValue())
+        .append(System.lineSeparator())
+        .append("Time elapsed = ")
+        .append(time)
+        .append(System.lineSeparator())
+        .append("Exit status = ")
+        .append(exitStatus.getCode());
     log.info(sb.toString());
+  }
+
+  private enum ExitStatus {
+    SUCCESS("SUCCESS"), FAIL_GEN("FAIL(maximum generation)"), FAIL_TIME("FAIL(time limit)");
+    private final String code;
+
+    ExitStatus(String code) {
+      this.code = code;
+    }
+
+    String getCode() {
+      return code;
+    }
   }
 }
