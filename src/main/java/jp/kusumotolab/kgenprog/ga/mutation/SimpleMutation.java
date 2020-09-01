@@ -2,6 +2,8 @@ package jp.kusumotolab.kgenprog.ga.mutation;
 
 import java.util.Random;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Statement;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -19,6 +21,8 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
  * @see Mutation
  */
 public class SimpleMutation extends Mutation {
+
+  private static final int ATTEMPT_FOR_REPLACE = 100;
 
   protected final Type type;
 
@@ -53,11 +57,23 @@ public class SimpleMutation extends Mutation {
     }
   }
 
+
   protected ASTNode chooseNodeForReuse(final ASTLocation location) {
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
     final Scope scope = new Scope(type, fqn);
     final Query query = new Query(scope);
-    return candidateSelection.exec(query);
+
+    ASTNode nodeForReuse = null;
+    int attempt = 0;
+    final boolean isStatement = location instanceof Statement;
+    final boolean isExpression = location instanceof Expression;
+    while(attempt++ < ATTEMPT_FOR_REPLACE){
+      nodeForReuse = candidateSelection.exec(query);
+      if(isStatement && nodeForReuse instanceof Statement || isExpression && nodeForReuse instanceof Expression){
+         break;
+      }
+    }
+    return nodeForReuse;
   }
 }
