@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.CharSet;
 
 /***
  * 1ファイルの変更内容．
