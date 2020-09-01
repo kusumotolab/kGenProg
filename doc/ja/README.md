@@ -22,7 +22,7 @@
 ---
 
 ## 動作条件
-- JDK8+
+- JDK11+
 
 ## インストール
 kGenProg は単一の jar ファイルにまとめてあります．[ここ](https://github.com/kusumotolab/kGenProg/releases/latest)から jar ファイルをダウンロードしてください．
@@ -64,8 +64,8 @@ $ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --conf
 ```
 
 ### 使用例
-[kGenProg/example](example) には kGenProg のテストに用いているバグが置いてあります．
-[kGenProg/example/CloseToZero01](example/CloseToZero01) に対して kGenProg を実行するには次のコマンドを実行してください．
+[kGenProg/example](../../example) には kGenProg のテストに用いているバグが置いてあります．
+[kGenProg/example/CloseToZero01](../../example/CloseToZero01) に対して kGenProg を実行するには次のコマンドを実行してください．
 
 ```sh
 $ cd kGenProg/example/CloseToZero01

@@ -16,11 +16,11 @@ echo 'Installing tcnksm/ghr to manage GitHub Releases...'
 go get -u github.com/tcnksm/ghr
 
 
-echo "Starting to publish a new release as the version: ${WANTED_VERSION} ..."
+echo "Starting to publish a new release as the version: ${VERSION} ..."
 
-# trim suffix "-all" of fat jar
-jar=$(ls ./workspace/artifacts/*.jar)
-mv $jar ${jar/-all/}
+# # trim suffix "-all" of fat jar
+# jar=$(ls ./workspace/artifacts/*.jar)
+# mv $jar ${jar/-all/}
 
 # generate change log
 CHANGELOG="## Change Log
@@ -32,6 +32,6 @@ ghr \
   --username $CIRCLE_PROJECT_USERNAME \
   --repository $CIRCLE_PROJECT_REPONAME \
   --commitish $CIRCLE_SHA1 \
-  --name "Version $WANTED_VERSION" \
+  --name "Version $VERSION" \
   --body "$CHANGELOG" \
     $VERSION ./workspace/artifacts/

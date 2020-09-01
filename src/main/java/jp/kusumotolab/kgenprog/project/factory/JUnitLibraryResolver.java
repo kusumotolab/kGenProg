@@ -1,12 +1,14 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.MissingResourceException;
 import jp.kusumotolab.kgenprog.CUILauncher;
 import jp.kusumotolab.kgenprog.project.ClassPath;
 
@@ -25,26 +27,26 @@ public class JUnitLibraryResolver {
       new EnumMap<>(JUnitVersion.class);
 
   static {
+    setupResourceJar(JUNIT3_DIR, JUNIT3_JUNIT, JUnitVersion.JUNIT3);
+    setupResourceJar(JUNIT4_DIR, JUNIT4_JUNIT, JUnitVersion.JUNIT4);
+  }
 
-    try {
-      final ClassLoader classLoader = CUILauncher.class.getClassLoader();
-      final InputStream junit3JInputStream =
-          classLoader.getResourceAsStream(JUNIT3_DIR + JUNIT3_JUNIT);
-      final InputStream junit4JInputStream =
-          classLoader.getResourceAsStream(JUNIT4_DIR + JUNIT4_JUNIT);
-
-      final Path systemTempPath = getTempDirectory();
-      final Path junit3JPath = systemTempPath.resolve(JUNIT3_JUNIT);
-      final Path junit4JPath = systemTempPath.resolve(JUNIT4_JUNIT);
-
-      Files.copy(junit3JInputStream, junit3JPath, StandardCopyOption.REPLACE_EXISTING);
-      Files.copy(junit4JInputStream, junit4JPath, StandardCopyOption.REPLACE_EXISTING);
-
-      libraries.put(JUnitVersion.JUNIT3, Arrays.asList(new ClassPath(junit3JPath)));
-      libraries.put(JUnitVersion.JUNIT4, Arrays.asList(new ClassPath(junit4JPath)));
-    } catch (Exception e) {
-      e.printStackTrace();
+  private static void setupResourceJar(final String dir, final String jar,
+      final JUnitVersion version) {
+    final String jarPath = dir + jar;
+    final ClassLoader classLoader = CUILauncher.class.getClassLoader();
+    final InputStream is = classLoader.getResourceAsStream(jarPath);
+    if (null == is) {
+      throw new MissingResourceException("Missing runtime junit library: " + jarPath, jarPath, "");
     }
+
+    final Path tempPath = getTempDirectory().resolve(jar);
+    try {
+      Files.copy(is, tempPath, StandardCopyOption.REPLACE_EXISTING);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
+    libraries.put(version, Collections.singletonList(new ClassPath(tempPath)));
   }
 
   // TODO 一時dirの責務をひとまずこのクラスに任せたが，巨大になるなら別クラスに切った方がよさそう．
@@ -55,8 +57,8 @@ public class JUnitLibraryResolver {
       if (null == tempDir) {
         tempDir = Files.createTempDirectory("kgp-");
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
     }
     return tempDir;
   }
