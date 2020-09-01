@@ -57,6 +57,18 @@ public class SimpleMutation extends Mutation {
     }
   }
 
+  /**
+   * 再利用するASTノードを選択するメソッド．
+   * 再利用先が文の場合は文を，再利用先が式である場合は式を再利用対象として返す．
+   *
+   * Choosing an AST node for reuse.
+   * Chosen node type depends on a given location, which means
+   * if a statement is given, a statement is chosen and
+   * if an expression is given, an expression is chosen.
+   *
+   * @param location 再利用するノードで置換されるノード
+   * @return 再利用するノード
+   */
   protected ASTNode chooseNodeForReuse(final ASTLocation location) {
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
