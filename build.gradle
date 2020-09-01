@@ -21,9 +21,6 @@ plugins {
 
     // Gradle lint
     id "nebula.lint" version "16.9.0"
-
-    // To generate fat jar
-    id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
 // Set compiler version
@@ -88,12 +85,20 @@ jar {
         attributes "Main-Class": "jp.kusumotolab.kgenprog.CUILauncher"
     }
 
+    // fatjar must include all dependencies
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    // exclude jar signatures for jar compression to avoid invalid signature
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+
     doFirst {
         // copy gradle.properties to resolve version info
         copy {
             from 'gradle.properties'
             into buildDir.name + '/resources/main/'
         }
+
         // annotate whether this task was executed on CI or not
         def isCi = System.getenv('CI') ? 'true' : 'false'
         File prop = new File(buildDir.name + '/resources/main/gradle.properties')
@@ -122,9 +127,4 @@ jacocoTestReport {
             fileTree(dir: it, exclude: '**/*junit**')
         }))
     }
-}
-
-// Minimize generating fat jar
-shadowJar {
-    minimize()
 }
