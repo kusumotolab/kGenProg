@@ -121,21 +121,18 @@ public class KGenProgMain {
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
         exitStatus = ExitStatus.SUCCESS;
-        log.info("GA stopped.");
         break;
       }
 
       // 制限時間に達した場合には GA を抜ける
       if (stopwatch.isTimeout()) {
-        exitStatus = ExitStatus.FAIL_TIME;
-        log.info("GA stopped.");
+        exitStatus = ExitStatus.FAILURE_TIME_LIMIT;
         break;
       }
 
       // 最大世代数に到達した場合には GA を抜ける
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
-        exitStatus = ExitStatus.FAIL_GEN;
-        log.info("GA stopped.");
+        exitStatus = ExitStatus.FAILURE_MAXIMUM_GENERATION;
         break;
       }
 
@@ -143,6 +140,7 @@ public class KGenProgMain {
       variantStore.proceedNextGeneration();
     }
 
+    log.info("GA stopped.");
     // 出力処理を行う
     exporters.exportAll(variantStore);
 
@@ -295,7 +293,7 @@ public class KGenProgMain {
       final ExitStatus exitStatus) {
     final StringBuilder sb = new StringBuilder();
     sb//
-        .append("Overall")
+        .append("Summary")
         .append(System.lineSeparator())
         .append("Reached generation = ")
         .append(generation.intValue())
@@ -309,7 +307,8 @@ public class KGenProgMain {
   }
 
   private enum ExitStatus {
-    SUCCESS("SUCCESS"), FAIL_GEN("FAIL(maximum generation)"), FAIL_TIME("FAIL(time limit)");
+    SUCCESS("SUCCESS"), FAILURE_MAXIMUM_GENERATION(
+        "FAILURE (maximum generation)"), FAILURE_TIME_LIMIT("FAILURE (time limit)");
     private final String code;
 
     ExitStatus(String code) {
