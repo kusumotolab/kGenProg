@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -135,5 +137,20 @@ public class JDTASTLocation implements ASTLocation {
 
     final JDTASTLocation target = (JDTASTLocation) o;
     return node.equals(target.node);
+  }
+
+  @Override
+  public String toString() {
+    return node.toString();
+  }
+
+  @Override
+  public boolean isStatement() {
+    return node instanceof Statement;
+  }
+
+  @Override
+  public boolean isExpression() {
+    return node instanceof Expression;
   }
 }

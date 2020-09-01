@@ -57,7 +57,6 @@ public class SimpleMutation extends Mutation {
     }
   }
 
-
   protected ASTNode chooseNodeForReuse(final ASTLocation location) {
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
@@ -66,12 +65,13 @@ public class SimpleMutation extends Mutation {
 
     ASTNode nodeForReuse = null;
     int attempt = 0;
-    final boolean isStatement = location instanceof Statement;
-    final boolean isExpression = location instanceof Expression;
-    while(attempt++ < ATTEMPT_FOR_REPLACE){
+    final boolean isStatement = location.isStatement();
+    final boolean isExpression = location.isExpression();
+    while (attempt++ < ATTEMPT_FOR_REPLACE) {
       nodeForReuse = candidateSelection.exec(query);
-      if(isStatement && nodeForReuse instanceof Statement || isExpression && nodeForReuse instanceof Expression){
-         break;
+      if (isStatement && nodeForReuse instanceof Statement
+          || isExpression && nodeForReuse instanceof Expression) {
+        break;
       }
     }
     return nodeForReuse;
