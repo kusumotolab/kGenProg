@@ -288,7 +288,7 @@ public class KGenProgMain {
         .getNormalizedValue();
   }
 
-  private DecimalFormat createDecimalFormat(){
+  private DecimalFormat createDecimalFormat() {
     return new DecimalFormat("#.###");
   }
 
