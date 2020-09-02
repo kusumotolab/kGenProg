@@ -36,6 +36,9 @@ public class VariantStore {
   private final AtomicLong variantCounter;
   private final Function<HistoricalElement, HistoricalElement> elementReplacer;
   private final Consumer<Variant> variantRecorder;
+  private int variantCount;
+  private int syntaxValidVariantCount;
+  private int buildSuccessVariantCount;
 
   /**
    * @param config 設定
@@ -57,6 +60,9 @@ public class VariantStore {
     foundSolutions = new ArrayList<>();
     // 最後に次の世代番号に進めておく
     generation.incrementAndGet();
+    variantCount = 0;
+    syntaxValidVariantCount = 0;
+    buildSuccessVariantCount = 0;
   }
 
   /**
@@ -127,6 +133,27 @@ public class VariantStore {
   public List<Variant> getFoundSolutions(final int maxNumber) {
     final int length = Math.min(maxNumber, foundSolutions.size());
     return foundSolutions.subList(0, length);
+  }
+
+  /**
+   * @return 今まで生成した個体数
+   */
+  public int getVariantCount() {
+    return variantCount;
+  }
+
+  /**
+   * @return 今まで生成した個体のうち、Syntax Valid な個体数
+   */
+  public int getSyntaxValidVariantCount() {
+    return syntaxValidVariantCount;
+  }
+
+  /**
+   * @return 今まで生成した個体のうち、ビルド成功個体数
+   */
+  public int getBuildSuccessVariantCount() {
+    return buildSuccessVariantCount;
   }
 
   /**
@@ -232,5 +259,20 @@ public class VariantStore {
 
   public Configuration getConfiguration() {
     return config;
+  }
+
+  /**
+   * variantCount, syntaxValidVariantCount, buildSuccessVariantCountを更新する
+   *
+   * @param variants 前回の更新以降新たに生成した個体のリスト
+   */
+  public void updateVariantCounts(final List<Variant> variants) {
+    variantCount += variants.size();
+    syntaxValidVariantCount += variants.stream()
+        .filter(Variant::isSyntaxValid)
+        .count();
+    buildSuccessVariantCount += variants.stream()
+        .filter(Variant::isBuildSucceeded)
+        .count();
   }
 }

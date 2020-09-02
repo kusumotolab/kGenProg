@@ -1,11 +1,13 @@
 package jp.kusumotolab.kgenprog;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.fl.FaultLocalization;
@@ -100,6 +102,8 @@ public class KGenProgMain {
     final StopWatch stopwatch = new StopWatch(config.getTimeLimitSeconds());
     stopwatch.start();
 
+    ExitStatus exitStatus;
+
     while (true) {
 
       // 新しい世代に入ったことをログ出力
@@ -114,25 +118,25 @@ public class KGenProgMain {
       // 世代別サマリの出力
       logGenerationSummary(stopwatch.toString(), variantsByMutation, variantsByCrossover);
       stopwatch.split();
+      variantStore.updateVariantCounts(
+          Stream.concat(variantsByMutation.stream(), variantsByCrossover.stream())
+              .collect(Collectors.toList()));
 
       // しきい値以上の completedVariants が生成された場合は，GA を抜ける
       if (areEnoughCompletedVariants(variantStore.getFoundSolutions())) {
-        log.info("enough solutions have been found.");
-        logGAStopped(variantStore.getGenerationNumber());
+        exitStatus = ExitStatus.SUCCESS;
         break;
       }
 
       // 制限時間に達した場合には GA を抜ける
       if (stopwatch.isTimeout()) {
-        log.info("GA reached the time limit.");
-        logGAStopped(variantStore.getGenerationNumber());
+        exitStatus = ExitStatus.FAILURE_TIME_LIMIT;
         break;
       }
 
       // 最大世代数に到達した場合には GA を抜ける
       if (reachedMaxGeneration(variantStore.getGenerationNumber())) {
-        log.info("GA reached the maximum generation.");
-        logGAStopped(variantStore.getGenerationNumber());
+        exitStatus = ExitStatus.FAILURE_MAXIMUM_GENERATION;
         break;
       }
 
@@ -140,12 +144,15 @@ public class KGenProgMain {
       variantStore.proceedNextGeneration();
     }
 
+    log.info("GA stopped.");
     // 出力処理を行う
     exporters.exportAll(variantStore);
 
     stopwatch.unsplit();
     strategies.finish();
-    log.info("execution time: " + stopwatch.toString());
+    logGAStopped(variantStore.getGenerationNumber(), variantStore.getVariantCount(),
+        variantStore.getSyntaxValidVariantCount(), variantStore.getBuildSuccessVariantCount(),
+        stopwatch.toString(), exitStatus);
 
     return variantStore.getFoundSolutions(config.getRequiredSolutionsCount());
   }
@@ -206,6 +213,7 @@ public class KGenProgMain {
     variants.addAll(variantsByMutation);
     variants.addAll(variantsByCrossover);
     final StringBuilder sb = new StringBuilder();
+    final DecimalFormat df = createDecimalFormat();
     sb//
         .append(System.lineSeparator())
         .append("----------------------------------------------------------------")
@@ -229,7 +237,7 @@ public class KGenProgMain {
         .append(", min ")
         .append(getMinText(variants))
         .append(", ave ")
-        .append(getAverage(variants))
+        .append(df.format(getAverage(variants)))
         .append(System.lineSeparator())
         .append("----------------------------------------------------------------")
         .append(System.lineSeparator());
@@ -249,7 +257,8 @@ public class KGenProgMain {
     }
     final Map.Entry<Double, Long> max =
         Collections.max(frequencies.entrySet(), Map.Entry.comparingByKey());
-    return max.getKey() + "(" + max.getValue() + ")";
+    final DecimalFormat df = createDecimalFormat();
+    return df.format(max.getKey()) + "(" + max.getValue() + ")";
   }
 
   private String getMinText(final List<Variant> variants) {
@@ -259,7 +268,8 @@ public class KGenProgMain {
     }
     final Map.Entry<Double, Long> min =
         Collections.min(frequencies.entrySet(), Map.Entry.comparingByKey());
-    return min.getKey() + "(" + min.getValue() + ")";
+    final DecimalFormat df = createDecimalFormat();
+    return df.format(min.getKey()) + "(" + min.getValue() + ")";
   }
 
   private double getAverage(final List<Variant> variants) {
@@ -281,12 +291,48 @@ public class KGenProgMain {
         .getNormalizedValue();
   }
 
-  private void logGAStopped(final OrdinalNumber generation) {
+  private DecimalFormat createDecimalFormat() {
+    return new DecimalFormat("#.###");
+  }
+
+  private void logGAStopped(final OrdinalNumber generation, final int variantCount,
+      final int syntaxValidCount, final int buildSuccessCount, final String time,
+      final ExitStatus exitStatus) {
     final StringBuilder sb = new StringBuilder();
     sb//
-        .append("GA stopped at the era of ")
-        .append(generation.toString())
-        .append(" generation.");
+        .append("Summary")
+        .append(System.lineSeparator())
+        .append("Reached generation = ")
+        .append(generation.intValue())
+        .append(System.lineSeparator())
+        .append("Generated variants = ")
+        .append(variantCount)
+        .append(System.lineSeparator())
+        .append("Syntax valid variants = ")
+        .append(syntaxValidCount)
+        .append(System.lineSeparator())
+        .append("Build succeeded variants = ")
+        .append(buildSuccessCount)
+        .append(System.lineSeparator())
+        .append("Time elapsed = ")
+        .append(time)
+        .append(System.lineSeparator())
+        .append("Exit status = ")
+        .append(exitStatus.getCode());
     log.info(sb.toString());
+  }
+
+  private enum ExitStatus {
+    SUCCESS("SUCCESS"), FAILURE_MAXIMUM_GENERATION(
+        "FAILURE (maximum generation)"), FAILURE_TIME_LIMIT("FAILURE (time limit)");
+    private final String code;
+
+    ExitStatus(String code) {
+      this.code = code;
+    }
+
+    String getCode() {
+      return code;
+    }
   }
 }
