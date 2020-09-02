@@ -10,7 +10,7 @@
 <p align=center>
     <a href="https://github.com/kusumotolab/kGenProg/releases/latest" alt="release"><img src="https://img.shields.io/github/release/kusumotolab/kGenProg.svg"></a>
     <a href="https://jitpack.io/#kusumotolab/kGenProg" alt="jitpack"><img src="https://jitpack.io/v/kusumotolab/kGenProg.svg"></a>
-    <a href="https://github.com/kusumotolab/kGenProg/actions?query=workflow%3A%22Test+branches%22" alt="GitHub Actions"><img src="https://github.com/kusumotolab/kGenProg/workflows/Test%20branches/badge.sv"></a>
+    <a href="https://github.com/kusumotolab/kGenProg/actions?query=workflow%3A%22Test+branches%22" alt="GitHub Actions"><img src="https://github.com/kusumotolab/kGenProg/workflows/Test%20branches/badge.svg"></a>
     <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="license"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
