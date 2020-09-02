@@ -1,0 +1,146 @@
+name: Build and release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Cache dependencies
+      id: cache-dependencies
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-dependencies
+      with:
+        path: ~/.gradle/caches
+        key: build-cache-${{ hashFiles('build.gradle') }}
+        restore-keys: |
+          build-cache-
+          build-
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+    - name: Resolve dependencies
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: ./gradlew dependencies
+    - name: Assemble jar file
+      run: ./gradlew assemble
+    - name: Collect artifacts to workspace
+      run: |
+        mkdir -p workspace/artifacts
+        cp ./build/libs/* ./workspace/artifacts/
+    - name: Upload artifacts to reuse on other workflows
+      uses: actions/upload-artifact@v2
+      with:
+        name: workspace
+        path: ./**/workspace
+
+  publish-as-nightly-build:
+    runs-on: ubuntu-latest
+    needs: build-artifacts
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: workspace
+    - name: Delete existing release
+      run: hub release delete nightly-build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Delete existing tag
+      run: hub push origin :nightly-build
+    - name: Rename jar file
+      run: mv ./workspace/artifacts/kGenProg*.jar ./workspace/artifacts/kGenProg-nightly-build.jar
+    - name: Get current date
+      id: current-date
+      run: echo "::set-output name=date::$(date +'%Y/%m/%d %H:%M')"
+      env:
+        TZ: Asia/Tokyo
+    - name: Publish a new nightly-build release
+      uses: actions/create-release@v1
+      id: create-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: nightly-build
+        release_name: Nightly Build (${{ steps.current-date.outputs.date }} JST)
+        body: |
+            This is a nightly-build release, automatically built on `master` branch (commit SHA: ${{ github.sha }}).
+            Execute the following command to download the latest version:
+            ```
+            $ curl -LO https://github.com/kusumotolab/kGenProg/releases/download/nightly-build/kGenProg-nightly-build.jar
+            ```
+        draft: false
+        prerelease: true
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: ./workspace/artifacts/kGenProg-nightly-build.jar
+        asset_name: kGenProg-nightly-build.jar
+        asset_content_type: application/java-archive
+    - name: Upload artifacts to reuse on other workflows
+      uses: actions/upload-artifact@v2
+      with:
+        name: workspace
+        path: ./**/workspace/
+
+  generate-change-log:
+    runs-on: ubuntu-latest
+    needs: publish-as-nightly-build
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: workspace
+    - name: Set up a Node environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+    - name: Create CHANGELOG.md
+      run: touch ./workspace/CHANGELOG.md
+    - name: Generate a change log when needed
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        chmod +x ./.github/generate-change-log.sh
+        chmod +x ./.github/check-version.sh
+        ./.github/generate-change-log.sh
+    - name: Upload artifacts to reuse on other workflows
+      uses: actions/upload-artifact@v2
+      with:
+        name: workspace
+        path: ./**/workspace/
+
+  publish-as-new-release:
+    runs-on: ubuntu-latest
+    needs: generate-change-log
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Download changelog to reuse on other workflows
+      uses: actions/download-artifact@v2
+      with:
+        name: workspace
+    - name: Set up a Go environment
+      uses: actions/setup-go@v2
+    - name: Publish a new release when needed
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COMMIT_SHA: ${{ github.sha }}
+      run: |
+        chmod +x ./.github/publish-new-release.sh
+        chmod +x ./.github/check-version.sh
+        ./.github/publish-new-release.sh
