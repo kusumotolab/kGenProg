@@ -19,7 +19,6 @@ public class CharsetDetector {
    * 文字コードがわからなかった場合はデフォルトの文字コードを返す
    *
    * @param path 文字コードを調べたいファイル
-   *
    * @return ファイルの文字コード
    */
   public Charset detect(final Path path) {
