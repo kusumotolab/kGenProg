@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +19,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
+import jp.kusumotolab.kgenprog.CharsetDetector;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
@@ -107,7 +110,10 @@ public class JDTASTConstruction {
 
   private String loadAsString(final String path) {
     try {
-      return new String(Files.readAllBytes(Paths.get(path)));
+      final CharsetDetector detector = new CharsetDetector();
+      final Charset charset = detector.detect(Paths.get(path));
+      final String code = Files.readString(Paths.get(path), charset);
+      return new String(code.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }

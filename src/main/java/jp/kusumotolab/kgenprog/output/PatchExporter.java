@@ -62,7 +62,7 @@ class PatchExporter implements Exporter {
   private void writeLog(final Patch patch) {
     patch.getFileDiffs()
         .forEach(fd -> log.info(String.format("patch (v%d)%s%s",
-            patch.getVariantId(), System.lineSeparator(), fd))
+            patch.getVariantId(), System.lineSeparator(), fd.toStringWithDefaultEncoding()))
         );
   }
 
