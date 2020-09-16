@@ -5,6 +5,10 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 
 public class JDTASTCrossoverLocation extends JDTASTLocation {
 
+  public JDTASTCrossoverLocation(final JDTASTLocation location) {
+    super(location.getSourcePath(), location.getNode(), location.getGeneratedAST());
+  }
+
   public JDTASTCrossoverLocation(final SourcePath sourcePath,
       final ASTNode node, final GeneratedJDTAST<?> generatedAST) {
     super(sourcePath, node, generatedAST);
@@ -12,7 +16,8 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
 
   @Override
   public ASTNode locate(final ASTNode otherASTRoot) {
-    return null;
+    // call super as mock
+    return super.locate(otherASTRoot);
   }
 
 }
