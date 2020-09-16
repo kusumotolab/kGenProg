@@ -555,6 +555,7 @@ public class LocalTestExecutorTest {
 
     // 各テスト名は3回出力されるはず．スレッドが生き残ると3回以上の出力される （300ms / 1000ms = 3）
     // TODO 割り込みタイミングによって結果が揺れる可能性あり．
+    // #785 で条件を緩めた．GHAにおける割込の甘さのために4回の出力を許す．スレッド打ち切りを確実に確認．
     assertThat(countPattern(stdout.toString(), FOO_TEST02.value)).isLessThanOrEqualTo(4);
     assertThat(countPattern(stdout.toString(), FOO_TEST03.value)).isLessThanOrEqualTo(4);
 
@@ -607,6 +608,7 @@ public class LocalTestExecutorTest {
 
     // 各テスト名は3回出力されるはず．スレッドが生き残ると3回以上の出力される （300ms / 1000ms = 3）
     // TODO 割り込みタイミングによって結果が揺れる可能性あり．
+    // #785 で条件を緩めた．GHAにおける割込の甘さのために4回の出力を許す．スレッド打ち切りを確実に確認．
     assertThat(countPattern(stdout.toString(), FOO_TEST02.value)).isLessThanOrEqualTo(4);
     assertThat(countPattern(stdout.toString(), FOO_TEST03.value)).isLessThanOrEqualTo(4);
 
