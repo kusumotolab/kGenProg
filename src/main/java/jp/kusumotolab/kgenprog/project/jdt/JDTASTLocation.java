@@ -115,7 +115,7 @@ public class JDTASTLocation implements ASTLocation {
   }
 
   @Override
-  public GeneratedAST<?> getGeneratedAST() {
+  public GeneratedJDTAST<?> getGeneratedAST() {
     return generatedAST;
   }
 
