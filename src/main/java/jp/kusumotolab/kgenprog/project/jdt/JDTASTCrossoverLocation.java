@@ -38,7 +38,7 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
       final List<ASTNode> nextPossibleNode = new ArrayList<>();
       for (final ASTNode current : possibleNode) {
         getChildren(current).stream()
-            .filter(e -> isSameASTNode(path, e))
+            .filter(e -> isSameASTNodeType(path, e))
             .forEach(nextPossibleNode::add);
       }
       possibleNode = nextPossibleNode;
@@ -68,7 +68,7 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
     return children;
   }
 
-  private boolean isSameASTNode(ASTNode a, ASTNode b) {
+  private boolean isSameASTNodeType(ASTNode a, ASTNode b) {
     return a.getClass() == b.getClass();
   }
 }
