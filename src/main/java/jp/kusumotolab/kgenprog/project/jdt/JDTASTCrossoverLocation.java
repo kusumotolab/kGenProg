@@ -25,7 +25,7 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
 
   /**
    * @param otherASTRoot 探索対象の別 AST のルート
-   * @return 探索に成功したとき，その AST ノード．探索対象のAST ノードが存在しないとき null
+   * @return 探索に成功したとき，その AST ノード．探索対象のAST ノードが存在しないとき null．
    */
   @Override
   public ASTNode locate(final ASTNode otherASTRoot) {
@@ -60,22 +60,22 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
     return possibleNode.isEmpty() ? null : possibleNode.get(0);
   }
 
-  private List<ASTNode> getChildren(ASTNode node) {
-    List<ASTNode> children = new ArrayList<>();
+  private List<ASTNode> getChildren(final ASTNode node) {
+    final List<ASTNode> children = new ArrayList<>();
     for (final Object o : node.structuralPropertiesForType()) {
-      Object child = node.getStructuralProperty((StructuralPropertyDescriptor) o);
-      if (child instanceof ASTNode) {
-        children.add((ASTNode) child);
-      } else if (child instanceof List) {
-        @SuppressWarnings("unchecked") // List の要素は必ず ASTNode
-        final List<ASTNode> c = (List<ASTNode>) child;
+      final Object childOrChildren = node.getStructuralProperty((StructuralPropertyDescriptor) o);
+      if (childOrChildren instanceof ASTNode) {
+        children.add((ASTNode) childOrChildren);
+      } else if (childOrChildren instanceof List) {
+        @SuppressWarnings("unchecked") // このとき，List の要素は必ず ASTNode
+        final List<ASTNode> c = (List<ASTNode>) childOrChildren;
         children.addAll(c);
       }
     }
     return children;
   }
 
-  private boolean isSameASTNodeType(ASTNode a, ASTNode b) {
+  private boolean isSameASTNodeType(final ASTNode a, final ASTNode b) {
     return a.getClass() == b.getClass();
   }
 }
