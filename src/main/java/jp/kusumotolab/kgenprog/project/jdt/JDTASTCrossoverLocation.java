@@ -9,6 +9,9 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
+/**
+ * JDT AST の単一ノードを示すオブジェクト 交叉で個体を生成するときの Operation のターゲットに利用する．
+ */
 public class JDTASTCrossoverLocation extends JDTASTLocation {
 
   public JDTASTCrossoverLocation(final JDTASTLocation location) {
@@ -20,6 +23,10 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
     super(sourcePath, node, generatedAST);
   }
 
+  /**
+   * @param otherASTRoot 探索対象の別 AST のルート
+   * @return 探索に成功したとき，その AST ノード．探索対象のAST ノードが存在しないとき null
+   */
   @Override
   public ASTNode locate(final ASTNode otherASTRoot) {
     final List<ASTNode> treePaths = new ArrayList<>();
