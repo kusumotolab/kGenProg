@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,8 +69,6 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
   }
 
   private boolean isSameASTNode(ASTNode a, ASTNode b) {
-//    return a.toString()
-//        .equals(b.toString());// TODO: 正しくない．
     return a.getClass() == b.getClass();
   }
 }
