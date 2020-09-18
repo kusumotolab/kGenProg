@@ -10,7 +10,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 public class JDTASTCrossoverLocationTest {
 
   @Test
-  public void testLocateForTheSameAst() {
+  public void testLocateForTheSameAst01() {
     final String source = new StringBuilder()
         .append("class A {")
         .append("  public void a(int i) {")
@@ -24,13 +24,66 @@ public class JDTASTCrossoverLocationTest {
 
     // extract target location
     final JDTASTLocation location = getLocation(ast, 1);
-    assertThat(location.getNode()).isSameSourceCodeAs("i=1;");
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
 
     // try locate() for the same ast root
-    final ASTNode node = location.locate(ast.getRoot());
+    final ASTNode node = cLocation.locate(ast.getRoot());
 
     // of course, target node and located node are the same
     assertThat(node).isSameSourceCodeAs("i=1;");
+    assertThat(node.getRoot()).isSameRootClassAs(ast.getRoot());
+  }
+
+  @Test
+  public void testLocateForTheSameAst02() {
+    final String source = new StringBuilder()
+        .append("class A {")
+        .append("  public void a(int i) {")
+        .append("    i = 1;") // target
+        .append("    i = 1;")
+        .append("    i = 1;")
+        .append("  }")
+        .append("}")
+        .toString();
+    final GeneratedJDTAST<ProductSourcePath> ast = createAst(source);
+
+    // extract target location
+    final JDTASTLocation location = getLocation(ast, 0);
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
+
+    // try locate() for the same ast root
+    final ASTNode node = cLocation.locate(ast.getRoot());
+
+    // of course, target node and located node are the same
+    assertThat(node).isEqualTo(location.getNode());
+    assertThat(node.getRoot()).isSameRootClassAs(ast.getRoot());
+  }
+
+  @Test
+  public void testLocateForTheSameAst03() {
+    final String source = new StringBuilder()
+        .append("class A {")
+        .append("  public void a(int i) {")
+        .append("    i = 1;")
+        .append("    i = 1;") // target
+        .append("    i = 1;")
+        .append("  }")
+        .append("}")
+        .toString();
+    final GeneratedJDTAST<ProductSourcePath> ast = createAst(source);
+
+    // extract target location
+    final JDTASTLocation location = getLocation(ast, 1);
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
+
+    // try locate() for the same ast root
+    final ASTNode node = cLocation.locate(ast.getRoot());
+
+    // there are the same nodes as target node, so located node is the first one
+    assertThat(node).isNotEqualTo(location.getNode());
     assertThat(node.getRoot()).isSameRootClassAs(ast.getRoot());
   }
 
@@ -52,10 +105,11 @@ public class JDTASTCrossoverLocationTest {
 
     // extract target location
     final JDTASTLocation location = getLocation(ast1, 1);
-    assertThat(location.getNode()).isSameSourceCodeAs("i=1;");
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
 
     // try loc1.locate()
-    final ASTNode node = location.locate(ast2.getRoot());
+    final ASTNode node = cLocation.locate(ast2.getRoot());
 
     // located node is the same as target node
     assertThat(node).isSameSourceCodeAs("i=1;");
@@ -89,10 +143,11 @@ public class JDTASTCrossoverLocationTest {
 
     // extract target location
     final JDTASTLocation location = getLocation(ast1, 1);
-    assertThat(location.getNode()).isSameSourceCodeAs("i=1;");
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
 
     // try loc1.locate()
-    final ASTNode node = location.locate(ast2.getRoot());
+    final ASTNode node = cLocation.locate(ast2.getRoot());
 
     // located node is the same as target node
     assertThat(node).isSameSourceCodeAs("i=1;");
@@ -128,10 +183,11 @@ public class JDTASTCrossoverLocationTest {
 
     // extract target location
     final JDTASTLocation location = getLocation(ast1, 1);
-    assertThat(location.getNode()).isSameSourceCodeAs("i=1;");
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
 
     // try loc1.locate()
-    final ASTNode node = location.locate(ast2.getRoot());
+    final ASTNode node = cLocation.locate(ast2.getRoot());
 
     // located node is the same as target node
     assertThat(node).isSameSourceCodeAs("i=1;");
@@ -167,10 +223,11 @@ public class JDTASTCrossoverLocationTest {
 
     // extract target location
     final JDTASTLocation location = getLocation(ast1, 1);
-    assertThat(location.getNode()).isSameSourceCodeAs("i=1;");
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
 
     // try loc1.locate()
-    final ASTNode node = location.locate(ast2.getRoot());
+    final ASTNode node = cLocation.locate(ast2.getRoot());
 
     // failed to locate
     assertThat(node).isNull();
@@ -200,10 +257,11 @@ public class JDTASTCrossoverLocationTest {
 
     // extract target location
     final JDTASTLocation location = getLocation(ast1, 1);
-    assertThat(location.getNode()).isSameSourceCodeAs("i=1;");
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=1;");
 
     // try loc1.locate()
-    final ASTNode node = location.locate(ast2.getRoot());
+    final ASTNode node = cLocation.locate(ast2.getRoot());
 
     // failed to locate
     assertThat(node).isNull();
@@ -216,11 +274,9 @@ public class JDTASTCrossoverLocationTest {
     return constructor.constructAST(path, source);
   }
 
-  private JDTASTCrossoverLocation getLocation(GeneratedJDTAST<ProductSourcePath> ast, int idx) {
+  private JDTASTLocation getLocation(GeneratedJDTAST<ProductSourcePath> ast, int idx) {
     final ASTLocations locs = ast.createLocations();
-    final JDTASTLocation loc = (JDTASTLocation) locs.getAll()
+    return (JDTASTLocation) locs.getAll()
         .get(idx);
-    return new JDTASTCrossoverLocation(loc);
   }
-
 }
