@@ -28,8 +28,8 @@ public class CascadeCrossover extends CrossoverAdaptor {
    * @return 交叉を行うインスタンス
    */
   public CascadeCrossover(final FirstVariantSelectionStrategy firstStrategy,
-      final SecondVariantSelectionStrategy secondStrategy, final int generatingCount) {
-    super(firstStrategy, secondStrategy, generatingCount);
+      final SecondVariantSelectionStrategy secondStrategy) {
+    super(firstStrategy, secondStrategy, 2);
   }
 
   @Override
@@ -37,7 +37,6 @@ public class CascadeCrossover extends CrossoverAdaptor {
       throws CrossoverInfeasibleException {
     final Variant v1 = getFirstVariantSelectionStrategy().exec(variants);
     final Variant v2 = getSecondVariantSelectionStrategy().exec(variants, v1);
-
     final HistoricalElement histElement = new CascadeCrossoverHistoricalElement(v1, v2);
 
     // create two variants from cascaded genes
