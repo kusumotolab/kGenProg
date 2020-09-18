@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
 import org.mockito.Mockito;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
@@ -12,25 +13,28 @@ import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.NoneOperation;
 import jp.kusumotolab.kgenprog.project.TestFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
-// 4つの疑似バリアントからなるテストデータ．
-//
-// 10のテストケースが存在すると仮定する．
-// バリアントAは奇数番目のテストを失敗する．
-// バリアントBは偶数番目のテストを失敗する．
-// バリアントCは1〜6のテストを失敗する．
-// バリアントDは5〜10のテストを失敗する．
-//
-// 各バリアントは4つのBaseを持つ．
-// バリアントAは，none, none, none, none．
-// バリアントBは，none, none, none, insert．
-// バリアントCは，none, insert, insert, insert．
-// バリアントDは，insert, insert, insert, insert．
+/**
+ * 4つの疑似バリアントからなるテストデータ．
+ *
+ * 10のテストケースが存在すると仮定する．
+ * バリアントAは偶数番目のテストを失敗する．
+ * バリアントBは奇数番目のテストを失敗する．
+ * バリアントCは0〜4のテストを失敗する．
+ * バリアントDは5〜9のテストを失敗する．
+ *
+ * 各バリアントは4つのBaseを持つ．
+ * バリアントAは，none, none, none, none．
+ * バリアントBは，none, none, none, insert．
+ * バリアントCは，none, insert, insert, insert．
+ * バリアントDは，insert, insert, insert, insert．
+ */
 public class CrossoverTestVariants {
 
   final Base noneBase;
@@ -41,10 +45,10 @@ public class CrossoverTestVariants {
   final Variant variantD;
   final VariantStore variantStore;
 
-  public CrossoverTestVariants() {
+  final TestResult succeededTestResult = Mockito.mock(TestResult.class);
+  final TestResult failedTestResult = Mockito.mock(TestResult.class);
 
-    final TestResult succeededTestResult = Mockito.mock(TestResult.class);
-    final TestResult failedTestResult = Mockito.mock(TestResult.class);
+  public CrossoverTestVariants() {
 
     try {
       Class<?> c = Class.forName("jp.kusumotolab.kgenprog.project.test.TestResult");
@@ -52,128 +56,34 @@ public class CrossoverTestVariants {
       f.setAccessible(true);
       f.set(succeededTestResult, false);
       f.set(failedTestResult, true);
-    } catch (ClassNotFoundException | NoSuchFieldException | SecurityException
+    } catch (final ClassNotFoundException | NoSuchFieldException | SecurityException
         | IllegalArgumentException | IllegalAccessException e) {
       e.printStackTrace();
     }
 
-    final TestResults testResultsA = Mockito.mock(TestResults.class);
-    when(testResultsA.getSucceededTestFQNs())
-        .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test2"),
-            new TestFullyQualifiedName("Test4"), new TestFullyQualifiedName("Test6"),
-            new TestFullyQualifiedName("Test8"), new TestFullyQualifiedName("Test10")));
-    when(testResultsA.getFailedTestFQNs())
-        .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test1"),
-            new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test5"),
-            new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test9")));
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test1")))
-        .thenReturn(failedTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test2")))
-        .thenReturn(succeededTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test3")))
-        .thenReturn(failedTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test4")))
-        .thenReturn(succeededTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test5")))
-        .thenReturn(failedTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test6")))
-        .thenReturn(succeededTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test7")))
-        .thenReturn(failedTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test8")))
-        .thenReturn(succeededTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test9")))
-        .thenReturn(failedTestResult);
-    when(testResultsA.getTestResult(new TestFullyQualifiedName("Test10")))
-        .thenReturn(succeededTestResult);
+    final FullyQualifiedName test0 = new TestFullyQualifiedName("test0");
+    final FullyQualifiedName test1 = new TestFullyQualifiedName("test1");
+    final FullyQualifiedName test2 = new TestFullyQualifiedName("test2");
+    final FullyQualifiedName test3 = new TestFullyQualifiedName("test3");
+    final FullyQualifiedName test4 = new TestFullyQualifiedName("test4");
+    final FullyQualifiedName test5 = new TestFullyQualifiedName("test5");
+    final FullyQualifiedName test6 = new TestFullyQualifiedName("test6");
+    final FullyQualifiedName test7 = new TestFullyQualifiedName("test7");
+    final FullyQualifiedName test8 = new TestFullyQualifiedName("test8");
+    final FullyQualifiedName test9 = new TestFullyQualifiedName("test9");
 
-    final TestResults testResultsB = Mockito.mock(TestResults.class);
-    when(testResultsB.getSucceededTestFQNs())
-        .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test1"),
-            new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test5"),
-            new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test9")));
-    when(testResultsB.getFailedTestFQNs())
-        .thenReturn(Arrays.asList(new TestFullyQualifiedName("Test2"),
-            new TestFullyQualifiedName("Test4"), new TestFullyQualifiedName("Test6"),
-            new TestFullyQualifiedName("Test8"), new TestFullyQualifiedName("Test10")));
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test1")))
-        .thenReturn(succeededTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test2")))
-        .thenReturn(failedTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test3")))
-        .thenReturn(succeededTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test4")))
-        .thenReturn(failedTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test5")))
-        .thenReturn(succeededTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test6")))
-        .thenReturn(failedTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test7")))
-        .thenReturn(succeededTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test8")))
-        .thenReturn(failedTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test9")))
-        .thenReturn(succeededTestResult);
-    when(testResultsB.getTestResult(new TestFullyQualifiedName("Test10")))
-        .thenReturn(failedTestResult);
-
-    final TestResults testResultsC = Mockito.mock(TestResults.class);
-    when(testResultsC.getSucceededTestFQNs()).thenReturn(
-        Arrays.asList(new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test8"),
-            new TestFullyQualifiedName("Test9"), new TestFullyQualifiedName("Test10")));
-    when(testResultsC.getFailedTestFQNs()).thenReturn(
-        Arrays.asList(new TestFullyQualifiedName("Test1"), new TestFullyQualifiedName("Test2"),
-            new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test4"),
-            new TestFullyQualifiedName("Test5"), new TestFullyQualifiedName("Test6")));
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test1")))
-        .thenReturn(failedTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test2")))
-        .thenReturn(failedTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test3")))
-        .thenReturn(failedTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test4")))
-        .thenReturn(failedTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test5")))
-        .thenReturn(failedTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test6")))
-        .thenReturn(failedTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test7")))
-        .thenReturn(succeededTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test8")))
-        .thenReturn(succeededTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test9")))
-        .thenReturn(succeededTestResult);
-    when(testResultsC.getTestResult(new TestFullyQualifiedName("Test10")))
-        .thenReturn(succeededTestResult);
-
-    final TestResults testResultsD = Mockito.mock(TestResults.class);
-    when(testResultsD.getSucceededTestFQNs()).thenReturn(
-        Arrays.asList(new TestFullyQualifiedName("Test1"), new TestFullyQualifiedName("Test2"),
-            new TestFullyQualifiedName("Test3"), new TestFullyQualifiedName("Test4")));
-    when(testResultsD.getFailedTestFQNs()).thenReturn(
-        Arrays.asList(new TestFullyQualifiedName("Test5"), new TestFullyQualifiedName("Test6"),
-            new TestFullyQualifiedName("Test7"), new TestFullyQualifiedName("Test8"),
-            new TestFullyQualifiedName("Test9"), new TestFullyQualifiedName("Test10")));
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test1")))
-        .thenReturn(succeededTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test2")))
-        .thenReturn(succeededTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test3")))
-        .thenReturn(succeededTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test4")))
-        .thenReturn(succeededTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test5")))
-        .thenReturn(failedTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test6")))
-        .thenReturn(failedTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test7")))
-        .thenReturn(failedTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test8")))
-        .thenReturn(failedTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test9")))
-        .thenReturn(failedTestResult);
-    when(testResultsD.getTestResult(new TestFullyQualifiedName("Test10")))
-        .thenReturn(failedTestResult);
+    final TestResults testResultsA = setupTestResults(
+        Arrays.asList(test1, test3, test5, test7, test9),
+        Arrays.asList(test0, test2, test4, test6, test8));
+    final TestResults testResultsB = setupTestResults(
+        Arrays.asList(test0, test2, test4, test6, test8),
+        Arrays.asList(test1, test3, test5, test7, test9));
+    final TestResults testResultsC = setupTestResults(
+        Arrays.asList(test6, test7, test8, test9),
+        Arrays.asList(test0, test1, test2, test3, test4, test5));
+    final TestResults testResultsD = setupTestResults(
+        Arrays.asList(test0, test1, test2, test3),
+        Arrays.asList(test4, test5, test6, test7, test8, test9));
 
     noneBase = new Base(null, new NoneOperation());
     insertBase = new Base(null, new InsertAfterOperation(null));
@@ -216,5 +126,15 @@ public class CrossoverTestVariants {
       final HistoricalElement element = invocation.getArgument(1);
       return new Variant(0, 0, gene, null, null, null, null, element);
     });
+  }
+
+  private TestResults setupTestResults(final List<FullyQualifiedName> passes,
+      final List<FullyQualifiedName> fails) {
+    final TestResults results = Mockito.mock(TestResults.class);
+    when(results.getSucceededTestFQNs()).thenReturn(passes);
+    when(results.getFailedTestFQNs()).thenReturn(fails);
+    passes.forEach(s -> when(results.getTestResult(s)).thenReturn(succeededTestResult));
+    fails.forEach(s -> when(results.getTestResult(s)).thenReturn(failedTestResult));
+    return results;
   }
 }
