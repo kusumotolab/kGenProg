@@ -75,17 +75,16 @@ public class SimpleMutation extends Mutation {
     final Scope scope = new Scope(type, fqn);
     final Query query = new Query(scope);
 
-    ASTNode nodeForReuse = null;
     int attempt = 0;
     final boolean isStatement = location.isStatement();
     final boolean isExpression = location.isExpression();
     while (attempt++ < ATTEMPT_FOR_REPLACE) {
-      nodeForReuse = candidateSelection.exec(query);
+      final ASTNode nodeForReuse = candidateSelection.exec(query);
       if (isStatement && nodeForReuse instanceof Statement
           || isExpression && nodeForReuse instanceof Expression) {
-        break;
+        return nodeForReuse;
       }
     }
-    return nodeForReuse;
+    return null;
   }
 }
