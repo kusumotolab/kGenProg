@@ -22,7 +22,7 @@ import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
  */
 public class SimpleMutation extends Mutation {
 
-  private static final int ATTEMPT_FOR_REPLACE = 100;
+  private static final int ATTEMPT_FOR_RESELECTION = 100;
 
   protected final Type type;
 
@@ -78,7 +78,7 @@ public class SimpleMutation extends Mutation {
     int attempt = 0;
     final boolean isStatement = location.isStatement();
     final boolean isExpression = location.isExpression();
-    while (attempt++ < ATTEMPT_FOR_REPLACE) {
+    while (attempt++ < ATTEMPT_FOR_RESELECTION) {
       final ASTNode nodeForReuse = candidateSelection.exec(query);
       if (isStatement && nodeForReuse instanceof Statement
           || isExpression && nodeForReuse instanceof Expression) {
