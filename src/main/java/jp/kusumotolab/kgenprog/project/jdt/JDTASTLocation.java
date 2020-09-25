@@ -7,7 +7,6 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
 import jp.kusumotolab.kgenprog.project.SourcePath;
 
@@ -20,7 +19,6 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 public class JDTASTLocation implements ASTLocation {
 
   public final ASTNode node;
-
   private final SourcePath sourcePath;
   private final GeneratedJDTAST<?> generatedAST;
 
@@ -31,6 +29,13 @@ public class JDTASTLocation implements ASTLocation {
     this.generatedAST = generatedAST;
   }
 
+  /**
+   * 別ASTでの同形部分を取り出す．
+   * 具体的には，このLocationオブジェクトを起点とした親への木構造を取り出し，別ASTから同形部分を探索する．
+   *
+   * @param otherASTRoot 探索対象の別ASTのルート
+   * @return
+   */
   public ASTNode locate(final ASTNode otherASTRoot) {
     final List<TreePathElement> treePaths = new ArrayList<>();
     ASTNode currentNode = node;
@@ -109,7 +114,7 @@ public class JDTASTLocation implements ASTLocation {
   }
 
   @Override
-  public GeneratedAST<?> getGeneratedAST() {
+  public GeneratedJDTAST<?> getGeneratedAST() {
     return generatedAST;
   }
 
