@@ -77,4 +77,27 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
     return a.toString()
         .compareTo(b.toString()) == 0;
   }
+
+  private static class TreePathElement {
+
+    private final ASTNode node;
+    private final StructuralPropertyDescriptor descriptor;
+
+    public TreePathElement(final ASTNode node) {
+      this(node, node.getLocationInParent());
+    }
+
+    public TreePathElement(final ASTNode node, final StructuralPropertyDescriptor descriptor) {
+      this.node = node;
+      this.descriptor = descriptor;
+    }
+
+    public boolean isSameDescriptor(final TreePathElement t) {
+      return this.descriptor == t.descriptor;
+    }
+
+    public ASTNode getNode() {
+      return node;
+    }
+  }
 }
