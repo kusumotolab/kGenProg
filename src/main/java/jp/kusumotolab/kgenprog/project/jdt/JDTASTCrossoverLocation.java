@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 
@@ -26,31 +25,30 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
     final List<TreePathElement> treePaths = makePath(node);
     treePaths.remove(0); // remove compilationUnit
 
-    List<TreePathElement> possibleNodes = new ArrayList<>();
-    possibleNodes.add(new TreePathElement(otherASTRoot));
+    List<TreePathElement> candidateNodes = new ArrayList<>();
+    candidateNodes.add(new TreePathElement(otherASTRoot));
+
     for (final TreePathElement path : treePaths) {//これと比べる．これが正解．
-      final List<TreePathElement> nextPossibleNodes = new ArrayList<>();
-      for (final TreePathElement current : possibleNodes) {
+      final List<TreePathElement> nextCandidateNodes = new ArrayList<>();
+      for (final TreePathElement current : candidateNodes) {
         getChildren(current.getNode()).stream()
-            .filter(e -> isSameASTNodeType(path.getNode(), e.getNode()) && path.isSameDescriptor(e))
-            .forEach(nextPossibleNodes::add);
+            .filter(path::isSameElementType)
+            .forEach(nextCandidateNodes::add);
       }
-      possibleNodes = nextPossibleNodes;
+      candidateNodes = nextCandidateNodes;
     }
 
-    possibleNodes = possibleNodes.stream()
-        .filter(e -> isSameSourceCode(node, e.getNode()))
-        .collect(Collectors.toList());
+    candidateNodes.removeIf(e -> !isSameSourceCode(node, e.getNode()));
 
     //解が複数存在するときは，とりあえず最初のものを返している．
     //TODO: 解が複数存在するときの適切な振る舞いを考える．
-    return possibleNodes.isEmpty() ? null : possibleNodes.get(0)
+    return candidateNodes.isEmpty() ? null : candidateNodes.get(0)
         .getNode();
   }
 
-  private List<TreePathElement> makePath(final ASTNode n) {
+  private List<TreePathElement> makePath(final ASTNode dest) {
     final List<TreePathElement> treePaths = new ArrayList<>();
-    ASTNode currentNode = n;
+    ASTNode currentNode = dest;
     while (currentNode != null) {
       treePaths.add(new TreePathElement(currentNode));
       currentNode = currentNode.getParent();
@@ -77,9 +75,6 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
     return children;
   }
 
-  private boolean isSameASTNodeType(final ASTNode a, final ASTNode b) {
-    return a.getClass() == b.getClass();
-  }
 
   private boolean isSameSourceCode(final ASTNode a, final ASTNode b) {
     return a.toString()
@@ -100,8 +95,17 @@ public class JDTASTCrossoverLocation extends JDTASTLocation {
       this.descriptor = descriptor;
     }
 
-    public boolean isSameDescriptor(final TreePathElement t) {
-      return this.descriptor == t.descriptor;
+    public boolean isSameElementType(final TreePathElement t) {
+      return isSameDescriptor(this, t)
+          && isSameNodeType(this.getNode(), t.getNode());
+    }
+
+    private boolean isSameNodeType(final ASTNode a, final ASTNode b) {
+      return a.getClass() == b.getClass();
+    }
+
+    private boolean isSameDescriptor(final TreePathElement a, final TreePathElement b) {
+      return a.descriptor == b.descriptor;
     }
 
     public ASTNode getNode() {
