@@ -88,6 +88,35 @@ public class JDTASTCrossoverLocationTest {
   }
 
   @Test
+  public void testLocateForTheSameAst04() {
+    final String source = new StringBuilder()
+        .append("class A {")
+        .append("  public void a(int i) {")
+        .append("    if (true) {")
+        .append("      i = 2;")
+        .append("      i = 3;")
+        .append("    } else {")
+        .append("      i = 2;") // target
+        .append("      i = 3;")
+        .append("  }")
+        .append("}")
+        .toString();
+    final GeneratedJDTAST<ProductSourcePath> ast = createAst(source);
+
+    // extract target location
+    final JDTASTLocation location = getLocation(ast, 4);
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=2;");
+
+    // try locate() for the same ast root
+    final ASTNode node = cLocation.locate(ast.getRoot());
+
+    // located node is the same as target node
+    assertThat(node).isEqualTo(location.getNode());
+    assertThat(node.getRoot()).isSameRootClassAs(ast.getRoot());
+  }
+
+  @Test
   public void testLocateForSameContentAst() {
     final String source = new StringBuilder()
         .append("class A {")
