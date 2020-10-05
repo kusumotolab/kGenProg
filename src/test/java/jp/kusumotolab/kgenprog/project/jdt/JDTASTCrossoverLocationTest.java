@@ -11,15 +11,13 @@ public class JDTASTCrossoverLocationTest {
 
   @Test
   public void testLocateForTheSameAst01() {
-    final String source = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 1;") // target
-        .append("    i = 2;")
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 1;" // target
+        + "    i = 2;"
+        + "  }"
+        + "}";
     final GeneratedJDTAST<ProductSourcePath> ast = createAst(source);
 
     // extract target location
@@ -37,15 +35,13 @@ public class JDTASTCrossoverLocationTest {
 
   @Test
   public void testLocateForTheSameAst02() {
-    final String source = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 1;") // target
-        .append("    i = 1;")
-        .append("    i = 1;")
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 1;" // target
+        + "    i = 1;"
+        + "    i = 1;"
+        + "  }"
+        + "}";
     final GeneratedJDTAST<ProductSourcePath> ast = createAst(source);
 
     // extract target location
@@ -63,15 +59,13 @@ public class JDTASTCrossoverLocationTest {
 
   @Test
   public void testLocateForTheSameAst03() {
-    final String source = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 1;")
-        .append("    i = 1;") // target
-        .append("    i = 1;")
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 1;"
+        + "    i = 1;" // target
+        + "    i = 1;"
+        + "  }"
+        + "}";
     final GeneratedJDTAST<ProductSourcePath> ast = createAst(source);
 
     // extract target location
@@ -88,16 +82,55 @@ public class JDTASTCrossoverLocationTest {
   }
 
   @Test
+  public void testLocateForTheSameAst04() {
+    final String source = "class A {"
+        + "  public void a(int i) {"
+        + "    if (true) {"
+        + "      i = 2;"
+        + "      i = 3;"
+        + "      if (true) {"
+        + "        i = 2;"
+        + "        i = 3;"
+        + "      } else {"
+        + "        i = 2;"
+        + "        i = 3;"
+        + "      }"
+        + "    } else {"
+        + "      i = 2;"
+        + "      i = 3;"
+        + "      if (true) {"
+        + "        i = 2;" //target
+        + "        i = 3;"
+        + "      } else {"
+        + "        i = 2;"
+        + "        i = 3;"
+        + "      }"
+        + "    }"
+        + "}";
+    final GeneratedJDTAST<ProductSourcePath> ast = createAst(source);
+
+    // extract target location
+    final JDTASTLocation location = getLocation(ast, 14);
+    final JDTASTCrossoverLocation cLocation = new JDTASTCrossoverLocation(location);
+    assertThat(cLocation.getNode()).isSameSourceCodeAs("i=2;");
+
+    // try locate() for the same ast root
+    final ASTNode node = cLocation.locate(ast.getRoot());
+
+    // located node is the same as target node
+    assertThat(node).isEqualTo(location.getNode());
+    assertThat(node.getRoot()).isSameRootClassAs(ast.getRoot());
+  }
+
+  @Test
   public void testLocateForSameContentAst() {
-    final String source = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 1;") // target
-        .append("    i = 2;")
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 1;" // target
+        + "    i = 2;"
+        + "  }"
+        + "}";
 
     // generate two asts (contents are the same but they are different object)
     final GeneratedJDTAST<ProductSourcePath> ast1 = createAst(source);
@@ -118,24 +151,20 @@ public class JDTASTCrossoverLocationTest {
 
   @Test
   public void testLocateForDifferentAst01() {
-    final String source1 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 1;") // target
-        .append("    i = 2;")
-        .append("  }")
-        .append("}")
-        .toString();
-    final String source2 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 2;")
-        .append("    i = 1;") // target
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source1 = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 1;" // target
+        + "    i = 2;"
+        + "  }"
+        + "}";
+    final String source2 = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 2;"
+        + "    i = 1;" // target
+        + "  }"
+        + "}";
 
     // generate two asts
     final GeneratedJDTAST<ProductSourcePath> ast1 = createAst(source1);
@@ -156,26 +185,22 @@ public class JDTASTCrossoverLocationTest {
 
   @Test
   public void testLocateForDifferentAst02() {
-    final String source1 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 1;") // target
-        .append("    i = 2;")
-        .append("  }")
-        .append("}")
-        .toString();
-    final String source2 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 1;") // target
-        .append("    if (true) {")
-        .append("      i = 2;")
-        .append("    }")
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source1 = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 1;" // target
+        + "    i = 2;"
+        + "  }"
+        + "}";
+    final String source2 = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 1;" // target
+        + "    if (true) {"
+        + "      i = 2;"
+        + "    }"
+        + "  }"
+        + "}";
 
     // generate two asts
     final GeneratedJDTAST<ProductSourcePath> ast1 = createAst(source1);
@@ -196,26 +221,22 @@ public class JDTASTCrossoverLocationTest {
 
   @Test
   public void testLocateForDifferentAst03() {
-    final String source1 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 1;") // target
-        .append("    i = 2;")
-        .append("  }")
-        .append("}")
-        .toString();
-    final String source2 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    if (true) {")
-        .append("      i = 1;") // target
-        .append("    }")
-        .append("    i = 2;")
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source1 = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 1;" // target
+        + "    i = 2;"
+        + "  }"
+        + "}";
+    final String source2 = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    if (true) {"
+        + "      i = 1;" // target
+        + "    }"
+        + "    i = 2;"
+        + "  }"
+        + "}";
 
     // generate two asts
     final GeneratedJDTAST<ProductSourcePath> ast1 = createAst(source1);
@@ -235,21 +256,17 @@ public class JDTASTCrossoverLocationTest {
 
   @Test
   public void testLocateForDifferentAst04() {
-    final String source1 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("    i = 0;")
-        .append("    i = 1;") // target
-        .append("    i = 2;")
-        .append("  }")
-        .append("}")
-        .toString();
-    final String source2 = new StringBuilder()
-        .append("class A {")
-        .append("  public void a(int i) {")
-        .append("  }")
-        .append("}")
-        .toString();
+    final String source1 = "class A {"
+        + "  public void a(int i) {"
+        + "    i = 0;"
+        + "    i = 1;" // target
+        + "    i = 2;"
+        + "  }"
+        + "}";
+    final String source2 = "class A {"
+        + "  public void a(int i) {"
+        + "  }"
+        + "}";
 
     // generate two asts
     final GeneratedJDTAST<ProductSourcePath> ast1 = createAst(source1);
