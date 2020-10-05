@@ -111,8 +111,11 @@ public class CascadeCrossoverTest {
     final GeneratedJDTAST<?> ast1 = getAst(v1);
     assertThat(ast1.getRoot()).isSameSourceCodeAs(
         "package example; public class Foo { public void a(int i) {"
-            + "if (n > 0 ) {n--;n--;n--;n--;}"
-            + "else {n++;n++;n++;n++;}"
+            + "if (n > 0 ) {"
+            + "  n--; n--; n--; n--;"
+            + "} else {"
+            + "  n++; n++; n++; n++;"
+            + "}"
             + "return n;}}");
 
     // v2 is same source as v1
