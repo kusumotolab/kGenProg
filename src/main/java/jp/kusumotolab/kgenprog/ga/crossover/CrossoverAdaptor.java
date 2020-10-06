@@ -70,24 +70,12 @@ public abstract class CrossoverAdaptor implements Crossover {
    */
   @Override
   public final List<Variant> exec(final VariantStore variantStore) {
-
-    final List<Variant> filteredVariants = variantStore.getCurrentVariants()
-        .stream()
-        .filter(e -> 1 < e.getGene() // 遺伝子の長さが2に満たないバリアントは交叉に使えない
-            .getBases()
-            .size())
-        .collect(Collectors.toList());
-
-    // filteredVariantsの要素数が2に満たない場合は交叉しない
-    if (filteredVariants.size() < 2) {
-      return Collections.emptyList();
-    }
-
+    final List<Variant> validVariants = variantStore.getCurrentVariants();
     final List<Variant> variants = new ArrayList<>();
     try {
       // generatingCountを超えるまでバリアントを作りづづける
       while (variants.size() < generatingCount) {
-        final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+        final List<Variant> newVariants = makeVariants(validVariants, variantStore);
         variants.addAll(newVariants);
       }
     } catch (final CrossoverInfeasibleException e) {
