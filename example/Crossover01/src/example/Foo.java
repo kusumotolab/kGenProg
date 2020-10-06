@@ -1,13 +1,10 @@
-package example;
-
 public class Foo {
-
-  public void a(int i) {
-    if (n > 0) {
-      n--;        // locA
+  public void a(int n) {
+    if (n) {
+      n = 0;      // loc0
     } else {
-      n++;        // locB
+      n = 1;      // loc1
     }
-    return n;     // locC
+    n = 2;        // loc2
   }
 }
