@@ -51,6 +51,11 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
     for (final Base base : gene.getBases()) {
       final Operation operation = base.getOperation();
       generatedSourceCode = operation.apply(generatedSourceCode, base.getTargetLocation());
+
+      // immediately return failed source code if operation#apply was failed
+      if (! generatedSourceCode.isGenerationSuccess()) {
+        return generatedSourceCode;
+      }
     }
 
     if (sourceCodeMap.containsKey((generatedSourceCode.getMessageDigest()))) {
