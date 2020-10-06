@@ -24,7 +24,6 @@ public class CascadeCrossover extends CrossoverAdaptor {
   /**
    * @param firstStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondStrategy 2つ目の親を選ぶためのアルゴリズム
-   * @param generatingCount 一世代の交叉処理で生成する個体の数
    * @return 交叉を行うインスタンス
    */
   public CascadeCrossover(final FirstVariantSelectionStrategy firstStrategy,
@@ -53,6 +52,7 @@ public class CascadeCrossover extends CrossoverAdaptor {
         .map(Variant::getGene)
         .map(Gene::getBases)
         .flatMap(Collection::stream)
+        .distinct() // remove shared genes which means these two variants have blood relation
         .map(this::mapBaseLocationToCrossoverLocation)
         .collect(Collectors.toList());
     return new Gene(cascadeBases);
