@@ -18,7 +18,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
  */
 public abstract class CrossoverAdaptor implements Crossover {
 
-  private static Logger log = LoggerFactory.getLogger(CrossoverAdaptor.class);
+  private static final Logger log = LoggerFactory.getLogger(CrossoverAdaptor.class);
 
   private final FirstVariantSelectionStrategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy secondVariantSelectionStrategy;
@@ -30,7 +30,6 @@ public abstract class CrossoverAdaptor implements Crossover {
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
-   * @return 交叉を行うインスタンス
    */
   public CrossoverAdaptor(final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,

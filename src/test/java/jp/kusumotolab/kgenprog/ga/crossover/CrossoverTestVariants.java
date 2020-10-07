@@ -98,22 +98,22 @@ public class CrossoverTestVariants {
     final Fitness fitnessD = new SimpleFitness(0.4d);
 
     variantA = Mockito.mock(Variant.class);
-    when(variantA.getId()).thenReturn(0l);
+    when(variantA.getId()).thenReturn(0L);
     when(variantA.getTestResults()).thenReturn(testResultsA);
     when(variantA.getGene()).thenReturn(geneA);
     when(variantA.getFitness()).thenReturn(fitnessA);
     variantB = Mockito.mock(Variant.class);
-    when(variantB.getId()).thenReturn(1l);
+    when(variantB.getId()).thenReturn(1L);
     when(variantB.getTestResults()).thenReturn(testResultsB);
     when(variantB.getGene()).thenReturn(geneB);
     when(variantB.getFitness()).thenReturn(fitnessB);
     variantC = Mockito.mock(Variant.class);
-    when(variantC.getId()).thenReturn(2l);
+    when(variantC.getId()).thenReturn(2L);
     when(variantC.getTestResults()).thenReturn(testResultsC);
     when(variantC.getGene()).thenReturn(geneC);
     when(variantC.getFitness()).thenReturn(fitnessC);
     variantD = Mockito.mock(Variant.class);
-    when(variantD.getId()).thenReturn(3l);
+    when(variantD.getId()).thenReturn(3L);
     when(variantD.getTestResults()).thenReturn(testResultsD);
     when(variantD.getGene()).thenReturn(geneD);
     when(variantD.getFitness()).thenReturn(fitnessD);
