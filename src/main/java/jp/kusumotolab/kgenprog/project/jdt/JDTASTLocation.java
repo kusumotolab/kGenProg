@@ -101,7 +101,6 @@ public class JDTASTLocation implements ASTLocation {
     return children;
   }
 
-
   private static boolean isSameSourceCode(final ASTNode a, final ASTNode b) {
     return a.toString()
         .compareTo(b.toString()) == 0;
