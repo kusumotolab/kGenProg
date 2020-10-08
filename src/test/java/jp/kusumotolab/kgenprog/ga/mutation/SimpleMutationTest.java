@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.ga.mutation;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
+import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -16,12 +17,14 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementAndConditionSelection;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -35,6 +38,7 @@ import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
@@ -182,7 +186,7 @@ public class SimpleMutationTest {
 
   private SimpleMutation createSimpleMutation(final GeneratedSourceCode sourceCode,
       final Random random) {
-    final CandidateSelection statementSelection = new RouletteStatementSelection(random);
+    final CandidateSelection statementSelection = new RouletteStatementAndConditionSelection(random);
     final SimpleMutation simpleMutation = new SimpleMutation(15, random, statementSelection,
         Type.PROJECT);
     simpleMutation.setCandidates(sourceCode.getProductAsts());
@@ -242,5 +246,47 @@ public class SimpleMutationTest {
       return null;
     }
     return bases.get(bases.size() - 1);
+  }
+
+  @Test
+  public void testReusedNode01() {
+    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+
+    // Statementを表すlocationを生成
+    final JDTASTLocation location = mock(JDTASTLocation.class);
+    when(location.isStatement()).thenReturn(true);
+    when(location.isExpression()).thenReturn(false);
+
+    // generatedASTのハリボテを生成
+    final GeneratedJDTAST generatedAST = mock(GeneratedJDTAST.class);
+    when(generatedAST.getPrimaryClassName()).thenReturn(new TargetFullyQualifiedName("test"));
+    when(location.getGeneratedAST()).thenReturn(generatedAST);
+
+    // locationと置換可能なプログラム要素を取得
+    // 取得したプログラム要素はStatementのはず．
+    final ASTNode chosenNode = simpleMutation.chooseNodeForReuse(location);
+    assertThat(chosenNode).isInstanceOf(Statement.class);
+  }
+
+  @Test
+  public void testReusedNode02() {
+    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+
+    // Expressionを表すlocationを生成
+    final JDTASTLocation location = mock(JDTASTLocation.class);
+    when(location.isStatement()).thenReturn(false);
+    when(location.isExpression()).thenReturn(true);
+
+    // generatedASTのハリボテを生成
+    final GeneratedJDTAST generatedAST = mock(GeneratedJDTAST.class);
+    when(generatedAST.getPrimaryClassName()).thenReturn(new TargetFullyQualifiedName("example"));
+    when(location.getGeneratedAST()).thenReturn(generatedAST);
+
+    // locationと置換可能なプログラム要素を取得
+    // 取得したプログラム要素はNullのはず．
+    final ASTNode chosenNode = simpleMutation.chooseNodeForReuse(location);
+    assertThat(chosenNode).isNull();
   }
 }

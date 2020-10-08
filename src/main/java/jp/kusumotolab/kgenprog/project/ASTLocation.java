@@ -14,4 +14,8 @@ public interface ASTLocation {
   LineNumberRange inferLineNumbers();
 
   GeneratedAST<?> getGeneratedAST();
+
+  boolean isStatement();
+
+  boolean isExpression();
 }
