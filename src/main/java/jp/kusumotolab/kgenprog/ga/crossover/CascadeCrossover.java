@@ -24,7 +24,6 @@ public class CascadeCrossover extends CrossoverAdaptor {
   /**
    * @param firstStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondStrategy 2つ目の親を選ぶためのアルゴリズム
-   * @return 交叉を行うインスタンス
    */
   public CascadeCrossover(final FirstVariantSelectionStrategy firstStrategy,
       final SecondVariantSelectionStrategy secondStrategy) {
@@ -40,7 +39,7 @@ public class CascadeCrossover extends CrossoverAdaptor {
 
     // create two variants from cascaded genes
     final Gene cascadeGene1 = createCascadeGene(v1, v2);
-    final Gene cascadeGene2 = createCascadeGene(v2, v1); //NOSONAR: it's intentional.
+    final Gene cascadeGene2 = createCascadeGene(v2, v1); // NOSONAR: it's intentional.
     final Variant newVariant1 = store.createVariant(cascadeGene1, histElement);
     final Variant newVariant2 = store.createVariant(cascadeGene2, histElement);
 
