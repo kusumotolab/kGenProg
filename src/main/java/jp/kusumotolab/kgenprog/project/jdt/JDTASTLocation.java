@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
@@ -36,66 +37,73 @@ public class JDTASTLocation implements ASTLocation {
    * 具体的には，このLocationオブジェクトを起点とした親への木構造を取り出し，別ASTから同形部分を探索する．
    *
    * @param otherASTRoot 探索対象の別ASTのルート
-   * @return
+   * @return 探索に成功したとき，その AST ノード．探索対象のAST ノードが存在しないとき null．
    */
   public ASTNode locate(final ASTNode otherASTRoot) {
+    final List<TreePathElement> treePaths = makePath(node);
+    treePaths.remove(0); // remove compilationUnit
+
+    final List<ASTNode> candidates = locateByNodeDepthAndType(treePaths, otherASTRoot);
+
+    //解が複数存在するときは，とりあえず最初のものを返している．
+    //TODO: 解が複数存在するときの適切な振る舞いを考える．
+    return candidates.isEmpty() ? null : candidates.get(0);
+  }
+
+  private List<ASTNode> locateByNodeDepthAndType(final List<TreePathElement> treePaths,
+      final ASTNode otherASTRoot) {
+    List<TreePathElement> candidateNodes = new ArrayList<>();
+    candidateNodes.add(new TreePathElement(otherASTRoot));
+
+    for (final TreePathElement path : treePaths) {//これと比べる．これが正解．
+      final List<TreePathElement> nextCandidateNodes = new ArrayList<>();
+      for (final TreePathElement current : candidateNodes) {
+        getChildren(current.getNode()).stream()
+            .filter(path::isSameElementType)
+            .forEach(nextCandidateNodes::add);
+      }
+      candidateNodes = nextCandidateNodes;
+    }
+
+    candidateNodes.removeIf(e -> !isSameSourceCode(node, e.getNode()));
+
+    return candidateNodes.stream()
+        .map(TreePathElement::getNode)
+        .collect(Collectors.toList());
+  }
+
+  private List<TreePathElement> makePath(final ASTNode dest) {
     final List<TreePathElement> treePaths = new ArrayList<>();
-    ASTNode currentNode = node;
-    while (true) {
-      final StructuralPropertyDescriptor locationInParent = currentNode.getLocationInParent();
-      if (locationInParent == null) {
-        break;
-      }
-
-      final ASTNode parent = currentNode.getParent();
-      int idx = TreePathElement.NOT_LIST;
-
-      if (locationInParent.isChildListProperty()) {
-        // Listの場合、indexも覚えておく
-        final List<?> children = (List<?>) parent.getStructuralProperty(locationInParent);
-        idx = children.indexOf(currentNode);
-      }
-
-      treePaths.add(new TreePathElement(locationInParent, idx));
-
-      currentNode = parent;
+    ASTNode currentNode = dest;
+    while (currentNode != null) {
+      treePaths.add(new TreePathElement(currentNode));
+      currentNode = currentNode.getParent();
     }
 
     Collections.reverse(treePaths);
-
-    currentNode = otherASTRoot;
-    for (final TreePathElement path : treePaths) {
-      currentNode = path.moveToChild(currentNode);
-    }
-
-    return currentNode;
+    return treePaths;
   }
 
-  private static class TreePathElement {
-
-    public static final int NOT_LIST = -1;
-
-    StructuralPropertyDescriptor descriptor;
-    int idx;
-
-    public TreePathElement(final StructuralPropertyDescriptor descriptor, final int idx) {
-      this.descriptor = descriptor;
-      this.idx = idx;
-    }
-
-    public ASTNode moveToChild(final ASTNode current) {
-      final Object child = current.getStructuralProperty(descriptor);
-      if (idx == NOT_LIST) {
-        return (ASTNode) child;
-      } else {
-        return (ASTNode) ((List<?>) child).get(idx);
+  private List<TreePathElement> getChildren(final ASTNode node) {
+    final List<TreePathElement> children = new ArrayList<>();
+    for (final Object o : node.structuralPropertiesForType()) {
+      final Object childOrChildren = node.getStructuralProperty((StructuralPropertyDescriptor) o);
+      if (childOrChildren instanceof ASTNode) {
+        children.add(new TreePathElement((ASTNode) childOrChildren));
+      } else if (childOrChildren instanceof List) {
+        @SuppressWarnings("unchecked") // このとき，List の要素は必ず ASTNode
+        final List<ASTNode> c = (List<ASTNode>) childOrChildren;
+        c.stream()
+            .map(TreePathElement::new)
+            .forEach(children::add);
       }
     }
+    return children;
   }
 
-  @Override
-  public SourcePath getSourcePath() {
-    return sourcePath;
+  private static boolean isSameSourceCode(final ASTNode a, final ASTNode b) {
+    return a.toString()
+        .compareTo(b.toString()) == 0;
   }
 
   @Override
@@ -116,6 +124,11 @@ public class JDTASTLocation implements ASTLocation {
   }
 
   @Override
+  public SourcePath getSourcePath() {
+    return sourcePath;
+  }
+
+  @Override
   public GeneratedJDTAST<?> getGeneratedAST() {
     return generatedAST;
   }
@@ -131,7 +144,6 @@ public class JDTASTLocation implements ASTLocation {
 
   @Override
   public boolean equals(final Object o) {
-
     if (null == o) {
       return false;
     }
@@ -157,5 +169,37 @@ public class JDTASTLocation implements ASTLocation {
   @Override
   public boolean isExpression() {
     return node instanceof Expression;
+  }
+
+  private static class TreePathElement {
+
+    private final ASTNode node;
+    StructuralPropertyDescriptor descriptor;
+
+    public TreePathElement(final ASTNode node) {
+      this(node, node.getLocationInParent());
+    }
+
+    public TreePathElement(final ASTNode node, final StructuralPropertyDescriptor descriptor) {
+      this.node = node;
+      this.descriptor = descriptor;
+    }
+
+    private static boolean isSameNodeType(final ASTNode a, final ASTNode b) {
+      return a.getClass() == b.getClass();
+    }
+
+    private static boolean isSameDescriptor(final TreePathElement a, final TreePathElement b) {
+      return a.descriptor == b.descriptor;
+    }
+
+    public boolean isSameElementType(final TreePathElement t) {
+      return isSameDescriptor(this, t)
+          && isSameNodeType(this.node, t.node);
+    }
+
+    public ASTNode getNode() {
+      return node;
+    }
   }
 }
