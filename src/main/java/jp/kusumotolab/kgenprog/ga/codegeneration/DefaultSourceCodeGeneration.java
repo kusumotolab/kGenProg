@@ -53,7 +53,7 @@ public class DefaultSourceCodeGeneration implements SourceCodeGeneration {
       generatedSourceCode = operation.apply(generatedSourceCode, base.getTargetLocation());
 
       // immediately return failed source code if operation#apply was failed
-      if (! generatedSourceCode.isGenerationSuccess()) {
+      if (!generatedSourceCode.isGenerationSuccess()) {
         return generatedSourceCode;
       }
     }
