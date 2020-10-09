@@ -17,8 +17,6 @@ import jp.kusumotolab.kgenprog.ga.variant.EmptyHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.project.ASTLocation;
-import jp.kusumotolab.kgenprog.project.ASTLocations;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
@@ -66,7 +64,7 @@ public class CascadeCrossoverTest {
    * 2つの親の塩基は独立したブロックへの操作である最も単純なケース
    */
   @Test
-  public void testForSimpleInsertions01()  {
+  public void testForSimpleInsertions01() {
     // 親1: n=0の後ろにn=0を2つ追加
     final Base base1a = new Base(loc0, new InsertAfterOperation(loc2.getNode()));
     final Base base1b = new Base(loc0, new InsertAfterOperation(loc2.getNode()));
@@ -406,7 +404,6 @@ public class CascadeCrossoverTest {
     assertThat(v2.isReproduced()).isTrue();
     assertThat(v2.isBuildSucceeded()).isFalse();
   }
-
 
   // helpers
 

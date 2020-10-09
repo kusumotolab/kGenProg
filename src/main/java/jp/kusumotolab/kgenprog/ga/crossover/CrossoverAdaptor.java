@@ -67,10 +67,16 @@ public abstract class CrossoverAdaptor implements Crossover {
    * @param variantStore 交叉対象の個体群
    * @return 交叉により生成された個体群
    */
-  @Override
-  public final List<Variant> exec(final VariantStore variantStore) {
-    final List<Variant> validVariants = variantStore.getCurrentVariants();
+  //@Override
+  public List<Variant> exec(final VariantStore variantStore) {
+    final List<Variant> validVariants = filter(variantStore.getCurrentVariants());
     final List<Variant> variants = new ArrayList<>();
+
+    // filteredVariantsの要素数が2に満たない場合は交叉しない
+    if (validVariants.size() < 2) {
+      return Collections.emptyList();
+    }
+
     try {
       // generatingCountを超えるまでバリアントを作りづづける
       while (variants.size() < generatingCount) {
@@ -85,6 +91,38 @@ public abstract class CrossoverAdaptor implements Crossover {
     return variants.subList(0, generatingCount);
   }
 
+  //@Override
+  public final List<Variant> execx(final VariantStore variantStore) {
+
+    final List<Variant> filteredVariants = variantStore.getCurrentVariants()
+        .stream()
+        .filter(e -> 1 < e.getGene() // 遺伝子の長さが2に満たないバリアントは交叉に使えない
+            .getBases()
+            .size())
+        .collect(Collectors.toList());
+
+    // filteredVariantsの要素数が2に満たない場合は交叉しない
+    if (filteredVariants.size() < 2) {
+      return Collections.emptyList();
+    }
+
+    final List<Variant> variants = new ArrayList<>();
+    try {
+      // generatingCountを超えるまでバリアントを作りづづける
+      while (variants.size() < generatingCount) {
+        final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+        variants.addAll(newVariants);
+      }
+    } catch (final CrossoverInfeasibleException e) {
+      log.debug(e.getMessage());
+    }
+
+    // バリアントを作りすぎた場合はそれを除いてリターン
+    return variants.subList(0, generatingCount);
+  }
+
   protected abstract List<Variant> makeVariants(List<Variant> variants, VariantStore variantStore)
       throws CrossoverInfeasibleException;
+
+  protected abstract List<Variant> filter(List<Variant> variants);
 }

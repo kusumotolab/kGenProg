@@ -11,8 +11,6 @@ import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.project.jdt.JDTASTCrossoverLocation;
-import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 
 /**
  * 直列的な交叉を行うクラス．
@@ -30,6 +28,7 @@ public class CascadeCrossover extends CrossoverAdaptor {
     super(firstStrategy, secondStrategy, 2);
   }
 
+
   @Override
   protected List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
       throws CrossoverInfeasibleException {
@@ -46,20 +45,19 @@ public class CascadeCrossover extends CrossoverAdaptor {
     return Arrays.asList(newVariant1, newVariant2);
   }
 
+  @Override
+  protected List<Variant> filter(final List<Variant> variants) {
+    return variants; // no filter necessary
+  }
+
   private Gene createCascadeGene(final Variant v1, final Variant v2) {
     final List<Base> cascadeBases = Stream.of(v1, v2)
         .map(Variant::getGene)
         .map(Gene::getBases)
         .flatMap(Collection::stream)
-        .distinct() // remove shared genes which means these two variants have blood relation
-        .map(this::mapBaseLocationToCrossoverLocation)
+        .distinct() // remove shared genes meaning these two variants have blood relation
         .collect(Collectors.toList());
     return new Gene(cascadeBases);
   }
 
-  private Base mapBaseLocationToCrossoverLocation(final Base base) {
-    final JDTASTLocation loc = new JDTASTCrossoverLocation(
-        (JDTASTLocation) base.getTargetLocation());
-    return new Base(loc, base.getOperation());
-  }
 }

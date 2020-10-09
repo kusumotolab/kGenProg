@@ -39,6 +39,15 @@ public class SinglePointCrossover extends CrossoverAdaptor {
   }
 
   @Override
+  protected List<Variant> filter(final List<Variant> variants) {
+    return variants.stream()
+        .filter(e -> 1 < e.getGene() // 遺伝子の長さが2に満たないバリアントは交叉に使えない
+            .getBases()
+            .size())
+        .collect(Collectors.toList());
+  }
+
+  @Override
   protected List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
       throws CrossoverInfeasibleException {
     final Variant variantA = getFirstVariantSelectionStrategy().exec(variants);
