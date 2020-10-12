@@ -22,8 +22,8 @@ import jp.kusumotolab.kgenprog.project.SourcePath;
 public class JDTASTLocation implements ASTLocation {
 
   public final ASTNode node;
-  protected final SourcePath sourcePath;
-  protected final GeneratedJDTAST<?> generatedAST;
+  private final SourcePath sourcePath;
+  private final GeneratedJDTAST<?> generatedAST;
 
   public JDTASTLocation(final SourcePath sourcePath, final ASTNode node,
       final GeneratedJDTAST<?> generatedAST) {

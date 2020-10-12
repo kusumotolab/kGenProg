@@ -65,7 +65,7 @@ public class CascadeCrossoverTest {
    */
   @Test
   public void testForSimpleInsertions01() {
-    // 親1: n=0の後ろにn=0を2つ追加
+    // 親1: n=0の後ろにn=2を2つ追加
     final Base base1a = new Base(loc0, new InsertAfterOperation(loc2.getNode()));
     final Base base1b = new Base(loc0, new InsertAfterOperation(loc2.getNode()));
     final Gene gene1 = new Gene(Arrays.asList(base1a, base1b));
@@ -79,7 +79,7 @@ public class CascadeCrossoverTest {
         + "}"
         + "n=2;}}");
 
-    // 親2: n=1の後ろにn=1を2つ追加
+    // 親2: n=1の後ろにn=2を2つ追加
     final Base base2a = new Base(loc1, new InsertAfterOperation(loc2.getNode()));
     final Base base2b = new Base(loc1, new InsertAfterOperation(loc2.getNode()));
     final Gene gene2 = new Gene(Arrays.asList(base2a, base2b));
@@ -94,14 +94,14 @@ public class CascadeCrossoverTest {
         + "n=2;}}");
 
     // setup mocked objects used in crossover
-    final VariantStore spyedStore = createMockedStore(parent1, parent2);
+    final VariantStore spiedStore = createMockedStore(parent1, parent2);
     final FirstVariantSelectionStrategy strategy1 = createMocked1stStrategy(parent1);
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
     final Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spyedStore);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -163,14 +163,14 @@ public class CascadeCrossoverTest {
         + "n=2;}}");
 
     // setup mocked objects used in crossover
-    final VariantStore spyedStore = createMockedStore(parent1, parent2);
+    final VariantStore spiedStore = createMockedStore(parent1, parent2);
     final FirstVariantSelectionStrategy strategy1 = createMocked1stStrategy(parent1);
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spyedStore);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -202,7 +202,7 @@ public class CascadeCrossoverTest {
    */
   @Test
   public void testForComplicatedMutations() {
-    // 親1: n=0の後ろにn=2を追加，さらにn=0後ろにn=1を追加
+    // 親1: n=0の後ろにn=2を追加，さらにn=0の後ろにn=1を追加
     final Base base1a = new Base(loc0, new InsertAfterOperation(loc2.getNode()));
     final Base base1b = new Base(loc0, new InsertAfterOperation(loc1.getNode()));
     final Gene gene1 = new Gene(Arrays.asList(base1a, base1b));
@@ -232,14 +232,14 @@ public class CascadeCrossoverTest {
         + "n=2;}}");
 
     // setup mocked objects used in crossover
-    final VariantStore spyedStore = createMockedStore(parent1, parent2);
+    final VariantStore spiedStore = createMockedStore(parent1, parent2);
     final FirstVariantSelectionStrategy strategy1 = createMocked1stStrategy(parent1);
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spyedStore);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -269,7 +269,7 @@ public class CascadeCrossoverTest {
 
   /**
    * 2つの親が矛盾する塩基を持つケース．
-   * 親2によってlocate先のstmtが消えてしまうため親1の生成に失敗
+   * 親2によってlocate先のstmtが消えてしまうため子2の生成に失敗
    */
   @Test
   public void testForInconsistentParents() {
@@ -301,14 +301,14 @@ public class CascadeCrossoverTest {
         + "n=2;}}");
 
     // setup mocked objects used in crossover
-    final VariantStore spyedStore = createMockedStore(parent1, parent2);
+    final VariantStore spiedStore = createMockedStore(parent1, parent2);
     final FirstVariantSelectionStrategy strategy1 = createMocked1stStrategy(parent1);
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spyedStore);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -373,14 +373,14 @@ public class CascadeCrossoverTest {
         + "n=2;}}");
 
     // setup mocked objects used in crossover
-    final VariantStore spyedStore = createMockedStore(parent1, parent2);
+    final VariantStore spiedStore = createMockedStore(parent1, parent2);
     final FirstVariantSelectionStrategy strategy1 = createMocked1stStrategy(parent1);
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spyedStore);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -427,10 +427,10 @@ public class CascadeCrossoverTest {
 
   private VariantStore createMockedStore(final Variant v1, final Variant v2) {
     // always return the specified variants for store#getCurrentVariants()
-    final VariantStore spyedStore = Mockito.spy(store);
-    when(spyedStore.getGeneratedVariants()).thenReturn(Arrays.asList(v1, v2));
-    when(spyedStore.getCurrentVariants()).thenReturn(Arrays.asList(v1, v2));
-    return spyedStore;
+    final VariantStore spiedStore = Mockito.spy(store);
+    when(spiedStore.getGeneratedVariants()).thenReturn(Arrays.asList(v1, v2));
+    when(spiedStore.getCurrentVariants()).thenReturn(Arrays.asList(v1, v2));
+    return spiedStore;
   }
 
   private FirstVariantSelectionStrategy createMocked1stStrategy(final Variant v) {
