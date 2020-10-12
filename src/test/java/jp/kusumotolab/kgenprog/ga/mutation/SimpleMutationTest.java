@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.mutation;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
-import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -17,7 +16,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
@@ -25,7 +23,6 @@ import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementAndConditionSelection;
-import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
@@ -186,7 +183,8 @@ public class SimpleMutationTest {
 
   private SimpleMutation createSimpleMutation(final GeneratedSourceCode sourceCode,
       final Random random) {
-    final CandidateSelection statementSelection = new RouletteStatementAndConditionSelection(random);
+    final CandidateSelection statementSelection = new RouletteStatementAndConditionSelection(
+        random);
     final SimpleMutation simpleMutation = new SimpleMutation(15, random, statementSelection,
         Type.PROJECT);
     simpleMutation.setCandidates(sourceCode.getProductAsts());
