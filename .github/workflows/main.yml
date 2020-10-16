@@ -1,0 +1,45 @@
+name: Test branches
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  run-unit-tests:
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 15
+    env:
+      JAVA_OPTS: -Xmx3200m
+      TERM: dumb
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['11']
+        platform: [windows-latest]
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Cache dependencies
+      id: cache-dependencies
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-dependencies
+      with:
+        path: ~/.gradle/caches
+        key: build-cache-${{ hashFiles('build.gradle') }}
+        restore-keys: |
+          build-cache-
+          build-
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java }}
+    - name: Resolve dependencies
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: ./gradlew dependencies
+    # ここでssh
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v1
+    - name: Execute tests
+      run: ./gradlew test
