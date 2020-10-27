@@ -1,8 +1,6 @@
 package jp.kusumotolab.kgenprog.output;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -22,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.algorithm.DiffException;
-import jp.kusumotolab.kgenprog.CharsetDetector;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 
@@ -62,17 +59,7 @@ public class PatchGenerator {
         .getResolvedPath();
 
     try {
-      final CharsetDetector detector = new CharsetDetector();
-      final Charset charset = detector.detect(originalPath);
-      if (charset.equals(StandardCharsets.UTF_8)) {
-        return Files.readAllLines(originalPath, StandardCharsets.UTF_8);
-      } else {
-        return Files.readAllLines(originalPath, charset)
-            .stream()
-            .map(e -> e.getBytes(StandardCharsets.UTF_8))
-            .map(e -> new String(e, StandardCharsets.UTF_8))
-            .collect(Collectors.toList());
-      }
+      return Files.readAllLines(originalPath, ast.getCharset());
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
       return Collections.emptyList();
