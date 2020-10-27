@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Collections;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -28,7 +29,7 @@ public class DeleteOperationTest {
   public void testDeleteStatement() {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source, StandardCharsets.UTF_8);
     @SuppressWarnings("unchecked")
     final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
         GeneratedJDTAST.class);

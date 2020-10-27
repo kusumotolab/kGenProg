@@ -58,7 +58,7 @@ public abstract class JDTOperation implements Operation {
     }
 
     return jdtast.getConstruction()
-        .constructAST(ast.getSourcePath(), document.get());
+        .constructAST(ast.getSourcePath(), document.get(), ast.getCharset());
   }
 
   protected abstract <T extends SourcePath> void applyToASTRewrite(final GeneratedJDTAST<T> ast,

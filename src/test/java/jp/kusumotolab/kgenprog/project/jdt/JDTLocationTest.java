@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -349,7 +350,7 @@ public class JDTLocationTest {
     final String fname = source.hashCode() + ".java"; // dummy file name
     final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get(fname));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    return constructor.constructAST(path, source);
+    return constructor.constructAST(path, source, StandardCharsets.UTF_8);
   }
 
   private JDTASTLocation getLocation(GeneratedJDTAST<ProductSourcePath> ast, int idx) {

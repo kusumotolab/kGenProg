@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.atIndex;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class GeneratedJDTASTTest {
     final ProductSourcePath productSourcePath =
         new ProductSourcePath(Paths.get("."), Paths.get(FILE_NAME));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    this.ast = constructor.constructAST(productSourcePath, SOURCE);
+    this.ast = constructor.constructAST(productSourcePath, SOURCE, StandardCharsets.UTF_8);
   }
 
   @Test
@@ -113,7 +114,8 @@ public class GeneratedJDTASTTest {
         new ProductSourcePath(Paths.get("."), Paths.get("a/b/c/T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
+        StandardCharsets.UTF_8);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.T2");
   }
@@ -124,7 +126,8 @@ public class GeneratedJDTASTTest {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
+        StandardCharsets.UTF_8);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("T2");
   }
@@ -136,7 +139,8 @@ public class GeneratedJDTASTTest {
         new ProductSourcePath(Paths.get("."), Paths.get("a/b/c/T2.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
+        StandardCharsets.UTF_8);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.T1");
   }
@@ -148,7 +152,8 @@ public class GeneratedJDTASTTest {
         new ProductSourcePath(Paths.get("."), Paths.get("a/b/c/package-info.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
+        StandardCharsets.UTF_8);
 
     assertThat(ast.getPrimaryClassName()).isEqualTo("a.b.c.package-info");
   }
@@ -160,10 +165,10 @@ public class GeneratedJDTASTTest {
         new ProductSourcePath(Paths.get("."), Paths.get("StaticImport.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
+        StandardCharsets.UTF_8);
 
-    @SuppressWarnings("unchecked")
-    final List<ImportDeclaration> imports = ast.getRoot()
+    @SuppressWarnings("unchecked") final List<ImportDeclaration> imports = ast.getRoot()
         .imports();
 
     assertThat(imports).hasSize(1)
@@ -326,8 +331,7 @@ public class GeneratedJDTASTTest {
     methodInvocationB.setName(ast.newSimpleName("b"));
     final Block block = ast.newBlock();
 
-    @SuppressWarnings("unchecked")
-    final List<Statement> blockStatementList = block.statements();
+    @SuppressWarnings("unchecked") final List<Statement> blockStatementList = block.statements();
 
     blockStatementList.add(ast.newExpressionStatement(methodInvocationA));
     blockStatementList.add(ast.newExpressionStatement(methodInvocationB));
@@ -367,8 +371,10 @@ public class GeneratedJDTASTTest {
     final String source2 = "class A { public void a() { b(1); } public void b(int v){}}\n\n";
     final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1);
-    final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2);
+    final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1,
+        StandardCharsets.UTF_8);
+    final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2,
+        StandardCharsets.UTF_8);
 
     assertThat(ast1.getMessageDigest()).isEqualTo(ast2.getMessageDigest());
   }
@@ -379,8 +385,10 @@ public class GeneratedJDTASTTest {
     final String source2 = "class A { public void a() { b(2); } public void b(int v){}}";
     final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1);
-    final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2);
+    final GeneratedJDTAST<ProductSourcePath> ast1 = constructor.constructAST(path, source1,
+        StandardCharsets.UTF_8);
+    final GeneratedJDTAST<ProductSourcePath> ast2 = constructor.constructAST(path, source2,
+        StandardCharsets.UTF_8);
 
     assertThat(ast1.getMessageDigest()).isNotEqualTo(ast2.getMessageDigest());
   }
