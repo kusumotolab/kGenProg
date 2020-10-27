@@ -297,7 +297,7 @@ public class PatchGeneratorTest {
     final String originalSource = targetAst.getSourceCode();
     final String modifiedSource = originalSource.replace(replaceFrom, replaceTo);
     final GeneratedAST ast = constructor.constructAST(targetAst.getSourcePath(), modifiedSource,
-        StandardCharsets.UTF_8);
+        targetAst.getCharset());
 
     // spy to return the modified ast
     final GeneratedSourceCode spy = spy(baseSourceCode);
