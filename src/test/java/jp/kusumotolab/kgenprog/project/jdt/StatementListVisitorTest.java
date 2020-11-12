@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.List;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -44,7 +45,7 @@ public class StatementListVisitorTest {
         new ProductSourcePath(Paths.get("."), Paths.get(FILE_NAME_A));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(
-        productSourcePath, SOURCE_A);
+        productSourcePath, SOURCE_A, StandardCharsets.UTF_8);
 
     // assuming that any instance of Block is not included in statements
     // Blockが含まれていないはず
@@ -63,7 +64,7 @@ public class StatementListVisitorTest {
         new ProductSourcePath(Paths.get("."), Paths.get(FILE_NAME_B));
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(
-        productSourcePath, SOURCE_B);
+        productSourcePath, SOURCE_B, StandardCharsets.UTF_8);
 
     // assuming that any instance of Block is included in statements
     // Blockが含まれているはず
