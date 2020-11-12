@@ -1,7 +1,6 @@
 package jp.kusumotolab.kgenprog.output;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
