@@ -38,8 +38,5 @@ jobs:
     - name: Resolve dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: ./gradlew dependencies
-    # ここでssh
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v1
     - name: Execute tests
       run: ./gradlew test
