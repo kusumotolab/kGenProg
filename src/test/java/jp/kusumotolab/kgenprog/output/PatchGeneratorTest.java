@@ -296,7 +296,8 @@ public class PatchGeneratorTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final String originalSource = targetAst.getSourceCode();
     final String modifiedSource = originalSource.replace(replaceFrom, replaceTo);
-    final GeneratedAST ast = constructor.constructAST(targetAst.getSourcePath(), modifiedSource);
+    final GeneratedAST ast = constructor.constructAST(targetAst.getSourcePath(), modifiedSource,
+        targetAst.getCharset());
 
     // spy to return the modified ast
     final GeneratedSourceCode spy = spy(baseSourceCode);

@@ -2,6 +2,7 @@ package jp.kusumotolab.kgenprog.project.jdt;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Collections;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -29,9 +30,9 @@ public class InsertAfterOperationTest {
     final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
-    @SuppressWarnings("unchecked")
-    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source,
+        StandardCharsets.UTF_8);
+    @SuppressWarnings("unchecked") final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
         GeneratedJDTAST.class);
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast), Collections.singletonList(mockAst));
@@ -85,7 +86,8 @@ public class InsertAfterOperationTest {
     final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("."), Paths.get("B.java"));
 
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source,
+        StandardCharsets.UTF_8);
 
     final TypeDeclaration type = (TypeDeclaration) ast.getRoot()
         .types()
