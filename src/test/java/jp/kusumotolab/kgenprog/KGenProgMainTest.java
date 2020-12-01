@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,6 +9,8 @@ import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import ch.qos.logback.classic.Level;
+import jp.kusumotolab.kgenprog.KGenProgMain.ExitStatus;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class KGenProgMainTest {
@@ -21,7 +24,7 @@ public class KGenProgMainTest {
   /*
    * 引数で与えられた情報を利用して，CUILauncher経由でkGenProgMainを実行するメソッド
    */
-  private List<Variant> runKGenProgMain(final Path rootPath, final Path productPath,
+  private ExitStatus runKGenProgMain(final Path rootPath, final Path productPath,
       final Path testPath) {
 
     final List<Path> productPaths = Arrays.asList(productPath);
@@ -115,4 +118,37 @@ public class KGenProgMainTest {
     assertThatCode(() -> runKGenProgMain(rootPath, productPath, testPath)).
         doesNotThrowAnyException();
   }
+
+
+  @Test
+  public void testBuildFailure() {
+    final Path rootPath = Paths.get("example/Abnormals/BuildFailure");
+    final Path productPath = rootPath.resolve(PRODUCT_NAME);
+    final Path testPath = rootPath.resolve(TEST_NAME);
+
+    final ExitStatus status = runKGenProgMain(rootPath, productPath, testPath);
+    assertThat(status).isEqualTo(ExitStatus.FAILURE_INITIAL_BUILD);
+
+  }
+
+  @Test
+  public void testNoBugs() {
+    final Path rootPath = Paths.get("example/Abnormals/NoBugs");
+    final Path productPath = rootPath.resolve(PRODUCT_NAME);
+    final Path testPath = rootPath.resolve(TEST_NAME);
+
+    final ExitStatus status = runKGenProgMain(rootPath, productPath, testPath);
+    assertThat(status).isEqualTo(ExitStatus.FAILURE_NO_BUGS);
+  }
+
+  @Test
+  public void testMissingRootDir() {
+    final Path rootPath = Paths.get("no-such-project-dir");
+    final Path productPath = rootPath.resolve(PRODUCT_NAME);
+    final Path testPath = rootPath.resolve(TEST_NAME);
+
+    final ExitStatus status = runKGenProgMain(rootPath, productPath, testPath);
+    assertThat(status).isEqualTo(ExitStatus.FAILURE_INVALID_PROJECT);
+  }
+
 }

@@ -22,6 +22,7 @@ import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.electronwill.nightconfig.core.UnmodifiableConfig.Entry;
 import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.InvalidValueException;
@@ -334,14 +335,12 @@ public class Configuration {
       testPaths = new ArrayList<>();
     }
 
-    public static Configuration buildFromCmdLineArgs(final String[] args)
-        throws IllegalArgumentException {
+    public static Configuration buildFromCmdLineArgs(final String[] args) {
       final Builder builder = createFromCmdLineArgs(args);
       return builder.build();
     }
 
-    public static Builder createFromCmdLineArgs(final String[] args)
-        throws IllegalArgumentException {
+    public static Builder createFromCmdLineArgs(final String[] args) {
 
       final Builder builder = new Builder();
       final CmdLineParser parser = new CmdLineParser(builder);
@@ -503,19 +502,19 @@ public class Configuration {
       return this;
     }
 
-    private static void validateArgument(final Builder builder) throws IllegalArgumentException {
+    private static void validateArgument(final Builder builder) {
       validateExistences(builder);
       validateCurrentDir(builder);
     }
 
-    private static void validateExistences(final Builder builder) throws IllegalArgumentException {
+    private static void validateExistences(final Builder builder) {
       validateExistence(builder.rootDir);
       builder.productPaths.forEach(Builder::validateExistence);
       builder.testPaths.forEach(Builder::validateExistence);
       builder.classPaths.forEach(Builder::validateExistence);
     }
 
-    private static void validateExistence(final Path path) throws IllegalArgumentException {
+    private static void validateExistence(final Path path) {
       if (Files.notExists(path)) {
         log.error(path.toString() + " does not exist.");
         throw new IllegalArgumentException(path.toString() + " does not exist.");
@@ -549,7 +548,7 @@ public class Configuration {
           .contains("--config");
     }
 
-    private void parseConfigFile() throws InvalidValueException, NoSuchFileException {
+    private void parseConfigFile() throws NoSuchFileException {
       try (final FileConfig config = loadConfig()) {
         final ObjectConverter converter = new ObjectConverter();
         converter.toObject(config, this);
@@ -563,7 +562,7 @@ public class Configuration {
         // 設定ファイルに記述されているオプション一覧を取得
         final Set<String> optionNames = config.entrySet()
             .stream()
-            .map(o -> o.getKey())
+            .map(Entry::getKey)
             .collect(Collectors.toSet());
 
         final Class<?> clazz = this.getClass();
