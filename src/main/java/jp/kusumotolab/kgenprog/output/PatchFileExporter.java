@@ -4,32 +4,26 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 
 /**
- * 解のパッチをログとファイルに出力するクラス．
+ * 解のパッチをファイルに出力する．
  */
-class PatchExporter implements Exporter {
+class PatchFileExporter implements Exporter {
 
-  private static final Logger log = LoggerFactory.getLogger(PatchExporter.class);
-
+  private static final Logger log = LoggerFactory.getLogger(PatchFileExporter.class);
   public static final String DIR_PREFIX = "patch-v";
   private final Path outdir;
 
-  private final PatchGenerator patchGenerator;
-
-  PatchExporter(final Path outdir) {
+  PatchFileExporter(final Path outdir) {
     this.outdir = outdir;
-    this.patchGenerator = new PatchGenerator();
   }
 
   /**
-   * パッチをログとファイルに出力する．
+   * パッチをファイルに出力する．
    *
    * @param variantStore バリアントを保持するクラス
    */
@@ -49,24 +43,13 @@ class PatchExporter implements Exporter {
       log.warn(e.getMessage());
     }
 
-    final List<Variant> solutions = variantStore.getFoundSolutions();
-
-    solutions.stream()
-        .map(patchGenerator::exec)
-        .forEach(p -> {
-          writeLog(p);
-          writePatch(p);
-        });
+    final PatchGenerator generator = new PatchGenerator();
+    variantStore.getFoundSolutions().stream()
+        .map(generator::exec)
+        .forEach(this::writeToFile);
   }
 
-  private void writeLog(final Patch patch) {
-    patch.getFileDiffs()
-        .forEach(fd -> log.info(String.format("patch (v%d)%s%s",
-            patch.getVariantId(), System.lineSeparator(), fd.toStringWithDefaultEncoding()))
-        );
-  }
-
-  private void writePatch(final Patch patch) {
+  private void writeToFile(final Patch patch) {
     final long id = patch.getVariantId();
     final Path subdir = outdir.resolve(DIR_PREFIX + id);
 

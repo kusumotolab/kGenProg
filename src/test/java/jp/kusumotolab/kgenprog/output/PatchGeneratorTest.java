@@ -38,7 +38,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "n--;", "n -= 1; //", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     // assert contents of patch folder
@@ -66,7 +66,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", ";", "; //", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -95,7 +95,7 @@ public class PatchGeneratorTest {
     final Variant v2 = createModifiedVariant(base, "Bar.java", "return n + 1;", "return n;", 99);
     final VariantStore variantStore = createMockedVariantStore(v1, v2);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -128,7 +128,7 @@ public class PatchGeneratorTest {
     final Variant v4 = createModifiedVariant(base, "Foo.java", "n--;", "n;;;;;", 4);
     final VariantStore variantStore = createMockedVariantStore(v0, v1, v2, v3, v4);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -152,7 +152,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "n--;", "n -= 1; //", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(true).isTrue(); // to prevent smoke test in sonarlint
@@ -160,7 +160,7 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerationWithShiftJISEncodedSourceCode() throws IOException {
-    final Logger logger = (Logger) LoggerFactory.getLogger(PatchExporter.class);
+    final Logger logger = (Logger) LoggerFactory.getLogger(PatchFileExporter.class);
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
@@ -171,7 +171,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "return m;", "return n;", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -209,7 +209,7 @@ public class PatchGeneratorTest {
 
   @Test
   public void testPatchGenerationWithUTF8EncodedSourceCode() throws IOException {
-    final Logger logger = (Logger) LoggerFactory.getLogger(PatchExporter.class);
+    final Logger logger = (Logger) LoggerFactory.getLogger(PatchFileExporter.class);
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
@@ -220,7 +220,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "return m;", "return n;", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();

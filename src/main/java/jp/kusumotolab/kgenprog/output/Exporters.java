@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -22,29 +21,29 @@ public class Exporters {
   public Exporters(final Configuration config) {
     outdir = config.getOutDir();
     exporterSet = createExporterSet(config);
-    clearPreviousResults();
+    clearPreviousResults(config);
   }
 
   private Set<Exporter> createExporterSet(final Configuration config) {
     if (config.needNotOutput()) {
-      return Collections.emptySet();
+      return Set.of(new PatchLogExporter()); // export with no file output
     }
     if (config.isHistoryRecord()) {
-      return Set.of(new PatchExporter(outdir), new JSONExporter(outdir));
+      return Set.of(
+          new PatchLogExporter(),
+          new PatchFileExporter(outdir),
+          new JSONExporter(outdir));
     }
-    return Set.of(new PatchExporter(outdir));
+    return Set.of(new PatchLogExporter(), new PatchFileExporter(outdir));
   }
 
   public void exportAll(final VariantStore variantStore) {
-    if (exporterSet.isEmpty()) {
-      return; // do nothing when exporters are empty
-    }
     this.exporterSet.forEach(e -> e.export(variantStore));
   }
 
-  private void clearPreviousResults() {
-    if (Files.notExists(outdir)) {
-      return;
+  private void clearPreviousResults(final Configuration config) {
+    if (config.needNotOutput() || Files.notExists(outdir)) {
+      return; // don't clear if no output specified
     }
 
     // delete outdir recursively
