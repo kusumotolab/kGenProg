@@ -25,7 +25,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class PatchGeneratorTest {
+public class PatchFileExporterTest {
 
   private static final Charset SHIFT_JIS = Charset.forName("shift-jis");
 
@@ -189,22 +189,6 @@ public class PatchGeneratorTest {
         .contains("public int max")
         .containsPattern("- +return m;")
         .containsPattern("\\+ +return n;");
-
-    // logの確認
-    final List<ILoggingEvent> logs = listAppender.list;
-    final String message = logs.get(0)
-        .getMessage();
-    assertThat(message)
-        .doesNotContain(
-            new String("2つの整数のうち大きい整数を返す".getBytes(StandardCharsets.UTF_8),
-                Charset.defaultCharset()))
-        .doesNotContain(
-            new String("整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
-        .doesNotContain(
-            new String("n, mのうち大きい整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
-        .contains("public int max")
-        .containsPattern("- +return m;")
-        .containsPattern("\\+ +return n;");
   }
 
   @Test
@@ -236,22 +220,6 @@ public class PatchGeneratorTest {
             new String("整数".getBytes(Charset.defaultCharset()), StandardCharsets.UTF_8))
         .doesNotContain(
             new String("n, mのうち大きい整数".getBytes(Charset.defaultCharset()), StandardCharsets.UTF_8))
-        .contains("public int max")
-        .containsPattern("- +return m;")
-        .containsPattern("\\+ +return n;");
-
-    // logの確認
-    final List<ILoggingEvent> logs = listAppender.list;
-    final String message = logs.get(0)
-        .getMessage();
-    assertThat(message)
-        .doesNotContain(
-            new String("2つの整数のうち大きい整数を返す".getBytes(StandardCharsets.UTF_8),
-                Charset.defaultCharset()))
-        .doesNotContain(
-            new String("整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
-        .doesNotContain(
-            new String("n, mのうち大きい整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
         .contains("public int max")
         .containsPattern("- +return m;")
         .containsPattern("\\+ +return n;");
