@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +18,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
+import jp.kusumotolab.kgenprog.CharsetDetector;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.GenerationFailedSourceCode;
@@ -38,12 +40,23 @@ public class JDTASTConstruction {
             .toString())
         .toArray(String[]::new);
 
+    final CharsetDetector detector = new CharsetDetector();
+    final String[] encodings = Stream.concat(productSourcePaths.stream(), testSourcePaths.stream())
+        .map(SourcePath::getResolvedPath)
+        .map(detector::detect)
+        .map(Charset::name)
+        .toArray(String[]::new);
+
     final ASTParser parser = createNewParser();
 
     final Map<Path, ProductSourcePath> pathToProductSourcePath = productSourcePaths.stream()
         .collect(Collectors.toMap(SourcePath::getResolvedPath, path -> path));
     final Map<Path, TestSourcePath> pathToTestSourcePath = testSourcePaths.stream()
         .collect(Collectors.toMap(SourcePath::getResolvedPath, path -> path));
+    final Map<Path, Charset> pathToCharset = Stream.concat(productSourcePaths.stream(),
+        testSourcePaths.stream())
+        .map(SourcePath::getResolvedPath)
+        .collect(Collectors.toMap(path -> path, detector::detect));
 
     final List<GeneratedAST<ProductSourcePath>> productAsts = new ArrayList<>();
     final List<GeneratedAST<TestSourcePath>> testAsts = new ArrayList<>();
@@ -55,21 +68,23 @@ public class JDTASTConstruction {
       public void acceptAST(final String sourcePath, final CompilationUnit ast) {
         final ProductSourcePath productPath = pathToProductSourcePath.get(Paths.get(sourcePath));
         if (productPath != null) {
+          final Charset charset = pathToCharset.get(Paths.get(sourcePath));
           productAsts.add(new GeneratedJDTAST<>(JDTASTConstruction.this, productPath, ast,
-              loadAsString(sourcePath)));
+              loadAsString(sourcePath, charset), charset));
         }
 
         final TestSourcePath testPath = pathToTestSourcePath.get(Paths.get(sourcePath));
         if (testPath != null) {
+          final Charset charset = pathToCharset.get(Paths.get(sourcePath));
           testAsts.add(new GeneratedJDTAST<>(JDTASTConstruction.this, testPath, ast,
-              loadAsString(sourcePath)));
+              loadAsString(sourcePath, charset), charset));
         }
 
         problems.addAll(Arrays.asList(ast.getProblems()));
       }
     };
 
-    parser.createASTs(paths, null, new String[] {}, requestor, null);
+    parser.createASTs(paths, encodings, new String[] {}, requestor, null);
 
     if (isConstructionSuccess(problems)) {
       return new GeneratedSourceCode(productAsts, testAsts);
@@ -80,18 +95,18 @@ public class JDTASTConstruction {
   }
 
   public <T extends SourcePath> GeneratedJDTAST<T> constructAST(final T sourcePath,
-      final String data) {
+      final String data, final Charset charset) {
     final ASTParser parser = createNewParser();
     parser.setSource(data.toCharArray());
 
-    return new GeneratedJDTAST<>(this, sourcePath, (CompilationUnit) parser.createAST(null), data);
+    return new GeneratedJDTAST<>(this, sourcePath, (CompilationUnit) parser.createAST(null), data,
+        charset);
   }
 
   public static ASTParser createNewParser() {
     final ASTParser parser = ASTParser.newParser(AST.JLS10);
 
-    @SuppressWarnings("unchecked")
-    final Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
+    @SuppressWarnings("unchecked") final Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
     options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
     options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
     options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
@@ -105,9 +120,9 @@ public class JDTASTConstruction {
     return parser;
   }
 
-  private String loadAsString(final String path) {
+  private String loadAsString(final String path, final Charset charset) {
     try {
-      return new String(Files.readAllBytes(Paths.get(path)));
+      return Files.readString(Paths.get(path), charset);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }

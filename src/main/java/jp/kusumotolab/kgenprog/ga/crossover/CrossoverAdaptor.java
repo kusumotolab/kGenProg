@@ -18,7 +18,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
  */
 public abstract class CrossoverAdaptor implements Crossover {
 
-  private static Logger log = LoggerFactory.getLogger(CrossoverAdaptor.class);
+  private static final Logger log = LoggerFactory.getLogger(CrossoverAdaptor.class);
 
   private final FirstVariantSelectionStrategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy secondVariantSelectionStrategy;
@@ -30,7 +30,6 @@ public abstract class CrossoverAdaptor implements Crossover {
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
-   * @return 交叉を行うインスタンス
    */
   public CrossoverAdaptor(final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
@@ -69,25 +68,19 @@ public abstract class CrossoverAdaptor implements Crossover {
    * @return 交叉により生成された個体群
    */
   @Override
-  public final List<Variant> exec(final VariantStore variantStore) {
-
-    final List<Variant> filteredVariants = variantStore.getCurrentVariants()
-        .stream()
-        .filter(e -> 1 < e.getGene() // 遺伝子の長さが2に満たないバリアントは交叉に使えない
-            .getBases()
-            .size())
-        .collect(Collectors.toList());
+  public List<Variant> exec(final VariantStore variantStore) {
+    final List<Variant> validVariants = filter(variantStore.getCurrentVariants());
+    final List<Variant> variants = new ArrayList<>();
 
     // filteredVariantsの要素数が2に満たない場合は交叉しない
-    if (filteredVariants.size() < 2) {
+    if (validVariants.size() < 2) {
       return Collections.emptyList();
     }
 
-    final List<Variant> variants = new ArrayList<>();
     try {
       // generatingCountを超えるまでバリアントを作りづづける
       while (variants.size() < generatingCount) {
-        final List<Variant> newVariants = makeVariants(filteredVariants, variantStore);
+        final List<Variant> newVariants = makeVariants(validVariants, variantStore);
         variants.addAll(newVariants);
       }
     } catch (final CrossoverInfeasibleException e) {
@@ -100,4 +93,6 @@ public abstract class CrossoverAdaptor implements Crossover {
 
   protected abstract List<Variant> makeVariants(List<Variant> variants, VariantStore variantStore)
       throws CrossoverInfeasibleException;
+
+  protected abstract List<Variant> filter(List<Variant> variants);
 }

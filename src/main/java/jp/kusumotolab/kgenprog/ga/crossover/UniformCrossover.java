@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
@@ -35,6 +36,15 @@ public class UniformCrossover extends CrossoverAdaptor {
       final int generatingCount) {
     super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount);
     this.random = random;
+  }
+
+  @Override
+  protected List<Variant> filter(final List<Variant> variants) {
+    return variants.stream()
+        .filter(e -> 1 < e.getGene() // 遺伝子の長さが2に満たないバリアントは交叉に使えない
+            .getBases()
+            .size())
+        .collect(Collectors.toList());
   }
 
   @Override

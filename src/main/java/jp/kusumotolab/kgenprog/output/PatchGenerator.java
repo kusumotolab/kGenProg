@@ -57,8 +57,9 @@ public class PatchGenerator {
   private List<String> readOriginalSource(final GeneratedAST<?> ast) {
     final Path originalPath = ast.getSourcePath()
         .getResolvedPath();
+
     try {
-      return Files.readAllLines(originalPath);
+      return Files.readAllLines(originalPath, ast.getCharset());
     } catch (final IOException e) {
       log.error(e.getMessage(), e);
       return Collections.emptyList();

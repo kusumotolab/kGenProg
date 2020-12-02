@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -23,15 +24,17 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
   private final T sourcePath;
   private final FullyQualifiedName primaryClassName;
   private final String sourceCode;
+  private final Charset charset;
   private final String messageDigest;
   private final int numberOfLines;
 
   public GeneratedJDTAST(final JDTASTConstruction construction, final T sourcePath,
-      final CompilationUnit root, final String source) {
+      final CompilationUnit root, final String source, final Charset charset) {
     this.construction = construction;
     this.root = root;
     this.sourcePath = sourcePath;
     this.sourceCode = source;
+    this.charset = charset;
 
     this.primaryClassName = searchPrimaryClassName(root);
     this.messageDigest = createMessageDigest();
@@ -61,6 +64,11 @@ public class GeneratedJDTAST<T extends SourcePath> implements GeneratedAST<T> {
   @Override
   public String getMessageDigest() {
     return messageDigest;
+  }
+
+  @Override
+  public Charset getCharset() {
+    return charset;
   }
 
   @Override

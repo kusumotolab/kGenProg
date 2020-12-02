@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.project.jdt;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,8 @@ public class ASTStreamTest {
 
     final ProductSourcePath sourcePath = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source,
+        StandardCharsets.UTF_8);
 
     final List<ASTNode> actual = ASTStream.stream(ast.getRoot())
         .collect(Collectors.toList());

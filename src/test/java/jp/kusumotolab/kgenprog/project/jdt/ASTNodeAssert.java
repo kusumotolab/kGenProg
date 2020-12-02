@@ -55,6 +55,16 @@ public class ASTNodeAssert extends AbstractAssert<ASTNodeAssert, ASTNode> {
   }
 
   /**
+   * astのルートノードが同じオブジェクトかを確かめる．
+   *
+   * @param sourceCode
+   * @return
+   */
+  public ASTNodeAssert isSameRootClassAs(final ASTNode ast) {
+    return assertThat(ast.getRoot()).hasSameClassAs(actual.getRoot());
+  }
+
+  /**
    * eclipse.jdt.coreを使ったフォーマッタ．
    *
    * @param source

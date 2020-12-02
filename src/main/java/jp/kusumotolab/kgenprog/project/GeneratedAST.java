@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project;
 
+import java.nio.charset.Charset;
+
 // TODO: クラス名を再検討
 public interface GeneratedAST<T extends SourcePath> {
 
@@ -12,6 +14,8 @@ public interface GeneratedAST<T extends SourcePath> {
   ASTLocations createLocations();
 
   String getMessageDigest();
+
+  Charset getCharset();
 
   int getNumberOfLines();
 }

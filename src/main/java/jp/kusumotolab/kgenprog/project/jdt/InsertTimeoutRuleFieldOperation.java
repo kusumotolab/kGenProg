@@ -75,7 +75,7 @@ public class InsertTimeoutRuleFieldOperation implements Operation {
     }
 
     return jdtast.getConstruction()
-        .constructAST(ast.getSourcePath(), document.get());
+        .constructAST(ast.getSourcePath(), document.get(), jdtast.getCharset());
   }
 
   /**

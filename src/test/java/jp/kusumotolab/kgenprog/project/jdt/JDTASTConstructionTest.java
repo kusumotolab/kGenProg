@@ -5,6 +5,8 @@ import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.BAR_TEST;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.FOO;
 import static jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src.FOO_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -64,6 +66,40 @@ public class JDTASTConstructionTest {
         .extracting(GeneratedAST::getSourcePath)
         .extracting(p -> p.path)
         .containsExactlyInAnyOrder(FOO);
+
+    // テストのASTはゼロのはず
+    final List<GeneratedAST<TestSourcePath>> testAsts = generatedSourceCode.getTestAsts();
+    assertThat(testAsts).hasSize(0);
+  }
+
+  @Test
+  public void testConstructASTWithUTF8() {
+    final Path basePath = Paths.get("example/BuildSuccess24");
+    final TargetProject targetProject = TargetProjectFactory.create(basePath);
+    final JDTASTConstruction construction = new JDTASTConstruction();
+    final GeneratedSourceCode generatedSourceCode = construction.constructAST(targetProject);
+    final List<GeneratedAST<ProductSourcePath>> productAsts = generatedSourceCode.getProductAsts();
+
+    assertThat(productAsts).hasSize(1)
+        .extracting(GeneratedAST::getCharset)
+        .containsExactlyInAnyOrder(StandardCharsets.UTF_8);
+
+    // テストのASTはゼロのはず
+    final List<GeneratedAST<TestSourcePath>> testAsts = generatedSourceCode.getTestAsts();
+    assertThat(testAsts).hasSize(0);
+  }
+
+  @Test
+  public void testConstructASTWithShiftJIS() {
+    final Path basePath = Paths.get("example/BuildSuccess25");
+    final TargetProject targetProject = TargetProjectFactory.create(basePath);
+    final JDTASTConstruction construction = new JDTASTConstruction();
+    final GeneratedSourceCode generatedSourceCode = construction.constructAST(targetProject);
+    final List<GeneratedAST<ProductSourcePath>> productAsts = generatedSourceCode.getProductAsts();
+
+    assertThat(productAsts).hasSize(1)
+        .extracting(GeneratedAST::getCharset)
+        .containsExactlyInAnyOrder(Charset.forName("shift-jis"));
 
     // テストのASTはゼロのはず
     final List<GeneratedAST<TestSourcePath>> testAsts = generatedSourceCode.getTestAsts();

@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.ga.variant;
 
+import java.util.Objects;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.Operation;
 
@@ -31,5 +32,21 @@ public class Base {
     return operation;
   }
 
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Base base = (Base) o;
+    return Objects.equals(getTargetLocation(), base.getTargetLocation()) &&
+        Objects.equals(getOperation(), base.getOperation());
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(getTargetLocation(), getOperation());
+  }
 }

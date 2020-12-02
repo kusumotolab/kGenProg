@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.output;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,18 @@ public class FileDiff {
   @Override
   public String toString() {
     return diff.stream()
+        .collect(Collectors.joining(System.lineSeparator()));
+  }
+
+  /**
+   * デフォルトエンコーディングに変換したdiffを返す
+   */
+  public String toStringWithDefaultEncoding() {
+    final Charset defaultCharset = Charset.defaultCharset();
+
+    return diff.stream()
+        .map(e -> e.getBytes(defaultCharset))
+        .map(e -> new String(e, defaultCharset))
         .collect(Collectors.joining(System.lineSeparator()));
   }
 }
