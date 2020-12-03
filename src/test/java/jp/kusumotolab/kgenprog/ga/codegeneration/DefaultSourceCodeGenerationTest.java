@@ -72,7 +72,7 @@ public class DefaultSourceCodeGenerationTest {
   }
 
   @Test
-  public void noneOperationTest() {
+  public void testNoneOperation() {
     final TargetProject targetProject =
         TargetProjectFactory.create(Paths.get("example/BuildSuccess01"));
     final Configuration config = new Configuration.Builder(targetProject).build();
