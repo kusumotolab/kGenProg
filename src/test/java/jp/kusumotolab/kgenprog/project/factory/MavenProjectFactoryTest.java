@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
-import jp.kusumotolab.kgenprog.project.ClassPath;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.TestSourcePath;
 
@@ -27,7 +25,6 @@ public class MavenProjectFactoryTest {
     assertThat(testSourcePaths)
         .hasSize(1)
         .contains(new TestSourcePath(path, Paths.get("src/test/java/example/FooTest.java")));
-
 
     // TODO: fails due to missing feature of dependency resolvement for Maven projects.
 //    final List<ClassPath> classPaths = targetProject.getClassPaths();

@@ -91,11 +91,11 @@ public abstract class CrossoverAdaptor implements Crossover {
       VARIANT_GENERATION:
       while (variants.size() < generatingCount) {
         final List<Variant> newVariants = makeVariants(validVariants, variantStore);
-        variants.addAll(newVariants);
 
         // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
         // 達している場合はこれ以上の変異プログラムは生成しない
         for (final Variant newVariant : newVariants) {
+          variants.add(newVariant);
           if (newVariant.isCompleted() && requiredSolutions <= ++foundSolutions) {
             break VARIANT_GENERATION;
           }
@@ -107,7 +107,7 @@ public abstract class CrossoverAdaptor implements Crossover {
     }
 
     // バリアントを作りすぎた場合はそれを除いてリターン
-    return variants.subList(0, generatingCount);
+    return generatingCount < variants.size() ? variants.subList(0, generatingCount) : variants;
   }
 
   protected abstract List<Variant> makeVariants(List<Variant> variants, VariantStore variantStore)

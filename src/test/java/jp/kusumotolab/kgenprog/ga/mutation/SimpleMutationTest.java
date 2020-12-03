@@ -89,6 +89,43 @@ public class SimpleMutationTest {
   }
 
   @Test
+  public void testStopFirst01() {
+    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
+
+    final Variant initialVariant = createInitialVariant(generatedSourceCode);
+    final VariantStore variantStore = createVariantStore(initialVariant);
+
+    // 修正プログラムがすでに1つ存在している状態にする
+    when(variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(1));
+
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+    final List<Variant> variantList = simpleMutation.exec(variantStore, 1);
+
+    // 変異プログラムを全く生成しないはず
+    assertThat(variantList).hasSize(0);
+  }
+
+  @Test
+  public void testStopFirst02() {
+    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
+
+    final Variant initialVariant = createInitialVariant(generatedSourceCode);
+    final VariantStore variantStore = createVariantStore(initialVariant);
+
+    // 修正プログラムが必ず生成されるようにモックを設定する
+    when(variantStore.createVariant(any(), any())).then(ans -> {
+      return new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
+          ans.getArgument(1));
+    });
+
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+    final List<Variant> variantList = simpleMutation.exec(variantStore, 1);
+
+    // 最初の変異プログラムが修正プログラムなので，それ以降は変異プログラムを生成しないはず
+    assertThat(variantList).hasSize(1);
+  }
+
+  @Test
   public void testBias() {
     final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
 

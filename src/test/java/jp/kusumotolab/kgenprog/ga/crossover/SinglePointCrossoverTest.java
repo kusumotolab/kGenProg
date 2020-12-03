@@ -1,12 +1,15 @@
 package jp.kusumotolab.kgenprog.ga.crossover;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Random;
 import org.junit.Test;
 import org.mockito.Mockito;
+import jp.kusumotolab.kgenprog.OrdinalNumber;
+import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -40,6 +43,53 @@ public class SinglePointCrossoverTest {
             new SecondVariantGeneSimilarityBasedSelection(random), 100);
     final List<Variant> variants100 = crossover100.exec(testVariants.variantStore, 1);
     assertThat(variants100.size()).isEqualTo(100);
+  }
+
+  @Test
+  public void testStopFirst01() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(true);
+    when(random.nextInt(anyInt())).thenReturn(0);
+
+    // テストデータを初期化
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+
+    // 修正プログラムがすでに1つ存在している状態にする
+    when(testVariants.variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(1));
+
+    // バリアントの生成
+    final Crossover crossover =
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(random), 10);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    assertThat(variants).isEmpty();
+  }
+
+  @Test
+  public void testStopFirst02() {
+
+    // 生成するバリアントを制御するための疑似乱数
+    final Random random = Mockito.mock(Random.class);
+    when(random.nextBoolean()).thenReturn(true);
+    when(random.nextInt(anyInt())).thenReturn(0);
+
+    // テストデータを初期化
+    final CrossoverTestVariants testVariants = new CrossoverTestVariants();
+
+    // 修正プログラムが必ず生成されるようにモックを設定する
+    when(testVariants.variantStore.createVariant(any(), any())).then(ans -> {
+      return new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
+          ans.getArgument(1));
+    });
+
+    // バリアントの生成
+    final Crossover crossover =
+        new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
+            new SecondVariantGeneSimilarityBasedSelection(random), 10);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    assertThat(variants).hasSize(1);
   }
 
   /**
