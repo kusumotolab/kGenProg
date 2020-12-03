@@ -93,7 +93,7 @@ $ java -jar path/to/kGenProg.jar
 | `-t`, `--test` | Specifies paths to test source code, or to directories containing them. Paths are separated with spaces. | Nothing |
 | `-x`, `--exec-test` | Specifies fully qualified names of test classes executed during evaluation of variants (i.e. fix-candidates). It is recommended to specify test classes detecting a bug. Class names are separated with spaces. | All test classes |
 | `-c`, `--cp` | Specifies class paths needed to build the target project. Paths are separated with spaces. | Nothing |
-| `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
+| `-o`, `--out-dir` | Specifies an output directory. Generated files include patches and history json. They can be enabled by `--patch-output` or `--history-record` |  A directory named `kgenprog-out` is created in the current directory. |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
 | `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
@@ -110,7 +110,8 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
-| `--history-record` | Stores generation process of each variant and all generated variants. | `false` |
+| `--patch-output` | Writes patch files to the output directory specified in `-o` option. | `false` |
+| `--history-record` | Records and writes generation process of all generated variants as JSON format. | `false` |
 
 
 ## Use in your research
