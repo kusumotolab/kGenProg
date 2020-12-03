@@ -1,5 +1,6 @@
 package jp.kusumotolab.kgenprog.project.factory;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +38,11 @@ public class TargetProject {
 
   public void setTestSourcePaths(final List<TestSourcePath> testSourcePaths) {
     this.testSourcePaths = testSourcePaths;
+  }
+
+  public boolean isValid() {
+    // TODO: other validations
+    return Files.isDirectory(rootPath);
   }
 
   @Override

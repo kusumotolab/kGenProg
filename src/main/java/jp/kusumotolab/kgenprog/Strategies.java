@@ -55,14 +55,6 @@ public class Strategies {
   }
 
   /**
-   * 自動プログラム修正を終える際に呼び出す必要があるメソッド．<br>
-   * {@link KGenProgMain#run()}内で呼び出されている．<br>
-   */
-  public void finish() {
-    testExecutor.finish();
-  }
-
-  /**
    * 自動バグ限局を実行するメソッド．<br>
    * 限局対象のソースコードとテストの実行結果を受け取り，自動バグ限局の実行結果を返す．<br>
    *
