@@ -2,14 +2,12 @@
 
 set -eo pipefail
 
-GITHUB_TAG_URL_BASE="https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag"
+GITHUB_TAG_URL_BASE="https://github.com/$GITHUB_REPOSITORY/releases/tag"
 
 # Analyze target version to be release
 
 WANTED_VERSION="$(cat ./gradle.properties | grep currentVersion | cut -d'=' -f2)"
 WANTED_VERSION="$(echo $WANTED_VERSION)" # Trim whitespaces
-
-VERSION_GIT_TAG="v${WANTED_VERSION}"
 
 
 # Ensure version name follows semantic versioning
@@ -24,7 +22,7 @@ fi
 
 # Check published releases
 
-HTTP_STATUS=$(curl -LI "${GITHUB_TAG_URL_BASE}/${VERSION_GIT_TAG}" -o /dev/null -w '%{http_code}\n' -s)
+HTTP_STATUS=$(curl -LI "${GITHUB_TAG_URL_BASE}/${WANTED_VERSION}" -o /dev/null -w '%{http_code}\n' -s)
 
 if [[ $HTTP_STATUS = '400' ]]; then
   echo "[ERROR] Version number $WANTED_VERSION cannot be used as a tag." >&2
