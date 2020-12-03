@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
@@ -82,7 +83,7 @@ public class SimpleMutationTest {
     final VariantStore variantStore = createVariantStore(initialVariant);
 
     final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
-    final List<Variant> variantList = simpleMutation.exec(variantStore);
+    final List<Variant> variantList = simpleMutation.exec(variantStore, 1);
 
     assertThat(variantList).hasSize(15);
   }
@@ -96,7 +97,7 @@ public class SimpleMutationTest {
 
     final VariantStore variantStore = createVariantStore(initialVariant);
     final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode, new Random(0));
-    final List<Variant> variantList = simpleMutation.exec(variantStore);
+    final List<Variant> variantList = simpleMutation.exec(variantStore, 1);
 
     final Map<String, List<Base>> map = variantList.stream()
         .map(this::getLastBase)
@@ -123,7 +124,7 @@ public class SimpleMutationTest {
     final VariantStore variantStore = createVariantStore(initialVariant);
 
     final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
-    final List<Variant> variantList = simpleMutation.exec(variantStore);
+    final List<Variant> variantList = simpleMutation.exec(variantStore, 1);
 
     final Variant variant = variantList.get(0);
     final Gene gene = variant.getGene();
@@ -153,7 +154,7 @@ public class SimpleMutationTest {
     final VariantStore variantStore = createVariantStore(initialVariant);
 
     final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
-    final List<Variant> variantList = simpleMutation.exec(variantStore);
+    final List<Variant> variantList = simpleMutation.exec(variantStore, 1);
 
     final Variant variant = variantList.get(0);
     final Base base = getLastBase(variant);
@@ -231,8 +232,10 @@ public class SimpleMutationTest {
     final VariantStore variantStore = mock(VariantStore.class);
     when(variantStore.getCurrentVariants()).thenReturn(Collections.singletonList(initialVariant));
     when(variantStore.createVariant(any(), any())).then(ans -> {
-      return new Variant(0, 0, ans.getArgument(0), null, null, null, null, ans.getArgument(1));
+      return new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(0.5), null,
+          ans.getArgument(1));
     });
+    when(variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(0));
     return variantStore;
   }
 

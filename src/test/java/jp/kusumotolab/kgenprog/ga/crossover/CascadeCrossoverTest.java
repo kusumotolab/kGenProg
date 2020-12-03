@@ -101,7 +101,7 @@ public class CascadeCrossoverTest {
     // テスト対象のセットアップ
     final Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spiedStore);
+    final List<Variant> variants = crossover.exec(spiedStore, 1);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -170,7 +170,7 @@ public class CascadeCrossoverTest {
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spiedStore);
+    final List<Variant> variants = crossover.exec(spiedStore, 1);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -239,7 +239,7 @@ public class CascadeCrossoverTest {
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spiedStore);
+    final List<Variant> variants = crossover.exec(spiedStore, 1);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -308,7 +308,7 @@ public class CascadeCrossoverTest {
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spiedStore);
+    final List<Variant> variants = crossover.exec(spiedStore, 1);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -380,7 +380,7 @@ public class CascadeCrossoverTest {
     // テスト対象のセットアップ
     Crossover crossover = new CascadeCrossover(strategy1, strategy2);
 
-    final List<Variant> variants = crossover.exec(spiedStore);
+    final List<Variant> variants = crossover.exec(spiedStore, 1);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
