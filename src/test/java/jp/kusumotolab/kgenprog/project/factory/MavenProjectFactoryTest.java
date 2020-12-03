@@ -13,7 +13,7 @@ import jp.kusumotolab.kgenprog.project.TestSourcePath;
 public class MavenProjectFactoryTest {
 
   @Test
-  public void create() {
+  public void testCreate() {
     final Path path = Paths.get("example", "BuildSuccess05");
     final MavenProjectFactory mavenProjectFactory = new MavenProjectFactory(path);
     final TargetProject targetProject = mavenProjectFactory.create();
