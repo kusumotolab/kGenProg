@@ -4,14 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import ch.qos.logback.classic.Level;
 import jp.kusumotolab.kgenprog.KGenProgMain.ExitStatus;
-import jp.kusumotolab.kgenprog.ga.variant.Variant;
 
 public class KGenProgMainTest {
 
@@ -27,8 +25,8 @@ public class KGenProgMainTest {
   private ExitStatus runKGenProgMain(final Path rootPath, final Path productPath,
       final Path testPath) {
 
-    final List<Path> productPaths = Arrays.asList(productPath);
-    final List<Path> testPaths = Arrays.asList(testPath);
+    final List<Path> productPaths = Collections.singletonList(productPath);
+    final List<Path> testPaths = Collections.singletonList(testPath);
     final Path outDir = tempFolder.getRoot()
         .toPath();
 

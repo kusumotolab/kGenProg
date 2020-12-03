@@ -14,10 +14,6 @@ public class EmptyTestResults extends TestResults {
 
   private final String cause;
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
   public EmptyTestResults(final BuildResults buildResults) {
     super(buildResults);
     this.cause = buildResults.diagnostics.getDiagnostics()
