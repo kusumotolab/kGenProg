@@ -22,9 +22,4 @@ public interface TestExecutor {
     return variantSingle.map(this::exec);
   }
 
-  default void initialize() {
-  }
-
-  default void finish() {
-  }
 }
