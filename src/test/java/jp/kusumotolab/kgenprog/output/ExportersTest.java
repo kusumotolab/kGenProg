@@ -33,7 +33,7 @@ public class ExportersTest {
   }
 
   @Test
-  public void testExportAll() throws IOException {
+  public void testExportAll() {
     final Path outdir = TestUtil.createVirtualDir();
     final Configuration config = setupMinimalConfig(outdir);
     final Exporters exporters = new Exporters(config);
@@ -72,7 +72,7 @@ public class ExportersTest {
   }
 
   @Test
-  public void testExportAllWithNoOutput02() throws IOException {
+  public void testExportAllWithNoOutput02() {
     final Path outdir = TestUtil.createVirtualDir();
     final Configuration config = setupMinimalConfig(outdir, true, true);
     final Exporters exporters = new Exporters(config);

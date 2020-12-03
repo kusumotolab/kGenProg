@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -89,13 +88,6 @@ public class PatchLogExporterTest {
         .contains("public int max")
         .containsPattern("- +return m;")
         .containsPattern("\\+ +return n;");
-  }
-
-  private GeneratedSourceCode createGeneratedSourceCode() {
-    // setup original source from BS03
-    final Path rootPath = Paths.get("example/BuildSuccess03");
-    final TargetProject targetProject = TargetProjectFactory.create(rootPath);
-    return TestUtil.createGeneratedSourceCode(targetProject);
   }
 
   private GeneratedSourceCode createGeneratedSourceCodeFromUTF8EncodedFiles() {

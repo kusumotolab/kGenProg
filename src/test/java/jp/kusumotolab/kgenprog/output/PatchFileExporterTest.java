@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -153,9 +154,7 @@ public class PatchFileExporterTest {
     final VariantStore variantStore = createMockedVariantStore(variant);
 
     final Exporter patchExporter = new PatchFileExporter(outdir);
-    patchExporter.export(variantStore);
-
-    assertThat(true).isTrue(); // to prevent smoke test in sonarlint
+    assertThatCode(() -> patchExporter.export(variantStore)).doesNotThrowAnyException();
   }
 
   @Test
