@@ -3,7 +3,6 @@ package jp.kusumotolab.kgenprog.ga.crossover;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
@@ -65,10 +64,20 @@ public abstract class CrossoverAdaptor implements Crossover {
    * 交叉処理を行うメソッド．交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．
    *
    * @param variantStore 交叉対象の個体群
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    * @return 交叉により生成された個体群
    */
   @Override
-  public List<Variant> exec(final VariantStore variantStore) {
+  public List<Variant> exec(final VariantStore variantStore, final int requiredSolutions) {
+
+    int foundSolutions = variantStore.getFoundSolutionsNumber()
+        .get();
+
+    // すでに必要な数の修正プログラム数がある場合は何もせずにこのメソッドを抜ける
+    if (requiredSolutions <= foundSolutions) {
+      return Collections.emptyList();
+    }
+
     final List<Variant> validVariants = filter(variantStore.getCurrentVariants());
     final List<Variant> variants = new ArrayList<>();
 
@@ -79,9 +88,19 @@ public abstract class CrossoverAdaptor implements Crossover {
 
     try {
       // generatingCountを超えるまでバリアントを作りづづける
+      VARIANT_GENERATION:
       while (variants.size() < generatingCount) {
         final List<Variant> newVariants = makeVariants(validVariants, variantStore);
         variants.addAll(newVariants);
+
+        // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
+        // 達している場合はこれ以上の変異プログラムは生成しない
+        for (final Variant newVariant : newVariants) {
+          if (newVariant.isCompleted() && requiredSolutions <= ++foundSolutions) {
+            break VARIANT_GENERATION;
+          }
+        }
+
       }
     } catch (final CrossoverInfeasibleException e) {
       log.debug(e.getMessage());

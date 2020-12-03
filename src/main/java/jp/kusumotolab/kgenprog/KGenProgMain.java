@@ -112,7 +112,8 @@ public class KGenProgMain {
       // 変異プログラムを生成
       final List<Variant> variantsByMutation = mutation.exec(variantStore,
           config.getRequiredSolutionsCount());
-      final List<Variant> variantsByCrossover = crossover.exec(variantStore);
+      final List<Variant> variantsByCrossover = crossover.exec(variantStore,
+          config.getRequiredSolutionsCount());
       variantStore.addGeneratedVariants(variantsByMutation);
       variantStore.addGeneratedVariants(variantsByCrossover);
 

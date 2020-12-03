@@ -18,9 +18,10 @@ public interface Crossover {
    * 交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．<br>
    *
    * @param variantStore 交叉対象の個体群
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    * @return 交叉により生成された個体群
    */
-  List<Variant> exec(VariantStore variantStore);
+  List<Variant> exec(VariantStore variantStore, int requiredSolutions);
 
   /**
    * 1つ目の親を返す．
