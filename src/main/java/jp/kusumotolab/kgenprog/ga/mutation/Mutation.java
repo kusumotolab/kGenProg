@@ -51,6 +51,14 @@ public abstract class Mutation {
   }
 
   /**
+   * @param variant 再利用するソースコード群を含初期バリアント
+   */
+  public void setInitialCandidates(final Variant variant) {
+    candidateSelection.setCandidates(variant.getGeneratedSourceCode()
+        .getProductAsts());
+  }
+
+  /**
    * 変異処理された Variant を mutationGeneratingCount 分だけ返す
    *
    * @param variantStore Variant の情報を格納するオブジェクト
