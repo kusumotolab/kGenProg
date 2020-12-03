@@ -428,6 +428,8 @@ public class CascadeCrossoverTest {
         new CascadeCrossover(new FirstVariantRandomSelection(random),
             new SecondVariantGeneSimilarityBasedSelection(random));
     final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+
+    // 交叉でバリアントを生成しないはず
     assertThat(variants).isEmpty();
   }
 
@@ -453,6 +455,8 @@ public class CascadeCrossoverTest {
         new CascadeCrossover(new FirstVariantRandomSelection(random),
             new SecondVariantGeneSimilarityBasedSelection(random));
     final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+
+    // 交叉で1つだけ変異プログラムを生成するはず
     assertThat(variants).hasSize(1);
   }
 

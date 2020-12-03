@@ -70,7 +70,7 @@ public abstract class Mutation {
     int foundSolutions = variantStore.getFoundSolutionsNumber()
         .get();
 
-    // すでに必要な数の修正プログラム数がある場合は何もせずにこのメソッドを抜ける
+    // すでに必要な数の修正プログラムがある場合は何もせずにこのメソッドを抜ける
     if (requiredSolutions <= foundSolutions) {
       return Collections.emptyList();
     }

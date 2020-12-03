@@ -73,7 +73,7 @@ public abstract class CrossoverAdaptor implements Crossover {
     int foundSolutions = variantStore.getFoundSolutionsNumber()
         .get();
 
-    // すでに必要な数の修正プログラム数がある場合は何もせずにこのメソッドを抜ける
+    // すでに必要な数の修正プログラムがある場合は何もせずにこのメソッドを抜ける
     if (requiredSolutions <= foundSolutions) {
       return Collections.emptyList();
     }
@@ -93,7 +93,7 @@ public abstract class CrossoverAdaptor implements Crossover {
         final List<Variant> newVariants = makeVariants(validVariants, variantStore);
 
         // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
-        // 達している場合はこれ以上の変異プログラムは生成しない
+        // 達している場合はそこで処理を終える
         for (final Variant newVariant : newVariants) {
           variants.add(newVariant);
           if (newVariant.isCompleted() && requiredSolutions <= ++foundSolutions) {
