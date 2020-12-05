@@ -90,7 +90,7 @@ Project
 ```
 
 ## Coding style
-- Contributors must follow our defined coding style ([eclipse](../blob/master/settings/eclipse-coding-style.xml), [intellij](../blob/master/settings/intellij-coding-style.xml)).
+- Contributors must follow our defined coding style ([eclipse](../settings/eclipse-coding-style.xml), [intellij](../settings/intellij-coding-style.xml)).
 This style is based on [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
 - Please use **LF** as line ending.
 - Please use **spaces**, do not use tabs.
