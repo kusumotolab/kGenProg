@@ -4,7 +4,7 @@ Thank you for interest in contributing to **kGenProg**.
 This document describes how to setup development environment as a kGenProg contributor.
 
 ## Requirements
-- JDK >=1.8
+- JDK11+
 - Gradle
 
 ## Getting setup
