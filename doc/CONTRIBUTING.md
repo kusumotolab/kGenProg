@@ -94,3 +94,10 @@ Project
 This style is based on [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
 - Please use **LF** as line ending.
 - Please use **spaces**, do not use tabs.
+
+## Creating JAR files with all dependencies (fat JAR or uber JAR)
+If you want to create a JAR file with all dependencies, run the following command.
+
+```shell
+$ ./gradlew assemble
+```
