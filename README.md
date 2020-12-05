@@ -32,12 +32,12 @@ There are sample bugs in [kusumotolab/kGenProg-example](https://github.com/kusum
 You can download all the bugs from [here](https://github.com/kusumotolab/kGenProg-example/archive/master.zip).
 
 
-## Gradle
+### Gradle
 kGenProg is also available for Gradle environments.
 Currently, kGenProg is distributed on JitPack.
 To add JitPack repository to your build file, append it in your build.gradle at the end of repositories.
 
-```
+```gradle
 allprojects {
     repositories {
         ...
@@ -48,7 +48,7 @@ allprojects {
 
 Then, please add the dependency to kGenProg.
 
-```
+```gradle
 dependencies {
     implementation 'com.github.kusumotolab:kGenProg:Tag'
 ```
