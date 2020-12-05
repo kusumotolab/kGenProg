@@ -16,6 +16,7 @@ We strongly recommend to use IntelliJ instead of Eclipse due to the difference o
 ```shell
 $ git clone https://github.com/kusumotolab/kGenProg
 $ cd kGenProg
+$ git submodule update --init
 ```
 
 2. Import the project
@@ -50,6 +51,7 @@ File
 ```shell
 $ git clone https://github.com/kusumotolab/kGenProg
 $ cd kGenProg
+$ git submodule update --init
 ```
 
 2. Resolve dependencies and build the project
