@@ -41,7 +41,6 @@ File
   -> Import Scheme
   -> IntelliJ IDEA code style XML
   -> Specify "PATH_TO_REPO/settings/intellij-coding-style.xml"
-
 ```
 
 
