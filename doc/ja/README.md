@@ -57,7 +57,7 @@ dependencies {
 
 ## 使用方法
 ```
-$ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
+$ java -jar path/to/kGenProg.jar [--config <path> | (-r <path> -s <path>... -t <path>...)]
     [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--headcount <num>]
     [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>] [--fault-localization <name>]
@@ -88,6 +88,7 @@ $ java -jar path/to/kGenProg.jar
 ### オプション
 | オプション | 説明 | デフォルト値/デフォルト動作 |
 |---|---|---|
+| `--config` | 設定ファイルへのパス | カレントディレクトリの `kgenprog.toml` を読み込む |
 | `-r`, `--root-dir` | 修正対象プロジェクトのルートディレクトリへのパス．テスト実行の都合上，対象プロジェクトのルートに移動した上でカレントディレクトリを指定することを推奨します． | なし |
 | `-s`, `--src` | プロダクトコード（単体テスト用のコードを除く実装系のソースコード）へのパス，もしくはプロダクトコードを含むディレクトリへのパス．スペース区切りで複数指定可能． | なし |
 | `-t`, `--test` | テストコード（単体テスト用のソースコード）へのパス，もしくはテストコードを含むディレクトリへのパス．スペース区切りで複数指定可能． | なし |

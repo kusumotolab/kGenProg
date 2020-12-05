@@ -235,6 +235,11 @@ public class Configuration {
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
 
+    @com.electronwill.nightconfig.core.conversion.Path("log-level")
+    @PreserveNotNull
+    @Conversion(LevelToString.class)
+    private Level logLevel = DEFAULT_LOG_LEVEL;
+
     @com.electronwill.nightconfig.core.conversion.Path("mutation-generating-count")
     @PreserveNotNull
     private int mutationGeneratingCount = DEFAULT_MUTATION_GENERATING_COUNT;
@@ -263,11 +268,6 @@ public class Configuration {
     @com.electronwill.nightconfig.core.conversion.Path("required-solutions")
     @PreserveNotNull
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
-
-    @com.electronwill.nightconfig.core.conversion.Path("log-level")
-    @PreserveNotNull
-    @Conversion(LevelToString.class)
-    private Level logLevel = DEFAULT_LOG_LEVEL;
 
     @com.electronwill.nightconfig.core.conversion.Path("random-seed")
     @PreserveNotNull
@@ -701,14 +701,6 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("testPaths");
     }
 
-    @Option(name = "-c", aliases = "--cp", metaVar = "<class path> ...",
-        usage = "Specifies class paths needed to build the target project.",
-        handler = StringArrayOptionHandler.class)
-    private void addClassPathFromCmdLineParser(final String classPath) {
-      this.classPaths.add(Paths.get(classPath));
-      this.optionsSetByCmdLineArgs.add("classPaths");
-    }
-
     @Option(name = "-x", aliases = "--exec-test", metaVar = "<fqn> ...",
         usage = "Specifies fully qualified names of test classes executed"
             + " during evaluation of variants (i.e. fix-candidates).",
@@ -718,11 +710,32 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("executionTests");
     }
 
+    @Option(name = "-c", aliases = "--cp", metaVar = "<class path> ...",
+        usage = "Specifies class paths needed to build the target project.",
+        handler = StringArrayOptionHandler.class)
+    private void addClassPathFromCmdLineParser(final String classPath) {
+      this.classPaths.add(Paths.get(classPath));
+      this.optionsSetByCmdLineArgs.add("classPaths");
+    }
+
     @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
         usage = "Writes patches kGenProg generated to the specified directory.")
     private void setOutDirFromCmdLineParser(final String outDir) {
       this.outDir = Paths.get(outDir);
       this.optionsSetByCmdLineArgs.add("outDir");
+    }
+
+    @Option(name = "-v", aliases = "--verbose",
+        usage = "Be more verbose, printing DEBUG level logs.")
+    private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
+      logLevel = Level.DEBUG;
+      this.optionsSetByCmdLineArgs.add("logLevel");
+    }
+
+    @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.")
+    private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
+      logLevel = Level.ERROR;
+      this.optionsSetByCmdLineArgs.add("logLevel");
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",
@@ -773,19 +786,6 @@ public class Configuration {
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       this.requiredSolutionsCount = requiredSolutionsCount;
       this.optionsSetByCmdLineArgs.add("requiredSolutionsCount");
-    }
-
-    @Option(name = "-v", aliases = "--verbose",
-        usage = "Be more verbose, printing DEBUG level logs.")
-    private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
-      logLevel = Level.DEBUG;
-      this.optionsSetByCmdLineArgs.add("logLevel");
-    }
-
-    @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.")
-    private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
-      logLevel = Level.ERROR;
-      this.optionsSetByCmdLineArgs.add("logLevel");
     }
 
     @Option(name = "--random-seed", metaVar = "<num>",

@@ -58,7 +58,7 @@ You can find more detailed descriptions [here](https://jitpack.io/#kusumotolab/k
 
 ## Usage
 ```
-$ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
+$ java -jar path/to/kGenProg.jar [--config <path> | (-r <path> -s <path>... -t <path>...)]
     [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--headcount <num>]
     [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>] [--fault-localization <name>]
@@ -89,6 +89,7 @@ $ java -jar path/to/kGenProg.jar
 ### Options
 | Option | Description | Default |
 |---|---|---|
+| `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
 | `-r`, `--root-dir` | Specifies the path to the root directory of the target project. It is recommended to specify the current directory after moving into the root directory of the target project, for implementation reason. | Nothing |
 | `-s`, `--src` | Specifies paths to "product" source code (i.e. main, non-test code), or to directories containing them. Paths are separated with spaces. | Nothing |
 | `-t`, `--test` | Specifies paths to test source code, or to directories containing them. Paths are separated with spaces. | Nothing |
