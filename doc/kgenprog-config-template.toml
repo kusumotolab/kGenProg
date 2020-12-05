@@ -56,3 +56,21 @@ test = ["path/to/test/source/code"]
 # Specifies random seed used by random number generator.
 #random-seed = <num>
 
+# Specify the scope from which source code to be reused is selected.
+# Acceptable values are "PROJECT", "PACKAGE" or "FILE"
+#scope = <level>
+
+# Specifies technique of fault localization.
+#fault-localization = <technique>
+
+# Specifies crossover type.
+#crossover-type = <type>
+
+# Specifies first variant selection strategy for crossover.
+#crossover-first-variant = <strategy>
+
+# Specifies second variant selection strategy for crossover.
+#crossover-second-variant = <strategy>
+
+# Record historical element
+#history-record = <boolean>

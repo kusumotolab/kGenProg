@@ -98,7 +98,6 @@ $ java -jar path/to/kGenProg.jar
 | `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
-| `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
 | `--mutation-generating-count` | Specifies how many variants are generated in a generation by a mutation. | 10 |
 | `--crossover-generating-count` | Specifies how many variants are generated in a generation by a crossover. | 10 |
 | `--headcount` | Specifies how many variants survive in a generation. | 100 |
@@ -113,6 +112,7 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
 | `--history-record` | Stores generation process of each variant and all generated variants. | `false` |
+| `--version` | Print version. | `false` | 
 
 
 ## Use in your research
