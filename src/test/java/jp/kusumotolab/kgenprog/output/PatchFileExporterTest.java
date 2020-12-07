@@ -1,6 +1,7 @@
 package jp.kusumotolab.kgenprog.output;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -25,7 +26,7 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
-public class PatchGeneratorTest {
+public class PatchFileExporterTest {
 
   private static final Charset SHIFT_JIS = Charset.forName("shift-jis");
 
@@ -38,7 +39,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "n--;", "n -= 1; //", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     // assert contents of patch folder
@@ -66,7 +67,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", ";", "; //", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -95,7 +96,7 @@ public class PatchGeneratorTest {
     final Variant v2 = createModifiedVariant(base, "Bar.java", "return n + 1;", "return n;", 99);
     final VariantStore variantStore = createMockedVariantStore(v1, v2);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -128,7 +129,7 @@ public class PatchGeneratorTest {
     final Variant v4 = createModifiedVariant(base, "Foo.java", "n--;", "n;;;;;", 4);
     final VariantStore variantStore = createMockedVariantStore(v0, v1, v2, v3, v4);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -152,15 +153,13 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "n--;", "n -= 1; //", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
-    patchExporter.export(variantStore);
-
-    assertThat(true).isTrue(); // to prevent smoke test in sonarlint
+    final Exporter patchExporter = new PatchFileExporter(outdir);
+    assertThatCode(() -> patchExporter.export(variantStore)).doesNotThrowAnyException();
   }
 
   @Test
   public void testPatchGenerationWithShiftJISEncodedSourceCode() throws IOException {
-    final Logger logger = (Logger) LoggerFactory.getLogger(PatchExporter.class);
+    final Logger logger = (Logger) LoggerFactory.getLogger(PatchFileExporter.class);
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
@@ -171,7 +170,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "return m;", "return n;", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -189,27 +188,11 @@ public class PatchGeneratorTest {
         .contains("public int max")
         .containsPattern("- +return m;")
         .containsPattern("\\+ +return n;");
-
-    // logの確認
-    final List<ILoggingEvent> logs = listAppender.list;
-    final String message = logs.get(0)
-        .getMessage();
-    assertThat(message)
-        .doesNotContain(
-            new String("2つの整数のうち大きい整数を返す".getBytes(StandardCharsets.UTF_8),
-                Charset.defaultCharset()))
-        .doesNotContain(
-            new String("整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
-        .doesNotContain(
-            new String("n, mのうち大きい整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
-        .contains("public int max")
-        .containsPattern("- +return m;")
-        .containsPattern("\\+ +return n;");
   }
 
   @Test
   public void testPatchGenerationWithUTF8EncodedSourceCode() throws IOException {
-    final Logger logger = (Logger) LoggerFactory.getLogger(PatchExporter.class);
+    final Logger logger = (Logger) LoggerFactory.getLogger(PatchFileExporter.class);
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
@@ -220,7 +203,7 @@ public class PatchGeneratorTest {
     final Variant variant = createModifiedVariant(base, "Foo.java", "return m;", "return n;", 0);
     final VariantStore variantStore = createMockedVariantStore(variant);
 
-    final Exporter patchExporter = new PatchExporter(outdir);
+    final Exporter patchExporter = new PatchFileExporter(outdir);
     patchExporter.export(variantStore);
 
     assertThat(outdir.resolve("patch-v0")).exists();
@@ -236,22 +219,6 @@ public class PatchGeneratorTest {
             new String("整数".getBytes(Charset.defaultCharset()), StandardCharsets.UTF_8))
         .doesNotContain(
             new String("n, mのうち大きい整数".getBytes(Charset.defaultCharset()), StandardCharsets.UTF_8))
-        .contains("public int max")
-        .containsPattern("- +return m;")
-        .containsPattern("\\+ +return n;");
-
-    // logの確認
-    final List<ILoggingEvent> logs = listAppender.list;
-    final String message = logs.get(0)
-        .getMessage();
-    assertThat(message)
-        .doesNotContain(
-            new String("2つの整数のうち大きい整数を返す".getBytes(StandardCharsets.UTF_8),
-                Charset.defaultCharset()))
-        .doesNotContain(
-            new String("整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
-        .doesNotContain(
-            new String("n, mのうち大きい整数".getBytes(StandardCharsets.UTF_8), Charset.defaultCharset()))
         .contains("public int max")
         .containsPattern("- +return m;")
         .containsPattern("\\+ +return n;");
