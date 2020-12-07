@@ -107,6 +107,7 @@ $ java -jar path/to/kGenProg.jar
 | `--random-seed` | kGenProg 全体で用いる乱数のシード値 | 0 |
 | `--scope` | 再利用候補の範囲（`PROJECT`，`PACKAGE`，`FILE`） | `PACKAGE` |
 | `--fault-localization` | 欠陥限局の手法（Fault Localization）（`Ample`，`Jaccard`，`Ochiai`，`Tarantula`，`Zoltar`） | `Ochiai` |
+| `--mutation-type` | 変異種別（`Simple`，`Heuristic`） | `Simple` |
 | `--crossover-type` | 交叉種別（`Random`，`Single`，`Uniform`） | `Random` |
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |
