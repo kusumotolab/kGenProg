@@ -245,6 +245,8 @@ public class KGenProgMain {
           .append(System.lineSeparator())
           .append(createFitnessSummary(variants))
           .append(System.lineSeparator())
+          .append(createTestTimeSummary(variants))
+          .append(System.lineSeparator())
           .append("----------------------------------------------------------------")
           .append(System.lineSeparator());
       log.info(sb.toString());
@@ -265,6 +267,35 @@ public class KGenProgMain {
           count(variants, v -> v.triedBuild() && !v.isBuildSucceeded()),
           count(variants, v -> !v.isSyntaxValid() && !v.isReproduced()),
           count(variants, Variant::isReproduced));
+    }
+
+    private String createTestTimeSummary(final List<Variant> variants) {
+      return String.format("Test time: sum %s ms, max %s ms, min %s ms",
+          getSumTestTime(variants),
+          getMaxTestTime(variants),
+          getMinTestTime(variants));
+    }
+
+    private String getSumTestTime(final List<Variant> variants) {
+      return format.format(
+          variants.stream()
+              .mapToDouble(e -> e.getTestResults().getTestTime())
+              .sum());
+    }
+    private String getMaxTestTime(final List<Variant> variants) {
+      return format.format(
+          variants.stream()
+          .mapToDouble(e -> e.getTestResults().getTestTime())
+          .filter(e -> e != 0)
+          .max().orElse(0));
+    }
+
+    private String getMinTestTime(final List<Variant> variants) {
+      return format.format(
+          variants.stream()
+              .mapToDouble(e -> e.getTestResults().getTestTime())
+              .filter(e -> e != 0)
+              .min().orElse(0));
     }
 
     private int count(final List<Variant> variants, final Predicate<Variant> p) {

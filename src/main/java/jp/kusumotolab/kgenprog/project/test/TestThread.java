@@ -106,6 +106,7 @@ class TestThread extends Thread {
       return;
     }
 
+    final long beginTestTime = System.nanoTime();
     testResults = new TestResults(buildResults);
 
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
@@ -142,6 +143,10 @@ class TestThread extends Thread {
       // Should handle safely
       // ひとまず本クラスをThreadで包むためにRuntimeExceptionでエラーを吐く．
       throw new RuntimeException(e);
+    }
+    finally {
+      final long endTestTime = System.nanoTime();
+      testResults.setTestTime((endTestTime - beginTestTime) * 0.000001);
     }
   }
 

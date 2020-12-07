@@ -27,6 +27,8 @@ public class TestResults {
 
   private BuildResults buildResults;
 
+  private double testTime = 0;
+
   private final Map<FullyQualifiedName, TestResult> value;
 
   /**
@@ -286,5 +288,13 @@ public class TestResults {
         .stream()
         .map(JavaBinaryObject::getFqn)
         .collect(Collectors.toSet());
+  }
+
+  public void setTestTime(double testTime) {
+    this.testTime = testTime;
+  }
+
+  public double getTestTime() {
+    return testTime;
   }
 }
