@@ -30,7 +30,7 @@ public class Exporters {
     final Set<Exporter> exporters = new HashSet<>();
     exporters.add(new PatchLogExporter()); // always write patch to log
 
-    if (!config.needNotOutput()) {
+    if (config.isPatchOutput()) {
       exporters.add(new PatchFileExporter(outdir));
     }
     if (config.isHistoryRecord()) {

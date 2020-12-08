@@ -80,5 +80,8 @@ test = ["path/to/test/source/code"]
 # Acceptable values are "Elite", "GeneSimilarity", "Random" or "TestSimilarity"
 #crossover-second-variant = <strategy>
 
-# Stores generation process of each variant and all generated variants.
-#history-record = <boolean>
+# Writes patch files to the output directory specified in `-o` option.
+#patch-output = true/false
+
+# Records and writes generation process of all generated variants as JSON format.
+#history-record = true/false

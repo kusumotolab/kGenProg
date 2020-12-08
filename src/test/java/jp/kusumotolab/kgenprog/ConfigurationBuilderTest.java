@@ -56,7 +56,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -64,7 +64,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -95,7 +95,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -103,7 +103,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -135,7 +135,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -143,7 +143,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -174,7 +174,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -182,7 +182,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -213,7 +213,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -221,7 +221,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -253,7 +253,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -261,7 +261,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -291,7 +291,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -299,7 +299,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -330,7 +330,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -338,7 +338,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -369,7 +369,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -377,7 +377,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -408,7 +408,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(logLevel);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -416,7 +416,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -446,7 +446,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Level.DEBUG);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -454,7 +454,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -485,7 +485,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -493,7 +493,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, classPaths, JUnitVersion.JUNIT4);
@@ -524,7 +524,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(randomSeed);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -532,7 +532,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -563,7 +563,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(scope);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -571,7 +571,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -579,10 +579,10 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildWithNeedNotOutput() {
-    final boolean needNotOutput = true;
-    final Builder builder = new Builder(rootDir, productPaths, testPaths).setNeedNotOutput(
-        needNotOutput);
+  public void testBuildWithNoPatchOutput() {
+    final boolean noPatchOutput = true;
+    final Builder builder = new Builder(rootDir, productPaths, testPaths).setPatchOutput(
+        noPatchOutput);
     final Configuration config = builder.build();
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
@@ -603,7 +603,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(needNotOutput);
+    assertThat(config.isPatchOutput()).isEqualTo(noPatchOutput);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -611,7 +611,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -643,14 +643,14 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(faultLocalization);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
     assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -682,14 +682,14 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(mutationType);
     assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -721,7 +721,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(crossoverType);
@@ -729,7 +729,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -762,12 +762,12 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
     assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(firstVariantSelectionStrategy);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -800,7 +800,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -808,7 +808,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         secondVariantSelectionStrategy);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -839,7 +839,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -847,7 +847,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -880,7 +880,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -888,7 +888,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -921,7 +921,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -929,7 +929,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -962,7 +962,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -970,7 +970,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1003,7 +1003,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1011,7 +1011,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1044,7 +1044,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1052,7 +1052,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1085,7 +1085,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1093,7 +1093,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1125,7 +1125,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1133,7 +1133,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1165,7 +1165,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Level.DEBUG);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1173,7 +1173,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1205,7 +1205,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Level.ERROR);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1213,7 +1213,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1246,7 +1246,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1254,7 +1254,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1287,7 +1287,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(randomSeed);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1295,7 +1295,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1328,7 +1328,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(scope);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1336,7 +1336,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, ImmutableList.of(productPath),
@@ -1411,9 +1411,9 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromCmdLineArgsWithNeedNotOutput() {
+  public void testBuildFromCmdLineArgsWithPatchOutput() {
     final String[] args = {"-r", rootDir.toString(), "-s", productPath.toString(), "-t",
-        testPath.toString(), "--no-output"};
+        testPath.toString(), "--patch-output"};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
@@ -1434,7 +1434,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isTrue();
+    assertThat(config.isPatchOutput()).isTrue();
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1442,7 +1442,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -1517,7 +1517,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1525,7 +1525,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1559,7 +1559,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1567,7 +1567,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1601,7 +1601,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1609,7 +1609,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1643,7 +1643,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1651,7 +1651,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1686,7 +1686,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1694,7 +1694,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1729,7 +1729,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1737,7 +1737,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1771,7 +1771,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1779,7 +1779,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1813,7 +1813,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1821,7 +1821,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1855,7 +1855,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1863,7 +1863,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1898,7 +1898,7 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1906,7 +1906,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -1938,7 +1938,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1946,7 +1946,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final Path classPath = rootDir.resolve("lib");
     final TargetProject expectedProject =
@@ -1982,7 +1982,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRandomSeed()).isEqualTo(randomSeed);
 
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -1990,7 +1990,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2025,7 +2025,7 @@ public class ConfigurationBuilderTest {
     final Scope.Type scope = Scope.Type.FILE;
     assertThat(config.getScope()).isEqualTo(scope);
 
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2033,7 +2033,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2065,7 +2065,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2073,7 +2073,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final String executionTest1 = "example.FooTest";
     final String executionTest2 = "example.BarTest";
@@ -2086,8 +2086,8 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromConfigFileWithNeedNotOutput() {
-    final Path configPath = rootDir.resolve("withNeedNotOutputTrue.toml");
+  public void testBuildFromConfigFileWithPatchOutput() {
+    final Path configPath = rootDir.resolve("withPatchOutputTrue.toml");
     final String[] args = {"--config", configPath.toString()};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
@@ -2116,10 +2116,10 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
-    final boolean needNotOutput = true;
-    assertThat(config.needNotOutput()).isEqualTo(needNotOutput);
+    final boolean isPatchOutput = true;
+    assertThat(config.isPatchOutput()).isEqualTo(isPatchOutput);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2155,7 +2155,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2163,7 +2163,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2202,7 +2202,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2210,7 +2210,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2249,7 +2249,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2257,7 +2257,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2295,7 +2295,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2303,7 +2303,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2341,7 +2341,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2349,7 +2349,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2388,7 +2388,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2396,7 +2396,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2436,7 +2436,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2444,7 +2444,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2482,7 +2482,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2490,7 +2490,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2527,7 +2527,7 @@ public class ConfigurationBuilderTest {
 
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2535,7 +2535,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2569,7 +2569,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2577,7 +2577,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final Path classPathFromConfigFile = rootDir.resolve("lib");
     final TargetProject projectWithClassPathFromConfigFile =
@@ -2621,7 +2621,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRandomSeed()).isEqualTo(randomSeedFromCmdLine);
 
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2629,7 +2629,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2667,7 +2667,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getScope()).isNotEqualTo(scopeFromConfigFile);
     assertThat(config.getScope()).isEqualTo(scopeFromCmdLine);
 
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2675,7 +2675,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2708,7 +2708,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2716,7 +2716,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final String executionTestFromConfigFile1 = "example.FooTest";
     final String executionTestFromConfigFile2 = "example.BarTest";
@@ -2731,9 +2731,9 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromConfigFileWithNeedNotOutputOverwrittenFromCmdLineArgs() {
-    final Path configPath = rootDir.resolve("withNeedNotOutputFalse.toml");
-    final String[] args = {"--config", configPath.toString(), "--no-output"};
+  public void testBuildFromConfigFileWithPatchOutputOverwrittenFromCmdLineArgs() {
+    final Path configPath = rootDir.resolve("withPatchOutputFalse.toml");
+    final String[] args = {"--config", configPath.toString(), "--patch-output"};
     final Configuration config = Configuration.Builder.buildFromCmdLineArgs(args);
 
     assertThat(config.getOutDir()).isEqualTo(Configuration.DEFAULT_OUT_DIR);
@@ -2755,9 +2755,9 @@ public class ConfigurationBuilderTest {
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
 
-    final boolean needNotOutputFromConfigFile = false;
-    assertThat(config.needNotOutput()).isNotEqualTo(needNotOutputFromConfigFile);
-    assertThat(config.needNotOutput()).isTrue();
+    final boolean isPatchOutputFromConfigFile = false;
+    assertThat(config.isPatchOutput()).isNotEqualTo(isPatchOutputFromConfigFile);
+    assertThat(config.isPatchOutput()).isTrue();
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2765,7 +2765,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2799,7 +2799,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
 
     final FaultLocalization.Technique faultLocalizationFromConfigFile = FaultLocalization.Technique.Ample;
     assertThat(config.getFaultLocalization()).isNotEqualTo(faultLocalizationFromConfigFile);
@@ -2809,7 +2809,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2843,7 +2843,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
 
@@ -2854,7 +2854,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2889,7 +2889,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2902,7 +2902,7 @@ public class ConfigurationBuilderTest {
         firstVariantSelectionStrategyFromCmdLine);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject =
         TargetProjectFactory.create(rootDir, productPaths, testPaths, Collections.emptyList(),
@@ -2937,13 +2937,13 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
     assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategyFromConfigFile =
         SecondVariantSelectionStrategy.Strategy.Random;
@@ -2991,7 +2991,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
@@ -2999,7 +2999,7 @@ public class ConfigurationBuilderTest {
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir,
         ImmutableList.of(link), testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -3035,7 +3035,7 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(Configuration.DEFAULT_MUTATION_TYPE);
     assertThat(config.getCrossoverType()).isEqualTo(Configuration.DEFAULT_CROSSOVER_TYPE);
