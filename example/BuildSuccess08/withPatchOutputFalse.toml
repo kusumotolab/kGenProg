@@ -1,4 +1,4 @@
 root-dir = "./"
 src = ["src/"]
 test = ["test/"]
-no-output = false
+patch-output = false
