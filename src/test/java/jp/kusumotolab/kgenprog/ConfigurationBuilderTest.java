@@ -187,6 +187,7 @@ public class ConfigurationBuilderTest {
         "-s", productPath.toString(),
         "-t", testPath.toString()
     };
+
     Builder.buildFromCmdLineArgs(args);
 
     // 警告でないはず
