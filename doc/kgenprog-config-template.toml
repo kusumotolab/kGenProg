@@ -64,6 +64,10 @@ test = ["path/to/test/source/code"]
 # Acceptable values are "Ample", "Jaccard", "Ochiai", "Tarantula" or "Zoltar"
 #fault-localization = <technique>
 
+# Specifies mutation type.
+# Acceptable values are "Simple" or "Heuristic"
+#mutation-type = <type>
+
 # Specifies crossover type.
 # Acceptable values are "Random", "Single", "Uniform" or "Cascade"
 #crossover-type = <type>
