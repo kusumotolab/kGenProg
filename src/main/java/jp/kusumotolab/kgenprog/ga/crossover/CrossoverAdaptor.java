@@ -98,7 +98,10 @@ public abstract class CrossoverAdaptor implements Crossover {
         // 達している場合はそこで処理を終える
         for (final Variant newVariant : newVariants) {
           variants.add(newVariant);
-          if (newVariant.isCompleted() && requiredSolutions <= ++foundSolutions) {
+          if(newVariant.isCompleted()){
+            foundSolutions++;
+          }
+          if (requiredSolutions <= foundSolutions) {
             break VARIANT_GENERATION;
           }
         }

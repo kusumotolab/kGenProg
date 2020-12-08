@@ -107,7 +107,10 @@ public abstract class Mutation {
 
       // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
       // 達している場合はこれ以上の変異プログラムは生成しない
-      if (newVariant.isCompleted() && requiredSolutions <= ++foundSolutions) {
+      if(newVariant.isCompleted()){
+        foundSolutions++;
+      }
+      if (requiredSolutions <= foundSolutions) {
         break;
       }
     }
