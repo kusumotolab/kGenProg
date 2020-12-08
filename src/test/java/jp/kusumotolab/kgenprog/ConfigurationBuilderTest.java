@@ -682,14 +682,14 @@ public class ConfigurationBuilderTest {
     assertThat(config.getLogLevel()).isEqualTo(Configuration.DEFAULT_LOG_LEVEL);
     assertThat(config.getRandomSeed()).isEqualTo(Configuration.DEFAULT_RANDOM_SEED);
     assertThat(config.getScope()).isEqualTo(Configuration.DEFAULT_SCOPE);
-    assertThat(config.needNotOutput()).isEqualTo(Configuration.DEFAULT_NEED_NOT_OUTPUT);
+    assertThat(config.isPatchOutput()).isEqualTo(Configuration.DEFAULT_IS_PATCH_OUTPUT);
     assertThat(config.getFaultLocalization()).isEqualTo(Configuration.DEFAULT_FAULT_LOCALIZATION);
     assertThat(config.getMutationType()).isEqualTo(mutationType);
     assertThat(config.getFirstVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY);
     assertThat(config.getSecondVariantSelectionStrategy()).isEqualTo(
         Configuration.DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY);
-    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_HISTORY_RECORD);
+    assertThat(config.isHistoryRecord()).isEqualTo(Configuration.DEFAULT_IS_HISTORY_RECORD);
 
     final TargetProject expectedProject = TargetProjectFactory.create(rootDir, productPaths,
         testPaths, Collections.emptyList(), JUnitVersion.JUNIT4);
