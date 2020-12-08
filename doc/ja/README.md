@@ -50,6 +50,7 @@ allprojects {
 ```gradle
 dependencies {
     implementation 'com.github.kusumotolab:kGenProg:Tag'
+}
 ```
 上記の`Tag`は利用したいkGenProgのバージョンIDで置換してください．
 より詳細な説明は[ここ](https://jitpack.io/#kusumotolab/kGenProg/)に英語で書かれています．

@@ -51,6 +51,7 @@ Then, please add the dependency to kGenProg.
 ```gradle
 dependencies {
     implementation 'com.github.kusumotolab:kGenProg:Tag'
+}
 ```
 Please replace `Tag` with the version ID that you want to use.
 You can find more detailed descriptions [here](https://jitpack.io/#kusumotolab/kGenProg/).
