@@ -102,7 +102,7 @@ public class SimpleMutationTest {
     final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     // 変異プログラムを全く生成しないはず
-    assertThat(variantList).hasSize(0);
+    assertThat(variantList).isEmpty();
   }
 
   @Test
