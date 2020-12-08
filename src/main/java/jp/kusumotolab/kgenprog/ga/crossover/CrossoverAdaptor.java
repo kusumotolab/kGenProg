@@ -81,38 +81,43 @@ public abstract class CrossoverAdaptor implements Crossover {
     }
 
     final List<Variant> validVariants = filter(variantStore.getCurrentVariants());
-    final List<Variant> variants = new ArrayList<>();
 
     // filteredVariantsの要素数が2に満たない場合は交叉しない
     if (validVariants.size() < 2) {
       return Collections.emptyList();
     }
 
-    try {
-      // generatingCountを超えるまでバリアントを作りづづける
-      VARIANT_GENERATION:
-      while (variants.size() < generatingCount) {
+    final List<Variant> variants = generateVariants(variantStore, validVariants);
+    return variants;
+  }
+
+  private List<Variant> generateVariants(final VariantStore variantStore,
+      final List<Variant> validVariants) {
+
+    final List<Variant> generatedVariants = new ArrayList<>();
+    int foundSolutions = variantStore.getFoundSolutionsNumber()
+        .get();
+
+    while (generatedVariants.size() < generatingCount) {
+      try {
         final List<Variant> newVariants = makeVariants(validVariants, variantStore);
 
         // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
         // 達している場合はそこで処理を終える
         for (final Variant newVariant : newVariants) {
-          variants.add(newVariant);
-          if(newVariant.isCompleted()){
+          generatedVariants.add(newVariant);
+          if (newVariant.isCompleted()) {
             foundSolutions++;
           }
           if (requiredSolutions <= foundSolutions) {
-            break VARIANT_GENERATION;
+            return generatedVariants;
           }
         }
-
+      } catch (final CrossoverInfeasibleException e) {
+        log.debug(e.getMessage());
       }
-    } catch (final CrossoverInfeasibleException e) {
-      log.debug(e.getMessage());
     }
-
-    // バリアントを作りすぎた場合はそれを除いてリターン
-    return generatingCount < variants.size() ? variants.subList(0, generatingCount) : variants;
+    return generatedVariants;
   }
 
   protected abstract List<Variant> makeVariants(List<Variant> variants, VariantStore variantStore)
