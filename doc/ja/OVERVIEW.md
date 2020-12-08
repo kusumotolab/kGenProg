@@ -93,6 +93,7 @@ KGenProgのデフォルト値はOchiaiである．
 - jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover：二つの親個体の遺伝子をある一点で前後に分割し，親個体Aの前半遺伝子と親個体Bの後半遺伝子から新しい個体を生み出す較差である．
 - jp.kusumotolab.kgenprog.ga.crossover.UniformCrossover：二つの親個体の遺伝子を並べ，同じ位置にある塩基のどちらを用いるかをランダム選択する．
 つまり，親個体Aの位置0の塩基と親個体Bの位置0の塩基のどちらかをランダム選択し，親個体Aの位置1の塩基と親個体Bの位置1の塩基のどちらかをランダム選択する，という処理を遺伝子の長さの回数行う．
+- jp.kusumotolab.kgenprog.ga.crossover.CascadeCrossover:二つの親個体から全ての塩基を取得後，塩基の重複を取り除いてつなげ合わせる交叉である．
 
 
 ## 交叉の第一の親を選択するためのインターフェース FirstVariantSelectionStrategy
