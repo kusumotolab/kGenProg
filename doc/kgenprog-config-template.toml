@@ -56,7 +56,7 @@ test = ["path/to/test/source/code"]
 # Specifies random seed used by random number generator.
 #random-seed = <num>
 
-# Specify the scope from which source code to be reused is selected.
+# Specifies the scope from which source code to be reused is selected.
 # Acceptable values are "PROJECT", "PACKAGE" or "FILE"
 #scope = <level>
 

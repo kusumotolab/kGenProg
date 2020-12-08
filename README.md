@@ -106,7 +106,7 @@ $ java -jar path/to/kGenProg.jar
 | `--test-time-limit` | Specifies a time limit in seconds to build and test each variant. | 10 |
 | `--required-solutions` | Terminates searching solutions when the specified number of solutions are found. | 1 |
 | `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
-| `--scope` | Specify the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
+| `--scope` | Specifies the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
 | `--fault-localization` | Specifies technique of fault localization. (`Ample`, `Jaccard`, `Ochiai`, `Tarantula`, `Zoltar`). | `Ochiai` |
 | `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`, `Cascade`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |

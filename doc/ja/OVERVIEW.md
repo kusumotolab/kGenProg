@@ -91,7 +91,7 @@ KGenProgのデフォルト値はOchiaiである．
 交叉のインターフェースはjp.kusumotolab.kgenprog.ga.crossover.Crossoverである．
 現在のところ，実装クラスとしては以下のものがある．
 - jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover：二つの親個体から全ての塩基を取得後，それらのうちの半分をランダムに選択して新しい個体を生み出す交叉である．
-- jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover：二つの親個体の遺伝子をある一点で前後に分割し，親個体Aの前半遺伝子と親個体Bの後半遺伝子から新しい個体を生み出す較差である．
+- jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover：二つの親個体の遺伝子をある一点で前後に分割し，親個体Aの前半遺伝子と親個体Bの後半遺伝子から新しい個体を生み出す交叉である．
 - jp.kusumotolab.kgenprog.ga.crossover.UniformCrossover：二つの親個体の遺伝子を並べ，同じ位置にある塩基のどちらを用いるかをランダム選択する．
 つまり，親個体Aの位置0の塩基と親個体Bの位置0の塩基のどちらかをランダム選択し，親個体Aの位置1の塩基と親個体Bの位置1の塩基のどちらかをランダム選択する，という処理を遺伝子の長さの回数行う．
 - jp.kusumotolab.kgenprog.ga.crossover.CascadeCrossover:二つの親個体から全ての塩基を取得後，塩基の重複を取り除いてつなげ合わせる交叉である．
@@ -122,7 +122,7 @@ KGenProgのデフォルト値はOchiaiである．
 現在のところ，実装クラスとしては以下のものがある．
 - jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection：適応度が高い個体を選択する．適応度が等しい個体が複数存在する場合はランダムに選択される．
 - jp.kusumotolab.kgenprog.ga.selection.EliteAndOldVariantSelection：適応度が高い個体を選択する．適応度が等しい個体が複数存在する場合は古い世代で生成された個体が選択される．
-- jp.kusumotolab.kgenprog.ga.selection.GenerationalVariantSelection：DefaultVariantSelectionとの違いがいまいち不明
+- jp.kusumotolab.kgenprog.ga.selection.GenerationalVariantSelection：DefaultVariantSelectionとの違いがいまいち不明．
 
 
 ## 個体の適応度を計算するためのインターフェース SourceCodeValidation
@@ -140,7 +140,7 @@ KGenProgのデフォルト値はOchiaiである．
 ## 抽象構文木の変更操作を表すインターフェース JDTOperation
 抽象構文木の変更操作を表すインターフェースは jp.kusumotolab.kgenprog.project.jdt.JDTOperation である．
 現在のところ，実装クラスとしては以下のものがある．
-- jp.kusumotolab.kgenprog.project.jdt.DeleteOperation：プログラム文を削除する
+- jp.kusumotolab.kgenprog.project.jdt.DeleteOperation：プログラム文を削除する．
 - jp.kusumotolab.kgenprog.project.jdt.InsertBeforeOperation：対象のプログラム文の前にプログラム文を挿入する．
 - jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation：対象のプログラム文の後ろにプログラム文を挿入する．
 - jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation：プログラム文を置換する．
