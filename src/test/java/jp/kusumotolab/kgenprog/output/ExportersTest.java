@@ -15,7 +15,7 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 public class ExportersTest {
 
   @Test
-  public void testInstanciationWithPreviousResults() throws IOException {
+  public void testInstantiationWithPreviousResults() throws IOException {
     // setup previous results which contains some files and a sub-directory
     final Path outdir = TestUtil.createVirtualDir();
     Files.createDirectory(outdir);
@@ -81,7 +81,6 @@ public class ExportersTest {
     assertThat(outdir).exists();
     assertThat(outdir.resolve(JSONExporter.JSON_FILENAME)).exists();
   }
-
 
   private Configuration setupMinimalConfig(final Path outdir) {
     return setupMinimalConfig(outdir, false, false);
