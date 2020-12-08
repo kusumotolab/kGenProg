@@ -93,7 +93,7 @@ $ java -jar path/to/kGenProg.jar
 | `-t`, `--test` | Specifies paths to test source code, or to directories containing them. Paths are separated with spaces. | Nothing |
 | `-x`, `--exec-test` | Specifies fully qualified names of test classes executed during evaluation of variants (i.e. fix-candidates). It is recommended to specify test classes detecting a bug. Class names are separated with spaces. | All test classes |
 | `-c`, `--cp` | Specifies class paths needed to build the target project. Paths are separated with spaces. | Nothing |
-| `-o`, `--out-dir` | Specifies an output directory. Generated files include patches and history json. They can be enabled by `--patch-output` or `--history-record` |  A directory named `kgenprog-out` is created in the current directory. |
+| `-o`, `--out-dir` | Specifies an output directory. Generated files include patches and history json. They can be enabled by `--patch-output` or `--history-record` | `./kgenprog-out` |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
 | `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
@@ -112,7 +112,7 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
 | `--patch-output` | Writes patch files to the output directory specified in `-o` option. | `false` |
-| `--history-record` | Records and writes generation process of all generated variants as JSON format. | `false` |
+| `--history-record` | Records and writes generation process of all generated variants as JSON format. Note that, this feature significantly reduces overall performance. | `false` |
 
 
 ## Use in your research

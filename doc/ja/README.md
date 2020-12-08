@@ -93,7 +93,7 @@ $ java -jar path/to/kGenProg.jar
 | `-t`, `--test` | テストコード（単体テスト用のソースコード）へのパス，もしくはテストコードを含むディレクトリへのパス．スペース区切りで複数指定可能． | なし |
 | `-x`, `--exec-test` | 遺伝的アルゴリズム中に実行されるテストクラスの完全限定名．バグを発現させるテストクラスを指定してください．スペース区切りで複数指定可能． | すべてのテストクラス |
 | `-c`, `--cp` | 修正対象プロジェクトのビルドに必要なクラスパス．スペース区切りで複数指定可能． | なし |
-| `-o`, `--out-dir` | kGenProg が結果の出力を行うディレクトリへのパス．指定ディレクトリ直下に実行時のタイムスタンプを名前とするディレクトリが生成され，そのディレクトリに結果が出力されます． | カレントディレクトリ直下に `kgenprog-out` というディレクトリが作成される |
+| `-o`, `--out-dir` | kGenProg が結果を出力するディレクトリへのパス．出力ファイルはパッチファイルとGAの生成過程．それぞれ `--patch-output` と `--history-record` でon/offを切り替え可能． | `./kgenprog-out` |
 | `-v`, `--verbose` | 詳細なログを出力する | `false` |
 | `-q`, `--quiet` | エラー出力のみを行う | `false` |
 | `--config` | 設定ファイルへのパス | カレントディレクトリの `kgenprog.toml` を読み込む |
@@ -111,7 +111,8 @@ $ java -jar path/to/kGenProg.jar
 | `--crossover-type` | 交叉種別（`Random`，`Single`，`Uniform`） | `Random` |
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |
-| `--history-record` | 個体の生成過程および生成された全個体を記録する | `false` |
+| `--patch-output` | 解のパッチファイル生成の有無 | `false` |
+| `--history-record` | 個体の生成過程および生成された全個体を記録するJSONファイルの記録の有無．この機能は実行速度の低下に繋がる点に注意 | `false` |
 
 ## 受賞
 - [Best Poster Award - APSEC 2018](http://www.apsec2018.org/)  
