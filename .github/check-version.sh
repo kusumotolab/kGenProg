@@ -22,7 +22,7 @@ fi
 
 # Check published releases
 
-HTTP_STATUS=$(curl -LI "${GITHUB_TAG_URL_BASE}/${WANTED_VERSION}" -o /dev/null -w '%{http_code}\n' -s)
+HTTP_STATUS=$(curl -LI "${GITHUB_TAG_URL_BASE}/v${WANTED_VERSION}" -o /dev/null -w '%{http_code}\n' -s)
 
 if [[ $HTTP_STATUS = '400' ]]; then
   echo "[ERROR] Version number $WANTED_VERSION cannot be used as a tag." >&2
