@@ -80,5 +80,5 @@ test = ["path/to/test/source/code"]
 # Acceptable values are "Elite", "GeneSimilarity", "Random" or "TestSimilarity"
 #crossover-second-variant = <strategy>
 
-# Record historical element
+# Stores generation process of each variant and all generated variants.
 #history-record = <boolean>
