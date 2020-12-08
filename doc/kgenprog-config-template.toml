@@ -56,3 +56,8 @@ test = ["path/to/test/source/code"]
 # Specifies random seed used by random number generator.
 #random-seed = <num>
 
+# Writes patch files to the output directory specified in `-o` option.
+#patch-output = true/false
+
+# Records and writes generation process of all generated variants as JSON format.
+#history-record = true/false

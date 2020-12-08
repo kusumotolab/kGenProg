@@ -56,7 +56,6 @@ public class Configuration {
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
-  public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION =
       FaultLocalization.Technique.Ochiai;
   public static final Mutation.Type DEFAULT_MUTATION_TYPE = Mutation.Type.Simple;
@@ -65,7 +64,8 @@ public class Configuration {
       FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
       SecondVariantSelectionStrategy.Strategy.Random;
-  public static final boolean DEFAULT_HISTORY_RECORD = false;
+  public static final boolean DEFAULT_IS_PATCH_OUTPUT = false;
+  public static final boolean DEFAULT_IS_HISTORY_RECORD = false;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -80,13 +80,13 @@ public class Configuration {
   private final Level logLevel;
   private final long randomSeed;
   private final Scope.Type scope;
-  private final boolean needNotOutput;
   private final FaultLocalization.Technique faultLocalization;
   private final Mutation.Type mutationType;
   private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
-  private final boolean historyRecord;
+  private final boolean isPatchOutput;
+  private final boolean isHistoryRecord;
   private final Builder builder;
 
   private Configuration(final Builder builder) {
@@ -103,13 +103,13 @@ public class Configuration {
     this.logLevel = builder.logLevel;
     this.randomSeed = builder.randomSeed;
     this.scope = builder.scope;
-    this.needNotOutput = builder.needNotOutput;
     this.faultLocalization = builder.faultLocalization;
     this.mutationType = builder.mutationType;
     this.crossoverType = builder.crossoverType;
     this.firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     this.secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
-    this.historyRecord = builder.historyRecord;
+    this.isPatchOutput = builder.isPatchOutput;
+    this.isHistoryRecord = builder.isHistoryRecord;
     this.builder = builder;
   }
 
@@ -173,9 +173,6 @@ public class Configuration {
     return scope;
   }
 
-  public boolean needNotOutput() {
-    return needNotOutput;
-  }
 
   public FaultLocalization.Technique getFaultLocalization() {
     return faultLocalization;
@@ -197,8 +194,12 @@ public class Configuration {
     return secondVariantSelectionStrategy;
   }
 
+  public boolean isPatchOutput() {
+    return isPatchOutput;
+  }
+
   public boolean isHistoryRecord() {
-    return historyRecord;
+    return isHistoryRecord;
   }
 
   @Override
@@ -287,11 +288,6 @@ public class Configuration {
     @Conversion(ScopeTypeToString.class)
     private Scope.Type scope = DEFAULT_SCOPE;
 
-    @Option(name = "--no-output", usage = "Do not output anything.", hidden = true)
-    @com.electronwill.nightconfig.core.conversion.Path("no-output")
-    @PreserveNotNull
-    private boolean needNotOutput = DEFAULT_NEED_NOT_OUTPUT;
-
     @com.electronwill.nightconfig.core.conversion.Path("fault-localization")
     @PreserveNotNull
     @Conversion(FaultLocalizationTechniqueToString.class)
@@ -319,9 +315,13 @@ public class Configuration {
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
         DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
+    @com.electronwill.nightconfig.core.conversion.Path("patch-output")
+    @PreserveNotNull
+    private boolean isPatchOutput = DEFAULT_IS_PATCH_OUTPUT;
+
     @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
-    private boolean historyRecord = DEFAULT_HISTORY_RECORD;
+    private boolean isHistoryRecord = DEFAULT_IS_HISTORY_RECORD;
 
     private final transient Set<String> optionsSetByCmdLineArgs = new HashSet<>();
     private final transient Set<String> optionsSetByConfigFile = new HashSet<>();
@@ -483,10 +483,6 @@ public class Configuration {
       return this;
     }
 
-    public Builder setNeedNotOutput(final boolean needNotOutput) {
-      this.needNotOutput = needNotOutput;
-      return this;
-    }
 
     public Builder setFaultLocalization(final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
@@ -515,8 +511,13 @@ public class Configuration {
       return this;
     }
 
-    public Builder setHistoryRecord(final boolean historyRecord) {
-      this.historyRecord = historyRecord;
+    public Builder setPatchOutput(final boolean isPatchOutput) {
+      this.isPatchOutput = isPatchOutput;
+      return this;
+    }
+
+    public Builder setHistoryRecord(final boolean isHistoryRecord) {
+      this.isHistoryRecord = isHistoryRecord;
       return this;
     }
 
@@ -534,7 +535,7 @@ public class Configuration {
 
     private static void validateExistence(final Path path) {
       if (Files.notExists(path)) {
-        log.error(path.toString() + " does not exist.");
+        log.error("{} does not exist.", path);
         throw new IllegalArgumentException(path.toString() + " does not exist.");
       }
     }
@@ -736,7 +737,7 @@ public class Configuration {
     }
 
     @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
-        usage = "Writes patches kGenProg generated to the specified directory.")
+        usage = "Specifies an output directory storing patch and/or history json.")
     private void setOutDirFromCmdLineParser(final String outDir) {
       this.outDir = Paths.get(outDir);
       this.optionsSetByCmdLineArgs.add("outDir");
@@ -855,9 +856,15 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("secondVariantSelectionStrategy");
     }
 
-    @Option(name = "--history-record", usage = "Record historical element.")
-    private void setHistoryRecordFromCmdLineParser(final boolean historyRecord) {
-      this.historyRecord = historyRecord;
+    @Option(name = "--patch-output", usage = "Write patch files to output dir.")
+    private void setPatchOutputFromCmdLineParser(final boolean isPatchOutput) {
+      this.isPatchOutput = isPatchOutput;
+      this.optionsSetByCmdLineArgs.add("patchOutput");
+    }
+
+    @Option(name = "--history-record", usage = "Record and write generation history to output dir.")
+    private void setHistoryRecordFromCmdLineParser(final boolean isHistoryRecord) {
+      this.isHistoryRecord = isHistoryRecord;
       this.optionsSetByCmdLineArgs.add("historyRecord");
     }
 
