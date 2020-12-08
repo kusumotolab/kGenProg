@@ -23,7 +23,6 @@ public class CascadeCrossover extends CrossoverAdaptor {
    * @param firstStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param requiredSolutions 生成する必要がある修正プログラムの数
-   *
    */
   public CascadeCrossover(final FirstVariantSelectionStrategy firstStrategy,
       final SecondVariantSelectionStrategy secondStrategy, final int requiredSolutions) {

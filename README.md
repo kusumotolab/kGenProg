@@ -107,6 +107,7 @@ $ java -jar path/to/kGenProg.jar
 | `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
 | `--scope` | Specify the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
 | `--fault-localization` | Specifies technique of fault localization. (`Ample`, `Jaccard`, `Ochiai`, `Tarantula`, `Zoltar`). | `Ochiai` |
+| `--mutation-type` | Specifies mutation type. (`Simple`, `Heuristic`). | `Simple` |
 | `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |

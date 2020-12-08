@@ -36,7 +36,8 @@ public class RandomCrossover extends CrossoverAdaptor {
       final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
       final int generatingCount, final int requiredSolutions) {
-    super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount, requiredSolutions);
+    super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount,
+        requiredSolutions);
     this.random = random;
   }
 
