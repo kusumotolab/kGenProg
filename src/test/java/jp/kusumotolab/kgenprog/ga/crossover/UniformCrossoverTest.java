@@ -81,10 +81,9 @@ public class UniformCrossoverTest {
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
 
     // 修正プログラムが必ず生成されるようにモックを設定する
-    when(testVariants.variantStore.createVariant(any(), any())).then(ans -> {
-      return new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
-          ans.getArgument(1));
-    });
+    when(testVariants.variantStore.createVariant(any(), any())).then(
+        ans -> new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
+            ans.getArgument(1)));
 
     // バリアントの生成
     final Crossover crossover =

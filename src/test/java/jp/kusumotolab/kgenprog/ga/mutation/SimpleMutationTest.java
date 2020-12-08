@@ -113,10 +113,9 @@ public class SimpleMutationTest {
     final VariantStore variantStore = createVariantStore(initialVariant);
 
     // 修正プログラムが必ず生成されるようにモックを設定する
-    when(variantStore.createVariant(any(), any())).then(ans -> {
-      return new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
-          ans.getArgument(1));
-    });
+    when(variantStore.createVariant(any(), any())).then(
+        ans -> new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
+            ans.getArgument(1)));
 
     final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
     final List<Variant> variantList = simpleMutation.exec(variantStore);
