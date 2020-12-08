@@ -22,6 +22,7 @@ public abstract class CrossoverAdaptor implements Crossover {
   private final FirstVariantSelectionStrategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy secondVariantSelectionStrategy;
   private final int generatingCount;
+  private final int requiredSolutions;
 
   /**
    * コンストラクタ．交叉に必要な情報を全て引数として渡す必要あり．
@@ -29,13 +30,15 @@ public abstract class CrossoverAdaptor implements Crossover {
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    */
   public CrossoverAdaptor(final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-      final int generatingCount) {
+      final int generatingCount, final int requiredSolutions) {
     this.firstVariantSelectionStrategy = firstVariantSelectionStrategy;
     this.secondVariantSelectionStrategy = secondVariantSelectionStrategy;
     this.generatingCount = generatingCount;
+    this.requiredSolutions = requiredSolutions;
   }
 
   /**
@@ -64,11 +67,10 @@ public abstract class CrossoverAdaptor implements Crossover {
    * 交叉処理を行うメソッド．交叉対象の個体群を含んだVariantStoreを引数として与える必要あり．
    *
    * @param variantStore 交叉対象の個体群
-   * @param requiredSolutions 生成する必要がある修正プログラムの数
    * @return 交叉により生成された個体群
    */
   @Override
-  public List<Variant> exec(final VariantStore variantStore, final int requiredSolutions) {
+  public List<Variant> exec(final VariantStore variantStore) {
 
     int foundSolutions = variantStore.getFoundSolutionsNumber()
         .get();

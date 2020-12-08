@@ -103,9 +103,9 @@ public class CascadeCrossoverTest {
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
-    final Crossover crossover = new CascadeCrossover(strategy1, strategy2);
+    final Crossover crossover = new CascadeCrossover(strategy1, strategy2, 1);
 
-    final List<Variant> variants = crossover.exec(spiedStore, 1);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -172,9 +172,9 @@ public class CascadeCrossoverTest {
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
-    Crossover crossover = new CascadeCrossover(strategy1, strategy2);
+    Crossover crossover = new CascadeCrossover(strategy1, strategy2, 1);
 
-    final List<Variant> variants = crossover.exec(spiedStore, 1);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -241,9 +241,9 @@ public class CascadeCrossoverTest {
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
-    Crossover crossover = new CascadeCrossover(strategy1, strategy2);
+    Crossover crossover = new CascadeCrossover(strategy1, strategy2, 1);
 
-    final List<Variant> variants = crossover.exec(spiedStore, 1);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -310,9 +310,9 @@ public class CascadeCrossoverTest {
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
-    Crossover crossover = new CascadeCrossover(strategy1, strategy2);
+    Crossover crossover = new CascadeCrossover(strategy1, strategy2, 1);
 
-    final List<Variant> variants = crossover.exec(spiedStore, 1);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -382,9 +382,9 @@ public class CascadeCrossoverTest {
     final SecondVariantSelectionStrategy strategy2 = createMocked2ndStrategy(parent2);
 
     // テスト対象のセットアップ
-    Crossover crossover = new CascadeCrossover(strategy1, strategy2);
+    Crossover crossover = new CascadeCrossover(strategy1, strategy2, 1);
 
-    final List<Variant> variants = crossover.exec(spiedStore, 1);
+    final List<Variant> variants = crossover.exec(spiedStore);
     assertThat(variants)
         .hasSize(2)
         .doesNotContainNull();
@@ -426,8 +426,8 @@ public class CascadeCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new CascadeCrossover(new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random));
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
 
     // 交叉でバリアントを生成しないはず
     assertThat(variants).isEmpty();
@@ -453,8 +453,8 @@ public class CascadeCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new CascadeCrossover(new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random));
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
 
     // 交叉で1つだけ変異プログラムを生成するはず
     assertThat(variants).hasSize(1);

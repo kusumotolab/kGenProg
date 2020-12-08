@@ -28,6 +28,7 @@ public abstract class Mutation {
   protected final Random random;
   protected final int mutationGeneratingCount;
   protected final CandidateSelection candidateSelection;
+  protected final int requiredSolutions;
 
   /**
    * コンストラクタ
@@ -35,12 +36,14 @@ public abstract class Mutation {
    * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    */
   public Mutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection) {
+      final CandidateSelection candidateSelection, final int requiredSolutions) {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
+    this.requiredSolutions = requiredSolutions;
   }
 
   /**
@@ -62,10 +65,9 @@ public abstract class Mutation {
    * 変異処理された Variant を mutationGeneratingCount 分だけ返す
    *
    * @param variantStore Variant の情報を格納するオブジェクト
-   * @param requiredSolutions 生成する必要がある修正プログラムの数
    * @return 変異された Gene を持った Variant のリスト
    */
-  public List<Variant> exec(final VariantStore variantStore, final int requiredSolutions) {
+  public List<Variant> exec(final VariantStore variantStore) {
 
     int foundSolutions = variantStore.getFoundSolutionsNumber()
         .get();

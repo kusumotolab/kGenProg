@@ -28,13 +28,14 @@ public class SinglePointCrossover extends CrossoverAdaptor {
    * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
    * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
    * @param generatingCount 一世代の交叉処理で生成する個体の数
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    * @return 交叉を行うインスタンス
    */
   public SinglePointCrossover(final Random random,
       final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
       final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-      final int generatingCount) {
-    super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount);
+      final int generatingCount, final int requiredSolutions) {
+    super(firstVariantSelectionStrategy, secondVariantSelectionStrategy, generatingCount, requiredSolutions);
     this.random = random;
   }
 

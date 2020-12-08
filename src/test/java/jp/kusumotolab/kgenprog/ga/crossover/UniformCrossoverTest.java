@@ -33,15 +33,15 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover10 =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 10);
-    final List<Variant> variants10 = crossover10.exec(testVariants.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 10, 1);
+    final List<Variant> variants10 = crossover10.exec(testVariants.variantStore);
     assertThat(variants10.size()).isEqualTo(10);
 
     // バリアントの生成
     final Crossover crossover100 =
         new SinglePointCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 100);
-    final List<Variant> variants100 = crossover100.exec(testVariants.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 100, 1);
+    final List<Variant> variants100 = crossover100.exec(testVariants.variantStore);
     assertThat(variants100.size()).isEqualTo(100);
   }
 
@@ -62,8 +62,8 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 10);
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 10, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
 
     // 交叉でバリアントを生成しないはず
     assertThat(variants).isEmpty();
@@ -89,8 +89,8 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 10);
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 10, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
 
     // 交叉で1つだけ変異プログラムを生成するはず
     assertThat(variants).hasSize(1);
@@ -110,9 +110,9 @@ public class UniformCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new UniformCrossover(random,
-        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1);
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantBが選ばれているはず
@@ -139,9 +139,9 @@ public class UniformCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new UniformCrossover(random,
-        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1);
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantDが選ばれているはず
@@ -168,9 +168,9 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantDが選ばれているはず
@@ -197,9 +197,9 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantAが選ばれているはず
@@ -226,9 +226,9 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestComplementaryBasedSelection(), 1);
+            new SecondVariantTestComplementaryBasedSelection(), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantBが選ばれているはず
@@ -255,9 +255,9 @@ public class UniformCrossoverTest {
     // バリアントの生成
     final Crossover crossover =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestComplementaryBasedSelection(), 1);
+            new SecondVariantTestComplementaryBasedSelection(), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantC，2つ目のバリアントとしてvariantDが選ばれているはず
@@ -283,9 +283,9 @@ public class UniformCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new UniformCrossover(random, new FirstVariantEliteSelection(random),
-        new SecondVariantEliteSelection(), 1);
+        new SecondVariantEliteSelection(), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantA，2つ目のバリアントとしてvariantBが選ばれているはず
@@ -311,9 +311,9 @@ public class UniformCrossoverTest {
 
     // バリアントの生成
     final Crossover crossover = new UniformCrossover(random, new FirstVariantEliteSelection(random),
-        new SecondVariantEliteSelection(), 1);
+        new SecondVariantEliteSelection(), 1, 1);
     final CrossoverTestVariants testVariants = new CrossoverTestVariants();
-    final List<Variant> variants = crossover.exec(testVariants.variantStore, 1);
+    final List<Variant> variants = crossover.exec(testVariants.variantStore);
     final Variant variant = variants.get(0);
 
     // 1つ目のバリアントとしてvariantB，2つ目のバリアントとしてvariantAが選ばれているはず
@@ -342,54 +342,54 @@ public class UniformCrossoverTest {
 
     // バリアントの生成
     final Crossover crossoverEE = new UniformCrossover(random,
-        new FirstVariantEliteSelection(random), new SecondVariantEliteSelection(), 1);
-    final List<Variant> variantsEE = crossoverEE.exec(singleTestVariant.variantStore, 1);
+        new FirstVariantEliteSelection(random), new SecondVariantEliteSelection(), 1, 1);
+    final List<Variant> variantsEE = crossoverEE.exec(singleTestVariant.variantStore);
     assertThat(variantsEE).isEmpty();
 
     // バリアントの生成
     final Crossover crossoverER = new UniformCrossover(random,
-        new FirstVariantEliteSelection(random), new SecondVariantRandomSelection(random), 1);
-    final List<Variant> variantsER = crossoverER.exec(singleTestVariant.variantStore, 1);
+        new FirstVariantEliteSelection(random), new SecondVariantRandomSelection(random), 1, 1);
+    final List<Variant> variantsER = crossoverER.exec(singleTestVariant.variantStore);
     assertThat(variantsER).isEmpty();
 
     // バリアントの生成
     final Crossover crossoverEG =
         new UniformCrossover(random, new FirstVariantEliteSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 1);
-    final List<Variant> variantsEG = crossoverEG.exec(singleTestVariant.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1, 1);
+    final List<Variant> variantsEG = crossoverEG.exec(singleTestVariant.variantStore);
     assertThat(variantsEG).isEmpty();
 
     // バリアントの生成
     final Crossover crossoverET = new UniformCrossover(random,
         new FirstVariantEliteSelection(random), new SecondVariantTestComplementaryBasedSelection(),
-        1);
-    final List<Variant> variantsET = crossoverET.exec(singleTestVariant.variantStore, 1);
+        1, 1);
+    final List<Variant> variantsET = crossoverET.exec(singleTestVariant.variantStore);
     assertThat(variantsET).isEmpty();
 
     // バリアントの生成
     final Crossover crossoverRE = new UniformCrossover(random,
-        new FirstVariantRandomSelection(random), new SecondVariantEliteSelection(), 1);
-    final List<Variant> variantsRE = crossoverRE.exec(singleTestVariant.variantStore, 1);
+        new FirstVariantRandomSelection(random), new SecondVariantEliteSelection(), 1, 1);
+    final List<Variant> variantsRE = crossoverRE.exec(singleTestVariant.variantStore);
     assertThat(variantsRE).isEmpty();
 
     // バリアントの生成
     final Crossover crossoverRR = new UniformCrossover(random,
-        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1);
-    final List<Variant> variantsRR = crossoverRR.exec(singleTestVariant.variantStore, 1);
+        new FirstVariantRandomSelection(random), new SecondVariantRandomSelection(random), 1, 1);
+    final List<Variant> variantsRR = crossoverRR.exec(singleTestVariant.variantStore);
     assertThat(variantsRR).isEmpty();
 
     // バリアントの生成
     final Crossover crossoverRG =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantGeneSimilarityBasedSelection(random), 1);
-    final List<Variant> variantsRG = crossoverRG.exec(singleTestVariant.variantStore, 1);
+            new SecondVariantGeneSimilarityBasedSelection(random), 1, 1);
+    final List<Variant> variantsRG = crossoverRG.exec(singleTestVariant.variantStore);
     assertThat(variantsRG).isEmpty();
 
     // バリアントの生成
     final Crossover crossoverRT =
         new UniformCrossover(random, new FirstVariantRandomSelection(random),
-            new SecondVariantTestComplementaryBasedSelection(), 1);
-    final List<Variant> variantsRT = crossoverRT.exec(singleTestVariant.variantStore, 1);
+            new SecondVariantTestComplementaryBasedSelection(), 1, 1);
+    final List<Variant> variantsRT = crossoverRT.exec(singleTestVariant.variantStore);
     assertThat(variantsRT).isEmpty();
   }
 

@@ -32,7 +32,7 @@ public class HeuristicMutationTest {
     when(random.nextDouble()).thenReturn(0.0);
 
     final HeuristicStatementSelection selection = new HeuristicStatementSelection(random);
-    final HeuristicMutation mutation = new HeuristicMutation(0, random, selection, Type.PACKAGE);
+    final HeuristicMutation mutation = new HeuristicMutation(0, random, selection, 1, Type.PACKAGE);
     mutation.setCandidates(generatedASTs);
 
     final ASTLocation location = generatedASTs.get(0)
