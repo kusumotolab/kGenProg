@@ -61,15 +61,19 @@ test = ["path/to/test/source/code"]
 #scope = <level>
 
 # Specifies technique of fault localization.
+# Acceptable values are "Ample", "Jaccard", "Ochiai", "Tarantula" or "Zoltar"
 #fault-localization = <technique>
 
 # Specifies crossover type.
+# Acceptable values are "Random", "Single", "Uniform" or "Cascade"
 #crossover-type = <type>
 
 # Specifies first variant selection strategy for crossover.
+# Acceptable values are "Elite" or "Random"
 #crossover-first-variant = <strategy>
 
 # Specifies second variant selection strategy for crossover.
+# Acceptable values are "Elite", "GeneSimilarity", "Random" or "TestSimilarity"
 #crossover-second-variant = <strategy>
 
 # Record historical element
