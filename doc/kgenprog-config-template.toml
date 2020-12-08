@@ -47,7 +47,7 @@ test = ["path/to/test/source/code"]
 # Terminates searching solutions when the specified time has passed.
 #time-limit = <sec>
 
-# Specifies time limit to build and test for each variant in second 
+# Specifies time limit to build and test for each variant in second
 #test-time-limit = <sec>
 
 # Terminates searching solutions when the specified number of solutions are found.
