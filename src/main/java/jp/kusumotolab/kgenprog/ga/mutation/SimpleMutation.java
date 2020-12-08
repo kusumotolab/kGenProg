@@ -4,7 +4,6 @@ import java.util.Random;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Statement;
-import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
@@ -24,7 +23,7 @@ public class SimpleMutation extends Mutation {
 
   private static final int ATTEMPT_FOR_RESELECTION = 100;
 
-  protected final Type type;
+  protected final Scope.Type scopeType;
 
   /**
    * コンストラクタ
@@ -32,12 +31,12 @@ public class SimpleMutation extends Mutation {
    * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
-   * @param type 選択する候補のスコープ
+   * @param scopeType 選択する候補のスコープ
    */
   public SimpleMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Type type) {
+      final CandidateSelection candidateSelection, final Scope.Type scopeType) {
     super(mutationGeneratingCount, random, candidateSelection);
-    this.type = type;
+    this.scopeType = scopeType;
   }
 
   protected Operation makeOperation(final ASTLocation location) {
@@ -72,7 +71,7 @@ public class SimpleMutation extends Mutation {
   protected ASTNode chooseNodeForReuse(final ASTLocation location) {
     final FullyQualifiedName fqn = location.getGeneratedAST()
         .getPrimaryClassName();
-    final Scope scope = new Scope(type, fqn);
+    final Scope scope = new Scope(scopeType, fqn);
     final Query query = new Query(scope);
 
     int attempt = 0;

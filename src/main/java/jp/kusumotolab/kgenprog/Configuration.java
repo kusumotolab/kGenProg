@@ -37,6 +37,7 @@ import jp.kusumotolab.kgenprog.fl.FaultLocalization.Technique;
 import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.crossover.FirstVariantSelectionStrategy;
 import jp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategy;
+import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope;
 import jp.kusumotolab.kgenprog.project.factory.JUnitLibraryResolver.JUnitVersion;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -57,6 +58,7 @@ public class Configuration {
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION =
       FaultLocalization.Technique.Ochiai;
+  public static final Mutation.Type DEFAULT_MUTATION_TYPE = Mutation.Type.Simple;
   public static final Crossover.Type DEFAULT_CROSSOVER_TYPE = Crossover.Type.Random;
   public static final FirstVariantSelectionStrategy.Strategy DEFAULT_FIRST_VARIANT_SELECTION_STRATEGY =
       FirstVariantSelectionStrategy.Strategy.Random;
@@ -79,6 +81,7 @@ public class Configuration {
   private final long randomSeed;
   private final Scope.Type scope;
   private final FaultLocalization.Technique faultLocalization;
+  private final Mutation.Type mutationType;
   private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
@@ -101,6 +104,7 @@ public class Configuration {
     this.randomSeed = builder.randomSeed;
     this.scope = builder.scope;
     this.faultLocalization = builder.faultLocalization;
+    this.mutationType = builder.mutationType;
     this.crossoverType = builder.crossoverType;
     this.firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     this.secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
@@ -172,6 +176,10 @@ public class Configuration {
 
   public FaultLocalization.Technique getFaultLocalization() {
     return faultLocalization;
+  }
+
+  public Mutation.Type getMutationType() {
+    return mutationType;
   }
 
   public Crossover.Type getCrossoverType() {
@@ -284,6 +292,11 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(FaultLocalizationTechniqueToString.class)
     private FaultLocalization.Technique faultLocalization = DEFAULT_FAULT_LOCALIZATION;
+
+    @com.electronwill.nightconfig.core.conversion.Path("mutation-type")
+    @PreserveNotNull
+    @Conversion(MutationTypeToString.class)
+    private Mutation.Type mutationType = DEFAULT_MUTATION_TYPE;
 
     @com.electronwill.nightconfig.core.conversion.Path("crossover-type")
     @PreserveNotNull
@@ -473,6 +486,11 @@ public class Configuration {
 
     public Builder setFaultLocalization(final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
+      return this;
+    }
+
+    public Builder setMutationType(final Mutation.Type mutationType) {
+      this.mutationType = mutationType;
       return this;
     }
 
@@ -809,6 +827,13 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("faultLocalization");
     }
 
+    @Option(name = "--mutation-type", usage = "Specifies mutation type.")
+    private void setMutationFromCmdLineParser(
+        final Mutation.Type mutationType) {
+      this.mutationType = mutationType;
+      this.optionsSetByCmdLineArgs.add("mutationType");
+    }
+
     @Option(name = "--crossover-type", usage = "Specifies crossover type.")
     private void setCrossoverTypeFromCmdLineParser(final Crossover.Type crossoverType) {
       this.crossoverType = crossoverType;
@@ -970,6 +995,26 @@ public class Configuration {
 
       @Override
       public String convertFromField(final Technique value) {
+        if (value == null) {
+          return null;
+        }
+        return value.toString();
+      }
+    }
+
+    private static class MutationTypeToString implements
+        Converter<Mutation.Type, String> {
+
+      @Override
+      public Mutation.Type convertToField(final String value) {
+        if (value == null) {
+          return null;
+        }
+        return Mutation.Type.valueOf(value);
+      }
+
+      @Override
+      public String convertFromField(final Mutation.Type value) {
         if (value == null) {
           return null;
         }
