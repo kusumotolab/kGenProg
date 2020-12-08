@@ -10,8 +10,8 @@
 
 <p align=center>
     <a href="https://github.com/kusumotolab/kGenProg/releases/latest" alt="release"><img src="https://img.shields.io/github/release/kusumotolab/kGenProg.svg"></a>
-    <a href="https://circleci.com/gh/kusumotolab/kGenProg/tree/master" alt="CircleCI"><img src="https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=shield"></a>
-    <a href="https://codecov.io/gh/kusumotolab/kGenProg" alt="Codecov"><img src="https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg"></a>
+    <a href="https://jitpack.io/#kusumotolab/kGenProg" alt="jitpack"><img src="https://jitpack.io/v/kusumotolab/kGenProg.svg"></a>
+    <a href="https://github.com/kusumotolab/kGenProg/actions?query=workflow%3A%22Test+branches%22" alt="GitHub Actions"><img src="https://github.com/kusumotolab/kGenProg/workflows/Test%20branches/badge.svg"></a>
     <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="license"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
@@ -108,6 +108,7 @@ $ java -jar path/to/kGenProg.jar
 | `--random-seed` | kGenProg 全体で用いる乱数のシード値 | 0 |
 | `--scope` | 再利用候補の範囲（`PROJECT`，`PACKAGE`，`FILE`） | `PACKAGE` |
 | `--fault-localization` | 欠陥限局の手法（Fault Localization）（`Ample`，`Jaccard`，`Ochiai`，`Tarantula`，`Zoltar`） | `Ochiai` |
+| `--mutation-type` | 変異種別（`Simple`，`Heuristic`） | `Simple` |
 | `--crossover-type` | 交叉種別（`Random`，`Single`，`Uniform`, `Cascade`） | `Random` |
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |

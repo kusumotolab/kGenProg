@@ -7,6 +7,8 @@ import java.util.function.Function;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Roulette;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.HeuristicStatementSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementAndConditionSelection;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
@@ -47,6 +49,14 @@ public abstract class Mutation {
    */
   public void setCandidates(final List<GeneratedAST<ProductSourcePath>> candidates) {
     candidateSelection.setCandidates(candidates);
+  }
+
+  /**
+   * @param variant 再利用するソースコード群を含初期バリアント
+   */
+  public void setInitialCandidates(final Variant variant) {
+    candidateSelection.setCandidates(variant.getGeneratedSourceCode()
+        .getProductAsts());
   }
 
   /**
@@ -101,4 +111,29 @@ public abstract class Mutation {
     return new Gene(bases);
   }
 
+  public enum Type {
+    Simple {
+      @Override
+      public Mutation initialize(final int mutationGeneratingCount, final Random random,
+          final Scope.Type scopeType) {
+        final CandidateSelection candidateSelection =
+            new RouletteStatementAndConditionSelection(random);
+        return new SimpleMutation(mutationGeneratingCount, random, candidateSelection, scopeType);
+      }
+    },
+
+    Heuristic {
+      @Override
+      public Mutation initialize(final int mutationGeneratingCount, final Random random,
+          final Scope.Type scopeType) {
+        final CandidateSelection candidateSelection =
+            new HeuristicStatementSelection(random);
+        return new HeuristicMutation(mutationGeneratingCount, random, candidateSelection,
+            scopeType);
+      }
+    };
+
+    public abstract Mutation initialize(final int mutationGeneratingCount, final Random random,
+        final Scope.Type scopeType);
+  }
 }

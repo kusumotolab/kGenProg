@@ -33,7 +33,7 @@ public class ExportersTest {
   }
 
   @Test
-  public void testExportAll() throws IOException {
+  public void testExportAll() {
     final Path outdir = TestUtil.createVirtualDir();
     final Configuration config = setupMinimalConfig(outdir);
     final Exporters exporters = new Exporters(config);
@@ -68,7 +68,7 @@ public class ExportersTest {
     final VariantStore store = TestUtil.createVariantStoreWithDefaultStrategies(config);
 
     exporters.exportAll(store);
-    assertThat(outdir).doesNotExist();
+    assertThat(outdir).doesNotExist(); // asssert no file output
   }
 
   @Test
@@ -79,7 +79,7 @@ public class ExportersTest {
     final VariantStore store = TestUtil.createVariantStoreWithDefaultStrategies(config);
 
     exporters.exportAll(store);
-    assertThat(outdir).doesNotExist();
+    assertThat(outdir).exists(); // outdir should be created by historyrecord
   }
 
   private Configuration setupMinimalConfig(final Path outdir) {

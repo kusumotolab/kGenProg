@@ -102,7 +102,7 @@ class TestThread extends Thread {
   public void run() {
     // ビルド失敗時は即座に諦める
     if (buildResults.isBuildFailed) {
-      testResults = new EmptyTestResults("build failed.");
+      testResults = new EmptyTestResults(buildResults);
       return;
     }
 

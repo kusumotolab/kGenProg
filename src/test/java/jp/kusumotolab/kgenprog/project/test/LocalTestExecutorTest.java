@@ -555,6 +555,11 @@ public class LocalTestExecutorTest {
 
     // 各テスト名は3回出力されるはず．スレッドが生き残ると3回以上の出力される （300ms / 1000ms = 3）
     // TODO 割り込みタイミングによって結果が揺れる可能性あり．
+    // #785 でCI環境 (GitHub Actions) の場合は無視するようにした．
+    if (null != System.getenv("GITHUB_ACTIONS")) {
+      System.out.println("Skipping thread interrupt test on GitHub Actions.");
+      return;
+    }
     assertThat(countPattern(stdout.toString(), FOO_TEST02.value)).isSameAs(3);
     assertThat(countPattern(stdout.toString(), FOO_TEST03.value)).isSameAs(3);
 
@@ -607,6 +612,11 @@ public class LocalTestExecutorTest {
 
     // 各テスト名は3回出力されるはず．スレッドが生き残ると3回以上の出力される （300ms / 1000ms = 3）
     // TODO 割り込みタイミングによって結果が揺れる可能性あり．
+    // #785 でCI環境 (GitHub Actions) の場合は無視するようにした．
+    if (null != System.getenv("GITHUB_ACTIONS")) {
+      System.out.println("Skipping thread interrupt test on GitHub Actions.");
+      return;
+    }
     assertThat(countPattern(stdout.toString(), FOO_TEST02.value)).isSameAs(3);
     assertThat(countPattern(stdout.toString(), FOO_TEST03.value)).isSameAs(3);
 

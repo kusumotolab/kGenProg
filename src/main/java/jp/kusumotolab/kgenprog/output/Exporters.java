@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -26,19 +27,19 @@ public class Exporters {
   }
 
   private Set<Exporter> createExporterSet(final Configuration config) {
-    if (config.needNotOutput()) {
-      return Collections.emptySet();
+    final Set<Exporter> exporters = new HashSet<>();
+    exporters.add(new PatchLogExporter()); // always write patch to log
+
+    if (!config.needNotOutput()) {
+      exporters.add(new PatchFileExporter(outdir));
     }
     if (config.isHistoryRecord()) {
-      return Set.of(new PatchExporter(outdir), new JSONExporter(outdir));
+      exporters.add(new JSONExporter(outdir));
     }
-    return Set.of(new PatchExporter(outdir));
+    return Collections.unmodifiableSet(exporters);
   }
 
   public void exportAll(final VariantStore variantStore) {
-    if (exporterSet.isEmpty()) {
-      return; // do nothing when exporters are empty
-    }
     this.exporterSet.forEach(e -> e.export(variantStore));
   }
 

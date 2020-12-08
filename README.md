@@ -10,8 +10,7 @@
 <p align=center>
     <a href="https://github.com/kusumotolab/kGenProg/releases/latest" alt="release"><img src="https://img.shields.io/github/release/kusumotolab/kGenProg.svg"></a>
     <a href="https://jitpack.io/#kusumotolab/kGenProg" alt="jitpack"><img src="https://jitpack.io/v/kusumotolab/kGenProg.svg"></a>
-    <a href="https://circleci.com/gh/kusumotolab/kGenProg/tree/master" alt="CircleCI"><img src="https://circleci.com/gh/kusumotolab/kGenProg/tree/master.svg?style=shield"></a>
-    <a href="https://codecov.io/gh/kusumotolab/kGenProg" alt="Codecov"><img src="https://codecov.io/gh/kusumotolab/kGenProg/branch/master/graph/badge.svg"></a>
+    <a href="https://github.com/kusumotolab/kGenProg/actions?query=workflow%3A%22Test+branches%22" alt="GitHub Actions"><img src="https://github.com/kusumotolab/kGenProg/workflows/Test%20branches/badge.svg"></a>
     <a href="https://github.com/kusumotolab/kGenProg/blob/master/LICENSE" alt="license"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
@@ -109,6 +108,7 @@ $ java -jar path/to/kGenProg.jar
 | `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
 | `--scope` | Specifies the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
 | `--fault-localization` | Specifies technique of fault localization. (`Ample`, `Jaccard`, `Ochiai`, `Tarantula`, `Zoltar`). | `Ochiai` |
+| `--mutation-type` | Specifies mutation type. (`Simple`, `Heuristic`). | `Simple` |
 | `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`, `Cascade`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
