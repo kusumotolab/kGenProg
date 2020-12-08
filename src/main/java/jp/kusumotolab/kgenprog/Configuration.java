@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -389,7 +390,10 @@ public class Configuration {
     }
 
     public Configuration build() {
-
+      warnSymbolicLink(rootDir);
+      warnSymbolicLink(productPaths);
+      warnSymbolicLink(testPaths);
+      warnSymbolicLink(classPaths);
       if (targetProject == null) {
         targetProject = TargetProjectFactory.create(rootDir, productPaths, testPaths, classPaths,
             JUnitVersion.JUNIT4);
@@ -589,7 +593,7 @@ public class Configuration {
 
           // Builderオブジェクトの各フィールドに対して，
           // Pathアノテーションが有る場合はその値を取得
-          field.setAccessible(true);
+          //field.setAccessible(true);
           final String name = field.getName();
           final com.electronwill.nightconfig.core.conversion.Path[] annotations =
               field.getDeclaredAnnotationsByType(
@@ -632,23 +636,31 @@ public class Configuration {
     }
 
     private Path resolveAgainstConfigDirAndNormalize(final Path path) {
-      return checkSymbolicLink(configPath.resolveSibling(path)
-          .normalize());
+      warnSymbolicLink(configPath.resolveSibling(path));
+
+      return configPath.resolveSibling(path)
+          .normalize();
     }
 
     /**
-     * Checks whether the given path is a symbolic link, and returns it as is. If it is a symbolic
-     * link, outputs warning message; otherwise do nothing.
+     * Warn if the given path is a symbolic link
      *
-     * @param path the path to be checked
-     * @return the given path
+     * @param path path to be checked
      */
-    private Path checkSymbolicLink(final Path path) {
-      if (Files.isSymbolicLink(path)) {
-        log.warn("symbolic link may not be resolved: " + path.toString());
+    private void warnSymbolicLink(final Path path) {
+      if (null == path) {
+        return;
       }
+      if (Files.isSymbolicLink(path)) {
+        log.warn("symbolic link may not be resolved: {}", path);
+      }
+    }
 
-      return path;
+    private void warnSymbolicLink(final List<Path> paths) {
+      if (null == paths) {
+        return;
+      }
+      paths.forEach(this::warnSymbolicLink);
     }
 
     @Override
@@ -657,7 +669,7 @@ public class Configuration {
       final Class<?> clazz = this.getClass();
       for (final Field field : clazz.getDeclaredFields()) {
         try {
-          field.setAccessible(true);
+          //field.setAccessible(true);
           if (Modifier.isTransient(field.getModifiers())) {
             continue;
           }

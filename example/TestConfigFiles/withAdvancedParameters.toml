@@ -1,0 +1,10 @@
+root-dir = "./"
+src = ["src"]
+test = ["test"]
+
+cp = ["lib", "library"]
+fault-localization = "Ochiai"
+crossover-type = "SinglePoint"
+crossover-first-variant = "Elite"
+crossover-second-variant = "TestComplementary"
+exec-test = ["example.FooTest", "example.BarTest"]

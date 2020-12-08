@@ -1,5 +1,0 @@
-root-dir = "./"
-src = ["src/"]
-test = ["test/"]
-exec-test = ["example.FooTest", "example.BarTest"]
-
