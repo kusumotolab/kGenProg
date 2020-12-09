@@ -4,16 +4,23 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import io.gsonfire.GsonFireBuilder;
+import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
+import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
+import jp.kusumotolab.kgenprog.project.SourcePath;
+import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 
@@ -51,20 +58,29 @@ class JSONExporter implements Exporter {
    * 各クラスのシリアライザを登録する．
    */
   private Gson setupGson() {
-    final GsonBuilder gsonBuilder = new GsonBuilder();
-    return gsonBuilder.registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
-        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
-        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
+    return new GsonFireBuilder().enableExposeMethodResult()
+        .createGsonBuilder()
+        .registerTypeHierarchyAdapter(ASTNode.class, new ASTNodeSerializer())
+        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
+        .registerTypeHierarchyAdapter(FileDiff.class, new FileDiffSerializer())
+        .registerTypeHierarchyAdapter(Fitness.class, new FitnessSerializer())
+        .registerTypeHierarchyAdapter(FullyQualifiedName.class, new FullyQualifiedNameSerializer())
+        .registerTypeHierarchyAdapter(Gene.class, new GeneSerializer())
+        .registerTypeHierarchyAdapter(GeneratedJDTAST.class, new GeneratedJDTASTSerializer())
+        .registerTypeHierarchyAdapter(GeneratedSourceCode.class,
+            new GeneratedSourceCodeSerializer())
+        .registerTypeHierarchyAdapter(Patch.class, new PatchSerializer())
+        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
+        .registerTypeHierarchyAdapter(SourcePath.class, new SourcePathSerializer())
         .registerTypeHierarchyAdapter(TestResult.class, new TestResultSerializer())
+        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
+        .registerTypeHierarchyAdapter(Variant.class, new VariantSerializer())
+        .registerTypeHierarchyAdapter(VariantStore.class, new VariantStoreSerializer())
         .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
-            new MutationHistoricalElementSerializer())
         .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
             new CrossoverHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .registerTypeHierarchyAdapter(Patch.class, new PatchSerializer())
-        .registerTypeHierarchyAdapter(FileDiff.class, new FileDiffSerializer())
-        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
+        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
+            new MutationHistoricalElementSerializer())
         .create();
   }
 }
