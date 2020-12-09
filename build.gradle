@@ -51,10 +51,12 @@ dependencies {
 
     implementation 'args4j:args4j:2.33'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'com.github.albfernandez:juniversalchardet:2.3.2'
     implementation 'com.github.wumpz:diffutils:2.2'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'commons-codec:commons-codec:1.11'
+    implementation 'io.gsonfire:gson-fire:1.8.5'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.apache.maven:maven-model:3.5.4'
@@ -64,8 +66,6 @@ dependencies {
     implementation 'org.eclipse.platform:org.eclipse.text:3.8.0'
     implementation 'org.jacoco:org.jacoco.core:0.8.1'
     implementation 'org.slf4j:slf4j-api:1.7.25'
-    implementation 'com.github.albfernandez:juniversalchardet:2.3.2'
-    implementation 'io.gsonfire:gson-fire:1.8.5'
 
     testImplementation 'org.assertj:assertj-core:3.10.0'
     testImplementation 'org.mockito:mockito-core:2.+'
