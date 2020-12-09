@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.gsonfire.GsonFireBuilder;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -28,21 +29,12 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class CrossoverHistoricalElementSerializerTest {
 
-  private Gson gson;
+  private final Gson gson = TestUtil.createGson();
   private final JDTASTConstruction astConstruction = new JDTASTConstruction();
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder()
-        .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
-            new CrossoverHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .create();
-  }
 
   private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 

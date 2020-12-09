@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.gsonfire.GsonFireBuilder;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -39,18 +40,8 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class MutationHistoricalElementSerializerTest {
 
-  private Gson gson;
+  private final Gson gson = TestUtil.createGson();
   private final JDTASTConstruction astConstruction = new JDTASTConstruction();
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder()
-        .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
-            new MutationHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .create();
-  }
 
   private ASTLocation mockASTLocation(final TargetProject project) {
     final ASTLocation astLocation = mock(ASTLocation.class);

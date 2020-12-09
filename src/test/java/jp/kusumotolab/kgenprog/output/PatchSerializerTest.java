@@ -10,10 +10,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
@@ -38,16 +36,9 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class PatchSerializerTest {
 
-  private Gson gson;
+  private final Gson gson = TestUtil.createGson();
   private final JDTASTConstruction astConstruction = new JDTASTConstruction();
   private final PatchGenerator patchGenerator = new PatchGenerator();
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder().registerTypeAdapter(Patch.class, new PatchSerializer())
-        .registerTypeHierarchyAdapter(FileDiff.class, new FileDiffSerializer())
-        .create();
-  }
 
   private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 

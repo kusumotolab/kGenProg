@@ -9,10 +9,8 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -32,14 +30,7 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class TestResultsSerializerTest {
 
-  private Gson gson;
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder().registerTypeAdapter(TestResult.class, new TestResultSerializer())
-        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
-        .create();
-  }
+  private final Gson gson = TestUtil.createGson();
 
   private TestResults execTest(final Path rootPath, final List<Path> sourcePaths,
       final List<Path> testPaths) {

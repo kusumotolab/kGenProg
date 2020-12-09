@@ -4,19 +4,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import io.gsonfire.GsonFireBuilder;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
+import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
+import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
+import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -24,23 +29,19 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
+import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.CrossoverHistoricalElement;
+import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.TestResults;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class BaseSerializerTest {
 
-  private Gson gson;
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder()
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .create();
-  }
+  private final Gson gson = TestUtil.createGson();
 
   @Test
-  public void testBase01() {
+  public void testBaseGeneratedByDeletion() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
@@ -64,11 +65,11 @@ public class BaseSerializerTest {
         .getAsJsonObject();
 
     // チェック
-    check(base, serializedBase);
+    assertBase(base, serializedBase);
   }
 
   @Test
-  public void testBase02() {
+  public void testBaseGeneratedByInsertion() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
@@ -98,12 +99,12 @@ public class BaseSerializerTest {
         .getAsJsonObject();
 
     // チェック
-    check(base, serializedBase);
+    assertBase(base, serializedBase);
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testBase03() {
+  public void testBasetestBaseGeneratedByReplacement() {
     final Path basePath = Paths.get("example/BuildSuccess01/");
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
@@ -136,12 +137,12 @@ public class BaseSerializerTest {
         .getAsJsonObject();
 
     // チェック
-    check(base, serializedBase);
+    assertBase(base, serializedBase);
   }
 
-  private void check(final Base base, final JsonObject serializedBase) {
+  private void assertBase(final Base base, final JsonObject serializedBase) {
     // キーの存在チェック
-    assertThat(serializedBase.keySet()).containsOnly(
+    assertThat(serializedBase.keySet()).contains(
         JsonKeyAlias.Base.FILE_NAME,
         JsonKeyAlias.Base.LINE_NUMBER_RANGE,
         JsonKeyAlias.Base.NAME,
