@@ -4,7 +4,7 @@ Thank you for interest in contributing to **kGenProg**.
 This document describes how to setup development environment as a kGenProg contributor.
 
 ## Requirements
-- JDK >=1.8
+- JDK11+
 - Gradle
 
 ## Getting setup
@@ -16,6 +16,7 @@ We strongly recommend to use IntelliJ instead of Eclipse due to the difference o
 ```shell
 $ git clone https://github.com/kusumotolab/kGenProg
 $ cd kGenProg
+$ git submodule update --init
 ```
 
 2. Import the project
@@ -40,7 +41,6 @@ File
   -> Import Scheme
   -> IntelliJ IDEA code style XML
   -> Specify "PATH_TO_REPO/settings/intellij-coding-style.xml"
-
 ```
 
 
@@ -50,6 +50,7 @@ File
 ```shell
 $ git clone https://github.com/kusumotolab/kGenProg
 $ cd kGenProg
+$ git submodule update --init
 ```
 
 2. Resolve dependencies and build the project
@@ -89,7 +90,14 @@ Project
 ```
 
 ## Coding style
-- Contributors must follow our defined coding style ([eclipse](../blob/master/settings/eclipse-coding-style.xml), [intellij](../blob/master/settings/intellij-coding-style.xml)).
+- Contributors must follow our defined coding style ([eclipse](../settings/eclipse-coding-style.xml), [intellij](../settings/intellij-coding-style.xml)).
 This style is based on [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
 - Please use **LF** as line ending.
 - Please use **spaces**, do not use tabs.
+
+## Creating JAR files with all dependencies (fat JAR or uber JAR)
+If you want to create a JAR file with all dependencies, run the following command.
+
+```shell
+$ ./gradlew assemble
+```

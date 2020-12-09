@@ -56,6 +56,30 @@ test = ["path/to/test/source/code"]
 # Specifies random seed used by random number generator.
 #random-seed = <num>
 
+# Specifies the scope from which source code to be reused is selected.
+# Acceptable values are "PROJECT", "PACKAGE" or "FILE"
+#scope = <level>
+
+# Specifies technique of fault localization.
+# Acceptable values are "Ample", "Jaccard", "Ochiai", "Tarantula" or "Zoltar"
+#fault-localization = <technique>
+
+# Specifies mutation type.
+# Acceptable values are "Simple" or "Heuristic"
+#mutation-type = <type>
+
+# Specifies crossover type.
+# Acceptable values are "Random", "Single", "Uniform" or "Cascade"
+#crossover-type = <type>
+
+# Specifies first variant selection strategy for crossover.
+# Acceptable values are "Elite" or "Random"
+#crossover-first-variant = <strategy>
+
+# Specifies second variant selection strategy for crossover.
+# Acceptable values are "Elite", "GeneSimilarity", "Random" or "TestSimilarity"
+#crossover-second-variant = <strategy>
+
 # Writes patch files to the output directory specified in `-o` option.
 #patch-output = true/false
 
