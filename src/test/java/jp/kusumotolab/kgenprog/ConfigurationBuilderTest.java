@@ -125,7 +125,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildWithOuputParameters() {
+  public void testBuildWithOutputParameters() {
     final Path outDir = rootDir.resolve("out");
     final boolean isPatchOutput = true;
     final boolean isHistoryRecord = true;
@@ -267,7 +267,7 @@ public class ConfigurationBuilderTest {
         rootDir, List.of(srcSymlink), List.of(testSymlink))
         .build();
 
-    // used to compare config.targetproject
+    // used to compare config.targetProject
     final TargetProject expectedProject = TargetProjectFactory.create(
         rootDir, List.of(srcSymlink), List.of(testSymlink),
         Collections.emptyList(), JUnitVersion.JUNIT4);
@@ -387,7 +387,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromCmdArgsWithOuputParameters() {
+  public void testBuildFromCmdArgsWithOutputParameters() {
     final Path outDir = rootDir.resolve("out");
     final boolean isPatchOutput = true;
     final boolean isHistoryRecord = true;
@@ -500,7 +500,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildFromConfigFileWithOuputParameters() {
+  public void testBuildFromConfigFileWithOutputParameters() {
     final Path outDir = rootDir.resolve("out");
     final boolean isPatchOutput = true;
     final boolean isHistoryRecord = true;
