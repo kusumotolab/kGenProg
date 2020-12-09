@@ -31,11 +31,13 @@ public class SimpleMutation extends Mutation {
    * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    * @param scopeType 選択する候補のスコープ
    */
   public SimpleMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Scope.Type scopeType) {
-    super(mutationGeneratingCount, random, candidateSelection);
+      final CandidateSelection candidateSelection, final int requiredSolutions,
+      final Scope.Type scopeType) {
+    super(mutationGeneratingCount, random, candidateSelection, requiredSolutions);
     this.scopeType = scopeType;
   }
 

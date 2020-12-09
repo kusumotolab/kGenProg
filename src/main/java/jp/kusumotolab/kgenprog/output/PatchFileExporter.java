@@ -44,7 +44,8 @@ class PatchFileExporter implements Exporter {
     }
 
     final PatchGenerator generator = new PatchGenerator();
-    variantStore.getFoundSolutions().stream()
+    variantStore.getFoundSolutions()
+        .stream()
         .map(generator::exec)
         .forEach(this::writeToFile);
   }

@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import org.mockito.Mockito;
+import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -102,21 +103,25 @@ public class CrossoverTestVariants {
     when(variantA.getTestResults()).thenReturn(testResultsA);
     when(variantA.getGene()).thenReturn(geneA);
     when(variantA.getFitness()).thenReturn(fitnessA);
+    when(variantA.isCompleted()).thenReturn(false);
     variantB = Mockito.mock(Variant.class);
     when(variantB.getId()).thenReturn(1L);
     when(variantB.getTestResults()).thenReturn(testResultsB);
     when(variantB.getGene()).thenReturn(geneB);
     when(variantB.getFitness()).thenReturn(fitnessB);
+    when(variantB.isCompleted()).thenReturn(false);
     variantC = Mockito.mock(Variant.class);
     when(variantC.getId()).thenReturn(2L);
     when(variantC.getTestResults()).thenReturn(testResultsC);
     when(variantC.getGene()).thenReturn(geneC);
     when(variantC.getFitness()).thenReturn(fitnessC);
+    when(variantC.isCompleted()).thenReturn(false);
     variantD = Mockito.mock(Variant.class);
     when(variantD.getId()).thenReturn(3L);
     when(variantD.getTestResults()).thenReturn(testResultsD);
     when(variantD.getGene()).thenReturn(geneD);
     when(variantD.getFitness()).thenReturn(fitnessD);
+    when(variantD.isCompleted()).thenReturn(false);
 
     variantStore = Mockito.mock(VariantStore.class);
     when(variantStore.getCurrentVariants())
@@ -124,8 +129,9 @@ public class CrossoverTestVariants {
     when(variantStore.createVariant(any(), any())).thenAnswer(invocation -> {
       final Gene gene = invocation.getArgument(0);
       final HistoricalElement element = invocation.getArgument(1);
-      return new Variant(0, 0, gene, null, null, null, null, element);
+      return new Variant(0, 0, gene, null, null, new SimpleFitness(0.5), null, element);
     });
+    when(variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(0));
   }
 
   private TestResults setupTestResults(final List<FullyQualifiedName> passes,

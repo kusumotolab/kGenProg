@@ -29,7 +29,8 @@ public class DeleteOperationTest {
   public void testDeleteStatement() {
     final ProductSourcePath path = new ProductSourcePath(Paths.get("."), Paths.get("A.java"));
     final JDTASTConstruction constructor = new JDTASTConstruction();
-    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source, StandardCharsets.UTF_8);
+    final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
+        StandardCharsets.UTF_8);
     @SuppressWarnings("unchecked")
     final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
         GeneratedJDTAST.class);

@@ -32,7 +32,8 @@ public class InsertAfterOperationTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(sourcePath, source,
         StandardCharsets.UTF_8);
-    @SuppressWarnings("unchecked") final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
+    @SuppressWarnings("unchecked")
+    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
         GeneratedJDTAST.class);
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast), Collections.singletonList(mockAst));

@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
+import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.mutation.Scope.Type;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
@@ -85,6 +86,42 @@ public class SimpleMutationTest {
     final List<Variant> variantList = simpleMutation.exec(variantStore);
 
     assertThat(variantList).hasSize(15);
+  }
+
+  @Test
+  public void testStopFirst01() {
+    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
+
+    final Variant initialVariant = createInitialVariant(generatedSourceCode);
+    final VariantStore variantStore = createVariantStore(initialVariant);
+
+    // 修正プログラムがすでに1つ存在している状態にする
+    when(variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(1));
+
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+    final List<Variant> variantList = simpleMutation.exec(variantStore);
+
+    // 変異プログラムを全く生成しないはず
+    assertThat(variantList).isEmpty();
+  }
+
+  @Test
+  public void testStopFirst02() {
+    final GeneratedSourceCode generatedSourceCode = createGeneratedSourceCode();
+
+    final Variant initialVariant = createInitialVariant(generatedSourceCode);
+    final VariantStore variantStore = createVariantStore(initialVariant);
+
+    // 修正プログラムが必ず生成されるようにモックを設定する
+    when(variantStore.createVariant(any(), any())).then(
+        ans -> new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
+            ans.getArgument(1)));
+
+    final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
+    final List<Variant> variantList = simpleMutation.exec(variantStore);
+
+    // 最初の変異プログラムが修正プログラムなので，それ以降は変異プログラムを生成しないはず
+    assertThat(variantList).hasSize(1);
   }
 
   @Test
@@ -185,7 +222,7 @@ public class SimpleMutationTest {
       final Random random) {
     final CandidateSelection statementSelection = new RouletteStatementAndConditionSelection(
         random);
-    final SimpleMutation simpleMutation = new SimpleMutation(15, random, statementSelection,
+    final SimpleMutation simpleMutation = new SimpleMutation(15, random, statementSelection, 1,
         Type.PROJECT);
     simpleMutation.setCandidates(sourceCode.getProductAsts());
     return simpleMutation;
@@ -231,8 +268,10 @@ public class SimpleMutationTest {
     final VariantStore variantStore = mock(VariantStore.class);
     when(variantStore.getCurrentVariants()).thenReturn(Collections.singletonList(initialVariant));
     when(variantStore.createVariant(any(), any())).then(ans -> {
-      return new Variant(0, 0, ans.getArgument(0), null, null, null, null, ans.getArgument(1));
+      return new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(0.5), null,
+          ans.getArgument(1));
     });
+    when(variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(0));
     return variantStore;
   }
 

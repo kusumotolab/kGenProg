@@ -35,11 +35,13 @@ public class HeuristicMutation extends Mutation {
    * @param mutationGeneratingCount 各世代で生成する Variant の数
    * @param random 乱数生成器
    * @param candidateSelection 再利用候補の行を選択するクラス
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    * @param scopeType 再利用するスコープのタイプ
    */
   public HeuristicMutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection, final Scope.Type scopeType) {
-    super(mutationGeneratingCount, random, candidateSelection);
+      final CandidateSelection candidateSelection, final int requiredSolutions,
+      final Scope.Type scopeType) {
+    super(mutationGeneratingCount, random, candidateSelection, requiredSolutions);
     this.scopeType = scopeType;
 
     operationGenerators = Lists.newArrayList(
