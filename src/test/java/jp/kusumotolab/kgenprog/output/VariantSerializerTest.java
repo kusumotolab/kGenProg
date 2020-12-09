@@ -50,7 +50,7 @@ public class VariantSerializerTest {
 
     // キーを持っているかチェック
     final Set<String> serializedVariantKey = serializedVariant.keySet();
-    assertThat(serializedVariantKey).containsOnly(//
+    assertThat(serializedVariantKey).contains(//
         JsonKeyAlias.Variant.ID, //
         JsonKeyAlias.Variant.FITNESS, //
         JsonKeyAlias.Variant.GENERATION_NUMBER, //

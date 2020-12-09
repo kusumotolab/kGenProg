@@ -105,7 +105,7 @@ public class PatchSerializerTest {
         .getAsJsonObject();
     final Set<String> serializedPatchKey = serializedPatch.keySet();
 
-    assertThat(serializedPatchKey).containsOnly(JsonKeyAlias.Patch.DIFF,
+    assertThat(serializedPatchKey).contains(JsonKeyAlias.Patch.DIFF,
         JsonKeyAlias.Patch.FILE_NAME);
 
     final String fileName = serializedPatch.get(JsonKeyAlias.Patch.FILE_NAME)
