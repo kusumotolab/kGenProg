@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 
 /**
@@ -65,33 +64,5 @@ public class TestResult {
    */
   public String getFailedReason() {
     return this.failedReason;
-  }
-
-  @Override
-  public String toString() {
-    return toString(0);
-  }
-
-  /**
-   * jsonシリアライザ
-   *
-   * @param indentDepth インデント幅
-   * @return
-   */
-  public String toString(final int indentDepth) {
-    final StringBuilder sb = new StringBuilder();
-    final String indent = StringUtils.repeat(" ", indentDepth);
-    sb.append(indent + "{\n");
-    sb.append(indent + "  \"executedTestFQN\": \"" + executedTestFQN + "\",\n");
-    sb.append(indent + "  \"wasFailed\": " + failed + ",\n");
-    sb.append(indent + "  \"coverages\": [\n");
-    sb.append(String.join(",\n", coverages.values()
-        .stream()
-        .map(c -> c.toString(indentDepth + 2))
-        .collect(Collectors.toList())));
-    sb.append("\n");
-    sb.append(indent + "  ]\n");
-    sb.append(indent + "}");
-    return sb.toString();
   }
 }

@@ -249,24 +249,6 @@ public class TestResults {
   }
 
   /**
-   * jsonシリアライザ
-   *
-   * @return
-   */
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder();
-    sb.append("[\n");
-    sb.append(String.join(",\n", this.value.values()
-        .stream()
-        .map(v -> v.toString(2))
-        .collect(Collectors.toList())));
-    sb.append("\n");
-    sb.append("]\n");
-    return sb.toString();
-  }
-
-  /**
    * ビルドの結果 (分散に使用)
    *
    * @return
