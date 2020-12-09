@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Test;
+import com.google.gson.JsonParser;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -107,6 +108,7 @@ public class TestResultsTest {
     final Variant variant = mock(Variant.class);
     when(variant.getGeneratedSourceCode()).thenReturn(generatedSourceCode);
     final TestResults result = executor.exec(variant);
+    final JsonParser parser = new JsonParser();
 
     final String expected = new StringBuilder()//
         .append("[")
@@ -144,8 +146,11 @@ public class TestResultsTest {
         .append("  }")
         .append("]")
         .toString();
+    final String actual = JsonParser.parseString(expected)
+        .toString();
 
-    assertThat(result.toString()).isEqualToIgnoringNewLines(expected);
+    assertThat(actual).isEqualTo(JsonParser.parseString(expected)
+        .toString());
   }
 
 }

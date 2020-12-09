@@ -1,5 +1,7 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,6 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import jp.kusumotolab.kgenprog.output.CoverageSerializer;
+import jp.kusumotolab.kgenprog.output.FullyQualifiedNameSerializer;
+import jp.kusumotolab.kgenprog.output.PathSerializer;
+import jp.kusumotolab.kgenprog.output.TestResultSerializerForDebug;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.LineNumberRange;
@@ -268,5 +280,16 @@ public class TestResults {
         .stream()
         .map(JavaBinaryObject::getFqn)
         .collect(Collectors.toSet());
+  }
+
+  @Override
+  public String toString() {
+    return new GsonBuilder().setPrettyPrinting()
+        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
+        .registerTypeHierarchyAdapter(FullyQualifiedName.class, new FullyQualifiedNameSerializer())
+        .registerTypeHierarchyAdapter(TestResult.class, new TestResultSerializerForDebug())
+        .registerTypeHierarchyAdapter(Coverage.class, new CoverageSerializer())
+        .create()
+        .toJson(value.values());
   }
 }
