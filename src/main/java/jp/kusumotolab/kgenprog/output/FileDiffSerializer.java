@@ -46,10 +46,10 @@ public class FileDiffSerializer implements JsonSerializer<FileDiff> {
   public JsonElement serialize(final FileDiff fileDiff, final Type type,
       final JsonSerializationContext context) {
 
+    final String diff = String.join("\n", fileDiff.getDiff());
     final JsonObject serializedFileDiff = new JsonObject();
     serializedFileDiff.addProperty("fileName", fileDiff.getFileName());
-    serializedFileDiff.addProperty("diff", fileDiff.getDiff()
-        .toString());
+    serializedFileDiff.addProperty("diff", diff);
 
     return serializedFileDiff;
   }
