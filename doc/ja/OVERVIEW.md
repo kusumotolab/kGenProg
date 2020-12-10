@@ -41,7 +41,7 @@ kGenProgにおける自動バグ限局とは，与えられたプログラムと
 
 交叉も変異と同じく，既存の個体（プログラム）から次の世代の個体を生み出す処理である．
 変異と交叉の違いは，変異が1つの個体から次世代の個体を生み出すのに対して，交叉は複数の個体から次世代の個体を生み出す処理である．
-もう一つ変異と交叉との違いは，変異では新しい操作を適用して個体を生成するのに対して，変異ではこれまでに個体に適用された操作を再利用して新しい個体を生成する．
+もう一つ変異と交叉との違いは，変異では新しい操作を適用して個体を生成するのに対して，交叉ではこれまでに個体に適用された操作を再利用して新しい個体を生成する．
 
 ## 塩基と遺伝子
 
@@ -56,22 +56,24 @@ kGenProgでは，実行中に生成される個体はその遺伝子により表
 
 遺伝的プログラミングを用いた自動プログラム修正は，その処理を行う上でさまざまな選択肢がある．
 例えば，kGenProgは自動バグ限局手法としてAmple，Jaccard，Ochiai，Tarantula，Zoltarが実装されている．
-また，これら以外の自動バグ限局手法も詳細実装されるかもしれないし，kGenProgのユーザがこれら以外の手法を利用したい場合もあるだろう．
+また，これら以外の自動バグ限局手法も将来実装されるかもしれないし，kGenProgのユーザがこれら以外の手法を利用したい場合もあるだろう．
 このようなことから，kGenProgでは，自動プログラム修正過程の種々の処理をインターフェース化した実装を行っている．
 よって，新しい自動バグ限局アルゴリズムを実装した場合でも，既存のkGenProgコードの書き換えは最小限の量で済む．
 
-以降，本質では，各処理のインターフェースと実装クラスについて述べる．
+以降，各処理のインターフェースと実装クラスについて述べる．
 
 
 ## 自動バグ限局のインターフェース FaultLocalization
 
-自動バグ限局のインターフェースはjp.kusumotolab.kgenprog.fl.FaultLozalizationである．
+自動バグ限局のインターフェースはjp.kusumotolab.kgenprog.fl.FaultLocalizationである．
 現在のところ，実装クラスとしては以下のものがある．
 - jp.kusumotolab.kgenprog.fl.Ample
+- jp.kusumotolab.kgenprog.fl.DStar
 - jp.kusumotolab.kgenprog.fl.Jaccard
 - jp.kusumotolab.kgenprog.fl.Ochiai
 - jp.kusumotolab.kgenprog.fl.Tarantula
 - jp.kusumotolab.kgenprog.fl.Zoltar
+
 いくつかの論文では，Ochiaiが最も性能が高いと報告している．
 KGenProgのデフォルト値はOchiaiである．
 
@@ -81,6 +83,7 @@ KGenProgのデフォルト値はOchiaiである．
 変異のインターフェースはjp.kusumotolab.kgenprog.ga.mutation.Mutationである．
 現在のところ，実装クラスとしては以下のものがある．
 - jp.kusumotolab.kgenprog.ga.mutation.SimpleMutation：変異により変更する箇所，変異の操作，操作が挿入と置換の場合に利用するプログラム文の取得を，ランダム選択により決定するクラスである．
+- jp.kusumotolab.kgenprog.ga.mutation.HeuristicMutation:変異により変更する箇所，変異の操作，操作が挿入と置換の場合に利用するプログラム文の取得をヒューリティクスを適用して決定するクラスである．
 
 
 ## 交叉のインターフェース Crossover
@@ -88,9 +91,10 @@ KGenProgのデフォルト値はOchiaiである．
 交叉のインターフェースはjp.kusumotolab.kgenprog.ga.crossover.Crossoverである．
 現在のところ，実装クラスとしては以下のものがある．
 - jp.kusumotolab.kgenprog.ga.crossover.RandomCrossover：二つの親個体から全ての塩基を取得後，それらのうちの半分をランダムに選択して新しい個体を生み出す交叉である．
-- jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover：二つの親個体の遺伝子をある一点で前後に分割し，親個体Aの前半遺伝子と親個体Bの後半遺伝子から新しい個体を生み出す較差である．
+- jp.kusumotolab.kgenprog.ga.crossover.SinglePointCrossover：二つの親個体の遺伝子をある一点で前後に分割し，親個体Aの前半遺伝子と親個体Bの後半遺伝子から新しい個体を生み出す交叉である．
 - jp.kusumotolab.kgenprog.ga.crossover.UniformCrossover：二つの親個体の遺伝子を並べ，同じ位置にある塩基のどちらを用いるかをランダム選択する．
 つまり，親個体Aの位置0の塩基と親個体Bの位置0の塩基のどちらかをランダム選択し，親個体Aの位置1の塩基と親個体Bの位置1の塩基のどちらかをランダム選択する，という処理を遺伝子の長さの回数行う．
+- jp.kusumotolab.kgenprog.ga.crossover.CascadeCrossover:二つの親個体から全ての塩基を取得後，塩基の重複を取り除いてつなげ合わせる交叉である．
 
 
 ## 交叉の第一の親を選択するためのインターフェース FirstVariantSelectionStrategy
@@ -101,7 +105,7 @@ KGenProgのデフォルト値はOchiaiである．
 - jp.kusumotolab.kgenprog.ga.crossover.FirstVariantRandomSelection：第一の親としてランダムに個体を選ぶ戦略である．
 
 
-## 交叉の第二の親を選択するためのインターフェースSecondVariantSelectionStrategy
+## 交叉の第二の親を選択するためのインターフェース SecondVariantSelectionStrategy
 
 交叉の第二の親を選択するためのインターフェースはjp.kusumotolab.kgenprog.ga.crossover.SecondVariantSelectionStrategyである．
 現在のところ，実装クラスとしては以下のものがある．
@@ -118,7 +122,7 @@ KGenProgのデフォルト値はOchiaiである．
 現在のところ，実装クラスとしては以下のものがある．
 - jp.kusumotolab.kgenprog.ga.selection.DefaultVariantSelection：適応度が高い個体を選択する．適応度が等しい個体が複数存在する場合はランダムに選択される．
 - jp.kusumotolab.kgenprog.ga.selection.EliteAndOldVariantSelection：適応度が高い個体を選択する．適応度が等しい個体が複数存在する場合は古い世代で生成された個体が選択される．
-- jp.kusumotolab.kgenprog.ga.selection.GenerationalVariantSelection：DefaultVariantSelectionとの違いがいまいち不明
+- jp.kusumotolab.kgenprog.ga.selection.GenerationalVariantSelection：DefaultVariantSelectionとの違いがいまいち不明．
 
 
 ## 個体の適応度を計算するためのインターフェース SourceCodeValidation
@@ -136,14 +140,8 @@ KGenProgのデフォルト値はOchiaiである．
 ## 抽象構文木の変更操作を表すインターフェース JDTOperation
 抽象構文木の変更操作を表すインターフェースは jp.kusumotolab.kgenprog.project.jdt.JDTOperation である．
 現在のところ，実装クラスとしては以下のものがある．
-- jp.kusumotolab.kgenprog.project.jdt.DeleteOperation：プログラム文を削除する
-- jp.kusumotolab.kgenprog.project.jdt.InsertBeforeOperation：対象のプログラム文の前にプログラム文を挿入する
-- jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation：対象のプログラム文の後ろにプログラム文を挿入する
-- jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation：プログラム文を置換する
-
-
-
-
-
-
+- jp.kusumotolab.kgenprog.project.jdt.DeleteOperation：プログラム文を削除する．
+- jp.kusumotolab.kgenprog.project.jdt.InsertBeforeOperation：対象のプログラム文の前にプログラム文を挿入する．
+- jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation：対象のプログラム文の後ろにプログラム文を挿入する．
+- jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation：プログラム文を置換する．
 

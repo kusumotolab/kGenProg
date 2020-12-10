@@ -106,7 +106,8 @@ public class JDTASTConstruction {
   public static ASTParser createNewParser() {
     final ASTParser parser = ASTParser.newParser(AST.JLS10);
 
-    @SuppressWarnings("unchecked") final Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
+    @SuppressWarnings("unchecked")
+    final Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
     options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
     options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
     options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);

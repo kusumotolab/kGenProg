@@ -36,7 +36,8 @@ public class ReplaceOperationTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
         StandardCharsets.UTF_8);
-    @SuppressWarnings("unchecked") final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
+    @SuppressWarnings("unchecked")
+    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
         GeneratedJDTAST.class);
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast), Collections.singletonList(mockAst));
@@ -82,7 +83,8 @@ public class ReplaceOperationTest {
     final JDTASTConstruction constructor = new JDTASTConstruction();
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
         StandardCharsets.UTF_8);
-    @SuppressWarnings("unchecked") final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
+    @SuppressWarnings("unchecked")
+    final GeneratedJDTAST<TestSourcePath> mockAst = Mockito.mock(
         GeneratedJDTAST.class);
     final GeneratedSourceCode generatedSourceCode =
         new GeneratedSourceCode(Collections.singletonList(ast), Collections.singletonList(mockAst));

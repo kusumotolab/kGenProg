@@ -61,15 +61,16 @@ public interface Crossover {
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
        * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
        * @param generatingCount 一世代の交叉処理で生成する個体の数
+       * @param requiredSolutions 生成する必要がある修正プログラムの数
        * @return 交叉を行うインスタンス
        */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
           final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-          final int generatingCount) {
+          final int generatingCount, final int requiredSolutions) {
         return new RandomCrossover(random, firstVariantSelectionStrategy,
-            secondVariantSelectionStrategy, generatingCount);
+            secondVariantSelectionStrategy, generatingCount, requiredSolutions);
       }
     },
 
@@ -89,15 +90,16 @@ public interface Crossover {
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
        * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
        * @param generatingCount 一世代の交叉処理で生成する個体の数
+       * @param requiredSolutions 生成する必要がある修正プログラムの数
        * @return 交叉を行うインスタンス
        */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
           final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-          final int generatingCount) {
+          final int generatingCount, final int requiredSolutions) {
         return new SinglePointCrossover(random, firstVariantSelectionStrategy,
-            secondVariantSelectionStrategy, generatingCount);
+            secondVariantSelectionStrategy, generatingCount, requiredSolutions);
       }
     },
 
@@ -117,15 +119,16 @@ public interface Crossover {
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
        * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
        * @param generatingCount 一世代の交叉処理で生成する個体の数
+       * @param requiredSolutions 生成する必要がある修正プログラムの数
        * @return 交叉を行うインスタンス
        */
       @Override
       public Crossover initialize(final Random random,
           final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
           final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-          final int generatingCount) {
+          final int generatingCount, final int requiredSolutions) {
         return new UniformCrossover(random, firstVariantSelectionStrategy,
-            secondVariantSelectionStrategy, generatingCount);
+            secondVariantSelectionStrategy, generatingCount, requiredSolutions);
       }
     };
 
@@ -136,11 +139,12 @@ public interface Crossover {
      * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
      * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
      * @param generatingCount 一世代の交叉処理で生成する個体の数
+     * @param requiredSolutions 生成する必要がある修正プログラムの数
      * @return 交叉を行うインスタンス
      */
     public abstract Crossover initialize(final Random random,
         final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
         final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
-        final int generatingCount);
+        final int generatingCount, final int requiredSolutions);
   }
 }

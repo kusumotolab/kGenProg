@@ -133,8 +133,8 @@ public class KGenProgMain {
 
       // 変異プログラムを生成
       final List<Variant> variantsByMutation = mutation.exec(variantStore);
-      final List<Variant> variantsByCrossover = crossover.exec(variantStore);
       variantStore.addGeneratedVariants(variantsByMutation);
+      final List<Variant> variantsByCrossover = crossover.exec(variantStore);
       variantStore.addGeneratedVariants(variantsByCrossover);
 
       // 世代別サマリの出力

@@ -1,12 +1,15 @@
 package jp.kusumotolab.kgenprog.ga.mutation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Roulette;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.HeuristicStatementSelection;
+import jp.kusumotolab.kgenprog.ga.mutation.selection.RouletteStatementAndConditionSelection;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
@@ -27,6 +30,7 @@ public abstract class Mutation {
   protected final Random random;
   protected final int mutationGeneratingCount;
   protected final CandidateSelection candidateSelection;
+  protected final int requiredSolutions;
 
   /**
    * コンストラクタ
@@ -34,12 +38,14 @@ public abstract class Mutation {
    * @param mutationGeneratingCount 各世代で生成する個体数
    * @param random 乱数生成器
    * @param candidateSelection 再利用する候補を選択するオブジェクト
+   * @param requiredSolutions 生成する必要がある修正プログラムの数
    */
   public Mutation(final int mutationGeneratingCount, final Random random,
-      final CandidateSelection candidateSelection) {
+      final CandidateSelection candidateSelection, final int requiredSolutions) {
     this.random = random;
     this.mutationGeneratingCount = mutationGeneratingCount;
     this.candidateSelection = candidateSelection;
+    this.requiredSolutions = requiredSolutions;
   }
 
   /**
@@ -64,6 +70,14 @@ public abstract class Mutation {
    * @return 変異された Gene を持った Variant のリスト
    */
   public List<Variant> exec(final VariantStore variantStore) {
+
+    int foundSolutions = variantStore.getFoundSolutionsNumber()
+        .get();
+
+    // すでに必要な数の修正プログラムがある場合は何もせずにこのメソッドを抜ける
+    if (requiredSolutions <= foundSolutions) {
+      return Collections.emptyList();
+    }
 
     final List<Variant> generatedVariants = new ArrayList<>();
 
@@ -90,7 +104,17 @@ public abstract class Mutation {
       final Base base = makeBase(suspiciousness);
       final Gene gene = makeGene(variant.getGene(), base);
       final HistoricalElement element = new MutationHistoricalElement(variant, base);
-      generatedVariants.add(variantStore.createVariant(gene, element));
+      final Variant newVariant = variantStore.createVariant(gene, element);
+      generatedVariants.add(newVariant);
+
+      // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
+      // 達している場合はこれ以上の変異プログラムは生成しない
+      if (newVariant.isCompleted()) {
+        foundSolutions++;
+      }
+      if (requiredSolutions <= foundSolutions) {
+        break;
+      }
     }
 
     return generatedVariants;
@@ -109,4 +133,33 @@ public abstract class Mutation {
     return new Gene(bases);
   }
 
+  public enum Type {
+    Simple {
+      @Override
+      public Mutation initialize(final int mutationGeneratingCount, final Random random,
+          final int requiredSolutions,
+          final Scope.Type scopeType) {
+        final CandidateSelection candidateSelection =
+            new RouletteStatementAndConditionSelection(random);
+        return new SimpleMutation(mutationGeneratingCount, random, candidateSelection,
+            requiredSolutions, scopeType);
+      }
+    },
+
+    Heuristic {
+      @Override
+      public Mutation initialize(final int mutationGeneratingCount, final Random random,
+          final int requiredSolutions,
+          final Scope.Type scopeType) {
+        final CandidateSelection candidateSelection =
+            new HeuristicStatementSelection(random);
+        return new HeuristicMutation(mutationGeneratingCount, random, candidateSelection,
+            requiredSolutions,
+            scopeType);
+      }
+    };
+
+    public abstract Mutation initialize(final int mutationGeneratingCount, final Random random,
+        final int requiredSolutions, final Scope.Type scopeType);
+  }
 }
