@@ -15,7 +15,7 @@ public class EmptyTestResults extends TestResults {
   private final String cause;
 
   public EmptyTestResults(final BuildResults buildResults) {
-    super(buildResults);
+    super(buildResults, null);
     this.cause = buildResults.diagnostics.getDiagnostics()
         .stream()
         .map(d -> d.getMessage(null))
@@ -82,5 +82,14 @@ public class EmptyTestResults extends TestResults {
    */
   public String getCause() {
     return cause;
+  }
+
+  /**
+   * {@inheritDoc}<br>
+   * Double.NaNを返す
+   */
+  @Override
+  public double getTestTime() {
+    return Double.NaN;
   }
 }

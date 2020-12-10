@@ -14,6 +14,7 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.test.Coverage.Status;
+import org.apache.commons.lang3.time.StopWatch;
 
 /**
  * 全テストの結果を表すオブジェクト．<br>
@@ -27,9 +28,9 @@ public class TestResults {
 
   private BuildResults buildResults;
 
-  private double testTime = 0;
-
   private final Map<FullyQualifiedName, TestResult> value;
+
+  private StopWatch stopWatch;
 
   /**
    * constructor
@@ -41,9 +42,10 @@ public class TestResults {
   /**
    * constructor
    */
-  public TestResults(final BuildResults buildResults) {
+  public TestResults(final BuildResults buildResults, final StopWatch stopWatch) {
     this();
     this.buildResults = buildResults;
+    this.stopWatch = stopWatch;
   }
 
   /**
@@ -290,11 +292,11 @@ public class TestResults {
         .collect(Collectors.toSet());
   }
 
-  public void setTestTime(double testTime) {
-    this.testTime = testTime;
-  }
-
+  /**
+   * テスト実行時間
+   * @return
+   */
   public double getTestTime() {
-    return testTime;
+    return this.stopWatch.getTime();
   }
 }

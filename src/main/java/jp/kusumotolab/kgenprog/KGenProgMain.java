@@ -270,7 +270,8 @@ public class KGenProgMain {
     }
 
     private String createTestTimeSummary(final List<Variant> variants) {
-      return String.format("Test time: sum %s ms, max %s ms, min %s ms",
+      return String.format(
+          "Test execution time: sum %s ms, max %s ms, min %s ms",
           getSumTestTime(variants),
           getMaxTestTime(variants),
           getMinTestTime(variants));
@@ -279,23 +280,28 @@ public class KGenProgMain {
     private String getSumTestTime(final List<Variant> variants) {
       return format.format(
           variants.stream()
-              .mapToDouble(e -> e.getTestResults().getTestTime())
+              .mapToDouble(e -> e.getTestResults()
+                  .getTestTime())
+              .filter(e -> Double.compare(e, Double.NaN) != 0)
               .sum());
     }
+
     private String getMaxTestTime(final List<Variant> variants) {
-      return format.format(
-          variants.stream()
-          .mapToDouble(e -> e.getTestResults().getTestTime())
-          .filter(e -> e != 0)
-          .max().orElse(0));
+      final var max = variants.stream()
+          .mapToDouble(e -> e.getTestResults()
+              .getTestTime())
+          .filter(e -> Double.compare(e, Double.NaN) != 0)
+          .max();
+      return format.format(max.isEmpty() ? "--" : max.orElse(Double.NaN));
     }
 
     private String getMinTestTime(final List<Variant> variants) {
-      return format.format(
-          variants.stream()
-              .mapToDouble(e -> e.getTestResults().getTestTime())
-              .filter(e -> e != 0)
-              .min().orElse(0));
+      final var min = variants.stream()
+          .mapToDouble(e -> e.getTestResults()
+              .getTestTime())
+          .filter(e -> Double.compare(e, Double.NaN) != 0)
+          .min();
+      return format.format(min.isEmpty() ? "--" : min.orElse(Double.NaN));
     }
 
     private int count(final List<Variant> variants, final Predicate<Variant> p) {

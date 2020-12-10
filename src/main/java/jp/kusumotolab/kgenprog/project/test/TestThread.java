@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.time.StopWatch;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.data.ExecutionData;
@@ -106,8 +108,9 @@ class TestThread extends Thread {
       return;
     }
 
-    final long beginTestTime = System.nanoTime();
-    testResults = new TestResults(buildResults);
+    final StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    testResults = new TestResults(buildResults, stopWatch);
 
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
@@ -145,8 +148,7 @@ class TestThread extends Thread {
       throw new RuntimeException(e);
     }
     finally {
-      final long endTestTime = System.nanoTime();
-      testResults.setTestTime((endTestTime - beginTestTime) * 0.000001);
+      stopWatch.stop();
     }
   }
 
