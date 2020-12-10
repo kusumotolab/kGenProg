@@ -590,9 +590,11 @@ public class Configuration {
         final Class<?> clazz = this.getClass();
         for (final Field field : clazz.getDeclaredFields()) {
 
-          // Builderオブジェクトの各フィールドに対して，
-          // Pathアノテーションが有る場合はその値を取得
+          // Builderオブジェクトの各フィールドに対して，Pathアノテーションが有る場合はその値を取得
+
+          // this usual reflection is not necessary due to reflected class is visible by here
           //field.setAccessible(true);
+
           final String name = field.getName();
           final com.electronwill.nightconfig.core.conversion.Path[] annotations =
               field.getDeclaredAnnotationsByType(
@@ -668,6 +670,7 @@ public class Configuration {
       final Class<?> clazz = this.getClass();
       for (final Field field : clazz.getDeclaredFields()) {
         try {
+          // this usual reflection is not necessary due to reflected class is visible by here
           //field.setAccessible(true);
           if (Modifier.isTransient(field.getModifiers())) {
             continue;
@@ -789,7 +792,6 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("timeLimit");
     }
 
-    // todo update usage
     @Option(name = "--test-time-limit", metaVar = "<sec>",
         usage = "Specifies time limit to build and test for each variant in second")
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
