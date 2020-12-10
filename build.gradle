@@ -58,6 +58,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.apache.maven:maven-model:3.5.4'
+    implementation 'org.apache.maven:maven-embedder:3.6.3'
+    implementation 'org.apache.maven:maven-compat:3.6.3'
     implementation 'org.codehaus.plexus:plexus-utils:3.1.0'
     implementation 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.102'
     implementation 'org.eclipse.platform:org.eclipse.equinox.common:3.10.200'
@@ -70,6 +72,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.+'
     testImplementation 'com.google.jimfs:jimfs:1.1'
     testImplementation 'com.github.stefanbirkner:system-rules:1.19.0'
+
 
     // Declare by "runtimeOnly" cuz hamcrest is necessary to execute junit-test dynamically,
     // but it doesn't seem to be loaded on compile task.
