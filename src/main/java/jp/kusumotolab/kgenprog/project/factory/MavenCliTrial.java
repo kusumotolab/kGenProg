@@ -8,7 +8,8 @@ public class MavenCliTrial {
     String pom = "example/BuildSuccess05/pom.xml";
     System.setProperty("maven.multiModuleProjectDirectory", "dummy");
     MavenCli.doMain(new String[] {"-f", pom, "dependency:build-classpath"}, null);
-    MavenCli.doMain(new String[] {"-f", pom, "help:evaluate", "-Dexpression=project.build"}, null);
+    MavenCli.doMain(new String[] {"-f", pom, "help:evaluate", "-Dexpression=project.build.sourceDirectory"}, null);
+    MavenCli.doMain(new String[] {"-f", pom, "help:evaluate", "-Dexpression=project.build.testSourceDirectory"}, null);
   }
 
 }
