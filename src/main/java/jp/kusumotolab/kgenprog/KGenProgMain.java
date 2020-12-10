@@ -292,7 +292,7 @@ public class KGenProgMain {
               .getTestTime())
           .filter(e -> Double.compare(e, Double.NaN) != 0)
           .max();
-      return format.format(max.isEmpty() ? "--" : max.orElse(Double.NaN));
+      return max.isEmpty() ? "--" : format.format(max.orElse(Double.NaN));
     }
 
     private String getMinTestTime(final List<Variant> variants) {
@@ -301,7 +301,7 @@ public class KGenProgMain {
               .getTestTime())
           .filter(e -> Double.compare(e, Double.NaN) != 0)
           .min();
-      return format.format(min.isEmpty() ? "--" : min.orElse(Double.NaN));
+      return min.isEmpty() ? "--" : format.format(min.orElse(Double.NaN));
     }
 
     private int count(final List<Variant> variants, final Predicate<Variant> p) {
