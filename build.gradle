@@ -41,6 +41,8 @@ group = 'com.github.kusumotolab'
 // In this section you declare where to find the dependencies of your project
 repositories {
     jcenter()
+    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+    maven { url 'https://repo.gradle.org/gradle/libs-snapshots' }
 }
 
 // In this section you declare the dependencies for your production and test code
@@ -77,6 +79,15 @@ dependencies {
     runtimeOnly 'org.apache.maven.resolver:maven-resolver-transport-http:1.6.1'
     runtimeOnly 'org.eclipse.aether:aether-connector-basic:1.1.0'
     runtimeOnly 'org.eclipse.aether:aether-transport-wagon:1.1.0'
+
+
+    implementation group: 'org.gradle', name: 'gradle-tooling-api', version: '6.7.1'
+    //compile group: 'org.gradle', name: 'gradle-tooling-api', version: '4.3'
+    //compile group: 'org.gradle', name: 'gradle-core', version: '4.2.1'
+    //providedCompile group: 'org.gradle', name: 'gradle-core', version: '4.2.1'
+    //compile group: 'org.gradle', name: 'gradle-core-api', version: '6.1.1'
+    //providedCompile group: 'org.gradle', name: 'gradle-core-api', version: '6.1.1'
+
 
     // Declare by "runtimeOnly" cuz hamcrest is necessary to execute junit-test dynamically,
     // but it doesn't seem to be loaded on compile task.

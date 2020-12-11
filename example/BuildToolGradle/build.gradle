@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.2.3' // impls for slf4j api
+
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'org.assertj:assertj-core:3.10.0'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+}

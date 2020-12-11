@@ -1,0 +1,5 @@
+513:26:48.645 [Test worker] INFO example.Foo - n = 9
+613:26:48.670 [Test worker] INFO example.Foo - n = 99
+513:26:48.671 [Test worker] INFO example.Foo - n = 1
+613:26:48.674 [Test worker] INFO example.Foo - n = -9
+613:26:48.675 [Test worker] INFO example.Foo - n = -9
