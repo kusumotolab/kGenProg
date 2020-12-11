@@ -147,3 +147,9 @@ jacocoTestReport {
         }))
     }
 }
+
+task runApp(type:JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+
+    main = project.hasProperty("mainClass") ? project.getProperty("mainClass") : "jp.kusumotolab.kgenprog.project.factory.MavenCliTrial"
+}
