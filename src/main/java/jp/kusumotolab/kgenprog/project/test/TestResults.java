@@ -30,7 +30,7 @@ public class TestResults {
 
   private final Map<FullyQualifiedName, TestResult> value;
 
-  private StopWatch stopWatch;
+  private double testTime;
 
   /**
    * constructor
@@ -42,10 +42,17 @@ public class TestResults {
   /**
    * constructor
    */
-  public TestResults(final BuildResults buildResults, final StopWatch stopWatch) {
+  public TestResults(final BuildResults buildResults) {
     this();
     this.buildResults = buildResults;
-    this.stopWatch = stopWatch;
+  }
+
+  /**
+   * constructor
+   */
+  public TestResults(final BuildResults buildResults, final double testTime) {
+    this(buildResults);
+    this.testTime = testTime;
   }
 
   /**
@@ -297,6 +304,6 @@ public class TestResults {
    * @return
    */
   public double getTestTime() {
-    return this.stopWatch.getTime();
+    return this.testTime;
   }
 }

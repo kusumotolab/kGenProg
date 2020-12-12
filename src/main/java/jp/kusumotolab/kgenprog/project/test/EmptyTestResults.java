@@ -15,7 +15,7 @@ public class EmptyTestResults extends TestResults {
   private final String cause;
 
   public EmptyTestResults(final BuildResults buildResults) {
-    super(buildResults, null);
+    super(buildResults);
     this.cause = buildResults.diagnostics.getDiagnostics()
         .stream()
         .map(d -> d.getMessage(null))

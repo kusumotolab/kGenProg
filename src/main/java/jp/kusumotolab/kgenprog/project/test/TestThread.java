@@ -108,9 +108,7 @@ class TestThread extends Thread {
       return;
     }
 
-    final StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    testResults = new TestResults(buildResults, stopWatch);
+    final StopWatch stopWatch = StopWatch.createStarted();
 
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
@@ -129,7 +127,7 @@ class TestThread extends Thread {
       // JUnitカスタムによる強制タイムアウトの指定
       junitCore.setTimeout(timeout, timeUnit);
 
-      final RunListener listener = new CoverageMeasurementListener(testResults);
+      final CoverageMeasurementListener listener = new CoverageMeasurementListener();
       junitCore.addListener(listener);
 
       // JUnit実行対象の題材テストはMemClassLoaderでロードされているので，
@@ -138,6 +136,8 @@ class TestThread extends Thread {
 
       junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 
+      stopWatch.stop();
+      testResults = listener.getTestResults(buildResults, stopWatch.getTime());
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
       testResults = new EmptyTestResults("failed to load classes.");
@@ -146,9 +146,6 @@ class TestThread extends Thread {
       // Should handle safely
       // ひとまず本クラスをThreadで包むためにRuntimeExceptionでエラーを吐く．
       throw new RuntimeException(e);
-    }
-    finally {
-      stopWatch.stop();
     }
   }
 
@@ -257,18 +254,31 @@ class TestThread extends Thread {
    */
   class CoverageMeasurementListener extends RunListener {
 
-    private final TestResults testResults;
+    private final List<TestResult> testResultList;
     private boolean wasFailed;
     private String failedReason;
 
     /**
      * constructor
      *
-     * @param storedTestResults テスト実行結果の保存先
      * @throws Exception
      */
-    public CoverageMeasurementListener(final TestResults storedTestResults) {
-      testResults = storedTestResults;
+
+    public CoverageMeasurementListener() {
+      testResultList = new ArrayList<>();
+    }
+
+    /**
+     * JUnit実行で生成されたTestResultをTestResultsにまとめる.
+     *
+     * @param buildResults ビルド結果
+     * @param testTime テスト実行時間
+     * @return
+     */
+    public TestResults getTestResults(BuildResults buildResults, double testTime) {
+      final TestResults testResults = new TestResults(buildResults, testTime);
+      testResultList.forEach(testResults::add);
+      return testResults;
     }
 
     @Override
@@ -361,7 +371,7 @@ class TestThread extends Thread {
 
       final TestResult testResult = new TestResult(testMethodFQN, wasFailed, failedReason,
           coverages);
-      testResults.add(testResult);
+      testResultList.add(testResult);
     }
   }
 
