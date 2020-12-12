@@ -155,7 +155,6 @@ class TestThread extends Thread {
    *
    * @param memoryClassLoader
    * @param fqns
-   * @param isInstrument
    * @throws IOException
    */
   private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
