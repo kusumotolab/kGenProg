@@ -1,0 +1,8 @@
+root-dir = "./"
+src = ["src"]
+test = ["test"]
+
+out-dir = "out"
+patch-output = true
+history-record = true
+log-level = "DEBUG"

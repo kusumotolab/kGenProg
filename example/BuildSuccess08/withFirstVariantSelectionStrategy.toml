@@ -1,4 +1,0 @@
-root-dir = "./"
-src = ["src/"]
-test = ["test/"]
-crossover-first-variant = "Elite"
