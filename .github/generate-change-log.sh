@@ -30,4 +30,6 @@ github-changes \
   --only-pulls --use-commit-body \
   --for-tag nightly-build
 
-sed -i -e '1,3d' ./workspace/CHANGELOG.md
+sed -i -e '1,3d' ./CHANGELOG.md
+cp ./CHANGELOG.md ./workspace/CHANGELOG.md
+rm ./CHANGELOG.md
