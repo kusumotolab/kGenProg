@@ -14,7 +14,6 @@ import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
 import jp.kusumotolab.kgenprog.project.build.JavaBinaryObject;
 import jp.kusumotolab.kgenprog.project.test.Coverage.Status;
-import org.apache.commons.lang3.time.StopWatch;
 
 /**
  * 全テストの結果を表すオブジェクト．<br>

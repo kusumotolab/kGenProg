@@ -127,7 +127,7 @@ class TestThread extends Thread {
       // JUnitカスタムによる強制タイムアウトの指定
       junitCore.setTimeout(timeout, timeUnit);
 
-      final CoverageMeasurementListener listener = new CoverageMeasurementListener();
+      final RunListener listener = new CoverageMeasurementListener();
       junitCore.addListener(listener);
 
       // JUnit実行対象の題材テストはMemClassLoaderでロードされているので，
@@ -137,7 +137,7 @@ class TestThread extends Thread {
       junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 
       stopWatch.stop();
-      testResults = listener.getTestResults(buildResults, stopWatch.getTime());
+      testResults = ((CoverageMeasurementListener) listener).getTestResults(buildResults, stopWatch.getTime());
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
       testResults = new EmptyTestResults("failed to load classes.");

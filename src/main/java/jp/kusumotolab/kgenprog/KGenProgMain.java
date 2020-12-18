@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -287,7 +288,7 @@ public class KGenProgMain {
     }
 
     private String getMaxTestTime(final List<Variant> variants) {
-      final var max = variants.stream()
+      final OptionalDouble max = variants.stream()
           .mapToDouble(e -> e.getTestResults()
               .getTestTime())
           .filter(e -> Double.compare(e, Double.NaN) != 0)
@@ -296,7 +297,7 @@ public class KGenProgMain {
     }
 
     private String getMinTestTime(final List<Variant> variants) {
-      final var min = variants.stream()
+      final OptionalDouble min = variants.stream()
           .mapToDouble(e -> e.getTestResults()
               .getTestTime())
           .filter(e -> Double.compare(e, Double.NaN) != 0)
