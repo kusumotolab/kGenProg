@@ -29,28 +29,31 @@ public class TestResults {
 
   private final Map<FullyQualifiedName, TestResult> value;
 
-  private double testTime;
+  private final double testTime;
 
   /**
    * constructor
    */
   public TestResults() {
     this.value = new HashMap<>();
+    this.testTime = Double.NaN;
   }
 
   /**
    * constructor
    */
   public TestResults(final BuildResults buildResults) {
-    this();
+    this.value = new HashMap<>();
     this.buildResults = buildResults;
+    this.testTime = Double.NaN;
   }
 
   /**
    * constructor
    */
   public TestResults(final BuildResults buildResults, final double testTime) {
-    this(buildResults);
+    this.value = new HashMap<>();
+    this.buildResults = buildResults;
     this.testTime = testTime;
   }
 
