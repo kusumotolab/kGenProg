@@ -29,14 +29,14 @@ public class TestResults {
 
   private final Map<FullyQualifiedName, TestResult> value;
 
-  private final double testTime;
+  private final double testExecTime;
 
   /**
    * constructor
    */
   public TestResults() {
     this.value = new HashMap<>();
-    this.testTime = Double.NaN;
+    this.testExecTime = Double.NaN;
   }
 
   /**
@@ -45,25 +45,18 @@ public class TestResults {
   public TestResults(final BuildResults buildResults) {
     this.value = new HashMap<>();
     this.buildResults = buildResults;
-    this.testTime = Double.NaN;
+    this.testExecTime = Double.NaN;
   }
 
   /**
    * constructor
    */
-  public TestResults(final BuildResults buildResults, final double testTime) {
+  public TestResults(final BuildResults buildResults, final double testExecTime,
+      final List<TestResult> testResultList) {
     this.value = new HashMap<>();
+    testResultList.forEach(testResult -> this.value.put(testResult.executedTestFQN, testResult));
     this.buildResults = buildResults;
-    this.testTime = testTime;
-  }
-
-  /**
-   * 新規TestResultの追加
-   *
-   * @param testResult
-   */
-  public void add(final TestResult testResult) {
-    this.value.put(testResult.executedTestFQN, testResult);
+    this.testExecTime = testExecTime;
   }
 
   /**
@@ -303,9 +296,10 @@ public class TestResults {
 
   /**
    * テスト実行時間
+   *
    * @return
    */
   public double getTestTime() {
-    return this.testTime;
+    return this.testExecTime;
   }
 }

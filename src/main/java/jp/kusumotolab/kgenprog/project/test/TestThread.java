@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.time.StopWatch;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -127,7 +126,8 @@ class TestThread extends Thread {
       // JUnitカスタムによる強制タイムアウトの指定
       junitCore.setTimeout(timeout, timeUnit);
 
-      final RunListener listener = new CoverageMeasurementListener();
+      final List<TestResult> testResultList = new ArrayList<>();
+      final RunListener listener = new CoverageMeasurementListener(testResultList);
       junitCore.addListener(listener);
 
       // JUnit実行対象の題材テストはMemClassLoaderでロードされているので，
@@ -137,7 +137,7 @@ class TestThread extends Thread {
       junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 
       stopWatch.stop();
-      testResults = ((CoverageMeasurementListener) listener).getTestResults(buildResults, stopWatch.getTime());
+      testResults = new TestResults(buildResults, stopWatch.getTime(), testResultList);
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
       testResults = new EmptyTestResults("failed to load classes.");
@@ -262,22 +262,8 @@ class TestThread extends Thread {
      *
      * @throws Exception
      */
-
-    public CoverageMeasurementListener() {
-      testResultList = new ArrayList<>();
-    }
-
-    /**
-     * JUnit実行で生成されたTestResultをTestResultsにまとめる.
-     *
-     * @param buildResults ビルド結果
-     * @param testTime テスト実行時間
-     * @return
-     */
-    public TestResults getTestResults(BuildResults buildResults, double testTime) {
-      final TestResults testResults = new TestResults(buildResults, testTime);
-      testResultList.forEach(testResults::add);
-      return testResults;
+    public CoverageMeasurementListener(final List<TestResult> testResultList) {
+      this.testResultList = testResultList;
     }
 
     @Override
