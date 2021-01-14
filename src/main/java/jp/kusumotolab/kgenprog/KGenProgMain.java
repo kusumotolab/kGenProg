@@ -283,7 +283,7 @@ public class KGenProgMain {
           variants.stream()
               .mapToDouble(e -> e.getTestResults()
                   .getTestTime())
-              .filter(e -> Double.compare(e, Double.NaN) != 0)
+              .filter(e -> !Double.isNaN(e))
               .sum());
     }
 
@@ -291,7 +291,7 @@ public class KGenProgMain {
       final OptionalDouble max = variants.stream()
           .mapToDouble(e -> e.getTestResults()
               .getTestTime())
-          .filter(e -> Double.compare(e, Double.NaN) != 0)
+          .filter(e -> !Double.isNaN(e))
           .max();
       return max.isEmpty() ? "--" : format.format(max.orElse(Double.NaN));
     }
@@ -300,7 +300,7 @@ public class KGenProgMain {
       final OptionalDouble min = variants.stream()
           .mapToDouble(e -> e.getTestResults()
               .getTestTime())
-          .filter(e -> Double.compare(e, Double.NaN) != 0)
+          .filter(e -> !Double.isNaN(e))
           .min();
       return min.isEmpty() ? "--" : format.format(min.orElse(Double.NaN));
     }
