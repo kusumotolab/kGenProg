@@ -129,7 +129,7 @@ public class VariantSerializer implements JsonSerializer<Variant> {
       final JsonSerializationContext context) {
     // カスタムシリアライザを使わずにシリアライズする
     final Patch patch = patchGenerator.exec(variant);
-    final JsonObject serializedVariant = gson.toJsonTree(variant, Variant.class)
+    final JsonObject serializedVariant = gson.toJsonTree(variant)
         .getAsJsonObject();
 
     // パッチの情報を追加

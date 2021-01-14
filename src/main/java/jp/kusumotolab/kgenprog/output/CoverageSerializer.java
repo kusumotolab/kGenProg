@@ -26,8 +26,7 @@ public class CoverageSerializer implements JsonSerializer<Coverage> {
 
     final JsonObject serializedCoverage = new JsonObject();
     serializedCoverage.add("coverages", context.serialize(statuses));
-    serializedCoverage.add("executedTargetFQN", context.serialize(src.getExecutedTargetFQN(),
-        FullyQualifiedName.class));
+    serializedCoverage.add("executedTargetFQN", context.serialize(src.getExecutedTargetFQN()));
     return serializedCoverage;
   }
 }

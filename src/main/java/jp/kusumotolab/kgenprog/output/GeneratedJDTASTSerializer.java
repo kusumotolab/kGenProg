@@ -32,9 +32,9 @@ public class GeneratedJDTASTSerializer implements JsonSerializer<GeneratedJDTAST
     final FullyQualifiedName primaryClassName = generatedJDTAST.getPrimaryClassName();
 
     final JsonObject serializedGeneratedJDTAST = new JsonObject();
-    serializedGeneratedJDTAST.add("root", context.serialize(root, ASTNode.class));
+    serializedGeneratedJDTAST.add("root", context.serialize(root));
     serializedGeneratedJDTAST.add("primaryClassName",
-        context.serialize(primaryClassName, FullyQualifiedName.class));
+        context.serialize(primaryClassName));
 
     return new JsonPrimitive(generatedJDTAST.getSourceCode());
   }

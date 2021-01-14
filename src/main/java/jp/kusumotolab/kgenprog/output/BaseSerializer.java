@@ -66,10 +66,9 @@ public class BaseSerializer implements JsonSerializer<Base> {
 
     serializedBase.addProperty("name", operation.getName());
     serializedBase.add("fileName",
-        context.serialize(targetLocation.getSourcePath(), SourcePath.class));
+        context.serialize(targetLocation.getSourcePath()));
     serializedBase.addProperty("snippet", operation.getTargetSnippet());
-    serializedBase.add("lineNumberRange", context.serialize(targetLocation.inferLineNumbers(),
-        LineNumberRange.class));
+    serializedBase.add("lineNumberRange", context.serialize(targetLocation.inferLineNumbers()));
 
     return serializedBase;
   }
