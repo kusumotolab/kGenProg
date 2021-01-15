@@ -29,28 +29,34 @@ public class TestResults {
 
   private final Map<FullyQualifiedName, TestResult> value;
 
+  private final double testExecTime;
+
   /**
    * constructor
    */
   public TestResults() {
     this.value = new HashMap<>();
+    this.testExecTime = Double.NaN;
   }
 
   /**
    * constructor
    */
   public TestResults(final BuildResults buildResults) {
-    this();
+    this.value = new HashMap<>();
     this.buildResults = buildResults;
+    this.testExecTime = Double.NaN;
   }
 
   /**
-   * 新規TestResultの追加
-   *
-   * @param testResult
+   * constructor
    */
-  public void add(final TestResult testResult) {
-    this.value.put(testResult.executedTestFQN, testResult);
+  public TestResults(final BuildResults buildResults, final double testExecTime,
+      final List<TestResult> testResultList) {
+    this.value = new HashMap<>();
+    testResultList.forEach(testResult -> this.value.put(testResult.executedTestFQN, testResult));
+    this.buildResults = buildResults;
+    this.testExecTime = testExecTime;
   }
 
   /**
@@ -286,5 +292,14 @@ public class TestResults {
         .stream()
         .map(JavaBinaryObject::getFqn)
         .collect(Collectors.toSet());
+  }
+
+  /**
+   * テスト実行時間
+   *
+   * @return
+   */
+  public double getTestTime() {
+    return this.testExecTime;
   }
 }

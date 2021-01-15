@@ -83,4 +83,13 @@ public class EmptyTestResults extends TestResults {
   public String getCause() {
     return cause;
   }
+
+  /**
+   * {@inheritDoc}<br>
+   * Double.NaNを返す
+   */
+  @Override
+  public double getTestTime() {
+    return Double.NaN;
+  }
 }
