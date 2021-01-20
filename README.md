@@ -15,7 +15,7 @@
 </p>
 
 <p align=center>
-    :us:English &nbsp; <a href="./doc/ja/README.md"> :jp:日本語</a>
+    :us:English &nbsp; <a href="docs/ja/README.md"> :jp:日本語</a>
 </p>
 
 ---
@@ -74,7 +74,7 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 ```
 
 You can configure parameters with a `.toml` file using `--config` option.
-See [doc/kgenprog-config-template.toml](doc/kgenprog-config-template.toml) to learn how to write a config file.
+See [docs/kgenprog-config-template.toml](docs/kgenprog-config-template.toml) to learn how to write a config file.
 ```sh
 $ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
 ```
