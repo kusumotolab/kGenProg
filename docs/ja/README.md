@@ -74,7 +74,7 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 ```
 
 `.toml` ファイルにパラメータをまとめておいて，実行時に指定することもできます．
-[doc/kgenprog-config-template.toml](../../doc/kgenprog-config-template.toml) に設定ファイルのサンプルがあります．
+[docs/kgenprog-config-template.toml](../kgenprog-config-template.toml) に設定ファイルのサンプルがあります．
 ```sh
 $ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
 ```
