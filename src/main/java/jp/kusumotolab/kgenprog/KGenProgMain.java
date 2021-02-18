@@ -227,7 +227,8 @@ public class KGenProgMain {
               succeededResults.size() + failedResults.size()))
           .append(System.lineSeparator());
       testResults.getFailedTestResults()
-          .forEach(r -> sb.append(String.format("%s: %s", r.executedTestFQN, r.getFailedReason())));
+          .forEach(r -> sb.append(String.format("%s: %s", r.executedTestFQN, r.getFailedReason()))
+              .append(System.lineSeparator()));
       log.info(sb.toString());
     }
 
