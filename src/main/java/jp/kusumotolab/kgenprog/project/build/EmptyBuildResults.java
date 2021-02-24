@@ -16,11 +16,11 @@ public class EmptyBuildResults extends BuildResults {
    */
   @Deprecated
   public EmptyBuildResults() {
-    super(null, null, null, true);
+    super(null, null, null, true, Double.NaN);
   }
 
   public EmptyBuildResults(final DiagnosticCollector<JavaFileObject> diagnostics,
-      final String buildProgressText) {
-    super(null, diagnostics, buildProgressText, true);
+      final String buildProgressText, final double buildTime) {
+    super(null, diagnostics, buildProgressText, true, buildTime);
   }
 }

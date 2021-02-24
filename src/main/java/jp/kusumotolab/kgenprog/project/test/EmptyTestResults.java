@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.project.test;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
 import jp.kusumotolab.kgenprog.project.build.BuildResults;
+import jp.kusumotolab.kgenprog.project.build.EmptyBuildResults;
 
 /**
  * テスト失敗時のテスト結果．<br>
@@ -23,6 +24,7 @@ public class EmptyTestResults extends TestResults {
   }
 
   public EmptyTestResults(final String cause) {
+    super(new EmptyBuildResults(null, null, Double.NaN));
     this.cause = cause;
   }
 

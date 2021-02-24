@@ -92,6 +92,7 @@ public class KGenProgMain {
 
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
+    log.debug(logwriter.outputFirstBuildTime(initialVariant));
 
     if (!initialVariant.isBuildSucceeded()) {
       log.error("Failed to build the specified project.");
@@ -236,7 +237,16 @@ public class KGenProgMain {
       final List<Variant> variants = new ArrayList<>();
       variants.addAll(variantsByMutation);
       variants.addAll(variantsByCrossover);
-      final StringBuilder sb = new StringBuilder()
+      final StringBuilder debugsb = new StringBuilder()
+          .append(System.lineSeparator())
+          .append("----------------------------------------------------------------")
+          .append(System.lineSeparator())
+          .append(createBuildTimeSummary(variants))
+          .append(System.lineSeparator())
+          .append("----------------------------------------------------------------")
+          .append(System.lineSeparator());
+      log.debug(debugsb.toString());
+      final StringBuilder infosb = new StringBuilder()
           .append(System.lineSeparator())
           .append("----------------------------------------------------------------")
           .append(System.lineSeparator())
@@ -250,7 +260,7 @@ public class KGenProgMain {
           .append(System.lineSeparator())
           .append("----------------------------------------------------------------")
           .append(System.lineSeparator());
-      log.info(sb.toString());
+      log.info(infosb.toString());
     }
 
     private String createFitnessSummary(final List<Variant> variants) {
@@ -268,6 +278,56 @@ public class KGenProgMain {
           count(variants, v -> v.triedBuild() && !v.isBuildSucceeded()),
           count(variants, v -> !v.isSyntaxValid() && !v.isReproduced()),
           count(variants, Variant::isReproduced));
+    }
+
+    private String outputFirstBuildTime(final Variant variant) {
+      return String.format(
+          System.lineSeparator() +
+              "----------------------------------------------------------------" +
+              System.lineSeparator() +
+              "First Build execution time: %s ms" +
+              System.lineSeparator() +
+              "----------------------------------------------------------------",
+          variant.getTestResults()
+              .getBuildResults().buildExecTime);
+    }
+
+    private String createBuildTimeSummary(final List<Variant> variants) {
+      return String.format(
+          "Build execution time: sum %s ms, max %s ms, min %s ms",
+          getSumBuildTime(variants),
+          getMaxBuildTime(variants),
+          getMinBuildTime(variants));
+    }
+
+    private String getSumBuildTime(final List<Variant> variants) {
+      return format.format(
+          variants.stream()
+              .mapToDouble(e -> e.getTestResults()
+                  .getBuildResults()
+                  .buildExecTime)
+              .filter(e -> !Double.isNaN(e))
+              .sum());
+    }
+
+    private String getMaxBuildTime(final List<Variant> variants) {
+      final OptionalDouble max = variants.stream()
+          .mapToDouble(e -> e.getTestResults()
+              .getBuildResults()
+              .buildExecTime)
+          .filter(e -> !Double.isNaN(e))
+          .max();
+      return max.isEmpty() ? "--" : format.format(max.orElse(Double.NaN));
+    }
+
+    private String getMinBuildTime(final List<Variant> variants) {
+      final OptionalDouble min = variants.stream()
+          .mapToDouble(e -> e.getTestResults()
+              .getBuildResults()
+              .buildExecTime)
+          .filter(e -> !Double.isNaN(e))
+          .min();
+      return min.isEmpty() ? "--" : format.format(min.orElse(Double.NaN));
     }
 
     private String createTestTimeSummary(final List<Variant> variants) {

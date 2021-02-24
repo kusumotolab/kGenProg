@@ -1,0 +1,2353 @@
+0 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+1 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+2 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+3 ============================
+example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+4 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	return n;
+	^
+5 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+6 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+7 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+8 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^example.CloseToZero:25: エラー: return文が指定されていません
+  }
+  ^
+9 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+10 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+    n += i;
+         ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+11 ============================
+example.CloseToZero:24: エラー: return文が指定されていません
+  }
+  ^
+12 ============================
+example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+13 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+14 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+15 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+16 ============================
+example.CloseToZero:23: エラー: return文が指定されていません
+  }
+  ^
+17 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+18 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+19 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+20 ============================
+example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+21 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+22 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+23 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+24 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+25 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+26 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+27 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	return n;
+	^
+28 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+29 ============================
+example.CloseToZero:27: エラー: return文が指定されていません
+  }
+  ^
+30 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+31 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+32 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+33 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	return n;
+	^
+34 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+35 ============================
+example.CloseToZero:25: エラー: return文が指定されていません
+  }
+  ^
+36 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+37 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+38 ============================
+example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+39 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+40 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+41 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+42 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+43 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+44 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+45 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n--;
+	^
+46 ============================
+example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+47 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+    n += i;
+         ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+48 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+    n += i;
+         ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+49 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+50 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+51 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+52 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+53 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+54 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+55 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+56 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+57 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+58 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	return n;
+	^
+59 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+60 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+61 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+62 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+63 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+64 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	i++;
+	^
+65 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+66 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+67 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+68 ============================
+example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+69 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n--;
+	^
+70 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+71 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+72 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+73 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+74 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+75 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n--;
+	^
+76 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+77 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+78 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+79 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+80 ============================
+example.CloseToZero:25: エラー: return文が指定されていません
+  }
+  ^
+81 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+82 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+83 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+84 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	return n;
+	^
+85 ============================
+example.CloseToZero:27: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+86 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	return n;
+	^
+87 ============================
+example.CloseToZero:27: エラー: return文が指定されていません
+  }
+  ^
+88 ============================
+example.CloseToZero:27: エラー: return文が指定されていません
+  }
+  ^
+89 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+90 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	i++;
+	^
+91 ============================
+example.CloseToZero:27: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+92 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+93 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+94 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+95 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	i++;
+	^
+96 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+97 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+98 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+99 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+100 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+101 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+102 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+103 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+104 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+105 ============================
+example.CloseToZero:27: エラー: シンボルを見つけられません
+    i++;
+    ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+106 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+107 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+108 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+109 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+110 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+111 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	return n;
+	^
+112 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+113 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+114 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+115 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+116 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	i++;
+	^
+117 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+118 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n--;
+	^
+119 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^example.CloseToZero:28: エラー: return文が指定されていません
+  }
+  ^
+120 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+121 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+122 ============================
+example.CloseToZero:26: エラー: return文が指定されていません
+  }
+  ^
+123 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+124 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+125 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+126 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+127 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+128 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+129 ============================
+example.CloseToZero:27: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+130 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+131 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+132 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+133 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+134 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+135 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+136 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+137 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+138 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+139 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+140 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+141 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	i++;
+	^
+142 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+143 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+144 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+145 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	i++;
+	^
+146 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+147 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+148 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+149 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+150 ============================
+example.CloseToZero:27: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+151 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+152 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+153 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+154 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+155 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+156 ============================
+example.CloseToZero:27: エラー: return文が指定されていません
+  }
+  ^
+157 ============================
+example.CloseToZero:27: エラー: シンボルを見つけられません
+    n += i;
+         ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+158 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+159 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+160 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+161 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+162 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+163 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+164 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n++;
+	^
+165 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+166 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+167 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+168 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+169 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+170 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+171 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+172 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+173 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+174 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+175 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+176 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+177 ============================
+example.CloseToZero:27: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+178 ============================
+example.CloseToZero:28: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+179 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+180 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+181 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+182 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+183 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+184 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+185 ============================
+example.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+186 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+187 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+188 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	return n;
+	^
+189 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+190 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	i++;
+	^
+191 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+192 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+193 ============================
+example.CloseToZero:29: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+194 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+195 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+196 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+197 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+198 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+199 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+200 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+201 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+202 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+203 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n++;
+	^
+204 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+205 ============================
+example.CloseToZero:28: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+206 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+207 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+208 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n++;
+	^
+209 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+210 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+211 ============================
+example.CloseToZero:27: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+212 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:29: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+213 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+214 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+215 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	return n;
+	^
+216 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+217 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+218 ============================
+example.CloseToZero:28: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+219 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+220 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+221 ============================
+example.CloseToZero:29: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+222 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+223 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+224 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+225 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+226 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+227 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n++;
+	^
+228 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n++;
+	^
+229 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+230 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+231 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+232 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n--;
+	^
+233 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+234 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+235 ============================
+example.CloseToZero:28: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+236 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+237 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+238 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+239 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+240 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+241 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+242 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+243 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+244 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	i++;
+	^
+245 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+246 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+247 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+248 ============================
+example.CloseToZero:30: エラー: この文に制御が移ることはありません
+	n--;
+	^
+249 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+250 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+251 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+252 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+253 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+254 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+255 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+256 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+257 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+258 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+259 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+260 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+261 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	return n;
+	^
+262 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+263 ============================
+example.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+264 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+265 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+266 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+267 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+268 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+269 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+270 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+271 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+272 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+273 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+274 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+275 ============================
+example.CloseToZero:27: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+276 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+277 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+278 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n++;
+	^
+279 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+280 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+281 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+282 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+283 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+284 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+285 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+286 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+287 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+288 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+289 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+290 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+291 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	i++;
+	^
+292 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n--;
+	^
+293 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+294 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+295 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+296 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+297 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+298 ============================
+example.CloseToZero:27: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+299 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+300 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+301 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+302 ============================
+example.CloseToZero:30: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+303 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+304 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+305 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+306 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n--;
+	^
+307 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+308 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+309 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+310 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+311 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+312 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+313 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+314 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+315 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+316 ============================
+example.CloseToZero:32: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+317 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+318 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+319 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	i++;
+	^
+320 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+321 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+322 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+323 ============================
+example.CloseToZero:31: エラー: シンボルを見つけられません
+    i++;
+    ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+324 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+325 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+326 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+327 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+328 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+329 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+330 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	return n;
+	^
+331 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+332 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+333 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+334 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+335 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+336 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+337 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+338 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n++;
+	^
+339 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:26: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+340 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+341 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+342 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+343 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+344 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+345 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+346 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+347 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+348 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+349 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+350 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+351 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+352 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n--;
+	^
+353 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n--;
+	^
+354 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n--;
+	^
+355 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n++;
+	^
+356 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n--;
+	^
+357 ============================
+example.CloseToZero:33: エラー: この文に制御が移ることはありません
+	i++;
+	^
+358 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+359 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+360 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+361 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+362 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+363 ============================
+example.CloseToZero:32: エラー: この文に制御が移ることはありません
+	n--;
+	^
+364 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+365 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+366 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+367 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+368 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+369 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+370 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+371 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+372 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+373 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+374 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+375 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+376 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	i++;
+	^
+377 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n++;
+	^
+378 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+379 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+380 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+381 ============================
+example.CloseToZero:31: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+382 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+383 ============================
+example.CloseToZero:25: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+384 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+385 ============================
+example.CloseToZero:30: エラー: この文に制御が移ることはありません
+	n--;
+	^
+386 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n--;
+	^
+387 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+388 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+389 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+390 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	i++;
+	^
+391 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:26: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+392 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:29: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+393 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+394 ============================
+example.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:30: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+395 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	n++;
+	^
+396 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+397 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+398 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+399 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+400 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:26: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+401 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:29: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+402 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:26: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+403 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	i++;
+	^
+404 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+405 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	i++;
+	^
+406 ============================
+example.CloseToZero:30: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+407 ============================
+example.CloseToZero:28: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+408 ============================
+example.CloseToZero:28: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+409 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      n += i;
+           ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:29: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+410 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	n++;
+	^
+411 ============================
+example.CloseToZero:24: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+412 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+413 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+414 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+415 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n++;
+	^
+416 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+417 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n++;
+	^
+418 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n++;
+	^
+419 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n++;
+	^
+420 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+421 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n += i;
+	^
+422 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+423 ============================
+example.CloseToZero:25: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+424 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+425 ============================
+example.CloseToZero:28: エラー: この文に制御が移ることはありません
+	n++;
+	^
+426 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+427 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+428 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:25: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+429 ============================
+example.CloseToZero:31: エラー: この文に制御が移ることはありません
+	n--;
+	^
+430 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+431 ============================
+example.CloseToZero:22: エラー: シンボルを見つけられません
+      i++;
+      ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+432 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+433 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	n--;
+	^
+434 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	n--;
+	^
+435 ============================
+example.CloseToZero:32: エラー: この文に制御が移ることはありません
+	return n;
+	^
+436 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n--;
+	^
+437 ============================
+example.CloseToZero:26: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+438 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+439 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+440 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+441 ============================
+example.CloseToZero:30: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+442 ============================
+example.CloseToZero:27: エラー: この文に制御が移ることはありません
+	i++;
+	^
+443 ============================
+example.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:27: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+444 ============================
+example.CloseToZero:23: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:24: エラー: シンボルを見つけられません
+	n += i;
+	     ^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZeroexample.CloseToZero:26: エラー: シンボルを見つけられません
+	i++;
+	^
+  シンボル:   変数 i
+  場所: クラス example.CloseToZero
+445 ============================
+example.CloseToZero:29: エラー: この文に制御が移ることはありません
+	n++;
+	^
+446 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+447 ============================
+example.CloseToZero:33: エラー: この文に制御が移ることはありません
+	return 0;
+	^
+448 ============================
+example.CloseToZero:25: エラー: この文に制御が移ることはありません
+	i++;
+	^
+449 ============================
+example.CloseToZero:24: エラー: この文に制御が移ることはありません
+	i++;
+	^
+450 ============================
+example.CloseToZero:23: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+451 ============================
+example.CloseToZero:26: エラー: この文に制御が移ることはありません
+	n--;
+	^
+452 ============================
+example.CloseToZero:36: エラー: この文に制御が移ることはありません
+	n--;
+	^
+453 ============================
+example.CloseToZero:27: エラー: 変数 iはすでにメソッド close_to_zero(int)で定義されています
+	int i = 0;
+	    ^
+454 ============================
+example.CloseToZero:23: エラー: この文に制御が移ることはありません
+	int i = 0;
+	    ^
+The log> logfile\CloseToZero03.txt
+
+

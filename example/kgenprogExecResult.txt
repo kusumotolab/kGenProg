@@ -1,0 +1,27 @@
+CloseToZero01
+Build Time is: 932450400[ns]
+Test  Time is: 372367100[ns]
+Whole Time is: 3224090200[ns]
+
+CloseToZero02
+Build Time is: 1070563300[ns]
+Test  Time is: 502039900[ns]
+Whole Time is: 4143979300[ns]
+
+CloseToZero03(世代数が1000を超えたので失敗)
+Build Time is: 837506400[ns]
+Test  Time is: 257229300[ns]
+Whole Time is: 25964865100[ns]
+
+CloseToZero04
+Build Time is: 1058721900[ns]
+Test  Time is: 434859600[ns]
+Whole Time is: 4564454500[ns]
+
+CountDown01
+Build Time is: 958262100[ns]
+Test  Time is: 359546700[ns]
+Whole Time is: 4515174600[ns]
+
+BuildSuccess08
+

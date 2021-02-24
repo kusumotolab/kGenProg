@@ -32,6 +32,11 @@ public class BuildResults {
   public final String buildProgressText;
 
   /**
+   * ビルド実行時間
+   */
+  public final double buildExecTime;
+
+  /**
    * コンストラクタ．各種ビルド結果を保持する．
    *
    * @param binaryStore ビルドの結果得られたバイナリの格納庫
@@ -41,11 +46,12 @@ public class BuildResults {
    */
   protected BuildResults(final BinaryStore binaryStore,
       final DiagnosticCollector<JavaFileObject> diagnostics, final String buildProgressText,
-      final boolean isBuildFailed) {
+      final boolean isBuildFailed, final double buildExecTime) {
     this.binaryStore = binaryStore;
     this.diagnostics = diagnostics;
     this.buildProgressText = buildProgressText;
     this.isBuildFailed = isBuildFailed;
+    this.buildExecTime = buildExecTime;
   }
 
 }

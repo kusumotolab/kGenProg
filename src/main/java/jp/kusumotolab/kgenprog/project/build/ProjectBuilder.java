@@ -13,6 +13,7 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
@@ -70,6 +71,7 @@ public class ProjectBuilder {
    */
   public BuildResults build(final GeneratedSourceCode generatedSourceCode) {
 
+    final StopWatch stopWatch = StopWatch.createStarted();
     // コンパイル状況や診断情報等の保持オブジェクトを用意
     final StringWriter progress = new StringWriter();
     final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
@@ -100,14 +102,17 @@ public class ProjectBuilder {
           }
           log.debug(sb.toString());
         }
-        return new EmptyBuildResults(diagnostics, progress.toString());
+        stopWatch.stop();
+        return new EmptyBuildResults(diagnostics, progress.toString(), stopWatch.getTime());
       }
     }
 
     // コンパイル済みバイナリを取り出してセットしておく
     final BinaryStore compiledBinaries = extractSubBinaryStore(allAsts);
 
-    return new BuildResults(compiledBinaries, diagnostics, progress.toString(), false);
+    stopWatch.stop();
+    return new BuildResults(compiledBinaries, diagnostics, progress.toString(), false,
+        stopWatch.getTime());
   }
 
   private boolean build(final List<GeneratedAST<?>> allAsts,
