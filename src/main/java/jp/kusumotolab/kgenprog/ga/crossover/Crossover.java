@@ -55,7 +55,7 @@ public interface Crossover {
        * 交叉を行うインスタンスを生成するメソッド．
        *
        * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
-       *      SecondVariantSelectionStrategy, int)
+       *      SecondVariantSelectionStrategy, int, int)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
@@ -84,7 +84,7 @@ public interface Crossover {
        * 交叉を行うインスタンスを生成するメソッド．
        *
        * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
-       *      SecondVariantSelectionStrategy, int)
+       *      SecondVariantSelectionStrategy, int, int)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
@@ -113,7 +113,7 @@ public interface Crossover {
        * 交叉を行うインスタンスを生成するメソッド．
        *
        * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
-       *      SecondVariantSelectionStrategy, int)
+       *      SecondVariantSelectionStrategy, int, int)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
@@ -142,7 +142,7 @@ public interface Crossover {
        * 交叉を行うインスタンスを生成するメソッド．
        *
        * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
-       *      SecondVariantSelectionStrategy, int)
+       *      SecondVariantSelectionStrategy, int, int)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
