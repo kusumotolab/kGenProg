@@ -43,10 +43,9 @@ public class CUILauncher {
     final FaultLocalization faultLocalization = config.getFaultLocalization()
         .initialize();
     final Random random = new Random(config.getRandomSeed());
-    final CandidateSelection candidateSelection =
-        new RouletteStatementAndConditionSelection(random);
-    final Mutation mutation = new SimpleMutation(config.getMutationGeneratingCount(), random,
-        candidateSelection, config.getRequiredSolutionsCount(), config.getScope());
+    final Mutation mutation = config.getMutationType()
+        .initialize(config.getMutationGeneratingCount(), random, config.getRequiredSolutionsCount(),
+            config.getScope());
     final FirstVariantSelectionStrategy firstVariantSelectionStrategy =
         config.getFirstVariantSelectionStrategy()
             .initialize(random);
