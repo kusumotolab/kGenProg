@@ -72,7 +72,7 @@ public class Variant {
   }
 
   /**
-   * @return この個体の AST を生成する上で文法的にた出しいかどうか
+   * @return この個体の AST を生成する上で文法的に正しいかどうか
    */
   @ExposeMethodResult("isSyntaxValid")
   public boolean isSyntaxValid() {
