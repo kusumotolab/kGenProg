@@ -138,5 +138,4 @@ public class MavenProjectFactory extends BuildToolProjectFactory {
     return matcher.group("res");
   }
 
-
 }
