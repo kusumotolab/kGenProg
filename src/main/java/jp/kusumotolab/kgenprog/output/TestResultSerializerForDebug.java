@@ -25,7 +25,7 @@ public class TestResultSerializerForDebug implements JsonSerializer<TestResult> 
         .collect(Collectors.toList());
     final JsonObject serializedTestResults = new JsonObject();
     serializedTestResults.add("executedTestFQN", context.serialize(testResult.executedTestFQN));
-    serializedTestResults.addProperty("wasFailed", false);
+    serializedTestResults.addProperty("wasFailed", testResult.failed);
     serializedTestResults.add("coverages", context.serialize(coverages));
 
     return serializedTestResults;
