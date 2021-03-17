@@ -1,0 +1,13 @@
+root-dir = "./"
+src = ["src"]
+test = ["test"]
+
+random-seed = 9
+mutation-generating-count = 10
+crossover-generating-count = 20
+headcount = 30
+max-generation = 40
+required-solutions = 50
+time-limit = 1800
+test-time-limit = 3
+scope = "FILE"

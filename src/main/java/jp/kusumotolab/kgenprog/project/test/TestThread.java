@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.time.StopWatch;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.data.ExecutionData;
@@ -106,7 +107,7 @@ class TestThread extends Thread {
       return;
     }
 
-    testResults = new TestResults(buildResults);
+    final StopWatch stopWatch = StopWatch.createStarted();
 
     final List<FullyQualifiedName> productFQNs = getProductFQNs();
     final List<FullyQualifiedName> executionTestFQNs = getExecutionTestFQNs();
@@ -125,7 +126,8 @@ class TestThread extends Thread {
       // JUnitカスタムによる強制タイムアウトの指定
       junitCore.setTimeout(timeout, timeUnit);
 
-      final RunListener listener = new CoverageMeasurementListener(testResults);
+      final List<TestResult> testResultList = new ArrayList<>();
+      final RunListener listener = new CoverageMeasurementListener(testResultList);
       junitCore.addListener(listener);
 
       // JUnit実行対象の題材テストはMemClassLoaderでロードされているので，
@@ -134,6 +136,8 @@ class TestThread extends Thread {
 
       junitCore.run(testClasses.toArray(new Class<?>[testClasses.size()]));
 
+      stopWatch.stop();
+      testResults = new TestResults(buildResults, stopWatch.getTime(), testResultList);
     } catch (final ClassNotFoundException e) {
       // クラスロードに失敗．FQNの指定ミスの可能性が大
       testResults = new EmptyTestResults("failed to load classes.");
@@ -151,7 +155,6 @@ class TestThread extends Thread {
    *
    * @param memoryClassLoader
    * @param fqns
-   * @param isInstrument
    * @throws IOException
    */
   private void addAllDefinitions(final MemoryClassLoader memoryClassLoader,
@@ -250,18 +253,17 @@ class TestThread extends Thread {
    */
   class CoverageMeasurementListener extends RunListener {
 
-    private final TestResults testResults;
+    private final List<TestResult> testResultList;
     private boolean wasFailed;
     private String failedReason;
 
     /**
      * constructor
      *
-     * @param storedTestResults テスト実行結果の保存先
      * @throws Exception
      */
-    public CoverageMeasurementListener(final TestResults storedTestResults) {
-      testResults = storedTestResults;
+    public CoverageMeasurementListener(final List<TestResult> testResultList) {
+      this.testResultList = testResultList;
     }
 
     @Override
@@ -354,7 +356,7 @@ class TestThread extends Thread {
 
       final TestResult testResult = new TestResult(testMethodFQN, wasFailed, failedReason,
           coverages);
-      testResults.add(testResult);
+      testResultList.add(testResult);
     }
   }
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -133,8 +134,8 @@ public class KGenProgMain {
 
       // 変異プログラムを生成
       final List<Variant> variantsByMutation = mutation.exec(variantStore);
-      final List<Variant> variantsByCrossover = crossover.exec(variantStore);
       variantStore.addGeneratedVariants(variantsByMutation);
+      final List<Variant> variantsByCrossover = crossover.exec(variantStore);
       variantStore.addGeneratedVariants(variantsByCrossover);
 
       // 世代別サマリの出力
@@ -226,7 +227,8 @@ public class KGenProgMain {
               succeededResults.size() + failedResults.size()))
           .append(System.lineSeparator());
       testResults.getFailedTestResults()
-          .forEach(r -> sb.append(String.format("%s: %s", r.executedTestFQN, r.getFailedReason())));
+          .forEach(r -> sb.append(String.format("%s: %s", r.executedTestFQN, r.getFailedReason()))
+              .append(System.lineSeparator()));
       log.info(sb.toString());
     }
 
@@ -244,6 +246,8 @@ public class KGenProgMain {
           .append(createVariantsSummary(variants))
           .append(System.lineSeparator())
           .append(createFitnessSummary(variants))
+          .append(System.lineSeparator())
+          .append(createTestTimeSummary(variants))
           .append(System.lineSeparator())
           .append("----------------------------------------------------------------")
           .append(System.lineSeparator());
@@ -265,6 +269,41 @@ public class KGenProgMain {
           count(variants, v -> v.triedBuild() && !v.isBuildSucceeded()),
           count(variants, v -> !v.isSyntaxValid() && !v.isReproduced()),
           count(variants, Variant::isReproduced));
+    }
+
+    private String createTestTimeSummary(final List<Variant> variants) {
+      return String.format(
+          "Test execution time: sum %s ms, max %s ms, min %s ms",
+          getSumTestTime(variants),
+          getMaxTestTime(variants),
+          getMinTestTime(variants));
+    }
+
+    private String getSumTestTime(final List<Variant> variants) {
+      return format.format(
+          variants.stream()
+              .mapToDouble(e -> e.getTestResults()
+                  .getTestTime())
+              .filter(e -> !Double.isNaN(e))
+              .sum());
+    }
+
+    private String getMaxTestTime(final List<Variant> variants) {
+      final OptionalDouble max = variants.stream()
+          .mapToDouble(e -> e.getTestResults()
+              .getTestTime())
+          .filter(e -> !Double.isNaN(e))
+          .max();
+      return max.isEmpty() ? "--" : format.format(max.orElse(Double.NaN));
+    }
+
+    private String getMinTestTime(final List<Variant> variants) {
+      final OptionalDouble min = variants.stream()
+          .mapToDouble(e -> e.getTestResults()
+              .getTestTime())
+          .filter(e -> !Double.isNaN(e))
+          .min();
+      return min.isEmpty() ? "--" : format.format(min.orElse(Double.NaN));
     }
 
     private int count(final List<Variant> variants, final Predicate<Variant> p) {

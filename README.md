@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="assets/logo.png" width="40%">
+    <img src="assets/logo.png" width="40%" alt="logo">
 </div>
 
 <p align="center">
@@ -15,7 +15,7 @@
 </p>
 
 <p align=center>
-    :us:English &nbsp; <a href="./doc/ja/README.md"> :jp:日本語</a>
+    :us:English &nbsp; <a href="docs/ja/README.md"> :jp:日本語</a>
 </p>
 
 ---
@@ -31,12 +31,12 @@ There are sample bugs in [kusumotolab/kGenProg-example](https://github.com/kusum
 You can download all the bugs from [here](https://github.com/kusumotolab/kGenProg-example/archive/master.zip).
 
 
-## Gradle
+### Gradle
 kGenProg is also available for Gradle environments.
 Currently, kGenProg is distributed on JitPack.
 To add JitPack repository to your build file, append it in your build.gradle at the end of repositories.
 
-```
+```gradle
 allprojects {
     repositories {
         ...
@@ -47,9 +47,10 @@ allprojects {
 
 Then, please add the dependency to kGenProg.
 
-```
+```gradle
 dependencies {
     implementation 'com.github.kusumotolab:kGenProg:Tag'
+}
 ```
 Please replace `Tag` with the version ID that you want to use.
 You can find more detailed descriptions [here](https://jitpack.io/#kusumotolab/kGenProg/).
@@ -57,7 +58,7 @@ You can find more detailed descriptions [here](https://jitpack.io/#kusumotolab/k
 
 ## Usage
 ```
-$ java -jar path/to/kGenProg.jar [(-r <path> -s <path>... -t <path>...) | --config <path>]
+$ java -jar path/to/kGenProg.jar [--config <path> | (-r <path> -s <path>... -t <path>...)]
     [-x <fqn>...] [-c <path>...] [-w <path>] [-o <path>] [-v | -q] [--headcount <num>]
     [--max-generation <num>] [--time-limit <sec>] [--test-time-limit <sec>]
     [--required-solutions <num>] [--random-seed <num>] [--fault-localization <name>]
@@ -73,7 +74,7 @@ $ java -jar path/to/kGenProg.jar -r ./ -s src/example/CloseToZero.java -t src/ex
 ```
 
 You can configure parameters with a `.toml` file using `--config` option.
-See [doc/kgenprog-config-template.toml](doc/kgenprog-config-template.toml) to learn how to write a config file.
+See [docs/kgenprog-config-template.toml](docs/kgenprog-config-template.toml) to learn how to write a config file.
 ```sh
 $ java -jar path/to/kGenProg.jar --config kGenProg/example/CloseToZero01/kgenprog.toml
 ```
@@ -88,15 +89,15 @@ $ java -jar path/to/kGenProg.jar
 ### Options
 | Option | Description | Default |
 |---|---|---|
+| `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
 | `-r`, `--root-dir` | Specifies the path to the root directory of the target project. It is recommended to specify the current directory after moving into the root directory of the target project, for implementation reason. | Nothing |
 | `-s`, `--src` | Specifies paths to "product" source code (i.e. main, non-test code), or to directories containing them. Paths are separated with spaces. | Nothing |
 | `-t`, `--test` | Specifies paths to test source code, or to directories containing them. Paths are separated with spaces. | Nothing |
 | `-x`, `--exec-test` | Specifies fully qualified names of test classes executed during evaluation of variants (i.e. fix-candidates). It is recommended to specify test classes detecting a bug. Class names are separated with spaces. | All test classes |
 | `-c`, `--cp` | Specifies class paths needed to build the target project. Paths are separated with spaces. | Nothing |
-| `-o`, `--out-dir` | Writes patches kGenProg generated under the specified directory. Patches are outputted to a directory having a name of the execution time and date under the specified directory. | A directory named `kgenprog-out` is created in the current directory. |
+| `-o`, `--out-dir` | Specifies an output directory. Generated files include patches and history json. They can be enabled by `--patch-output` or `--history-record` | `./kgenprog-out` |
 | `-v`, `--verbose` | Be more verbose, printing DEBUG level logs. | `false` |
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
-| `--config` |  Specifies the path to config file. | Reads config file named `kgenprog.toml` in the current directory. |
 | `--mutation-generating-count` | Specifies how many variants are generated in a generation by a mutation. | 10 |
 | `--crossover-generating-count` | Specifies how many variants are generated in a generation by a crossover. | 10 |
 | `--headcount` | Specifies how many variants survive in a generation. | 100 |
@@ -105,13 +106,15 @@ $ java -jar path/to/kGenProg.jar
 | `--test-time-limit` | Specifies a time limit in seconds to build and test each variant. | 10 |
 | `--required-solutions` | Terminates searching solutions when the specified number of solutions are found. | 1 |
 | `--random-seed` | Specifies a random seed used by a random number generator. | 0 |
-| `--scope` | Specify the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
+| `--scope` | Specifies the scope from which source code to be reused is selected. (`PROJECT`, `PACKAGE`, `FILE`). | `PACKAGE` |
 | `--fault-localization` | Specifies technique of fault localization. (`Ample`, `Jaccard`, `Ochiai`, `Tarantula`, `Zoltar`). | `Ochiai` |
 | `--mutation-type` | Specifies mutation type. (`Simple`, `Heuristic`). | `Simple` |
-| `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`). | `Random` |
+| `--crossover-type` | Specifies crossover type. (`Random`, `Single`, `Uniform`, `Cascade`). | `Random` |
 | `--crossover-first-variant` | Specifies first variant selection strategy for crossover. (`Elite`, `Random`). | `Random` |
 | `--crossover-second-variant` | Specifies second variant selection strategy for crossover.  (`Elite`, `GeneSimilarity`, `Random`, `TestSimilarity`). | `Random` |
-| `--history-record` | Stores generation process of each variant and all generated variants. | `false` |
+| `--patch-output` | Writes patch files to the output directory specified in `-o` option. | `false` |
+| `--history-record` | Records and writes generation process of all generated variants as JSON format. Note that, this feature significantly reduces overall performance. | `false` |
+| `--version` | Prints the kGenProg version number. | `false` | 
 
 
 ## Use in your research

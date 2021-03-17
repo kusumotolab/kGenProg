@@ -56,7 +56,6 @@ public class Configuration {
   public static final Path DEFAULT_OUT_DIR = Paths.get("kgenprog-out");
   public static final long DEFAULT_RANDOM_SEED = 0;
   public static final Scope.Type DEFAULT_SCOPE = Scope.Type.PACKAGE;
-  public static final boolean DEFAULT_NEED_NOT_OUTPUT = false;
   public static final FaultLocalization.Technique DEFAULT_FAULT_LOCALIZATION =
       FaultLocalization.Technique.Ochiai;
   public static final Mutation.Type DEFAULT_MUTATION_TYPE = Mutation.Type.Simple;
@@ -65,7 +64,8 @@ public class Configuration {
       FirstVariantSelectionStrategy.Strategy.Random;
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
       SecondVariantSelectionStrategy.Strategy.Random;
-  public static final boolean DEFAULT_HISTORY_RECORD = false;
+  public static final boolean DEFAULT_IS_PATCH_OUTPUT = false;
+  public static final boolean DEFAULT_IS_HISTORY_RECORD = false;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;
@@ -80,13 +80,13 @@ public class Configuration {
   private final Level logLevel;
   private final long randomSeed;
   private final Scope.Type scope;
-  private final boolean needNotOutput;
   private final FaultLocalization.Technique faultLocalization;
   private final Mutation.Type mutationType;
   private final Crossover.Type crossoverType;
   private final FirstVariantSelectionStrategy.Strategy firstVariantSelectionStrategy;
   private final SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy;
-  private final boolean historyRecord;
+  private final boolean isPatchOutput;
+  private final boolean isHistoryRecord;
   private final Builder builder;
 
   private Configuration(final Builder builder) {
@@ -103,13 +103,13 @@ public class Configuration {
     this.logLevel = builder.logLevel;
     this.randomSeed = builder.randomSeed;
     this.scope = builder.scope;
-    this.needNotOutput = builder.needNotOutput;
     this.faultLocalization = builder.faultLocalization;
     this.mutationType = builder.mutationType;
     this.crossoverType = builder.crossoverType;
     this.firstVariantSelectionStrategy = builder.firstVariantSelectionStrategy;
     this.secondVariantSelectionStrategy = builder.secondVariantSelectionStrategy;
-    this.historyRecord = builder.historyRecord;
+    this.isPatchOutput = builder.isPatchOutput;
+    this.isHistoryRecord = builder.isHistoryRecord;
     this.builder = builder;
   }
 
@@ -173,9 +173,6 @@ public class Configuration {
     return scope;
   }
 
-  public boolean needNotOutput() {
-    return needNotOutput;
-  }
 
   public FaultLocalization.Technique getFaultLocalization() {
     return faultLocalization;
@@ -197,8 +194,12 @@ public class Configuration {
     return secondVariantSelectionStrategy;
   }
 
+  public boolean isPatchOutput() {
+    return isPatchOutput;
+  }
+
   public boolean isHistoryRecord() {
-    return historyRecord;
+    return isHistoryRecord;
   }
 
   @Override
@@ -244,6 +245,11 @@ public class Configuration {
     @Conversion(PathToString.class)
     private Path outDir = DEFAULT_OUT_DIR;
 
+    @com.electronwill.nightconfig.core.conversion.Path("log-level")
+    @PreserveNotNull
+    @Conversion(LevelToString.class)
+    private Level logLevel = DEFAULT_LOG_LEVEL;
+
     @com.electronwill.nightconfig.core.conversion.Path("mutation-generating-count")
     @PreserveNotNull
     private int mutationGeneratingCount = DEFAULT_MUTATION_GENERATING_COUNT;
@@ -273,11 +279,6 @@ public class Configuration {
     @PreserveNotNull
     private int requiredSolutionsCount = DEFAULT_REQUIRED_SOLUTIONS_COUNT;
 
-    @com.electronwill.nightconfig.core.conversion.Path("log-level")
-    @PreserveNotNull
-    @Conversion(LevelToString.class)
-    private Level logLevel = DEFAULT_LOG_LEVEL;
-
     @com.electronwill.nightconfig.core.conversion.Path("random-seed")
     @PreserveNotNull
     private long randomSeed = DEFAULT_RANDOM_SEED;
@@ -286,11 +287,6 @@ public class Configuration {
     @PreserveNotNull
     @Conversion(ScopeTypeToString.class)
     private Scope.Type scope = DEFAULT_SCOPE;
-
-    @Option(name = "--no-output", usage = "Do not output anything.", hidden = true)
-    @com.electronwill.nightconfig.core.conversion.Path("no-output")
-    @PreserveNotNull
-    private boolean needNotOutput = DEFAULT_NEED_NOT_OUTPUT;
 
     @com.electronwill.nightconfig.core.conversion.Path("fault-localization")
     @PreserveNotNull
@@ -319,9 +315,13 @@ public class Configuration {
     private SecondVariantSelectionStrategy.Strategy secondVariantSelectionStrategy =
         DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY;
 
+    @com.electronwill.nightconfig.core.conversion.Path("patch-output")
+    @PreserveNotNull
+    private boolean isPatchOutput = DEFAULT_IS_PATCH_OUTPUT;
+
     @com.electronwill.nightconfig.core.conversion.Path("history-record")
     @PreserveNotNull
-    private boolean historyRecord = DEFAULT_HISTORY_RECORD;
+    private boolean isHistoryRecord = DEFAULT_IS_HISTORY_RECORD;
 
     private final transient Set<String> optionsSetByCmdLineArgs = new HashSet<>();
     private final transient Set<String> optionsSetByConfigFile = new HashSet<>();
@@ -389,7 +389,10 @@ public class Configuration {
     }
 
     public Configuration build() {
-
+      warnSymbolicLink(rootDir);
+      warnSymbolicLink(productPaths);
+      warnSymbolicLink(testPaths);
+      warnSymbolicLink(classPaths);
       if (targetProject == null) {
         targetProject = TargetProjectFactory.create(rootDir, productPaths, testPaths, classPaths,
             JUnitVersion.JUNIT4);
@@ -483,10 +486,6 @@ public class Configuration {
       return this;
     }
 
-    public Builder setNeedNotOutput(final boolean needNotOutput) {
-      this.needNotOutput = needNotOutput;
-      return this;
-    }
 
     public Builder setFaultLocalization(final FaultLocalization.Technique faultLocalization) {
       this.faultLocalization = faultLocalization;
@@ -515,8 +514,13 @@ public class Configuration {
       return this;
     }
 
-    public Builder setHistoryRecord(final boolean historyRecord) {
-      this.historyRecord = historyRecord;
+    public Builder setPatchOutput(final boolean isPatchOutput) {
+      this.isPatchOutput = isPatchOutput;
+      return this;
+    }
+
+    public Builder setHistoryRecord(final boolean isHistoryRecord) {
+      this.isHistoryRecord = isHistoryRecord;
       return this;
     }
 
@@ -534,7 +538,7 @@ public class Configuration {
 
     private static void validateExistence(final Path path) {
       if (Files.notExists(path)) {
-        log.error(path.toString() + " does not exist.");
+        log.error("{} does not exist.", path);
         throw new IllegalArgumentException(path.toString() + " does not exist.");
       }
     }
@@ -586,9 +590,11 @@ public class Configuration {
         final Class<?> clazz = this.getClass();
         for (final Field field : clazz.getDeclaredFields()) {
 
-          // Builderオブジェクトの各フィールドに対して，
-          // Pathアノテーションが有る場合はその値を取得
-          field.setAccessible(true);
+          // Builderオブジェクトの各フィールドに対して，Pathアノテーションが有る場合はその値を取得
+
+          // this usual reflection is not necessary due to reflected class is visible by here
+          //field.setAccessible(true);
+
           final String name = field.getName();
           final com.electronwill.nightconfig.core.conversion.Path[] annotations =
               field.getDeclaredAnnotationsByType(
@@ -631,23 +637,31 @@ public class Configuration {
     }
 
     private Path resolveAgainstConfigDirAndNormalize(final Path path) {
-      return checkSymbolicLink(configPath.resolveSibling(path)
-          .normalize());
+      warnSymbolicLink(configPath.resolveSibling(path));
+
+      return configPath.resolveSibling(path)
+          .normalize();
     }
 
     /**
-     * Checks whether the given path is a symbolic link, and returns it as is. If it is a symbolic
-     * link, outputs warning message; otherwise do nothing.
+     * Warn if the given path is a symbolic link
      *
-     * @param path the path to be checked
-     * @return the given path
+     * @param path path to be checked
      */
-    private Path checkSymbolicLink(final Path path) {
-      if (Files.isSymbolicLink(path)) {
-        log.warn("symbolic link may not be resolved: " + path.toString());
+    private void warnSymbolicLink(final Path path) {
+      if (null == path) {
+        return;
       }
+      if (Files.isSymbolicLink(path)) {
+        log.warn("symbolic link may not be resolved: {}", path);
+      }
+    }
 
-      return path;
+    private void warnSymbolicLink(final List<Path> paths) {
+      if (null == paths) {
+        return;
+      }
+      paths.forEach(this::warnSymbolicLink);
     }
 
     @Override
@@ -656,7 +670,8 @@ public class Configuration {
       final Class<?> clazz = this.getClass();
       for (final Field field : clazz.getDeclaredFields()) {
         try {
-          field.setAccessible(true);
+          // this usual reflection is not necessary due to reflected class is visible by here
+          //field.setAccessible(true);
           if (Modifier.isTransient(field.getModifiers())) {
             continue;
           }
@@ -718,14 +733,6 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("testPaths");
     }
 
-    @Option(name = "-c", aliases = "--cp", metaVar = "<class path> ...",
-        usage = "Specifies class paths needed to build the target project.",
-        handler = StringArrayOptionHandler.class)
-    private void addClassPathFromCmdLineParser(final String classPath) {
-      this.classPaths.add(Paths.get(classPath));
-      this.optionsSetByCmdLineArgs.add("classPaths");
-    }
-
     @Option(name = "-x", aliases = "--exec-test", metaVar = "<fqn> ...",
         usage = "Specifies fully qualified names of test classes executed"
             + " during evaluation of variants (i.e. fix-candidates).",
@@ -735,11 +742,32 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("executionTests");
     }
 
+    @Option(name = "-c", aliases = "--cp", metaVar = "<class path> ...",
+        usage = "Specifies class paths needed to build the target project.",
+        handler = StringArrayOptionHandler.class)
+    private void addClassPathFromCmdLineParser(final String classPath) {
+      this.classPaths.add(Paths.get(classPath));
+      this.optionsSetByCmdLineArgs.add("classPaths");
+    }
+
     @Option(name = "-o", aliases = "--out-dir", metaVar = "<path>",
-        usage = "Writes patches kGenProg generated to the specified directory.")
+        usage = "Specifies an output directory storing patch and/or history json.")
     private void setOutDirFromCmdLineParser(final String outDir) {
       this.outDir = Paths.get(outDir);
       this.optionsSetByCmdLineArgs.add("outDir");
+    }
+
+    @Option(name = "-v", aliases = "--verbose",
+        usage = "Be more verbose, printing DEBUG level logs.")
+    private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
+      logLevel = Level.DEBUG;
+      this.optionsSetByCmdLineArgs.add("logLevel");
+    }
+
+    @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.")
+    private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
+      logLevel = Level.ERROR;
+      this.optionsSetByCmdLineArgs.add("logLevel");
     }
 
     @Option(name = "--mutation-generating-count", metaVar = "<num>",
@@ -777,7 +805,6 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("timeLimit");
     }
 
-    // todo update usage
     @Option(name = "--test-time-limit", metaVar = "<sec>",
         usage = "Specifies time limit to build and test for each variant in second")
     private void setTestTimeLimitFromCmdLineParser(final long testTimeLimit) {
@@ -790,19 +817,6 @@ public class Configuration {
     private void setRequiredSolutionsCountFromCmdLineParser(final int requiredSolutionsCount) {
       this.requiredSolutionsCount = requiredSolutionsCount;
       this.optionsSetByCmdLineArgs.add("requiredSolutionsCount");
-    }
-
-    @Option(name = "-v", aliases = "--verbose",
-        usage = "Be more verbose, printing DEBUG level logs.")
-    private void setLogLevelDebugFromCmdLineParser(final boolean isVerbose) {
-      logLevel = Level.DEBUG;
-      this.optionsSetByCmdLineArgs.add("logLevel");
-    }
-
-    @Option(name = "-q", aliases = "--quiet", usage = "Be more quiet, suppressing non-ERROR logs.")
-    private void setLogLevelErrorFromCmdLineParser(final boolean isQuiet) {
-      logLevel = Level.ERROR;
-      this.optionsSetByCmdLineArgs.add("logLevel");
     }
 
     @Option(name = "--random-seed", metaVar = "<num>",
@@ -855,9 +869,15 @@ public class Configuration {
       this.optionsSetByCmdLineArgs.add("secondVariantSelectionStrategy");
     }
 
-    @Option(name = "--history-record", usage = "Record historical element.")
-    private void setHistoryRecordFromCmdLineParser(final boolean historyRecord) {
-      this.historyRecord = historyRecord;
+    @Option(name = "--patch-output", usage = "Write patch files to output dir.")
+    private void setPatchOutputFromCmdLineParser(final boolean isPatchOutput) {
+      this.isPatchOutput = isPatchOutput;
+      this.optionsSetByCmdLineArgs.add("patchOutput");
+    }
+
+    @Option(name = "--history-record", usage = "Record and write generation history to output dir.")
+    private void setHistoryRecordFromCmdLineParser(final boolean isHistoryRecord) {
+      this.isHistoryRecord = isHistoryRecord;
       this.optionsSetByCmdLineArgs.add("historyRecord");
     }
 

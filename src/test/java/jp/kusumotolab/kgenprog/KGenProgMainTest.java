@@ -6,18 +6,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import jp.kusumotolab.kgenprog.KGenProgMain.ExitStatus;
 
 public class KGenProgMainTest {
 
   private final static String PRODUCT_NAME = "src/example/CloseToZero.java";
   private final static String TEST_NAME = "src/example/CloseToZeroTest.java";
-
-  @Rule
-  public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   /*
    * 引数で与えられた情報を利用して，CUILauncher経由でkGenProgMainを実行するメソッド
@@ -27,17 +22,14 @@ public class KGenProgMainTest {
 
     final List<Path> productPaths = Collections.singletonList(productPath);
     final List<Path> testPaths = Collections.singletonList(testPath);
-    final Path outDir = tempFolder.getRoot()
-        .toPath();
-
-    final Configuration config =
-        new Configuration.Builder(rootPath, productPaths, testPaths).setTimeLimitSeconds(600)
-            .setTestTimeLimitSeconds(1)
-            .setMaxGeneration(100)
-            .setRequiredSolutionsCount(1)
-            .setOutDir(outDir)
-            .setNeedNotOutput(true)
-            .build();
+    final Configuration config = new Configuration.Builder(rootPath, productPaths, testPaths)
+        .setTimeLimitSeconds(600)
+        .setTestTimeLimitSeconds(1)
+        .setMaxGeneration(100)
+        .setRequiredSolutionsCount(1)
+        .setPatchOutput(false) // to prevent file output
+        .setHistoryRecord(false) // to prevent file output
+        .build();
 
     final CUILauncher launcher = new CUILauncher();
     return launcher.launch(config);

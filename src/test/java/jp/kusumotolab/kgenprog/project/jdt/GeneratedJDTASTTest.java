@@ -168,7 +168,8 @@ public class GeneratedJDTASTTest {
     final GeneratedJDTAST<ProductSourcePath> ast = constructor.constructAST(path, source,
         StandardCharsets.UTF_8);
 
-    @SuppressWarnings("unchecked") final List<ImportDeclaration> imports = ast.getRoot()
+    @SuppressWarnings("unchecked")
+    final List<ImportDeclaration> imports = ast.getRoot()
         .imports();
 
     assertThat(imports).hasSize(1)
@@ -331,7 +332,8 @@ public class GeneratedJDTASTTest {
     methodInvocationB.setName(ast.newSimpleName("b"));
     final Block block = ast.newBlock();
 
-    @SuppressWarnings("unchecked") final List<Statement> blockStatementList = block.statements();
+    @SuppressWarnings("unchecked")
+    final List<Statement> blockStatementList = block.statements();
 
     blockStatementList.add(ast.newExpressionStatement(methodInvocationA));
     blockStatementList.add(ast.newExpressionStatement(methodInvocationB));

@@ -13,6 +13,8 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
@@ -30,6 +32,8 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
  * @author shinsuke
  */
 public class ProjectBuilder {
+
+  public static final Logger log = LoggerFactory.getLogger(ProjectBuilder.class);
 
   // TODO デフォルトのコンパイラバージョンは要検討．ひとまず1.8固定．
   // TODO #289: 加え，toml からコンパイラバージョンを指定できるようにするべき．
@@ -79,6 +83,23 @@ public class ProjectBuilder {
       final boolean success = build(allAsts, javaSourceObjects, diagnostics, progress);
 
       if (!success) {
+        if (!diagnostics.getDiagnostics()
+            .isEmpty()) {
+          final StringBuilder sb = new StringBuilder();
+          sb.append("build failed.")
+              .append(System.lineSeparator())
+              .append(diagnostics.getDiagnostics()
+                  .get(0));
+          if (diagnostics.getDiagnostics()
+              .size() > 1) {
+            sb.append(System.lineSeparator())
+                .append("and ")
+                .append(diagnostics.getDiagnostics()
+                    .size() - 1)
+                .append(" more.");
+          }
+          log.debug(sb.toString());
+        }
         return new EmptyBuildResults(diagnostics, progress.toString());
       }
     }
