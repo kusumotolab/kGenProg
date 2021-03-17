@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class BuildToolProjectFactory implements ProjectFactory {
 
@@ -16,15 +17,18 @@ public abstract class BuildToolProjectFactory implements ProjectFactory {
   }
 
   protected final Collection<Path> getConfigPath() {
-    try {
-      return Files.walk(rootPath)
-          .filter(p -> p.toString()
-              .endsWith(getConfigFileName()))
+    try (final Stream<Path> stream = Files.walk(rootPath, 1)) { // max depth should be 1
+      return stream.filter(p -> p.endsWith(getConfigFileName()))
           .collect(Collectors.toList());
-    } catch (IOException e) {
+    } catch (final IOException e) {
       // do nothing
     }
     return Collections.emptyList();
+  }
+
+  @Override
+  public boolean isApplicable() {
+    return !getConfigPath().isEmpty();
   }
 
   protected abstract String getConfigFileName();
