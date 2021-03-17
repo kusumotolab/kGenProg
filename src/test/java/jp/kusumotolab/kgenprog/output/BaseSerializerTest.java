@@ -1,10 +1,9 @@
 package jp.kusumotolab.kgenprog.output;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
@@ -12,16 +11,12 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import io.gsonfire.GsonFireBuilder;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
-import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
-import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
-import jp.kusumotolab.kgenprog.project.SourcePath;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
@@ -29,11 +24,9 @@ import jp.kusumotolab.kgenprog.project.jdt.GeneratedJDTAST;
 import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
-import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
-import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.CrossoverHistoricalElement;
-import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.TestResults;
+import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.LineNumberRange;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class BaseSerializerTest {
@@ -65,7 +58,7 @@ public class BaseSerializerTest {
         .getAsJsonObject();
 
     // チェック
-    assertBase(base, serializedBase);
+    assertBase(base, serializedBase.toString());
   }
 
   @Test
@@ -99,12 +92,12 @@ public class BaseSerializerTest {
         .getAsJsonObject();
 
     // チェック
-    assertBase(base, serializedBase);
+    assertBase(base, serializedBase.toString());
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testBasetestBaseGeneratedByReplacement() {
+  public void testBaseGeneratedByReplacement() {
     final Path basePath = Paths.get("example/BuildSuccess01/");
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
@@ -137,50 +130,39 @@ public class BaseSerializerTest {
         .getAsJsonObject();
 
     // チェック
-    assertBase(base, serializedBase);
+    assertBase(base, serializedBase.toString());
   }
 
-  private void assertBase(final Base base, final JsonObject serializedBase) {
-    // キーの存在チェック
-    assertThat(serializedBase.keySet()).contains(
-        JsonKeyAlias.Base.FILE_NAME,
-        JsonKeyAlias.Base.LINE_NUMBER_RANGE,
-        JsonKeyAlias.Base.NAME,
-        JsonKeyAlias.Base.SNIPPET);
-
-    // ファイル名のチェック
+  private void assertBase(final Base base, final String serializedBase) {
     final String expectFqn = base.getTargetLocation()
         .getSourcePath().path.toString();
-    final String serializedFqn = serializedBase.get(JsonKeyAlias.Base.FILE_NAME)
-        .getAsString();
-    assertThat(serializedFqn).isEqualTo(expectFqn);
+    final DocumentContext context = JsonPath.parse(serializedBase);
 
-    // 行範囲のチェック
-    final JsonObject serializedLineNumberRange = serializedBase.get(
-        JsonKeyAlias.Base.LINE_NUMBER_RANGE)
-        .getAsJsonObject();
-    final int serializedLineStart = serializedLineNumberRange.get(
-        JsonKeyAlias.LineNumberRange.START)
-        .getAsInt();
-    final int serializedLineEnd = serializedLineNumberRange.get(
-        JsonKeyAlias.LineNumberRange.END)
-        .getAsInt();
-    assertThat(serializedLineStart).isEqualTo(base.getTargetLocation()
-        .inferLineNumbers().start);
-    assertThat(serializedLineEnd).isEqualTo(base.getTargetLocation()
-        .inferLineNumbers().end);
+    assertThatJson(serializedBase).isObject()
+        .containsOnlyKeys(JsonKeyAlias.Base.FILE_NAME,
+            JsonKeyAlias.Base.LINE_NUMBER_RANGE,
+            JsonKeyAlias.Base.NAME,
+            JsonKeyAlias.Base.SNIPPET);
 
-    // 操作名のチェック
-    final String serializedOperationName = serializedBase.get(
-        JsonKeyAlias.Base.NAME)
-        .getAsString();
-    assertThat(serializedOperationName).isEqualTo(base.getOperation()
-        .getName());
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.FILE_NAME)
+        .isEqualTo(expectFqn);
 
-    // コード片のチェック
-    final String serializedSnippet = serializedBase.get(JsonKeyAlias.Base.SNIPPET)
-        .getAsString();
-    assertThat(serializedSnippet).isEqualTo(base.getOperation()
-        .getTargetSnippet());
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.LINE_NUMBER_RANGE)
+        .isObject()
+        .containsOnlyKeys(LineNumberRange.START, LineNumberRange.END);
+    assertThatJson(serializedBase).node(LineNumberRange.START)
+        .isEqualTo(base.getTargetLocation()
+            .inferLineNumbers().start);
+    assertThatJson(serializedBase).node(LineNumberRange.END)
+        .isEqualTo(base.getTargetLocation()
+            .inferLineNumbers().end);
+
+    assertThatJson(context).node(JsonKeyAlias.Base.NAME)
+        .isEqualTo(base.getOperation()
+            .getName());
+
+    assertThatJson(context).node(JsonKeyAlias.Base.SNIPPET)
+        .isEqualTo(base.getOperation()
+            .getTargetSnippet());
   }
 }

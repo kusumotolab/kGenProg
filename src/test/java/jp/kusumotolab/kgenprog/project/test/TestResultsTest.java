@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.project.test;
 
 import static jp.kusumotolab.kgenprog.project.jdt.ASTNodeAssert.assertThat;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -8,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Test;
-import com.google.gson.JsonParser;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.ASTLocation;
@@ -108,49 +109,59 @@ public class TestResultsTest {
     final Variant variant = mock(Variant.class);
     when(variant.getGeneratedSourceCode()).thenReturn(generatedSourceCode);
     final TestResults result = executor.exec(variant);
-    final JsonParser parser = new JsonParser();
 
-    final String expected = new StringBuilder()//
-        .append("[")
-        .append("  {")
-        .append("    \"executedTestFQN\": \"example.FooTest.test04\",")
-        .append("    \"wasFailed\": false,")
-        .append("    \"coverages\": [")
-        .append(
-            "      {\"executedTargetFQN\": \"example.Foo\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
-        .append("    ]")
-        .append("  },")
-        .append("  {")
-        .append("    \"executedTestFQN\": \"example.FooTest.test01\",")
-        .append("    \"wasFailed\": false,")
-        .append("    \"coverages\": [")
-        .append(
-            "      {\"executedTargetFQN\": \"example.Foo\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
-        .append("    ]")
-        .append("  },")
-        .append("  {")
-        .append("    \"executedTestFQN\": \"example.FooTest.test03\",")
-        .append("    \"wasFailed\": true,")
-        .append("    \"coverages\": [")
-        .append(
-            "      {\"executedTargetFQN\": \"example.Foo\", \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]}")
-        .append("    ]")
-        .append("  },")
-        .append("  {")
-        .append("    \"executedTestFQN\": \"example.FooTest.test02\",")
-        .append("    \"wasFailed\": false,")
-        .append("    \"coverages\": [")
-        .append(
-            "      {\"executedTargetFQN\": \"example.Foo\", \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]}")
-        .append("    ]")
-        .append("  }")
-        .append("]")
-        .toString();
-    final String actual = JsonParser.parseString(expected)
-        .toString();
-
-    assertThat(actual).isEqualTo(JsonParser.parseString(expected)
-        .toString());
+    assertThatJson(result.toString())
+        .isArray()
+        .containsOnly(//
+            json(//
+                "{" +
+                    "   \"executedTestFQN\": \"example.FooTest.test01\"," +
+                    "   \"wasFailed\": false," +
+                    "   \"coverages\": [" +
+                    "       {" +
+                    "           \"executedTargetFQN\": \"example.Foo\"," +
+                    "           \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]" +
+                    "       }" +
+                    "    ]" +
+                    "}"
+            ),
+            json(//
+                "{" +
+                    "   \"executedTestFQN\": \"example.FooTest.test02\"," +
+                    "   \"wasFailed\": false," +
+                    "   \"coverages\": [" +
+                    "       {" +
+                    "           \"executedTargetFQN\": \"example.Foo\"," +
+                    "           \"coverages\": [0, 2, 0, 2, 2, 0, 0, 1, 0, 2]" +
+                    "       }" +
+                    "    ]" +
+                    "}"
+            ),
+            json(//
+                "{" +
+                    "   \"executedTestFQN\": \"example.FooTest.test03\"," +
+                    "   \"wasFailed\": true," +
+                    "   \"coverages\": [" +
+                    "       {" +
+                    "           \"executedTargetFQN\": \"example.Foo\"," +
+                    "           \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]" +
+                    "       }" +
+                    "    ]" +
+                    "}"
+            ),
+            json(//
+                "{" +
+                    "   \"executedTestFQN\": \"example.FooTest.test04\"," +
+                    "   \"wasFailed\": false," +
+                    "   \"coverages\": [" +
+                    "       {" +
+                    "           \"executedTargetFQN\": \"example.Foo\"," +
+                    "           \"coverages\": [0, 2, 0, 2, 1, 0, 0, 2, 0, 2]" +
+                    "       }" +
+                    "    ]" +
+                    "}"
+            )
+        );
   }
 
 }

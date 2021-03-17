@@ -91,8 +91,11 @@ public class VariantStoreSerializerTest {
     final JsonObject serializedVariantStore = gson.toJsonTree(variantStore)
         .getAsJsonObject();
     // キーのチェック
-    assertThat(serializedVariantStore.keySet()).containsOnly(JsonKeyAlias.VariantStore.PROJECT_NAME,
-        JsonKeyAlias.VariantStore.VARIANTS, JsonKeyAlias.VariantStore.CONFIGURATION);
+    assertThat(serializedVariantStore.keySet()).containsOnly(
+        JsonKeyAlias.VariantStore.PROJECT_NAME,
+        JsonKeyAlias.VariantStore.VARIANTS,
+        JsonKeyAlias.VariantStore.CONFIGURATION
+    );
 
     // 値のチェック
     final String projectName = serializedVariantStore.get(JsonKeyAlias.VariantStore.PROJECT_NAME)

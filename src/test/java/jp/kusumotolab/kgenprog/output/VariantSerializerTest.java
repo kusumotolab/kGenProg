@@ -50,7 +50,7 @@ public class VariantSerializerTest {
 
     // キーを持っているかチェック
     final Set<String> serializedVariantKey = serializedVariant.keySet();
-    assertThat(serializedVariantKey).contains(//
+    assertThat(serializedVariantKey).containsOnly(//
         JsonKeyAlias.Variant.ID, //
         JsonKeyAlias.Variant.FITNESS, //
         JsonKeyAlias.Variant.GENERATION_NUMBER, //
@@ -69,9 +69,7 @@ public class VariantSerializerTest {
         serializedVariant.get(JsonKeyAlias.Variant.GENERATION_NUMBER);
     final JsonElement isBuildSuccess = serializedVariant.get(JsonKeyAlias.Variant.IS_BUILD_SUCCESS);
     final JsonElement selectionCount = serializedVariant.get(JsonKeyAlias.Variant.SELECTION_COUNT);
-
-    // TODO win+gradle 環境で落ちるのでいったんコメントアウト #389を解消してから戻すべき．
-    // final JsonElement patches = serializedVariant.get(JsonKeyAlias.Variant.PATCH);
+     final JsonElement patches = serializedVariant.get(JsonKeyAlias.Variant.PATCH);
 
     final JsonElement bases = serializedVariant.get(JsonKeyAlias.Variant.BASES);
     final JsonElement is_syntax_valid = serializedVariant.get(JsonKeyAlias.Variant.IS_SYNTAX_VALID);
@@ -81,9 +79,7 @@ public class VariantSerializerTest {
     assertThat(generationNumber.getAsInt()).isEqualTo(0);
     assertThat(isBuildSuccess.getAsBoolean()).isEqualTo(false);
     assertThat(selectionCount.getAsInt()).isEqualTo(0);
-
-    // TODO 上のpatches宣言のコメントアウトに依存 #389を解消してから戻すべき．
-    // assertThat(patches.getAsJsonArray()).isEmpty();
+     assertThat(patches.getAsJsonArray()).isEmpty();
 
     assertThat(bases.getAsJsonArray()).isEmpty();
     assertThat(is_syntax_valid.getAsBoolean()).isEqualTo(true);

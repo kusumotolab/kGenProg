@@ -1,10 +1,9 @@
 package jp.kusumotolab.kgenprog.output;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.Set;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
@@ -12,8 +11,6 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -95,26 +92,14 @@ public class PatchSerializerTest {
         createVariant(1L, 1, new SimpleFitness(0.0d), code, historicalElement);
 
     final Patch patch = patchGenerator.exec(modifiedVariant);
+    final String serializedPatches = gson.toJson(patch);
 
-    final JsonArray serializedPatches = gson.toJsonTree(patch)
-        .getAsJsonArray();
-    assertThat(serializedPatches).hasSize(1);
-
-    // FileDiffをシリアライズできているかテスト
-    final JsonObject serializedPatch = serializedPatches.get(0)
-        .getAsJsonObject();
-    final Set<String> serializedPatchKey = serializedPatch.keySet();
-
-    assertThat(serializedPatchKey).contains(JsonKeyAlias.Patch.DIFF,
-        JsonKeyAlias.Patch.FILE_NAME);
-
-    final String fileName = serializedPatch.get(JsonKeyAlias.Patch.FILE_NAME)
-        .getAsString();
-    assertThat(fileName).isEqualTo("example.CloseToZero");
-
-    // パッチ自体はPatchGeneratorTestでテスト済みなので，値が存在するかどうかだけ調べる
-    final String diff = serializedPatch.get(JsonKeyAlias.Patch.DIFF)
-        .getAsString();
-    assertThat(diff).isNotBlank();
+    assertThatJson(serializedPatches).isArray()
+        .hasSize(1);
+    assertThatJson(serializedPatches).node(JsonKeyAlias.Patch.FILE_NAME)
+        .isEqualTo("example.CloseToZero");
+    assertThatJson(serializedPatches).node(JsonKeyAlias.Patch.DIFF)
+        .isEqualTo(
+            "--- example.CloseToZero\n+++ example.CloseToZero\n@@ -22,6 +22,7 @@\n     } else {\n       n++;\n     }\n+\tjson();\n     return n;\n   }\n }");
   }
 }
