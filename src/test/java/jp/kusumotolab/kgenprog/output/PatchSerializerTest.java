@@ -28,7 +28,6 @@ import jp.kusumotolab.kgenprog.project.jdt.InsertAfterOperation;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
-import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class PatchSerializerTest {
@@ -96,9 +95,10 @@ public class PatchSerializerTest {
 
     assertThatJson(serializedPatches).isArray()
         .hasSize(1);
-    assertThatJson(serializedPatches).node(JsonKeyAlias.Patch.FILE_NAME)
+    assertThatJson(serializedPatches).inPath("$.[0].fileName")
         .isEqualTo("example.CloseToZero");
-    assertThatJson(serializedPatches).node(JsonKeyAlias.Patch.DIFF)
+    assertThatJson(serializedPatches).inPath("$.[0].diff")
+        .isString()
         .isEqualTo(
             "--- example.CloseToZero\n+++ example.CloseToZero\n@@ -22,6 +22,7 @@\n     } else {\n       n++;\n     }\n+\tjson();\n     return n;\n   }\n }");
   }

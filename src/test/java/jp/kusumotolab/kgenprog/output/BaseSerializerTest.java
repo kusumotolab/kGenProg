@@ -12,8 +12,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
@@ -88,11 +86,10 @@ public class BaseSerializerTest {
 
     final InsertAfterOperation operation = new InsertAfterOperation(insertStatement);
     final Base base = new Base(location, operation);
-    final JsonObject serializedBase = gson.toJsonTree(base)
-        .getAsJsonObject();
+    final String serializedBase = gson.toJson(base);
 
     // チェック
-    assertBase(base, serializedBase.toString());
+    assertBase(base, serializedBase);
   }
 
   @SuppressWarnings("unchecked")
@@ -126,17 +123,15 @@ public class BaseSerializerTest {
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
     final Base base = new Base(location, operation);
-    final JsonObject serializedBase = gson.toJsonTree(base)
-        .getAsJsonObject();
+    final String serializedBase = gson.toJson(base);
 
     // チェック
-    assertBase(base, serializedBase.toString());
+    assertBase(base, serializedBase);
   }
 
   private void assertBase(final Base base, final String serializedBase) {
     final String expectFqn = base.getTargetLocation()
         .getSourcePath().path.toString();
-    final DocumentContext context = JsonPath.parse(serializedBase);
 
     assertThatJson(serializedBase).isObject()
         .containsOnlyKeys(JsonKeyAlias.Base.FILE_NAME,
@@ -150,18 +145,19 @@ public class BaseSerializerTest {
     assertThatJson(serializedBase).node(JsonKeyAlias.Base.LINE_NUMBER_RANGE)
         .isObject()
         .containsOnlyKeys(LineNumberRange.START, LineNumberRange.END);
-    assertThatJson(serializedBase).node(LineNumberRange.START)
+    assertThatJson(serializedBase).inPath("$.lineNumberRange.start")
         .isEqualTo(base.getTargetLocation()
             .inferLineNumbers().start);
-    assertThatJson(serializedBase).node(LineNumberRange.END)
+    assertThatJson(serializedBase).inPath("$.lineNumberRange.end")
         .isEqualTo(base.getTargetLocation()
             .inferLineNumbers().end);
 
-    assertThatJson(context).node(JsonKeyAlias.Base.NAME)
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.NAME)
         .isEqualTo(base.getOperation()
             .getName());
 
-    assertThatJson(context).node(JsonKeyAlias.Base.SNIPPET)
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.SNIPPET)
+        .isString()
         .isEqualTo(base.getOperation()
             .getTargetSnippet());
   }

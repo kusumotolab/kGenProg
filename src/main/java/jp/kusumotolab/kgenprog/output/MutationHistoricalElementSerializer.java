@@ -56,7 +56,7 @@ public class MutationHistoricalElementSerializer implements
 
     // 親のIDと操作の名前をシリアライズする
     final JsonObject serializedMutationHistoricalElement = context.serialize(
-        mutationHistoricalElement)
+        mutationHistoricalElement, HistoricalElement.class)
         .getAsJsonObject();
 
     serializedMutationHistoricalElement.add("appendBase",

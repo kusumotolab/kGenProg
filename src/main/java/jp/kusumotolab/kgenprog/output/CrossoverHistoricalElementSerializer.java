@@ -56,7 +56,7 @@ public class CrossoverHistoricalElementSerializer implements
 
     // 親のIDと操作の名前をシリアライズする
     final JsonObject serializedCrossoverHistoricalElement = context.serialize(
-        crossoverHistoricalElement)
+        crossoverHistoricalElement, HistoricalElement.class)
         .getAsJsonObject();
 
     serializedCrossoverHistoricalElement.addProperty("crossoverPoint",

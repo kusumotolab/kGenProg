@@ -15,17 +15,15 @@ public class HistoricalElementSerializerTest {
   public void testOriginalHistoricalElement() {
     final OriginalHistoricalElement originalHistoricalElement = new OriginalHistoricalElement();
     final String serializedOriginalHistoricalElement = gson.toJson(originalHistoricalElement);
-    final String serializedHistoricalElement = gson.toJson(serializedOriginalHistoricalElement);
 
-    assertThatJson(serializedHistoricalElement).isObject()
+    assertThatJson(serializedOriginalHistoricalElement).isObject()
         .containsOnlyKeys(JsonKeyAlias.CrossoverHistoricalElement.PARENT_IDS,
-            JsonKeyAlias.CrossoverHistoricalElement.NAME,
-            JsonKeyAlias.CrossoverHistoricalElement.CROSSOVER_POINT);
-    assertThatJson(serializedHistoricalElement).node(
+            JsonKeyAlias.CrossoverHistoricalElement.NAME);
+    assertThatJson(serializedOriginalHistoricalElement).node(
         JsonKeyAlias.CrossoverHistoricalElement.PARENT_IDS)
         .isArray()
         .isEmpty();
-    assertThatJson(serializedHistoricalElement).node(
+    assertThatJson(serializedOriginalHistoricalElement).node(
         JsonKeyAlias.CrossoverHistoricalElement.NAME)
         .isString()
         .isEmpty();

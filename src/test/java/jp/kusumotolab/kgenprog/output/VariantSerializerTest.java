@@ -60,7 +60,10 @@ public class VariantSerializerTest {
         JsonKeyAlias.Variant.SELECTION_COUNT, //
         JsonKeyAlias.Variant.PATCH, //
         JsonKeyAlias.Variant.IS_SYNTAX_VALID, //
-        JsonKeyAlias.Variant.BASES);
+        JsonKeyAlias.Variant.BASES, //
+        JsonKeyAlias.Variant.GENERATED_SOURCE_CODE, //
+        JsonKeyAlias.Variant.SUSPICIOUSNESSES //
+    );
 
     // 各値のチェック
     final JsonElement id = serializedVariant.get(JsonKeyAlias.Variant.ID);
@@ -69,7 +72,7 @@ public class VariantSerializerTest {
         serializedVariant.get(JsonKeyAlias.Variant.GENERATION_NUMBER);
     final JsonElement isBuildSuccess = serializedVariant.get(JsonKeyAlias.Variant.IS_BUILD_SUCCESS);
     final JsonElement selectionCount = serializedVariant.get(JsonKeyAlias.Variant.SELECTION_COUNT);
-     final JsonElement patches = serializedVariant.get(JsonKeyAlias.Variant.PATCH);
+    final JsonElement patches = serializedVariant.get(JsonKeyAlias.Variant.PATCH);
 
     final JsonElement bases = serializedVariant.get(JsonKeyAlias.Variant.BASES);
     final JsonElement is_syntax_valid = serializedVariant.get(JsonKeyAlias.Variant.IS_SYNTAX_VALID);
@@ -79,7 +82,7 @@ public class VariantSerializerTest {
     assertThat(generationNumber.getAsInt()).isEqualTo(0);
     assertThat(isBuildSuccess.getAsBoolean()).isEqualTo(false);
     assertThat(selectionCount.getAsInt()).isEqualTo(0);
-     assertThat(patches.getAsJsonArray()).isEmpty();
+    assertThat(patches.getAsJsonArray()).isEmpty();
 
     assertThat(bases.getAsJsonArray()).isEmpty();
     assertThat(is_syntax_valid.getAsBoolean()).isEqualTo(true);
