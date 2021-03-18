@@ -140,6 +140,7 @@ public class BaseSerializerTest {
             JsonKeyAlias.Base.SNIPPET);
 
     assertThatJson(serializedBase).node(JsonKeyAlias.Base.FILE_NAME)
+        .isString()
         .isEqualTo(expectFqn);
 
     assertThatJson(serializedBase).node(JsonKeyAlias.Base.LINE_NUMBER_RANGE)
