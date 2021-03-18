@@ -21,6 +21,9 @@ import jp.kusumotolab.kgenprog.project.ASTLocation;
 import jp.kusumotolab.kgenprog.project.GeneratedAST;
 import jp.kusumotolab.kgenprog.project.Operation;
 import jp.kusumotolab.kgenprog.project.ProductSourcePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import me.tongfei.progressbar.*;
 
 /**
  * ソースコードの変異を行うクラス
@@ -31,6 +34,7 @@ public abstract class Mutation {
   protected final int mutationGeneratingCount;
   protected final CandidateSelection candidateSelection;
   protected final int requiredSolutions;
+  final Logger logger = LoggerFactory.getLogger("Test");
 
   /**
    * コンストラクタ
@@ -89,31 +93,44 @@ public abstract class Mutation {
       return Double.isNaN(value) ? 0 : value;
     }, random);
 
-    for (int i = 0; i < mutationGeneratingCount; i++) {
-      final Variant variant = variantRoulette.exec();
-      final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
-      final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
+    try (ProgressBar pb = new ProgressBarBuilder()
+        .setInitialMax(mutationGeneratingCount)
+        .setStyle(ProgressBarStyle.UNICODE_BLOCK)
+        .setTaskName("Test")
+//        .setMaxRenderedLength(50)
+        .setConsumer(new DelegatingProgressBarConsumer(logger::info, 50))
+        .build()) {
+      // your taskName here
 
-      if (suspiciousnesses.isEmpty()) {
-        continue;
-      }
-      final Roulette<Suspiciousness> roulette =
-          new Roulette<>(suspiciousnesses, weightFunction, random);
+      for (int i = 0; i < mutationGeneratingCount; i++) {
+        final Variant variant = variantRoulette.exec();
+        final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
+        final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(),
+            2);
 
-      final Suspiciousness suspiciousness = roulette.exec();
-      final Base base = makeBase(suspiciousness);
-      final Gene gene = makeGene(variant.getGene(), base);
-      final HistoricalElement element = new MutationHistoricalElement(variant, base);
-      final Variant newVariant = variantStore.createVariant(gene, element);
-      generatedVariants.add(newVariant);
+        if (suspiciousnesses.isEmpty()) {
+          pb.step();
+          continue;
+        }
+        final Roulette<Suspiciousness> roulette =
+            new Roulette<>(suspiciousnesses, weightFunction, random);
 
-      // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
-      // 達している場合はこれ以上の変異プログラムは生成しない
-      if (newVariant.isCompleted()) {
-        foundSolutions++;
-      }
-      if (requiredSolutions <= foundSolutions) {
-        break;
+        final Suspiciousness suspiciousness = roulette.exec();
+        final Base base = makeBase(suspiciousness);
+        final Gene gene = makeGene(variant.getGene(), base);
+        final HistoricalElement element = new MutationHistoricalElement(variant, base);
+        final Variant newVariant = variantStore.createVariant(gene, element);
+        pb.step();
+        generatedVariants.add(newVariant);
+
+        // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
+        // 達している場合はこれ以上の変異プログラムは生成しない
+        if (newVariant.isCompleted()) {
+          foundSolutions++;
+        }
+        if (requiredSolutions <= foundSolutions) {
+          break;
+        }
       }
     }
 

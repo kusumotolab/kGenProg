@@ -78,6 +78,8 @@ dependencies {
     // night-config:core is necessary to compile, and "toml" is necessary for runtime only.
     implementation 'com.electronwill.night-config:core:3.4.0'
     runtimeOnly 'com.electronwill.night-config:toml:3.4.0'
+
+    compile 'me.tongfei:progressbar:0.9.1'
 }
 
 jar {
