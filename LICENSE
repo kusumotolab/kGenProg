@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2018-2020 the kGenProg team in Kusumoto Lab (Yoshiki Higo, Shinsuke Matsumoto, Ryo Arima, Akito Tanikado, Keigo Naitou, Hiroyuki Matsuo, Junnosuke Matsumoto, Yuya Tomida, Kaisei Hanayama, Tetsushi Kuma, and Ryoko Izuta)
+Copyright (c) 2018-2021 the kGenProg team in Kusumoto Lab (Yoshiki Higo, Shinsuke Matsumoto, Ryo Arima, Akito Tanikado, Keigo Naitou, Hiroyuki Matsuo, Junnosuke Matsumoto, Yuya Tomida, Kaisei Hanayama, Tetsushi Kuma, Ryoko Izuta, and Hiroto Watanabe)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,70 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-kGenProg uses the following libraries WITHOUT any modifications.
-
-Apache Commons Lang: APACHE Lisence 2.0, 
-https://commons.apache.org/proper/commons-lang/
-
-Apache Commons Codec: APACHE licens, 2.0, 
-https://commons.apache.org/proper/commons-codec/
-
-Apache Maven: Apache License 2.0,
-https://maven.apache.org/
-
-args4j: MIT license, 
-https://args4j.kohsuke.org/
-
-ASM: 3-Clause BSD License, 
-https://asm.ow2.io/license.html
-
-AssertJ: Apache License 2.0, 
-http://joel-costigliola.github.io/assertj/
-
-Codehaus Plexus: Apache License 2.0,
-https://codehaus-plexus.github.io/
-
-Eclipse JDT: Eclipse Public License 1.0, 
-https://projects.eclipse.org/projects/eclipse.jdt/
-
-Eclipse Equinox: Eclipse Public License 1.0,
-https://www.eclipse.org/equinox/
-
-Eclipse Platform Text: Eclipse Public License 2.0,
-https://www.eclipse.org/eclipse/platform-text/index.php
-
-Google Gson: Apache License 2.0,
-https://sites.google.com/site/gson/
-
-Google Guava: Apache License 2.0,
-https://github.com/google/guava
-
-JaCoCo: Eclipse Public License 1.0, 
-https://www.jacoco.org/
-
-java-diff-utils: Apache License 2.0, 
-https://code.google.com/archive/p/java-diff-utils/
-
-LOGBack: dual-licensed under Eclipse Public License 1.0 and the LGPL 2.1, 
-https://logback.qos.ch/
-
-mockito: MIT license
-https://site.mockito.org/
-
-NightConfig: LGPL,
-https://github.com/TheElectronWill/night-config
-
-ReactiveX RxJava: Apache License 2.0,
-https://github.com/ReactiveX/RxJava
-
-SLF4J: MIT license, 
-https://www.slf4j.org/
-
-
-kGenProg uses the following libraries WITH modifications.
-
-JUnit: Eclipse Public License 1.0, 
-https://junit.org/junit4/
-
-
