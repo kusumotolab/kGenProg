@@ -55,7 +55,7 @@ public interface Crossover {
        * 交叉を行うインスタンスを生成するメソッド．
        *
        * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
-       *      SecondVariantSelectionStrategy, int)
+       *      SecondVariantSelectionStrategy, int, int)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
@@ -84,7 +84,7 @@ public interface Crossover {
        * 交叉を行うインスタンスを生成するメソッド．
        *
        * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
-       *      SecondVariantSelectionStrategy, int)
+       *      SecondVariantSelectionStrategy, int, int)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
@@ -113,7 +113,7 @@ public interface Crossover {
        * 交叉を行うインスタンスを生成するメソッド．
        *
        * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
-       *      SecondVariantSelectionStrategy, int)
+       *      SecondVariantSelectionStrategy, int, int)
        *
        * @param random 交叉処理の内部でランダム処理を行うためのシード
        * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
@@ -129,6 +129,35 @@ public interface Crossover {
           final int generatingCount, final int requiredSolutions) {
         return new UniformCrossover(random, firstVariantSelectionStrategy,
             secondVariantSelectionStrategy, generatingCount, requiredSolutions);
+      }
+    },
+
+    /**
+     * 直列交叉を表す型．
+     *
+     * @see jp.kusumotolab.kgenprog.ga.crossover.CascadeCrossover
+     */
+    Cascade {
+      /**
+       * 交叉を行うインスタンスを生成するメソッド．
+       *
+       * @see Crossover.Type#initialize(Random, FirstVariantSelectionStrategy,
+       *      SecondVariantSelectionStrategy, int, int)
+       *
+       * @param random 交叉処理の内部でランダム処理を行うためのシード
+       * @param firstVariantSelectionStrategy 1つ目の親を選ぶためのアルゴリズム
+       * @param secondVariantSelectionStrategy 2つ目の親を選ぶためのアルゴリズム
+       * @param generatingCount 一世代の交叉処理で生成する個体の数
+       * @param requiredSolutions 生成する必要がある修正プログラムの数
+       * @return 交叉を行うインスタンス
+       */
+      @Override
+      public Crossover initialize(final Random random,
+          final FirstVariantSelectionStrategy firstVariantSelectionStrategy,
+          final SecondVariantSelectionStrategy secondVariantSelectionStrategy,
+          final int generatingCount, final int requiredSolutions) {
+        return new CascadeCrossover(firstVariantSelectionStrategy,
+            secondVariantSelectionStrategy, requiredSolutions);
       }
     };
 
