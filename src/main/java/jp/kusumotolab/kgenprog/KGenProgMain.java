@@ -17,6 +17,7 @@ import jp.kusumotolab.kgenprog.ga.crossover.Crossover;
 import jp.kusumotolab.kgenprog.ga.mutation.Mutation;
 import jp.kusumotolab.kgenprog.ga.selection.VariantSelection;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation;
+import jp.kusumotolab.kgenprog.ga.variant.TimeManager;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.Exporters;
@@ -44,6 +45,8 @@ public class KGenProgMain {
   private final SourceCodeGeneration sourceCodeGeneration;
   private final Exporters exporters;
   private final Strategies strategies;
+  private final TimeManager buildTimeManager;
+  private final TimeManager testTimeManager;
 
   /**
    * コンストラクタ．自動プログラム修正に必要な全ての情報を渡す必要あり．
@@ -73,6 +76,8 @@ public class KGenProgMain {
     this.crossover = crossover;
     this.sourceCodeGeneration = sourceCodeGeneration;
     this.exporters = exporters;
+    this.buildTimeManager = new TimeManager();
+    this.testTimeManager = new TimeManager();
     this.strategies = new Strategies(faultLocalization, new JDTASTConstruction(),
         sourceCodeGeneration, sourceCodeValidation, testExecutor, variantSelection);
   }
@@ -92,7 +97,7 @@ public class KGenProgMain {
 
     final VariantStore variantStore = new VariantStore(config, strategies);
     final Variant initialVariant = variantStore.getInitialVariant();
-    log.debug(logwriter.outputFirstBuildTime(initialVariant));
+    log.debug(logwriter.getInitialBuildTime(initialVariant));
 
     if (!initialVariant.isBuildSucceeded()) {
       log.error("Failed to build the specified project.");
@@ -107,6 +112,9 @@ public class KGenProgMain {
     }
 
     logwriter.logInitialFailedTests(initialVariant.getTestResults());
+    buildTimeManager.addTime(initialVariant.getTestResults()
+        .getBuildResults().buildExecTime);
+//    testTimeManager.addTime(initialVariant.getTestResults().getTestTime());
 
     mutation.setInitialCandidates(initialVariant);
     sourceCodeGeneration.initialize(initialVariant);
@@ -136,8 +144,18 @@ public class KGenProgMain {
       // 変異プログラムを生成
       final List<Variant> variantsByMutation = mutation.exec(variantStore);
       variantStore.addGeneratedVariants(variantsByMutation);
+      variantsByMutation.forEach(e -> {
+        buildTimeManager.addTime(e.getTestResults()
+            .getBuildResults().buildExecTime);
+        testTimeManager.addTime(e.getTestResults().getTestTime());
+      });
       final List<Variant> variantsByCrossover = crossover.exec(variantStore);
       variantStore.addGeneratedVariants(variantsByCrossover);
+      variantsByCrossover.forEach(e -> {
+        buildTimeManager.addTime(e.getTestResults()
+            .getBuildResults().buildExecTime);
+        testTimeManager.addTime(e.getTestResults().getTestTime());
+      });
 
       // 世代別サマリの出力
       logwriter.logGenerationSummary(stopwatch.toString(), variantsByMutation, variantsByCrossover);
@@ -250,8 +268,10 @@ public class KGenProgMain {
           .append(createTestTimeSummary(variants))
           .append(System.lineSeparator());
       if (log.isDebugEnabled())         // Debugモードではビルド時間の情報をサマリーに追加
-          sb.append(createBuildTimeSummary(variants))
-              .append(System.lineSeparator());
+      {
+        sb.append(createBuildTimeSummary(variants))
+            .append(System.lineSeparator());
+      }
       sb.append("----------------------------------------------------------------")
           .append(System.lineSeparator());
       log.info(sb.toString());
@@ -274,7 +294,7 @@ public class KGenProgMain {
           count(variants, Variant::isReproduced));
     }
 
-    private String outputFirstBuildTime(final Variant variant) {
+    private String getInitialBuildTime(final Variant variant) {
       return String.format(
           System.lineSeparator() +
               "----------------------------------------------------------------" +
@@ -282,8 +302,8 @@ public class KGenProgMain {
               "First Build execution time: %s ms" +
               System.lineSeparator() +
               "----------------------------------------------------------------",
-          variant.getTestResults()
-              .getBuildResults().buildExecTime);
+          format.format(variant.getTestResults()
+              .getBuildResults().buildExecTime));
     }
 
     private String createBuildTimeSummary(final List<Variant> variants) {
@@ -295,13 +315,14 @@ public class KGenProgMain {
     }
 
     private String getSumBuildTime(final List<Variant> variants) {
-      return format.format(
-          variants.stream()
-              .mapToDouble(e -> e.getTestResults()
-                  .getBuildResults()
-                  .buildExecTime)
-              .filter(e -> !Double.isNaN(e))
-              .sum());
+      double sum = variants.stream()
+          .mapToDouble(e -> e.getTestResults()
+              .getBuildResults()
+              .buildExecTime)
+          .filter(e -> !Double.isNaN(e))
+          .sum();
+
+      return format.format(sum);
     }
 
     private String getMaxBuildTime(final List<Variant> variants) {
@@ -430,6 +451,13 @@ public class KGenProgMain {
           .append(System.lineSeparator())
           .append(String.format("Time elapsed = %s", time))
           .append(System.lineSeparator())
+          .append(String.format("Total Test Time = %s seconds", format.format(testTimeManager.getTime())))
+          .append(System.lineSeparator());
+      if (log.isDebugEnabled()) {
+          sb.append(String.format("Total Build Time = %s seconds", format.format(buildTimeManager.getTime())))
+              .append(System.lineSeparator());
+      }
+      sb.append(System.lineSeparator())
           .append(String.format("Exit status = %s", exitStatus.getCode()));
       log.info(sb.toString());
     }
