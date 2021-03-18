@@ -100,7 +100,7 @@ $ java -jar path/to/kGenProg.jar
 | `-q`, `--quiet` | エラー出力のみを行う | `false` |
 | `--mutation-generating-count` | 遺伝的アルゴリズムの変異操作によって1つの世代に生成する個体の数 | 10 |
 | `--crossover-generating-count` | 遺伝的アルゴリズムの交叉操作によって1つの世代に生成する個体の数 | 10 |
-| `--headcount` | 遺伝的アルゴリズムの選択操作によって1世代に残される個体の最大数 | 100 |
+| `--headcount` | 遺伝的アルゴリズムの選択操作によって1世代に残される個体の最大数 | 10 |
 | `--max-generation` | 遺伝的アルゴリズムを打ち切る世代数 | 10 |
 | `--time-limit` | 遺伝的アルゴリズムを打ち切る時間（秒） | 60 |
 | `--test-time-limit` | 各個体のビルドおよびテストを打ち切る時間（秒） | 10 |

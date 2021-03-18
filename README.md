@@ -100,7 +100,7 @@ $ java -jar path/to/kGenProg.jar
 | `-q`, `--quiet` | Be more quiet, suppressing non-ERROR logs. | `false` |
 | `--mutation-generating-count` | Specifies how many variants are generated in a generation by a mutation. | 10 |
 | `--crossover-generating-count` | Specifies how many variants are generated in a generation by a crossover. | 10 |
-| `--headcount` | Specifies how many variants survive in a generation. | 100 |
+| `--headcount` | Specifies how many variants survive in a generation. | 10 |
 | `--max-generation` | Terminates searching solutions when the specified number of generations reached. | 10 |
 | `--time-limit` | Terminates searching solutions when the specified time in seconds has passed. | 60 |
 | `--test-time-limit` | Specifies a time limit in seconds to build and test each variant. | 10 |
