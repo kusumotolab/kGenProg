@@ -237,16 +237,7 @@ public class KGenProgMain {
       final List<Variant> variants = new ArrayList<>();
       variants.addAll(variantsByMutation);
       variants.addAll(variantsByCrossover);
-      final StringBuilder debugsb = new StringBuilder()
-          .append(System.lineSeparator())
-          .append("----------------------------------------------------------------")
-          .append(System.lineSeparator())
-          .append(createBuildTimeSummary(variants))
-          .append(System.lineSeparator())
-          .append("----------------------------------------------------------------")
-          .append(System.lineSeparator());
-      log.debug(debugsb.toString());
-      final StringBuilder infosb = new StringBuilder()
+      final StringBuilder sb = new StringBuilder()
           .append(System.lineSeparator())
           .append("----------------------------------------------------------------")
           .append(System.lineSeparator())
@@ -257,10 +248,13 @@ public class KGenProgMain {
           .append(createFitnessSummary(variants))
           .append(System.lineSeparator())
           .append(createTestTimeSummary(variants))
-          .append(System.lineSeparator())
-          .append("----------------------------------------------------------------")
           .append(System.lineSeparator());
-      log.info(infosb.toString());
+      if (log.isDebugEnabled())         // Debugモードではビルド時間の情報をサマリーに追加
+          sb.append(createBuildTimeSummary(variants))
+              .append(System.lineSeparator());
+      sb.append("----------------------------------------------------------------")
+          .append(System.lineSeparator());
+      log.info(sb.toString());
     }
 
     private String createFitnessSummary(final List<Variant> variants) {
