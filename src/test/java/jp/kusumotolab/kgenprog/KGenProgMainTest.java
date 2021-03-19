@@ -112,7 +112,7 @@ public class KGenProgMainTest {
 
   @Test
   public void testBuildFailure() {
-    final Path rootPath = Paths.get("example/Abnormals/BuildFailure");
+    final Path rootPath = Paths.get("example/Abnormals/BuildFailure01");
     final Path productPath = rootPath.resolve(PRODUCT_NAME);
     final Path testPath = rootPath.resolve(TEST_NAME);
 
