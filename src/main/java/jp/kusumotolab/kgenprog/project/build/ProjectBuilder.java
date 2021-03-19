@@ -100,7 +100,7 @@ public class ProjectBuilder {
           }
           log.debug(sb.toString());
         }
-        return new EmptyBuildResults(diagnostics, progress.toString());
+        return new FailedBuildResults(diagnostics, progress.toString());
       }
     }
 
