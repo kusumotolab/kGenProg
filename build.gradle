@@ -17,7 +17,7 @@ plugins {
     id 'jacoco'
 
     // Maven plugin to use JitPack
-    id 'maven-publish'
+    id 'maven'
 
     // Gradle lint
     id "nebula.lint" version "16.9.0"
