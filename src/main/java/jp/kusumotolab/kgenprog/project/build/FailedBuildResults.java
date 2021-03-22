@@ -9,17 +9,17 @@ import javax.tools.JavaFileObject;
  *
  * @author shinsuke
  */
-public class EmptyBuildResults extends BuildResults {
+public class FailedBuildResults extends BuildResults {
 
   /**
    * @deprecated
    */
   @Deprecated
-  public EmptyBuildResults() {
+  public FailedBuildResults() {
     super(null, null, null, true);
   }
 
-  public EmptyBuildResults(final DiagnosticCollector<JavaFileObject> diagnostics,
+  public FailedBuildResults(final DiagnosticCollector<JavaFileObject> diagnostics,
       final String buildProgressText) {
     super(null, diagnostics, buildProgressText, true);
   }

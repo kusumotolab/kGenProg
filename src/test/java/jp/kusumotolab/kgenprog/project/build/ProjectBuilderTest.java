@@ -40,7 +40,7 @@ public class ProjectBuilderTest {
     final ProjectBuilder projectBuilder = new ProjectBuilder(targetProject);
     final BuildResults buildResults = projectBuilder.build(source);
 
-    assertThat(buildResults).isInstanceOf(EmptyBuildResults.class);
+    assertThat(buildResults).isInstanceOf(FailedBuildResults.class);
     assertThat(buildResults.isBuildFailed).isTrue();
     assertThat(buildResults.diagnostics.getDiagnostics()).isNotEmpty();
   }
@@ -304,7 +304,7 @@ public class ProjectBuilderTest {
     // 再度ビルドするとキャッシュが働いて上記Barの不正バイナリをロードし，失敗するはず
     final BuildResults buildResults2 = projectBuilder.build(source);
     assertThat(buildResults2.isBuildFailed).isTrue();
-    assertThat(buildResults2).isInstanceOf(EmptyBuildResults.class);
+    assertThat(buildResults2).isInstanceOf(FailedBuildResults.class);
   }
 
 }
