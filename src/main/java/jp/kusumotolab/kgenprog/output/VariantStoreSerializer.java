@@ -2,11 +2,13 @@ package jp.kusumotolab.kgenprog.output;
 
 
 import java.lang.reflect.Type;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import jp.kusumotolab.kgenprog.Configuration;
+import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 
@@ -40,7 +42,6 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProject;
  * </table>
  *
  * @see <a href="https://github.com/google/gson/blob/master/UserGuide.md#TOC-Custom-Serialization-and-Deserialization">Gsonドキュメント</a>
- * @see VariantSerializer
  * @see Configuration
  */
 public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
@@ -52,7 +53,6 @@ public class VariantStoreSerializer implements JsonSerializer<VariantStore> {
    * @param type シリアライズ対象のインスタンスの型
    * @param context インスタンスをシリアライズするインスタンス
    */
-
   @Override
   public JsonElement serialize(final VariantStore variantStore, final Type type,
       final JsonSerializationContext context) {

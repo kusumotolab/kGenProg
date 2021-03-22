@@ -1,52 +1,31 @@
 package jp.kusumotolab.kgenprog.output;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import java.util.Set;
-import org.junit.Before;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.OriginalHistoricalElement;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class HistoricalElementSerializerTest {
 
-  private Gson gson;
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder()
-        .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .create();
-  }
+  private final Gson gson = TestUtil.createGson();
 
   @Test
   public void testOriginalHistoricalElement() {
     final OriginalHistoricalElement originalHistoricalElement = new OriginalHistoricalElement();
-    final JsonObject serializedOriginalHistoricalElement = gson.toJsonTree(
-        originalHistoricalElement)
-        .getAsJsonObject();
+    final String serializedOriginalHistoricalElement = gson.toJson(originalHistoricalElement);
 
-    // キーの存在チェック
-
-    final Set<String> serializedOperationKey = serializedOriginalHistoricalElement.keySet();
-    assertThat(serializedOperationKey).containsOnly(
-        JsonKeyAlias.HistoricalElement.PARENT_IDS,
-        JsonKeyAlias.HistoricalElement.NAME);
-
-    // 親IDのチェック
-    final JsonArray serializedParentIds = serializedOriginalHistoricalElement.get(
-        JsonKeyAlias.HistoricalElement.PARENT_IDS)
-        .getAsJsonArray();
-    assertThat(serializedParentIds).hasSize(0);
-
-    // 操作名のチェック
-    final String operationName = serializedOriginalHistoricalElement.get(
-        JsonKeyAlias.HistoricalElement.NAME)
-        .getAsString();
-    assertThat(operationName).isBlank();
+    assertThatJson(serializedOriginalHistoricalElement).isObject()
+        .containsOnlyKeys(JsonKeyAlias.CrossoverHistoricalElement.PARENT_IDS,
+            JsonKeyAlias.CrossoverHistoricalElement.NAME);
+    assertThatJson(serializedOriginalHistoricalElement).node(
+        JsonKeyAlias.CrossoverHistoricalElement.PARENT_IDS)
+        .isArray()
+        .isEmpty();
+    assertThatJson(serializedOriginalHistoricalElement).node(
+        JsonKeyAlias.CrossoverHistoricalElement.NAME)
+        .isString()
+        .isEmpty();
   }
 }

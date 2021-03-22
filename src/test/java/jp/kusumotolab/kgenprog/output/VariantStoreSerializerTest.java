@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.reactivex.Single;
@@ -36,30 +35,13 @@ import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.DeleteOperation;
 import jp.kusumotolab.kgenprog.project.test.LocalTestExecutor;
 import jp.kusumotolab.kgenprog.project.test.TestExecutor;
-import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
-import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.CrossoverHistoricalElement;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class VariantStoreSerializerTest {
 
-  private Gson createGson() {
-    return new GsonBuilder()
-        .registerTypeAdapter(VariantStore.class, new VariantStoreSerializer())
-        .registerTypeAdapter(Variant.class, new VariantSerializer())
-        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
-        .registerTypeAdapter(TestResult.class, new TestResultSerializer())
-        .registerTypeAdapter(Patch.class, new PatchSerializer())
-        .registerTypeAdapter(FileDiff.class, new FileDiffSerializer())
-        .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
-            new MutationHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
-            new CrossoverHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
-        .create();
-  }
+  private final Gson gson = TestUtil.createGson();
 
   @Test
   public void testVariantStoreSerializer() {
@@ -67,8 +49,6 @@ public class VariantStoreSerializerTest {
     final TargetProject project = TargetProjectFactory.create(rootPath);
     final Builder builder = new Builder(project).setHistoryRecord(true);
     final Configuration config = builder.build();
-    // gsonのセットアップ
-    final Gson gson = createGson();
 
     final List<Suspiciousness> faultLocalizationResult = new ArrayList<>();
     final GeneratedSourceCode sourceCodeGenerationResult =
@@ -111,8 +91,11 @@ public class VariantStoreSerializerTest {
     final JsonObject serializedVariantStore = gson.toJsonTree(variantStore)
         .getAsJsonObject();
     // キーのチェック
-    assertThat(serializedVariantStore.keySet()).containsOnly(JsonKeyAlias.VariantStore.PROJECT_NAME,
-        JsonKeyAlias.VariantStore.VARIANTS, JsonKeyAlias.VariantStore.CONFIGURATION);
+    assertThat(serializedVariantStore.keySet()).containsOnly(
+        JsonKeyAlias.VariantStore.PROJECT_NAME,
+        JsonKeyAlias.VariantStore.VARIANTS,
+        JsonKeyAlias.VariantStore.CONFIGURATION
+    );
 
     // 値のチェック
     final String projectName = serializedVariantStore.get(JsonKeyAlias.VariantStore.PROJECT_NAME)
@@ -130,8 +113,6 @@ public class VariantStoreSerializerTest {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);
     final Configuration config = new Configuration.Builder(project).build();
-    // gsonのセットアップ
-    final Gson gson = createGson();
 
     final JsonObject serializedConfiguration = gson.toJsonTree(config)
         .getAsJsonObject();

@@ -1,6 +1,6 @@
 package jp.kusumotolab.kgenprog.output;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.eclipse.jdt.core.dom.AST;
@@ -9,10 +9,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
@@ -26,21 +24,15 @@ import jp.kusumotolab.kgenprog.project.jdt.JDTASTLocation;
 import jp.kusumotolab.kgenprog.project.jdt.ReplaceOperation;
 import jp.kusumotolab.kgenprog.testutil.ExampleAlias.Src;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
+import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias.LineNumberRange;
 import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class BaseSerializerTest {
 
-  private Gson gson;
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder()
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .create();
-  }
+  private final Gson gson = TestUtil.createGson();
 
   @Test
-  public void testBase01() {
+  public void testBaseGeneratedByDeletion() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
@@ -64,11 +56,11 @@ public class BaseSerializerTest {
         .getAsJsonObject();
 
     // チェック
-    check(base, serializedBase);
+    assertBase(base, serializedBase.toString());
   }
 
   @Test
-  public void testBase02() {
+  public void testBaseGeneratedByInsertion() {
     final Path basePath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
@@ -94,16 +86,15 @@ public class BaseSerializerTest {
 
     final InsertAfterOperation operation = new InsertAfterOperation(insertStatement);
     final Base base = new Base(location, operation);
-    final JsonObject serializedBase = gson.toJsonTree(base)
-        .getAsJsonObject();
+    final String serializedBase = gson.toJson(base);
 
     // チェック
-    check(base, serializedBase);
+    assertBase(base, serializedBase);
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testBase03() {
+  public void testBaseGeneratedByReplacement() {
     final Path basePath = Paths.get("example/BuildSuccess01/");
     final TargetProject project = TargetProjectFactory.create(basePath);
     final GeneratedSourceCode originalSourceCode = TestUtil.createGeneratedSourceCode(project);
@@ -132,54 +123,43 @@ public class BaseSerializerTest {
 
     final ReplaceOperation operation = new ReplaceOperation(replaceBlock);
     final Base base = new Base(location, operation);
-    final JsonObject serializedBase = gson.toJsonTree(base)
-        .getAsJsonObject();
+    final String serializedBase = gson.toJson(base);
 
     // チェック
-    check(base, serializedBase);
+    assertBase(base, serializedBase);
   }
 
-  private void check(final Base base, final JsonObject serializedBase) {
-    // キーの存在チェック
-    assertThat(serializedBase.keySet()).containsOnly(
-        JsonKeyAlias.Base.FILE_NAME,
-        JsonKeyAlias.Base.LINE_NUMBER_RANGE,
-        JsonKeyAlias.Base.NAME,
-        JsonKeyAlias.Base.SNIPPET);
-
-    // ファイル名のチェック
+  private void assertBase(final Base base, final String serializedBase) {
     final String expectFqn = base.getTargetLocation()
         .getSourcePath().path.toString();
-    final String serializedFqn = serializedBase.get(JsonKeyAlias.Base.FILE_NAME)
-        .getAsString();
-    assertThat(serializedFqn).isEqualTo(expectFqn);
 
-    // 行範囲のチェック
-    final JsonObject serializedLineNumberRange = serializedBase.get(
-        JsonKeyAlias.Base.LINE_NUMBER_RANGE)
-        .getAsJsonObject();
-    final int serializedLineStart = serializedLineNumberRange.get(
-        JsonKeyAlias.LineNumberRange.START)
-        .getAsInt();
-    final int serializedLineEnd = serializedLineNumberRange.get(
-        JsonKeyAlias.LineNumberRange.END)
-        .getAsInt();
-    assertThat(serializedLineStart).isEqualTo(base.getTargetLocation()
-        .inferLineNumbers().start);
-    assertThat(serializedLineEnd).isEqualTo(base.getTargetLocation()
-        .inferLineNumbers().end);
+    assertThatJson(serializedBase).isObject()
+        .containsOnlyKeys(JsonKeyAlias.Base.FILE_NAME,
+            JsonKeyAlias.Base.LINE_NUMBER_RANGE,
+            JsonKeyAlias.Base.NAME,
+            JsonKeyAlias.Base.SNIPPET);
 
-    // 操作名のチェック
-    final String serializedOperationName = serializedBase.get(
-        JsonKeyAlias.Base.NAME)
-        .getAsString();
-    assertThat(serializedOperationName).isEqualTo(base.getOperation()
-        .getName());
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.FILE_NAME)
+        .isString()
+        .isEqualTo(expectFqn);
 
-    // コード片のチェック
-    final String serializedSnippet = serializedBase.get(JsonKeyAlias.Base.SNIPPET)
-        .getAsString();
-    assertThat(serializedSnippet).isEqualTo(base.getOperation()
-        .getTargetSnippet());
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.LINE_NUMBER_RANGE)
+        .isObject()
+        .containsOnlyKeys(LineNumberRange.START, LineNumberRange.END);
+    assertThatJson(serializedBase).inPath("$.lineNumberRange.start")
+        .isEqualTo(base.getTargetLocation()
+            .inferLineNumbers().start);
+    assertThatJson(serializedBase).inPath("$.lineNumberRange.end")
+        .isEqualTo(base.getTargetLocation()
+            .inferLineNumbers().end);
+
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.NAME)
+        .isEqualTo(base.getOperation()
+            .getName());
+
+    assertThatJson(serializedBase).node(JsonKeyAlias.Base.SNIPPET)
+        .isString()
+        .isEqualTo(base.getOperation()
+            .getTargetSnippet());
   }
 }

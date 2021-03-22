@@ -1,6 +1,8 @@
 package jp.kusumotolab.kgenprog.ga.variant;
 
 import java.util.List;
+import com.google.gson.annotations.SerializedName;
+import io.gsonfire.annotations.ExposeMethodResult;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
@@ -15,12 +17,18 @@ public class Variant {
 
   private final long id;
   private final int generationNumber;
+
+  @SerializedName("bases")
   private final Gene gene;
   private final GeneratedSourceCode generatedSourceCode;
+
+  @SerializedName("testSummary")
   private final TestResults testResults;
   private final Fitness fitness;
   private int selectionCount = 0;
   private final List<Suspiciousness> suspiciousnesses;
+
+  @SerializedName("operation")
   private final HistoricalElement historicalElement;
 
   /**
@@ -64,8 +72,9 @@ public class Variant {
   }
 
   /**
-   * @return この個体の AST を生成する上で文法的にた出しいかどうか
+   * @return この個体の AST を生成する上で文法的に正しいかどうか
    */
+  @ExposeMethodResult("isSyntaxValid")
   public boolean isSyntaxValid() {
     return generatedSourceCode.isGenerationSuccess();
   }
@@ -80,6 +89,7 @@ public class Variant {
   /**
    * @return ビルドに成功したかどうか
    */
+  @ExposeMethodResult("isBuildSuccess")
   public boolean isBuildSucceeded() {
     return EmptyTestResults.class != testResults.getClass();
   }

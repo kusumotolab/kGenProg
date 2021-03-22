@@ -1,19 +1,14 @@
 package jp.kusumotolab.kgenprog.output;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.Set;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
 import jp.kusumotolab.kgenprog.ga.variant.Base;
@@ -39,18 +34,8 @@ import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class MutationHistoricalElementSerializerTest {
 
-  private Gson gson;
+  private final Gson gson = TestUtil.createGson();
   private final JDTASTConstruction astConstruction = new JDTASTConstruction();
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder()
-        .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
-            new MutationHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .create();
-  }
 
   private ASTLocation mockASTLocation(final TargetProject project) {
     final ASTLocation astLocation = mock(ASTLocation.class);
@@ -97,30 +82,23 @@ public class MutationHistoricalElementSerializerTest {
     final Base appendBase = new Base(targetLocation, operation);
     final HistoricalElement historicalElement =
         new MutationHistoricalElement(initialVariant, appendBase);
+    final String serializedHistoricalElement = gson.toJson(historicalElement);
 
-    final JsonObject serializedHistoricalElement = gson.toJsonTree(historicalElement)
-        .getAsJsonObject();
+    assertThatJson(serializedHistoricalElement).isObject()
+        .containsOnlyKeys(JsonKeyAlias.MutationHistoricalElement.PARENT_IDS,
+            JsonKeyAlias.MutationHistoricalElement.NAME,
+            JsonKeyAlias.MutationHistoricalElement.APPEND_BASE);
 
-    // キーの存在チェック
-    final Set<String> serializedOperationKey = serializedHistoricalElement.keySet();
-    assertThat(serializedOperationKey).containsOnly(
-        JsonKeyAlias.MutationHistoricalElement.PARENT_IDS,
-        JsonKeyAlias.MutationHistoricalElement.NAME,
-        JsonKeyAlias.MutationHistoricalElement.APPEND_BASE);
-
-    // 親IDのチェック
-    final JsonArray serializedParentIds =
-        serializedHistoricalElement.get(JsonKeyAlias.MutationHistoricalElement.PARENT_IDS)
-            .getAsJsonArray();
-    assertThat(serializedParentIds).hasSize(1);
-    assertThat(serializedParentIds.get(0)
-        .getAsString()).isEqualTo(String.valueOf(0L));
-
-    // 操作名のチェック
-    final String operationName =
-        serializedHistoricalElement.get(JsonKeyAlias.MutationHistoricalElement.NAME)
-            .getAsString();
-    assertThat(operationName).isEqualTo("insert_after");
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.NAME)
+        .isEqualTo("insert_after");
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.PARENT_IDS)
+        .isArray()
+        .containsOnly(0);
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.APPEND_BASE)
+        .isNotNull();
   }
 
   /**
@@ -141,30 +119,18 @@ public class MutationHistoricalElementSerializerTest {
     final Base appendBase = new Base(targetLocation, operation);
     final HistoricalElement historicalElement =
         new MutationHistoricalElement(initialVariant, appendBase);
+    final String serializedHistoricalElement = gson.toJson(historicalElement);
 
-    final JsonObject serializedHistoricalElement = gson.toJsonTree(historicalElement)
-        .getAsJsonObject();
-
-    // キーの存在チェック
-    final Set<String> serializedOperationKey = serializedHistoricalElement.keySet();
-    assertThat(serializedOperationKey).containsOnly(
-        JsonKeyAlias.MutationHistoricalElement.PARENT_IDS,
-        JsonKeyAlias.MutationHistoricalElement.NAME,
-        JsonKeyAlias.MutationHistoricalElement.APPEND_BASE);
-
-    // 親IDのチェック
-    final JsonArray serializedParentIds =
-        serializedHistoricalElement.get(JsonKeyAlias.MutationHistoricalElement.PARENT_IDS)
-            .getAsJsonArray();
-    assertThat(serializedParentIds).hasSize(1);
-    assertThat(serializedParentIds.get(0)
-        .getAsString()).isEqualTo(String.valueOf(0L));
-
-    // 操作名のチェック
-    final String operationName =
-        serializedHistoricalElement.get(JsonKeyAlias.MutationHistoricalElement.NAME)
-            .getAsString();
-    assertThat(operationName).isEqualTo("delete");
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.NAME)
+        .isEqualTo("delete");
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.PARENT_IDS)
+        .isArray()
+        .containsOnly(0);
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.APPEND_BASE)
+        .isNotNull();
   }
 
   /**
@@ -187,29 +153,17 @@ public class MutationHistoricalElementSerializerTest {
 
     final HistoricalElement historicalElement =
         new MutationHistoricalElement(initialVariant, appendBase);
+    final String serializedHistoricalElement = gson.toJson(historicalElement);
 
-    final JsonObject serializedHistoricalElement = gson.toJsonTree(historicalElement)
-        .getAsJsonObject();
-
-    // キーの存在チェック
-    final Set<String> serializedOperationKey = serializedHistoricalElement.keySet();
-    assertThat(serializedOperationKey).containsOnly(
-        JsonKeyAlias.MutationHistoricalElement.PARENT_IDS,
-        JsonKeyAlias.MutationHistoricalElement.NAME,
-        JsonKeyAlias.MutationHistoricalElement.APPEND_BASE);
-
-    // 親IDのチェック
-    final JsonArray serializedParentIds =
-        serializedHistoricalElement.get(JsonKeyAlias.MutationHistoricalElement.PARENT_IDS)
-            .getAsJsonArray();
-    assertThat(serializedParentIds).hasSize(1);
-    assertThat(serializedParentIds.get(0)
-        .getAsString()).isEqualTo(String.valueOf(0L));
-
-    // 操作名のチェック
-    final String operationName =
-        serializedHistoricalElement.get(JsonKeyAlias.MutationHistoricalElement.NAME)
-            .getAsString();
-    assertThat(operationName).isEqualTo("replace");
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.NAME)
+        .isEqualTo("replace");
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.PARENT_IDS)
+        .isArray()
+        .containsOnly(0);
+    assertThatJson(serializedHistoricalElement)
+        .node(JsonKeyAlias.MutationHistoricalElement.APPEND_BASE)
+        .isNotNull();
   }
 }

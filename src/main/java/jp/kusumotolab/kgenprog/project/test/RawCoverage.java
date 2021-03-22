@@ -1,11 +1,15 @@
 package jp.kusumotolab.kgenprog.project.test;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
+import com.google.gson.GsonBuilder;
+import jp.kusumotolab.kgenprog.output.FullyQualifiedNameSerializer;
+import jp.kusumotolab.kgenprog.output.PathSerializer;
 import jp.kusumotolab.kgenprog.project.FullyQualifiedName;
 import jp.kusumotolab.kgenprog.project.TargetFullyQualifiedName;
 
@@ -82,24 +86,4 @@ public class RawCoverage implements Coverage {
   public int getStatusesSize() {
     return statuses.size();
   }
-
-  @Override
-  public String toString() {
-    return toString(0);
-  }
-
-  public String toString(final int indentDepth) {
-    final StringBuilder sb = new StringBuilder();
-    final String indent = StringUtils.repeat(" ", indentDepth);
-    sb.append(indent + "  {");
-    sb.append("\"executedTargetFQN\": \"" + executedTargetFQN + "\", ");
-    sb.append("\"coverages\": [");
-    sb.append(statuses.stream()
-        .map(Enum::ordinal)
-        .map(String::valueOf)
-        .collect(Collectors.joining(", ")));
-    sb.append("]}");
-    return sb.toString();
-  }
-
 }

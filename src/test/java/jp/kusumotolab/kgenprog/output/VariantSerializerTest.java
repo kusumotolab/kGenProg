@@ -5,49 +5,26 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Set;
-import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SimpleFitness;
-import jp.kusumotolab.kgenprog.ga.variant.Base;
-import jp.kusumotolab.kgenprog.ga.variant.CrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
-import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
-import jp.kusumotolab.kgenprog.ga.variant.MutationHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.OriginalHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Variant;
 import jp.kusumotolab.kgenprog.project.factory.TargetProject;
 import jp.kusumotolab.kgenprog.project.factory.TargetProjectFactory;
 import jp.kusumotolab.kgenprog.project.jdt.JDTASTConstruction;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
-import jp.kusumotolab.kgenprog.project.test.TestResult;
-import jp.kusumotolab.kgenprog.project.test.TestResults;
 import jp.kusumotolab.kgenprog.testutil.JsonKeyAlias;
+import jp.kusumotolab.kgenprog.testutil.TestUtil;
 
 public class VariantSerializerTest {
 
-  private Gson gson;
+  private final Gson gson = TestUtil.createGson();
   private final JDTASTConstruction astConstruction = new JDTASTConstruction();
-
-  @Before
-  public void setup() {
-    gson = new GsonBuilder().registerTypeAdapter(Variant.class, new VariantSerializer())
-        .registerTypeHierarchyAdapter(TestResults.class, new TestResultsSerializer())
-        .registerTypeAdapter(TestResult.class, new TestResultSerializer())
-        .registerTypeAdapter(Patch.class, new PatchSerializer())
-        .registerTypeAdapter(FileDiff.class, new FileDiffSerializer())
-        .registerTypeHierarchyAdapter(HistoricalElement.class, new HistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
-            new MutationHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(CrossoverHistoricalElement.class,
-            new CrossoverHistoricalElementSerializer())
-        .registerTypeHierarchyAdapter(Base.class, new BaseSerializer())
-        .create();
-  }
 
   private Variant createVariant(final Fitness fitness, final TargetProject targetProject) {
 
@@ -83,7 +60,10 @@ public class VariantSerializerTest {
         JsonKeyAlias.Variant.SELECTION_COUNT, //
         JsonKeyAlias.Variant.PATCH, //
         JsonKeyAlias.Variant.IS_SYNTAX_VALID, //
-        JsonKeyAlias.Variant.BASES);
+        JsonKeyAlias.Variant.BASES, //
+        JsonKeyAlias.Variant.GENERATED_SOURCE_CODE, //
+        JsonKeyAlias.Variant.SUSPICIOUSNESSES //
+    );
 
     // 各値のチェック
     final JsonElement id = serializedVariant.get(JsonKeyAlias.Variant.ID);
@@ -92,9 +72,7 @@ public class VariantSerializerTest {
         serializedVariant.get(JsonKeyAlias.Variant.GENERATION_NUMBER);
     final JsonElement isBuildSuccess = serializedVariant.get(JsonKeyAlias.Variant.IS_BUILD_SUCCESS);
     final JsonElement selectionCount = serializedVariant.get(JsonKeyAlias.Variant.SELECTION_COUNT);
-
-    // TODO win+gradle 環境で落ちるのでいったんコメントアウト #389を解消してから戻すべき．
-    // final JsonElement patches = serializedVariant.get(JsonKeyAlias.Variant.PATCH);
+    final JsonElement patches = serializedVariant.get(JsonKeyAlias.Variant.PATCH);
 
     final JsonElement bases = serializedVariant.get(JsonKeyAlias.Variant.BASES);
     final JsonElement is_syntax_valid = serializedVariant.get(JsonKeyAlias.Variant.IS_SYNTAX_VALID);
@@ -104,9 +82,7 @@ public class VariantSerializerTest {
     assertThat(generationNumber.getAsInt()).isEqualTo(0);
     assertThat(isBuildSuccess.getAsBoolean()).isEqualTo(false);
     assertThat(selectionCount.getAsInt()).isEqualTo(0);
-
-    // TODO 上のpatches宣言のコメントアウトに依存 #389を解消してから戻すべき．
-    // assertThat(patches.getAsJsonArray()).isEmpty();
+    assertThat(patches.getAsJsonArray()).isEmpty();
 
     assertThat(bases.getAsJsonArray()).isEmpty();
     assertThat(is_syntax_valid.getAsBoolean()).isEqualTo(true);
