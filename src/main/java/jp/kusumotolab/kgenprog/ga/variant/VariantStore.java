@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
@@ -18,7 +19,9 @@ import jp.kusumotolab.kgenprog.ga.validation.Fitness;
 import jp.kusumotolab.kgenprog.ga.validation.SourceCodeValidation.Input;
 import jp.kusumotolab.kgenprog.project.GeneratedSourceCode;
 import jp.kusumotolab.kgenprog.project.test.EmptyTestResults;
+import jp.kusumotolab.kgenprog.project.test.TestResult;
 import jp.kusumotolab.kgenprog.project.test.TestResults;
+import org.junit.Test;
 
 /**
  * kGenProg が生成する Variant を生成したり保持したりするクラス
@@ -225,9 +228,14 @@ public class VariantStore {
         .cast(Variant.class)
         .cache();
 
+    // ASTはあるがビルド＆テスト実行がまだされていない場合 -> ビルド＆テスト実行をする
+    // 以前生成したのと同じソースコードが生成された場合 -> その旨のメッセージを返す
+    // 上記以外の場合 -> 構文エラーが発生した登見なしてメッセージを返す
     final Single<TestResults> resultsSingle =
         sourceCode.shouldBeTested() ? strategies.execAsyncTestExecutor(variantSingle)
-            .cache() : Single.just(new EmptyTestResults("build failed or reproduced."));
+            .cache() : Single.just(new EmptyTestResults(
+            sourceCode.isReproducedSourceCode() ? "reproduced."
+                : sourceCode.getGenerationMessage()));
     variant.setTestResultsSingle(resultsSingle);
 
     final Single<Fitness> fitnessSingle = Single
