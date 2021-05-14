@@ -25,8 +25,10 @@ public abstract class SourcePath {
 
   @Override
   public boolean equals(final Object o) {
-    return this.toString()
-        .equals(o.toString());
+    if (!(o instanceof SourcePath)) {
+      return false;
+    }
+    return path.equals(((SourcePath) o).path);
   }
 
   @Override
