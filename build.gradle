@@ -1,5 +1,5 @@
 buildscript {
-    repositories { jcenter() }
+    repositories { mavenCentral() }
     dependencies {
         // Gradle linter
         classpath 'com.netflix.nebula:gradle-lint-plugin:latest.release'
@@ -17,7 +17,7 @@ plugins {
     id 'jacoco'
 
     // Maven plugin to use JitPack
-    id 'maven'
+    id 'maven-publish'
 
     // Gradle lint
     id "nebula.lint" version "16.9.0"
@@ -40,7 +40,7 @@ group = 'com.github.kusumotolab'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 // In this section you declare the dependencies for your production and test code
@@ -84,9 +84,7 @@ dependencies {
 
 jar {
     // Specify App's entry point
-    manifest {
-        attributes "Main-Class": "jp.kusumotolab.kgenprog.CUILauncher"
-    }
+    manifest.attributes "Main-Class": "jp.kusumotolab.kgenprog.CUILauncher"
 
     // fatjar must include all dependencies
     from {
@@ -94,6 +92,7 @@ jar {
     }
     // exclude jar signatures for jar compression to avoid invalid signature
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     doFirst {
         // copy gradle.properties to resolve version info
