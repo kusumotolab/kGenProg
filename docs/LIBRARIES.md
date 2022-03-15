@@ -1,15 +1,15 @@
 kGenProg uses the following libraries WITHOUT any modifications.
 
-Apache Commons Lang: APACHE Lisence 2.0, 
+Apache Commons Lang: Apache License 2.0, 
 https://commons.apache.org/proper/commons-lang/
 
-Apache Commons Codec: APACHE licens, 2.0, 
+Apache Commons Codec: Apache License 2.0, 
 https://commons.apache.org/proper/commons-codec/
 
 Apache Maven: Apache License 2.0,
 https://maven.apache.org/
 
-args4j: MIT license, 
+args4j: MIT License, 
 https://args4j.kohsuke.org/
 
 ASM: 3-Clause BSD License, 
@@ -45,7 +45,7 @@ https://code.google.com/archive/p/java-diff-utils/
 LOGBack: dual-licensed under Eclipse Public License 1.0 and the LGPL 2.1, 
 https://logback.qos.ch/
 
-mockito: MIT license
+mockito: MIT License
 https://site.mockito.org/
 
 NightConfig: LGPL,
@@ -54,7 +54,7 @@ https://github.com/TheElectronWill/night-config
 ReactiveX RxJava: Apache License 2.0,
 https://github.com/ReactiveX/RxJava
 
-SLF4J: MIT license, 
+SLF4J: MIT License, 
 https://www.slf4j.org/
 
 
