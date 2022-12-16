@@ -85,7 +85,7 @@ public class VariantStore {
   }
 
   /**
-   * @return 現在の世代数をを返す
+   * @return 現在の世代数を返す
    */
   public OrdinalNumber getGenerationNumber() {
     return generation;
