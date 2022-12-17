@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.Random;
 import java.util.stream.Stream;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -27,6 +28,7 @@ import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
 import jp.kusumotolab.kgenprog.output.ASTNodeSerializer;
 import jp.kusumotolab.kgenprog.output.BaseSerializer;
 import jp.kusumotolab.kgenprog.output.CrossoverHistoricalElementSerializer;
+import jp.kusumotolab.kgenprog.output.DurationSerializer;
 import jp.kusumotolab.kgenprog.output.FileDiff;
 import jp.kusumotolab.kgenprog.output.FileDiffSerializer;
 import jp.kusumotolab.kgenprog.output.FitnessSerializer;
@@ -110,6 +112,7 @@ public class TestUtil {
             new CrossoverHistoricalElementSerializer())
         .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
             new MutationHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(Duration.class, new DurationSerializer())
         .create();
   }
 

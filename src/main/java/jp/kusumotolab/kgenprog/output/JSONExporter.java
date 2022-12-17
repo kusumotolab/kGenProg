@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +82,7 @@ class JSONExporter implements Exporter {
             new CrossoverHistoricalElementSerializer())
         .registerTypeHierarchyAdapter(MutationHistoricalElement.class,
             new MutationHistoricalElementSerializer())
+        .registerTypeHierarchyAdapter(Duration.class, new DurationSerializer())
         .create();
   }
 }
