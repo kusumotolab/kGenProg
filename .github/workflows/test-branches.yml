@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: ['11', '12', '13']
+        java: ['11', '17']
         platform: [ubuntu-latest, windows-latest, macos-latest]
     steps:
     - name: Git checkout
@@ -32,8 +32,9 @@ jobs:
           build-cache-
           build-
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
+        distribution: 'temurin'
         java-version: ${{ matrix.java }}
     - name: Resolve dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'

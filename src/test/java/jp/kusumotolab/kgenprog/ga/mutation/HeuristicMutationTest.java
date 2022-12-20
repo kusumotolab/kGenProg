@@ -3,6 +3,7 @@ package jp.kusumotolab.kgenprog.ga.mutation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -28,7 +29,7 @@ public class HeuristicMutationTest {
     final GeneratedSourceCode sourceCode = new JDTASTConstruction().constructAST(factory.create());
 
     final List<GeneratedAST<ProductSourcePath>> generatedASTs = sourceCode.getProductAsts();
-    final Random random = mock(Random.class);
+    final Random random = mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextDouble()).thenReturn(0.0);
 
     final HeuristicStatementSelection selection = new HeuristicStatementSelection(random);

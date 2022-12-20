@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 import java.util.List;
 import java.util.Random;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class RandomCrossoverTest {
   public void testNumberOfGeneratedVariants() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0);
 
@@ -49,7 +50,7 @@ public class RandomCrossoverTest {
   public void testStopFirst01() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0);
 
@@ -73,7 +74,7 @@ public class RandomCrossoverTest {
   public void testStopFirst02() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0);
 
@@ -102,7 +103,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants01() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0)
         .thenReturn(0)
@@ -132,7 +133,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants02() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(1)
         .thenReturn(1)
@@ -162,7 +163,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants03() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0);
 
@@ -190,7 +191,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants04() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(2);
 
@@ -218,7 +219,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants05() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0);
 
@@ -246,7 +247,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants06() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(2);
 
@@ -274,7 +275,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants07() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(0);
 
@@ -302,7 +303,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants08() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(1);
 
@@ -330,7 +331,7 @@ public class RandomCrossoverTest {
   public void testGeneratedVariants09() {
 
     // 生成するバリアントを制御するための疑似乱数
-    final Random random = Mockito.mock(Random.class);
+    final Random random = Mockito.mock(Random.class, withSettings().withoutAnnotations());
     when(random.nextBoolean()).thenReturn(true);
     when(random.nextInt(anyInt())).thenReturn(1);
 
