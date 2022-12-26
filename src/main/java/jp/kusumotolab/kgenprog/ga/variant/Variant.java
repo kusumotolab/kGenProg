@@ -39,7 +39,7 @@ public class Variant {
    * @param gene この個体がもつべき遺伝子
    * @param generatedSourceCode この個体のソースコード
    * @param testResults この個体のテスト結果
-   * @param fitness この個体のの評価値
+   * @param fitness この個体の評価値
    * @param suspiciousnesses この個体のソースコードに関する疑惑値
    * @param historicalElement この個体が生成されるまでの過程
    */
@@ -95,7 +95,7 @@ public class Variant {
   }
 
   /**
-   * @return この個体がビルドにに取り組んだかどうか
+   * @return この個体がビルドに取り組んだかどうか
    * (AST の生成に失敗した場合・重複している場合はビルドに取り組まない)
    */
   public boolean triedBuild() {

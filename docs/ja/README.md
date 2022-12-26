@@ -109,7 +109,7 @@ $ java -jar path/to/kGenProg.jar
 | `--scope` | 再利用候補の範囲（`PROJECT`，`PACKAGE`，`FILE`） | `PACKAGE` |
 | `--fault-localization` | 欠陥限局の手法（Fault Localization）（`Ample`，`Jaccard`，`Ochiai`，`Tarantula`，`Zoltar`） | `Ochiai` |
 | `--mutation-type` | 変異種別（`Simple`，`Heuristic`） | `Simple` |
-| `--crossover-type` | 交叉種別（`Random`，`Single`，`Uniform`, `Cascade`） | `Random` |
+| `--crossover-type` | 交叉種別（`Random`，`SinglePoint`，`Uniform`, `Cascade`） | `Random` |
 | `--crossover-first-variant` | 交叉対象の第一バリアントの選択方法（`Elite`，`Random`） | `Random` |
 | `--crossover-second-variant` | 交叉対象の第二バリアントの選択方法（`Elite`，`GeneSimilarity`，`Random`，`TestComplementary`) | `Random` |
 | `--patch-output` | 解のパッチファイル生成の有無 | `false` |
