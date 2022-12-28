@@ -108,6 +108,32 @@ jar {
     }
 }
 
+//config of maven-publish plugin for jitpack
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'kGenProg'
+            from components.java
+            pom {
+                name = 'kGenProg'
+                description = 'A High-performance, High-extensibility and High-portability APR System'
+                inceptionYear = '2018'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://github.com/kusumotolab/kGenProg/blob/master/LICENSE'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/kusumotolab/kGenProg.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/kusumotolab/kGenProg.git'
+                    url = 'https://github.com/kusumotolab/kGenProg'
+                }
+            }
+        }
+    }
+}
+
 // Define App's version
 version = currentVersion
 
