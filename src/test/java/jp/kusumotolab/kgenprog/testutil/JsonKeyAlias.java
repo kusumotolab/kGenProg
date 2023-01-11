@@ -32,6 +32,7 @@ public class JsonKeyAlias {
     public final static String BASES = "bases";
     public final static String GENERATED_SOURCE_CODE = "generatedSourceCode";
     public final static String SUSPICIOUSNESSES = "suspiciousnesses";
+    public final static String GENERATION_TIME = "time";
   }
 
   public static class Base {

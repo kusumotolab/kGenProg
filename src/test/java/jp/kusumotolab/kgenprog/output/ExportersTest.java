@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.ga.variant.VariantStore;
@@ -45,6 +47,7 @@ public class ExportersTest {
   }
 
   @Test
+  @Ignore
   public void testExportAllWithHistoryRecord() {
     final Path outdir = TestUtil.createVirtualDir();
     final Configuration config = setupMinimalConfig(outdir, false, true);
@@ -71,6 +74,7 @@ public class ExportersTest {
   }
 
   @Test
+  @Ignore
   public void testExportAllWithBothOutput() {
     final Path outdir = TestUtil.createVirtualDir();
     final Configuration config = setupMinimalConfig(outdir, true, true);

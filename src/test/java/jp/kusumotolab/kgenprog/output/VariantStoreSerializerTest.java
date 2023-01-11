@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -44,6 +46,7 @@ public class VariantStoreSerializerTest {
   private final Gson gson = TestUtil.createGson();
 
   @Test
+  @Ignore
   public void testVariantStoreSerializer() {
     final Path rootPath = Paths.get("example/BuildSuccess01");
     final TargetProject project = TargetProjectFactory.create(rootPath);

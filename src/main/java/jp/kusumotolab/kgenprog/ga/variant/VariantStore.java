@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import org.apache.commons.lang3.time.StopWatch;
+
 import io.reactivex.Single;
 import jp.kusumotolab.kgenprog.Configuration;
 import jp.kusumotolab.kgenprog.OrdinalNumber;
@@ -70,11 +73,18 @@ public class VariantStore {
    *
    * @param gene 遺伝子情報
    * @param element 生成過程の記録
+   * @param time 生成時間
    * @return 生成された個体
    */
   public Variant createVariant(final Gene gene, final HistoricalElement element) {
     final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
     return createVariant(gene, sourceCode, elementReplacer.apply(element));
+  }
+
+  public Variant createVariant(final Gene gene, final HistoricalElement element, long time) {
+    final StopWatch stopWatch = StopWatch.createStarted();
+    final GeneratedSourceCode sourceCode = strategies.execSourceCodeGeneration(this, gene);
+    return createVariant(gene, sourceCode, elementReplacer.apply(element), (time + stopWatch.getTime()));
   }
 
   /**
@@ -241,6 +251,41 @@ public class VariantStore {
             (v, r) -> strategies.execFaultLocalization(sourceCode, r))
         .cache();
     variant.setSuspiciousnessListSingle(suspiciousnessListSingle);
+
+    variant.subscribe();
+
+    return variant;
+  }
+
+  /* 交叉における時間計測用のcreateVariantメソッド */
+
+  private Variant createVariant(final Gene gene, final GeneratedSourceCode sourceCode,
+      final HistoricalElement element, long time) {
+    final StopWatch stopWatch = StopWatch.createStarted();
+    final LazyVariant variant = new LazyVariant(variantCounter.getAndIncrement(), generation.get(),
+        gene, sourceCode, element);
+    final Single<Variant> variantSingle = Single.just(variant)
+        .cast(Variant.class)
+        .cache();
+
+    final Single<TestResults> resultsSingle =
+        sourceCode.shouldBeTested() ? strategies.execAsyncTestExecutor(variantSingle)
+            .cache() : Single.just(new EmptyTestResults("build failed or reproduced."));
+    variant.setTestResultsSingle(resultsSingle);
+
+    final Single<Fitness> fitnessSingle = Single
+        .zip(variantSingle, resultsSingle,
+            (v, r) -> strategies.execSourceCodeValidation(new Input(gene, sourceCode, r)))
+        .cache();
+    variant.setFitnessSingle(fitnessSingle);
+
+    final Single<List<Suspiciousness>> suspiciousnessListSingle = Single
+        .zip(variantSingle, resultsSingle,
+            (v, r) -> strategies.execFaultLocalization(sourceCode, r))
+        .cache();
+    variant.setSuspiciousnessListSingle(suspiciousnessListSingle);
+    
+    variant.setGenerationTime(time + stopWatch.getTime());
 
     variant.subscribe();
 

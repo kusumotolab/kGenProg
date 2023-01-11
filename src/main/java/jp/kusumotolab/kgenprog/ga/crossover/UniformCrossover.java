@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.time.StopWatch;
+
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
 import jp.kusumotolab.kgenprog.ga.variant.HistoricalElement;
@@ -52,6 +55,7 @@ public class UniformCrossover extends CrossoverAdaptor {
   @Override
   protected List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
       throws CrossoverInfeasibleException {
+    final StopWatch stopWatch = StopWatch.createStarted();
     final Variant variantA = getFirstVariantSelectionStrategy().exec(variants);
     final Variant variantB = getSecondVariantSelectionStrategy().exec(variants, variantA);
     final Gene geneA = variantA.getGene();
@@ -61,7 +65,8 @@ public class UniformCrossover extends CrossoverAdaptor {
 
     final Gene newGene = makeGene(basesA, basesB);
     final HistoricalElement newElement = new UniformCrossoverHistoricalElement(variantA, variantB);
-    return Arrays.asList(store.createVariant(newGene, newElement));
+    return Arrays.asList(store.createVariant(newGene, newElement, stopWatch.getTime()));
+    //return Arrays.asList(store.createVariant(newGene, newElement));
   }
 
   private Gene makeGene(final List<Base> basesA, final List<Base> basesB) {

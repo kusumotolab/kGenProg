@@ -115,7 +115,7 @@ public class SimpleMutationTest {
     // 修正プログラムが必ず生成されるようにモックを設定する
     when(variantStore.createVariant(any(), any())).then(
         ans -> new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(1.0), null,
-            ans.getArgument(1)));
+            ans.getArgument(1), 0L));
 
     final SimpleMutation simpleMutation = createSimpleMutation(generatedSourceCode);
     final List<Variant> variantList = simpleMutation.exec(variantStore);
@@ -261,7 +261,7 @@ public class SimpleMutationTest {
 
     final Gene initialGene = new Gene(Collections.emptyList());
     return new Variant(0, 0, initialGene, sourceCode, null, new SimpleFitness(0.0),
-        suspiciousnesses, null);
+        suspiciousnesses, null, 0L);
   }
 
   private VariantStore createVariantStore(final Variant initialVariant) {
@@ -269,7 +269,7 @@ public class SimpleMutationTest {
     when(variantStore.getCurrentVariants()).thenReturn(Collections.singletonList(initialVariant));
     when(variantStore.createVariant(any(), any())).then(ans -> {
       return new Variant(0, 0, ans.getArgument(0), null, null, new SimpleFitness(0.5), null,
-          ans.getArgument(1));
+          ans.getArgument(1), 0L);
     });
     when(variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(0));
     return variantStore;

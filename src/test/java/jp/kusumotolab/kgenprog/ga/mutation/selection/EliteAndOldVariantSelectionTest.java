@@ -166,7 +166,7 @@ public class EliteAndOldVariantSelectionTest {
    * @return variant
    */
   private Variant createVariant(final Fitness fitness) {
-    final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null);
+    final Variant variant = new Variant(0, 0, null, null, null, fitness, null, null, 0L);
     return variant;
   }
 
@@ -178,7 +178,7 @@ public class EliteAndOldVariantSelectionTest {
    * @return variant
    */
   private Variant createVariant(final Fitness fitness, final int id) {
-    final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null);
+    final Variant variant = new Variant(id, 0, null, null, null, fitness, null, null, 0L);
     return variant;
   }
 }

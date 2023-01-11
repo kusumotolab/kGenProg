@@ -27,12 +27,19 @@ public class LazyVariant extends Variant {
    * @param generationNumber この個体の世代数
    * @param gene この個体の遺伝子
    * @param generatedSourceCode この個体のソースコード
-   * @param historicalElement この個体がが生成されるまでの過程
+   * @param historicalElement この個体が生成されるまでの過程
+   * @param generationTime この個体の生成にかかった時間
    */
+  public LazyVariant(final long id, final int generationNumber, final Gene gene,
+      final GeneratedSourceCode generatedSourceCode, final HistoricalElement historicalElement, final long generationTime) {
+    super(id, generationNumber, gene, generatedSourceCode, null, null, null,
+        historicalElement, generationTime);
+  }
+
   public LazyVariant(final long id, final int generationNumber, final Gene gene,
       final GeneratedSourceCode generatedSourceCode, final HistoricalElement historicalElement) {
     super(id, generationNumber, gene, generatedSourceCode, null, null, null,
-        historicalElement);
+        historicalElement, 0L);
   }
 
   /**

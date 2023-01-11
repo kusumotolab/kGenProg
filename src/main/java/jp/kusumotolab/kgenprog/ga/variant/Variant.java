@@ -17,6 +17,7 @@ public class Variant {
 
   private final long id;
   private final int generationNumber;
+  private double generationTime;
 
   @SerializedName("bases")
   private final Gene gene;
@@ -42,8 +43,24 @@ public class Variant {
    * @param fitness この個体のの評価値
    * @param suspiciousnesses この個体のソースコードに関する疑惑値
    * @param historicalElement この個体が生成されるまでの過程
+   * @param generationTime この個体の生成にかかった時間
    */
   public Variant(final long id, final int generationNumber, final Gene gene,
+      final GeneratedSourceCode generatedSourceCode, final TestResults testResults,
+      final Fitness fitness, final List<Suspiciousness> suspiciousnesses,
+      final HistoricalElement historicalElement, final long generationTime) {
+    this.id = id;
+    this.generationNumber = generationNumber;
+    this.gene = gene;
+    this.generatedSourceCode = generatedSourceCode;
+    this.testResults = testResults;
+    this.fitness = fitness;
+    this.suspiciousnesses = suspiciousnesses;
+    this.historicalElement = historicalElement;
+    this.generationTime = generationTime;
+  }
+
+      public Variant(final long id, final int generationNumber, final Gene gene,
       final GeneratedSourceCode generatedSourceCode, final TestResults testResults,
       final Fitness fitness, final List<Suspiciousness> suspiciousnesses,
       final HistoricalElement historicalElement) {
@@ -55,6 +72,7 @@ public class Variant {
     this.fitness = fitness;
     this.suspiciousnesses = suspiciousnesses;
     this.historicalElement = historicalElement;
+    this.generationTime = 0L;
   }
 
   /**
@@ -156,6 +174,20 @@ public class Variant {
    */
   public HistoricalElement getHistoricalElement() {
     return historicalElement;
+  }
+
+  /**
+   * @return この個体が生成されるまでの時間
+   */
+  public double getGenerationTime() {
+    return generationTime;
+  }
+
+  /**
+   * @return この個体が生成されるまでの時間
+   */
+  public void setGenerationTime(double generationTime) {
+    this.generationTime = generationTime;
   }
 
   /**

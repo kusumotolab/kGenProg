@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.time.StopWatch;
+
 import jp.kusumotolab.kgenprog.ga.variant.Base;
 import jp.kusumotolab.kgenprog.ga.variant.CascadeCrossoverHistoricalElement;
 import jp.kusumotolab.kgenprog.ga.variant.Gene;
@@ -33,6 +36,7 @@ public class CascadeCrossover extends CrossoverAdaptor {
   @Override
   protected List<Variant> makeVariants(final List<Variant> variants, final VariantStore store)
       throws CrossoverInfeasibleException {
+    final StopWatch stopWatch = StopWatch.createStarted();
     final Variant v1 = getFirstVariantSelectionStrategy().exec(variants);
     final Variant v2 = getSecondVariantSelectionStrategy().exec(variants, v1);
     final HistoricalElement histElement = new CascadeCrossoverHistoricalElement(v1, v2);

@@ -53,7 +53,7 @@ public class CrossoverSingleTestVariant {
     when(variantStore.createVariant(any(), any())).thenAnswer(invocation -> {
       final Gene gene = invocation.getArgument(0);
       final HistoricalElement element = invocation.getArgument(1);
-      return new Variant(0, 0, gene, null, null, new SimpleFitness(0.5), null, element);
+      return new Variant(0, 0, gene, null, null, new SimpleFitness(0.5), null, element, 0L);
     });
     when(variantStore.getFoundSolutionsNumber()).thenReturn(new OrdinalNumber(0));
   }

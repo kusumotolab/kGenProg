@@ -84,6 +84,11 @@ import jp.kusumotolab.kgenprog.project.test.TestResults;
  * <td>testSummary</td>
  * <td>テスト結果</td>
  * </tr>
+ * 
+ * <tr>
+ * <td>generationTime</td>
+ * <td>生成時間</td>
+ * </tr>
  * </tbody>
  * </table>
  *
@@ -131,7 +136,8 @@ public class VariantSerializer implements JsonSerializer<Variant> {
     final Patch patch = patchGenerator.exec(variant);
     final JsonObject serializedVariant = gson.toJsonTree(variant)
         .getAsJsonObject();
-
+    serializedVariant.add("fitness", context.serialize(variant.getFitness()));
+    
     // パッチの情報を追加
     serializedVariant.add("patch", context.serialize(patch));
 

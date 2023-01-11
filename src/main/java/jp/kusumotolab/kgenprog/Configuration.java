@@ -65,7 +65,7 @@ public class Configuration {
   public static final SecondVariantSelectionStrategy.Strategy DEFAULT_SECOND_VARIANT_SELECTION_STRATEGY =
       SecondVariantSelectionStrategy.Strategy.Random;
   public static final boolean DEFAULT_IS_PATCH_OUTPUT = false;
-  public static final boolean DEFAULT_IS_HISTORY_RECORD = false;
+  public static final boolean DEFAULT_IS_HISTORY_RECORD = true;
 
   private final TargetProject targetProject;
   private final List<String> executionTests;

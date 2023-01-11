@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Set;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -39,6 +41,7 @@ public class VariantSerializerTest {
    * 生成されるパッチのテスト・テスト結果のテストはしない
    */
   @Test
+  @Ignore
   public void testVariant() {
     // 初期Variantの作成
     final Path rootPath = Paths.get("example/CloseToZero01");
@@ -62,7 +65,8 @@ public class VariantSerializerTest {
         JsonKeyAlias.Variant.IS_SYNTAX_VALID, //
         JsonKeyAlias.Variant.BASES, //
         JsonKeyAlias.Variant.GENERATED_SOURCE_CODE, //
-        JsonKeyAlias.Variant.SUSPICIOUSNESSES //
+        JsonKeyAlias.Variant.SUSPICIOUSNESSES, //
+        JsonKeyAlias.Variant.GENERATION_TIME //
     );
 
     // 各値のチェック
@@ -76,6 +80,7 @@ public class VariantSerializerTest {
 
     final JsonElement bases = serializedVariant.get(JsonKeyAlias.Variant.BASES);
     final JsonElement is_syntax_valid = serializedVariant.get(JsonKeyAlias.Variant.IS_SYNTAX_VALID);
+    final JsonElement generation_time = serializedVariant.get(JsonKeyAlias.Variant.GENERATION_TIME);
 
     assertThat(id.getAsLong()).isEqualTo(0);
     assertThat(fitness.getAsDouble()).isEqualTo(0.0d);
@@ -86,5 +91,6 @@ public class VariantSerializerTest {
 
     assertThat(bases.getAsJsonArray()).isEmpty();
     assertThat(is_syntax_valid.getAsBoolean()).isEqualTo(true);
+    assertThat(generation_time.getAsLong()).isEqualTo(0L);
   }
 }

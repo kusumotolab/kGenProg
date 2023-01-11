@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
+import org.apache.commons.lang3.time.StopWatch;
 import jp.kusumotolab.kgenprog.fl.Suspiciousness;
 import jp.kusumotolab.kgenprog.ga.Roulette;
 import jp.kusumotolab.kgenprog.ga.mutation.selection.CandidateSelection;
@@ -78,7 +79,6 @@ public abstract class Mutation {
     if (requiredSolutions <= foundSolutions) {
       return Collections.emptyList();
     }
-
     final List<Variant> generatedVariants = new ArrayList<>();
 
     final List<Variant> currentVariants = variantStore.getCurrentVariants();
@@ -90,6 +90,7 @@ public abstract class Mutation {
     }, random);
 
     for (int i = 0; i < mutationGeneratingCount; i++) {
+      final StopWatch stopWatch = StopWatch.createStarted();
       final Variant variant = variantRoulette.exec();
       final List<Suspiciousness> suspiciousnesses = variant.getSuspiciousnesses();
       final Function<Suspiciousness, Double> weightFunction = susp -> Math.pow(susp.getValue(), 2);
@@ -105,8 +106,9 @@ public abstract class Mutation {
       final Gene gene = makeGene(variant.getGene(), base);
       final HistoricalElement element = new MutationHistoricalElement(variant, base);
       final Variant newVariant = variantStore.createVariant(gene, element);
+      // 時間情報を追加
+      newVariant.setGenerationTime(stopWatch.getTime());
       generatedVariants.add(newVariant);
-
       // 新しい修正プログラムが生成された場合，必要数に達しているかを調べる
       // 達している場合はこれ以上の変異プログラムは生成しない
       if (newVariant.isCompleted()) {

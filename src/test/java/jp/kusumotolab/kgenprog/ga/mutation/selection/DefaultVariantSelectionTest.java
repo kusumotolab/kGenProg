@@ -186,7 +186,7 @@ public class DefaultVariantSelectionTest {
    */
   private Variant createVariant(final Fitness fitness, final int id,
       final TestResults testResults) {
-    return new Variant(id, 0, null, null, testResults, fitness, null, null);
+    return new Variant(id, 0, null, null, testResults, fitness, null, null, 0L);
   }
 
   /**

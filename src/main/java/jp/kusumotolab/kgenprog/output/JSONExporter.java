@@ -32,7 +32,7 @@ class JSONExporter implements Exporter {
   private static final Logger log = LoggerFactory.getLogger(JSONExporter.class);
 
   private final Path outdir;
-  public static final String JSON_FILENAME = "history.json";
+  public static final String JSON_FILENAME = "hogehoge.json";
 
   JSONExporter(final Path outdir) {
     this.outdir = outdir;
